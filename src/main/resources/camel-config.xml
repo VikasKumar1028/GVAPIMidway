@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor 
+	license agreements. See the NOTICE file distributed with this work for additional 
+	information regarding copyright ownership. The ASF licenses this file to 
+	You under the Apache License, Version 2.0 (the "License"); you may not use 
+	this file except in compliance with the License. You may obtain a copy of 
+	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
+	by applicable law or agreed to in writing, software distributed under the 
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
+	OF ANY KIND, either express or implied. See the License for the specific 
+	language governing permissions and limitations under the License. -->
+
+<!-- START SNIPPET: e1 -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camel="http://camel.apache.org/schema/spring"
+	xmlns:cxf="http://camel.apache.org/schema/cxf" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jaxrs="http://cxf.apache.org/jaxrs" xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+       http://camel.apache.org/schema/cxf http://camel.apache.org/schema/cxf/camel-cxf.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd
+       http://www.springframework.org/schema/data/mongo
+       http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd
+       http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.0.xsd">
+	<!-- We still need it for loading the CXFServlet -->
+
+	<import resource="classpath:META-INF/cxf/cxf.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+
+	<context:component-scan base-package="com.gv.midway" />
+
+	<bean id="camelRoutes" class="com.gv.midway.router.CamelRoute" />
+
+	<bean id="adaptationLayerService" class="com.gv.midway.controller.AdaptationLayerServiceImpl" />
+
+	<bean id="auditLogEventNotifer" class="com.gv.midway.logger.AuditLogEventNotifer" />
+
+	<jaxrs:server id="GVJax" address="/">
+		<jaxrs:serviceBeans>
+			<ref bean="adaptationLayerService" />
+		</jaxrs:serviceBeans>
+		<jaxrs:providers>
+			<bean class="com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider" />
+		</jaxrs:providers>
+	</jaxrs:server>
+
+	<!-- Defined the client endpoint to create the cxf-rs consumer -->
+	<cxf:rsClient id="rsVerizonClient"
+		address="https://thingspace.verizon.com/api/m2m/v1/" serviceClass="com.gv.midway.service.impl.VerizonService"
+		loggingFeatureEnabled="true">
+		<cxf:providers>
+			<bean class="com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider" />
+		</cxf:providers>
+	</cxf:rsClient>
+
+	<cxf:rsClient id="rsKoreClient"
+		address="https://prismproapi.koretelematics.com/4/TransactionalAPI.svc"
+		serviceClass="com.gv.midway.controller.JSONService"
+		loggingFeatureEnabled="true">
+		<cxf:providers>
+			<bean class="com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider" />
+		</cxf:providers>
+	</cxf:rsClient>
+
+	<camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
+		<routeBuilder ref="camelRoutes" />
+
+	</camelContext>
+
+	<!-- Swagger API listing resource -->
+	<bean id="swaggerResourceJSON"
+		class="com.wordnik.swagger.jaxrs.listing.ApiListingResourceJSON" />
+
+	<!-- Swagger writers -->
+	<bean id="resourceWriter"
+		class="com.wordnik.swagger.jaxrs.listing.ResourceListingProvider" />
+	<bean id="apiWriter"
+		class="com.wordnik.swagger.jaxrs.listing.ApiDeclarationProvider" />
+
+	<jaxrs:server address="/sw" id="swagger">
+		<jaxrs:serviceBeans>
+			<ref bean="swaggerResourceJSON" />
+		</jaxrs:serviceBeans>
+		<jaxrs:providers>
+			<ref bean="resourceWriter" />
+			<ref bean="apiWriter" />
+		</jaxrs:providers>
+	</jaxrs:server>
+
+	<bean id="swaggerConfig" class="com.wordnik.swagger.jaxrs.config.BeanConfig">
+		<property name="resourcePackage" value="com.gv.midway" />
+		<property name="version" value="2.0" />
+		<property name="basePath" value="http://localhost:8080/MidWay/api" />
+		<property name="title" value="Swagger UI MidWay Integration" />
+		<property name="description" value="Swagger UI Integration for MidWay" />
+		<property name="contact" value="vs00419238@techmahindra.com" />
+		<property name="scan" value="true" />
+	</bean>
+
+	<mongo:mongo host="127.0.0.1" port="27017" />
+	<mongo:db-factory dbname="yourdb" />
+
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
+	</bean>
+</beans>
