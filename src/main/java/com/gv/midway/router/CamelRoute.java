@@ -26,7 +26,7 @@ import com.gv.midway.service.IDeviceService;
 /**
  * The Camel route
  *
- * @version change
+ * @version change 2
  */
 @PropertySource({ "classpath:stub.properties" })
 @Component
