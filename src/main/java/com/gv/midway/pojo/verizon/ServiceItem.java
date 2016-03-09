@@ -16,7 +16,6 @@
  */
 package com.gv.midway.pojo.verizon;
 
-
 public class ServiceItem {
 
 	@Override
@@ -24,28 +23,30 @@ public class ServiceItem {
 		return "ServiceItem [deviceNumber=" + deviceNumber + ", type=" + type
 				+ "]";
 	}
+
 	public String getDeviceNumber() {
 		return deviceNumber;
 	}
+
 	public void setDeviceNumber(String deviceNumber) {
 		this.deviceNumber = deviceNumber;
 	}
+
 	public String getType() {
 		return type;
 	}
+
 	public void setType(String type) {
 		this.type = type;
 	}
+
 	public ServiceItem(String deviceNumber, String type) {
 		super();
 		this.deviceNumber = deviceNumber;
 		this.type = type;
 	}
+
 	private String deviceNumber;
 	private String type;
-
-
-
-	
 
 }

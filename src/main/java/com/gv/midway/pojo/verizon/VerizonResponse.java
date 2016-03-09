@@ -7,31 +7,27 @@ public class VerizonResponse {
 
 	private String hasMoreData;
 
-    private Devices[] devices;
+	private Devices[] devices;
 
-    public String getHasMoreData ()
-    {
-        return hasMoreData;
-    }
+	public String getHasMoreData() {
+		return hasMoreData;
+	}
 
-    public void setHasMoreData (String hasMoreData)
-    {
-        this.hasMoreData = hasMoreData;
-    }
+	public void setHasMoreData(String hasMoreData) {
+		this.hasMoreData = hasMoreData;
+	}
 
-    public Devices[] getDevices ()
-    {
-        return devices;
-    }
+	public Devices[] getDevices() {
+		return devices;
+	}
 
-    public void setDevices (Devices[] devices)
-    {
-        this.devices = devices;
-    }
+	public void setDevices(Devices[] devices) {
+		this.devices = devices;
+	}
 
-    @Override
-    public String toString()
-    {
-        return "ClassPojo [hasMoreData = "+hasMoreData+", devices = "+devices+"]";
-    }
+	@Override
+	public String toString() {
+		return "ClassPojo [hasMoreData = " + hasMoreData + ", devices = "
+				+ devices + "]";
+	}
 }

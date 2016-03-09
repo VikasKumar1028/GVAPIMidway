@@ -4,8 +4,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "audit")
 public class Audit {
-	
-	
+
 	String audit_id;
 	String carrier;
 	String inboundURL;
@@ -17,8 +16,7 @@ public class Audit {
 	String auditType;
 	String source;
 	String status;
-	
-	
+
 	public String getPayload() {
 		return payload;
 	}

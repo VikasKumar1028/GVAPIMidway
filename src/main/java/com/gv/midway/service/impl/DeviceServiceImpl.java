@@ -16,7 +16,7 @@ public class DeviceServiceImpl implements IDeviceService {
 	private IDeviceDao iDeviceDao;
 
 	public String insertDeviceDetails(Exchange exchange) {
-		
+
 		Device device = (Device) exchange.getIn().getBody();
 		return iDeviceDao.insertDeviceDetails(device);
 	}

@@ -2,7 +2,7 @@ package com.gv.midway.pojo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-@JsonSerialize(include=JsonSerialize.Inclusion.NON_EMPTY)
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 public class ExtendedAttributes {
 	private String key4;
 

@@ -1,47 +1,41 @@
 package com.gv.midway.pojo.request;
 
 public class Cell {
-	
-	 private String esn;
 
-	    private String sim;
+	private String esn;
 
-	    private String mdn;
+	private String sim;
 
-	    public String getEsn ()
-	    {
-	        return esn;
-	    }
+	private String mdn;
 
-	    public void setEsn (String esn)
-	    {
-	        this.esn = esn;
-	    }
+	public String getEsn() {
+		return esn;
+	}
 
-	    public String getSim ()
-	    {
-	        return sim;
-	    }
+	public void setEsn(String esn) {
+		this.esn = esn;
+	}
 
-	    public void setSim (String sim)
-	    {
-	        this.sim = sim;
-	    }
+	public String getSim() {
+		return sim;
+	}
 
-	    public String getMdn ()
-	    {
-	        return mdn;
-	    }
+	public void setSim(String sim) {
+		this.sim = sim;
+	}
 
-	    public void setMdn (String mdn)
-	    {
-	        this.mdn = mdn;
-	    }
+	public String getMdn() {
+		return mdn;
+	}
 
-	    @Override
-	    public String toString()
-	    {
-	        return "ClassPojo [esn = "+esn+", sim = "+sim+", mdn = "+mdn+"]";
-	    }
+	public void setMdn(String mdn) {
+		this.mdn = mdn;
+	}
+
+	@Override
+	public String toString() {
+		return "ClassPojo [esn = " + esn + ", sim = " + sim + ", mdn = " + mdn
+				+ "]";
+	}
 
 }

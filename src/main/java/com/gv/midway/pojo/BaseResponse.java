@@ -1,7 +1,5 @@
 package com.gv.midway.pojo;
 
-
-
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
@@ -23,5 +21,11 @@ public class BaseResponse {
 
 	public void setHeader(ResponseHeader header) {
 		this.header = header;
+	}
+
+	@Override
+	public String toString() {
+		return "BaseResponse [header=" + header + ", response=" + response
+				+ "]";
 	}
 }

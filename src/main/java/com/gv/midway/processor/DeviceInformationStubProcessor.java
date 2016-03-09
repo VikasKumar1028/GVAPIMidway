@@ -18,39 +18,36 @@ public class DeviceInformationStubProcessor implements Processor {
 
 	public void process(Exchange exchange) throws Exception {
 		// TODO Auto-generated method stub
-		
-		
-		System.out.println("----------------------"+exchange.getProperty("TransactionId"));
-		
-		DeviceInformationResponse deviceInformationResponse =new DeviceInformationResponse();
-		
-		DeviceInformationResponseDataArea deviceInformationResponseDataArea=new DeviceInformationResponseDataArea();
-		
+
+		System.out.println("----------------------"
+				+ exchange.getProperty("TransactionId"));
+
+		DeviceInformationResponse deviceInformationResponse = new DeviceInformationResponse();
+
+		DeviceInformationResponseDataArea deviceInformationResponseDataArea = new DeviceInformationResponseDataArea();
+
 		DeviceInformation deviceInformation = new DeviceInformation();
 		DeviceInformation[] deviceInformationArray = new DeviceInformation[1];
-		
-		
-		ResponseHeader responseheader =new ResponseHeader();
-		
-		Response response= new Response();
+
+		ResponseHeader responseheader = new ResponseHeader();
+
+		Response response = new Response();
 		response.setResponseCode("200 OK");
 		response.setResponseDescription("Device Information is fetched successfully");
 		response.setResponseStatus("SUCESS");
 
-						
 		responseheader.setApplicationName("applicationName");
 		responseheader.setRegion("setRegion");
 		responseheader.setTimestamp("setTimestamp");
 		responseheader.setOrganization("setOrganization");
 		responseheader.setSourceName("setSourceName");
-		
-		//baseResponse.setHeader(header);
-		
+
+		// baseResponse.setHeader(header);
+
 		deviceInformationResponse.setHeader(responseheader);
 		deviceInformationResponse.setResponse(response);
-		
-		
-		//deviceInformationResponse.setResponse(response);
+
+		// deviceInformationResponse.setResponse(response);
 		deviceInformation.setAccountName("sadhana");
 		deviceInformation.setBillingCycleEndDate("2015-10-13T20:00:00Z");
 		deviceInformation.setConnected("false");
@@ -109,14 +106,15 @@ public class DeviceInformationStubProcessor implements Processor {
 
 		String[] groupNames = { "BED20141" };
 		deviceInformation.setGroupNames(groupNames);
-		
-		deviceInformationArray[0]=deviceInformation;
+
+		deviceInformationArray[0] = deviceInformation;
 		deviceInformationResponseDataArea.setDevices(deviceInformationArray);
-		
-		deviceInformationResponse.setDataArea(deviceInformationResponseDataArea);
+
+		deviceInformationResponse
+				.setDataArea(deviceInformationResponseDataArea);
 
 		exchange.getIn().setBody(deviceInformationResponse);
-		
+
 	}
 
 }

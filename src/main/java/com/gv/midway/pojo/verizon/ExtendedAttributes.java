@@ -6,20 +6,17 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class ExtendedAttributes {
 	private String key;
 
-    public String getKey ()
-    {
-        return key;
-    }
+	public String getKey() {
+		return key;
+	}
 
-    public void setKey (String key)
-    {
-        this.key = key;
-    }
+	public void setKey(String key) {
+		this.key = key;
+	}
 
-    @Override
-    public String toString()
-    {
-        return "ClassPojo [key = "+key+"]";
-    }
+	@Override
+	public String toString() {
+		return "ClassPojo [key = " + key + "]";
+	}
 
 }

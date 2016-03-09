@@ -36,7 +36,10 @@
 
 	<bean id="adaptationLayerService" class="com.gv.midway.controller.AdaptationLayerServiceImpl" />
 
-	<bean id="auditLogEventNotifer" class="com.gv.midway.logger.AuditLogEventNotifer" />
+	 <bean id="auditLogRequestEventNotifer" class="com.gv.midway.audit.AuditLogRequestEventNotifer" />
+
+	<bean id="auditLogResponseEventNotifer" class="com.gv.midway.audit.AuditLogResponseEventNotifer" />
+
 
 	<jaxrs:server id="GVJax" address="/">
 		<jaxrs:serviceBeans>

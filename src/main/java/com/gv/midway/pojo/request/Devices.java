@@ -1,9 +1,9 @@
 package com.gv.midway.pojo.request;
 
 public class Devices {
-	
+
 	private Device[] devices;
-	
+
 	public Device[] getDevices() {
 		return devices;
 	}
@@ -11,7 +11,5 @@ public class Devices {
 	public void setDevices(Device[] devices) {
 		this.devices = devices;
 	}
-
-	
 
 }

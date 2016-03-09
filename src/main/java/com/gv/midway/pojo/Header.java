@@ -1,6 +1,6 @@
 package com.gv.midway.pojo;
 
-public  class Header {
+public class Header {
 	private String region;
 
 	private String timestamp;
@@ -12,7 +12,7 @@ public  class Header {
 	private String sourceName;
 
 	private String applicationName;
-	
+
 	private String bsCarrier;
 
 	public String getBsCarrier() {
@@ -79,6 +79,5 @@ public  class Header {
 				+ ", applicationName=" + applicationName + ", bsCarrier="
 				+ bsCarrier + "]";
 	}
-
 
 }

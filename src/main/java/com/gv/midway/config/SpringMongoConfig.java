@@ -10,13 +10,11 @@ import com.mongodb.MongoClient;
 
 @Configuration
 public class SpringMongoConfig {
-	public @Bean
-	MongoDbFactory mongoDbFactory() throws Exception {
+	public @Bean MongoDbFactory mongoDbFactory() throws Exception {
 		return new SimpleMongoDbFactory(new MongoClient(), "yourdb");
 	}
 
-	public @Bean
-	MongoTemplate mongoTemplate() throws Exception {
+	public @Bean MongoTemplate mongoTemplate() throws Exception {
 
 		MongoTemplate mongoTemplate = new MongoTemplate(mongoDbFactory());
 

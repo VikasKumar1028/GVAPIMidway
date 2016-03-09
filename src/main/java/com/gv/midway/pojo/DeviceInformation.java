@@ -1,10 +1,12 @@
 package com.gv.midway.pojo;
 
+import java.util.Arrays;
+
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-@JsonSerialize(include=JsonSerialize.Inclusion.NON_EMPTY)
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 public class DeviceInformation {
-	
+
 	private String lastConnectionDate;
 
 	private LstFeatures lstFeatures;
@@ -27,8 +29,6 @@ public class DeviceInformation {
 
 	private String accountName;
 
-	private String lstExtFeatures;
-
 	private String dailyDataThreshold;
 
 	private String billingCycleEndDate;
@@ -43,11 +43,131 @@ public class DeviceInformation {
 
 	private String dailySMSThreshold;
 
-	private String lstHistoryOverLastYear;
+	private String[] lstHistoryOverLastYear;
 
 	private ExtendedAttributes extendedAttributes;
 
 	private String ipAddress;
+
+	private String staticIP;
+
+	private String voiceDispatchNumber;
+
+	private int mostRecentLocateId;
+
+	private int previousLocateId;
+
+	private String mostRecentLocateDate;
+
+	private double mostRecentLatitude;
+
+	private double mostRecentLongitude;
+
+	private String mostRecentAddress;
+
+	private String previousLocateDate;
+
+	private double previousLatitude;
+
+	private double previousLongitude;
+
+	private String[] lstExtFeatures;
+
+	public int getMostRecentLocateId() {
+		return mostRecentLocateId;
+	}
+
+	public void setMostRecentLocateId(int mostRecentLocateId) {
+		this.mostRecentLocateId = mostRecentLocateId;
+	}
+
+	public int getPreviousLocateId() {
+		return previousLocateId;
+	}
+
+	public void setPreviousLocateId(int previousLocateId) {
+		this.previousLocateId = previousLocateId;
+	}
+
+	public String getMostRecentLocateDate() {
+		return mostRecentLocateDate;
+	}
+
+	public void setMostRecentLocateDate(String mostRecentLocateDate) {
+		this.mostRecentLocateDate = mostRecentLocateDate;
+	}
+
+	public double getMostRecentLatitude() {
+		return mostRecentLatitude;
+	}
+
+	public void setMostRecentLatitude(double mostRecentLatitude) {
+		this.mostRecentLatitude = mostRecentLatitude;
+	}
+
+	public double getMostRecentLongitude() {
+		return mostRecentLongitude;
+	}
+
+	public void setMostRecentLongitude(double mostRecentLongitude) {
+		this.mostRecentLongitude = mostRecentLongitude;
+	}
+
+	public String getMostRecentAddress() {
+		return mostRecentAddress;
+	}
+
+	public void setMostRecentAddress(String mostRecentAddress) {
+		this.mostRecentAddress = mostRecentAddress;
+	}
+
+	public String getPreviousLocateDate() {
+		return previousLocateDate;
+	}
+
+	public void setPreviousLocateDate(String previousLocateDate) {
+		this.previousLocateDate = previousLocateDate;
+	}
+
+	public double getPreviousLatitude() {
+		return previousLatitude;
+	}
+
+	public void setPreviousLatitude(double previousLatitude) {
+		this.previousLatitude = previousLatitude;
+	}
+
+	public double getPreviousLongitude() {
+		return previousLongitude;
+	}
+
+	public void setPreviousLongitude(double previousLongitude) {
+		this.previousLongitude = previousLongitude;
+	}
+
+	public String[] getLstExtFeatures() {
+		return lstExtFeatures;
+	}
+
+	public void setLstExtFeatures(String[] lstExtFeatures) {
+		this.lstExtFeatures = lstExtFeatures;
+	}
+
+	public String getVoiceDispatchNumber() {
+		return voiceDispatchNumber;
+	}
+
+	public void setVoiceDispatchNumber(String voiceDispatchNumber) {
+		this.voiceDispatchNumber = voiceDispatchNumber;
+	}
+
+	public String getStaticIP() {
+		return staticIP;
+	}
+
+	public void setStaticIP(String staticIP) {
+		this.staticIP = staticIP;
+	}
 
 	private String lastActivationDate;
 
@@ -139,14 +259,6 @@ public class DeviceInformation {
 		this.accountName = accountName;
 	}
 
-	public String getLstExtFeatures() {
-		return lstExtFeatures;
-	}
-
-	public void setLstExtFeatures(String lstExtFeatures) {
-		this.lstExtFeatures = lstExtFeatures;
-	}
-
 	public String getDailyDataThreshold() {
 		return dailyDataThreshold;
 	}
@@ -203,14 +315,6 @@ public class DeviceInformation {
 		this.dailySMSThreshold = dailySMSThreshold;
 	}
 
-	public String getLstHistoryOverLastYear() {
-		return lstHistoryOverLastYear;
-	}
-
-	public void setLstHistoryOverLastYear(String lstHistoryOverLastYear) {
-		this.lstHistoryOverLastYear = lstHistoryOverLastYear;
-	}
-
 	public ExtendedAttributes getExtendedAttributes() {
 		return extendedAttributes;
 	}
@@ -235,27 +339,83 @@ public class DeviceInformation {
 		this.lastActivationDate = lastActivationDate;
 	}
 
+	public String[] getLstHistoryOverLastYear() {
+		return lstHistoryOverLastYear;
+	}
+
+	public void setLstHistoryOverLastYear(String[] lstHistoryOverLastYear) {
+		this.lstHistoryOverLastYear = lstHistoryOverLastYear;
+	}
+
 	@Override
 	public String toString() {
-		return "ApiAdapatationResponse [lastConnectionDate = "
-				+ lastConnectionDate + ", lstFeatures = " + lstFeatures
-				+ ", futureSMSPlan = " + futureSMSPlan
-				+ ", lastActivationBy = " + lastActivationBy
-				+ ", customFields = " + customFields + ", connected = "
-				+ connected + ", carrierInformations = " + carrierInformations
-				+ ", groupNames = " + groupNames + ", monthlySMSThreshold = "
-				+ monthlySMSThreshold + ", monthlyDataThreshold = "
-				+ monthlyDataThreshold + ", accountName = " + accountName
-				+ ", lstExtFeatures = " + lstExtFeatures
-				+ ", dailyDataThreshold = " + dailyDataThreshold
-				+ ", billingCycleEndDate = " + billingCycleEndDate
-				+ ", createdAt = " + createdAt + ", futureDataPlan = "
-				+ futureDataPlan + ", deviceIds = " + deviceIds
-				+ ", currentSMSPlan = " + currentSMSPlan
-				+ ", dailySMSThreshold = " + dailySMSThreshold
-				+ ", lstHistoryOverLastYear = " + lstHistoryOverLastYear
-				+ ", extendedAttributes = " + extendedAttributes
-				+ ", ipAddress = " + ipAddress + ", lastActivationDate = "
-				+ lastActivationDate + "]";
+		return "DeviceInformation [lastConnectionDate=" + lastConnectionDate
+				+ ", lstFeatures=" + lstFeatures + ", futureSMSPlan="
+				+ futureSMSPlan + ", lastActivationBy=" + lastActivationBy
+				+ ", customFields=" + Arrays.toString(customFields)
+				+ ", connected=" + connected + ", carrierInformations="
+				+ carrierInformations + ", groupNames="
+				+ Arrays.toString(groupNames) + ", monthlySMSThreshold="
+				+ monthlySMSThreshold + ", monthlyDataThreshold="
+				+ monthlyDataThreshold + ", accountName=" + accountName
+				+ ", dailyDataThreshold=" + dailyDataThreshold
+				+ ", billingCycleEndDate=" + billingCycleEndDate
+				+ ", createdAt=" + createdAt + ", futureDataPlan="
+				+ futureDataPlan + ", deviceIds=" + deviceIds
+				+ ", currentSMSPlan=" + currentSMSPlan + ", dailySMSThreshold="
+				+ dailySMSThreshold + ", lstHistoryOverLastYear="
+				+ Arrays.toString(lstHistoryOverLastYear)
+				+ ", extendedAttributes=" + extendedAttributes + ", ipAddress="
+				+ ipAddress + ", staticIP=" + staticIP
+				+ ", voiceDispatchNumber=" + voiceDispatchNumber
+				+ ", mostRecentLocateId=" + mostRecentLocateId
+				+ ", previousLocateId=" + previousLocateId
+				+ ", mostRecentLocateDate=" + mostRecentLocateDate
+				+ ", mostRecentLatitude=" + mostRecentLatitude
+				+ ", mostRecentLongitude=" + mostRecentLongitude
+				+ ", mostRecentAddress=" + mostRecentAddress
+				+ ", previousLocateDate=" + previousLocateDate
+				+ ", previousLatitude=" + previousLatitude
+				+ ", previousLongitude=" + previousLongitude
+				+ ", lstExtFeatures=" + Arrays.toString(lstExtFeatures)
+				+ ", lastActivationDate=" + lastActivationDate
+				+ ", getMostRecentLocateId()=" + getMostRecentLocateId()
+				+ ", getPreviousLocateId()=" + getPreviousLocateId()
+				+ ", getMostRecentLocateDate()=" + getMostRecentLocateDate()
+				+ ", getMostRecentLatitude()=" + getMostRecentLatitude()
+				+ ", getMostRecentLongitude()=" + getMostRecentLongitude()
+				+ ", getMostRecentAddress()=" + getMostRecentAddress()
+				+ ", getPreviousLocateDate()=" + getPreviousLocateDate()
+				+ ", getPreviousLatitude()=" + getPreviousLatitude()
+				+ ", getPreviousLongitude()=" + getPreviousLongitude()
+				+ ", getLstExtFeatures()="
+				+ Arrays.toString(getLstExtFeatures())
+				+ ", getVoiceDispatchNumber()=" + getVoiceDispatchNumber()
+				+ ", getStaticIP()=" + getStaticIP()
+				+ ", getLastConnectionDate()=" + getLastConnectionDate()
+				+ ", getLstFeatures()=" + getLstFeatures()
+				+ ", getFutureSMSPlan()=" + getFutureSMSPlan()
+				+ ", getLastActivationBy()=" + getLastActivationBy()
+				+ ", getCustomFields()=" + Arrays.toString(getCustomFields())
+				+ ", getConnected()=" + getConnected()
+				+ ", getCarrierInformations()=" + getCarrierInformations()
+				+ ", getGroupNames()=" + Arrays.toString(getGroupNames())
+				+ ", getMonthlySMSThreshold()=" + getMonthlySMSThreshold()
+				+ ", getMonthlyDataThreshold()=" + getMonthlyDataThreshold()
+				+ ", getAccountName()=" + getAccountName()
+				+ ", getDailyDataThreshold()=" + getDailyDataThreshold()
+				+ ", getBillingCycleEndDate()=" + getBillingCycleEndDate()
+				+ ", getCreatedAt()=" + getCreatedAt()
+				+ ", getFutureDataPlan()=" + getFutureDataPlan()
+				+ ", getDeviceIds()=" + getDeviceIds()
+				+ ", getCurrentSMSPlan()=" + getCurrentSMSPlan()
+				+ ", getDailySMSThreshold()=" + getDailySMSThreshold()
+				+ ", getExtendedAttributes()=" + getExtendedAttributes()
+				+ ", getIpAddress()=" + getIpAddress()
+				+ ", getLastActivationDate()=" + getLastActivationDate()
+				+ ", getLstHistoryOverLastYear()="
+				+ Arrays.toString(getLstHistoryOverLastYear())
+				+ ", getClass()=" + getClass() + ", hashCode()=" + hashCode()
+				+ ", toString()=" + super.toString() + "]";
 	}
 }

@@ -1,5 +1,7 @@
 package com.gv.midway.dao.impl;
 
+import java.util.Arrays;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +15,13 @@ import com.gv.midway.dao.IDeviceDao;
 import com.gv.midway.pojo.request.Device;
 import com.gv.midway.pojo.request.Devices;
 import com.mongodb.WriteResult;
+
 @Service
 public class DeviceDaoImpl implements IDeviceDao {
-	
-	 private static final Logger logger = LoggerFactory.getLogger(DeviceDaoImpl.class); // Initializing
-	    
+
+	private static final Logger logger = LoggerFactory
+			.getLogger(DeviceDaoImpl.class); // Initializing
+
 	/*
 	 * @Autowired MongoDb grandVictorDB;
 	 */
@@ -26,41 +30,19 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 	public String insertDeviceDetails(Device device) {
 
-		
-		/*
-		 * try { ObjectMapper mapper = new ObjectMapper(); String json =
-		 * mapper.writeValueAsString(device);
-		 * 
-		 * DBObject dbObject = (DBObject) JSON.parse(json); final WriteResult
-		 * writeResult = mongoTemplate.getCollection("Device").insert(dbObject);
-		 * 
-		 * } catch (DuplicateKeyException e) { //
-		 * log.warn("@error> edge already exists");
-		 * 
-		 * return null; }catch(Exception ex) { }
-		 */
-
-		// Simple way using template
 		logger.info("saving in database");
 		mongoTemplate.save(device);
-		//System.out.println(  mongoTemplate.getDb().toString()+"-----"+"----------xcxc-----"+device.toString());
 		return device.getId();
 
 	}
 
 	public String insertDevicesDetailsInBatch(Devices devices) {
 
-		//mongoTemplate.setWriteResultChecking(WriteResultChecking.EXCEPTION);
-	//	mongoTemplate.insertAll(Arrays.asList(devices.getDevices()));
-		throw new NullPointerException();
-		
-		
-		//return null;
+		 mongoTemplate.insertAll(Arrays.asList(devices.getDevices()));
+		return "SUCCESS";
 	}
 
 	public String updateDevicesDetailsInBatch(Devices devices) {
-
-		// mongoTemplate.setWriteResultChecking(WriteResultChecking.EXCEPTION);
 
 		for (Device device : devices.getDevices()) {
 			Query searchUserQuery = new Query(Criteria
@@ -91,7 +73,6 @@ public class DeviceDaoImpl implements IDeviceDao {
 		WriteResult wr = mongoTemplate.updateFirst(searchUserQuery,
 				Update.update("bs_id", device.getBs_id()), Device.class);
 
-	
 		return device.getId();
 
 	}

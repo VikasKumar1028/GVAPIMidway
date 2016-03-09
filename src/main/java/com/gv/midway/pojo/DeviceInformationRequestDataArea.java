@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.gv.midway.pojo.GetDeviceRequest.CustomFields;
 import com.gv.midway.pojo.GetDeviceRequest.DeviceId;
 
-@JsonSerialize(include=JsonSerialize.Inclusion.NON_EMPTY)
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 public class DeviceInformationRequestDataArea {
 	private String groupName;
 
@@ -98,12 +98,11 @@ public class DeviceInformationRequestDataArea {
 
 	@Override
 	public String toString() {
-		return "DeviceInformationRequest [groupName = " + groupName + ", accountName = "
-				+ accountName + ", earliest = " + earliest
+		return "DeviceInformationRequest [groupName = " + groupName
+				+ ", accountName = " + accountName + ", earliest = " + earliest
 				+ ", customFields = " + customFields + ", currentState = "
 				+ currentState + ", servicePlan = " + servicePlan
 				+ ", latest = " + latest + ", deviceNumber = " + deviceNumber
 				+ ", deviceId = " + deviceId + "]";
 	}
 }
-			
