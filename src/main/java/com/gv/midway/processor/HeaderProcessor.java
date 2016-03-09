@@ -10,7 +10,7 @@ public class HeaderProcessor implements Processor {
 
 	Logger log = Logger.getLogger(HeaderProcessor.class.getName());
 
-	
+
 	public void process(Exchange exchange) throws Exception {
 
 		log.info("Start:HeaderProcessor");

@@ -1,11 +1,9 @@
 package com.gv.midway.processor;
 
 import org.apache.camel.Exchange;
+import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
-import com.gv.midway.pojo.DeviceInformation;
-import com.gv.midway.pojo.DeviceInformationResponse;
-import com.gv.midway.pojo.DeviceInformationResponseDataArea;
 
 public class VerizonDeviceInformationProcessor implements Processor {
 
@@ -15,23 +13,25 @@ public class VerizonDeviceInformationProcessor implements Processor {
 	public void process(Exchange exchange) throws Exception {
 
 		log.info("Start:VerizonDeviceInformationProcessor");
-		DeviceInformationResponse deviceInformationResponse = new DeviceInformationResponse();
+		
+		 System.out.println("-----Main Thread--------"+  Thread.currentThread().getName());
+			
+		System.out.println("------IN VERIZON PROCESSOR--------"
+				+ exchange.getIn().getBody());
 
-		DeviceInformationResponseDataArea deviceInformationResponseDataArea = new DeviceInformationResponseDataArea();
+		String json = "{\"accountName\":\"TestAccount-1\"}";
 
-		DeviceInformation deviceInformation = new DeviceInformation();
-		DeviceInformation[] deviceInformationArray = new DeviceInformation[1];
-
-		String[] lstExtFeatures = {};
-		deviceInformation.setLstExtFeatures(lstExtFeatures);
-
-		deviceInformationArray[0] = deviceInformation;
-		deviceInformationResponseDataArea.setDevices(deviceInformationArray);
-
-		deviceInformationResponse
-				.setDataArea(deviceInformationResponseDataArea);
-
-		exchange.getIn().setBody(deviceInformationResponse);
+		exchange.getIn().setBody(json);
+		Message message = exchange.getIn();
+		//message.setHeader("VZ-M2M-Token","1d1f8e7a-c8bb-4f3c-a924-cf612b562425");
+		message.setHeader("VZ-M2M-Token","1d1f8e7a");
+		//message.setHeader("Authorization","Bearer 12");
+		message.setHeader("Authorization","Bearer 89ba225e1438e95bd05c3cc288d3591");
+		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
+		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
+		message.setHeader(Exchange.HTTP_METHOD, "POST");
+		message.setHeader(Exchange.HTTP_PATH, "/devices/actions/list");
+		
 	}
 
 }

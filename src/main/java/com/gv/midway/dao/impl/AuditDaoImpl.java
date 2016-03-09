@@ -19,9 +19,17 @@ public class AuditDaoImpl implements IAuditDao {
 	MongoTemplate mongoTemplate;
 
 	public void auditExternalRequestCall(Exchange exchange) {
+		
+	/*	CamelContext camel =(CamelContext)exchange.getContext();
+		camel.*/
+		
+		 //  HttpServletRequest req = exchange.getIn().getBody(HttpServletRequest.class);
 
 		logger.info("saving in database");
 		// mongoTemplate.save(e);
+		// System.out.println(
+		// mongoTemplate.getDb().toString()+"-----"+"----------xcxc-----"+device.toString());
+		// return device.getId();
 
 	}
 
@@ -29,6 +37,9 @@ public class AuditDaoImpl implements IAuditDao {
 
 		logger.info("saving in database");
 		// mongoTemplate.save(device);
+		// System.out.println(
+		// mongoTemplate.getDb().toString()+"-----"+"----------xcxc-----"+device.toString());
+		// return device.getId();
 
 	}
 

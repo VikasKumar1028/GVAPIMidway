@@ -111,7 +111,7 @@ public class StubKoreDeviceInformationProcessor implements Processor {
 		String[] groupNames = { "null" };
 		deviceInformation.setGroupNames(groupNames);
 
-		deviceInformation.setVoiceDispatchNumber("DispatchNumber Value");
+		deviceInformation.setVoiceDispatchNumber("voiceDispatchNumber");
 		deviceInformation.setMostRecentLocateId(80);
 		deviceInformation.setPreviousLocateId(23);
 		deviceInformation.setMostRecentLocateDate("296913780000-0600");
