@@ -25,8 +25,8 @@ import com.gv.midway.service.IDeviceService;
 
 /**
  * The Camel route
- * 
- * @version
+ *
+ * @version change
  */
 @PropertySource({ "classpath:stub.properties" })
 @Component
@@ -41,23 +41,23 @@ public class CamelRoute extends RouteBuilder {
 
 	private String uriRestVerizonEndPoint = "cxfrs://bean://rsVerizonClient";
 	private String uriRestKoreEndPoint = "cxfrs://bean://rsKoreClient";
-	
+
 	Logger log = Logger.getLogger(CamelRoute.class.getName());
 	@Autowired
 	Environment env;
 
 	@Override
 	public void configure() throws Exception {
-		
-		
+
+
 		 onException(UnknownHostException.class,ConnectException.class)
 		    .routeId("ConnectionExceptionRoute")
 		    .handled(true)
 		    .log(LoggingLevel.ERROR, "Connection Error")
 		    .maximumRedeliveries(2)
 		    .redeliveryDelay(1000).process(new VerizonErrorProcessor());
-		    
-		    
+
+
 		    ;
 		   // .backOffMultiplier(2)
 		   //.useExponentialBackOff()
@@ -79,13 +79,13 @@ public class CamelRoute extends RouteBuilder {
 				.process(new KoreDeviceInformationProcessor()).to("log:input")
 				.when(header("sourceName").isEqualTo("VERIZON"))
 				.process(new VerizonDeviceInformationProcessor())
-				.to(uriRestVerizonEndPoint)				
+				.to(uriRestVerizonEndPoint)
 				.process(new VerizonPostProcessor1())
 				.endChoice().end()
-				
-				
-				
-				
+
+
+
+
 				/*.doCatch(Exception.class)
 				.process(new VerizonPostProcessor()).end().choice()
 				//Failure flow
@@ -95,7 +95,7 @@ public class CamelRoute extends RouteBuilder {
 				// recursive calling
 				.to("direct:deviceInformation")
 				.endChoice()*/
-				
+
 				//.process(new VerizonPostProcessor()).end()
 				.to("log:input").endChoice().end();
 
@@ -104,18 +104,18 @@ public class CamelRoute extends RouteBuilder {
 
 		from("direct:insertDeviceDetails").bean(iDeviceService,
 				"insertDeviceDetails").to("log:input").end();
-		
+
 
 		from("direct:updateDeviceDetails").bean(iDeviceService,
 				"updateDeviceDetails").to("log:input").end();
-		
+
 		from("direct:getDeviceDetails").bean(iDeviceService,
 				"getDeviceDetails").to("log:input").end();
-		
-		
+
+
 		from("direct:getDeviceDetailsBsId").bean(iDeviceService,
 				"getDeviceDetailsBsId").to("log:input").end();
-		
+
 		from("direct:insertDeviceDetailsinBatch").bean(iDeviceService,
 				"insertDevicesDetailsInBatch").to("log:input").end();
 	}
