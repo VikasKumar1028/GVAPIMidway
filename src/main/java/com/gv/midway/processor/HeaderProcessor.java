@@ -4,7 +4,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 
-import com.gv.midway.pojo.DeviceInformationRequest;
+import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
 
 public class HeaderProcessor implements Processor {
 

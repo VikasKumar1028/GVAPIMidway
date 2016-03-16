@@ -3,11 +3,11 @@ package com.gv.midway.controller;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.ProducerTemplate;
 
-import com.gv.midway.pojo.DeviceInformationRequest;
-import com.gv.midway.pojo.DeviceInformationResponse;
+import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
+import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
+import com.gv.midway.device.request.pojo.Device;
+import com.gv.midway.device.request.pojo.Devices;
 
-import com.gv.midway.pojo.request.Device;
-import com.gv.midway.pojo.request.Devices;
 
 @SuppressWarnings("all")
 public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
@@ -24,67 +24,73 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 
 	public Object insertDeviceDetails(Device device) {
 		// TODO Auto-generated method stub
-		
-		System.out.println("device is...."+device.toString());
-		
-		Object response= producer.requestBody("direct:insertDeviceDetails",
+
+		System.out.println("device is...." + device.toString());
+
+		Object response = producer.requestBody("direct:insertDeviceDetails",
 				device);
-		
-		System.out.println(" insertDeviceDetails respsone is ........"+response);
-		
+
+		System.out.println(" insertDeviceDetails respsone is ........"
+				+ response);
+
 		return response;
 	}
 
-	public Object updateDeviceDetails(String id,Device device) {
+	public Object updateDeviceDetails(String id, Device device) {
 		// TODO Auto-generated method stub
-		System.out.println("device id is...."+id);
-		
-		System.out.println("device info to update is...."+device.toString());
-		
-		
-		Object response=producer.requestBodyAndHeader("direct:updateDeviceDetails", device,"id",id);
-		
-		System.out.println("updateDeviceDetails respsone is ........"+response);
-		
+		System.out.println("device id is...." + id);
+
+		System.out.println("device info to update is...." + device.toString());
+
+		Object response = producer.requestBodyAndHeader(
+				"direct:updateDeviceDetails", device, "id", id);
+
+		System.out.println("updateDeviceDetails respsone is ........"
+				+ response);
+
 		return response;
 	}
 
 	public Object getDeviceInfo(String id) {
 		// TODO Auto-generated method stub
-		
-		System.out.println("device id is...."+id);
-		
-        Object response=producer.requestBodyAndHeader("direct:getDeviceDetails",null,"id",id);
-		
-		System.out.println("direct:getDeviceDetails respsone is ........"+response);
-		
+
+		System.out.println("device id is...." + id);
+
+		Object response = producer.requestBodyAndHeader(
+				"direct:getDeviceDetails", null, "id", id);
+
+		System.out.println("direct:getDeviceDetails respsone is ........"
+				+ response);
+
 		return response;
 	}
 
-	
 	public Object getDeviceInfoBsId(String bs_id) {
 		// TODO Auto-generated method stub
-        System.out.println("device bs_id is...."+bs_id);
-		
-        Object response=producer.requestBodyAndHeader("direct:getDeviceDetailsBsId",null,"bs_id",bs_id);
-		
-		System.out.println("direct:getDeviceDetailsBs_Id respsone is ........"+response);
-		
+		System.out.println("device bs_id is...." + bs_id);
+
+		Object response = producer.requestBodyAndHeader(
+				"direct:getDeviceDetailsBsId", null, "bs_id", bs_id);
+
+		System.out.println("direct:getDeviceDetailsBs_Id respsone is ........"
+				+ response);
+
 		return response;
 	}
 
-	
 	public Object insertDevicesDetailsInBatch(Devices devices) {
 		// TODO Auto-generated method stub
-        System.out.println("devices info is...."+devices.toString());
-		
-		Object response= producer.requestBody("direct:insertDeviceDetailsinBatch",
-				devices);
-		
-		System.out.println(" insertDeviceDetails in Batch respsone is ........"+response);
-		
+		System.out.println("devices info is...." + devices.toString());
+
+		Object response = producer.requestBody(
+				"direct:insertDeviceDetailsinBatch", devices);
+
+		System.out.println(" insertDeviceDetails in Batch respsone is ........"
+				+ response);
+
 		return response;
 	}
+
 	public DeviceInformationResponse deviceInformationDevice(
 			DeviceInformationRequest deviceInformationRequest) {
 

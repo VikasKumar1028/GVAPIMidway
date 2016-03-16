@@ -1,7 +1,7 @@
 package com.gv.midway.audit;
 
 import java.util.EventObject;
-//changes
+
 import org.apache.camel.Exchange;
 import org.apache.camel.management.event.ExchangeCreatedEvent;
 //ExchangeSentEvent;
@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.pojo.BaseRequest;
 import com.gv.midway.pojo.audit.Audit;
 
@@ -28,13 +29,19 @@ public class AuditLogRequestEventNotifer extends EventNotifierSupport {
 			Exchange exchange = create.getExchange();
 			logger.info("In Audit log Request");
 
-			if (exchange.getIn().getBody().getClass()
-					.isInstance(BaseRequest.class)) {
+		;
+			ObjectMapper mapper = new ObjectMapper();
+			String jsonInString = mapper.writeValueAsString( exchange.getIn().getBody());
+
+			
+			
+			if (exchange.getIn().getBody() instanceof 
+				BaseRequest) {
 
 				BaseRequest baseRequest = (BaseRequest) exchange.getIn()
 						.getBody();
 				String msgBody = (String) exchange.getIn().getBody().toString();
-
+				
 				long timestamp = System.currentTimeMillis();
 				String TransactionId = Long.toString(timestamp);
 				exchange.setProperty("TransactionId", TransactionId);
@@ -45,7 +52,7 @@ public class AuditLogRequestEventNotifer extends EventNotifierSupport {
 				audit.setApiAction(exchange.getFromEndpoint().toString());
 				audit.setInboundURL(exchange.getFromEndpoint().toString());
 				audit.setTransactionId(TransactionId);
-				audit.setPayload(msgBody);
+				audit.setPayload(jsonInString);
 				mongoTemplate.save(audit);
 
 			}

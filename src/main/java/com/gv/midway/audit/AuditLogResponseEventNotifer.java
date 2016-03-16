@@ -29,8 +29,7 @@ public class AuditLogResponseEventNotifer extends EventNotifierSupport {
 			Exchange exchange = create.getExchange();
 			logger.info("In Audit log Response");
 
-			if (exchange.getIn().getBody().getClass()
-					.isInstance(BaseResponse.class)) {
+			if (exchange.getIn().getBody() instanceof BaseResponse) {
 
 				BaseResponse baseResponse = (BaseResponse) exchange.getIn()
 						.getBody();
@@ -39,7 +38,7 @@ public class AuditLogResponseEventNotifer extends EventNotifierSupport {
 						.getProperty("TransactionId");
 
 				Audit audit = new Audit();
-				audit.setCarrier(baseResponse.getHeader().getBsCarrier());
+			    audit.setCarrier(baseResponse.getHeader().getBsCarrier());
 				audit.setSource(baseResponse.getHeader().getSourceName());
 				audit.setApiAction(exchange.getFromEndpoint().toString());
 				audit.setInboundURL(exchange.getFromEndpoint().toString());

@@ -5,6 +5,8 @@ import java.net.UnknownHostException;
 
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.component.cxf.CxfOperationException;
+import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
@@ -12,21 +14,31 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.gv.midway.constant.IConstant;
+import com.gv.midway.pojo.deviceInformation.kore.KoreDeviceInformationResponse;
+import com.gv.midway.pojo.deviceInformation.verizon.VerizonResponse;
+import com.gv.midway.pojo.token.VerizonAuthorizationResponse;
+import com.gv.midway.pojo.token.VerizonSessionLoginResponse;
 import com.gv.midway.processor.HeaderProcessor;
-import com.gv.midway.processor.KoreDeviceInformationProcessor;
-import com.gv.midway.processor.StubKoreDeviceInformationProcessor;
-import com.gv.midway.processor.StubVerizonDeviceInformationProcessor;
-import com.gv.midway.processor.VerizonDeviceInformationProcessor;
-import com.gv.midway.processor.VerizonErrorProcessor;
-import com.gv.midway.processor.VerizonPostProcessor1;
+import com.gv.midway.processor.GenericErrorProcessor;
+import com.gv.midway.processor.deviceInformation.KoreDeviceInformationPostProcessor;
+import com.gv.midway.processor.deviceInformation.KoreDeviceInformationPreProcessor;
+import com.gv.midway.processor.deviceInformation.StubKoreDeviceInformationProcessor;
+import com.gv.midway.processor.deviceInformation.StubVerizonDeviceInformationProcessor;
+import com.gv.midway.processor.deviceInformation.VerizonDeviceInformationPostProcessor;
+import com.gv.midway.processor.deviceInformation.VerizonDeviceInformationPreProcessor;
+import com.gv.midway.processor.token.VerizonAuthorizationTokenProcessor;
+import com.gv.midway.processor.token.VerizonSessionAttributeProcessor;
+import com.gv.midway.processor.token.VerizonSessionTokenProcessor;
+import com.gv.midway.service.IAuditService;
 import com.gv.midway.service.IDeviceService;
 // this static import is needed for older versions of Camel than 2.5
 // import static org.apache.camel.language.simple.SimpleLanguage.simple;
+import com.gv.midway.service.ISessionService;
 
 /**
  * The Camel route
- *
- * @version change 2
+ * 
+ * @version
  */
 @PropertySource({ "classpath:stub.properties" })
 @Component
@@ -39,7 +51,18 @@ public class CamelRoute extends RouteBuilder {
 	@Autowired
 	private IDeviceService iDeviceService;
 
+	@Autowired
+	private ISessionService iSessionService;
+
+	@Autowired
+	private IAuditService iAuditService;
+
+	/*
+	 * @Autowired private SessionBean sessionBean;
+	 */
+
 	private String uriRestVerizonEndPoint = "cxfrs://bean://rsVerizonClient";
+	private String uriRestVerizonTokenEndPoint = "cxfrs://bean://rsVerizonTokenClient";
 	private String uriRestKoreEndPoint = "cxfrs://bean://rsKoreClient";
 
 	Logger log = Logger.getLogger(CamelRoute.class.getName());
@@ -49,26 +72,37 @@ public class CamelRoute extends RouteBuilder {
 	@Override
 	public void configure() throws Exception {
 
+		onException(UnknownHostException.class, ConnectException.class)
+				.routeId("ConnectionExceptionRoute").handled(true)
+				.log(LoggingLevel.ERROR, "Connection Error")
+				.maximumRedeliveries(3).redeliveryDelay(1000)
+				.process(new GenericErrorProcessor());
 
-		 onException(UnknownHostException.class,ConnectException.class)
-		    .routeId("ConnectionExceptionRoute")
-		    .handled(true)
-		    .log(LoggingLevel.ERROR, "Connection Error")
-		    .maximumRedeliveries(2)
-		    .redeliveryDelay(1000).process(new VerizonErrorProcessor());
+		// from("direct:deviceInformation")
+		onException(CxfOperationException.class)
+				.routeId("ConnectionLoginExceptionRoute").handled(true)
+				.log(LoggingLevel.INFO, "Connection Error")
+				.maximumRedeliveries(1).redeliveryDelay(1000)
+				.bean(iSessionService, "checkToken").choice()
+				.when(body().contains("true"))
+				.log(LoggingLevel.INFO, "MATCH -REFETCHING ")
 
+				.process(new VerizonAuthorizationTokenProcessor())
 
-		    ;
-		   // .backOffMultiplier(2)
-		   //.useExponentialBackOff()
-		   // .maximumRedeliveryDelay(60000)
-		   // .log(LoggingLevel.DEBUG, "Rolling back!")
-		   // .rollback();
+				.to(uriRestVerizonTokenEndPoint).unmarshal()
+				.json(JsonLibrary.Jackson, VerizonAuthorizationResponse.class)
+				.process(new VerizonSessionTokenProcessor())
+				.to(uriRestVerizonTokenEndPoint).unmarshal()
+				.json(JsonLibrary.Jackson, VerizonSessionLoginResponse.class)
+				.process(new VerizonSessionAttributeProcessor())
+				.bean(iSessionService, "setVzToken").endChoice().otherwise()
+				.log(LoggingLevel.INFO, "NOT MATCH").to("log:input").end()
+				.bean(iSessionService, "synchronizeDBContextToken")
+				.process(new VerizonDeviceInformationPostProcessor());
 
-
-		log.info("CamelRoute");
 		from("direct:deviceInformation").process(new HeaderProcessor())
-				.choice().when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
+				.bean(iAuditService, "auditExternalRequestCall").choice()
+				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
 				.choice().when(header("sourceName").isEqualTo("KORE"))
 				.process(new StubKoreDeviceInformationProcessor())
 				.to("log:input")
@@ -76,47 +110,40 @@ public class CamelRoute extends RouteBuilder {
 				.process(new StubVerizonDeviceInformationProcessor())
 				.to("log:input").endChoice().otherwise().choice()
 				.when(header("sourceName").isEqualTo("KORE"))
-				.process(new KoreDeviceInformationProcessor()).to("log:input")
+				.process(new KoreDeviceInformationPreProcessor())
+				.to(uriRestKoreEndPoint)
+				.unmarshal()
+				.json(JsonLibrary.Jackson, KoreDeviceInformationResponse.class)
+				.process(new KoreDeviceInformationPostProcessor()).endChoice()					
 				.when(header("sourceName").isEqualTo("VERIZON"))
-				.process(new VerizonDeviceInformationProcessor())
+				.bean(iSessionService, "setContextTokenInExchange")
+				.process(new VerizonDeviceInformationPreProcessor())
 				.to(uriRestVerizonEndPoint)
-				.process(new VerizonPostProcessor1())
+				.unmarshal()
+				.json(JsonLibrary.Jackson, VerizonResponse.class)
+				.process(new VerizonDeviceInformationPostProcessor())				
 				.endChoice().end()
+				.to("log:input").endChoice().end()
+				.bean(iAuditService, "auditExternalResponseCall");
 
+	
+		from("direct:insertDeviceDetails")
+				.bean(iDeviceService, "insertDeviceDetails").to("log:input")
+				.end();
 
+		from("direct:updateDeviceDetails")
+				.bean(iDeviceService, "updateDeviceDetails").to("log:input")
+				.end();
 
+		from("direct:getDeviceDetails")
+				.bean(iDeviceService, "getDeviceDetails").to("log:input").end();
 
-				/*.doCatch(Exception.class)
-				.process(new VerizonPostProcessor()).end().choice()
-				//Failure flow
-				.when(header("CamelHttpResponseCode").isNotEqualTo("200"))
-				// setting the original message
-				.process(new VerizonPostProcessor1())
-				// recursive calling
-				.to("direct:deviceInformation")
-				.endChoice()*/
+		from("direct:getDeviceDetailsBsId")
+				.bean(iDeviceService, "getDeviceDetailsBsId").to("log:input")
+				.end();
 
-				//.process(new VerizonPostProcessor()).end()
-				.to("log:input").endChoice().end();
-
-		from("direct:Kore").process(new KoreDeviceInformationProcessor())
-				.to(uriRestKoreEndPoint).to("log:input");
-
-		from("direct:insertDeviceDetails").bean(iDeviceService,
-				"insertDeviceDetails").to("log:input").end();
-
-
-		from("direct:updateDeviceDetails").bean(iDeviceService,
-				"updateDeviceDetails").to("log:input").end();
-
-		from("direct:getDeviceDetails").bean(iDeviceService,
-				"getDeviceDetails").to("log:input").end();
-
-
-		from("direct:getDeviceDetailsBsId").bean(iDeviceService,
-				"getDeviceDetailsBsId").to("log:input").end();
-
-		from("direct:insertDeviceDetailsinBatch").bean(iDeviceService,
-				"insertDevicesDetailsInBatch").to("log:input").end();
+		from("direct:insertDeviceDetailsinBatch")
+				.bean(iDeviceService, "insertDevicesDetailsInBatch")
+				.to("log:input").end();
 	}
 }

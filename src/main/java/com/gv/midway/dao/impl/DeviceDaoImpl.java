@@ -9,6 +9,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.CompletionService;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.ExecutorService;
 
 import javax.ws.rs.core.Response;
 
@@ -26,6 +29,8 @@ import com.gv.midway.device.request.pojo.Device;
 import com.gv.midway.device.request.pojo.Devices;
 import com.gv.midway.device.response.pojo.InsertDeviceResponse;
 import com.gv.midway.device.response.pojo.ResponseMessage;
+import com.gv.midway.utility.BatchExecutor;
+import com.gv.midway.utility.BatchTask;
 
 
 
@@ -61,9 +66,9 @@ public class DeviceDaoImpl implements IDeviceDao
 		//System.out.println(  mongoTemplate.getDb().toString()+"-----"+"----------xcxc-----"+device.toString());
 		System.out.println("device data is...."+device.toString());
 		
-	    InsertDeviceResponse insertDeviceResponse= new InsertDeviceResponse();
-	    insertDeviceResponse.setId(device.getId());
-   	    insertDeviceResponse.setMessage("Success ");
+		 InsertDeviceResponse insertDeviceResponse= new InsertDeviceResponse();
+		 insertDeviceResponse.setId(device.getId());
+	   	 insertDeviceResponse.setMessage("Success ");
    	    
    	 return Response.status(200).entity(insertDeviceResponse).build(); 
 
@@ -167,17 +172,9 @@ public class DeviceDaoImpl implements IDeviceDao
 
 	public Object insertDevicesDetailsInBatch(Devices devices) {
 		// TODO Auto-generated method stub
-		List<Device> deviceList=new ArrayList<Device>();
-		Collections.addAll(deviceList, devices.getDevices());
-		try{
-	    mongoTemplate.setWriteResultChecking(WriteResultChecking.EXCEPTION);
-		mongoTemplate.insertAll(deviceList);
-		}
-		catch(Exception e){
-			
-			System.out.println("exeption is......."+e.getMessage());
-		}
-		return null;
+		BatchTask batchTask= new BatchTask(mongoTemplate,"insert" , devices);
+		
+		return batchTask.doBatchJob();
 	}
 
 	/*public String insertDevicesDetailsInBatch(Devices devices) {
