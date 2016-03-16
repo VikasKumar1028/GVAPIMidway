@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.pojo.BaseRequest;
 import com.gv.midway.pojo.audit.Audit;
 
-/* AuditLogRequestEventNotifier
+/* AuditLogRequestEventNotifier Next
 */
 public class AuditLogRequestEventNotifer extends EventNotifierSupport {
 
@@ -35,15 +35,15 @@ public class AuditLogRequestEventNotifer extends EventNotifierSupport {
 			ObjectMapper mapper = new ObjectMapper();
 			String jsonInString = mapper.writeValueAsString( exchange.getIn().getBody());
 
-			
-			
-			if (exchange.getIn().getBody() instanceof 
+
+
+			if (exchange.getIn().getBody() instanceof
 				BaseRequest) {
 
 				BaseRequest baseRequest = (BaseRequest) exchange.getIn()
 						.getBody();
 				String msgBody = (String) exchange.getIn().getBody().toString();
-				
+
 				long timestamp = System.currentTimeMillis();
 				String TransactionId = Long.toString(timestamp);
 				exchange.setProperty("TransactionId", TransactionId);
