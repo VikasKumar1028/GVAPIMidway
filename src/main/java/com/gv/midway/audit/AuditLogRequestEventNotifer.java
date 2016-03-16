@@ -24,7 +24,7 @@ public class AuditLogRequestEventNotifer extends EventNotifierSupport {
 
 	@Autowired
 	MongoTemplate mongoTemplate;
-
+//notify on object creation
 	public void notify(EventObject event) throws Exception {
 		if (event instanceof ExchangeCreatedEvent) {
 			ExchangeCreatedEvent create = (ExchangeCreatedEvent) event;
