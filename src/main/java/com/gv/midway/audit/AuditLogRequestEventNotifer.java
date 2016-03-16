@@ -15,6 +15,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.pojo.BaseRequest;
 import com.gv.midway.pojo.audit.Audit;
 
+/* AuditLogRequestEventNotifier
+*/
 public class AuditLogRequestEventNotifer extends EventNotifierSupport {
 
 	private static final Logger logger = LoggerFactory
