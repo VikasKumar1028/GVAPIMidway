@@ -6,13 +6,13 @@ import org.apache.log4j.Logger;
 
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.ResponseHeader;
-import com.gv.midway.pojo.deviceInformation.response.CarrierInformations;
-import com.gv.midway.pojo.deviceInformation.response.CustomFields;
-import com.gv.midway.pojo.deviceInformation.response.DeviceIds;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponseDataArea;
-import com.gv.midway.pojo.deviceInformation.response.ExtendedAttributes;
+import com.gv.midway.pojo.deviceInformation.verizon.CarrierInformations;
+import com.gv.midway.pojo.deviceInformation.verizon.CustomFields;
+import com.gv.midway.pojo.deviceInformation.verizon.DeviceIds;
+import com.gv.midway.pojo.deviceInformation.verizon.ExtendedAttributes;
 
 public class StubVerizonDeviceInformationProcessor implements Processor {
 
@@ -107,11 +107,12 @@ public class StubVerizonDeviceInformationProcessor implements Processor {
 		DeviceIds[] deviceIdsArray = { deviceIds, deviceIds1, deviceIds2 };
 		deviceInformation.setDeviceIds(deviceIdsArray);
 
-		ExtendedAttributes extendedAttributes = new ExtendedAttributes();
-		extendedAttributes.setKey1("SkuNumber");
-		extendedAttributes.setKey2("CostCenterCode");
-		extendedAttributes.setKey3("PreIMEI");
-		extendedAttributes.setKey4("PreSKU");
+		ExtendedAttributes[] extendedAttributes = new ExtendedAttributes[4];
+
+		extendedAttributes[0] = new ExtendedAttributes("key1", "SkuNumber");
+		extendedAttributes[1] = new ExtendedAttributes("key2", "CostCenterCode");
+		extendedAttributes[2] = new ExtendedAttributes("key3", "PreIMEI");
+		extendedAttributes[3] = new ExtendedAttributes("key4", "PreSKU");
 
 		deviceInformation.setExtendedAttributes(extendedAttributes);
 
@@ -121,7 +122,7 @@ public class StubVerizonDeviceInformationProcessor implements Processor {
 		 * lstFeatures.setFEAT000603("null");
 		 */
 
-		String[] lstFeatures = { "null"};
+		String[] lstFeatures = { "null" };
 
 		deviceInformation.setLstFeatures(lstFeatures);
 
@@ -168,8 +169,6 @@ public class StubVerizonDeviceInformationProcessor implements Processor {
 		deviceInformation.setPreviousLocateDate("null");
 		deviceInformation.setPreviousLatitude("null");
 		deviceInformation.setPreviousLongitude("0000");
-		
-				
 
 		String[] lstExtFeatures = { null };
 		deviceInformation.setLstExtFeatures(lstExtFeatures);

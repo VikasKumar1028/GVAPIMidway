@@ -4,6 +4,18 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ExtendedAttributes {
+	
+	public ExtendedAttributes(String key, String value) {
+		//super();
+		this.key = key;
+		this.value = value;
+	}
+
+	
+	public ExtendedAttributes() {
+
+	}
+
 	private String key;
 	public String getValue() {
 		return value;

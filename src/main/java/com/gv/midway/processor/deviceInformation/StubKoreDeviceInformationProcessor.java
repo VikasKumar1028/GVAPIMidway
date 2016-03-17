@@ -6,13 +6,13 @@ import org.apache.log4j.Logger;
 
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.ResponseHeader;
-import com.gv.midway.pojo.deviceInformation.response.CarrierInformations;
-import com.gv.midway.pojo.deviceInformation.response.CustomFields;
-import com.gv.midway.pojo.deviceInformation.response.DeviceIds;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponseDataArea;
-import com.gv.midway.pojo.deviceInformation.response.ExtendedAttributes;
+import com.gv.midway.pojo.deviceInformation.verizon.CarrierInformations;
+import com.gv.midway.pojo.deviceInformation.verizon.CustomFields;
+import com.gv.midway.pojo.deviceInformation.verizon.DeviceIds;
+import com.gv.midway.pojo.deviceInformation.verizon.ExtendedAttributes;
 
 public class StubKoreDeviceInformationProcessor implements Processor {
 
@@ -91,11 +91,14 @@ public class StubKoreDeviceInformationProcessor implements Processor {
 
 		deviceInformation.setDeviceIds(deviceIdsArray);
 
-		ExtendedAttributes extendedAttributes = new ExtendedAttributes();
-		extendedAttributes.setKey1("null");
-		extendedAttributes.setKey2("null");
-		extendedAttributes.setKey3("null");
-		extendedAttributes.setKey4("null");
+		ExtendedAttributes[] extendedAttributes = new ExtendedAttributes[4];
+		
+		new ExtendedAttributes("key1","null");
+		extendedAttributes[0]=new ExtendedAttributes("key1","null");
+		extendedAttributes[1]=new ExtendedAttributes("key2","null");
+		extendedAttributes[2]=new ExtendedAttributes("key3","null");
+		extendedAttributes[3]=new ExtendedAttributes("key4","null");
+
 
 		deviceInformation.setExtendedAttributes(extendedAttributes);
 

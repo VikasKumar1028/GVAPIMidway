@@ -7,6 +7,10 @@ public class CarrierInformations {
 	private String state;
 
 	private String servicePlan;
+	
+	private String currentDataPlan;
+	
+	private String status;
 
 	private String carrierName;
 
@@ -38,6 +42,22 @@ public class CarrierInformations {
 	public String toString() {
 		return "ClassPojo [state = " + state + ", servicePlan = " + servicePlan
 				+ ", carrierName = " + carrierName + "]";
+	}
+
+	public String getCurrentDataPlan() {
+		return currentDataPlan;
+	}
+
+	public void setCurrentDataPlan(String currentDataPlan) {
+		this.currentDataPlan = currentDataPlan;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 }

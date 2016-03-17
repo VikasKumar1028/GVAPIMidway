@@ -3,6 +3,10 @@ package com.gv.midway.pojo.deviceInformation.response;
 import java.util.Arrays;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.gv.midway.pojo.deviceInformation.verizon.CarrierInformations;
+import com.gv.midway.pojo.deviceInformation.verizon.CustomFields;
+import com.gv.midway.pojo.deviceInformation.verizon.DeviceIds;
+import com.gv.midway.pojo.deviceInformation.verizon.ExtendedAttributes;
 
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 public class DeviceInformation {
@@ -13,9 +17,35 @@ public class DeviceInformation {
 
 	private String lastConnectionDate;
 
-	// private LstFeatures lstFeatures;
-	// added by Sadhana
 	private String[] lstFeatures;
+	
+    public String getCurrentDataPlan() {
+		return currentDataPlan;
+	}
+
+	public void setCurrentDataPlan(String currentDataPlan) {
+		this.currentDataPlan = currentDataPlan;
+	}
+
+	public String getIMSIOrMIN() {
+		return IMSIOrMIN;
+	}
+
+	public void setIMSIOrMIN(String iMSIOrMIN) {
+		IMSIOrMIN = iMSIOrMIN;
+	}
+
+	public String getMSISDNOrMDN() {
+		return MSISDNOrMDN;
+	}
+
+	public void setMSISDNOrMDN(String mSISDNOrMDN) {
+		MSISDNOrMDN = mSISDNOrMDN;
+	}
+
+	private String currentDataPlan;
+    private String IMSIOrMIN;
+    private String MSISDNOrMDN;
 
 	public String[] getLstFeatures() {
 		return lstFeatures;
@@ -80,6 +110,8 @@ public class DeviceInformation {
 	private String customField5;
 	private String customField6;
 
+	private CustomFields[] customFields;
+	
 	public String getPreviousAddress() {
 		return previousAddress;
 	}
@@ -93,7 +125,7 @@ public class DeviceInformation {
 
 	private String lastActivationBy;
 
-	private CustomFields[] customFields;
+	
 
 	private String connected;
 
@@ -133,7 +165,7 @@ public class DeviceInformation {
 
 	private String[] lstHistoryOverLastYear;
 
-	private ExtendedAttributes extendedAttributes;
+	private ExtendedAttributes[] extendedAttributes;
 
 	private String ipAddress;
 
@@ -402,11 +434,11 @@ public class DeviceInformation {
 		this.dailySMSThreshold = dailySMSThreshold;
 	}
 
-	public ExtendedAttributes getExtendedAttributes() {
+	public ExtendedAttributes[] getExtendedAttributes() {
 		return extendedAttributes;
 	}
 
-	public void setExtendedAttributes(ExtendedAttributes extendedAttributes) {
+	public void setExtendedAttributes(ExtendedAttributes[] extendedAttributes) {
 		this.extendedAttributes = extendedAttributes;
 	}
 

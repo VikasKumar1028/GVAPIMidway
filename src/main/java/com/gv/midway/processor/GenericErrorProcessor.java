@@ -1,49 +1,58 @@
 package com.gv.midway.processor;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.apache.camel.Exchange;
-import org.apache.camel.Message;
 import org.apache.camel.Processor;
 
+import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.ResponseHeader;
-import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
-import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponseDataArea;
 
 public class GenericErrorProcessor implements Processor {
-	
 
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.apache.camel.Processor#process(org.apache.camel.Exchange)
-	 */
 	public void process(Exchange exchange) throws Exception {
-	
-		
-		DeviceInformationResponse deviceInformationResponse = new DeviceInformationResponse();
-
-		DeviceInformationResponseDataArea deviceInformationResponseDataArea = new DeviceInformationResponseDataArea();
-
-		DeviceInformation deviceInformation = new DeviceInformation();
-		DeviceInformation[] deviceInformationArray = new DeviceInformation[1];
 
 		ResponseHeader responseheader = new ResponseHeader();
-
 		Response response = new Response();
-		response.setResponseCode("300");
-		response.setResponseDescription("Device Information is fetched Failed");
-		response.setResponseStatus("FAILED");
-		
-		deviceInformationResponse.setHeader(responseheader);
-		deviceInformationResponse.setResponse(response);
+		responseheader.setApplicationName("Midway");
+		responseheader.setRegion("USA");
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Date date = new Date();
+
+		responseheader.setTimestamp(dateFormat.format(date));
+		responseheader.setOrganization("Grant Victor");
+		responseheader.setSourceName(exchange.getIn().getHeader("sourceName")
+				.toString());
 
 		
-
+		if(exchange.getProperty(IConstant.RESPONSE_CODE)!=null)
+		{
+			
+			response.setResponseCode(exchange.getProperty(IConstant.RESPONSE_CODE).toString());
+			response.setResponseStatus(exchange.getProperty(IConstant.RESPONSE_STATUS).toString());
+			response.setResponseDescription(exchange.getProperty(IConstant.RESPONSE_DESCRIPTION).toString());
+		}else{
 		
-		System.out.println("------------ERROR------------"+ exchange.getUnitOfWork().getOriginalInMessage().toString());
-	
-		exchange.getIn().setBody(deviceInformationResponse);
+		response.setResponseCode("Conenction Error");
+		response.setResponseStatus("Conenction Error");
+		response.setResponseDescription("Conenction Error");
+		}
+		
+		String TransactionId = (String) exchange.getProperty("TransactionId");
+		responseheader.setTransactionId(TransactionId);
+
+		if ("Endpoint[direct://deviceInformation]".equals(exchange
+				.getFromEndpoint().toString())) {
+
+			DeviceInformationResponse deviceInformationResponse = new DeviceInformationResponse();
+			deviceInformationResponse.setHeader(responseheader);
+			deviceInformationResponse.setResponse(response);
+			exchange.getIn().setBody(deviceInformationResponse);
+
+		}
 	}
 }

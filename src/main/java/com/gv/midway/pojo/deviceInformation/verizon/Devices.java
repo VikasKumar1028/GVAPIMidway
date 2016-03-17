@@ -1,7 +1,6 @@
 package com.gv.midway.pojo.deviceInformation.verizon;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.gv.midway.pojo.deviceInformation.verizon.DeviceIds;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Devices {
@@ -27,8 +26,17 @@ public class Devices {
 	private String lastActivationDate;
 
 	private String ipAddress;
+	
+	private CustomFields[] customFields;
 
-	//added
+	public CustomFields[] getCustomFields() {
+		return customFields;
+	}
+
+	public void setCustomFields(CustomFields[] customFields) {
+		this.customFields = customFields;
+	}
+
 	private String lastConnectionDate;
 
 	public String getLastConnectionDate() {

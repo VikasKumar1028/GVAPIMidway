@@ -1,8 +1,8 @@
 package com.gv.midway.pojo.deviceInformation.request;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.gv.midway.pojo.deviceInformation.request.CustomFields;
-import com.gv.midway.pojo.deviceInformation.request.DeviceId;
+import com.gv.midway.device.response.pojo.DeviceId;
+import com.gv.midway.pojo.deviceInformation.verizon.CustomFields;
 
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 public class DeviceInformationRequestDataArea {
