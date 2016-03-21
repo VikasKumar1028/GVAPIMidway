@@ -6,7 +6,11 @@ import java.util.Date;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
+import org.apache.log4j.Logger;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 
+import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.ResponseHeader;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
@@ -15,14 +19,29 @@ import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponseDa
 import com.gv.midway.pojo.deviceInformation.verizon.CarrierInformations;
 import com.gv.midway.pojo.deviceInformation.verizon.CustomFields;
 import com.gv.midway.pojo.deviceInformation.verizon.DeviceIds;
-import com.gv.midway.pojo.deviceInformation.verizon.ExtendedAttributes;
-//import com.gv.midway.pojo.deviceInformation.verizon.CustomFields;
 import com.gv.midway.pojo.deviceInformation.verizon.VerizonResponse;
 
+@Component
 public class VerizonDeviceInformationPostProcessor implements Processor {
 
 	static int i = 0;
 
+	Logger log = Logger.getLogger(VerizonDeviceInformationPostProcessor.class
+			.getName());
+
+	
+
+
+    Environment newEnv;
+
+	public VerizonDeviceInformationPostProcessor(Environment env) {
+		super();
+		this.newEnv=env;
+		
+	}
+	public VerizonDeviceInformationPostProcessor() {
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -30,23 +49,42 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 	 */
 	public void process(Exchange exchange) throws Exception {
 
-		// VerizonResponse verizonResponse=new VerizonResponse();
-
-		System.out.println("VerizonPostProcessor1");
+		log.info("Start:VerizonDeviceInformationPostProcessor");
 
 		VerizonResponse verizonResponse = exchange.getIn().getBody(
 				VerizonResponse.class);
 
 		int getDevicelenth = verizonResponse.getDevices().length;
 
-		System.out.println("getDevicelenth::" + getDevicelenth);
+		log.info("getDevicelenth::" + getDevicelenth);
 
 		DeviceInformationResponse deviceInformationResponse = new DeviceInformationResponse();
 
 		DeviceInformation[] deviceInformationArray = new DeviceInformation[getDevicelenth];
 
-		System.out.println("deviceInformationArray"
-				+ deviceInformationArray.length);
+		log.info("deviceInformationArray::" + deviceInformationArray.length);
+
+		ResponseHeader responseheader = new ResponseHeader();
+
+		Response response = new Response();
+		response.setResponseCode(newEnv.getProperty(IConstant.RESPONSES_CODE));
+		response.setResponseStatus(newEnv.getProperty(IConstant.RESPONSE_STATUS_SUCCESS));
+
+		responseheader.setApplicationName(newEnv.getProperty(IConstant.APPLICATION_NAME));
+		responseheader.setRegion(newEnv.getProperty(IConstant.REGION));
+		DateFormat dateFormat = new SimpleDateFormat(newEnv.getProperty(IConstant.DATE_FORMAT));
+		Date date = new Date();
+
+		responseheader.setTimestamp(dateFormat.format(date));
+		responseheader.setOrganization(newEnv.getProperty(IConstant.ORGANIZATION));
+		responseheader.setSourceName(newEnv.getProperty(IConstant.SOURCE_NAME_VERIZON));
+		String TransactionId = (String) exchange.getProperty(newEnv.getProperty(IConstant.EXCHANEGE_PROPERTY));
+		responseheader.setTransactionId(TransactionId);
+
+		responseheader.setBsCarrier(newEnv.getProperty(IConstant.BSCARRIER_VERIZON));
+		deviceInformationResponse.setHeader(responseheader);
+		deviceInformationResponse.setResponse(response);
+
 		for (int i = 0; i < getDevicelenth; i++) {
 			DeviceInformation deviceInformation = new DeviceInformation();
 
@@ -78,17 +116,16 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 								.getCarrierInformations()[j].getCarrierName());
 				carrierInformations.setState(verizonResponse.getDevices()[i]
 						.getCarrierInformations()[j].getState());
-				carrierInformations.setServicePlan(verizonResponse
-						.getDevices()[i].getCarrierInformations()[j]
-						.getServicePlan());
+				carrierInformations
+						.setServicePlan(verizonResponse.getDevices()[i]
+								.getCarrierInformations()[j].getServicePlan());
 			}
 
 			deviceInformation.setCarrierInformations(carrierInformations);
-	
 
+			deviceInformation.setExtendedAttributes(verizonResponse
+					.getDevices()[i].getExtendedAttributes());
 
-			deviceInformation.setExtendedAttributes(verizonResponse.getDevices()[i].getExtendedAttributes());
-			
 			deviceInformation.setLastConnectionDate(verizonResponse
 					.getDevices()[i].getLastConnectionDate());
 
@@ -138,27 +175,6 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 
 		deviceInformationResponse
 				.setDataArea(deviceInformationResponseDataArea);
-		ResponseHeader responseheader = new ResponseHeader();
-
-		Response response = new Response();
-		response.setResponseCode("200");
-		response.setResponseStatus("SUCCESS");
-
-		responseheader.setApplicationName("Midway");
-		responseheader.setRegion("USA");
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		Date date = new Date();
-		
-		responseheader.setTimestamp(dateFormat.format(date));
-		responseheader.setOrganization("Grant Victor");
-		responseheader.setSourceName("VERIZON");
-		String TransactionId = (String) exchange
-				.getProperty("TransactionId");
-		responseheader.setTransactionId(TransactionId);
-
-		responseheader.setBsCarrier("VERIZON");
-		deviceInformationResponse.setHeader(responseheader);
-		deviceInformationResponse.setResponse(response);
 
 		exchange.getIn().setBody(deviceInformationResponse);
 

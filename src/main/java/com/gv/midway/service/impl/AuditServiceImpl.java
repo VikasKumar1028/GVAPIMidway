@@ -29,4 +29,10 @@ public class AuditServiceImpl implements IAuditService {
 		iAuditDao.auditExternalResponseCall(exchange);
 	}
 
+	
+	public void auditExternalExceptionResponseCall(Exchange exchange){
+		
+		log.info("AuditServiceImpl-auditExternalExceptionResponseCall");
+		iAuditDao.auditExternalExceptionResponseCall(exchange);
+	}
 }

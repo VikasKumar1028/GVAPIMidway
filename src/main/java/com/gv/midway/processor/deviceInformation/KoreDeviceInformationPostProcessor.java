@@ -7,7 +7,9 @@ import java.util.Date;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
+import org.springframework.core.env.Environment;
 
+import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.ResponseHeader;
 import com.gv.midway.pojo.deviceInformation.kore.KoreDeviceInformationResponse;
@@ -20,13 +22,25 @@ public class KoreDeviceInformationPostProcessor implements Processor {
 	Logger log = Logger.getLogger(KoreDeviceInformationPostProcessor.class
 			.getName());
 
-	public void process(Exchange exchange) throws Exception {
+	
+	Environment newEnv;
+	
+	public KoreDeviceInformationPostProcessor(Environment env) {
+		super();
+		this.newEnv=env;
+		}
 
+	public KoreDeviceInformationPostProcessor() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public void process(Exchange exchange) throws Exception {
+		
+		log.info("Start:KoreDeviceInformationPostProcessor");
 		KoreDeviceInformationResponse koreDeviceInformationResponse = (KoreDeviceInformationResponse) exchange
 				.getIn().getBody();
 		log.info("----exchange_Body- Post Processor----------"
 				+ koreDeviceInformationResponse.toString());
-		
 
 		DeviceInformationResponse deviceInformationResponse = new DeviceInformationResponse();
 
@@ -38,22 +52,22 @@ public class KoreDeviceInformationPostProcessor implements Processor {
 		ResponseHeader responseheader = new ResponseHeader();
 
 		Response response = new Response();
-		response.setResponseCode("200");
+		
+		response.setResponseCode(newEnv.getProperty(IConstant.RESPONSES_CODE));
 		response.setResponseStatus(koreDeviceInformationResponse.getD()
 				.getStatus());
 
-		responseheader.setApplicationName("Midway");
-		responseheader.setRegion("USA");
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		responseheader.setApplicationName(newEnv.getProperty(IConstant.APPLICATION_NAME));
+		responseheader.setRegion(newEnv.getProperty(IConstant.REGION));
+		DateFormat dateFormat = new SimpleDateFormat(newEnv.getProperty(IConstant.DATE_FORMAT));
 		Date date = new Date();
-		
+
 		responseheader.setTimestamp(dateFormat.format(date));
-		responseheader.setOrganization("Grant Victor");
-		responseheader.setSourceName("KORE");
-		String TransactionId = (String) exchange
-				.getProperty("TransactionId");
+		responseheader.setOrganization(newEnv.getProperty(IConstant.ORGANIZATION));
+		responseheader.setSourceName(newEnv.getProperty(IConstant.SOURCE_NAME_KORE));
+		String TransactionId = (String) exchange.getProperty(newEnv.getProperty(IConstant.EXCHANEGE_PROPERTY));
 		responseheader.setTransactionId(TransactionId);
-		responseheader.setBsCarrier("KORE");
+		responseheader.setBsCarrier(newEnv.getProperty(IConstant.BSCARRIER_KORE));
 
 		deviceInformationResponse.setHeader(responseheader);
 		deviceInformationResponse.setResponse(response);
@@ -127,5 +141,7 @@ public class KoreDeviceInformationPostProcessor implements Processor {
 				.setDataArea(deviceInformationResponseDataArea);
 
 		exchange.getIn().setBody(deviceInformationResponse);
+		log.info("end:KoreDeviceInformationPostProcessor");
 	}
+
 }

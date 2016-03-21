@@ -6,6 +6,8 @@ import java.util.Date;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.Response;
@@ -14,17 +16,34 @@ import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 
 public class GenericErrorProcessor implements Processor {
 
+	
+	
+	 Environment newEnv;
+
+		
+	public GenericErrorProcessor(Environment env) {
+		super();
+		this.newEnv=env;
+		
+		}
+
+	
+	public GenericErrorProcessor() {
+		// TODO Auto-generated constructor stub
+	}
+
+
 	public void process(Exchange exchange) throws Exception {
 
 		ResponseHeader responseheader = new ResponseHeader();
 		Response response = new Response();
-		responseheader.setApplicationName("Midway");
-		responseheader.setRegion("USA");
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		responseheader.setApplicationName(newEnv.getProperty(IConstant.APPLICATION_NAME));
+		responseheader.setRegion(newEnv.getProperty(IConstant.REGION));
+		DateFormat dateFormat = new SimpleDateFormat(newEnv.getProperty(IConstant.DATE_FORMAT));
 		Date date = new Date();
 
 		responseheader.setTimestamp(dateFormat.format(date));
-		responseheader.setOrganization("Grant Victor");
+		responseheader.setOrganization(newEnv.getProperty(IConstant.ORGANIZATION));
 		responseheader.setSourceName(exchange.getIn().getHeader("sourceName")
 				.toString());
 
@@ -42,7 +61,7 @@ public class GenericErrorProcessor implements Processor {
 		response.setResponseDescription("Conenction Error");
 		}
 		
-		String TransactionId = (String) exchange.getProperty("TransactionId");
+		String TransactionId = (String) exchange.getProperty(newEnv.getProperty(IConstant.EXCHANEGE_PROPERTY));
 		responseheader.setTransactionId(TransactionId);
 
 		if ("Endpoint[direct://deviceInformation]".equals(exchange

@@ -43,7 +43,7 @@ import com.gv.midway.service.ISessionService;
  * 
  * @version
  */
-@PropertySource({ "classpath:stub.properties" })
+@PropertySource({ "classpath:stub.properties" ,"classpath:midway.properties"})
 @Component
 public class CamelRoute extends RouteBuilder {
 
@@ -69,93 +69,97 @@ public class CamelRoute extends RouteBuilder {
 	private String uriRestKoreEndPoint = "cxfrs://bean://rsKoreClient";
 
 	Logger log = Logger.getLogger(CamelRoute.class.getName());
+
 	@Autowired
 	Environment env;
 
 	@Override
 	public void configure() throws Exception {
 
+		System.out.println("Source Name is...."
+				+ (env.getProperty(IConstant.SOURCE_NAME_KORE)));
+
 		onException(UnknownHostException.class, ConnectException.class)
 				.routeId("ConnectionExceptionRoute").handled(true)
 				.log(LoggingLevel.ERROR, "Connection Error")
 				.maximumRedeliveries(3).redeliveryDelay(1000)
-				.process(new GenericErrorProcessor());
+				.process(new GenericErrorProcessor(env));
 
-		
 		onException(VerizonSessionTokenExpirationException.class)
 				.routeId("ConnectionLoginExceptionRoute").handled(true)
 				.log(LoggingLevel.INFO, "Connection Error")
 				.maximumRedeliveries(1).redeliveryDelay(1000)
-				.bean(iSessionService, "checkToken").
-				choice()
-					.when(body().contains("true"))
-					.log(LoggingLevel.INFO, "MATCH -REFETCHING ")
-					.process(new VerizonAuthorizationTokenProcessor())
-					.to(uriRestVerizonTokenEndPoint).unmarshal()
-					.json(JsonLibrary.Jackson, VerizonAuthorizationResponse.class)
-					.process(new VerizonSessionTokenProcessor())
-					.to(uriRestVerizonTokenEndPoint).unmarshal()
-					.json(JsonLibrary.Jackson, VerizonSessionLoginResponse.class)
-					.process(new VerizonSessionAttributeProcessor())
-					.bean(iSessionService, "setVzToken"). // saved this token in the DB
-				endChoice().
-				otherwise()
-					.log(LoggingLevel.INFO, "NOT MATCH").
-					to("log:input").
-				end()
-				.bean(iSessionService, "synchronizeDBContextToken") // sync DB and session token in the ServletContext				
-				.process(new GenericErrorProcessor());//The control will come to this processor when all attempts have been failed
-		
-		
+				.bean(iSessionService, "checkToken").choice()
+				.when(body().contains("true"))
+				.log(LoggingLevel.INFO, "MATCH -REFETCHING ")
+				.process(new VerizonAuthorizationTokenProcessor())
+				.to(uriRestVerizonTokenEndPoint).unmarshal()
+				.json(JsonLibrary.Jackson, VerizonAuthorizationResponse.class)
+				.process(new VerizonSessionTokenProcessor())
+				.to(uriRestVerizonTokenEndPoint)
+				.unmarshal()
+				.json(JsonLibrary.Jackson, VerizonSessionLoginResponse.class)
+				.process(new VerizonSessionAttributeProcessor())
+				.bean(iSessionService, "setVzToken")
+				. // saved this token in the DB
+				endChoice().otherwise().log(LoggingLevel.INFO, "NOT MATCH")
+				.to("log:input").end()
+				// sync DB and	 session token in	 the	 ServletContext
+				.bean(iSessionService, "synchronizeDBContextToken") 				
+				// The control will come to this processor when all attempts have been failed
+				.process(new GenericErrorProcessor(env)); 
 
 		from("direct:deviceInformation").process(new HeaderProcessor())
-				.bean(iAuditService, "auditExternalRequestCall")
 				.choice()
-				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
-					.choice()
-						.when(header("sourceName").isEqualTo("KORE"))
-							.process(new StubKoreDeviceInformationProcessor())
-							.to("log:input")
-						.when(header("sourceName").isEqualTo("VERIZON"))
-							.process(new StubVerizonDeviceInformationProcessor())
-							.to("log:input")				
-					.endChoice()				
-				.otherwise()
-				.choice()
-					.when(header("sourceName").isEqualTo("KORE"))
-					
-							.doTry()
-									.process(new KoreDeviceInformationPreProcessor())
-									.to(uriRestKoreEndPoint)
-									.unmarshal()
-									.json(JsonLibrary.Jackson,KoreDeviceInformationResponse.class)
-									.process(new KoreDeviceInformationPostProcessor())
-							.doCatch(CxfOperationException.class)
-									.process(new KoreGenericExceptionProcessor())							
-							.endDoTry()	
-							
-					.endChoice()
-					
-					.when(header("sourceName").isEqualTo("VERIZON"))
-					
-						.doTry()
-							.bean(iSessionService, "setContextTokenInExchange")
-							.process(new VerizonDeviceInformationPreProcessor())
-							.to(uriRestVerizonEndPoint)
-							.unmarshal()
-							.json(JsonLibrary.Jackson, VerizonResponse.class)
-							.process(new VerizonDeviceInformationPostProcessor())
-						.doCatch(CxfOperationException.class)
-									.process(new VerizonGenericExceptionProcessor())						
-						.endDoTry()	
+					.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
+						.choice()
+							.when(header("sourceName").isEqualTo("KORE"))
+									.process(new StubKoreDeviceInformationProcessor())
+									.to("log:input")
+							.when(header("sourceName").isEqualTo("VERIZON"))
+									.process(new StubVerizonDeviceInformationProcessor())
+									.to("log:input").endChoice()
+					.otherwise()
+						.choice()
 						
-					.endChoice()					
-				.end()
-				
-				.to("log:input").endChoice().end()
-				.bean(iAuditService, "auditExternalResponseCall");
-
+							.when(header("sourceName").isEqualTo("KORE"))
+										.doTry()
+											.process(new KoreDeviceInformationPreProcessor())
+											.bean(iAuditService, "auditExternalRequestCall")
+											.to(uriRestKoreEndPoint)
+											.unmarshal()
+											.json(JsonLibrary.Jackson, KoreDeviceInformationResponse.class)
+											.bean(iAuditService, "auditExternalResponseCall")
+											.process(new KoreDeviceInformationPostProcessor(env))
+										.doCatch(CxfOperationException.class)
+											.bean(iAuditService, "auditExternalExceptionResponseCall")
+											.process(new KoreGenericExceptionProcessor(env))
+										.endDoTry()
 	
+							.endChoice()
+	
+							.when(header("sourceName").isEqualTo("VERIZON"))
+									.doTry()
+										.bean(iSessionService, "setContextTokenInExchange")
+										.process(new VerizonDeviceInformationPreProcessor())
+										.bean(iAuditService, "auditExternalRequestCall")
+										.to(uriRestVerizonEndPoint)
+										.unmarshal()
+										.json(JsonLibrary.Jackson, VerizonResponse.class)
+										.bean(iAuditService, "auditExternalResponseCall")
+										.process(new VerizonDeviceInformationPostProcessor(env))
+									.doCatch(CxfOperationException.class)
+										.bean(iAuditService, "auditExternalExceptionResponseCall")
+										.process(new VerizonGenericExceptionProcessor(env))
+									.endDoTry()
+	
+							.endChoice()
+							.end()
+	
+					.to("log:input")
+				.endChoice()
+				.end();
+
 		from("direct:insertDeviceDetails")
 				.bean(iDeviceService, "insertDeviceDetails").to("log:input")
 				.end();

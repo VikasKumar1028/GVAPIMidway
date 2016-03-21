@@ -29,7 +29,7 @@ public class AuditLogRequestEventNotifer extends EventNotifierSupport {
 			Exchange exchange = create.getExchange();
 			logger.info("In Audit log Request");
 
-		;
+	
 			ObjectMapper mapper = new ObjectMapper();
 			String jsonInString = mapper.writeValueAsString( exchange.getIn().getBody());
 
@@ -37,7 +37,7 @@ public class AuditLogRequestEventNotifer extends EventNotifierSupport {
 			
 			if (exchange.getIn().getBody() instanceof 
 				BaseRequest) {
-
+				logger.info("In Audit log Request1");
 				BaseRequest baseRequest = (BaseRequest) exchange.getIn()
 						.getBody();
 				String msgBody = (String) exchange.getIn().getBody().toString();
