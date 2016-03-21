@@ -26,10 +26,10 @@ public class VerizonDeviceInformationPreProcessor implements Processor {
 
 		DeviceInformationRequest req = (DeviceInformationRequest) exchange
 				.getIn().getBody();
-		String accountName =req.getDataArea().getAccountName();
-		log.info("Account Number"+req.getDataArea().getAccountName());
+		/*String accountName =req.getDataArea().getAccountName();
+		log.info("Account Number"+req.getDataArea().getAccountName());*/
 		net.sf.json.JSONObject obj = new net.sf.json.JSONObject();
-		obj.put("accountName", accountName);
+		obj.put("req", req);
 /*
 		System.out.println("req.getDataArea()" + req.getDataArea());
 		String json = "{\"accountName\":\"ABC\"}";*/

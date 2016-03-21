@@ -1,7 +1,7 @@
 package com.gv.midway.pojo.deviceInformation.request;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.gv.midway.device.response.pojo.DeviceId;
+import com.gv.midway.pojo.deviceInformation.request.DeviceId;
 import com.gv.midway.pojo.deviceInformation.verizon.CustomFields;
 
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
@@ -22,8 +22,9 @@ public class DeviceInformationRequestDataArea {
 
 	private String deviceNumber;
 
-	private DeviceId deviceId;
+	//private DeviceId deviceId;
 	
+	private DeviceId[] deviceId;
 
 	private String netSuiteId;
 	private String midwayMasterDeviceId;
@@ -108,11 +109,11 @@ public class DeviceInformationRequestDataArea {
 		this.deviceNumber = deviceNumber;
 	}
 
-	public DeviceId getDeviceId() {
+	public DeviceId[] getDeviceId() {
 		return deviceId;
 	}
 
-	public void setDeviceId(DeviceId deviceId) {
+	public void setDeviceId(DeviceId[] deviceId) {
 		this.deviceId = deviceId;
 	}
 
