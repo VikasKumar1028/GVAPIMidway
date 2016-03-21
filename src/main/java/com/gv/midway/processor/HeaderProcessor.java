@@ -18,7 +18,7 @@ public class HeaderProcessor implements Processor {
 		DeviceInformationRequest deviceInformationRequest = exchange.getIn()
 				.getBody(DeviceInformationRequest.class);
 
-		exchange.getIn().setHeader("sourceName",
+		exchange.getIn().setHeader(IConstant.SOURCE_NAME,
 				deviceInformationRequest.getHeader().getSourceName());
 		
 		exchange.setProperty(IConstant.BSCARRIER,
@@ -26,6 +26,9 @@ public class HeaderProcessor implements Processor {
 		exchange.setProperty(IConstant.SOURCE_NAME, deviceInformationRequest.getHeader()
 				.getSourceName());
 
+		
+		
+		
 	}
 
 }

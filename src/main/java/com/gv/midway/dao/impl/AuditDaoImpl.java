@@ -64,9 +64,9 @@ public class AuditDaoImpl implements IAuditDao {
 					.getBody());
 
 			Audit audit = new Audit();
-			audit.setCarrier(exchange.getIn().getHeader(IConstant.BSCARRIER)
+			audit.setCarrier(exchange.getProperty(IConstant.BSCARRIER)
 					.toString());
-			audit.setSource(exchange.getIn().getHeader(IConstant.SOURCE_NAME)
+			audit.setSource(exchange.getProperty(IConstant.SOURCE_NAME)
 					.toString());
 			audit.setApiAction(exchange.getFromEndpoint().toString());
 			audit.setInboundURL(exchange.getFromEndpoint().toString());
@@ -96,9 +96,9 @@ public class AuditDaoImpl implements IAuditDao {
 		try {
 
 			Audit audit = new Audit();
-			audit.setCarrier(exchange.getIn().getHeader(IConstant.BSCARRIER)
+			audit.setCarrier(exchange.getProperty(IConstant.BSCARRIER)
 					.toString());
-			audit.setSource(exchange.getIn().getHeader(IConstant.SOURCE_NAME)
+			audit.setSource(exchange.getProperty(IConstant.SOURCE_NAME)
 					.toString());
 			audit.setApiAction(exchange.getFromEndpoint().toString());
 			audit.setInboundURL(exchange.getFromEndpoint().toString());
