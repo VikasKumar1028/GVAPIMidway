@@ -7,19 +7,22 @@ import com.gv.midway.pojo.deviceInformation.verizon.CarrierInformations;
 import com.gv.midway.pojo.deviceInformation.verizon.CustomFields;
 import com.gv.midway.pojo.deviceInformation.verizon.DeviceIds;
 import com.gv.midway.pojo.deviceInformation.verizon.ExtendedAttributes;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 public class DeviceInformation {
-
+	@ApiModelProperty(value = "An identifier from NetSuite system")
 	private String netSuiteId;
 
+	@ApiModelProperty(value = "An unique identifier (Primary key) for device in Midway")
 	private String midwayMasterDeviceId;
 
+	@ApiModelProperty(value = "If the device is not connected, this indicates the last known connection date.")
 	private String lastConnectionDate;
 
 	private String[] lstFeatures;
-	
-    public String getCurrentDataPlan() {
+
+	public String getCurrentDataPlan() {
 		return currentDataPlan;
 	}
 
@@ -43,9 +46,14 @@ public class DeviceInformation {
 		MSISDNOrMDN = mSISDNOrMDN;
 	}
 
+	@ApiModelProperty(value = "currentDataPlan for the device")
 	private String currentDataPlan;
-    private String IMSIOrMIN;
-    private String MSISDNOrMDN;
+	
+	@ApiModelProperty(value = "IMSIOrMIN of the device")
+	private String IMSIOrMIN;
+	
+	@ApiModelProperty(value = "MSISDNOrMDN of the device")
+	private String MSISDNOrMDN;
 
 	public String[] getLstFeatures() {
 		return lstFeatures;
@@ -110,8 +118,9 @@ public class DeviceInformation {
 	private String customField5;
 	private String customField6;
 
+	@ApiModelProperty(value = "The custom fields and values that have been set for the device.")
 	private CustomFields[] customFields;
-	
+
 	public String getPreviousAddress() {
 		return previousAddress;
 	}
@@ -121,32 +130,44 @@ public class DeviceInformation {
 	}
 
 	// ended by Sadhana
+	@ApiModelProperty(value = "futureSMSPlan for the device")
 	private String futureSMSPlan;
 
+	@ApiModelProperty(value = "The user who last activated the device.")
 	private String lastActivationBy;
 
-	
-
+	@ApiModelProperty(value = "True if the device is connected; false if it is not.")
 	private String connected;
 
+	@ApiModelProperty(value = "The carrier information associated with the device.")
 	private CarrierInformations carrierInformations;
 
+	@ApiModelProperty(value = "The device group that the device belongs to.")
 	private String[] groupNames;
 
+	@ApiModelProperty(value = "monthly SMS Threshold of the device")
 	private String monthlySMSThreshold;
 
+	@ApiModelProperty(value = "monthly Data Threshold of the device")
 	private String monthlyDataThreshold;
 
+	@ApiModelProperty(value = "The billing account for which a list of devices will be returned.")
 	private String accountName;
 
+	@ApiModelProperty(value = "Daily Data Threshold of the device.")
 	private String dailyDataThreshold;
 
+	@ApiModelProperty(value = "The date that the device's current billing cycle ends.")
 	private String billingCycleEndDate;
 
+	@ApiModelProperty(value = "The date and time that the device was added to the system.")
 	private String createdAt;
 
+	@ApiModelProperty(value = "FutureDataPlan of the device.")
 	private String futureDataPlan;
 	// added
+	
+	@ApiModelProperty(value = "All identifiers for the device.")
 	private DeviceIds[] deviceIds;
 
 	// private DeviceIds deviceIds;
@@ -159,40 +180,58 @@ public class DeviceInformation {
 		this.deviceIds = deviceIds;
 	}
 
+	@ApiModelProperty(value = "currentSMSPlan for the device.")
 	private String currentSMSPlan;
 
+	@ApiModelProperty(value = "dailySMSThreshold for the device.")
 	private String dailySMSThreshold;
 
+	@ApiModelProperty(value = "Last year history details for the device.")
 	private String[] lstHistoryOverLastYear;
 
+	@ApiModelProperty(value = "Any extended attributes for the device, as Key ")
 	private ExtendedAttributes[] extendedAttributes;
 
+	@ApiModelProperty(value = "The IP address of the device.")
 	private String ipAddress;
 
+	@ApiModelProperty(value = "The Static IP address of the device.")
 	private String staticIP;
 
+	@ApiModelProperty(value = "Voice dispatch number")
 	private String voiceDispatchNumber;
 
+	@ApiModelProperty(value = "mostRecentLocateId of the device.")
 	private String mostRecentLocateId;
 
+	@ApiModelProperty(value = "previousLocateId of the device.")
 	private String previousLocateId;
 
+	@ApiModelProperty(value = "mostRecentLocateDate of the device.")
 	private String mostRecentLocateDate;
-
+	
+	@ApiModelProperty(value = "mostRecentLatitude of the device.")
 	private String mostRecentLatitude;
 
+	@ApiModelProperty(value = "mostRecentLongitude of the device.")
 	private String mostRecentLongitude;
 
+	@ApiModelProperty(value = "mostRecentAddress of the device.")
 	private String mostRecentAddress;
 
+	@ApiModelProperty(value = "previousLocateDate of the device.")
 	private String previousLocateDate;
 
+	@ApiModelProperty(value = "previousLatitude of the device.")
 	private String previousLatitude;
-
+	
+	@ApiModelProperty(value = "previousLongitude of the device.")
 	private String previousLongitude;
 
+	@ApiModelProperty(value = "previousAddress of the device.")
 	private String previousAddress;
 
+	@ApiModelProperty(value = "Last Extended Features of the device.")
 	private String[] lstExtFeatures;
 
 	public String getMostRecentLocateId() {
