@@ -23,6 +23,7 @@ import com.gv.midway.processor.GenericErrorProcessor;
 import com.gv.midway.processor.HeaderProcessor;
 import com.gv.midway.processor.KoreGenericExceptionProcessor;
 import com.gv.midway.processor.VerizonGenericExceptionProcessor;
+import com.gv.midway.processor.deactivateDevice.VerizonDeactivateDevicePreProcessor;
 import com.gv.midway.processor.deviceInformation.KoreDeviceInformationPostProcessor;
 import com.gv.midway.processor.deviceInformation.KoreDeviceInformationPreProcessor;
 import com.gv.midway.processor.deviceInformation.StubKoreDeviceInformationProcessor;
@@ -178,5 +179,9 @@ public class CamelRoute extends RouteBuilder {
 		from("direct:insertDeviceDetailsinBatch")
 				.bean(iDeviceService, "insertDevicesDetailsInBatch")
 				.to("log:input").end();
+		
+		from("direct:deactivateDevice")
+				.process(new VerizonDeactivateDevicePreProcessor())
+				.to(uriRestVerizonEndPoint).to("log:input").end();
 	}
 }

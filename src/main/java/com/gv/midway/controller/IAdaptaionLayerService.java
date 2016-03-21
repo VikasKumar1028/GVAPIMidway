@@ -8,6 +8,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
+import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
+import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.device.request.pojo.Device;
@@ -66,5 +68,14 @@ public interface IAdaptaionLayerService {
 	@ApiOperation(value = "DeviceInformationService")
 	DeviceInformationResponse deviceInformationDevice(
 			DeviceInformationRequest deviceInformationRequest);
+	
+	@POST
+	@Path("/device/deactivate")
+	@Produces("application/json")
+	@Consumes("application/json")
+	@ApiOperation(value = "DeactivateDeviceService")
+	DeactivateDeviceResponse deactivateDevice(
+			DeactivateDeviceRequest deactivateDeviceRequest);
+
 
 }
