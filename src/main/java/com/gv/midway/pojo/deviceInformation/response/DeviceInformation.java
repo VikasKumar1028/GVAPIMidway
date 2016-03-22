@@ -20,6 +20,7 @@ public class DeviceInformation {
 	@ApiModelProperty(value = "If the device is not connected, this indicates the last known connection date.")
 	private String lastConnectionDate;
 
+	@ApiModelProperty(value = "last Features of the device.")
 	private String[] lstFeatures;
 
 	public String getCurrentDataPlan() {
@@ -111,11 +112,17 @@ public class DeviceInformation {
 		this.customField6 = customField6;
 	}
 
+	@ApiModelProperty(value = "The custom fields and values that have been set for the device.")
 	private String customField1;
+	@ApiModelProperty(value = "The custom fields and values that have been set for the device.")
 	private String customField2;
+	@ApiModelProperty(value = "The custom fields and values that have been set for the device.")
 	private String customField3;
+	@ApiModelProperty(value = "The custom fields and values that have been set for the device.")
 	private String customField4;
+	@ApiModelProperty(value = "The custom fields and values that have been set for the device.")
 	private String customField5;
+	@ApiModelProperty(value = "The custom fields and values that have been set for the device.")
 	private String customField6;
 
 	@ApiModelProperty(value = "The custom fields and values that have been set for the device.")
@@ -329,7 +336,7 @@ public class DeviceInformation {
 	public void setStaticIP(String staticIP) {
 		this.staticIP = staticIP;
 	}
-
+	@ApiModelProperty(value = "The date and time that the device was last activated.")
 	private String lastActivationDate;
 
 	public String getLastConnectionDate() {

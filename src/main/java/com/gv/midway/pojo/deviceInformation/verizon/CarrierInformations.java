@@ -1,17 +1,23 @@
 package com.gv.midway.pojo.deviceInformation.verizon;
 
+import com.wordnik.swagger.annotations.ApiModelProperty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CarrierInformations {
+	@ApiModelProperty(value = "Carrier state")
 	private String state;
 
+	@ApiModelProperty(value = "Service Plan that that device belongs to.")
 	private String servicePlan;
 	
+	@ApiModelProperty(value = "Current Data Plan of the Device.")
 	private String currentDataPlan;
 	
+	@ApiModelProperty(value = "Status of the device.")
 	private String status;
 
+	@ApiModelProperty(value = "The name of the carrier")
 	private String carrierName;
 
 	public String getState() {

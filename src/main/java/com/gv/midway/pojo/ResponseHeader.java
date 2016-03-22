@@ -1,18 +1,27 @@
 package com.gv.midway.pojo;
 
+import com.wordnik.swagger.annotations.ApiModelProperty;
 public class ResponseHeader {
+	
+	@ApiModelProperty(value = "Region for the request")
 	private String region;
 
+	@ApiModelProperty(value = "Timestamp for the triggered request.")
 	private String timestamp;
 
+	@ApiModelProperty(value = "Organisation name for the requests")
 	private String organization;
 
+	@ApiModelProperty(value = "Unique Identifier of the complete flow for the requests.")
 	private String transactionId;
 
+	@ApiModelProperty(value = "Name of the source from where the request is trigger.")
 	private String sourceName;
 
+	@ApiModelProperty(value = "Mode of the request")
 	private String applicationName;
 
+	@ApiModelProperty(value = "Target System of request")
 	private String bsCarrier;
 
 	public String getBsCarrier() {

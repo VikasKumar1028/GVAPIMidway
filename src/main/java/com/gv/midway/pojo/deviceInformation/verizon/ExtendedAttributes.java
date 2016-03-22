@@ -1,5 +1,6 @@
 package com.gv.midway.pojo.deviceInformation.verizon;
 
+import com.wordnik.swagger.annotations.ApiModelProperty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -16,6 +17,7 @@ public class ExtendedAttributes {
 
 	}
 
+	@ApiModelProperty(value = "Key for the device as custom field")
 	private String key;
 	public String getValue() {
 		return value;
@@ -25,6 +27,7 @@ public class ExtendedAttributes {
 		this.value = value;
 	}
 
+	@ApiModelProperty(value = "Value for the device as custom field")
 	private String value;
 
 	public String getKey() {

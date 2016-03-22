@@ -1,10 +1,14 @@
 package com.gv.midway.pojo;
-
+import com.wordnik.swagger.annotations.ApiModelProperty;
 public class Response {
 
+	@ApiModelProperty(value = "Response code for triggered request.")
 	private String responseCode;
 
+	@ApiModelProperty(value = "Reesponse status : SUCCESS or FAILURE")
 	private String responseStatus;
+	
+	@ApiModelProperty(value = "Details of the response status received.")
 	private String responseDescription;
 
 	public String getResponseStatus() {

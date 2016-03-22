@@ -1,32 +1,42 @@
 package com.gv.midway.pojo.deviceInformation.request;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.gv.midway.pojo.deviceInformation.request.DeviceId;
+import com.gv.midway.device.response.pojo.DeviceId;
 import com.gv.midway.pojo.deviceInformation.verizon.CustomFields;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 public class DeviceInformationRequestDataArea {
+	@ApiModelProperty(value = "The device group that the device belongs to.")
 	private String groupName;
-
+	
+	@ApiModelProperty(value = "The billing account that the device is associated with.")	
 	private String accountName;
 
+	@ApiModelProperty(value = "The earliest date and time for which you want connection events.")	
 	private String earliest;
 
+	@ApiModelProperty(value = "Custom field names and values, if you want to only include devices that have matching values.")
 	private CustomFields[] customFields;
 
+	@ApiModelProperty(value = "The name of a device state, to only include devices in that state.")
 	private String currentState;
 
+	@ApiModelProperty(value = "The service plan that the device is assigned to.")
 	private String servicePlan;
 
+	@ApiModelProperty(value = "The last date and time for which you want connection events.")
 	private String latest;
 
+	@ApiModelProperty(value = "The device number of the device to query.")
 	private String deviceNumber;
 
-	//private DeviceId deviceId;
-	
+	@ApiModelProperty(value = "All identifiers for the device.")
 	private DeviceId[] deviceId;
-
+	
+	@ApiModelProperty(value = "An identifier from NetSuite system")
 	private String netSuiteId;
+	@ApiModelProperty(value = "An unique identifier (Primary key) for device in Midway")
 	private String midwayMasterDeviceId;
 
 	public String getGroupName() {

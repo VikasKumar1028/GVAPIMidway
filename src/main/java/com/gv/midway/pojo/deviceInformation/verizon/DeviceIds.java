@@ -1,11 +1,14 @@
 package com.gv.midway.pojo.deviceInformation.verizon;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 public class DeviceIds {
+	@ApiModelProperty(value = "The value of the device identifier.")
 	private String id;
-
+	
+	@ApiModelProperty(value = "The type of the device identifier.") 
 	private String kind;
 
 	public String getImsiOrMIN() {
@@ -24,7 +27,9 @@ public class DeviceIds {
 		this.msisdnOrMDN = msisdnOrMDN;
 	}
 
+	@ApiModelProperty(value = "IMSI Or MIN of the device.")
 	private String imsiOrMIN;
+	@ApiModelProperty(value = "MSISDN Or MDN of the device.")
 	private String msisdnOrMDN;
 
 	/*
