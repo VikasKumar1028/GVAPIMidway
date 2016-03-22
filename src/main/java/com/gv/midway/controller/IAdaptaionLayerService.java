@@ -8,6 +8,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
+import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
+import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
@@ -21,14 +23,14 @@ import com.wordnik.swagger.annotations.ApiOperation;
 @Path("/v1")
 @Api(value = "/v1", description = "MidWay API Integration")
 public interface IAdaptaionLayerService {
-
+/*
 	@POST
 	@Path("/device/activate")
 	@Produces("application/json")
 	@Consumes("application/json")
 	@ApiOperation(value = "Activate devices")
 	String activateDevice();
-
+*/
 	@POST
 	@Path("/cell")
 	@Produces("application/json")
@@ -76,6 +78,14 @@ public interface IAdaptaionLayerService {
 	@ApiOperation(value = "DeactivateDeviceService")
 	DeactivateDeviceResponse deactivateDevice(
 			DeactivateDeviceRequest deactivateDeviceRequest);
+	
+	@POST
+	@Path("/device/activate")
+	@Produces("application/json")
+	@Consumes("application/json")
+	@ApiOperation(value = "DeviceActivationService")
+	ActivateDeviceResponse activateDeviceResponse(
+			ActivateDeviceRequest activateDeviceRequest);
 
 
 }

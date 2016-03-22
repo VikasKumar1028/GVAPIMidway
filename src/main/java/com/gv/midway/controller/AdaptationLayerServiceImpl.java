@@ -3,6 +3,8 @@ package com.gv.midway.controller;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.ProducerTemplate;
 
+import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
+import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
@@ -105,5 +107,12 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 		
 		return (DeactivateDeviceResponse) producer.requestBody(
 				"direct:deactivateDevice", deactivateDeviceRequest);
+	}
+	
+	public ActivateDeviceResponse activateDeviceResponse(
+			ActivateDeviceRequest activateDeviceRequest) {
+		
+		return (ActivateDeviceResponse) producer.requestBody(
+				"direct:deviceActivate", activateDeviceRequest);
 	}
 }

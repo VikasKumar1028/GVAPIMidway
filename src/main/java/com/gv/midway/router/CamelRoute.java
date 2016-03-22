@@ -23,6 +23,9 @@ import com.gv.midway.processor.GenericErrorProcessor;
 import com.gv.midway.processor.HeaderProcessor;
 import com.gv.midway.processor.KoreGenericExceptionProcessor;
 import com.gv.midway.processor.VerizonGenericExceptionProcessor;
+import com.gv.midway.processor.activateDevice.StubVerizonDeviceActivateProcessor;
+import com.gv.midway.processor.activateDevice.VerizonActivateDevicePostProcessor;
+import com.gv.midway.processor.activateDevice.VerizonActivateDevicePreProcessor;
 import com.gv.midway.processor.deactivateDevice.VerizonDeactivateDevicePreProcessor;
 import com.gv.midway.processor.deviceInformation.KoreDeviceInformationPostProcessor;
 import com.gv.midway.processor.deviceInformation.KoreDeviceInformationPreProcessor;
@@ -160,6 +163,29 @@ public class CamelRoute extends RouteBuilder {
 					.to("log:input")
 				.endChoice()
 				.end();
+		
+		from("direct:deviceActivate").process(new HeaderProcessor())
+				.bean(iAuditService, "auditExternalRequestCall").choice()
+				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
+				.choice().when(header("sourceName").isEqualTo("KORE"))
+				.process(new StubKoreDeviceInformationProcessor())
+				.to("log:input")
+				.when(header("sourceName").isEqualTo("VERIZON"))
+				.process(new StubVerizonDeviceActivateProcessor())
+				.to("log:input").endChoice().otherwise().choice()
+				.when(header("sourceName").isEqualTo("KORE"))
+				.process(new KoreDeviceInformationPreProcessor())
+				.to(uriRestKoreEndPoint).unmarshal()
+				.json(JsonLibrary.Jackson, KoreDeviceInformationResponse.class)
+				.process(new KoreDeviceInformationPostProcessor()).endChoice()
+				.when(header("sourceName").isEqualTo("VERIZON"))
+				.bean(iSessionService, "setContextTokenInExchange")
+				.process(new VerizonActivateDevicePreProcessor())
+				.to(uriRestVerizonEndPoint).unmarshal()
+				.json(JsonLibrary.Jackson, VerizonResponse.class)
+				.process(new VerizonActivateDevicePostProcessor()).endChoice()
+				.end().to("log:input").endChoice().end()
+				.bean(iAuditService, "auditExternalResponseCall");
 
 		from("direct:insertDeviceDetails")
 				.bean(iDeviceService, "insertDeviceDetails").to("log:input")
