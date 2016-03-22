@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.exception.VerizonSessionTokenExpirationException;
+import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
+import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.kore.KoreDeviceInformationResponse;
 import com.gv.midway.pojo.deviceInformation.verizon.VerizonResponse;
 import com.gv.midway.pojo.token.VerizonAuthorizationResponse;
@@ -26,6 +28,11 @@ import com.gv.midway.processor.VerizonGenericExceptionProcessor;
 import com.gv.midway.processor.activateDevice.StubVerizonDeviceActivateProcessor;
 import com.gv.midway.processor.activateDevice.VerizonActivateDevicePostProcessor;
 import com.gv.midway.processor.activateDevice.VerizonActivateDevicePreProcessor;
+import com.gv.midway.processor.deactivateDevice.KoreDeactivateDevicePostProcessor;
+import com.gv.midway.processor.deactivateDevice.KoreDeactivateDevicePreProcessor;
+import com.gv.midway.processor.deactivateDevice.StubKoreDeactivateDeviceProcessor;
+import com.gv.midway.processor.deactivateDevice.StubVerizonDeactivateDeviceProcessor;
+import com.gv.midway.processor.deactivateDevice.VerizonDeactivateDevicePostProcessor;
 import com.gv.midway.processor.deactivateDevice.VerizonDeactivateDevicePreProcessor;
 import com.gv.midway.processor.deviceInformation.KoreDeviceInformationPostProcessor;
 import com.gv.midway.processor.deviceInformation.KoreDeviceInformationPreProcessor;
@@ -206,8 +213,44 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iDeviceService, "insertDevicesDetailsInBatch")
 				.to("log:input").end();
 		
-		from("direct:deactivateDevice")
+				
+		from("direct:deactivateDevice").process(new HeaderProcessor())
+				.bean(iAuditService, "auditExternalRequestCall").choice()
+				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
+				.choice().when(header("sourceName").isEqualTo("KORE"))
+				.process(new StubKoreDeactivateDeviceProcessor())
+				.to("log:input")
+				.when(header("sourceName").isEqualTo("VERIZON"))
+				.process(new StubVerizonDeactivateDeviceProcessor())
+				.to("log:input").endChoice().otherwise().choice()
+				.when(header("sourceName").isEqualTo("KORE"))
+				.doTry()
+				
+				.process(new KoreDeactivateDevicePreProcessor())
+				.to(uriRestKoreEndPoint)
+				.unmarshal()
+				.json(JsonLibrary.Jackson, DeactivateDeviceRequest.class)
+				.process(new KoreDeactivateDevicePostProcessor())
+				.doCatch(CxfOperationException.class)
+											.bean(iAuditService, "auditExternalExceptionResponseCall")
+											.process(new KoreGenericExceptionProcessor(env))
+										.endDoTry()
+				
+				.endChoice()						
+				.when(header("sourceName").isEqualTo("VERIZON"))
+				.doTry()
+				
+				.bean(iSessionService, "setContextTokenInExchange")
 				.process(new VerizonDeactivateDevicePreProcessor())
-				.to(uriRestVerizonEndPoint).to("log:input").end();
+				.to(uriRestVerizonEndPoint).unmarshal()
+				.json(JsonLibrary.Jackson, VerizonResponse.class)
+				.process(new VerizonDeactivateDevicePostProcessor())
+						.doCatch(CxfOperationException.class)
+											.bean(iAuditService, "auditExternalExceptionResponseCall")
+											.process(new KoreGenericExceptionProcessor(env))
+										.endDoTry()
+				
+				.endChoice().end().to("log:input").endChoice().end()
+				.bean(iAuditService, "auditExternalResponseCall");
 	}
 }
