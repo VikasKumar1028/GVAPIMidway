@@ -57,7 +57,7 @@ public class ActivateDeviceRequestDataArea
 
     //private DeviceIds[] deviceId;
     
-    private DeviceId deviceId;
+    private DeviceId[] deviceId;
 
     private CustomerName customerName;
     
@@ -199,11 +199,11 @@ public class ActivateDeviceRequestDataArea
 		return customerName;
 	}
 
-	public DeviceId getDeviceId() {
+	public DeviceId[] getDeviceId() {
 		return deviceId;
 	}
 
-	public void setDeviceId(DeviceId deviceId) {
+	public void setDeviceId(DeviceId[] deviceId) {
 		this.deviceId = deviceId;
 	}
 

@@ -25,10 +25,11 @@ public class VerizonActivateDevicePostProcessor implements Processor {
 	Logger log = Logger.getLogger(VerizonDeviceInformationPostProcessor.class
 			.getName());
 
-	public VerizonActivateDevicePostProcessor() {
-
-	}
-
+	/*
+	 * public VerizonActivateDevicePostProcessor() {
+	 * 
+	 * }
+	 */
 	Environment newEnv;
 
 	public VerizonActivateDevicePostProcessor(Environment env) {
@@ -46,23 +47,36 @@ public class VerizonActivateDevicePostProcessor implements Processor {
 
 		log.info("Start:VerizonDeviceInformationPostProcessor");
 
-		VerizonResponse verizonResponse = exchange.getIn().getBody(
-				VerizonResponse.class);
+		System.out.println("-----------------"
+				+ exchange.getIn().getBody().toString());
 
-		// ActivateDeviceResponse activateDeviceResponse = new
-		// ActivateDeviceResponse();
-
-		ActivateDeviceResponse activateDeviceResponse = exchange.getIn()
-				.getBody(ActivateDeviceResponse.class);
-
+		ActivateDeviceResponse activateDeviceResponse = new ActivateDeviceResponse();
 		ActivateDeviceResponseDataArea activateDeviceResponseDataArea = new ActivateDeviceResponseDataArea();
-
 		ResponseHeader responseheader = new ResponseHeader();
-
 		Response response = new Response();
-		response.setResponseCode(newEnv.getProperty(IConstant.RESPONSES_CODE));
-		response.setResponseStatus(newEnv
-				.getProperty(IConstant.RESPONSE_STATUS_SUCCESS));
+		
+		if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
+			// Without error
+			VerizonResponse verizonResponse = exchange.getIn().getBody(
+					VerizonResponse.class);
+			response.setResponseCode(newEnv.getProperty(IConstant.RESPONSES_CODE));
+			response.setResponseStatus(newEnv
+					.getProperty(IConstant.RESPONSE_STATUS_SUCCESS));
+			
+
+		} else {
+			response.setResponseCode("400");
+			response.setResponseStatus(exchange.getIn().getBody().toString());
+			}
+
+	
+
+		/*
+		 * ActivateDeviceResponse activateDeviceResponse = exchange.getIn()
+		 * .getBody(ActivateDeviceResponse.class);
+		 */
+
+	
 
 		responseheader.setApplicationName(newEnv
 				.getProperty(IConstant.APPLICATION_NAME));
@@ -82,12 +96,14 @@ public class VerizonActivateDevicePostProcessor implements Processor {
 
 		responseheader.setBsCarrier(newEnv
 				.getProperty(IConstant.BSCARRIER_VERIZON));
+
+		// System.out.println("*******************"+responseheader.getOrganization());
 		activateDeviceResponse.setHeader(responseheader);
 		activateDeviceResponse.setResponse(response);
 
 		activateDeviceResponseDataArea.setRequestId("requestId");
 		activateDeviceResponse.setDataArea(activateDeviceResponseDataArea);
-		
+
 		exchange.getIn().setBody(activateDeviceResponse);
 
 	}

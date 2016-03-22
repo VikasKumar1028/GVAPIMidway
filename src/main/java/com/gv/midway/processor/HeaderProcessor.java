@@ -5,6 +5,7 @@ import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 
 import com.gv.midway.constant.IConstant;
+import com.gv.midway.pojo.BaseRequest;
 import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
 
 public class HeaderProcessor implements Processor {
@@ -15,15 +16,18 @@ public class HeaderProcessor implements Processor {
 	public void process(Exchange exchange) throws Exception {
 
 		log.info("Start:HeaderProcessor");
-		DeviceInformationRequest deviceInformationRequest = exchange.getIn()
-				.getBody(DeviceInformationRequest.class);
+	/*	DeviceInformationRequest deviceInformationRequest = exchange.getIn()
+				.getBody(DeviceInformationRequest.class);*/
+		
+		BaseRequest baseRequest= exchange.getIn()
+				.getBody(BaseRequest.class);
 
 		exchange.getIn().setHeader(IConstant.SOURCE_NAME,
-				deviceInformationRequest.getHeader().getSourceName());
+				baseRequest.getHeader().getSourceName());
 		
 		exchange.setProperty(IConstant.BSCARRIER,
-				deviceInformationRequest.getHeader().getBsCarrier());
-		exchange.setProperty(IConstant.SOURCE_NAME, deviceInformationRequest.getHeader()
+				baseRequest.getHeader().getBsCarrier());
+		exchange.setProperty(IConstant.SOURCE_NAME, baseRequest.getHeader()
 				.getSourceName());
 
 		

@@ -181,9 +181,13 @@ public class CamelRoute extends RouteBuilder {
 				.when(header("sourceName").isEqualTo("VERIZON"))
 				.bean(iSessionService, "setContextTokenInExchange")
 				.process(new VerizonActivateDevicePreProcessor())
-				.to(uriRestVerizonEndPoint).unmarshal()
-				.json(JsonLibrary.Jackson, VerizonResponse.class)
-				.process(new VerizonActivateDevicePostProcessor()).endChoice()
+				
+				.to(uriRestVerizonEndPoint)
+				.unmarshal()
+				.json(JsonLibrary.Jackson)
+			/*	.unmarshal()
+				.json(JsonLibrary.Jackson, VerizonResponse.class)*/
+				.process(new VerizonActivateDevicePostProcessor(env)).endChoice()
 				.end().to("log:input").endChoice().end()
 				.bean(iAuditService, "auditExternalResponseCall");
 
