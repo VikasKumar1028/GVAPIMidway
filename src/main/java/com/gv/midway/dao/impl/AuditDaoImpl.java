@@ -94,6 +94,7 @@ public class AuditDaoImpl implements IAuditDao {
 		String responseBody = exception.getResponseBody();
 
 		try {
+			//changes for the audit
 
 			Audit audit = new Audit();
 			audit.setCarrier(exchange.getProperty(IConstant.BSCARRIER)
