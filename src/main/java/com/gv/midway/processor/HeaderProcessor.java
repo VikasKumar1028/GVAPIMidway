@@ -16,10 +16,9 @@ public class HeaderProcessor implements Processor {
 	public void process(Exchange exchange) throws Exception {
 
 		log.info("Start:HeaderProcessor");
-	/*	DeviceInformationRequest deviceInformationRequest = exchange.getIn()
-				.getBody(DeviceInformationRequest.class);*/
-		
-		BaseRequest baseRequest= exchange.getIn()
+
+		BaseRequest baseRequest = exchange.getIn()
+
 				.getBody(BaseRequest.class);
 
 		exchange.getIn().setHeader(IConstant.SOURCE_NAME,

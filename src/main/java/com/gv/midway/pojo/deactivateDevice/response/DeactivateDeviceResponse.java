@@ -7,8 +7,10 @@ import com.gv.midway.pojo.BaseResponse;
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DeactivateDeviceResponse extends BaseResponse {
-	
+
 	private String requestId;
+
+	private String trackingNumber;
 
 	public String getRequestId() {
 		return requestId;
@@ -18,10 +20,19 @@ public class DeactivateDeviceResponse extends BaseResponse {
 		this.requestId = requestId;
 	}
 
+	public String getTrackingNumber() {
+		return trackingNumber;
+	}
+
+	public void setTrackingNumber(String trackingNumber) {
+		this.trackingNumber = trackingNumber;
+	}
+
 	@Override
 	public String toString() {
-		return "DeactivateDeviceResponse [requestId=" + requestId + "]";
+		return "DeactivateDeviceResponse [requestId=" + requestId
+				+ ", trackingNumber=" + trackingNumber + "]";
 	}
-	
-	
+
+
 }
