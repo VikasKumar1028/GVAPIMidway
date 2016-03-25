@@ -2,12 +2,17 @@ package com.gv.midway.processor.deactivateDevice;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
+import org.apache.log4j.Logger;
 
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.ResponseHeader;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
+import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponseDataArea;
 
 public class StubKoreDeactivateDeviceProcessor implements Processor {
+
+	Logger log = Logger.getLogger(StubKoreDeactivateDeviceProcessor.class
+			.getName());
 
 	public StubKoreDeactivateDeviceProcessor() {
 
@@ -16,8 +21,10 @@ public class StubKoreDeactivateDeviceProcessor implements Processor {
 	public void process(Exchange exchange) throws Exception {
 		// TODO Auto-generated method stub
 
+		log.info("Start::StubKoreDeactivateDeviceProcessor");
 		DeactivateDeviceResponse deactivateDeviceResponse = new DeactivateDeviceResponse();
 		ResponseHeader responseheader = new ResponseHeader();
+		DeactivateDeviceResponseDataArea deactivateDeviceResponseDataArea = new DeactivateDeviceResponseDataArea();
 
 		Response response = new Response();
 		response.setResponseCode("200");
@@ -34,9 +41,13 @@ public class StubKoreDeactivateDeviceProcessor implements Processor {
 
 		deactivateDeviceResponse.setHeader(responseheader);
 		deactivateDeviceResponse.setResponse(response);
-		deactivateDeviceResponse.setRequestId("requestId");
-		deactivateDeviceResponse.setTrackingNumber("trackingNumbe");
+	
+		deactivateDeviceResponseDataArea.setRequestId("requestId(");
+		deactivateDeviceResponseDataArea.setTrackingNumber("trackingNumbe");
+		
+		deactivateDeviceResponse.setDataArea(deactivateDeviceResponseDataArea);
 		exchange.getIn().setBody(deactivateDeviceResponse);
+		log.info("End::StubKoreDeactivateDeviceProcessor");
 	}
 
 }

@@ -8,12 +8,12 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.component.cxf.CxfOperationException;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.ResponseHeader;
+import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 
 public class KoreGenericExceptionProcessor implements Processor {
@@ -39,9 +39,11 @@ public class KoreGenericExceptionProcessor implements Processor {
 
 	public void process(Exchange exchange) throws Exception {
 
+		
 		CxfOperationException exception = (CxfOperationException) exchange
 				.getProperty(Exchange.EXCEPTION_CAUGHT);
-
+		
+		
 		log.info("----KoreGenericExceptionProcessor----------"
 				+ exception.getResponseBody());
 
@@ -59,14 +61,28 @@ public class KoreGenericExceptionProcessor implements Processor {
 		responseHeader.setBsCarrier(newEnv.getProperty(IConstant.BSCARRIER_KORE));
 
 		Response response = new Response();
-		response.setResponseCode("InValid Data");
-		response.setResponseStatus("4");
+		//response.setResponseCode("InValid Data");
+		int  statusCodeInt=exception.getStatusCode();
+		String statusCode = String.valueOf(statusCodeInt);
+		response.setResponseCode(statusCode);
+		//response.setResponseStatus("4");
+		response.setResponseStatus(exception.getStatusText());
 		response.setResponseDescription(exception.getResponseBody());
 
+				
 		if ("Endpoint[direct://deviceInformation]".equals(exchange
 				.getFromEndpoint().toString())) {
 
 			DeviceInformationResponse responseObject = new DeviceInformationResponse();
+			responseObject.setHeader(responseHeader);
+			responseObject.setResponse(response);
+			exchange.getIn().setBody(responseObject);
+		}
+				
+		if ("Endpoint[direct://deactivateDevice]".equals(exchange
+				.getFromEndpoint().toString())) {
+
+			DeactivateDeviceResponse responseObject = new DeactivateDeviceResponse();
 			responseObject.setHeader(responseHeader);
 			responseObject.setResponse(response);
 			exchange.getIn().setBody(responseObject);

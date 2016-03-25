@@ -2,12 +2,17 @@ package com.gv.midway.processor.deactivateDevice;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
+import org.apache.log4j.Logger;
 
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.ResponseHeader;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
+import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponseDataArea;
 
 public class StubVerizonDeactivateDeviceProcessor implements Processor {
+
+	Logger log = Logger.getLogger(StubVerizonDeactivateDeviceProcessor.class
+			.getName());
 
 	public StubVerizonDeactivateDeviceProcessor() {
 
@@ -15,8 +20,10 @@ public class StubVerizonDeactivateDeviceProcessor implements Processor {
 
 	public void process(Exchange exchange) throws Exception {
 		// TODO Auto-generated method stub
-		
+		log.info("Start::StubVerizonDeactivateDeviceProcessor");
 		DeactivateDeviceResponse deactivateDeviceResponse = new DeactivateDeviceResponse();
+		DeactivateDeviceResponseDataArea deactivateDeviceResponseDataArea = new DeactivateDeviceResponseDataArea();
+
 		ResponseHeader responseheader = new ResponseHeader();
 
 		Response response = new Response();
@@ -34,9 +41,11 @@ public class StubVerizonDeactivateDeviceProcessor implements Processor {
 
 		deactivateDeviceResponse.setHeader(responseheader);
 		deactivateDeviceResponse.setResponse(response);
-		deactivateDeviceResponse.setRequestId("requestId");
-		deactivateDeviceResponse.setTrackingNumber("null");
-		exchange.getIn().setBody(deactivateDeviceResponse);
 
+		deactivateDeviceResponseDataArea.setRequestId("requestId");
+		deactivateDeviceResponseDataArea.setTrackingNumber("null");
+		deactivateDeviceResponse.setDataArea(deactivateDeviceResponseDataArea);
+		exchange.getIn().setBody(deactivateDeviceResponse);
+		log.info("End::StubVerizonDeactivateDeviceProcessor");
 	}
 }

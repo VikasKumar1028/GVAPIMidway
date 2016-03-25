@@ -6,6 +6,7 @@ public interface IConstant {
 	static  String VZ_SEESION_TOKEN = "vzSessionToken";
 	static String VZ_AUTHORIZATION_TOKEN = "vzAuthorizationToken";
 	static String KORE_AUTHENTICATION = "kore.authentication";
+	static String VERIZON_AUTHENTICATION = "verizon.authentication";
 	static String RESPONSE_CODE = "ResponseCode";
 	static String RESPONSE_STATUS = "ResponseStatus";
 	static String RESPONSE_DESCRIPTION = "ResponseDescription";
