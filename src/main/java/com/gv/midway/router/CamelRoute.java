@@ -24,7 +24,10 @@ import com.gv.midway.processor.GenericErrorProcessor;
 import com.gv.midway.processor.HeaderProcessor;
 import com.gv.midway.processor.KoreGenericExceptionProcessor;
 import com.gv.midway.processor.VerizonGenericExceptionProcessor;
-import com.gv.midway.processor.activateDevice.StubVerizonDeviceActivateProcessor;
+import com.gv.midway.processor.activateDevice.KoreActivateDevicePostProcessor;
+import com.gv.midway.processor.activateDevice.KoreActivateDevicePreProcessor;
+import com.gv.midway.processor.activateDevice.StubKoreActivateDeviceProcessor;
+import com.gv.midway.processor.activateDevice.StubVerizonActivateDeviceProcessor;
 import com.gv.midway.processor.activateDevice.VerizonActivateDevicePostProcessor;
 import com.gv.midway.processor.activateDevice.VerizonActivateDevicePreProcessor;
 import com.gv.midway.processor.deactivateDevice.KoreDeactivateDevicePostProcessor;
@@ -135,7 +138,7 @@ public class CamelRoute extends RouteBuilder {
 						
 							.when(header("sourceName").isEqualTo("KORE"))
 										.doTry()
-											.process(new KoreDeviceInformationPreProcessor())
+											.process(new StubKoreActivateDeviceProcessor())
 											.bean(iAuditService, "auditExternalRequestCall")
 											.to(uriRestKoreEndPoint)
 											.unmarshal()
@@ -171,32 +174,48 @@ public class CamelRoute extends RouteBuilder {
 				.endChoice()
 				.end();
 		
-		from("direct:deviceActivate").process(new HeaderProcessor())
-				.bean(iAuditService, "auditExternalRequestCall").choice()
-				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
-				.choice().when(header("sourceName").isEqualTo("KORE"))
-				.process(new StubKoreDeviceInformationProcessor())
-				.to("log:input")
-				.when(header("sourceName").isEqualTo("VERIZON"))
-				.process(new StubVerizonDeviceActivateProcessor())
-				.to("log:input").endChoice().otherwise().choice()
-				.when(header("sourceName").isEqualTo("KORE"))
-				.process(new KoreDeviceInformationPreProcessor())
-				.to(uriRestKoreEndPoint).unmarshal()
-				.json(JsonLibrary.Jackson, KoreDeviceInformationResponse.class)
-				.process(new KoreDeviceInformationPostProcessor()).endChoice()
-				.when(header("sourceName").isEqualTo("VERIZON"))
-				.bean(iSessionService, "setContextTokenInExchange")
-				.process(new VerizonActivateDevicePreProcessor())
+		from("direct:activateDevice").process(new HeaderProcessor())
+			.choice()
+						.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
+						.choice()
+								.when(header("sourceName").isEqualTo("KORE"))
+									.process(new StubKoreActivateDeviceProcessor())
+									.to("log:input")
+								.when(header("sourceName").isEqualTo("VERIZON"))
+									.process(new StubVerizonActivateDeviceProcessor())
+									.to("log:input").
+						endChoice().otherwise()
+							.choice()
+									.when(header("sourceName").isEqualTo("KORE"))
+									.doTry()
+											.process(new KoreActivateDevicePreProcessor(env))
+												.bean(iAuditService, "auditExternalRequestCall")
+											.to(uriRestKoreEndPoint).unmarshal()
+											.json(JsonLibrary.Jackson)
+											.bean(iAuditService, "auditExternalResponseCall")
+											.process(new KoreActivateDevicePostProcessor(env))
+									  .doCatch(CxfOperationException.class)
+											.bean(iAuditService, "auditExternalExceptionResponseCall")
+											.process(new KoreGenericExceptionProcessor(env))
+								   .endDoTry()
+							.endChoice()
+									.when(header("sourceName").isEqualTo("VERIZON"))
+										.doTry()
+												.bean(iSessionService, "setContextTokenInExchange")
+												.process(new VerizonActivateDevicePreProcessor())
+												.to(uriRestVerizonEndPoint)
+												.unmarshal()
+												.json(JsonLibrary.Jackson)
+												.bean(iAuditService, "auditExternalResponseCall")
+												.process(new VerizonActivateDevicePostProcessor(env))
+										.doCatch(CxfOperationException.class)
+											.bean(iAuditService, "auditExternalExceptionResponseCall")
+											.process(new VerizonGenericExceptionProcessor(env))
+										.endDoTry()	
+								.endChoice()
+							.end().to("log:input")
+			.endChoice().end();
 				
-				.to(uriRestVerizonEndPoint)
-				.unmarshal()
-				.json(JsonLibrary.Jackson)
-			/*	.unmarshal()
-				.json(JsonLibrary.Jackson, VerizonResponse.class)*/
-				.process(new VerizonActivateDevicePostProcessor(env)).endChoice()
-				.end().to("log:input").endChoice().end()
-				.bean(iAuditService, "auditExternalResponseCall");
 				
 		from("direct:deactivateDevice").process(new HeaderProcessor())
 			.choice()

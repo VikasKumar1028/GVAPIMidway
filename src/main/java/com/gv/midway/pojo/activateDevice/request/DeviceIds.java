@@ -1,5 +1,8 @@
-package com.gv.midway.pojo.activateDevice.verizon;
+package com.gv.midway.pojo.activateDevice.request;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class DeviceIds {
 	private String id;
 

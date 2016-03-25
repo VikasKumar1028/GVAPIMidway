@@ -9,42 +9,42 @@ import com.gv.midway.pojo.ResponseHeader;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponseDataArea;
 
-public class StubVerizonDeviceActivateProcessor implements Processor {
+public class StubKoreActivateDeviceProcessor implements Processor {
 
-	Logger log = Logger.getLogger(StubVerizonDeviceActivateProcessor.class
+	Logger log = Logger.getLogger(StubKoreActivateDeviceProcessor.class
 			.getName());
 
 	public void process(Exchange exchange) throws Exception {
 
-		log.info("StubVerizonDeviceActivateProcessor");
+		log.info("Start:StubKoreDeviceActivateProcessor");
+
 		ActivateDeviceResponse activateDeviceResponse = new ActivateDeviceResponse();
 
 		ActivateDeviceResponseDataArea activateDeviceResponseDataArea = new ActivateDeviceResponseDataArea();
-
 		ResponseHeader responseheader = new ResponseHeader();
 
 		Response response = new Response();
 		response.setResponseCode("200");
-		response.setResponseDescription("Device Activated successfully");
-		response.setResponseStatus("SUCESS");
+		response.setResponseDescription("Device is Activated successfully");
+		response.setResponseStatus("SUCCESS");
 
 		responseheader.setApplicationName("WEB");
-		responseheader.setRegion("setRegion");
+		responseheader.setRegion("USA");
 		responseheader.setTimestamp("2016-03-08T21:49:45");
 		responseheader.setOrganization("Grant Victor");
-		responseheader.setSourceName("VERIZON");
+		responseheader.setSourceName("KORE");
 		responseheader.setTransactionId("cde2131ksjd");
-		responseheader.setBsCarrier("VERIZON");
-		// baseResponse.setHeader(header);
+		responseheader.setBsCarrier("KORE");// baseResponse.setHeader(header);
 
 		activateDeviceResponse.setHeader(responseheader);
 		activateDeviceResponse.setResponse(response);
 
-	
-		activateDeviceResponseDataArea.setRequestId("R001");
-
+		activateDeviceResponseDataArea.setTrackingNumber("TR001");
+		activateDeviceResponseDataArea.setRequestId("requestId");
 		activateDeviceResponse.setDataArea(activateDeviceResponseDataArea);
 
 		exchange.getIn().setBody(activateDeviceResponse);
+
+		log.info("End:StubKoreDeviceActivateProcessor");
 	}
 }

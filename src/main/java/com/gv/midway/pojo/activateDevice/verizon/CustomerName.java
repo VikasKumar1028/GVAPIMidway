@@ -1,59 +1,96 @@
 package com.gv.midway.pojo.activateDevice.verizon;
 
-public class CustomerName
-{
-	 private String firstName;
-	 
-	
-    private String lastName;
+public class CustomerName {
+	private String firstName;
 
-    private String middleName;
+	private String lastName;
 
-    private String title;
+	private String middleName;
 
-    public String getMiddleName ()
-    {
-        return middleName;
-    }
+	private String title;
 
-    public void setMiddleName (String middleName)
-    {
-        this.middleName = middleName;
-    }
+	public String getMiddleName() {
+		return middleName;
+	}
 
-    public String getLastName ()
-    {
-        return lastName;
-    }
+	public void setMiddleName(String middleName) {
+		this.middleName = middleName;
+	}
 
-    public void setLastName (String lastName)
-    {
-        this.lastName = lastName;
-    }
+	public String getLastName() {
+		return lastName;
+	}
 
-    public String getTitle ()
-    {
-        return title;
-    }
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
 
-    public void setTitle (String title)
-    {
-        this.title = title;
-    }
+	public String getTitle() {
+		return title;
+	}
 
-    public String getFirstName ()
-    {
-        return firstName;
-    }
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
-    public void setFirstName (String firstName)
-    {
-        this.firstName = firstName;
-    }
+	public String getFirstName() {
+		return firstName;
+	}
 
-    @Override
-    public String toString()
-    {
-        return "ClassPojo [middleName = "+middleName+", lastName = "+lastName+", title = "+title+", firstName = "+firstName+"]";
-    }
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	@Override
+	public String toString() {
+		return "CustomerName [firstName=" + firstName + ", lastName="
+				+ lastName + ", middleName=" + middleName + ", title=" + title
+				+ "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((firstName == null) ? 0 : firstName.hashCode());
+		result = prime * result
+				+ ((lastName == null) ? 0 : lastName.hashCode());
+		result = prime * result
+				+ ((middleName == null) ? 0 : middleName.hashCode());
+		result = prime * result + ((title == null) ? 0 : title.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CustomerName other = (CustomerName) obj;
+		if (firstName == null) {
+			if (other.firstName != null)
+				return false;
+		} else if (!firstName.equals(other.firstName))
+			return false;
+		if (lastName == null) {
+			if (other.lastName != null)
+				return false;
+		} else if (!lastName.equals(other.lastName))
+			return false;
+		if (middleName == null) {
+			if (other.middleName != null)
+				return false;
+		} else if (!middleName.equals(other.middleName))
+			return false;
+		if (title == null) {
+			if (other.title != null)
+				return false;
+		} else if (!title.equals(other.title))
+			return false;
+		return true;
+	}
 }

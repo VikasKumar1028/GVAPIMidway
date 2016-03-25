@@ -10,68 +10,45 @@ import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
 
 import com.gv.midway.constant.IConstant;
-import com.gv.midway.pojo.BaseRequest;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.ResponseHeader;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponseDataArea;
-import com.gv.midway.pojo.activateDevice.verizon.VerizonResponse;
-import com.gv.midway.processor.deviceInformation.VerizonDeviceInformationPostProcessor;
 
-public class VerizonActivateDevicePostProcessor implements Processor {
+public class KoreActivateDevicePostProcessor implements Processor {
 
-	static int i = 0;
-
-	Logger log = Logger.getLogger(VerizonDeviceInformationPostProcessor.class
+	Logger log = Logger.getLogger(KoreActivateDevicePostProcessor.class
 			.getName());
 
-	/*
-	 * public VerizonActivateDevicePostProcessor() {
-	 * 
-	 * }
-	 */
+	public KoreActivateDevicePostProcessor() {
+
+	}
+
 	Environment newEnv;
 
-	public VerizonActivateDevicePostProcessor(Environment env) {
+	public KoreActivateDevicePostProcessor(Environment env) {
 		super();
 		this.newEnv = env;
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.apache.camel.Processor#process(org.apache.camel.Exchange)
-	 */
 	public void process(Exchange exchange) throws Exception {
 
-		log.info("Start:VerizonDeviceInformationPostProcessor");
+		log.info("Start::KoreActivateDevicePostProcessor");
+		ActivateDeviceResponseDataArea deviceActivateResponseDataArea = new ActivateDeviceResponseDataArea();
 
-		System.out.println("-----------------"
-				+ exchange.getIn().getBody().toString());
+		ActivateDeviceResponse activateDeviceResponse = exchange.getIn()
+				.getBody(ActivateDeviceResponse.class);
 
-		ActivateDeviceResponse activateDeviceResponse = new ActivateDeviceResponse();
 		ActivateDeviceResponseDataArea activateDeviceResponseDataArea = new ActivateDeviceResponseDataArea();
+
 		ResponseHeader responseheader = new ResponseHeader();
+
 		Response response = new Response();
+		response.setResponseCode(newEnv.getProperty(IConstant.RESPONSES_CODE));
+		response.setResponseStatus(newEnv
+				.getProperty(IConstant.RESPONSE_STATUS_SUCCESS));
 
-		if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
-			// Without error
-			VerizonResponse verizonResponse = exchange.getIn().getBody(
-					VerizonResponse.class);
-			response.setResponseCode(newEnv
-					.getProperty(IConstant.RESPONSES_CODE));
-			response.setResponseStatus(newEnv
-					.getProperty(IConstant.RESPONSE_STATUS_SUCCESS));
-
-		} else {
-			
-			response.setResponseCode("200");
-			response.setResponseStatus("errorMessage");
-			response.setResponseDescription(exchange.getIn().getBody().toString());
-		}
-
-		
 		responseheader.setApplicationName(newEnv
 				.getProperty(IConstant.APPLICATION_NAME));
 		responseheader.setRegion(newEnv.getProperty(IConstant.REGION));
@@ -91,14 +68,13 @@ public class VerizonActivateDevicePostProcessor implements Processor {
 		responseheader.setBsCarrier(newEnv
 				.getProperty(IConstant.BSCARRIER_VERIZON));
 
+		deviceActivateResponseDataArea.setRequestId("requestId");
+
 		activateDeviceResponse.setHeader(responseheader);
 		activateDeviceResponse.setResponse(response);
-
-		//activateDeviceResponseDataArea.setRequestId("requestId");
-		//activateDeviceResponse.setDataArea(activateDeviceResponseDataArea);
+		activateDeviceResponse.setDataArea(deviceActivateResponseDataArea);
 
 		exchange.getIn().setBody(activateDeviceResponse);
-
+		log.info("End::KoreActivateDevicePostProcessor");
 	}
-
 }

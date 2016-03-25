@@ -109,10 +109,10 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 				"direct:deactivateDevice", deactivateDeviceRequest);
 	}
 	
-	public ActivateDeviceResponse activateDeviceResponse(
+	public ActivateDeviceResponse activateDevice(
 			ActivateDeviceRequest activateDeviceRequest) {
 		
 		return (ActivateDeviceResponse) producer.requestBody(
-				"direct:deviceActivate", activateDeviceRequest);
+				"direct:activateDevice", activateDeviceRequest);
 	}
 }

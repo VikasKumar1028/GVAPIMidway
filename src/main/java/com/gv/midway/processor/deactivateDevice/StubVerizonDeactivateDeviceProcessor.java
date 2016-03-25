@@ -32,7 +32,7 @@ public class StubVerizonDeactivateDeviceProcessor implements Processor {
 		response.setResponseStatus("SUCESS");
 
 		responseheader.setApplicationName("WEB");
-		responseheader.setRegion("Region_Value");
+		responseheader.setRegion("USA");
 		responseheader.setTimestamp("2016-03-08T21:49:45");
 		responseheader.setOrganization("Grant Victor");
 		responseheader.setSourceName("KORE");

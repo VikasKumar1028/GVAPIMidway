@@ -83,8 +83,8 @@ public interface IAdaptaionLayerService {
 	@Path("/device/activate")
 	@Produces("application/json")
 	@Consumes("application/json")
-	@ApiOperation(value = "DeviceActivationService")
-	ActivateDeviceResponse activateDeviceResponse(
+	@ApiOperation(value = "ActivateDeviceService")
+	ActivateDeviceResponse activateDevice(
 			ActivateDeviceRequest activateDeviceRequest);
 
 
