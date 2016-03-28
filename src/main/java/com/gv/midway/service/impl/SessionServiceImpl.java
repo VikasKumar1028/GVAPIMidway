@@ -5,6 +5,7 @@ import javax.servlet.ServletContext;
 import org.apache.camel.Exchange;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.ServletContextAware;
 
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.dao.ISessionDao;
@@ -12,13 +13,18 @@ import com.gv.midway.pojo.session.SessionBean;
 import com.gv.midway.service.ISessionService;
 
 @Service
-public class SessionServiceImpl implements ISessionService {
+public class SessionServiceImpl implements ISessionService,ServletContextAware {
 
-	@Autowired
+//	@Autowired
 	private ServletContext servletContext;
 
 	@Autowired
 	private ISessionDao sessionDao;
+	
+	
+	public void setServletContext(ServletContext servletContext) {
+	     this.servletContext = servletContext;
+	}
 
 	public String getContextVzSessionToken() {
 
