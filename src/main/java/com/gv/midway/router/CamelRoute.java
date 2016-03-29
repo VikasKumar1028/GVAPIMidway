@@ -233,21 +233,22 @@ public class CamelRoute extends RouteBuilder {
 				
 				
 		from("direct:processKoreTransaction")
-			.log("*********************WIRE TAP THREAD**********************")
+			.log("Wire Tap Thread")
 			.bean(iTransactionalService,"populateDBPayload")
 		    .split().method("deviceSplitter").recipientList().method("koreDeviceServiceRouter");
 		
 		 from("seda:koreSedaActivation?concurrentConsumers=5")
 		    .doTry()
-		    .process(new KoreActivateDevicePreProcessor(env))
+		    			.process(new KoreActivateDevicePreProcessor(env))
 						.to(uriRestKoreEndPoint).unmarshal()
 						.json(JsonLibrary.Jackson, KoreDeviceInformationResponse.class)
+						.bean(iTransactionalService,"populateKoreTransactionalSuccessResponse")
 						.process(new KoreDeviceInformationPostProcessor())
 		    .doCatch(CxfOperationException.class)
-		    .bean(iTransactionalService,"populateKoreTransactionalErrorResponse")
-			.bean(iAuditService, "auditExternalExceptionResponseCall")
-			.process(new KoreGenericExceptionProcessor(env))
-		.endDoTry();		
+		    			.bean(iTransactionalService,"populateKoreTransactionalErrorResponse")
+		    			.bean(iAuditService, "auditExternalExceptionResponseCall")
+		    			.process(new KoreGenericExceptionProcessor(env))
+		    .endDoTry();		
 		
 		
 		from("direct:deactivateDevice").process(new HeaderProcessor())

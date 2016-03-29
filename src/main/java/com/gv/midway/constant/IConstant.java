@@ -28,4 +28,5 @@ public interface IConstant {
 	static String AUDIT_TRANSACTION_ID="com.gv.midway.audit.TransactionID";
 	static String MIDWAY_TRANSACTION_ID="MidwayTransactionId";
 	static String MIDWAY_TRANSACTION_STATUS_PENDING="Pending";
+	static String MIDWAY_TRANSACTION_DEVICE_NUMBER="TransactionDeviceNumber";
 }

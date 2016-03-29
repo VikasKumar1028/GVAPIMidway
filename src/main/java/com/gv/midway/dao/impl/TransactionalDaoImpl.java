@@ -164,7 +164,10 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		Query searchUserQuery = new Query(Criteria
 				.where("midwayTransationID")
 				.is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID))
-				);
+				.andOperator(
+						Criteria.where("deviceNumber")
+						.is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
+				
 		
 		
 		 /* String carrierTransationID;//Call Back Thread String
@@ -176,17 +179,21 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		 * callBackReceived;//CallBack Thread String
 		 * callBackFailureToNetSuitReason;//CallBack Thread
 		 */
-		if (exchange.getIn().getBody().toString().contains("errorMessage=")) {
+		CxfOperationException exception = (CxfOperationException) exchange
+				.getProperty(Exchange.EXCEPTION_CAUGHT);
+
+		String errorResponseBody = exception.getResponseBody();
+
 				
 
 		Update update = new Update();
-		update.set("callBackPayload", exchange.getIn().getBody().toString());
-		update.set("carrierErrorDecription", exchange.getIn().getBody().toString());
-		update.set("carrierErrorDecription", exchange.getIn().getBody().toString());
+		update.set("callBackPayload", errorResponseBody);
+		update.set("carrierErrorDecription", errorResponseBody);
+		update.set("carrierErrorDecription", errorResponseBody);
 		update.set("carrierStatus", "Error");
 		update.set("LastTimeStampUpdated", CommonUtil.getCurrentTimeStamp());
 		mongoTemplate.updateMulti(searchUserQuery, update, Transaction.class);
-		}
+		
 	}
 	
 	
