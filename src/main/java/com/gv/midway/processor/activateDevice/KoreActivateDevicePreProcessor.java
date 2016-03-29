@@ -40,7 +40,7 @@ public class KoreActivateDevicePreProcessor implements Processor {
 		
 		ObjectMapper mapper = new ObjectMapper();
 	
-		ActivateDeviceRequest activateDeviceRequest=mapper.readValue(transaction.getPayload(),ActivateDeviceRequest.class);
+		ActivateDeviceRequest activateDeviceRequest=mapper.readValue(transaction.getDevicePayload(),ActivateDeviceRequest.class);
 	
 			
 	

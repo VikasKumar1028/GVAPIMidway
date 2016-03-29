@@ -21,9 +21,9 @@ import com.gv.midway.pojo.transaction.Transaction;
 public class KoreDeviceServiceRouter {
 
     public String resolveOrderItemChannel(Transaction transaction) {
-    	System.out.println("************KORE ROUTER****************************"+ transaction.getInboundURL());
+    	System.out.println("************KORE ROUTER****************************"+ transaction.getRequestType());
     	
-    	if(transaction.getInboundURL().contains("direct://activateDevice"))    		
+    	if(transaction.getRequestType().contains("direct://activateDevice"))    		
     	 		
     		
         return  "seda:koreSedaActivation" ;
