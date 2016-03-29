@@ -2,6 +2,8 @@ package com.gv.midway.pojo.transaction;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.mongodb.BasicDBObject;
+
 @Document(collection = "transactionalDetail")
 public class Transaction {
 
@@ -21,6 +23,12 @@ public class Transaction {
 	String auditTransationID;
 	Boolean callBackReceived;
 	String callBackFailureToNetSuitReason;
+	
+	
+	public Transaction() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	public String getMidwayTransationID() {
 		return midwayTransationID;

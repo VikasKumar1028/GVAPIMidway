@@ -15,6 +15,7 @@ import com.gv.midway.pojo.DeviceId;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequestDataArea;
 import com.gv.midway.pojo.transaction.Transaction;
+import com.mongodb.BasicDBList;
 
 @Service
 public class TransactionalDaoImpl implements ITransactionalDao {
@@ -23,7 +24,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 	MongoTemplate mongoTemplate;
 
 	public void populateDBPayload(Exchange exchange) {
-		ArrayList list = new ArrayList();
+		ArrayList<Transaction> list = new ArrayList();
 
 		System.out.println("Exchange inside"
 				+ exchange.getIn().getBody().toString());
@@ -36,7 +37,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		DeviceId[] deviceIds = activateDeviceRequestDataArea.getDeviceId();
 		Kryo kryo = new Kryo();
-
+		
+		
 		for (DeviceId actualDeviceId : deviceIds) {
 			DeviceId[] payLoadDeviceIds = new DeviceId[1];
 			DeviceId payLoadDeviceId = new DeviceId();
@@ -52,42 +54,45 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				String msgBody = mapper.writeValueAsString(copy);
 
 				Transaction transaction = new Transaction();
-				transaction.setCarrierName(exchange.getProperty(IConstant.BSCARRIER).toString());
+				transaction.setCarrierName(exchange.getProperty(
+						IConstant.BSCARRIER).toString());
 				transaction.setDevicePayload(msgBody);
-				
-				
-				//transaction.setAuditTransationID(exchange.getProperty());
-						
-				/*transaction.setCarrierName(exchange.getProperties());
-				transaction.setCarrier(exchang
-						.getProperty(IConstant.BSCARRIER).toString());
-				transaction.setSource(exchange.getProperty(
-						IConstant.SOURCE_NAME).toString());
-				transaction.setApiAction(exchange.getFromEndpoint().toString());
-				transaction
-						.setInboundURL(exchange.getFromEndpoint().toString());
-				transaction.setTransactionId(exchange.getProperty(
-						"TransactionId").toString());
-				transaction.setPayload(msgBody);*/
+				transaction.setAuditTransationID(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
+				transaction.setRequestType(exchange.getFromEndpoint().toString());
+				// transaction.setAuditTransationID(exchange.getProperty());
+
+				/*
+				 * transaction.setCarrierName(exchange.getProperties());
+				 * transaction.setCarrier(exchang
+				 * .getProperty(IConstant.BSCARRIER).toString());
+				 * transaction.setSource(exchange.getProperty(
+				 * IConstant.SOURCE_NAME).toString());
+				 * transaction.setApiAction(exchange
+				 * .getFromEndpoint().toString()); transaction
+				 * .setInboundURL(exchange.getFromEndpoint().toString());
+				 * transaction.setTransactionId(exchange.getProperty(
+				 * "TransactionId").toString());
+				 * transaction.setPayload(msgBody);
+				 */
+
+				//mongoTemplate.insertAll(objectsToSave)
 				
 				list.add(transaction);
-				System.out
-						.println(exchange.getProperty(IConstant.SOURCE_NAME).toString()+"***************&&&&&&&&&&&&&&&&&&&&&&*********************"
-								+ copy.getDataArea().toString());
-				mongoTemplate.save(transaction);
+
 			} catch (Exception ex) {
 				System.out
-						.println("**************)))))))))))))))))))))))&&&&&&&&&&&&&&&&*********************"
-								+ copy.getDataArea().toString());
+						.println("**************Error*********************"	+ copy.getDataArea().toString());
 
 			}
 			
-			System.out.println("LIST SIZE 2--------------------" + list.size());
 			
-			if(exchange.getProperty(IConstant.SOURCE_NAME).toString().equals("KORE"))
-			{
-				System.out.println("LIST SIZE ------------------------" + list.size());
-			exchange.getIn().setBody(list);
+			mongoTemplate.insertAll(list);
+			
+
+			if (exchange.getProperty(IConstant.SOURCE_NAME).toString()
+					.equals("KORE")) {
+
+				exchange.getIn().setBody(list);
 			}
 
 		}
