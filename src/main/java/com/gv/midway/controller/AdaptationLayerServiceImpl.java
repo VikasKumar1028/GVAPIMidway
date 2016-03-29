@@ -3,14 +3,15 @@ package com.gv.midway.controller;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.ProducerTemplate;
 
+import com.gv.midway.device.request.pojo.Device;
+import com.gv.midway.device.request.pojo.Devices;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
-import com.gv.midway.device.request.pojo.Device;
-import com.gv.midway.device.request.pojo.Devices;
+import com.gv.midway.pojo.verizon.generic.callback.VerizonActivateCallBackRequest;
 
 
 @SuppressWarnings("all")
@@ -114,5 +115,9 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 		
 		return (ActivateDeviceResponse) producer.requestBody(
 				"direct:activateDevice", activateDeviceRequest);
+	}
+	
+	public VerizonActivateCallBackRequest activateCallback(VerizonActivateCallBackRequest callbackRequest) {
+		return (VerizonActivateCallBackRequest) producer.requestBody("direct:callbacks", callbackRequest);
 	}
 }

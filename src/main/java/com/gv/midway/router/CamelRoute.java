@@ -24,12 +24,12 @@ import com.gv.midway.processor.GenericErrorProcessor;
 import com.gv.midway.processor.HeaderProcessor;
 import com.gv.midway.processor.KoreGenericExceptionProcessor;
 import com.gv.midway.processor.VerizonGenericExceptionProcessor;
-import com.gv.midway.processor.activateDevice.KoreActivateDevicePostProcessor;
 import com.gv.midway.processor.activateDevice.KoreActivateDevicePreProcessor;
 import com.gv.midway.processor.activateDevice.StubKoreActivateDeviceProcessor;
 import com.gv.midway.processor.activateDevice.StubVerizonActivateDeviceProcessor;
 import com.gv.midway.processor.activateDevice.VerizonActivateDevicePostProcessor;
 import com.gv.midway.processor.activateDevice.VerizonActivateDevicePreProcessor;
+import com.gv.midway.processor.callbacks.CallbackPreProcessor;
 import com.gv.midway.processor.deactivateDevice.KoreDeactivateDevicePostProcessor;
 import com.gv.midway.processor.deactivateDevice.KoreDeactivateDevicePreProcessor;
 import com.gv.midway.processor.deactivateDevice.StubKoreDeactivateDeviceProcessor;
@@ -37,7 +37,6 @@ import com.gv.midway.processor.deactivateDevice.StubVerizonDeactivateDeviceProce
 import com.gv.midway.processor.deactivateDevice.VerizonDeactivateDevicePostProcessor;
 import com.gv.midway.processor.deactivateDevice.VerizonDeactivateDevicePreProcessor;
 import com.gv.midway.processor.deviceInformation.KoreDeviceInformationPostProcessor;
-import com.gv.midway.processor.deviceInformation.KoreDeviceInformationPreProcessor;
 import com.gv.midway.processor.deviceInformation.StubKoreDeviceInformationProcessor;
 import com.gv.midway.processor.deviceInformation.StubVerizonDeviceInformationProcessor;
 import com.gv.midway.processor.deviceInformation.VerizonDeviceInformationPostProcessor;
@@ -51,6 +50,8 @@ import com.gv.midway.service.IDeviceService;
 // import static org.apache.camel.language.simple.SimpleLanguage.simple;
 import com.gv.midway.service.ISessionService;
 import com.gv.midway.service.ITransactionalService;
+import com.gv.midway.service.callbacks.GVCallbackTransactionalService;
+import com.gv.midway.service.callbacks.GVCallbacksService;
 
 /**
  * The Camel route
@@ -77,6 +78,11 @@ public class CamelRoute extends RouteBuilder {
 	
 	@Autowired
 	private ITransactionalService iTransactionalService;
+	
+	@Autowired
+	private GVCallbacksService gvCallBacks;
+	@Autowired
+	private GVCallbackTransactionalService gvCallbackTransactionalService;
 
 	/*
 	 * @Autowired private SessionBean sessionBean;
@@ -85,7 +91,8 @@ public class CamelRoute extends RouteBuilder {
 	private String uriRestVerizonEndPoint = "cxfrs://bean://rsVerizonClient";
 	private String uriRestVerizonTokenEndPoint = "cxfrs://bean://rsVerizonTokenClient";
 	private String uriRestKoreEndPoint = "cxfrs://bean://rsKoreClient";
-
+	private String uriRestNetsuitEndPoint = "cxfrs://bean://rsNetsuitClient";
+	
 	Logger log = Logger.getLogger(CamelRoute.class.getName());
 
 	@Autowired
@@ -302,6 +309,14 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iDeviceService, "insertDevicesDetailsInBatch")
 				.to("log:input").end();
 		
-	
+		from("direct:callbacks")
+			.process(new CallbackPreProcessor())
+			.bean(gvCallBacks, "callbackRequestCall")
+	//		.to("kafka:10.13.37.26:9092?topic=test&serializerClass=kafka.serializer.StringEncoder")
+//			.doTry()
+//			.to(uriRestNetsuitEndPoint)
+//			.doCatch(CxfOperationException.class)
+			.bean(gvCallbackTransactionalService,"populateCallbackDBPayload")
+		.end();
 	}
 }

@@ -42,7 +42,7 @@
 
 	<bean id="adaptationLayerService" class="com.gv.midway.controller.AdaptationLayerServiceImpl" />
 
-	<bean id="auditLogRequestEventNotifer" class="com.gv.midway.audit.AuditLogRequestEventNotifer" />
+	<bean id="auditLogRequestEventNotifer" class="com.gv.midway.audit.AuditLogRequestEventNotifer" ></bean>
 
 	<bean id="auditLogResponseEventNotifer" class="com.gv.midway.audit.AuditLogResponseEventNotifer" />
 
@@ -85,7 +85,17 @@
 			<bean class="com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider" />
 		</cxf:providers>
 	</cxf:rsClient>
+<!-- START : Defining client endpoint to create cxf-rs URL -->
 
+	<cxf:rsClient id="rsNetsuitClient"
+		address="" serviceClass=""
+		loggingFeatureEnabled="true">
+		<cxf:providers>
+			<bean class="com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider" />
+		</cxf:providers>
+	</cxf:rsClient>
+	
+<!-- END : Defining client endpoint to create cxf-rs URL -->
 	<camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
 		<routeBuilder ref="camelRoutes" />
 

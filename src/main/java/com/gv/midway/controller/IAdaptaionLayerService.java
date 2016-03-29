@@ -8,14 +8,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
+import com.gv.midway.device.request.pojo.Device;
+import com.gv.midway.device.request.pojo.Devices;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
-import com.gv.midway.device.request.pojo.Device;
-import com.gv.midway.device.request.pojo.Devices;
+import com.gv.midway.pojo.verizon.generic.callback.VerizonActivateCallBackRequest;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 
@@ -87,5 +88,10 @@ public interface IAdaptaionLayerService {
 	ActivateDeviceResponse activateDevice(
 			ActivateDeviceRequest activateDeviceRequest);
 
-
+	@POST
+	@Path("/device/callback")
+	@Produces("application/json")
+	@Consumes("application/json")
+	@ApiOperation(value = "DeviceActivationCallbackService")
+	VerizonActivateCallBackRequest activateCallback(VerizonActivateCallBackRequest activateDeviceRequest);
 }
