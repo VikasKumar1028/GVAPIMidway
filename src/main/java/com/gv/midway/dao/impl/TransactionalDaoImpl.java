@@ -50,12 +50,20 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			copy.getDataArea().setDeviceId(payLoadDeviceIds);
 
 			try {
+				long timestamp = System.currentTimeMillis();
+				String midwayTransationID = Long.toString(timestamp);
+				System.out.println("midwayTransationID::::----"+midwayTransationID);
+				
 				ObjectMapper mapper = new ObjectMapper();
 				String msgBody = mapper.writeValueAsString(copy);
 
 				Transaction transaction = new Transaction();
 				transaction.setCarrierName(exchange.getProperty(
 						IConstant.BSCARRIER).toString());
+				System.out.println("transaction.getRequestType()"+exchange.getFromRouteId());
+				
+				transaction.setMidwayTransationID("midwayTransationID");
+				
 				transaction.setDevicePayload(msgBody);
 				transaction.setAuditTransationID(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
 				transaction.setRequestType(exchange.getFromEndpoint().toString());
@@ -97,6 +105,10 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		}
 
+	}
+	public void callbackSaveDB(Exchange exchange) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
