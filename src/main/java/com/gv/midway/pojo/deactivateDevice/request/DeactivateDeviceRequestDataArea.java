@@ -1,9 +1,9 @@
 package com.gv.midway.pojo.deactivateDevice.request;
+import com.gv.midway.pojo.DeviceId;
 
 import java.util.Arrays;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DeactivateDeviceRequestDataArea {
 	private String groupName;
@@ -16,7 +16,7 @@ public class DeactivateDeviceRequestDataArea {
 
 	private String reasonCode;
 
-	private DeviceIds[] deviceIds;
+	private DeviceId[] deviceIds;
 
 	private String etfWaiver;
 
@@ -62,11 +62,11 @@ public class DeactivateDeviceRequestDataArea {
 		this.reasonCode = reasonCode;
 	}
 
-	public DeviceIds[] getDeviceIds() {
+	public DeviceId[] getDeviceIds() {
 		return deviceIds;
 	}
 
-	public void setDeviceIds(DeviceIds[] deviceIds) {
+	public void setDeviceIds(DeviceId[] deviceIds) {
 		this.deviceIds = deviceIds;
 	}
 

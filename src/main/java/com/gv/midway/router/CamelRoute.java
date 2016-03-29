@@ -50,6 +50,7 @@ import com.gv.midway.service.IDeviceService;
 // this static import is needed for older versions of Camel than 2.5
 // import static org.apache.camel.language.simple.SimpleLanguage.simple;
 import com.gv.midway.service.ISessionService;
+import com.gv.midway.service.ITransactionalService;
 
 /**
  * The Camel route
@@ -73,6 +74,9 @@ public class CamelRoute extends RouteBuilder {
 
 	@Autowired
 	private IAuditService iAuditService;
+	
+	@Autowired
+	private ITransactionalService iTransactionalService;
 
 	/*
 	 * @Autowired private SessionBean sessionBean;
@@ -187,7 +191,8 @@ public class CamelRoute extends RouteBuilder {
 						endChoice().otherwise()
 							.choice()
 									.when(header("sourceName").isEqualTo("KORE"))
-									.doTry()
+									 .wireTap("direct:processKoreTransaction")
+									/*.doTry()
 											.process(new KoreActivateDevicePreProcessor(env))
 												.bean(iAuditService, "auditExternalRequestCall")
 											.to(uriRestKoreEndPoint).unmarshal()
@@ -197,7 +202,7 @@ public class CamelRoute extends RouteBuilder {
 									  .doCatch(CxfOperationException.class)
 											.bean(iAuditService, "auditExternalExceptionResponseCall")
 											.process(new KoreGenericExceptionProcessor(env))
-								   .endDoTry()
+								   .endDoTry()*/
 							.endChoice()
 									.when(header("sourceName").isEqualTo("VERIZON"))
 										.doTry()
@@ -261,6 +266,22 @@ public class CamelRoute extends RouteBuilder {
 			endChoice()
 			.end();
 			
+		from("direct:processKoreTransaction")
+		.log("*********************WIRE TAP THREAD**********************")
+			.bean(iTransactionalService,"populateDBPayload")
+		    .split().method("deviceSplitter").recipientList().method("koreDeviceServiceRouter");
+		
+		 from("seda:koreSedaActivation?concurrentConsumers=5")
+		    .doTry()
+		    .process(new KoreActivateDevicePreProcessor(env))
+						.to(uriRestKoreEndPoint).unmarshal()
+						.json(JsonLibrary.Jackson, KoreDeviceInformationResponse.class)
+						.process(new KoreDeviceInformationPostProcessor())
+		    .doCatch(CxfOperationException.class)
+			.bean(iAuditService, "auditExternalExceptionResponseCall")
+			.process(new KoreGenericExceptionProcessor(env))
+		.endDoTry();
+		
 				
 		from("direct:insertDeviceDetails")
 				.bean(iDeviceService, "insertDeviceDetails").to("log:input")

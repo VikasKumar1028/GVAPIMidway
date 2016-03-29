@@ -3,13 +3,11 @@ package com.gv.midway.pojo.activateDevice.request;
 import java.util.Arrays;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.gv.midway.pojo.activateDevice.request.DeviceIds;
+import com.gv.midway.pojo.DeviceId;
 import com.gv.midway.pojo.activateDevice.verizon.Address;
 import com.gv.midway.pojo.activateDevice.verizon.CustomFields;
 import com.gv.midway.pojo.activateDevice.verizon.CustomerName;
 import com.gv.midway.pojo.activateDevice.verizon.PrimaryPlaceOfUse;
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ActivateDeviceRequestDataArea {
 
@@ -37,7 +35,7 @@ public class ActivateDeviceRequestDataArea {
 
 	private String mdnZipCode;
 
-	private DeviceIds[] deviceId;
+	private DeviceId[] deviceId;
 
 	private CustomerName customerName;
 
@@ -145,11 +143,11 @@ public class ActivateDeviceRequestDataArea {
 		return customerName;
 	}
 
-	public DeviceIds[] getDeviceId() {
+	public DeviceId[] getDeviceId() {
 		return deviceId;
 	}
 
-	public void setDeviceId(DeviceIds[] deviceId) {
+	public void setDeviceId(DeviceId[] deviceId) {
 		this.deviceId = deviceId;
 	}
 

@@ -1,13 +1,13 @@
-package com.gv.midway.pojo.deviceInformation.request;
+package com.gv.midway.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DeviceId {
-	@JsonProperty("id")
+	//@JsonProperty("id")
 	private String id;
-	@JsonProperty("kind")
+	//@JsonProperty("kind")
 	private String kind;
 
 	public String getId() {

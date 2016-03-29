@@ -10,12 +10,10 @@ import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
 
 import com.gv.midway.constant.IConstant;
-import com.gv.midway.pojo.BaseRequest;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.ResponseHeader;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponseDataArea;
-import com.gv.midway.pojo.activateDevice.verizon.VerizonResponse;
 import com.gv.midway.processor.deviceInformation.VerizonDeviceInformationPostProcessor;
 
 public class VerizonActivateDevicePostProcessor implements Processor {
@@ -57,8 +55,8 @@ public class VerizonActivateDevicePostProcessor implements Processor {
 
 		if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
 			// Without error
-			VerizonResponse verizonResponse = exchange.getIn().getBody(
-					VerizonResponse.class);
+			/*VerizonResponse verizonResponse = exchange.getIn().getBody(
+					VerizonResponse.class);*/
 			response.setResponseCode(newEnv
 					.getProperty(IConstant.RESPONSES_CODE));
 			response.setResponseStatus(newEnv

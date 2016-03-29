@@ -36,6 +36,9 @@
 
 	<bean id="camelRoutes" class="com.gv.midway.router.CamelRoute" />
 
+	<bean id="koreDeviceServiceRouter" class="com.gv.midway.router.KoreDeviceServiceRouter" />
+
+	<bean id="deviceSplitter" class="com.gv.midway.splitter.DeviceSplitter" />
 
 	<bean id="adaptationLayerService" class="com.gv.midway.controller.AdaptationLayerServiceImpl" />
 

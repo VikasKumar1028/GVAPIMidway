@@ -6,16 +6,13 @@ import java.util.Date;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
-import org.apache.camel.component.cxf.CxfOperationException;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
 
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.ResponseHeader;
-import com.gv.midway.pojo.activateDevice.verizon.VerizonResponse;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
-import com.gv.midway.processor.deviceInformation.VerizonDeviceInformationPostProcessor;
 
 public class VerizonDeactivateDevicePostProcessor implements Processor {
 
