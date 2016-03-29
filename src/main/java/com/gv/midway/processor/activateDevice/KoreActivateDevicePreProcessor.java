@@ -38,6 +38,9 @@ public class KoreActivateDevicePreProcessor implements Processor {
 
 		Transaction transaction= exchange.getIn().getBody(Transaction.class);
 		
+//exchange		transaction.getDeviceNumber()
+
+		
 		ObjectMapper mapper = new ObjectMapper();
 	
 		ActivateDeviceRequest activateDeviceRequest=mapper.readValue(transaction.getDevicePayload(),ActivateDeviceRequest.class);
@@ -52,6 +55,8 @@ public class KoreActivateDevicePreProcessor implements Processor {
 		message.setHeader(Exchange.HTTP_PATH, "/json/activateDevice");
 
 		message.setBody(activateDeviceRequest);
+		
+		
 		
 		log.info("End:KoreDeactivateDevicePreProcessor");
 	}
@@ -98,6 +103,7 @@ public class KoreActivateDevicePreProcessor implements Processor {
 		message.setBody(activateDeviceRequest);
 
 		log.info("End:KoreActivateDevicePreProcessor.java");
+		
 
 	}
 */

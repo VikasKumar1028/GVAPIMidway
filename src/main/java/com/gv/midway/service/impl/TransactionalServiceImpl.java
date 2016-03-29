@@ -17,4 +17,9 @@ public class TransactionalServiceImpl implements ITransactionalService {
 		transactionalDao.populateDBPayload(exchange);
 	}
 
+	public void callbackSaveDB(Exchange exchange) {
+		
+		transactionalDao.callbackSaveDB(exchange);
+	}
+
 }

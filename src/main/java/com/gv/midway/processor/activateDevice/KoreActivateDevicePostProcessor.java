@@ -34,7 +34,13 @@ public class KoreActivateDevicePostProcessor implements Processor {
 
 	public void process(Exchange exchange) throws Exception {
 
+		//bean exhange (deviceNumber, Midwayisd)
+		
+		//update status
+		
+		
 		log.info("Start::KoreActivateDevicePostProcessor");
+		System.out.println("KoreActivateDevicePostProcessor------------------------------tracking no----------");
 		ActivateDeviceResponseDataArea deviceActivateResponseDataArea = new ActivateDeviceResponseDataArea();
 
 		ActivateDeviceResponse activateDeviceResponse = exchange.getIn()
@@ -72,6 +78,7 @@ public class KoreActivateDevicePostProcessor implements Processor {
 
 		activateDeviceResponse.setHeader(responseheader);
 		activateDeviceResponse.setResponse(response);
+		deviceActivateResponseDataArea.setTrackingNumber("ReciptNumbergenratedByKORE");
 		activateDeviceResponse.setDataArea(deviceActivateResponseDataArea);
 
 		exchange.getIn().setBody(activateDeviceResponse);
