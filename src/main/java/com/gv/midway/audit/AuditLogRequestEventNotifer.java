@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.BaseRequest;
 import com.gv.midway.pojo.audit.Audit;
 
@@ -44,7 +45,7 @@ public class AuditLogRequestEventNotifer extends EventNotifierSupport {
 				
 				long timestamp = System.currentTimeMillis();
 				String TransactionId = Long.toString(timestamp);
-				exchange.setProperty("TransactionId", TransactionId);
+				exchange.setProperty(IConstant.AUDIT_TRANSACTION_ID, TransactionId);
 
 				Audit audit = new Audit();
 				audit.setCarrier(baseRequest.getHeader().getBsCarrier());

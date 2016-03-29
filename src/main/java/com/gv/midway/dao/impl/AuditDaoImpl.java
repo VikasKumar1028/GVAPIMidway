@@ -39,7 +39,7 @@ public class AuditDaoImpl implements IAuditDao {
 			audit.setApiAction(exchange.getIn().getHeader(Exchange.HTTP_PATH)
 					.toString());
 			audit.setInboundURL(exchange.getFromEndpoint().toString());
-			audit.setTransactionId(exchange.getProperty("TransactionId")
+			audit.setTransactionId(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID)
 					.toString());
 			audit.setPayload(msgBody);
 			mongoTemplate.save(audit);
@@ -70,7 +70,7 @@ public class AuditDaoImpl implements IAuditDao {
 					.toString());
 			audit.setApiAction(exchange.getFromEndpoint().toString());
 			audit.setInboundURL(exchange.getFromEndpoint().toString());
-			audit.setTransactionId(exchange.getProperty("TransactionId")
+			audit.setTransactionId(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID)
 					.toString());
 			audit.setPayload(msgBody);
 			mongoTemplate.save(audit);
@@ -103,7 +103,7 @@ public class AuditDaoImpl implements IAuditDao {
 					.toString());
 			audit.setApiAction(exchange.getFromEndpoint().toString());
 			audit.setInboundURL(exchange.getFromEndpoint().toString());
-			audit.setTransactionId(exchange.getProperty("TransactionId")
+			audit.setTransactionId(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID)
 					.toString());
 			audit.setPayload(responseBody);
 			mongoTemplate.save(audit);

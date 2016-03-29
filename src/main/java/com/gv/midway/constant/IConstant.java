@@ -25,4 +25,5 @@ public interface IConstant {
 	static String DATE_FORMAT="simple.date.format";
 	static String SOURCE_NAME="sourceName";
 	static String BSCARRIER="bsCarrier";
+	static String AUDIT_TRANSACTION_ID="com.gv.midway.audit.TransactionID";
 }
