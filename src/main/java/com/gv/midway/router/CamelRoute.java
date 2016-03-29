@@ -214,6 +214,7 @@ public class CamelRoute extends RouteBuilder {
 									.when(header("sourceName").isEqualTo("VERIZON"))
 										.doTry()
 												.bean(iSessionService, "setContextTokenInExchange")
+												.bean(iTransactionalService,"populateDBPayload")
 												.process(new VerizonActivateDevicePreProcessor())
 												.to(uriRestVerizonEndPoint)
 												.unmarshal()

@@ -2,7 +2,7 @@ package com.gv.midway.pojo.transaction;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.mongodb.BasicDBObject;
+
 
 @Document(collection = "transactionalDetail")
 public class Transaction {

@@ -26,4 +26,5 @@ public interface IConstant {
 	static String SOURCE_NAME="sourceName";
 	static String BSCARRIER="bsCarrier";
 	static String AUDIT_TRANSACTION_ID="com.gv.midway.audit.TransactionID";
+	static String MIDWAY_TRANSACTION_STATUS_PENDING="Pending";
 }
