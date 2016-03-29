@@ -1,6 +1,10 @@
 package com.gv.midway.audit;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.EventObject;
+import java.util.TimeZone;
 
 import org.apache.camel.Exchange;
 //import org.apache.camel.management.event.ExchangeCreatedEvent;
@@ -42,14 +46,29 @@ public class AuditLogResponseEventNotifer extends EventNotifierSupport {
 				
 				String TransactionId = (String) exchange
 						.getProperty(IConstant.AUDIT_TRANSACTION_ID);
-
+				
+				Date localTime = new Date();
+				DateFormat converter = new SimpleDateFormat(
+						"dd/MM/yyyy:HH:mm:ss");
+				converter.setTimeZone(TimeZone.getTimeZone("GMT"));
+			
 				Audit audit = new Audit();
-			    audit.setCarrier(baseResponse.getHeader().getBsCarrier());
+			  /*  audit.setCarrier(baseResponse.getHeader().getBsCarrier());
 				audit.setSource(baseResponse.getHeader().getSourceName());
 				audit.setApiAction(exchange.getFromEndpoint().toString());
 				audit.setInboundURL(exchange.getFromEndpoint().toString());
-				audit.setTransactionId(TransactionId);
+				audit.setTransactionId(TransactionId);*/
+				
+				audit.setApi_OpreationName(baseResponse.getHeader().getBsCarrier());
+				audit.setFrom(baseResponse.getHeader().getSourceName());
+				audit.setTo(exchange.getFromEndpoint().toString());
+				audit.setTimeStamp(localTime);
+				audit.setAuditTransationID(TransactionId);
+				audit.setErrorDetais(baseResponse.getResponse().getResponseDescription());
+				audit.setErrorProblem(baseResponse.getResponse().getResponseStatus());
+				audit.setErrorCode(baseResponse.getResponse().getResponseCode());
 				audit.setPayload(jsonInString);
+				
 				mongoTemplate.save(audit);
 
 			}

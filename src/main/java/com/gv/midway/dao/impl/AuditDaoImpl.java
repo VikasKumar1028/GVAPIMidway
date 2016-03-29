@@ -1,5 +1,10 @@
 package com.gv.midway.dao.impl;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.component.cxf.CxfOperationException;
 import org.apache.log4j.Logger;
@@ -34,13 +39,24 @@ public class AuditDaoImpl implements IAuditDao {
 			log.info("auditExternalRequestCall-jsonInString::" + msgBody);
 
 			Audit audit = new Audit();
-			audit.setCarrier(exchange.getProperty("bsCarrier").toString());
+			/*audit.setCarrier(exchange.getProperty("bsCarrier").toString());
 			audit.setSource(exchange.getProperty("sourceName").toString());
 			audit.setApiAction(exchange.getIn().getHeader(Exchange.HTTP_PATH)
 					.toString());
 			audit.setInboundURL(exchange.getFromEndpoint().toString());
 			audit.setTransactionId(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID)
-					.toString());
+					.toString());*/
+			Date localTime = new Date();
+			DateFormat converter = new SimpleDateFormat(
+					"dd/MM/yyyy:HH:mm:ss");
+			converter.setTimeZone(TimeZone.getTimeZone("GMT"));
+			
+			audit.setApi_OpreationName(exchange.getProperty("bsCarrier").toString());
+			audit.setFrom(exchange.getProperty("sourceName").toString());
+			audit.setTo(exchange.getFromEndpoint().toString());
+			audit.setTimeStamp(localTime);
+			audit.setAuditTransationID(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
+			
 			audit.setPayload(msgBody);
 			mongoTemplate.save(audit);
 
@@ -64,14 +80,26 @@ public class AuditDaoImpl implements IAuditDao {
 					.getBody());
 
 			Audit audit = new Audit();
-			audit.setCarrier(exchange.getProperty(IConstant.BSCARRIER)
-					.toString());
-			audit.setSource(exchange.getProperty(IConstant.SOURCE_NAME)
-					.toString());
+		/*	audit.setCarrier(exchange.getProperty(IConstant.BSCARRIER).toString());
+			audit.setSource(exchange.getProperty(IConstant.SOURCE_NAME).toString());
 			audit.setApiAction(exchange.getFromEndpoint().toString());
 			audit.setInboundURL(exchange.getFromEndpoint().toString());
-			audit.setTransactionId(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID)
-					.toString());
+			audit.setTransactionId(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());*/
+			
+			Date localTime = new Date();
+			DateFormat converter = new SimpleDateFormat(
+					"dd/MM/yyyy:HH:mm:ss");
+			converter.setTimeZone(TimeZone.getTimeZone("GMT"));
+			
+			audit.setApi_OpreationName(exchange.getProperty("bsCarrier").toString());
+			audit.setFrom(exchange.getProperty("sourceName").toString());
+			audit.setTo(exchange.getFromEndpoint().toString());
+			audit.setTimeStamp(localTime);
+			audit.setAuditTransationID(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
+			audit.setErrorDetais(exchange.getProperty(IConstant.RESPONSE_DESCRIPTION).toString());
+			audit.setErrorProblem(exchange.getProperty(IConstant.RESPONSE_STATUS).toString());
+			audit.setErrorCode(exchange.getProperty(IConstant.RESPONSE_CODE).toString());
+			
 			audit.setPayload(msgBody);
 			mongoTemplate.save(audit);
 
@@ -97,14 +125,27 @@ public class AuditDaoImpl implements IAuditDao {
 			//changes for the audit
 
 			Audit audit = new Audit();
-			audit.setCarrier(exchange.getProperty(IConstant.BSCARRIER)
+			/*audit.setCarrier(exchange.getProperty(IConstant.BSCARRIER)
 					.toString());
 			audit.setSource(exchange.getProperty(IConstant.SOURCE_NAME)
 					.toString());
 			audit.setApiAction(exchange.getFromEndpoint().toString());
 			audit.setInboundURL(exchange.getFromEndpoint().toString());
 			audit.setTransactionId(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID)
-					.toString());
+					.toString());*/
+			Date localTime = new Date();
+			DateFormat converter = new SimpleDateFormat(
+					"dd/MM/yyyy:HH:mm:ss");
+			converter.setTimeZone(TimeZone.getTimeZone("GMT"));
+			
+			audit.setApi_OpreationName(exchange.getProperty("bsCarrier").toString());
+			audit.setFrom(exchange.getProperty("sourceName").toString());
+			audit.setTo(exchange.getFromEndpoint().toString());
+			audit.setTimeStamp(localTime);
+			audit.setAuditTransationID(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
+			audit.setErrorDetais(exchange.getProperty(IConstant.RESPONSE_DESCRIPTION).toString());
+			audit.setErrorProblem(exchange.getProperty(IConstant.RESPONSE_STATUS).toString());
+			audit.setErrorCode(exchange.getProperty(IConstant.RESPONSE_CODE).toString());
 			audit.setPayload(responseBody);
 			mongoTemplate.save(audit);
 

@@ -1,6 +1,10 @@
 package com.gv.midway.audit;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.EventObject;
+import java.util.TimeZone;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.management.event.ExchangeCreatedEvent;
@@ -20,7 +24,8 @@ public class AuditLogRequestEventNotifer extends EventNotifierSupport {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(AuditLogRequestEventNotifer.class); // Initializing
-
+	
+	
 	@Autowired
 	MongoTemplate mongoTemplate;
 
@@ -30,29 +35,40 @@ public class AuditLogRequestEventNotifer extends EventNotifierSupport {
 			Exchange exchange = create.getExchange();
 			logger.info("In Audit log Request");
 
-	
 			ObjectMapper mapper = new ObjectMapper();
-			String jsonInString = mapper.writeValueAsString( exchange.getIn().getBody());
+			String jsonInString = mapper.writeValueAsString(exchange.getIn()
+					.getBody());
 
-			
-			
-			if (exchange.getIn().getBody() instanceof 
-				BaseRequest) {
+			if (exchange.getIn().getBody() instanceof BaseRequest) {
 				logger.info("In Audit log Request1");
 				BaseRequest baseRequest = (BaseRequest) exchange.getIn()
 						.getBody();
 				String msgBody = (String) exchange.getIn().getBody().toString();
-				
+
 				long timestamp = System.currentTimeMillis();
 				String TransactionId = Long.toString(timestamp);
-				exchange.setProperty(IConstant.AUDIT_TRANSACTION_ID, TransactionId);
+				exchange.setProperty(IConstant.AUDIT_TRANSACTION_ID,
+						TransactionId);
 
+				Date localTime = new Date();
+				DateFormat converter = new SimpleDateFormat(
+						"dd/MM/yyyy:HH:mm:ss");
+				converter.setTimeZone(TimeZone.getTimeZone("GMT"));
 				Audit audit = new Audit();
-				audit.setCarrier(baseRequest.getHeader().getBsCarrier());
-				audit.setSource(baseRequest.getHeader().getSourceName());
-				audit.setApiAction(exchange.getFromEndpoint().toString());
-				audit.setInboundURL(exchange.getFromEndpoint().toString());
-				audit.setTransactionId(TransactionId);
+				/*
+				 * audit.setCarrier(baseRequest.getHeader().getBsCarrier());
+				 * audit.setSource(baseRequest.getHeader().getSourceName());
+				 * audit.setApiAction(exchange.getFromEndpoint().toString());
+				 * audit.setInboundURL(exchange.getFromEndpoint().toString());
+				 * audit.setTransactionId(TransactionId);
+				 */
+				audit.setApi_OpreationName(baseRequest.getHeader().getBsCarrier());
+				audit.setFrom(baseRequest.getHeader().getSourceName());
+				audit.setTo(exchange.getFromEndpoint().toString());
+				audit.setTimeStamp(localTime);
+				audit.setAuditTransationID(TransactionId);
+				// audit.setStatus(exchange.getProperty(name));
+
 				audit.setPayload(jsonInString);
 				mongoTemplate.save(audit);
 
