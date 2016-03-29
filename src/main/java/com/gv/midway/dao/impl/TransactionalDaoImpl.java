@@ -52,7 +52,14 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				String msgBody = mapper.writeValueAsString(copy);
 
 				Transaction transaction = new Transaction();
-				transaction.setCarrier(exchange
+				transaction.setCarrierName(exchange.getProperty(IConstant.BSCARRIER).toString());
+				transaction.setDevicePayload(msgBody);
+				
+				
+				//transaction.setAuditTransationID(exchange.getProperty());
+						
+				/*transaction.setCarrierName(exchange.getProperties());
+				transaction.setCarrier(exchang
 						.getProperty(IConstant.BSCARRIER).toString());
 				transaction.setSource(exchange.getProperty(
 						IConstant.SOURCE_NAME).toString());
@@ -61,7 +68,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 						.setInboundURL(exchange.getFromEndpoint().toString());
 				transaction.setTransactionId(exchange.getProperty(
 						"TransactionId").toString());
-				transaction.setPayload(msgBody);
+				transaction.setPayload(msgBody);*/
+				
 				list.add(transaction);
 				System.out
 						.println(exchange.getProperty(IConstant.SOURCE_NAME).toString()+"***************&&&&&&&&&&&&&&&&&&&&&&*********************"
