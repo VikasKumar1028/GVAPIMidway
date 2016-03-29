@@ -1,0 +1,156 @@
+package com.gv.midway.pojo.verizon.generic.callback;
+
+public class DeviceResponse {
+	private SuspendResponse suspendResponse;
+
+    private PrlInformationResponse prlInformationResponse;
+
+    private ActivateResponse activateResponse;
+
+    private RestoreResponse restoreResponse;
+
+    private SmsDeliveryResponse smsDeliveryResponse;
+
+    private DeactivateResponse deactivateResponse;
+
+    public SuspendResponse getSuspendResponse ()
+    {
+        return suspendResponse;
+    }
+
+    public void setSuspendResponse (SuspendResponse suspendResponse)
+    {
+        this.suspendResponse = suspendResponse;
+    }
+
+    public PrlInformationResponse getPrlInformationResponse ()
+    {
+        return prlInformationResponse;
+    }
+
+    public void setPrlInformationResponse (PrlInformationResponse prlInformationResponse)
+    {
+        this.prlInformationResponse = prlInformationResponse;
+    }
+
+    public ActivateResponse getActivateResponse ()
+    {
+        return activateResponse;
+    }
+
+    public void setActivateResponse (ActivateResponse activateResponse)
+    {
+        this.activateResponse = activateResponse;
+    }
+
+    public RestoreResponse getRestoreResponse ()
+    {
+        return restoreResponse;
+    }
+
+    public void setRestoreResponse (RestoreResponse restoreResponse)
+    {
+        this.restoreResponse = restoreResponse;
+    }
+
+    public SmsDeliveryResponse getSmsDeliveryResponse ()
+    {
+        return smsDeliveryResponse;
+    }
+
+    public void setSmsDeliveryResponse (SmsDeliveryResponse smsDeliveryResponse)
+    {
+        this.smsDeliveryResponse = smsDeliveryResponse;
+    }
+
+    public DeactivateResponse getDeactivateResponse ()
+    {
+        return deactivateResponse;
+    }
+
+    public void setDeactivateResponse (DeactivateResponse deactivateResponse)
+    {
+        this.deactivateResponse = deactivateResponse;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "ClassPojo [suspendResponse = "+suspendResponse+", prlInformationResponse = "+prlInformationResponse+", activateResponse = "+activateResponse+", restoreResponse = "+restoreResponse+", smsDeliveryResponse = "+smsDeliveryResponse+", deactivateResponse = "+deactivateResponse+"]";
+    }
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime
+				* result
+				+ ((activateResponse == null) ? 0 : activateResponse.hashCode());
+		result = prime
+				* result
+				+ ((deactivateResponse == null) ? 0 : deactivateResponse
+						.hashCode());
+		result = prime
+				* result
+				+ ((prlInformationResponse == null) ? 0
+						: prlInformationResponse.hashCode());
+		result = prime * result
+				+ ((restoreResponse == null) ? 0 : restoreResponse.hashCode());
+		result = prime
+				* result
+				+ ((smsDeliveryResponse == null) ? 0 : smsDeliveryResponse
+						.hashCode());
+		result = prime * result
+				+ ((suspendResponse == null) ? 0 : suspendResponse.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof DeviceResponse))
+			return false;
+		DeviceResponse other = (DeviceResponse) obj;
+		if (activateResponse == null) {
+			if (other.activateResponse != null)
+				return false;
+		} else if (!activateResponse.equals(other.activateResponse))
+			return false;
+		if (deactivateResponse == null) {
+			if (other.deactivateResponse != null)
+				return false;
+		} else if (!deactivateResponse.equals(other.deactivateResponse))
+			return false;
+		if (prlInformationResponse == null) {
+			if (other.prlInformationResponse != null)
+				return false;
+		} else if (!prlInformationResponse.equals(other.prlInformationResponse))
+			return false;
+		if (restoreResponse == null) {
+			if (other.restoreResponse != null)
+				return false;
+		} else if (!restoreResponse.equals(other.restoreResponse))
+			return false;
+		if (smsDeliveryResponse == null) {
+			if (other.smsDeliveryResponse != null)
+				return false;
+		} else if (!smsDeliveryResponse.equals(other.smsDeliveryResponse))
+			return false;
+		if (suspendResponse == null) {
+			if (other.suspendResponse != null)
+				return false;
+		} else if (!suspendResponse.equals(other.suspendResponse))
+			return false;
+		return true;
+	}
+    
+}
