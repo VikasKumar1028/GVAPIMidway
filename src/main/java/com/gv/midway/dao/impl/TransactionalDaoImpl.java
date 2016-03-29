@@ -150,13 +150,61 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		update.set("carrierErrorDecription", exchange.getIn().getBody().toString());
 		update.set("carrierErrorDecription", exchange.getIn().getBody().toString());
 		update.set("carrierStatus", "Error");
+		update.set("LastTimeStampUpdated", CommonUtil.getCurrentTimeStamp());
 		mongoTemplate.updateMulti(searchUserQuery, update, Transaction.class);
 		}
 	}
 	
+	
+	
+	
+	public void populateKoreTransactionalErrorResponse(Exchange exchange){
+
+				
+		Query searchUserQuery = new Query(Criteria
+				.where("midwayTransationID")
+				.is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID))
+				);
+		
+		
+		 /* String carrierTransationID;//Call Back Thread String
+		 * carrierStatus;//Call Back Thread String
+		 * LastTimeStampUpdated;//CallBack Thread String
+		 * carrierErrorDecription;//CallBack Thread String
+		 * callBackPayload;//CallBack Thread Boolean
+		 * callBackDelivered;//CallBack Thread Boolean
+		 * callBackReceived;//CallBack Thread String
+		 * callBackFailureToNetSuitReason;//CallBack Thread
+		 */
+		if (exchange.getIn().getBody().toString().contains("errorMessage=")) {
+				
+
+		Update update = new Update();
+		update.set("callBackPayload", exchange.getIn().getBody().toString());
+		update.set("carrierErrorDecription", exchange.getIn().getBody().toString());
+		update.set("carrierErrorDecription", exchange.getIn().getBody().toString());
+		update.set("carrierStatus", "Error");
+		update.set("LastTimeStampUpdated", CommonUtil.getCurrentTimeStamp());
+		mongoTemplate.updateMulti(searchUserQuery, update, Transaction.class);
+		}
+	}
+	
+	
 	public void callbackSaveDB(Exchange exchange) {
 		// TODO Auto-generated method stub
 
+	}
+
+
+	public void populateVerizonTransactionalErrorResponse(Exchange exchange) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void populateKoreTransactionalSuccessResponse(Exchange exchange) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

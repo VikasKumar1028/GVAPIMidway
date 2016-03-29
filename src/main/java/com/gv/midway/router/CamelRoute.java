@@ -223,6 +223,7 @@ public class CamelRoute extends RouteBuilder {
 												.bean(iAuditService, "auditExternalResponseCall")
 												.process(new VerizonActivateDevicePostProcessor(env))
 										.doCatch(CxfOperationException.class)
+											.bean(iTransactionalService,"populateVerizonTransactionalErrorResponse")
 											.bean(iAuditService, "auditExternalExceptionResponseCall")											
 											.process(new VerizonGenericExceptionProcessor(env))
 										.endDoTry()	
@@ -231,6 +232,24 @@ public class CamelRoute extends RouteBuilder {
 			.endChoice().end();
 				
 				
+		from("direct:processKoreTransaction")
+			.log("*********************WIRE TAP THREAD**********************")
+			.bean(iTransactionalService,"populateDBPayload")
+		    .split().method("deviceSplitter").recipientList().method("koreDeviceServiceRouter");
+		
+		 from("seda:koreSedaActivation?concurrentConsumers=5")
+		    .doTry()
+		    .process(new KoreActivateDevicePreProcessor(env))
+						.to(uriRestKoreEndPoint).unmarshal()
+						.json(JsonLibrary.Jackson, KoreDeviceInformationResponse.class)
+						.process(new KoreDeviceInformationPostProcessor())
+		    .doCatch(CxfOperationException.class)
+		    .bean(iTransactionalService,"populateKoreTransactionalErrorResponse")
+			.bean(iAuditService, "auditExternalExceptionResponseCall")
+			.process(new KoreGenericExceptionProcessor(env))
+		.endDoTry();		
+		
+		
 		from("direct:deactivateDevice").process(new HeaderProcessor())
 			.choice()
 						.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
@@ -276,22 +295,6 @@ public class CamelRoute extends RouteBuilder {
 			endChoice()
 			.end();
 			
-		from("direct:processKoreTransaction")
-		.log("*********************WIRE TAP THREAD**********************")
-			.bean(iTransactionalService,"populateDBPayload")
-		    .split().method("deviceSplitter").recipientList().method("koreDeviceServiceRouter");
-		
-		 from("seda:koreSedaActivation?concurrentConsumers=5")
-		    .doTry()
-		    .process(new KoreActivateDevicePreProcessor(env))
-						.to(uriRestKoreEndPoint).unmarshal()
-						.json(JsonLibrary.Jackson, KoreDeviceInformationResponse.class)
-						.process(new KoreDeviceInformationPostProcessor())
-		    .doCatch(CxfOperationException.class)
-			.bean(iAuditService, "auditExternalExceptionResponseCall")
-			.process(new KoreGenericExceptionProcessor(env))
-		.endDoTry();
-		
 				
 		from("direct:insertDeviceDetails")
 				.bean(iDeviceService, "insertDeviceDetails").to("log:input")

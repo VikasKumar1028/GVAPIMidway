@@ -27,4 +27,19 @@ public class TransactionalServiceImpl implements ITransactionalService {
 		
 	}
 
+	public void populateVerizonTransactionalErrorResponse(Exchange exchange) {
+		transactionalDao.populateVerizonTransactionalErrorResponse(exchange);
+		
+	}
+
+	public void populateKoreTransactionalErrorResponse(Exchange exchange) {
+		transactionalDao.populateKoreTransactionalErrorResponse(exchange);
+		
+	}
+
+	public void populateKoreTransactionalSuccessResponse(Exchange exchange) {
+		transactionalDao.populateKoreTransactionalSuccessResponse(exchange);
+		
+	}
+
 }
