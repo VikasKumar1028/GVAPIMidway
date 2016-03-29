@@ -6,6 +6,8 @@ public interface ITransactionalService {
 
 	public void populateDBPayload(Exchange exchange);
 	
+	public void populateVerizonTransactionalResponse(Exchange exchange);
+	
 	public void callbackSaveDB(Exchange exchange);
 	
 }

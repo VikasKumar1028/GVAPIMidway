@@ -22,4 +22,9 @@ public class TransactionalServiceImpl implements ITransactionalService {
 		transactionalDao.callbackSaveDB(exchange);
 	}
 
+	public void populateVerizonTransactionalResponse(Exchange exchange) {
+		transactionalDao.populateVerizonTransactionalResponse(exchange);
+		
+	}
+
 }

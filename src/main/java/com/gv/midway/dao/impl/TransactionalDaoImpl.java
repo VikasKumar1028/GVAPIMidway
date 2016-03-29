@@ -3,18 +3,24 @@ package com.gv.midway.dao.impl;
 import java.util.ArrayList;
 
 import org.apache.camel.Exchange;
+import org.apache.camel.component.cxf.CxfOperationException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.dao.ITransactionalDao;
+import com.gv.midway.device.request.pojo.Device;
 import com.gv.midway.pojo.DeviceId;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequestDataArea;
+import com.gv.midway.pojo.audit.Audit;
 import com.gv.midway.pojo.transaction.Transaction;
 import com.gv.midway.utility.CommonUtil;
 
@@ -32,6 +38,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		long timestamp = System.currentTimeMillis();
 		String midwayTransationID = Long.toString(timestamp);
+		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_ID,midwayTransationID );
 		String currentDataTime = CommonUtil.getCurrentTimeStamp();
 
 		ActivateDeviceRequest req = (ActivateDeviceRequest) exchange.getIn()
@@ -60,11 +67,13 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 				/*
 				 * String midwayTransationID; //Main Thread String
-				 * deviceNumber;//Main Thread String devicePayload;//Main Thread
-				 * String midwayStatus;//Main Thread String carrierName;//Main
-				 * Thread String TimeStampReceived;//Main Thread String
-				 * auditTransationID;//Main Thread String requestType;//Main
-				 * Thread
+				 * deviceNumber;//Main Thread
+				 *  String devicePayload;//Main Thread
+				 * String midwayStatus;//Main Thread 
+				 * String carrierName;//Main Thread 
+				 * String TimeStampReceived;//Main Thread 
+				 * String auditTransationID;//Main Thread 
+				 * String requestType;//Main Thread
 				 * 
 				 * String carrierTransationID;//Call Back Thread String
 				 * carrierStatus;//Call Back Thread String
@@ -102,9 +111,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		}
 		mongoTemplate.insertAll(list);
-
-		
-		System.out.println("***********************************" + list.size());
 		// For Kore We Need Wire Tap and SEDA component So the body should
 		// be set with arraylist of transaction for Verizon we simply add
 		// into database and do not change the exchange body
@@ -116,6 +122,38 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		}
 	}
 
+	
+	public void populateVerizonTransactionalResponse(Exchange exchange){
+
+		
+		
+		Query searchUserQuery = new Query(Criteria
+				.where("midwayTransationID")
+				.is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID))
+				);
+		
+		
+		 /* String carrierTransationID;//Call Back Thread String
+		 * carrierStatus;//Call Back Thread String
+		 * LastTimeStampUpdated;//CallBack Thread String
+		 * carrierErrorDecription;//CallBack Thread String
+		 * callBackPayload;//CallBack Thread Boolean
+		 * callBackDelivered;//CallBack Thread Boolean
+		 * callBackReceived;//CallBack Thread String
+		 * callBackFailureToNetSuitReason;//CallBack Thread
+		 */
+		if (exchange.getIn().getBody().toString().contains("errorMessage=")) {
+				
+
+		Update update = new Update();
+		update.set("callBackPayload", exchange.getIn().getBody().toString());
+		update.set("carrierErrorDecription", exchange.getIn().getBody().toString());
+		update.set("carrierErrorDecription", exchange.getIn().getBody().toString());
+		update.set("carrierStatus", "Error");
+		mongoTemplate.updateMulti(searchUserQuery, update, Transaction.class);
+		}
+	}
+	
 	public void callbackSaveDB(Exchange exchange) {
 		// TODO Auto-generated method stub
 
