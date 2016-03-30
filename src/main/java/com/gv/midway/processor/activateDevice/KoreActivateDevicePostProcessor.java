@@ -43,8 +43,7 @@ public class KoreActivateDevicePostProcessor implements Processor {
 		System.out.println("KoreActivateDevicePostProcessor------------------------------tracking no----------");
 		ActivateDeviceResponseDataArea deviceActivateResponseDataArea = new ActivateDeviceResponseDataArea();
 
-		ActivateDeviceResponse activateDeviceResponse = exchange.getIn()
-				.getBody(ActivateDeviceResponse.class);
+		ActivateDeviceResponse activateDeviceResponse = new ActivateDeviceResponse();
 
 		ActivateDeviceResponseDataArea activateDeviceResponseDataArea = new ActivateDeviceResponseDataArea();
 

@@ -24,6 +24,7 @@ import com.gv.midway.processor.GenericErrorProcessor;
 import com.gv.midway.processor.HeaderProcessor;
 import com.gv.midway.processor.KoreGenericExceptionProcessor;
 import com.gv.midway.processor.VerizonGenericExceptionProcessor;
+import com.gv.midway.processor.activateDevice.KoreActivateDevicePostProcessor;
 import com.gv.midway.processor.activateDevice.KoreActivateDevicePreProcessor;
 import com.gv.midway.processor.activateDevice.StubKoreActivateDeviceProcessor;
 import com.gv.midway.processor.activateDevice.StubVerizonActivateDeviceProcessor;
@@ -199,17 +200,7 @@ public class CamelRoute extends RouteBuilder {
 							.choice()
 									.when(header("sourceName").isEqualTo("KORE"))
 									 .wireTap("direct:processKoreTransaction")
-									/*.doTry()
-											.process(new KoreActivateDevicePreProcessor(env))
-												.bean(iAuditService, "auditExternalRequestCall")
-											.to(uriRestKoreEndPoint).unmarshal()
-											.json(JsonLibrary.Jackson)
-											.bean(iAuditService, "auditExternalResponseCall")
-											.process(new KoreActivateDevicePostProcessor(env))
-									  .doCatch(CxfOperationException.class)
-											.bean(iAuditService, "auditExternalExceptionResponseCall")
-											.process(new KoreGenericExceptionProcessor(env))
-								   .endDoTry()*/
+									 .process(new KoreActivateDevicePostProcessor(env))
 							.endChoice()
 									.when(header("sourceName").isEqualTo("VERIZON"))
 										.doTry()
