@@ -16,11 +16,9 @@ import com.esotericsoftware.kryo.Kryo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.dao.ITransactionalDao;
-import com.gv.midway.device.request.pojo.Device;
 import com.gv.midway.pojo.DeviceId;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequestDataArea;
-import com.gv.midway.pojo.audit.Audit;
 import com.gv.midway.pojo.transaction.Transaction;
 import com.gv.midway.utility.CommonUtil;
 
@@ -150,7 +148,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		update.set("carrierErrorDecription", exchange.getIn().getBody().toString());
 		update.set("carrierErrorDecription", exchange.getIn().getBody().toString());
 		update.set("carrierStatus", "Error");
-		update.set("LastTimeStampUpdated", CommonUtil.getCurrentTimeStamp());
+		update.set("lastTimeStampUpdated", CommonUtil.getCurrentTimeStamp());
 		mongoTemplate.updateMulti(searchUserQuery, update, Transaction.class);
 		}
 	}
@@ -168,8 +166,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 						Criteria.where("deviceNumber")
 						.is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
 				
-		
-		
+				
 		 /* String carrierTransationID;//Call Back Thread String
 		 * carrierStatus;//Call Back Thread String
 		 * LastTimeStampUpdated;//CallBack Thread String
@@ -191,7 +188,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		update.set("carrierErrorDecription", errorResponseBody);
 		update.set("carrierErrorDecription", errorResponseBody);
 		update.set("carrierStatus", "Error");
-		update.set("LastTimeStampUpdated", CommonUtil.getCurrentTimeStamp());
+		update.set("lastTimeStampUpdated", CommonUtil.getCurrentTimeStamp());
 		mongoTemplate.updateMulti(searchUserQuery, update, Transaction.class);
 		
 	}

@@ -2,8 +2,6 @@ package com.gv.midway.pojo.transaction;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-
-
 @Document(collection = "transactionalDetail")
 public class Transaction {
 
@@ -14,8 +12,8 @@ public class Transaction {
 	String midwayStatus;
 	String carrierStatus;
 	String carrierName;
-	String TimeStampReceived;
-	String LastTimeStampUpdated;
+	String timeStampReceived;
+	String lastTimeStampUpdated;
 	String carrierErrorDecription;
 	String requestType;
 	String callBackPayload;
@@ -23,11 +21,9 @@ public class Transaction {
 	String auditTransationID;
 	Boolean callBackReceived;
 	String callBackFailureToNetSuitReason;
-	
-	
+
 	public Transaction() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public String getMidwayTransationID() {
@@ -84,22 +80,6 @@ public class Transaction {
 
 	public void setCarrierName(String carrierName) {
 		this.carrierName = carrierName;
-	}
-
-	public String getTimeStampReceived() {
-		return TimeStampReceived;
-	}
-
-	public void setTimeStampReceived(String timeStampReceived) {
-		TimeStampReceived = timeStampReceived;
-	}
-
-	public String getLastTimeStampUpdated() {
-		return LastTimeStampUpdated;
-	}
-
-	public void setLastTimeStampUpdated(String lastTimeStampUpdated) {
-		LastTimeStampUpdated = lastTimeStampUpdated;
 	}
 
 	public String getCarrierErrorDecription() {
@@ -166,8 +146,8 @@ public class Transaction {
 				+ ", deviceNumber=" + deviceNumber + ", devicePayload="
 				+ devicePayload + ", midwayStatus=" + midwayStatus
 				+ ", carrierStatus=" + carrierStatus + ", carrierName="
-				+ carrierName + ", TimeStampReceived=" + TimeStampReceived
-				+ ", LastTimeStampUpdated=" + LastTimeStampUpdated
+				+ carrierName + ", TimeStampReceived=" + timeStampReceived
+				+ ", LastTimeStampUpdated=" + lastTimeStampUpdated
 				+ ", carrierErrorDecription=" + carrierErrorDecription
 				+ ", requestType=" + requestType + ", callBackPayload="
 				+ callBackPayload + ", callBackDelivered=" + callBackDelivered
@@ -183,11 +163,11 @@ public class Transaction {
 		int result = 1;
 		result = prime
 				* result
-				+ ((LastTimeStampUpdated == null) ? 0 : LastTimeStampUpdated
+				+ ((lastTimeStampUpdated == null) ? 0 : lastTimeStampUpdated
 						.hashCode());
 		result = prime
 				* result
-				+ ((TimeStampReceived == null) ? 0 : TimeStampReceived
+				+ ((timeStampReceived == null) ? 0 : timeStampReceived
 						.hashCode());
 		result = prime
 				* result
@@ -242,15 +222,15 @@ public class Transaction {
 		if (getClass() != obj.getClass())
 			return false;
 		Transaction other = (Transaction) obj;
-		if (LastTimeStampUpdated == null) {
-			if (other.LastTimeStampUpdated != null)
+		if (lastTimeStampUpdated == null) {
+			if (other.lastTimeStampUpdated != null)
 				return false;
-		} else if (!LastTimeStampUpdated.equals(other.LastTimeStampUpdated))
+		} else if (!lastTimeStampUpdated.equals(other.lastTimeStampUpdated))
 			return false;
-		if (TimeStampReceived == null) {
-			if (other.TimeStampReceived != null)
+		if (timeStampReceived == null) {
+			if (other.timeStampReceived != null)
 				return false;
-		} else if (!TimeStampReceived.equals(other.TimeStampReceived))
+		} else if (!timeStampReceived.equals(other.timeStampReceived))
 			return false;
 		if (auditTransationID == null) {
 			if (other.auditTransationID != null)
@@ -324,6 +304,22 @@ public class Transaction {
 		} else if (!requestType.equals(other.requestType))
 			return false;
 		return true;
+	}
+
+	public String getTimeStampReceived() {
+		return timeStampReceived;
+	}
+
+	public void setTimeStampReceived(String timeStampReceived) {
+		this.timeStampReceived = timeStampReceived;
+	}
+
+	public String getLastTimeStampUpdated() {
+		return lastTimeStampUpdated;
+	}
+
+	public void setLastTimeStampUpdated(String lastTimeStampUpdated) {
+		this.lastTimeStampUpdated = lastTimeStampUpdated;
 	}
 
 }
