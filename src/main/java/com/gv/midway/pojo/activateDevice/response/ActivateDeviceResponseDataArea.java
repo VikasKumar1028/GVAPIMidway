@@ -5,31 +5,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ActivateDeviceResponseDataArea {
 
-	private String requestId;
-	private String trackingNumber;
-
-	public String getRequestId() {
-		return requestId;
-	}
-
-	public void setRequestId(String requestId) {
-		this.requestId = requestId;
-	}
-
-	@Override
-	public String toString() {
-		return "ActivateDeviceResponseDataArea [requestId=" + requestId
-				+ ", trackingNumber=" + trackingNumber + "]";
-	}
+	private String orderNumber;
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((requestId == null) ? 0 : requestId.hashCode());
-		result = prime * result
-				+ ((trackingNumber == null) ? 0 : trackingNumber.hashCode());
+				+ ((orderNumber == null) ? 0 : orderNumber.hashCode());
 		return result;
 	}
 
@@ -42,25 +25,26 @@ public class ActivateDeviceResponseDataArea {
 		if (getClass() != obj.getClass())
 			return false;
 		ActivateDeviceResponseDataArea other = (ActivateDeviceResponseDataArea) obj;
-		if (requestId == null) {
-			if (other.requestId != null)
+		if (orderNumber == null) {
+			if (other.orderNumber != null)
 				return false;
-		} else if (!requestId.equals(other.requestId))
-			return false;
-		if (trackingNumber == null) {
-			if (other.trackingNumber != null)
-				return false;
-		} else if (!trackingNumber.equals(other.trackingNumber))
+		} else if (!orderNumber.equals(other.orderNumber))
 			return false;
 		return true;
 	}
 
-	public String getTrackingNumber() {
-		return trackingNumber;
+	public String getOrderNumber() {
+		return orderNumber;
 	}
 
-	public void setTrackingNumber(String trackingNumber) {
-		this.trackingNumber = trackingNumber;
+	public void setOrderNumber(String orderNumber) {
+		this.orderNumber = orderNumber;
+	}
+
+	@Override
+	public String toString() {
+		return "ActivateDeviceResponseDataArea [orderNumber=" + orderNumber
+				+ "]";
 	}
 
 }

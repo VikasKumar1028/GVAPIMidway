@@ -92,6 +92,6 @@ public interface IAdaptaionLayerService {
 	@Path("/device/callback")
 	@Produces("application/json")
 	@Consumes("application/json")
-	@ApiOperation(value = "DeviceActivationCallbackService")
+	@ApiOperation(value = "ActivateDeviceCallbackService")
 	VerizonActivateCallBackRequest activateCallback(VerizonActivateCallBackRequest activateDeviceRequest);
 }

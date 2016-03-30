@@ -1,5 +1,8 @@
 package com.gv.midway.pojo.activateDevice.verizon;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CustomerName {
 	private String firstName;
 

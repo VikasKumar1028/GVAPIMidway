@@ -8,6 +8,7 @@ import com.gv.midway.pojo.activateDevice.verizon.Address;
 import com.gv.midway.pojo.activateDevice.verizon.CustomFields;
 import com.gv.midway.pojo.activateDevice.verizon.CustomerName;
 import com.gv.midway.pojo.activateDevice.verizon.PrimaryPlaceOfUse;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ActivateDeviceRequestDataArea {
 
@@ -36,12 +37,6 @@ public class ActivateDeviceRequestDataArea {
 	private String mdnZipCode;
 
 	private DeviceId[] deviceId;
-
-	private CustomerName customerName;
-
-	private Address address;
-
-	private String eAPCode;
 
 	public String getGroupName() {
 		return groupName;
@@ -139,36 +134,12 @@ public class ActivateDeviceRequestDataArea {
 		this.mdnZipCode = mdnZipCode;
 	}
 
-	public CustomerName getCustomerName() {
-		return customerName;
-	}
-
 	public DeviceId[] getDeviceId() {
 		return deviceId;
 	}
 
 	public void setDeviceId(DeviceId[] deviceId) {
 		this.deviceId = deviceId;
-	}
-
-	public void setCustomerName(CustomerName customerName) {
-		this.customerName = customerName;
-	}
-
-	public Address getAddress() {
-		return address;
-	}
-
-	public void setAddress(Address address) {
-		this.address = address;
-	}
-
-	public String geteAPCode() {
-		return eAPCode;
-	}
-
-	public void seteAPCode(String eAPCode) {
-		this.eAPCode = eAPCode;
 	}
 
 	@Override
@@ -182,8 +153,7 @@ public class ActivateDeviceRequestDataArea {
 				+ leadId + ", carrierName=" + carrierName
 				+ ", publicIpRestriction=" + publicIpRestriction
 				+ ", mdnZipCode=" + mdnZipCode + ", deviceId="
-				+ Arrays.toString(deviceId) + ", customerName=" + customerName
-				+ ", address=" + address + ", eAPCode=" + eAPCode + "]";
+				+ Arrays.toString(deviceId) + "]";
 	}
 
 	@Override
@@ -192,7 +162,6 @@ public class ActivateDeviceRequestDataArea {
 		int result = 1;
 		result = prime * result
 				+ ((accountName == null) ? 0 : accountName.hashCode());
-		result = prime * result + ((address == null) ? 0 : address.hashCode());
 		result = prime
 				* result
 				+ ((carrierIpPoolName == null) ? 0 : carrierIpPoolName
@@ -202,8 +171,6 @@ public class ActivateDeviceRequestDataArea {
 		result = prime * result
 				+ ((costCenterCode == null) ? 0 : costCenterCode.hashCode());
 		result = prime * result + Arrays.hashCode(customFields);
-		result = prime * result
-				+ ((customerName == null) ? 0 : customerName.hashCode());
 		result = prime * result + Arrays.hashCode(deviceId);
 		result = prime * result
 				+ ((groupName == null) ? 0 : groupName.hashCode());
@@ -239,11 +206,6 @@ public class ActivateDeviceRequestDataArea {
 				return false;
 		} else if (!accountName.equals(other.accountName))
 			return false;
-		if (address == null) {
-			if (other.address != null)
-				return false;
-		} else if (!address.equals(other.address))
-			return false;
 		if (carrierIpPoolName == null) {
 			if (other.carrierIpPoolName != null)
 				return false;
@@ -260,11 +222,6 @@ public class ActivateDeviceRequestDataArea {
 		} else if (!costCenterCode.equals(other.costCenterCode))
 			return false;
 		if (!Arrays.equals(customFields, other.customFields))
-			return false;
-		if (customerName == null) {
-			if (other.customerName != null)
-				return false;
-		} else if (!customerName.equals(other.customerName))
 			return false;
 		if (!Arrays.equals(deviceId, other.deviceId))
 			return false;
