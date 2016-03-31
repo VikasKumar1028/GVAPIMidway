@@ -5,12 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DeviceId {
-
+	// @JsonProperty("id")
 	private String id;
-
+	// @JsonProperty("kind")
 	private String kind;
-
-	// activation KORE field
 	private String eAPCode;
 
 	public String getId() {
@@ -29,20 +27,31 @@ public class DeviceId {
 		this.kind = kind;
 	}
 
-	@Override
-	public String toString() {
-		return "DeviceId [id=" + id + ", kind=" + kind + ", eAPCode=" + eAPCode
-				+ "]";
-	}
-
+	/**
+	 * @return the eAPCode
+	 */
 	public String geteAPCode() {
 		return eAPCode;
 	}
 
+	/**
+	 * @param eAPCode the eAPCode to set
+	 */
 	public void seteAPCode(String eAPCode) {
 		this.eAPCode = eAPCode;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "DeviceId [id=" + id + ", kind=" + kind + ", eAPCode=" + eAPCode + "]";
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -53,13 +62,16 @@ public class DeviceId {
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof DeviceId))
 			return false;
 		DeviceId other = (DeviceId) obj;
 		if (eAPCode == null) {
@@ -79,4 +91,7 @@ public class DeviceId {
 			return false;
 		return true;
 	}
+
+	
+
 }

@@ -168,7 +168,7 @@ public class DeviceTestData extends Header {
 		    	//deviceId[0].setId("89014103277405946190");
 				deviceId[0].setKind("ghgjg");
 				
-				dataArea.setDeviceIds(deviceId);
+				dataArea.setDeviceId(deviceId);
 		 		dataArea.setAccountName("Test");
 		 		
 		         req.setDataArea(dataArea);
@@ -181,7 +181,7 @@ public class DeviceTestData extends Header {
 			     System.out.println("Delivered Account Name----------------" +req.getDataArea().getAccountName()); 
 			      
 			     //null pointer check for deviceId
-			     if(req.getDataArea().getDeviceIds()[0].getId()==null || req.getDataArea().getDeviceIds()[0].getId().equals("") ){
+			     if(req.getDataArea().getDeviceId()[0].getId()==null || req.getDataArea().getDeviceId()[0].getId().equals("") ){
 			    	 throw new AssertionError("Device Id is Mandatory");
 			     }
 					  				

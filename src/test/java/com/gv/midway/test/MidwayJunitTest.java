@@ -138,7 +138,7 @@ public class MidwayJunitTest extends Assert {
 		deviceId[0].setId("89014103277405946190");
 		deviceId[0].setKind("ghgjg");
 
-		dataArea.setDeviceIds(deviceId);
+		dataArea.setDeviceId(deviceId);
 
 		req.setDataArea(dataArea);
 

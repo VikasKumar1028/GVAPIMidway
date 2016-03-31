@@ -16,7 +16,7 @@ public class DeactivateDeviceRequestDataArea {
 
 	private String reasonCode;
 
-	private DeviceId[] deviceIds;
+	private DeviceId[] deviceId;
 
 	private String etfWaiver;
 
@@ -62,13 +62,6 @@ public class DeactivateDeviceRequestDataArea {
 		this.reasonCode = reasonCode;
 	}
 
-	public DeviceId[] getDeviceIds() {
-		return deviceIds;
-	}
-
-	public void setDeviceIds(DeviceId[] deviceIds) {
-		this.deviceIds = deviceIds;
-	}
 
 	public String getEtfWaiver() {
 		return etfWaiver;
@@ -78,15 +71,6 @@ public class DeactivateDeviceRequestDataArea {
 		this.etfWaiver = etfWaiver;
 	}
 
-	@Override
-	public String toString() {
-		return "DeactivateDeviceRequestDataArea [groupName=" + groupName
-				+ ", accountName=" + accountName + ", customFields="
-				+ Arrays.toString(customFields) + ", servicePlan="
-				+ servicePlan + ", reasonCode=" + reasonCode + ", deviceIds="
-				+ Arrays.toString(deviceIds) + ", etfWaiver=" + etfWaiver
-				+ ", flagScrap=" + flagScrap + "]";
-	}
 
 	public Boolean getFlagScrap() {
 		return flagScrap;
@@ -96,34 +80,56 @@ public class DeactivateDeviceRequestDataArea {
 		this.flagScrap = flagScrap;
 	}
 
+	/**
+	 * @return the deviceId
+	 */
+	public DeviceId[] getDeviceId() {
+		return deviceId;
+	}
+
+	/**
+	 * @param deviceId the deviceId to set
+	 */
+	public void setDeviceId(DeviceId[] deviceId) {
+		this.deviceId = deviceId;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "DeactivateDeviceRequestDataArea [groupName=" + groupName + ", accountName=" + accountName + ", customFields=" + Arrays.toString(customFields) + ", servicePlan=" + servicePlan + ", reasonCode=" + reasonCode + ", deviceId=" + Arrays.toString(deviceId) + ", etfWaiver=" + etfWaiver + ", flagScrap=" + flagScrap + "]";
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((accountName == null) ? 0 : accountName.hashCode());
+		result = prime * result + ((accountName == null) ? 0 : accountName.hashCode());
 		result = prime * result + Arrays.hashCode(customFields);
-		result = prime * result + Arrays.hashCode(deviceIds);
-		result = prime * result
-				+ ((etfWaiver == null) ? 0 : etfWaiver.hashCode());
-		result = prime * result
-				+ ((flagScrap == null) ? 0 : flagScrap.hashCode());
-		result = prime * result
-				+ ((groupName == null) ? 0 : groupName.hashCode());
-		result = prime * result
-				+ ((reasonCode == null) ? 0 : reasonCode.hashCode());
-		result = prime * result
-				+ ((servicePlan == null) ? 0 : servicePlan.hashCode());
+		result = prime * result + Arrays.hashCode(deviceId);
+		result = prime * result + ((etfWaiver == null) ? 0 : etfWaiver.hashCode());
+		result = prime * result + ((flagScrap == null) ? 0 : flagScrap.hashCode());
+		result = prime * result + ((groupName == null) ? 0 : groupName.hashCode());
+		result = prime * result + ((reasonCode == null) ? 0 : reasonCode.hashCode());
+		result = prime * result + ((servicePlan == null) ? 0 : servicePlan.hashCode());
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof DeactivateDeviceRequestDataArea))
 			return false;
 		DeactivateDeviceRequestDataArea other = (DeactivateDeviceRequestDataArea) obj;
 		if (accountName == null) {
@@ -133,7 +139,7 @@ public class DeactivateDeviceRequestDataArea {
 			return false;
 		if (!Arrays.equals(customFields, other.customFields))
 			return false;
-		if (!Arrays.equals(deviceIds, other.deviceIds))
+		if (!Arrays.equals(deviceId, other.deviceId))
 			return false;
 		if (etfWaiver == null) {
 			if (other.etfWaiver != null)
@@ -162,4 +168,5 @@ public class DeactivateDeviceRequestDataArea {
 			return false;
 		return true;
 	}
+	
 }

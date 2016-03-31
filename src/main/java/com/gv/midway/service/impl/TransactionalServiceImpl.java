@@ -12,11 +12,14 @@ public class TransactionalServiceImpl implements ITransactionalService {
 	@Autowired
 	private ITransactionalDao transactionalDao;
 
-	public void populateDBPayload(Exchange exchange) {
+	public void populateActivateDBPayload(Exchange exchange) {
 
-		transactionalDao.populateDBPayload(exchange);
+		transactionalDao.populateActivateDBPayload(exchange);
 	}
+	public void populateDeactivateDBPayload(Exchange exchange) {
 
+		transactionalDao.populateDeactivateDBPayload(exchange);
+	}
 	public void callbackSaveDB(Exchange exchange) {
 		
 		transactionalDao.callbackSaveDB(exchange);
