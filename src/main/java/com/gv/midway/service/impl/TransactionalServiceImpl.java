@@ -12,14 +12,11 @@ public class TransactionalServiceImpl implements ITransactionalService {
 	@Autowired
 	private ITransactionalDao transactionalDao;
 
-	public void populateActivateDBPayload(Exchange exchange) {
+	public void populateDBPayload(Exchange exchange) {
 
-		transactionalDao.populateActivateDBPayload(exchange);
+		transactionalDao.populateDBPayload(exchange);
 	}
-	public void populateDeactivateDBPayload(Exchange exchange) {
 
-		transactionalDao.populateDeactivateDBPayload(exchange);
-	}
 	public void callbackSaveDB(Exchange exchange) {
 		
 		transactionalDao.callbackSaveDB(exchange);
@@ -43,6 +40,11 @@ public class TransactionalServiceImpl implements ITransactionalService {
 	public void populateKoreTransactionalSuccessResponse(Exchange exchange) {
 		transactionalDao.populateKoreTransactionalSuccessResponse(exchange);
 		
+	}
+
+	public void populatePendingKoreCheckStatus(Exchange exchange) {
+		// TODO Auto-generated method stub
+		transactionalDao.populatePendingKoreCheckStatus(exchange);
 	}
 
 }
