@@ -39,7 +39,7 @@ public class StubVerizonActivateDeviceProcessor implements Processor {
 		activateDeviceResponse.setHeader(responseheader);
 		activateDeviceResponse.setResponse(response);
 
-		activateDeviceResponseDataArea.setRequestId("R001");
+		//activateDeviceResponseDataArea.setRequestId("R001");
 
 		activateDeviceResponse.setDataArea(activateDeviceResponseDataArea);
 

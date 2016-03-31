@@ -73,11 +73,11 @@ public class KoreActivateDevicePostProcessor implements Processor {
 		responseheader.setBsCarrier(newEnv
 				.getProperty(IConstant.BSCARRIER_VERIZON));
 
-		deviceActivateResponseDataArea.setRequestId("requestId");
+		//deviceActivateResponseDataArea.setRequestId("requestId");
 
 		activateDeviceResponse.setHeader(responseheader);
 		activateDeviceResponse.setResponse(response);
-		deviceActivateResponseDataArea.setTrackingNumber("ReciptNumbergenratedByKORE");
+		//deviceActivateResponseDataArea.setTrackingNumber("ReciptNumbergenratedByKORE");
 		activateDeviceResponse.setDataArea(deviceActivateResponseDataArea);
 
 		exchange.getIn().setBody(activateDeviceResponse);

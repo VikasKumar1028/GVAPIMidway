@@ -39,8 +39,8 @@ public class StubKoreActivateDeviceProcessor implements Processor {
 		activateDeviceResponse.setHeader(responseheader);
 		activateDeviceResponse.setResponse(response);
 
-		activateDeviceResponseDataArea.setTrackingNumber("TR001");
-		activateDeviceResponseDataArea.setRequestId("requestId");
+		//activateDeviceResponseDataArea.setTrackingNumber("TR001");
+		//activateDeviceResponseDataArea.setRequestId("requestId");
 		activateDeviceResponse.setDataArea(activateDeviceResponseDataArea);
 
 		exchange.getIn().setBody(activateDeviceResponse);
