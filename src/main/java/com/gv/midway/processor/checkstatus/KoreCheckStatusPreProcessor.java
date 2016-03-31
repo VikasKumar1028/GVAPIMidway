@@ -4,6 +4,7 @@ import org.apache.camel.Processor;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.log4j.Logger;
+import org.springframework.core.env.Environment;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
@@ -12,6 +13,21 @@ import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
 import com.gv.midway.pojo.transaction.Transaction;
 
 public class KoreCheckStatusPreProcessor implements Processor {
+	
+	Logger log = Logger.getLogger(KoreCheckStatusPreProcessor.class
+			.getName());
+
+	private Environment newEnv;
+	
+	public KoreCheckStatusPreProcessor() {
+
+	}
+
+	
+	public KoreCheckStatusPreProcessor(Environment env) {
+		super();
+		this.newEnv = env;
+	}
 
 	public void process(Exchange exchange) throws Exception {
 		
@@ -38,7 +54,7 @@ public class KoreCheckStatusPreProcessor implements Processor {
 		
 		
 		
-		log.info("End:KoreDeactivateDevicePreProcessor");
+		
 		
 		
 	}

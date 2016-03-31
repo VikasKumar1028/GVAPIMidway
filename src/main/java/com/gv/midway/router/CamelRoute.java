@@ -26,6 +26,7 @@ import com.gv.midway.processor.KoreGenericExceptionProcessor;
 import com.gv.midway.processor.VerizonGenericExceptionProcessor;
 import com.gv.midway.processor.activateDevice.KoreActivateDevicePostProcessor;
 import com.gv.midway.processor.activateDevice.KoreActivateDevicePreProcessor;
+import com.gv.midway.processor.checkstatus.KoreCheckStatusPreProcessor;
 import com.gv.midway.processor.activateDevice.StubKoreActivateDeviceProcessor;
 import com.gv.midway.processor.activateDevice.StubVerizonActivateDeviceProcessor;
 import com.gv.midway.processor.activateDevice.VerizonActivateDevicePostProcessor;
