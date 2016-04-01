@@ -12,12 +12,13 @@ public class Audit {
 	private String to;
 	private Date timeStamp;
 	private String status;
-	private String auditTransationID;
+	private String auditTransationId;
 	private String Payload;
 	private String errorProblem;
 	private String errorCode;
 	private String errorDetais;
 	private String hostName;
+	private String gvTransationId;
 
 	public String getApi_OpreationName() {
 		return api_OpreationName;
@@ -60,11 +61,11 @@ public class Audit {
 	}
 
 	public String getAuditTransationID() {
-		return auditTransationID;
+		return auditTransationId;
 	}
 
 	public void setAuditTransationID(String auditTransationID) {
-		this.auditTransationID = auditTransationID;
+		this.auditTransationId = auditTransationID;
 	}
 
 	public String getPayload() {
@@ -118,7 +119,7 @@ public class Audit {
 						.hashCode());
 		result = prime
 				* result
-				+ ((auditTransationID == null) ? 0 : auditTransationID
+				+ ((auditTransationId == null) ? 0 : auditTransationId
 						.hashCode());
 		result = prime * result
 				+ ((errorCode == null) ? 0 : errorCode.hashCode());
@@ -127,6 +128,8 @@ public class Audit {
 		result = prime * result
 				+ ((errorProblem == null) ? 0 : errorProblem.hashCode());
 		result = prime * result + ((from == null) ? 0 : from.hashCode());
+		result = prime * result
+				+ ((gvTransationId == null) ? 0 : gvTransationId.hashCode());
 		result = prime * result
 				+ ((hostName == null) ? 0 : hostName.hashCode());
 		result = prime * result + ((status == null) ? 0 : status.hashCode());
@@ -155,10 +158,10 @@ public class Audit {
 				return false;
 		} else if (!api_OpreationName.equals(other.api_OpreationName))
 			return false;
-		if (auditTransationID == null) {
-			if (other.auditTransationID != null)
+		if (auditTransationId == null) {
+			if (other.auditTransationId != null)
 				return false;
-		} else if (!auditTransationID.equals(other.auditTransationID))
+		} else if (!auditTransationId.equals(other.auditTransationId))
 			return false;
 		if (errorCode == null) {
 			if (other.errorCode != null)
@@ -179,6 +182,11 @@ public class Audit {
 			if (other.from != null)
 				return false;
 		} else if (!from.equals(other.from))
+			return false;
+		if (gvTransationId == null) {
+			if (other.gvTransationId != null)
+				return false;
+		} else if (!gvTransationId.equals(other.gvTransationId))
 			return false;
 		if (hostName == null) {
 			if (other.hostName != null)
@@ -208,9 +216,17 @@ public class Audit {
 		return "Audit [api_OpreationName=" + api_OpreationName + ", from="
 				+ from + ", to=" + to + ", timeStamp=" + timeStamp
 				+ ", status=" + status + ", auditTransationID="
-				+ auditTransationID + ", Payload=" + Payload
+				+ auditTransationId + ", Payload=" + Payload
 				+ ", errorProblem=" + errorProblem + ", errorCode=" + errorCode
 				+ ", errorDetais=" + errorDetais + ", hostName=" + hostName
-				+ "]";
+				+ ", gvTransationId=" + gvTransationId + "]";
+	}
+
+	public String getGvTransationId() {
+		return gvTransationId;
+	}
+
+	public void setGvTransationId(String gvTransationId) {
+		this.gvTransationId = gvTransationId;
 	}
 }

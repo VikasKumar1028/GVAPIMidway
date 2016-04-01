@@ -111,8 +111,8 @@ public class CamelRoute extends RouteBuilder {
 				.log(LoggingLevel.ERROR, "Connection Error")
 				.maximumRedeliveries(3).redeliveryDelay(1000)
 				.bean(iTransactionalService,"populateConnectionErrorResponse(${exchange},CONNECTION_ERROR)")
-				.bean(iAuditService, "auditExternalExceptionResponseCall").end();
-				//.process(new GenericErrorProcessor(env));
+				//.bean(iAuditService, "auditExternalExceptionResponseCall").end();
+				.process(new GenericErrorProcessor(env));
 
 		onException(VerizonSessionTokenExpirationException.class)
 				.routeId("ConnectionLoginExceptionRoute").handled(true)
@@ -203,7 +203,7 @@ public class CamelRoute extends RouteBuilder {
 							.choice()
 									.when(header("sourceName").isEqualTo("KORE"))
 									 .wireTap("direct:processKoreTransaction")
-									 //.process(new KoreActivateDevicePostProcessor(env))
+									 .process(new KoreActivateDevicePostProcessor(env))
 							.endChoice()
 									.when(header("sourceName").isEqualTo("VERIZON"))
 										.bean(iSessionService, "setContextTokenInExchange")
