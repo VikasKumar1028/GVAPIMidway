@@ -37,21 +37,26 @@ public class AuditDaoImpl implements IAuditDao {
 					.getBody());
 
 			log.info("auditExternalRequestCall-jsonInString::" + msgBody);
+			
+			String requestEndpint =exchange.getFromEndpoint().toString();
+			String requestEndpintSpilt[] =requestEndpint.split("//");
+			
+			
+			log.info("requestEndpintSpilt::"+requestEndpintSpilt[1].replaceAll("]", " "));
+			
+			String apiOperationName= "GV_"+requestEndpintSpilt[1].replaceAll("]", "")+"_ProxyRequest";
+			log.info("apiOperationName"+apiOperationName);
+		
+			
 
 			Audit audit = new Audit();
-			/*audit.setCarrier(exchange.getProperty("bsCarrier").toString());
-			audit.setSource(exchange.getProperty("sourceName").toString());
-			audit.setApiAction(exchange.getIn().getHeader(Exchange.HTTP_PATH)
-					.toString());
-			audit.setInboundURL(exchange.getFromEndpoint().toString());
-			audit.setTransactionId(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID)
-					.toString());*/
+		
 			Date localTime = new Date();
 			DateFormat converter = new SimpleDateFormat(
 					"dd/MM/yyyy:HH:mm:ss");
 			converter.setTimeZone(TimeZone.getTimeZone("GMT"));
 			
-			audit.setApi_OpreationName(exchange.getProperty("bsCarrier").toString());
+			audit.setApi_OpreationName(apiOperationName);
 			audit.setFrom(exchange.getProperty("sourceName").toString());
 			audit.setTo(exchange.getFromEndpoint().toString());
 			audit.setTimeStamp(localTime);
@@ -78,26 +83,32 @@ public class AuditDaoImpl implements IAuditDao {
 			ObjectMapper mapper = new ObjectMapper();
 			String msgBody = mapper.writeValueAsString(exchange.getIn()
 					.getBody());
+			
+			String responseEndpint =exchange.getFromEndpoint().toString();
+			String responseEndpintSpilt[] =responseEndpint.split("//");
+			
+			
+			log.info("requestEndpintSpilt::"+responseEndpintSpilt[1].replaceAll("]", " "));
+			
+			String apiOperationName= "GV_"+responseEndpintSpilt[1].replaceAll("]", "")+"_ProxyResponse";
+			log.info("apiOperationName"+apiOperationName);
+		
 
 			Audit audit = new Audit();
-		/*	audit.setCarrier(exchange.getProperty(IConstant.BSCARRIER).toString());
-			audit.setSource(exchange.getProperty(IConstant.SOURCE_NAME).toString());
-			audit.setApiAction(exchange.getFromEndpoint().toString());
-			audit.setInboundURL(exchange.getFromEndpoint().toString());
-			audit.setTransactionId(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());*/
+		
 			
 			Date localTime = new Date();
 			DateFormat converter = new SimpleDateFormat(
 					"dd/MM/yyyy:HH:mm:ss");
 			converter.setTimeZone(TimeZone.getTimeZone("GMT"));
 			
-			audit.setApi_OpreationName(exchange.getProperty("bsCarrier").toString());
+			audit.setApi_OpreationName(apiOperationName);
 			audit.setFrom(exchange.getProperty("sourceName").toString());
 			audit.setTo(exchange.getFromEndpoint().toString());
 			audit.setTimeStamp(localTime);
 			audit.setAuditTransationID(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
 			audit.setErrorDetais(exchange.getProperty(IConstant.RESPONSE_DESCRIPTION).toString());
-			audit.setErrorProblem(exchange.getProperty(IConstant.RESPONSE_STATUS).toString());
+			audit.setErrorProblem(exchange.getProperty(IConstant.ERROR_MESSAGE).toString());
 			audit.setErrorCode(exchange.getProperty(IConstant.RESPONSE_CODE).toString());
 			
 			audit.setPayload(msgBody);
@@ -120,25 +131,30 @@ public class AuditDaoImpl implements IAuditDao {
 				.getProperty(Exchange.EXCEPTION_CAUGHT);
 
 		String responseBody = exception.getResponseBody();
+		
+		
 
 		try {
 			//changes for the audit
+			
+			String responseExceptionEndpint =exchange.getFromEndpoint().toString();
+			String responseExceptionEndpintSpilt[] =responseExceptionEndpint.split("//");
+			
+			
+			log.info("requestEndpintSpilt::"+responseExceptionEndpintSpilt[1].replaceAll("]", " "));
+			
+			String apiOperationName= "GV_"+responseExceptionEndpintSpilt[1].replaceAll("]", "")+"_ProxyResponse";
+			log.info("apiOperationName"+apiOperationName);
+		
 
 			Audit audit = new Audit();
-			/*audit.setCarrier(exchange.getProperty(IConstant.BSCARRIER)
-					.toString());
-			audit.setSource(exchange.getProperty(IConstant.SOURCE_NAME)
-					.toString());
-			audit.setApiAction(exchange.getFromEndpoint().toString());
-			audit.setInboundURL(exchange.getFromEndpoint().toString());
-			audit.setTransactionId(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID)
-					.toString());*/
+		
 			Date localTime = new Date();
 			DateFormat converter = new SimpleDateFormat(
 					"dd/MM/yyyy:HH:mm:ss");
 			converter.setTimeZone(TimeZone.getTimeZone("GMT"));
 			
-			audit.setApi_OpreationName(exchange.getProperty("bsCarrier").toString());
+			audit.setApi_OpreationName(apiOperationName);
 			audit.setFrom(exchange.getProperty("sourceName").toString());
 			audit.setTo(exchange.getFromEndpoint().toString());
 			audit.setTimeStamp(localTime);

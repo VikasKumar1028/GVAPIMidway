@@ -54,6 +54,17 @@ public class AuditLogRequestEventNotifer extends EventNotifierSupport {
 				DateFormat converter = new SimpleDateFormat(
 						"dd/MM/yyyy:HH:mm:ss");
 				converter.setTimeZone(TimeZone.getTimeZone("GMT"));
+				
+				String requestEndpint =exchange.getFromEndpoint().toString();
+				String requestEndpintSpilt[] =requestEndpint.split("//");
+				
+				
+				logger.info("requestEndpintSpilt::"+requestEndpintSpilt[1].replaceAll("]", " "));
+				
+				String apiOperationName= "GV_"+requestEndpintSpilt[1].replaceAll("]", "")+"_BRequest";
+				logger.info("apiOperationName"+apiOperationName);
+				
+				
 				Audit audit = new Audit();
 				/*
 				 * audit.setCarrier(baseRequest.getHeader().getBsCarrier());
@@ -62,7 +73,7 @@ public class AuditLogRequestEventNotifer extends EventNotifierSupport {
 				 * audit.setInboundURL(exchange.getFromEndpoint().toString());
 				 * audit.setTransactionId(TransactionId);
 				 */
-				audit.setApi_OpreationName(baseRequest.getHeader().getBsCarrier());
+				audit.setApi_OpreationName(apiOperationName);
 				audit.setFrom(baseRequest.getHeader().getSourceName());
 				audit.setTo(exchange.getFromEndpoint().toString());
 				audit.setTimeStamp(localTime);

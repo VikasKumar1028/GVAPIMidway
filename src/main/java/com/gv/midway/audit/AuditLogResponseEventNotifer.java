@@ -52,6 +52,17 @@ public class AuditLogResponseEventNotifer extends EventNotifierSupport {
 						"dd/MM/yyyy:HH:mm:ss");
 				converter.setTimeZone(TimeZone.getTimeZone("GMT"));
 			
+				String responseEndpint =exchange.getFromEndpoint().toString();
+				String responseEndpintSpilt[] =responseEndpint.split("//");
+				
+				
+				logger.info("responseEndpintSpilt::"+responseEndpintSpilt[1].replaceAll("]", " "));
+				
+				String apiOperationName= "GV_"+responseEndpintSpilt[1].replaceAll("]", "")+"_BResponse";
+				logger.info("apiOperationName"+apiOperationName);
+				
+				
+				
 				Audit audit = new Audit();
 			  /*  audit.setCarrier(baseResponse.getHeader().getBsCarrier());
 				audit.setSource(baseResponse.getHeader().getSourceName());
@@ -59,7 +70,7 @@ public class AuditLogResponseEventNotifer extends EventNotifierSupport {
 				audit.setInboundURL(exchange.getFromEndpoint().toString());
 				audit.setTransactionId(TransactionId);*/
 				
-				audit.setApi_OpreationName(baseResponse.getHeader().getBsCarrier());
+				audit.setApi_OpreationName(apiOperationName);
 				audit.setFrom(baseResponse.getHeader().getSourceName());
 				audit.setTo(exchange.getFromEndpoint().toString());
 				audit.setTimeStamp(localTime);

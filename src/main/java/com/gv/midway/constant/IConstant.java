@@ -9,6 +9,7 @@ public interface IConstant {
 	static String VERIZON_AUTHENTICATION = "verizon.authentication";
 	static String RESPONSE_CODE = "ResponseCode";
 	static String RESPONSE_STATUS = "ResponseStatus";
+	static String ERROR_MESSAGE = "ERROR_MESSAGE";
 	static String RESPONSE_DESCRIPTION = "ResponseDescription";
 
 	static String APPLICATION_NAME="application.name";
@@ -30,5 +31,7 @@ public interface IConstant {
 	static String MIDWAY_CALLBACK_CARRIER_STATUS_SUCCESS="Success";
 	static String MIDWAY_CALLBACK_DELIVERED_FAILED="Fail";
 	static String MIDWAY_TRANSACTION_STATUS_PENDING="Pending";
+	static String MIDWAY_TRANSACTION_STATUS_ERROR="Error";
+	static String MIDWAY_TRANSACTION_STATUS_SUCCESS="Success";
 	static String MIDWAY_TRANSACTION_DEVICE_NUMBER="TransactionDeviceNumber";
 }
