@@ -11,12 +11,16 @@ import com.gv.midway.service.ITransactionalService;
 public class TransactionalServiceImpl implements ITransactionalService {
 	@Autowired
 	private ITransactionalDao transactionalDao;
+	//santosh:new method
+	public void populateActivateDBPayload(Exchange exchange) {
 
-	public void populateDBPayload(Exchange exchange) {
-
-		transactionalDao.populateDBPayload(exchange);
+		transactionalDao.populateActivateDBPayload(exchange);
 	}
+	//santosh:new method
+	public void populateDeactivateDBPayload(Exchange exchange) {
 
+		transactionalDao.populateDeactivateDBPayload(exchange);
+	}
 	public void populateVerizonTransactionalResponse(Exchange exchange) {
 		transactionalDao.populateVerizonTransactionalResponse(exchange);
 		

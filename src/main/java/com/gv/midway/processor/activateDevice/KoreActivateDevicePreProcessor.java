@@ -40,7 +40,7 @@ public class KoreActivateDevicePreProcessor implements Processor {
 		
 //exchange		transaction.getDeviceNumber()
 
-		
+		//santosh:cross check ObjectMapper with ur code
 		ObjectMapper mapper = new ObjectMapper();
 	
 		ActivateDeviceRequest activateDeviceRequest=mapper.readValue(transaction.getDevicePayload(),ActivateDeviceRequest.class);
@@ -56,7 +56,7 @@ public class KoreActivateDevicePreProcessor implements Processor {
 
 		message.setBody(activateDeviceRequest);
 		
-		
+		//santosh:logging
 		
 		log.info("End:KoreDeactivateDevicePreProcessor");
 	}

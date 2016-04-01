@@ -38,7 +38,8 @@ public class KoreDeviceInformationPostProcessor implements Processor {
 		
 		log.info("Start:KoreDeviceInformationPostProcessor");
 		KoreDeviceInformationResponse koreDeviceInformationResponse = (KoreDeviceInformationResponse) exchange
-				.getIn().getBody();
+				.getIn().getBody(KoreDeviceInformationResponse.class);
+		
 		log.info("----exchange_Body- Post Processor-===++++++++++++---------"
 				+ koreDeviceInformationResponse.toString());
 

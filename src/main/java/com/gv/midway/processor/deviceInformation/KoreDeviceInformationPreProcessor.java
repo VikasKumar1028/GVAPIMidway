@@ -19,10 +19,10 @@ public class KoreDeviceInformationPreProcessor implements Processor {
 		
 		// wrap it in a Subject
 		DeviceInformationRequest request = (DeviceInformationRequest) exchange
-				.getIn().getBody();
-		String deviceId = request.getDataArea().getDeviceId()[0].getId();
-		System.out.println("deviceId::"+deviceId);
-		//String deviceId = "89014103277405946190";
+				.getIn().getBody(DeviceInformationRequest.class);
+		//String deviceId = request.getDataArea().getDeviceId()[0].getId();
+		//System.out.println("deviceId::"+deviceId);
+		String deviceId = "89014103277405946190";
 		// String json = "{\"deviceNumber\":\""+deviceId+"\"}";
 		net.sf.json.JSONObject obj = new net.sf.json.JSONObject();
 		obj.put("deviceNumber", deviceId);

@@ -1,6 +1,5 @@
 package com.gv.midway.dao.impl;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +20,8 @@ import com.gv.midway.dao.ITransactionalDao;
 import com.gv.midway.pojo.DeviceId;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequestDataArea;
+import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
+import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequestDataArea;
 import com.gv.midway.pojo.transaction.Transaction;
 import com.gv.midway.utility.CommonUtil;
 import com.mongodb.WriteResult;
@@ -33,20 +34,18 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 	Logger log = Logger.getLogger(TransactionalDaoImpl.class);
 
-	public void populateDBPayload(Exchange exchange) {
-		log.info("Inside populateDBPayload");
-		ArrayList<Transaction> list = new ArrayList();
+	public void populateActivateDBPayload(Exchange exchange) {
+		log.info("Inside populateActivateDBPayload");
+		ArrayList<Transaction> list = new ArrayList<Transaction>();
 
 		long timestamp = System.currentTimeMillis();
 		String midwayTransationID = Long.toString(timestamp);
-		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_ID,midwayTransationID );
+		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_ID, midwayTransationID);
 		String currentDataTime = CommonUtil.getCurrentTimeStamp();
 
-		ActivateDeviceRequest req = (ActivateDeviceRequest) exchange.getIn()
-				.getBody();
+		ActivateDeviceRequest req = (ActivateDeviceRequest) exchange.getIn().getBody();
 
-		ActivateDeviceRequestDataArea activateDeviceRequestDataArea = (ActivateDeviceRequestDataArea) req
-				.getDataArea();
+		ActivateDeviceRequestDataArea activateDeviceRequestDataArea = (ActivateDeviceRequestDataArea) req.getDataArea();
 
 		DeviceId[] deviceIds = activateDeviceRequestDataArea.getDeviceId();
 		Kryo kryo = new Kryo();
@@ -68,13 +67,11 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 				/*
 				 * String midwayTransationID; //Main Thread String
-				 * deviceNumber;//Main Thread
-				 *  String devicePayload;//Main Thread
-				 * String midwayStatus;//Main Thread 
-				 * String carrierName;//Main Thread 
-				 * String TimeStampReceived;//Main Thread 
-				 * String auditTransationID;//Main Thread 
-				 * String requestType;//Main Thread
+				 * deviceNumber;//Main Thread String devicePayload;//Main Thread
+				 * String midwayStatus;//Main Thread String carrierName;//Main
+				 * Thread String TimeStampReceived;//Main Thread String
+				 * auditTransationID;//Main Thread String requestType;//Main
+				 * Thread
 				 * 
 				 * String carrierTransationID;//Call Back Thread String
 				 * carrierStatus;//Call Back Thread String
@@ -91,24 +88,19 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				transaction.setMidwayTransationID(midwayTransationID);
 				transaction.setDeviceNumber(actualDeviceId.getId());
 				transaction.setDevicePayload(msgBody);
-				transaction
-						.setMidwayStatus(IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
-				transaction.setCarrierName(exchange.getProperty(
-						IConstant.BSCARRIER).toString());
+				transaction.setMidwayStatus(IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
+				transaction.setCarrierName(exchange.getProperty(IConstant.BSCARRIER).toString());
 				transaction.setTimeStampReceived(currentDataTime);
-				transaction.setAuditTransationID(exchange.getProperty(
-						IConstant.AUDIT_TRANSACTION_ID).toString());
-				transaction.setRequestType(exchange.getFromEndpoint()
-						.toString());
+				transaction.setAuditTransationID(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
+				transaction.setRequestType(exchange.getFromEndpoint().toString());
 
 				list.add(transaction);
 
 			} catch (Exception ex) {
-				log.error("Inside populateDBPayload");
+				//santosh:logging
+				log.error("Inside populateActivateDBPayload");
 
 			}
-
-		
 
 		}
 		mongoTemplate.insertAll(list);
@@ -116,25 +108,80 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		// be set with arraylist of transaction for Verizon we simply add
 		// into database and do not change the exchange body
 
-		if (exchange.getProperty(IConstant.SOURCE_NAME).toString()
-				.equals("KORE")) {
+		if (exchange.getProperty(IConstant.SOURCE_NAME).toString().equals("KORE")) {
 
 			exchange.getIn().setBody(list);
 		}
 	}
+//santosh:new method
+	public void populateDeactivateDBPayload(Exchange exchange) {
 
-	
-	public void populateVerizonTransactionalResponse(Exchange exchange){
+		log.info("Inside populateDeactivateDBPayload");
+		ArrayList<Transaction> list = new ArrayList<Transaction>();
 
-		
-		
-		Query searchUserQuery = new Query(Criteria
-				.where("midwayTransationID")
-				.is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID))
-				);
-		
-		
-		 /* String carrierTransationID;//Call Back Thread String
+		long timestamp = System.currentTimeMillis();
+		String midwayTransationID = Long.toString(timestamp);
+		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_ID, midwayTransationID);
+		String currentDataTime = CommonUtil.getCurrentTimeStamp();
+
+		DeactivateDeviceRequest req = (DeactivateDeviceRequest) exchange.getIn().getBody();
+
+		DeactivateDeviceRequestDataArea deActivateDeviceRequestDataArea = (DeactivateDeviceRequestDataArea) req.getDataArea();
+
+		DeviceId[] deviceIds = deActivateDeviceRequestDataArea.getDeviceId();
+		Kryo kryo = new Kryo();
+
+		for (DeviceId actualDeviceId : deviceIds) {
+			DeviceId[] payLoadDeviceIds = new DeviceId[1];
+			DeviceId payLoadDeviceId = new DeviceId();
+			payLoadDeviceId.setId(actualDeviceId.getId());
+			payLoadDeviceId.setKind(actualDeviceId.getKind());
+			payLoadDeviceIds[0] = payLoadDeviceId;
+			DeactivateDeviceRequest copy = kryo.copy(req);
+
+			copy.getDataArea().setDeviceId(payLoadDeviceIds);
+
+			try {
+
+				ObjectMapper mapper = new ObjectMapper();
+				String msgBody = mapper.writeValueAsString(copy);
+
+				Transaction transaction = new Transaction();
+				transaction.setMidwayTransationID(midwayTransationID);
+				transaction.setDeviceNumber(actualDeviceId.getId());
+				transaction.setDevicePayload(msgBody);
+				transaction.setMidwayStatus(IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
+				transaction.setCarrierName(exchange.getProperty(IConstant.BSCARRIER).toString());
+				transaction.setTimeStampReceived(currentDataTime);
+				transaction.setAuditTransationID(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
+				transaction.setRequestType(exchange.getFromEndpoint().toString());
+
+				list.add(transaction);
+
+			} catch (Exception ex) {
+				log.error("Inside populateDeactivateDBPayload");
+
+			}
+
+		}
+		mongoTemplate.insertAll(list);
+		// For Kore We Need Wire Tap and SEDA component So the body should
+		// be set with arraylist of transaction for Verizon we simply add
+		// into database and do not change the exchange body
+
+		if (exchange.getProperty(IConstant.SOURCE_NAME).toString().equals("KORE")) {
+
+			exchange.getIn().setBody(list);
+		}
+
+	}
+
+	public void populateVerizonTransactionalResponse(Exchange exchange) {
+
+		Query searchUserQuery = new Query(Criteria.where("midwayTransationID").is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)));
+
+		/*
+		 * String carrierTransationID;//Call Back Thread String
 		 * carrierStatus;//Call Back Thread String
 		 * LastTimeStampUpdated;//CallBack Thread String
 		 * carrierErrorDecription;//CallBack Thread String
@@ -144,33 +191,23 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		 * callBackFailureToNetSuitReason;//CallBack Thread
 		 */
 		if (exchange.getIn().getBody().toString().contains("errorMessage=")) {
-				
 
-		Update update = new Update();
-		update.set("callBackPayload", exchange.getIn().getBody().toString());
-		update.set("carrierErrorDecription", exchange.getIn().getBody().toString());
-		update.set("carrierErrorDecription", exchange.getIn().getBody().toString());
-		update.set("carrierStatus", "Error");
-		update.set("lastTimeStampUpdated", CommonUtil.getCurrentTimeStamp());
-		mongoTemplate.updateMulti(searchUserQuery, update, Transaction.class);
+			Update update = new Update();
+			update.set("callBackPayload", exchange.getIn().getBody().toString());
+			update.set("carrierErrorDecription", exchange.getIn().getBody().toString());
+			update.set("carrierErrorDecription", exchange.getIn().getBody().toString());
+			update.set("carrierStatus", "Error");
+			update.set("lastTimeStampUpdated", CommonUtil.getCurrentTimeStamp());
+			mongoTemplate.updateMulti(searchUserQuery, update, Transaction.class);
 		}
 	}
-	
-	
-	
-	
-	public void populateKoreTransactionalErrorResponse(Exchange exchange){
 
-				
-		Query searchUserQuery = new Query(Criteria
-				.where("midwayTransationID")
-				.is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID))
-				.andOperator(
-						Criteria.where("deviceNumber")
-						.is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
-				
-				
-		 /* String carrierTransationID;//Call Back Thread String
+	public void populateKoreTransactionalErrorResponse(Exchange exchange) {
+
+		Query searchUserQuery = new Query(Criteria.where("midwayTransationID").is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)).andOperator(Criteria.where("deviceNumber").is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
+
+		/*
+		 * String carrierTransationID;//Call Back Thread String
 		 * carrierStatus;//Call Back Thread String
 		 * LastTimeStampUpdated;//CallBack Thread String
 		 * carrierErrorDecription;//CallBack Thread String
@@ -179,12 +216,9 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		 * callBackReceived;//CallBack Thread String
 		 * callBackFailureToNetSuitReason;//CallBack Thread
 		 */
-		CxfOperationException exception = (CxfOperationException) exchange
-				.getProperty(Exchange.EXCEPTION_CAUGHT);
+		CxfOperationException exception = (CxfOperationException) exchange.getProperty(Exchange.EXCEPTION_CAUGHT);
 
 		String errorResponseBody = exception.getResponseBody();
-
-				
 
 		Update update = new Update();
 		update.set("callBackPayload", errorResponseBody);
@@ -193,39 +227,26 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		update.set("carrierStatus", "Error");
 		update.set("lastTimeStampUpdated", CommonUtil.getCurrentTimeStamp());
 		mongoTemplate.updateMulti(searchUserQuery, update, Transaction.class);
-		
-	}
-	
-	
 
+	}
 
 	public void populateVerizonTransactionalErrorResponse(Exchange exchange) {
 		// TODO Auto-generated method stub
-		
-	}
 
+	}
 
 	public void populateKoreTransactionalResponse(Exchange exchange) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-	
-	public void populateConnectionErrorResponse(Exchange exchange,String errorType){
-		
-		
-		System.out.println("**************************ERROR TYPE**************************************"+ errorType);
-		Query searchUserQuery =null;
-		if(		"KORE".equals(exchange.getProperty(IConstant.SOURCE_NAME)) ){
-			searchUserQuery= new Query(
-				Criteria.where("midwayTransationID")
-						.is(exchange
-								.getProperty(IConstant.MIDWAY_TRANSACTION_ID))
-						.andOperator(
-								Criteria.where("deviceNumber")
-										.is(exchange
-												.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
-			String errorResponseBody = IConstant.MIDWAY_CONNECTION_ERROR;	
+
+	public void populateConnectionErrorResponse(Exchange exchange, String errorType) {
+
+		System.out.println("**************************ERROR TYPE**************************************" + errorType);
+		Query searchUserQuery = null;
+		if ("KORE".equals(exchange.getProperty(IConstant.SOURCE_NAME))) {
+			searchUserQuery = new Query(Criteria.where("midwayTransationID").is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)).andOperator(Criteria.where("deviceNumber").is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
+			String errorResponseBody = IConstant.MIDWAY_CONNECTION_ERROR;
 
 			Update update = new Update();
 			update.set("callBackPayload", errorResponseBody);
@@ -234,44 +255,33 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			update.set("carrierStatus", "Error");
 			update.set("lastTimeStampUpdated", CommonUtil.getCurrentTimeStamp());
 			mongoTemplate.updateMulti(searchUserQuery, update, Transaction.class);
-		
-		
-		}else if("VERIZON".equals(exchange.getProperty(IConstant.SOURCE_NAME)) ) {
-			
-			System.out.println("**************************1111111111111**************************************"+ exchange.getIn().getBody().toString());
-			
-		 searchUserQuery = new Query(Criteria.where("midwayTransationID")
-					.is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)));
-		 
-		
 
-				Update update = new Update();
-				update.set("callBackPayload","CONNECTION_ERROR".toString());
-				update.set("carrierErrorDecription","CONNECTION_ERROR"
-						.toString());
-				update.set("carrierErrorDecription", "CONNECTION_ERROR"
-						.toString());
-				update.set("carrierStatus", "Error");
-				update.set("lastTimeStampUpdated", CommonUtil.getCurrentTimeStamp());
-				WriteResult result=mongoTemplate.updateMulti(searchUserQuery, update,
-						Transaction.class);
-				
-				System.out.println("*******************************************"+ result);
-	
+		} else if ("VERIZON".equals(exchange.getProperty(IConstant.SOURCE_NAME))) {
+
+			System.out.println("**************************1111111111111**************************************" + exchange.getIn().getBody().toString());
+
+			searchUserQuery = new Query(Criteria.where("midwayTransationID").is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)));
+
+			Update update = new Update();
+			update.set("callBackPayload", "CONNECTION_ERROR".toString());
+			update.set("carrierErrorDecription", "CONNECTION_ERROR".toString());
+			update.set("carrierErrorDecription", "CONNECTION_ERROR".toString());
+			update.set("carrierStatus", "Error");
+			update.set("lastTimeStampUpdated", CommonUtil.getCurrentTimeStamp());
+			WriteResult result = mongoTemplate.updateMulti(searchUserQuery, update, Transaction.class);
+
+			System.out.println("*******************************************" + result);
+
 		}
 
-		
 	}
-
 
 	public void populatePendingKoreCheckStatus(Exchange exchange) {
 		// TODO Auto-generated method stub
-		Query searchPendingCheckStatusQuery = new Query(Criteria
-				.where("carrierStatus")
-				.is("Pending"));
-		
-		List<Transaction> transactionListPendingStatus=mongoTemplate.find(searchPendingCheckStatusQuery, Transaction.class);
-		exchange.getIn().setBody(transactionListPendingStatus);		
+		Query searchPendingCheckStatusQuery = new Query(Criteria.where("carrierStatus").is("Pending"));
+
+		List<Transaction> transactionListPendingStatus = mongoTemplate.find(searchPendingCheckStatusQuery, Transaction.class);
+		exchange.getIn().setBody(transactionListPendingStatus);
 	}
 
 }
