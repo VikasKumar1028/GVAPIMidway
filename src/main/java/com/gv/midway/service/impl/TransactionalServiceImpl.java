@@ -17,11 +17,6 @@ public class TransactionalServiceImpl implements ITransactionalService {
 		transactionalDao.populateDBPayload(exchange);
 	}
 
-	public void callbackSaveDB(Exchange exchange) {
-		
-		transactionalDao.callbackSaveDB(exchange);
-	}
-
 	public void populateVerizonTransactionalResponse(Exchange exchange) {
 		transactionalDao.populateVerizonTransactionalResponse(exchange);
 		
@@ -37,14 +32,18 @@ public class TransactionalServiceImpl implements ITransactionalService {
 		
 	}
 
-	public void populateKoreTransactionalSuccessResponse(Exchange exchange) {
-		transactionalDao.populateKoreTransactionalSuccessResponse(exchange);
+	public void populateKoreTransactionalResponse(Exchange exchange) {
+		transactionalDao.populateKoreTransactionalResponse(exchange);
 		
 	}
 
 	public void populatePendingKoreCheckStatus(Exchange exchange) {
 		// TODO Auto-generated method stub
 		transactionalDao.populatePendingKoreCheckStatus(exchange);
+	}
+	
+	public void populateConnectionErrorResponse(Exchange exchange,String errorType){
+		transactionalDao.populateConnectionErrorResponse(exchange,errorType);
 	}
 
 }

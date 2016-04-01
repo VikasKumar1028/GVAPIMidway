@@ -1,8 +1,9 @@
 package com.gv.midway.dao.impl;
 
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.component.cxf.CxfOperationException;
 import org.apache.log4j.Logger;
@@ -22,6 +23,7 @@ import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequestDataArea;
 import com.gv.midway.pojo.transaction.Transaction;
 import com.gv.midway.utility.CommonUtil;
+import com.mongodb.WriteResult;
 
 @Service
 public class TransactionalDaoImpl implements ITransactionalDao {
@@ -195,10 +197,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 	}
 	
 	
-	public void callbackSaveDB(Exchange exchange) {
-		// TODO Auto-generated method stub
-
-	}
 
 
 	public void populateVerizonTransactionalErrorResponse(Exchange exchange) {
@@ -207,8 +205,61 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 	}
 
 
-	public void populateKoreTransactionalSuccessResponse(Exchange exchange) {
+	public void populateKoreTransactionalResponse(Exchange exchange) {
 		// TODO Auto-generated method stub
+		
+	}
+	
+	
+	public void populateConnectionErrorResponse(Exchange exchange,String errorType){
+		
+		
+		System.out.println("**************************ERROR TYPE**************************************"+ errorType);
+		Query searchUserQuery =null;
+		if(		"KORE".equals(exchange.getProperty(IConstant.SOURCE_NAME)) ){
+			searchUserQuery= new Query(
+				Criteria.where("midwayTransationID")
+						.is(exchange
+								.getProperty(IConstant.MIDWAY_TRANSACTION_ID))
+						.andOperator(
+								Criteria.where("deviceNumber")
+										.is(exchange
+												.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
+			String errorResponseBody = IConstant.MIDWAY_CONNECTION_ERROR;	
+
+			Update update = new Update();
+			update.set("callBackPayload", errorResponseBody);
+			update.set("carrierErrorDecription", errorResponseBody);
+			update.set("carrierErrorDecription", errorResponseBody);
+			update.set("carrierStatus", "Error");
+			update.set("lastTimeStampUpdated", CommonUtil.getCurrentTimeStamp());
+			mongoTemplate.updateMulti(searchUserQuery, update, Transaction.class);
+		
+		
+		}else if("VERIZON".equals(exchange.getProperty(IConstant.SOURCE_NAME)) ) {
+			
+			System.out.println("**************************1111111111111**************************************"+ exchange.getIn().getBody().toString());
+			
+		 searchUserQuery = new Query(Criteria.where("midwayTransationID")
+					.is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)));
+		 
+		
+
+				Update update = new Update();
+				update.set("callBackPayload","CONNECTION_ERROR".toString());
+				update.set("carrierErrorDecription","CONNECTION_ERROR"
+						.toString());
+				update.set("carrierErrorDecription", "CONNECTION_ERROR"
+						.toString());
+				update.set("carrierStatus", "Error");
+				update.set("lastTimeStampUpdated", CommonUtil.getCurrentTimeStamp());
+				WriteResult result=mongoTemplate.updateMulti(searchUserQuery, update,
+						Transaction.class);
+				
+				System.out.println("*******************************************"+ result);
+	
+		}
+
 		
 	}
 

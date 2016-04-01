@@ -34,4 +34,5 @@ public interface IConstant {
 	static String MIDWAY_TRANSACTION_STATUS_ERROR="Error";
 	static String MIDWAY_TRANSACTION_STATUS_SUCCESS="Success";
 	static String MIDWAY_TRANSACTION_DEVICE_NUMBER="TransactionDeviceNumber";
+	static String MIDWAY_CONNECTION_ERROR="ConnectionError";
 }
