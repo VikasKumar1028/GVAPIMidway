@@ -3,6 +3,7 @@ package com.gv.midway.router;
 import java.net.ConnectException;
 import java.net.UnknownHostException;
 
+import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.cxf.CxfOperationException;
@@ -111,8 +112,9 @@ public class CamelRoute extends RouteBuilder {
 				.log(LoggingLevel.ERROR, "Connection Error")
 				.maximumRedeliveries(3).redeliveryDelay(1000)
 				.bean(iTransactionalService,"populateConnectionErrorResponse(${exchange},CONNECTION_ERROR)")
-				//.bean(iAuditService, "auditExternalExceptionResponseCall").end();
+				.bean(iAuditService, "auditExternalConnectionExceptionResponseCall")
 				.process(new GenericErrorProcessor(env));
+		
 
 		onException(VerizonSessionTokenExpirationException.class)
 				.routeId("ConnectionLoginExceptionRoute").handled(true)
@@ -221,6 +223,8 @@ public class CamelRoute extends RouteBuilder {
 		from("direct:VerizonActivationFlow")
 					.doTry()						
 							.process(new VerizonActivateDevicePreProcessor())
+							//Audit will store record 3 times in case of failure (see onException for connection.class above)
+							.bean(iAuditService, "auditExternalRequestCall")
 							.to(uriRestVerizonEndPoint)
 							.unmarshal()
 							.json(JsonLibrary.Jackson)
@@ -246,7 +250,7 @@ public class CamelRoute extends RouteBuilder {
 						"populateKoreTransactionalErrorResponse")
 				.bean(iAuditService, "auditExternalExceptionResponseCall")
 				.end()
-
+				.bean(iAuditService, "auditExternalRequestCall")
 				.process(new KoreActivateDevicePreProcessor(env))
 				.to(uriRestKoreEndPoint)
 				.unmarshal()
@@ -294,6 +298,7 @@ public class CamelRoute extends RouteBuilder {
 		from("direct:VerizonDeActivationFlow")
 		.doTry()		
 		.process(new VerizonDeactivateDevicePreProcessor())
+		//Audit will store record 3 times in case of failure (see onException for connection.class above)
 		.bean(iAuditService, "auditExternalRequestCall")
 		.to(uriRestVerizonEndPoint)
 		.unmarshal().json(JsonLibrary.Jackson)
@@ -303,9 +308,7 @@ public class CamelRoute extends RouteBuilder {
 		.bean(iAuditService, "auditExternalExceptionResponseCall")
 		.process(new VerizonGenericExceptionProcessor(env))
 		.endDoTry()	;
-		
-		
-		
+			
 		
 //SubFlow: Device Kore DeActivation 		
 		
@@ -322,6 +325,7 @@ public class CamelRoute extends RouteBuilder {
 						"populateKoreTransactionalErrorResponse")
 			.bean(iAuditService, "auditExternalExceptionResponseCall")
 			.end()
+			.bean(iAuditService, "auditExternalRequestCall")
 			.process(new KoreDeactivateDevicePreProcessor(env))
 			.to(uriRestKoreEndPoint).unmarshal()
 			.json(JsonLibrary.Jackson, KoreDeviceInformationResponse.class)

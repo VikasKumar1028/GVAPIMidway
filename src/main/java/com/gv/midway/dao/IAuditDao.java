@@ -10,6 +10,8 @@ public interface IAuditDao {
 	
 	public void auditExternalRequestCall(Exchange exchange);
 	
+	public void auditExternalConnectionExceptionResponseCall(Exchange exchange);
+	
 	
 
 }

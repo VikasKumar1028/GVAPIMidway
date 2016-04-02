@@ -37,36 +37,36 @@ public class AuditDaoImpl implements IAuditDao {
 					.getBody());
 
 			log.info("auditExternalRequestCall-jsonInString::" + msgBody);
-			
-			String requestEndpint =exchange.getFromEndpoint().toString();
-			String requestEndpintSpilt[] =requestEndpint.split("//");
-			
-			
-			log.info("requestEndpintSpilt::"+requestEndpintSpilt[1].replaceAll("]", " "));
-			
-			String apiOperationName= "GV_"+requestEndpintSpilt[1].replaceAll("]", "")+"_ProxyRequest";
-			log.info("apiOperationName"+apiOperationName);
-		
-			
+
+			String requestEndpint = exchange.getFromEndpoint().toString();
+			String requestEndpintSpilt[] = requestEndpint.split("//");
+
+			log.info("requestEndpintSpilt::"
+					+ requestEndpintSpilt[1].replaceAll("]", " "));
+
+			String apiOperationName = "GV_"
+					+ requestEndpintSpilt[1].replaceAll("]", "")
+					+ "_ProxyRequest";
+			log.info("apiOperationName" + apiOperationName);
 
 			Audit audit = new Audit();
-		
+
 			Date localTime = new Date();
-			DateFormat converter = new SimpleDateFormat(
-					"dd/MM/yyyy:HH:mm:ss");
+			DateFormat converter = new SimpleDateFormat("dd/MM/yyyy:HH:mm:ss");
 			converter.setTimeZone(TimeZone.getTimeZone("GMT"));
-			
+
 			audit.setApi_OpreationName(apiOperationName);
 			audit.setFrom(exchange.getProperty("sourceName").toString());
 			audit.setTo(exchange.getFromEndpoint().toString());
 			audit.setTimeStamp(localTime);
-			audit.setAuditTransationID(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
-			
+			audit.setAuditTransationID(exchange.getProperty(
+					IConstant.AUDIT_TRANSACTION_ID).toString());
+
 			audit.setPayload(msgBody);
 			mongoTemplate.save(audit);
 
 		} catch (Exception e) {
-			log.info("auditExternalRequestCall-Exception" + e.getMessage());
+			log.info("auditExternalRequestCall-Exception" + e);
 		}
 
 		log.info("End-AuditDaoImpl :auditExternalRequestCall");
@@ -83,40 +83,45 @@ public class AuditDaoImpl implements IAuditDao {
 			ObjectMapper mapper = new ObjectMapper();
 			String msgBody = mapper.writeValueAsString(exchange.getIn()
 					.getBody());
-			
-			String responseEndpint =exchange.getFromEndpoint().toString();
-			String responseEndpintSpilt[] =responseEndpint.split("//");
-			
-			
-			log.info("requestEndpintSpilt::"+responseEndpintSpilt[1].replaceAll("]", " "));
-			
-			String apiOperationName= "GV_"+responseEndpintSpilt[1].replaceAll("]", "")+"_ProxyResponse";
-			log.info("apiOperationName"+apiOperationName);
-		
+
+			String responseEndpint = exchange.getFromEndpoint().toString();
+			String responseEndpintSpilt[] = responseEndpint.split("//");
+
+			log.info("requestEndpintSpilt::"
+					+ responseEndpintSpilt[1].replaceAll("]", " "));
+
+			String apiOperationName = "GV_"
+					+ responseEndpintSpilt[1].replaceAll("]", "")
+					+ "_ProxyResponse";
+			log.info("apiOperationName" + apiOperationName);
 
 			Audit audit = new Audit();
-		
-			
+
 			Date localTime = new Date();
-			DateFormat converter = new SimpleDateFormat(
-					"dd/MM/yyyy:HH:mm:ss");
+			DateFormat converter = new SimpleDateFormat("dd/MM/yyyy:HH:mm:ss");
 			converter.setTimeZone(TimeZone.getTimeZone("GMT"));
-			
+
 			audit.setApi_OpreationName(apiOperationName);
 			audit.setFrom(exchange.getProperty("sourceName").toString());
 			audit.setTo(exchange.getFromEndpoint().toString());
 			audit.setTimeStamp(localTime);
-			audit.setAuditTransationID(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
-			audit.setErrorDetais(exchange.getProperty(IConstant.RESPONSE_DESCRIPTION).toString());
-			audit.setErrorProblem(exchange.getProperty(IConstant.ERROR_MESSAGE).toString());
-			audit.setErrorCode(exchange.getProperty(IConstant.RESPONSE_CODE).toString());
-			
+			audit.setAuditTransationID(exchange.getProperty(
+					IConstant.AUDIT_TRANSACTION_ID).toString());
+			/*
+			 * audit.setErrorDetais(exchange.getProperty(IConstant.
+			 * RESPONSE_DESCRIPTION).toString());
+			 * audit.setErrorProblem(exchange.
+			 * getProperty(IConstant.ERROR_MESSAGE).toString());
+			 * audit.setErrorCode
+			 * (exchange.getProperty(IConstant.RESPONSE_CODE).toString());
+			 */
+
 			audit.setPayload(msgBody);
 			mongoTemplate.save(audit);
 
 			// }
 		} catch (Exception e) {
-			log.info("auditExternalResponseCall-Exception" + e.getMessage());
+			log.info("auditExternalResponseCall-Exception" + e);
 		}
 
 		log.info("End-AuditDaoImpl:auditExternalResponseCall");
@@ -126,48 +131,120 @@ public class AuditDaoImpl implements IAuditDao {
 	public void auditExternalExceptionResponseCall(Exchange exchange) {
 
 		log.info("Start-AuditDaoImpl:auditExternalExceptionResponseCall");
-
-		CxfOperationException exception = (CxfOperationException) exchange
-				.getProperty(Exchange.EXCEPTION_CAUGHT);
-
-		String responseBody = exception.getResponseBody();
+		String responseBody = "";
 		
+		CxfOperationException exception = null;
 		
+		if ( exchange
+				.getProperty(Exchange.EXCEPTION_CAUGHT) != null) {
+			exception = (CxfOperationException) exchange
+					.getProperty(Exchange.EXCEPTION_CAUGHT);
+			responseBody = exception.getResponseBody();
+		}
 
 		try {
-			//changes for the audit
-			
-			String responseExceptionEndpint =exchange.getFromEndpoint().toString();
-			String responseExceptionEndpintSpilt[] =responseExceptionEndpint.split("//");
-			
-			
-			log.info("requestEndpintSpilt::"+responseExceptionEndpintSpilt[1].replaceAll("]", " "));
-			
-			String apiOperationName= "GV_"+responseExceptionEndpintSpilt[1].replaceAll("]", "")+"_ProxyResponse";
-			log.info("apiOperationName"+apiOperationName);
-		
+			// changes for the audit
+
+			String responseExceptionEndpint = exchange.getFromEndpoint()
+					.toString();
+			String responseExceptionEndpintSpilt[] = responseExceptionEndpint
+					.split("//");
+
+			log.info("requestEndpintSpilt::"
+					+ responseExceptionEndpintSpilt[1].replaceAll("]", " "));
+
+			String apiOperationName = "GV_"
+					+ responseExceptionEndpintSpilt[1].replaceAll("]", "")
+					+ "_ProxyResponse";
+			log.info("apiOperationName" + apiOperationName);
 
 			Audit audit = new Audit();
-		
+
 			Date localTime = new Date();
-			DateFormat converter = new SimpleDateFormat(
-					"dd/MM/yyyy:HH:mm:ss");
+			DateFormat converter = new SimpleDateFormat("dd/MM/yyyy:HH:mm:ss");
 			converter.setTimeZone(TimeZone.getTimeZone("GMT"));
-			
+
 			audit.setApi_OpreationName(apiOperationName);
 			audit.setFrom(exchange.getProperty("sourceName").toString());
 			audit.setTo(exchange.getFromEndpoint().toString());
 			audit.setTimeStamp(localTime);
-			audit.setAuditTransationID(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
-			audit.setErrorDetais(exchange.getProperty(IConstant.RESPONSE_DESCRIPTION).toString());
-			audit.setErrorProblem(exchange.getProperty(IConstant.RESPONSE_STATUS).toString());
-			audit.setErrorCode(exchange.getProperty(IConstant.RESPONSE_CODE).toString());
+			audit.setAuditTransationID(exchange.getProperty(
+					IConstant.AUDIT_TRANSACTION_ID).toString());
+			audit.setErrorDetais(exchange.getProperty(
+					IConstant.RESPONSE_DESCRIPTION).toString());
+			audit.setErrorProblem(exchange.getProperty(
+					IConstant.RESPONSE_STATUS).toString());
+			audit.setErrorCode(exchange.getProperty(IConstant.RESPONSE_CODE)
+					.toString());
 			audit.setPayload(responseBody);
 			mongoTemplate.save(audit);
 
 		} catch (Exception e) {
-			log.info("auditExternalExceptionResponseCall" + e.getMessage());
+			log.info("auditExternalExceptionResponseCall" + e);
 		}
 	}
 
+	
+	
+	public void auditExternalConnectionExceptionResponseCall(Exchange exchange) {
+
+		log.info("Start-auditExternalConnectionExceptionResponseCall");
+		String responseBody = "";
+		
+		CxfOperationException exception = null;
+		
+		if ( exchange
+				.getProperty(Exchange.EXCEPTION_CAUGHT) != null) {
+			
+			String str=exchange
+					.getProperty(Exchange.EXCEPTION_CAUGHT).toString();
+			responseBody = str;
+		}
+
+		try {
+			// changes for the audit
+
+			String responseExceptionEndpint = exchange.getFromEndpoint()
+					.toString();
+			String responseExceptionEndpintSpilt[] = responseExceptionEndpint
+					.split("//");
+
+			log.info("requestEndpintSpilt::"
+					+ responseExceptionEndpintSpilt[1].replaceAll("]", " "));
+
+			String apiOperationName = "GV_"
+					+ responseExceptionEndpintSpilt[1].replaceAll("]", "")
+					+ "_ProxyResponse";
+			log.info("apiOperationName" + apiOperationName);
+
+			Audit audit = new Audit();
+
+			Date localTime = new Date();
+			DateFormat converter = new SimpleDateFormat("dd/MM/yyyy:HH:mm:ss");
+			converter.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+			audit.setApi_OpreationName(apiOperationName);
+			audit.setFrom(exchange.getProperty("sourceName").toString());
+			audit.setTo(exchange.getFromEndpoint().toString());
+			audit.setTimeStamp(localTime);
+			audit.setAuditTransationID(exchange.getProperty(
+					IConstant.AUDIT_TRANSACTION_ID).toString());
+			audit.setErrorDetais(exchange.getProperty(
+					IConstant.RESPONSE_DESCRIPTION).toString());
+			audit.setErrorProblem(exchange.getProperty(
+					IConstant.RESPONSE_STATUS).toString());
+			audit.setErrorCode(exchange.getProperty(IConstant.RESPONSE_CODE)
+					.toString());
+			audit.setPayload(responseBody);
+			mongoTemplate.save(audit);
+
+		} catch (Exception e) {
+			log.info("auditExternalConnectionExceptionResponseCall" + e);
+		}
+	}
+
+	
+	
+	
+	
 }

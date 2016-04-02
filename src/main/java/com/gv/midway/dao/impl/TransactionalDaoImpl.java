@@ -274,6 +274,11 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		}
 
+		
+		exchange.setProperty(IConstant.RESPONSE_DESCRIPTION, "CONNECTION_ERROR");
+		exchange.setProperty(IConstant.RESPONSE_STATUS, "CONNECTION_ERROR");
+		exchange.setProperty(IConstant.RESPONSE_CODE, "CONNECTION_ERROR");
+
 	}
 
 	public void populatePendingKoreCheckStatus(Exchange exchange) {

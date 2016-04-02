@@ -10,4 +10,6 @@ public interface IAuditService {
 
 	public void auditExternalExceptionResponseCall(Exchange exchange);
 	
+	public void auditExternalConnectionExceptionResponseCall(Exchange exchange);
+	
 }
