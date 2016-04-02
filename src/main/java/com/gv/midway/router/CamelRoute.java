@@ -189,6 +189,10 @@ public class CamelRoute extends RouteBuilder {
 				.endChoice()
 				.end();
 		
+//***** DEVICE ACTIVATION BEGIN		
+		
+//Main: Device Activation Flow
+		
 		from("direct:activateDevice").process(new HeaderProcessor())
 			.choice()
 						.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
@@ -200,10 +204,10 @@ public class CamelRoute extends RouteBuilder {
 									.process(new StubVerizonActivateDeviceProcessor())
 									.to("log:input").
 						endChoice().otherwise()
-							.choice()//santosh:
+							.choice()
 									.when(header("sourceName").isEqualTo("KORE"))
 									.wireTap("direct:processActivateKoreTransaction")
-									.process(new KoreActivateDevicePostProcessor())
+									.process(new KoreActivateDevicePostProcessor(env))
 							.endChoice()
 									.when(header("sourceName").isEqualTo("VERIZON"))
 										.bean(iSessionService, "setContextTokenInExchange")
@@ -213,7 +217,7 @@ public class CamelRoute extends RouteBuilder {
 							.end().to("log:input")
 			.endChoice().end();
 				
-				
+//SubFlow: Device Verizon Activation 				
 		from("direct:VerizonActivationFlow")
 					.doTry()						
 							.process(new VerizonActivateDevicePreProcessor())
@@ -229,14 +233,15 @@ public class CamelRoute extends RouteBuilder {
 						.process(new VerizonGenericExceptionProcessor(env))
 					.endDoTry()	.end();
 		
-		//santosh:
+//SubFlow: Device Kore Activation 		
 		from("direct:processActivateKoreTransaction")
 			.log("Wire Tap Thread activation")
 			.bean(iTransactionalService,"populateActivateDBPayload")
 		    .split().method("deviceSplitter").recipientList().method("koreDeviceServiceRouter");
-		//santosh:
-		 from("seda:koreSedaActivation?concurrentConsumers=5").onException(CxfOperationException.class).handled(true)
-				.log("***************************************************CXFEXCEPTION******************************************")
+
+//SubFlow: Device Kore Acitvation- SEDA CALL 
+		 from("seda:koreSedaActivation?concurrentConsumers=5")
+		 .onException(CxfOperationException.class).handled(true)
 				.bean(iTransactionalService,
 						"populateKoreTransactionalErrorResponse")
 				.bean(iAuditService, "auditExternalExceptionResponseCall")
@@ -250,19 +255,13 @@ public class CamelRoute extends RouteBuilder {
 						"populateKoreTransactionalResponse")
 				.process(new KoreActivateDevicePostProcessor());
 
-		    /*.doTry()
-		    			.process(new KoreActivateDevicePreProcessor(env))
-						.to(uriRestKoreEndPoint).unmarshal()
-						.json(JsonLibrary.Jackson, KoreDeviceInformationResponse.class)
-						.bean(iTransactionalService,"populateKoreTransactionalSuccessResponse")
-						.process(new KoreDeviceInformationPostProcessor())
-		    .doCatch(CxfOperationException.class)
-		    			.bean(iTransactionalService,"populateKoreTransactionalErrorResponse")
-		    			.bean(iAuditService, "auditExternalExceptionResponseCall")	
-		    			.process(new KoreGenericExceptionProcessor(env))
-		    .endDoTry();		
-		     */
-		//santosh:
+//*****  DEVICE ACTIVATION END
+		 
+		 
+//***** DEVICE DEACTIVATION BEGIN		
+			
+//Main: Device DeActivation Flow
+		 
 		from("direct:deactivateDevice").process(new HeaderProcessor())
 			.choice()
 						.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
@@ -277,51 +276,60 @@ public class CamelRoute extends RouteBuilder {
 									.choice()//santosh:
 											.when(header("sourceName").isEqualTo("KORE"))
 											.wireTap("direct:processDeactivateKoreTransaction")
-											.doTry()
-													.process(new KoreDeactivateDevicePostProcessor(env))
-					                        .doCatch(CxfOperationException.class)
-													.bean(iAuditService, "auditExternalExceptionResponseCall")
-													.process(new KoreGenericExceptionProcessor(env))
-										   .endDoTry()
+											.process(new KoreDeactivateDevicePostProcessor(env))
+				
 								  .endChoice()				
-											.when(header("sourceName").isEqualTo("VERIZON"))
-											.doTry()
+											.when(header("sourceName").isEqualTo("VERIZON"))											
 													.bean(iSessionService, "setContextTokenInExchange")
 													.bean(iTransactionalService,"populateDeactivateDBPayload")
-													.process(new VerizonDeactivateDevicePreProcessor())
-													.bean(iAuditService, "auditExternalRequestCall")
-													.to(uriRestVerizonEndPoint)
-													.unmarshal().json(JsonLibrary.Jackson)
-													.bean(iAuditService, "auditExternalResponseCall")
-													.process(new VerizonDeactivateDevicePostProcessor(env))
-											.doCatch(CxfOperationException.class)
-												.bean(iAuditService, "auditExternalExceptionResponseCall")
-												.process(new VerizonGenericExceptionProcessor(env))
-											.endDoTry()				
+													.to("direct:VerizonDeActivationFlow")
+														
 					.endChoice().
 					end().to("log:input").
 			endChoice()
 			.end();
 			
-		//santosh:
+//SubFlow: Device Verizon DeActivation 			
+		
+		from("direct:VerizonDeActivationFlow")
+		.doTry()		
+		.process(new VerizonDeactivateDevicePreProcessor())
+		.bean(iAuditService, "auditExternalRequestCall")
+		.to(uriRestVerizonEndPoint)
+		.unmarshal().json(JsonLibrary.Jackson)
+		.bean(iAuditService, "auditExternalResponseCall")
+		.process(new VerizonDeactivateDevicePostProcessor(env))
+		.doCatch(CxfOperationException.class)
+		.bean(iAuditService, "auditExternalExceptionResponseCall")
+		.process(new VerizonGenericExceptionProcessor(env))
+		.endDoTry()	;
+		
+		
+		
+		
+//SubFlow: Device Kore DeActivation 		
+		
 		from("direct:processDeactivateKoreTransaction")
 		.log("Wire Tap Thread deactivation")
 		.bean(iTransactionalService,"populateDeactivateDBPayload")
 	    .split().method("deviceSplitter").recipientList().method("koreDeviceServiceRouter");	
-		//santosh:
+		
+		
+//SubFlow: Device Kore DeAcitvation- SEDA CALL 		
 		from("seda:koreSedaDeactivation?concurrentConsumers=5")
-	    .doTry()
+		.onException(CxfOperationException.class).handled(true)
+			.bean(iTransactionalService,
+						"populateKoreTransactionalErrorResponse")
+			.bean(iAuditService, "auditExternalExceptionResponseCall")
+			.end()
 			.process(new KoreDeactivateDevicePreProcessor(env))
 			.to(uriRestKoreEndPoint).unmarshal()
 			.json(JsonLibrary.Jackson, KoreDeviceInformationResponse.class)
 			.bean(iAuditService, "auditExternalResponseCall")
 			.bean(iTransactionalService,"populateKoreTransactionalResponse")
-			.process(new KoreDeviceInformationPostProcessor())
-	    .doCatch(CxfOperationException.class)
-			.bean(iTransactionalService,"populateKoreTransactionalErrorResponse")
-			.bean(iAuditService, "auditExternalExceptionResponseCall")
-			.process(new KoreGenericExceptionProcessor(env))
-	    .endDoTry();
+			.process(new KoreDeviceInformationPostProcessor());
+	
+//*****  DEVICE ACTIVATION END		
 		
 		from("direct:insertDeviceDetails")
 				.bean(iDeviceService, "insertDeviceDetails").to("log:input")
@@ -345,6 +353,7 @@ public class CamelRoute extends RouteBuilder {
 		from("direct:callbacks")
 			.process(new CallbackPreProcessor())
 			.bean(gvCallBacks, "callbackRequestCall")
+			//******************DONOT REMOVE THIS COMMENTED CODE **********************
 	//		.to("kafka:10.13.37.26:9092?topic=test&serializerClass=kafka.serializer.StringEncoder")
 //			.doTry()
 //			.to(uriRestNetsuitEndPoint)
