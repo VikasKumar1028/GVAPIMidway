@@ -60,11 +60,13 @@ public class KoreActivateDevicePostProcessor implements Processor {
 
 		responseheader.setTimestamp(dateFormat.format(date));
 		responseheader.setOrganization(newEnv.getProperty(IConstant.ORGANIZATION));
-		responseheader.setSourceName(newEnv.getProperty(IConstant.SOURCE_NAME_VERIZON));
+		
+		
 		String TransactionId = (String) exchange.getProperty(newEnv.getProperty(IConstant.EXCHANEGE_PROPERTY));
 		responseheader.setTransactionId(TransactionId);
 
-		responseheader.setBsCarrier(newEnv.getProperty(IConstant.BSCARRIER_VERIZON));
+		responseheader.setSourceName(exchange.getProperty(IConstant.SOURCE_NAME).toString());
+		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER).toString());
 
 		// deviceActivateResponseDataArea.setRequestId("requestId");
 
