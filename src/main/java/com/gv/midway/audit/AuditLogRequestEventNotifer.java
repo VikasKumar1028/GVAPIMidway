@@ -30,6 +30,8 @@ public class AuditLogRequestEventNotifer extends EventNotifierSupport {
 	MongoTemplate mongoTemplate;
 
 	public void notify(EventObject event) throws Exception {
+		
+		
 		if (event instanceof ExchangeCreatedEvent) {
 			ExchangeCreatedEvent create = (ExchangeCreatedEvent) event;
 			Exchange exchange = create.getExchange();
@@ -39,8 +41,8 @@ public class AuditLogRequestEventNotifer extends EventNotifierSupport {
 			String jsonInString = mapper.writeValueAsString(exchange.getIn()
 					.getBody());
 
-			if (exchange.getIn().getBody() instanceof BaseRequest) {
-				logger.info("In Audit log Request1");
+			if (exchange.getIn().getBody() instanceof BaseRequest && exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID)==null) {
+				logger.info("In Audit log Request*************************************");
 				BaseRequest baseRequest = (BaseRequest) exchange.getIn()
 						.getBody();
 				String msgBody = (String) exchange.getIn().getBody().toString();
