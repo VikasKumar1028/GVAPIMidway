@@ -227,6 +227,11 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		update.set("carrierStatus", "Error");
 		update.set("lastTimeStampUpdated", CommonUtil.getCurrentTimeStamp());
 		mongoTemplate.updateMulti(searchUserQuery, update, Transaction.class);
+		
+		
+		exchange.setProperty(IConstant.RESPONSE_DESCRIPTION,errorResponseBody );
+		exchange.setProperty(IConstant.RESPONSE_STATUS,errorResponseBody );
+		exchange.setProperty(IConstant.RESPONSE_CODE,errorResponseBody );
 
 	}
 
