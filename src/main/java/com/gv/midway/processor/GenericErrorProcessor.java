@@ -12,6 +12,7 @@ import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.ResponseHeader;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
+import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 
 public class GenericErrorProcessor implements Processor {
@@ -83,6 +84,16 @@ public class GenericErrorProcessor implements Processor {
 			activateDeviceResponse.setHeader(responseheader);
 			activateDeviceResponse.setResponse(response);
 			exchange.getIn().setBody(activateDeviceResponse);
+
+		}
+		
+		if ("Endpoint[direct://deactivateDevice]".equals(exchange
+				.getFromEndpoint().toString())) {
+
+			DeactivateDeviceResponse deactivateDeviceResponse = new DeactivateDeviceResponse();
+			deactivateDeviceResponse.setHeader(responseheader);
+			deactivateDeviceResponse.setResponse(response);
+			exchange.getIn().setBody(deactivateDeviceResponse);
 
 		}
 

@@ -302,6 +302,7 @@ public class CamelRoute extends RouteBuilder {
 		.bean(iAuditService, "auditExternalRequestCall")
 		.to(uriRestVerizonEndPoint)
 		.unmarshal().json(JsonLibrary.Jackson)
+		.bean(iTransactionalService,"populateVerizonTransactionalResponse")
 		.bean(iAuditService, "auditExternalResponseCall")
 		.process(new VerizonDeactivateDevicePostProcessor(env))
 		.doCatch(CxfOperationException.class)
