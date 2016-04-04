@@ -4,12 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DeviceId {
+public class ActivateDeviceId {
 	// @JsonProperty("id")
 	private String id;
 	// @JsonProperty("kind")
 	private String kind;
-	
+	private String eAPCode;
 
 	public String getId() {
 		return id;
@@ -27,13 +27,26 @@ public class DeviceId {
 		this.kind = kind;
 	}
 
+	/**
+	 * @return the eAPCode
+	 */
+	public String geteAPCode() {
+		return eAPCode;
+	}
+
+	/**
+	 * @param eAPCode the eAPCode to set
+	 */
+	public void seteAPCode(String eAPCode) {
+		this.eAPCode = eAPCode;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "DeviceId [id=" + id + ", kind=" + kind + "]";
+		return "DeviceId [id=" + id + ", kind=" + kind + ", eAPCode=" + eAPCode + "]";
 	}
 
 	/* (non-Javadoc)
@@ -43,7 +56,8 @@ public class DeviceId {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-			result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((eAPCode == null) ? 0 : eAPCode.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((kind == null) ? 0 : kind.hashCode());
 		return result;
 	}
@@ -57,9 +71,14 @@ public class DeviceId {
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof DeviceId))
+		if (!(obj instanceof ActivateDeviceId))
 			return false;
-		DeviceId other = (DeviceId) obj;
+		ActivateDeviceId other = (ActivateDeviceId) obj;
+		if (eAPCode == null) {
+			if (other.eAPCode != null)
+				return false;
+		} else if (!eAPCode.equals(other.eAPCode))
+			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
