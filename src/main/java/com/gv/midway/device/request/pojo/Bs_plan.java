@@ -1,4 +1,4 @@
-package com.gv.midway.pojo.deviceInformation.response;
+package com.gv.midway.device.request.pojo;
 
 import java.util.Arrays;
 

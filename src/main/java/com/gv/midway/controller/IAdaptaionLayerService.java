@@ -10,6 +10,7 @@ import javax.ws.rs.Produces;
 
 import com.gv.midway.device.request.pojo.Device;
 import com.gv.midway.device.request.pojo.Devices;
+import com.gv.midway.device.response.pojo.InsertDeviceResponse;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
@@ -37,13 +38,13 @@ public interface IAdaptaionLayerService {
 	@Produces("application/json")
 	@Consumes("application/json")
 	@ApiOperation(value = "Insert Device Details")
-	Object insertDeviceDetails(Device device);
+	InsertDeviceResponse insertDeviceDetails(Device device);
 
 	@PUT
-	@Path("/cell/{id}")
+	@Path("/cell/update")
 	@Produces("application/json")
 	@ApiOperation(value = "Update Device Details")
-	Object updateDeviceDetails(@PathParam("id") final String id, Device device);
+	Object updateDeviceDetails(Device device);
 
 	@GET
 	@Path("/cell/info/{id}")

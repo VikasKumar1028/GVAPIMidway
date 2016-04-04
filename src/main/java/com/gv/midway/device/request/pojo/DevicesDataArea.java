@@ -1,12 +1,8 @@
-package com.gv.midway.pojo.deviceInformation.response;
+package com.gv.midway.device.request.pojo;
 
 import com.wordnik.swagger.annotations.ApiModelProperty;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.gv.midway.device.request.pojo.DeviceInformation;
 
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
-public class DeviceInformationResponseDataArea {
-
+public class DevicesDataArea {
 	@ApiModelProperty(value = "Information of the Device(s)")
 	private DeviceInformation[] devices;
 
@@ -18,3 +14,4 @@ public class DeviceInformationResponseDataArea {
 		this.devices = devices;
 	}
 }
+

@@ -4,11 +4,12 @@ package com.gv.midway.service.impl;
 import org.apache.camel.Exchange;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.gv.midway.dao.IDeviceDao;
 import com.gv.midway.device.request.pojo.Device;
 import com.gv.midway.device.request.pojo.Devices;
+import com.gv.midway.device.response.pojo.InsertDeviceResponse;
 import com.gv.midway.service.IDeviceService;
+
 
 
 
@@ -18,7 +19,7 @@ public class DeviceServiceImpl implements IDeviceService {
 	@Autowired
 	private IDeviceDao iDeviceDao;
 
-	public Object insertDeviceDetails(Exchange exchange) {
+	public InsertDeviceResponse insertDeviceDetails(Exchange exchange) {
 
 		Device device = (Device) exchange.getIn().getBody();
 
@@ -32,14 +33,16 @@ public class DeviceServiceImpl implements IDeviceService {
 		// TODO Auto-generated method stub
 		
 		                       
-		Device device = (Device)exchange.getIn().getBody();
+		/*Device device = (Device)exchange.getIn().getBody();
 		
 	    String deviceId = exchange.getIn().getHeader("id", String.class);
        
 		System.out.println("id is...."+deviceId);
 		
 		
-		return iDeviceDao.updateDeviceDetails(deviceId, device);
+		return iDeviceDao.updateDeviceDetails(deviceId, device);*/
+		
+		return null;
 		
 		
 	}

@@ -1,45 +1,23 @@
 package com.gv.midway.device.request.pojo;
 
-import java.util.Arrays;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.gv.midway.pojo.BaseRequest;
+import com.gv.midway.pojo.BaseResponse;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 
-public class Devices {
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Devices extends BaseRequest{
 
-    private Device[] devices;
-	
-	public Device[] getDevices() {
-		return devices;
+	@ApiModelProperty(value = "Device Information DataArea")
+	private DevicesDataArea dataArea;
+
+	public DevicesDataArea getDataArea() {
+		return dataArea;
 	}
 
-	public void setDevices(Device[] devices) {
-		this.devices = devices;
+	public void setDataArea(DevicesDataArea dataArea) {
+		this.dataArea = dataArea;
 	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + Arrays.hashCode(devices);
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Devices other = (Devices) obj;
-		if (!Arrays.equals(devices, other.devices))
-			return false;
-		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "Devices [devices=" + Arrays.toString(devices) + "]";
-	}
-	
-	
 }

@@ -1,8 +1,13 @@
-package com.gv.midway.pojo.deviceInformation.response;
+package com.gv.midway.device.request.pojo;
 
 
 import java.util.Arrays;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.gv.midway.pojo.deviceInformation.verizon.CustomFields;
 import com.gv.midway.pojo.deviceInformation.verizon.DeviceIds;
@@ -10,10 +15,12 @@ import com.gv.midway.pojo.deviceInformation.verizon.ExtendedAttributes;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
-
+@Document(collection="deviceInfo")
 public class DeviceInformation {
 	
 	@ApiModelProperty(value = "An unique identifier (Primary key) for device in Midway")
+	@JsonIgnore
+	@Id
 	private String midwayMasterDeviceId;
 	
 	@ApiModelProperty(value = "An identifier from NetSuite system")

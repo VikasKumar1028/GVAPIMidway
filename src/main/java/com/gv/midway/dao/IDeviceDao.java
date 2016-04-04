@@ -2,14 +2,16 @@ package com.gv.midway.dao;
 
 import com.gv.midway.device.request.pojo.Device;
 import com.gv.midway.device.request.pojo.Devices;
+import com.gv.midway.device.response.pojo.InsertDeviceResponse;
 
 
 	
 
 public interface IDeviceDao {
-	public Object insertDeviceDetails(Device device);
 	
-	public Object updateDeviceDetails(String deviceId,Device device);
+	public InsertDeviceResponse insertDeviceDetails(Device device);
+	
+	public Object updateDeviceDetails(Device device);
 	
 	public Object getDeviceDetails(String deviceId);
 	

@@ -2,9 +2,11 @@ package com.gv.midway.service;
 
 import org.apache.camel.Exchange;
 
+import com.gv.midway.device.response.pojo.InsertDeviceResponse;
+
 public interface IDeviceService {
 	
-	public Object insertDeviceDetails(Exchange exchange);
+	public InsertDeviceResponse insertDeviceDetails(Exchange exchange);
 
 	public Object updateDeviceDetails(Exchange exchange);
 	

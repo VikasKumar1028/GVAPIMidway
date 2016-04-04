@@ -1,66 +1,25 @@
 package com.gv.midway.device.request.pojo;
 
+public class Features {
 
-import javax.annotation.Generated;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@Generated("org.jsonschema2pojo")
-@JsonPropertyOrder({ "id", "name" })
-public class Feature {
-
-	
-
-	@JsonProperty("id")
 	private String id;
-	
-	@JsonProperty("name")
+
 	private String name;
 
-
-	/**
-	 * 
-	 * @return The id
-	 */
-	
 	public String getId() {
 		return id;
 	}
 
-	/**
-	 * 
-	 * @param id
-	 *            The id
-	 */
-	
 	public void setId(String id) {
 		this.id = id;
 	}
 
-	/**
-	 * 
-	 * @return The name
-	 */
-	
 	public String getName() {
 		return name;
 	}
 
-	/**
-	 * 
-	 * @param name
-	 *            The name
-	 */
-	
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	@Override
-	public String toString() {
-		return "Feature [id=" + id + ", name=" + name + "]";
 	}
 
 	@Override
@@ -80,7 +39,7 @@ public class Feature {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Feature other = (Feature) obj;
+		Features other = (Features) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -93,5 +52,18 @@ public class Feature {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Features [id=");
+		builder.append(id);
+		builder.append(", name=");
+		builder.append(name);
+		builder.append("]");
+		return builder.toString();
+	}
+
 	
+
 }

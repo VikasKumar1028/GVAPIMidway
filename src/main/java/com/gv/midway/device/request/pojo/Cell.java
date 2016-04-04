@@ -1,87 +1,54 @@
 package com.gv.midway.device.request.pojo;
 
-import javax.annotation.Generated;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-
-
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@Generated("org.jsonschema2pojo")
-@JsonPropertyOrder({ "esn", "sim", "mdn" })
 public class Cell {
 
 	
-
-	@JsonProperty("esn")
+	@ApiModelProperty(value = "esn number of the device.")
 	private String esn;
-	@JsonProperty("sim")
-	private String sim;
-	@JsonProperty("mdn")
-	private String mdn;
-	
 
-	/**
-	 * 
-	 * @return The esn
-	 */
-	
+	@ApiModelProperty(value = "sim number of the device.")
+	private String sim;
+
+	@ApiModelProperty(value = "mdn number of the device.")
+	private String mdn;
+
 	public String getEsn() {
 		return esn;
 	}
 
-	/**
-	 * 
-	 * @param esn
-	 *            The esn
-	 */
-	
 	public void setEsn(String esn) {
 		this.esn = esn;
 	}
 
-	/**
-	 * 
-	 * @return The sim
-	 */
-	
 	public String getSim() {
 		return sim;
 	}
 
-	/**
-	 * 
-	 * @param sim
-	 *            The sim
-	 */
-	
 	public void setSim(String sim) {
 		this.sim = sim;
 	}
 
-	/**
-	 * 
-	 * @return The mdn
-	 */
-	
 	public String getMdn() {
 		return mdn;
 	}
 
-	/**
-	 * 
-	 * @param mdn
-	 *            The mdn
-	 */
-	
 	public void setMdn(String mdn) {
 		this.mdn = mdn;
 	}
 
 	@Override
 	public String toString() {
-		return "Cell [esn=" + esn + ", sim=" + sim + ", mdn=" + mdn + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("Cell [esn=");
+		builder.append(esn);
+		builder.append(", sim=");
+		builder.append(sim);
+		builder.append(", mdn=");
+		builder.append(mdn);
+		builder.append("]");
+		return builder.toString();
 	}
 
 	@Override
@@ -120,4 +87,6 @@ public class Cell {
 			return false;
 		return true;
 	}
+
+
 }

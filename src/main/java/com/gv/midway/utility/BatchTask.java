@@ -10,11 +10,11 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import com.gv.midway.device.request.pojo.Cell;
+/*import com.gv.midway.device.request.pojo.Cell;
 import com.gv.midway.device.request.pojo.Device;
 import com.gv.midway.device.request.pojo.Devices;
 import com.gv.midway.device.response.pojo.BatchInsertResponse;
-import com.gv.midway.device.response.pojo.InsertCell;
+import com.gv.midway.device.response.pojo.InsertCell;*/
 
 
 
@@ -24,21 +24,21 @@ public class BatchTask {
 	
 	private String action;
 	
-	private Devices devices;
+	//private Devices devices;
 	
 	private int successCount=0;
 	
 	private int failCount=0;
 	
-    private List<InsertCell> insert_cells = new ArrayList<InsertCell>();
+   // private List<InsertCell> insert_cells = new ArrayList<InsertCell>();
 	
-	private List<Cell> error_cells=new ArrayList<Cell>();
+//	private List<Cell> error_cells=new ArrayList<Cell>();
 	
-	public BatchTask(MongoTemplate mongoTemplate,String action,Devices devices){
+	public BatchTask(MongoTemplate mongoTemplate,String action/*,Devices devices*/){
 		
 		this.mongoTemplate=mongoTemplate;
 		this.action=action;
-		this.devices=devices;
+		//this.devices=devices;
 	}
 	
 	public Object doBatchJob(){
@@ -46,9 +46,9 @@ public class BatchTask {
 		BatchExecutor batchExecutor=BatchExecutor.getBatchExecutor();
 		ExecutorService executorService=batchExecutor.getExecutorService();
 		
-		Device[] deviceArr=devices.getDevices();
+		//Device[] deviceArr=devices.getDevices();
 		CompletionService<Object> compService = new ExecutorCompletionService<Object>(executorService);
-		for (final Device device : deviceArr) {
+		/*for (final Device device : deviceArr) {
           
            compService.submit(new Callable<Object>() {
 			
@@ -105,10 +105,10 @@ public class BatchTask {
 		batchInsertResponse.setError_count(failCount);
 		batchInsertResponse.setInsert_count(successCount);
 		batchInsertResponse.setError_cells(error_cells);
-		
+		*/
 		
 	
-		return batchInsertResponse;
+		return null;
 	}
 	
 	

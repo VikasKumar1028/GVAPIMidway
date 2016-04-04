@@ -1,10 +1,21 @@
 package com.gv.midway.device.response.pojo;
 
 public class InsertDeviceResponse {
-
+	
 	private String id;
 	
 	private String message;
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("InsertDeviceResponse [id=");
+		builder.append(id);
+		builder.append(", message=");
+		builder.append(message);
+		builder.append("]");
+		return builder.toString();
+	}
 
 	public String getId() {
 		return id;
@@ -53,10 +64,4 @@ public class InsertDeviceResponse {
 		return true;
 	}
 
-	@Override
-	public String toString() {
-		return "InsertDeviceResponse [id=" + id + ", message=" + message + "]";
-	}
-	
-	
 }

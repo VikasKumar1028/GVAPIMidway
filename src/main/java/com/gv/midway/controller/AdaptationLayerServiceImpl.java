@@ -4,7 +4,9 @@ import org.apache.camel.EndpointInject;
 import org.apache.camel.ProducerTemplate;
 
 import com.gv.midway.device.request.pojo.Device;
+import com.gv.midway.device.request.pojo.DeviceInformation;
 import com.gv.midway.device.request.pojo.Devices;
+import com.gv.midway.device.response.pojo.InsertDeviceResponse;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
@@ -27,12 +29,12 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 
 	}
 
-	public Object insertDeviceDetails(Device device) {
+	public InsertDeviceResponse insertDeviceDetails(Device device) {
 		// TODO Auto-generated method stub
 
 		System.out.println("device is...." + device.toString());
 
-		Object response = producer.requestBody("direct:insertDeviceDetails",
+		InsertDeviceResponse response = (InsertDeviceResponse) producer.requestBody("direct:insertDeviceDetails",
 				device);
 
 		System.out.println(" insertDeviceDetails respsone is ........"
@@ -41,15 +43,18 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 		return response;
 	}
 
-	public Object updateDeviceDetails(String id, Device device) {
+	public Object updateDeviceDetails(Device device) {
 		// TODO Auto-generated method stub
-		System.out.println("device id is...." + id);
+		System.out.println("device id is...." );
 
 		System.out.println("device info to update is...." + device.toString());
 
-		Object response = producer.requestBodyAndHeader(
-				"direct:updateDeviceDetails", device, "id", id);
+		/*Object response = producer.requestBodyAndHeader(
+				"direct:updateDeviceDetails", device, "id", id);*/
 
+		Object response = producer.requestBody(
+				"direct:updateDeviceDetails", device);
+				
 		System.out.println("updateDeviceDetails respsone is ........"
 				+ response);
 

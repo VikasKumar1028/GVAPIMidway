@@ -1,36 +1,16 @@
 package com.gv.midway.dao.impl;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.concurrent.CompletionService;
-import java.util.concurrent.ExecutorCompletionService;
-import java.util.concurrent.ExecutorService;
-
-import javax.ws.rs.core.Response;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.WriteResultChecking;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-
-import scala.collection.mutable.HashSet;
-
 import com.gv.midway.dao.IDeviceDao;
 import com.gv.midway.device.request.pojo.Device;
+import com.gv.midway.device.request.pojo.DeviceInformation;
 import com.gv.midway.device.request.pojo.Devices;
 import com.gv.midway.device.response.pojo.InsertDeviceResponse;
-import com.gv.midway.device.response.pojo.ResponseMessage;
-import com.gv.midway.utility.BatchExecutor;
-import com.gv.midway.utility.BatchTask;
+
 
 
 
@@ -43,43 +23,47 @@ public class DeviceDaoImpl implements IDeviceDao
 	@Autowired
 	MongoTemplate mongoTemplate;
 
-	public Object insertDeviceDetails(Device device) {
+	public InsertDeviceResponse insertDeviceDetails(Device device) {
 
 		// Simple way using template
+		DeviceInformation deviceInformation=null;
        try{
-        device.setStatus("activate");
+        //device.setStatus("activate");
+        device.getDataArea().getDevice().setState("activate");
         //device.setIpAddress("127.0.0.1");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-        device.setLastUpdated(sdf.format(new Date()));
+        device.getDataArea().getDevice().setLastUpdated(sdf.format(new Date()));
         
-		mongoTemplate.insert(device);
+       deviceInformation= device.getDataArea().getDevice();
+		mongoTemplate.insert(deviceInformation);
        }
        
        catch(Exception e)
        {
     	   System.out.println("error in insert is..."+e.getMessage());
-    	   ResponseMessage responseMessage= new ResponseMessage();
-    	   responseMessage.setMessage("failed to insert record in midway layer ");
+    	   InsertDeviceResponse insertDeviceResponse= new InsertDeviceResponse();
+  	   	   insertDeviceResponse.setMessage("failed to insert record in midway layer ");
+    	  
     	   
-    	   return Response.status(500).entity(responseMessage).build(); 
+    	   return insertDeviceResponse;
        }
 		//System.out.println(  mongoTemplate.getDb().toString()+"-----"+"----------xcxc-----"+device.toString());
 		System.out.println("device data is...."+device.toString());
 		
 		 InsertDeviceResponse insertDeviceResponse= new InsertDeviceResponse();
-		 insertDeviceResponse.setId(device.getId());
-	   	 insertDeviceResponse.setMessage("Success ");
+		 insertDeviceResponse.setId(deviceInformation.getMidwayMasterDeviceId());
+	   	 insertDeviceResponse.setMessage("Success");
    	    
-   	 return Response.status(200).entity(insertDeviceResponse).build(); 
+   	 return insertDeviceResponse;
 
 	}
 
 	public Object updateDeviceDetails(String deviceId, Device device) {
 		// TODO Auto-generated method stub
 		
-		ResponseMessage responseMessage= new ResponseMessage();
+		//ResponseMessage responseMessage= new ResponseMessage();
 		
-		try{
+		/*try{
 			
 			Device deviceExist=mongoTemplate.findById(deviceId, Device.class);
 			
@@ -93,22 +77,24 @@ public class DeviceDaoImpl implements IDeviceDao
 				
 			}
 	        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-	        device.setLastUpdated(sdf.format(new Date()));
-	        device.setId(deviceId);
+	      //  device.setLastUpdated(sdf.format(new Date()));
+	       // device.setId(deviceId);
 			mongoTemplate.save(device);
 	       }
 	       
 	       catch(Exception e)
 	       {
 	    	   System.out.println("error in update is..."+e.getMessage());
-	    	   responseMessage.setMessage("failed to update record in midway layer");
+	    	 //  responseMessage.setMessage("failed to update record in midway layer");
 		       return Response.status(500).entity(responseMessage).build(); 
 	    	 
 	       }
 			//System.out.println(  mongoTemplate.getDb().toString()+"-----"+"----------xcxc-----"+device.toString());
 			System.out.println("device data is...."+device.toString());
-			responseMessage.setMessage("device record updated successfully in midway layer");
-		    return Response.status(200).entity(responseMessage).build(); 
+			//responseMessage.setMessage("device record updated successfully in midway layer");
+		    return Response.status(200).entity(responseMessage).build(); */
+		
+		return null;
 			
 		
 	}
@@ -118,7 +104,7 @@ public class DeviceDaoImpl implements IDeviceDao
 		
 		
 		
-		Device device=mongoTemplate.findById(deviceId, Device.class);
+		/*Device device=mongoTemplate.findById(deviceId, Device.class);
 		if(device==null){
 			
 			ResponseMessage responseMessage= new ResponseMessage();
@@ -128,17 +114,17 @@ public class DeviceDaoImpl implements IDeviceDao
 		
 		}
 		
-	    return Response.status(200).entity(device).build(); 
+	    return Response.status(200).entity(device).build(); */
 		
 		
-	
+	return null;
 		
 	}
 
 
 	public Object getDeviceDetailsBsId(String bsId) {
 		// TODO Auto-generated method stub
-		
+		/*
 		Integer bs_id;
 		try{
 			
@@ -166,15 +152,24 @@ public class DeviceDaoImpl implements IDeviceDao
 			return Response.status(404).entity(responseMessage).build(); 
 		}
 		
-		return Response.status(200).entity(deviceList).build(); 
+		return Response.status(200).entity(deviceList).build(); */
+		
+		return null;
 	}
 
 
 	public Object insertDevicesDetailsInBatch(Devices devices) {
 		// TODO Auto-generated method stub
-		BatchTask batchTask= new BatchTask(mongoTemplate,"insert" , devices);
+	/*	BatchTask batchTask= new BatchTask(mongoTemplate,"insert" , devices);
 		
-		return batchTask.doBatchJob();
+		return batchTask.doBatchJob();*/
+		
+		return null;
+	}
+
+	public Object updateDeviceDetails(Device device) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	/*public String insertDevicesDetailsInBatch(Devices devices) {
