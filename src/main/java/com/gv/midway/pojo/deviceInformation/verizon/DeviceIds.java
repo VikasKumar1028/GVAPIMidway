@@ -11,30 +11,6 @@ public class DeviceIds {
 	@ApiModelProperty(value = "The type of the device identifier.") 
 	private String kind;
 
-	public String getImsiOrMIN() {
-		return imsiOrMIN;
-	}
-
-	public void setImsiOrMIN(String imsiOrMIN) {
-		this.imsiOrMIN = imsiOrMIN;
-	}
-
-	public String getMsisdnOrMDN() {
-		return msisdnOrMDN;
-	}
-
-	public void setMsisdnOrMDN(String msisdnOrMDN) {
-		this.msisdnOrMDN = msisdnOrMDN;
-	}
-
-	@ApiModelProperty(value = "IMSI Or MIN of the device.")
-	private String imsiOrMIN;
-	@ApiModelProperty(value = "MSISDN Or MDN of the device.")
-	private String msisdnOrMDN;
-
-	/*
-	 * private String IMSIOrMIN; private String MSISDNOrMDN;
-	 */
 
 	public String getId() {
 		return id;
@@ -44,17 +20,6 @@ public class DeviceIds {
 		this.id = id;
 	}
 
-	/*
-	 * public String getIMSIOrMIN() { return IMSIOrMIN; }
-	 * 
-	 * public void setIMSIOrMIN(String IMSIOrMIN) { this.IMSIOrMIN = IMSIOrMIN;
-	 * }
-	 * 
-	 * public String getMSISDNOrMDN() { return MSISDNOrMDN; }
-	 * 
-	 * public void setMSISDNOrMDN(String MSISDNOrMDN) { this.MSISDNOrMDN =
-	 * MSISDNOrMDN; }
-	 */
 	public String getKind() {
 		return kind;
 	}
@@ -65,11 +30,44 @@ public class DeviceIds {
 
 	@Override
 	public String toString() {
-		return "DeviceIds [id=" + id + ", kind=" + kind + ", imsiOrMIN="
-				+ imsiOrMIN + ", msisdnOrMDN=" + msisdnOrMDN
-				+ ", getImsiOrMIN()=" + getImsiOrMIN() + ", getMsisdnOrMDN()="
-				+ getMsisdnOrMDN() + ", getId()=" + getId() + ", getKind()="
-				+ getKind() + ", getClass()=" + getClass() + ", hashCode()="
-				+ hashCode() + ", toString()=" + super.toString() + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("DeviceIds [id=");
+		builder.append(id);
+		builder.append(", kind=");
+		builder.append(kind);
+		builder.append("]");
+		return builder.toString();
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((kind == null) ? 0 : kind.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DeviceIds other = (DeviceIds) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (kind == null) {
+			if (other.kind != null)
+				return false;
+		} else if (!kind.equals(other.kind))
+			return false;
+		return true;
+	}
+
 }

@@ -1,573 +1,796 @@
 package com.gv.midway.pojo.deviceInformation.response;
 
+
 import java.util.Arrays;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.gv.midway.pojo.deviceInformation.verizon.CarrierInformations;
 import com.gv.midway.pojo.deviceInformation.verizon.CustomFields;
 import com.gv.midway.pojo.deviceInformation.verizon.DeviceIds;
 import com.gv.midway.pojo.deviceInformation.verizon.ExtendedAttributes;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
-public class DeviceInformation {
-	@ApiModelProperty(value = "An identifier from NetSuite system")
-	private String netSuiteId;
 
+public class DeviceInformation {
+	
 	@ApiModelProperty(value = "An unique identifier (Primary key) for device in Midway")
 	private String midwayMasterDeviceId;
-
-	@ApiModelProperty(value = "If the device is not connected, this indicates the last known connection date.")
-	private String lastConnectionDate;
-
-	@ApiModelProperty(value = "last Features of the device.")
-	private String[] lstFeatures;
-
-	public String getCurrentDataPlan() {
-		return currentDataPlan;
-	}
-
-	public void setCurrentDataPlan(String currentDataPlan) {
-		this.currentDataPlan = currentDataPlan;
-	}
-
-	public String getIMSIOrMIN() {
-		return IMSIOrMIN;
-	}
-
-	public void setIMSIOrMIN(String iMSIOrMIN) {
-		IMSIOrMIN = iMSIOrMIN;
-	}
-
-	public String getMSISDNOrMDN() {
-		return MSISDNOrMDN;
-	}
-
-	public void setMSISDNOrMDN(String mSISDNOrMDN) {
-		MSISDNOrMDN = mSISDNOrMDN;
-	}
-
-	@ApiModelProperty(value = "currentDataPlan for the device")
-	private String currentDataPlan;
 	
-	@ApiModelProperty(value = "IMSIOrMIN of the device")
-	private String IMSIOrMIN;
+	@ApiModelProperty(value = "An identifier from NetSuite system")
+	private String netSuiteId;
 	
-	@ApiModelProperty(value = "MSISDNOrMDN of the device")
-	private String MSISDNOrMDN;
+	@ApiModelProperty(value = "value of the device identifer.Cell information")
+	private Cell cell;
+	
+	@ApiModelProperty(value = "Bs Id of the device")
+	private String bs_id;
+	
+	@ApiModelProperty(value = "serial number of the device")
+	private String serial_num;
 
-	public String[] getLstFeatures() {
-		return lstFeatures;
-	}
+	@ApiModelProperty(value = "mac address of the device")
+	private String mac;
 
-	public void setLstFeatures(String[] lstFeatures) {
-		this.lstFeatures = lstFeatures;
-	}
+	@ApiModelProperty(value = "business carrier reseller information of the device")
+	private String bs_carrier;
+	
+	@ApiModelProperty(value = "business service plan of the device for end customer.")
+	private Bs_plan bs_plan;
 
-	public String getCustomField1() {
-		return customField1;
-	}
+	@ApiModelProperty(value = "TimeStamp for latest devcie Information updated.")
+	private String lastUpdated;
 
-	public void setCustomField1(String customField1) {
-		this.customField1 = customField1;
-	}
-
-	public String getCustomField2() {
-		return customField2;
-	}
-
-	public void setCustomField2(String customField2) {
-		this.customField2 = customField2;
-	}
-
-	public String getCustomField3() {
-		return customField3;
-	}
-
-	public void setCustomField3(String customField3) {
-		this.customField3 = customField3;
-	}
-
-	public String getCustomField4() {
-		return customField4;
-	}
-
-	public void setCustomField4(String customField4) {
-		this.customField4 = customField4;
-	}
-
-	public String getCustomField5() {
-		return customField5;
-	}
-
-	public void setCustomField5(String customField5) {
-		this.customField5 = customField5;
-	}
-
-	public String getCustomField6() {
-		return customField6;
-	}
-
-	public void setCustomField6(String customField6) {
-		this.customField6 = customField6;
-	}
-
-	@ApiModelProperty(value = "The custom fields and values that have been set for the device.")
-	private String customField1;
-	@ApiModelProperty(value = "The custom fields and values that have been set for the device.")
-	private String customField2;
-	@ApiModelProperty(value = "The custom fields and values that have been set for the device.")
-	private String customField3;
-	@ApiModelProperty(value = "The custom fields and values that have been set for the device.")
-	private String customField4;
-	@ApiModelProperty(value = "The custom fields and values that have been set for the device.")
-	private String customField5;
-	@ApiModelProperty(value = "The custom fields and values that have been set for the device.")
-	private String customField6;
-
+	@ApiModelProperty(value = "State of the device.like active,suspended,deactivate,restore")
+	private String state;
+	
+	@ApiModelProperty(value = "The current service plan of the device.")
+	private String currentServicePlan;
+	
+	@ApiModelProperty(value = "The IP address of the device.")
+	private String ipAddress;
+	
 	@ApiModelProperty(value = "The custom fields and values that have been set for the device.")
 	private CustomFields[] customFields;
-
-	public String getPreviousAddress() {
-		return previousAddress;
-	}
-
-	public void setPreviousAddress(String previousAddress) {
-		this.previousAddress = previousAddress;
-	}
-
-	// ended by Sadhana
-	@ApiModelProperty(value = "futureSMSPlan for the device")
-	private String futureSMSPlan;
-
-	@ApiModelProperty(value = "The user who last activated the device.")
-	private String lastActivationBy;
-
-	@ApiModelProperty(value = "True if the device is connected; false if it is not.")
-	private String connected;
-
-	@ApiModelProperty(value = "The carrier information associated with the device.")
-	private CarrierInformations carrierInformations;
-
-	@ApiModelProperty(value = "The device group that the device belongs to.")
-	private String[] groupNames;
-
-	@ApiModelProperty(value = "monthly SMS Threshold of the device")
-	private String monthlySMSThreshold;
-
-	@ApiModelProperty(value = "monthly Data Threshold of the device")
-	private String monthlyDataThreshold;
-
-	@ApiModelProperty(value = "The billing account for which a list of devices will be returned.")
-	private String accountName;
-
-	@ApiModelProperty(value = "Daily Data Threshold of the device.")
-	private String dailyDataThreshold;
-
-	@ApiModelProperty(value = "The date that the device's current billing cycle ends.")
-	private String billingCycleEndDate;
-
-	@ApiModelProperty(value = "The date and time that the device was added to the system.")
-	private String createdAt;
-
-	@ApiModelProperty(value = "FutureDataPlan of the device.")
-	private String futureDataPlan;
-	// added
 	
 	@ApiModelProperty(value = "All identifiers for the device.")
 	private DeviceIds[] deviceIds;
+	
+	@ApiModelProperty(value = "Any extended attributes for the device, as Key .It will only in case of Verizon")
+	private ExtendedAttributes[] extendedAttributes;
+	
+	@ApiModelProperty(value = "The billing account for which a list of devices will be returned.It will only in case of Verizon")
+	private String accountName;
+	
+	@ApiModelProperty(value = "The date that the device's current billing cycle ends.It will only in case of Verizon")
+	private String billingCycleEndDate;
+	
+	@ApiModelProperty(value = "The device group that the device belongs to.It will only in case of Verizon")
+	private String groupName;
 
-	// private DeviceIds deviceIds;
-
-	public DeviceIds[] getDeviceIds() {
-		return deviceIds;
-	}
-
-	public void setDeviceIds(DeviceIds[] deviceIds) {
-		this.deviceIds = deviceIds;
-	}
-
-	@ApiModelProperty(value = "currentSMSPlan for the device.")
+	@ApiModelProperty(value = "True if the device is connected; false if it is not.It will only in case of Verizon")
+	private String connected;
+	
+	@ApiModelProperty(value = "The date and time that the device was added to the system.It will only in case of Verizon")
+	private String createdAt;
+	
+	@ApiModelProperty(value = "The user who last activated the device.It will only in case of Verizon")
+	private String lastActivationBy;
+	
+	@ApiModelProperty(value = "The date and time that the device was last activated.It will only in case of Verizon")
+	private String lastActivationDate;
+	
+	@ApiModelProperty(value = "If the device is not connected, this indicates the last known connection date.It will only in case of Verizon")
+	private String lastConnectionDate;
+	
+	@ApiModelProperty(value = "Voice dispatch number.It will be only in case of Kore")
+	private String voiceDispatchNumber;
+	
+	@ApiModelProperty(value = "currentSMSPlan for the device.It will be only in case of Kore")
 	private String currentSMSPlan;
-
-	@ApiModelProperty(value = "dailySMSThreshold for the device.")
+	
+	@ApiModelProperty(value = "futureSMSPlan for the device.It will be only in case of Kore")
+	private String futureSMSPlan;
+	
+	@ApiModelProperty(value = "FutureDataPlan of the device.It will be only in case of Kore")
+	private String futureDataPlan;
+	
+	@ApiModelProperty(value = "dailySMSThreshold for the device.It will be only in case of Kore")
 	private String dailySMSThreshold;
+	
+	@ApiModelProperty(value = "Daily Data Threshold of the device.It will be only in case of Kore")
+	private String dailyDataThreshold;
+	
+	@ApiModelProperty(value = "monthly SMS Threshold of the device.It will be only in case of Kore")
+	private String monthlySMSThreshold;
 
-	@ApiModelProperty(value = "Last year history details for the device.")
+	@ApiModelProperty(value = "monthly Data Threshold of the device.It will be only in case of Kore")
+	private String monthlyDataThreshold;
+	
+	@ApiModelProperty(value = "Last year history details for the device.It will be only in case of Kore")
 	private String[] lstHistoryOverLastYear;
 
-	@ApiModelProperty(value = "Any extended attributes for the device, as Key ")
-	private ExtendedAttributes[] extendedAttributes;
-
-	@ApiModelProperty(value = "The IP address of the device.")
-	private String ipAddress;
-
-	@ApiModelProperty(value = "The Static IP address of the device.")
-	private String staticIP;
-
-	@ApiModelProperty(value = "Voice dispatch number")
-	private String voiceDispatchNumber;
-
-	@ApiModelProperty(value = "mostRecentLocateId of the device.")
-	private String mostRecentLocateId;
-
-	@ApiModelProperty(value = "previousLocateId of the device.")
-	private String previousLocateId;
-
-	@ApiModelProperty(value = "mostRecentLocateDate of the device.")
-	private String mostRecentLocateDate;
+	@ApiModelProperty(value = "last Features of the device.It will be only in case of Kore")
+	private String[] lstFeatures;
 	
-	@ApiModelProperty(value = "mostRecentLatitude of the device.")
-	private String mostRecentLatitude;
-
-	@ApiModelProperty(value = "mostRecentLongitude of the device.")
-	private String mostRecentLongitude;
-
-	@ApiModelProperty(value = "mostRecentAddress of the device.")
-	private String mostRecentAddress;
-
-	@ApiModelProperty(value = "previousLocateDate of the device.")
-	private String previousLocateDate;
-
-	@ApiModelProperty(value = "previousLatitude of the device.")
-	private String previousLatitude;
 	
-	@ApiModelProperty(value = "previousLongitude of the device.")
-	private String previousLongitude;
-
-	@ApiModelProperty(value = "previousAddress of the device.")
-	private String previousAddress;
-
 	@ApiModelProperty(value = "Last Extended Features of the device.")
 	private String[] lstExtFeatures;
 
-	public String getMostRecentLocateId() {
-		return mostRecentLocateId;
-	}
-
-	public void setMostRecentLocateId(String mostRecentLocateId) {
-		this.mostRecentLocateId = mostRecentLocateId;
-	}
-
-	public String getPreviousLocateId() {
-		return previousLocateId;
-	}
-
-	public void setPreviousLocateId(String previousLocateId) {
-		this.previousLocateId = previousLocateId;
-	}
-
-	public String getMostRecentLocateDate() {
-		return mostRecentLocateDate;
-	}
-
-	public void setMostRecentLocateDate(String mostRecentLocateDate) {
-		this.mostRecentLocateDate = mostRecentLocateDate;
-	}
-
-	public String getMostRecentLatitude() {
-		return mostRecentLatitude;
-	}
-
-	public void setMostRecentLatitude(String mostRecentLatitude) {
-		this.mostRecentLatitude = mostRecentLatitude;
-	}
-
-	public String getMostRecentLongitude() {
-		return mostRecentLongitude;
-	}
-
-	public void setMostRecentLongitude(String mostRecentLongitude) {
-		this.mostRecentLongitude = mostRecentLongitude;
-	}
-
-	public String getMostRecentAddress() {
-		return mostRecentAddress;
-	}
-
-	public void setMostRecentAddress(String mostRecentAddress) {
-		this.mostRecentAddress = mostRecentAddress;
-	}
-
-	public String getPreviousLocateDate() {
-		return previousLocateDate;
-	}
-
-	public void setPreviousLocateDate(String previousLocateDate) {
-		this.previousLocateDate = previousLocateDate;
-	}
-
-	public String getPreviousLatitude() {
-		return previousLatitude;
-	}
-
-	public void setPreviousLatitude(String previousLatitude) {
-		this.previousLatitude = previousLatitude;
-	}
-
-	public String getPreviousLongitude() {
-		return previousLongitude;
-	}
-
-	public void setPreviousLongitude(String previousLongitude) {
-		this.previousLongitude = previousLongitude;
-	}
-
-	public String[] getLstExtFeatures() {
-		return lstExtFeatures;
-	}
-
-	public void setLstExtFeatures(String[] lstExtFeatures) {
-		this.lstExtFeatures = lstExtFeatures;
-	}
-
-	public String getVoiceDispatchNumber() {
-		return voiceDispatchNumber;
-	}
-
-	public void setVoiceDispatchNumber(String voiceDispatchNumber) {
-		this.voiceDispatchNumber = voiceDispatchNumber;
-	}
-
-	public String getStaticIP() {
-		return staticIP;
-	}
-
-	public void setStaticIP(String staticIP) {
-		this.staticIP = staticIP;
-	}
-	@ApiModelProperty(value = "The date and time that the device was last activated.")
-	private String lastActivationDate;
-
-	public String getLastConnectionDate() {
-		return lastConnectionDate;
-	}
-
-	public void setLastConnectionDate(String lastConnectionDate) {
-		this.lastConnectionDate = lastConnectionDate;
-	}
-
-	/*
-	 * public LstFeatures getLstFeatures() { return lstFeatures; }
-	 * 
-	 * public void setLstFeatures(LstFeatures lstFeatures) { this.lstFeatures =
-	 * lstFeatures; }
-	 */
-
-	public String getFutureSMSPlan() {
-		return futureSMSPlan;
-	}
-
-	public void setFutureSMSPlan(String futureSMSPlan) {
-		this.futureSMSPlan = futureSMSPlan;
-	}
-
-	public String getLastActivationBy() {
-		return lastActivationBy;
-	}
-
-	public void setLastActivationBy(String lastActivationBy) {
-		this.lastActivationBy = lastActivationBy;
-	}
-
-	public CustomFields[] getCustomFields() {
-		return customFields;
-	}
-
-	public void setCustomFields(CustomFields[] customFields) {
-		this.customFields = customFields;
-	}
-
-	public String getConnected() {
-		return connected;
-	}
-
-	public void setConnected(String connected) {
-		this.connected = connected;
-	}
-
-	public CarrierInformations getCarrierInformations() {
-		return carrierInformations;
-	}
-
-	public void setCarrierInformations(CarrierInformations carrierInformations) {
-		this.carrierInformations = carrierInformations;
-	}
-
-	public String[] getGroupNames() {
-		return groupNames;
-	}
-
-	public void setGroupNames(String[] groupNames) {
-		this.groupNames = groupNames;
-	}
-
-	public String getMonthlySMSThreshold() {
-		return monthlySMSThreshold;
-	}
-
-	public void setMonthlySMSThreshold(String monthlySMSThreshold) {
-		this.monthlySMSThreshold = monthlySMSThreshold;
-	}
-
-	public String getMonthlyDataThreshold() {
-		return monthlyDataThreshold;
-	}
-
-	public void setMonthlyDataThreshold(String monthlyDataThreshold) {
-		this.monthlyDataThreshold = monthlyDataThreshold;
-	}
-
-	public String getAccountName() {
-		return accountName;
-	}
-
-	public void setAccountName(String accountName) {
-		this.accountName = accountName;
-	}
-
-	public String getDailyDataThreshold() {
-		return dailyDataThreshold;
-	}
-
-	public void setDailyDataThreshold(String dailyDataThreshold) {
-		this.dailyDataThreshold = dailyDataThreshold;
-	}
-
-	public String getBillingCycleEndDate() {
-		return billingCycleEndDate;
-	}
-
-	public void setBillingCycleEndDate(String billingCycleEndDate) {
-		this.billingCycleEndDate = billingCycleEndDate;
-	}
-
-	public String getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(String createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public String getFutureDataPlan() {
-		return futureDataPlan;
-	}
-
-	public void setFutureDataPlan(String futureDataPlan) {
-		this.futureDataPlan = futureDataPlan;
-	}
-
-	/*
-	 * public DeviceIds getDeviceIds() { return deviceIds; }
-	 * 
-	 * public void setDeviceIds(DeviceIds deviceIds) { this.deviceIds =
-	 * deviceIds; }
-	 */
-	public String getCurrentSMSPlan() {
-		return currentSMSPlan;
-	}
-
-	public void setCurrentSMSPlan(String currentSMSPlan) {
-		this.currentSMSPlan = currentSMSPlan;
-	}
-
-	public String getDailySMSThreshold() {
-		return dailySMSThreshold;
-	}
-
-	public void setDailySMSThreshold(String dailySMSThreshold) {
-		this.dailySMSThreshold = dailySMSThreshold;
-	}
-
-	public ExtendedAttributes[] getExtendedAttributes() {
-		return extendedAttributes;
-	}
-
-	public void setExtendedAttributes(ExtendedAttributes[] extendedAttributes) {
-		this.extendedAttributes = extendedAttributes;
-	}
-
-	public String getIpAddress() {
-		return ipAddress;
-	}
-
-	public void setIpAddress(String ipAddress) {
-		this.ipAddress = ipAddress;
-	}
-
-	public String getLastActivationDate() {
-		return lastActivationDate;
-	}
-
-	public void setLastActivationDate(String lastActivationDate) {
-		this.lastActivationDate = lastActivationDate;
-	}
-
-	public String[] getLstHistoryOverLastYear() {
-		return lstHistoryOverLastYear;
-	}
-
-	public void setLstHistoryOverLastYear(String[] lstHistoryOverLastYear) {
-		this.lstHistoryOverLastYear = lstHistoryOverLastYear;
-	}
-
-	public String getNetSuiteId() {
-		return netSuiteId;
-	}
-
-	public void setNetSuiteId(String netSuiteId) {
-		this.netSuiteId = netSuiteId;
-	}
 
 	public String getMidwayMasterDeviceId() {
 		return midwayMasterDeviceId;
 	}
 
+
 	public void setMidwayMasterDeviceId(String midwayMasterDeviceId) {
 		this.midwayMasterDeviceId = midwayMasterDeviceId;
 	}
 
+
+	public String getNetSuiteId() {
+		return netSuiteId;
+	}
+
+
+	public void setNetSuiteId(String netSuiteId) {
+		this.netSuiteId = netSuiteId;
+	}
+
+
+	public Cell getCell() {
+		return cell;
+	}
+
+
+	public void setCell(Cell cell) {
+		this.cell = cell;
+	}
+
+
+	public String getBs_id() {
+		return bs_id;
+	}
+
+
+	public void setBs_id(String bs_id) {
+		this.bs_id = bs_id;
+	}
+
+
+	public String getSerial_num() {
+		return serial_num;
+	}
+
+
+	public void setSerial_num(String serial_num) {
+		this.serial_num = serial_num;
+	}
+
+
+	public String getMac() {
+		return mac;
+	}
+
+
+	public void setMac(String mac) {
+		this.mac = mac;
+	}
+
+
+	public String getBs_carrier() {
+		return bs_carrier;
+	}
+
+
+	public void setBs_carrier(String bs_carrier) {
+		this.bs_carrier = bs_carrier;
+	}
+
+
+	public Bs_plan getBs_plan() {
+		return bs_plan;
+	}
+
+
+	public void setBs_plan(Bs_plan bs_plan) {
+		this.bs_plan = bs_plan;
+	}
+
+
+	public String getLastUpdated() {
+		return lastUpdated;
+	}
+
+
+	public void setLastUpdated(String lastUpdated) {
+		this.lastUpdated = lastUpdated;
+	}
+
+
+	public String getState() {
+		return state;
+	}
+
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+
+	public String getCurrentServicePlan() {
+		return currentServicePlan;
+	}
+
+
+	public void setCurrentServicePlan(String currentServicePlan) {
+		this.currentServicePlan = currentServicePlan;
+	}
+
+
+	public String getIpAddress() {
+		return ipAddress;
+	}
+
+
+	public void setIpAddress(String ipAddress) {
+		this.ipAddress = ipAddress;
+	}
+
+
+	public CustomFields[] getCustomFields() {
+		return customFields;
+	}
+
+
+	public void setCustomFields(CustomFields[] customFields) {
+		this.customFields = customFields;
+	}
+
+
+	public DeviceIds[] getDeviceIds() {
+		return deviceIds;
+	}
+
+
+	public void setDeviceIds(DeviceIds[] deviceIds) {
+		this.deviceIds = deviceIds;
+	}
+
+
+	public ExtendedAttributes[] getExtendedAttributes() {
+		return extendedAttributes;
+	}
+
+
+	public void setExtendedAttributes(ExtendedAttributes[] extendedAttributes) {
+		this.extendedAttributes = extendedAttributes;
+	}
+
+
+	public String getAccountName() {
+		return accountName;
+	}
+
+
+	public void setAccountName(String accountName) {
+		this.accountName = accountName;
+	}
+
+
+	public String getBillingCycleEndDate() {
+		return billingCycleEndDate;
+	}
+
+
+	public void setBillingCycleEndDate(String billingCycleEndDate) {
+		this.billingCycleEndDate = billingCycleEndDate;
+	}
+
+
+	public String getGroupName() {
+		return groupName;
+	}
+
+
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
+	}
+
+
+	public String getConnected() {
+		return connected;
+	}
+
+
+	public void setConnected(String connected) {
+		this.connected = connected;
+	}
+
+
+	public String getCreatedAt() {
+		return createdAt;
+	}
+
+
+	public void setCreatedAt(String createdAt) {
+		this.createdAt = createdAt;
+	}
+
+
+	public String getLastActivationBy() {
+		return lastActivationBy;
+	}
+
+
+	public void setLastActivationBy(String lastActivationBy) {
+		this.lastActivationBy = lastActivationBy;
+	}
+
+
+	public String getLastActivationDate() {
+		return lastActivationDate;
+	}
+
+
+	public void setLastActivationDate(String lastActivationDate) {
+		this.lastActivationDate = lastActivationDate;
+	}
+
+
+	public String getLastConnectionDate() {
+		return lastConnectionDate;
+	}
+
+
+	public void setLastConnectionDate(String lastConnectionDate) {
+		this.lastConnectionDate = lastConnectionDate;
+	}
+
+
+	public String getVoiceDispatchNumber() {
+		return voiceDispatchNumber;
+	}
+
+
+	public void setVoiceDispatchNumber(String voiceDispatchNumber) {
+		this.voiceDispatchNumber = voiceDispatchNumber;
+	}
+
+
+	public String getCurrentSMSPlan() {
+		return currentSMSPlan;
+	}
+
+
+	public void setCurrentSMSPlan(String currentSMSPlan) {
+		this.currentSMSPlan = currentSMSPlan;
+	}
+
+
+	public String getFutureSMSPlan() {
+		return futureSMSPlan;
+	}
+
+
+	public void setFutureSMSPlan(String futureSMSPlan) {
+		this.futureSMSPlan = futureSMSPlan;
+	}
+
+
+	public String getFutureDataPlan() {
+		return futureDataPlan;
+	}
+
+
+	public void setFutureDataPlan(String futureDataPlan) {
+		this.futureDataPlan = futureDataPlan;
+	}
+
+
+	public String getDailySMSThreshold() {
+		return dailySMSThreshold;
+	}
+
+
+	public void setDailySMSThreshold(String dailySMSThreshold) {
+		this.dailySMSThreshold = dailySMSThreshold;
+	}
+
+
+	public String getDailyDataThreshold() {
+		return dailyDataThreshold;
+	}
+
+
+	public void setDailyDataThreshold(String dailyDataThreshold) {
+		this.dailyDataThreshold = dailyDataThreshold;
+	}
+
+
+	public String getMonthlySMSThreshold() {
+		return monthlySMSThreshold;
+	}
+
+
+	public void setMonthlySMSThreshold(String monthlySMSThreshold) {
+		this.monthlySMSThreshold = monthlySMSThreshold;
+	}
+
+
+	public String getMonthlyDataThreshold() {
+		return monthlyDataThreshold;
+	}
+
+
+	public void setMonthlyDataThreshold(String monthlyDataThreshold) {
+		this.monthlyDataThreshold = monthlyDataThreshold;
+	}
+
+
+	public String[] getLstHistoryOverLastYear() {
+		return lstHistoryOverLastYear;
+	}
+
+
+	public void setLstHistoryOverLastYear(String[] lstHistoryOverLastYear) {
+		this.lstHistoryOverLastYear = lstHistoryOverLastYear;
+	}
+
+
+	public String[] getLstFeatures() {
+		return lstFeatures;
+	}
+
+
+	public void setLstFeatures(String[] lstFeatures) {
+		this.lstFeatures = lstFeatures;
+	}
+
+
+	public String[] getLstExtFeatures() {
+		return lstExtFeatures;
+	}
+
+
+	public void setLstExtFeatures(String[] lstExtFeatures) {
+		this.lstExtFeatures = lstExtFeatures;
+	}
+
+
 	@Override
 	public String toString() {
-		return "DeviceInformation [netSuiteId=" + netSuiteId
-				+ ", midwayMasterDeviceId=" + midwayMasterDeviceId
-				+ ", lastConnectionDate=" + lastConnectionDate
-				+ ", lstFeatures=" + Arrays.toString(lstFeatures)
-				+ ", customField1=" + customField1 + ", customField2="
-				+ customField2 + ", customField3=" + customField3
-				+ ", customField4=" + customField4 + ", customField5="
-				+ customField5 + ", customField6=" + customField6
-				+ ", futureSMSPlan=" + futureSMSPlan + ", lastActivationBy="
-				+ lastActivationBy + ", customFields="
-				+ Arrays.toString(customFields) + ", connected=" + connected
-				+ ", carrierInformations=" + carrierInformations
-				+ ", groupNames=" + Arrays.toString(groupNames)
-				+ ", monthlySMSThreshold=" + monthlySMSThreshold
-				+ ", monthlyDataThreshold=" + monthlyDataThreshold
-				+ ", accountName=" + accountName + ", dailyDataThreshold="
-				+ dailyDataThreshold + ", billingCycleEndDate="
-				+ billingCycleEndDate + ", createdAt=" + createdAt
-				+ ", futureDataPlan=" + futureDataPlan + ", deviceIds="
-				+ Arrays.toString(deviceIds) + ", currentSMSPlan="
-				+ currentSMSPlan + ", dailySMSThreshold=" + dailySMSThreshold
-				+ ", lstHistoryOverLastYear="
-				+ Arrays.toString(lstHistoryOverLastYear)
-				+ ", extendedAttributes=" + extendedAttributes + ", ipAddress="
-				+ ipAddress + ", staticIP=" + staticIP
-				+ ", voiceDispatchNumber=" + voiceDispatchNumber
-				+ ", mostRecentLocateId=" + mostRecentLocateId
-				+ ", previousLocateId=" + previousLocateId
-				+ ", mostRecentLocateDate=" + mostRecentLocateDate
-				+ ", mostRecentLatitude=" + mostRecentLatitude
-				+ ", mostRecentLongitude=" + mostRecentLongitude
-				+ ", mostRecentAddress=" + mostRecentAddress
-				+ ", previousLocateDate=" + previousLocateDate
-				+ ", previousLatitude=" + previousLatitude
-				+ ", previousLongitude=" + previousLongitude
-				+ ", previousAddress=" + previousAddress + ", lstExtFeatures="
-				+ Arrays.toString(lstExtFeatures) + ", lastActivationDate="
-				+ lastActivationDate + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("DeviceInformation [midwayMasterDeviceId=");
+		builder.append(midwayMasterDeviceId);
+		builder.append(", netSuiteId=");
+		builder.append(netSuiteId);
+		builder.append(", cell=");
+		builder.append(cell);
+		builder.append(", bs_id=");
+		builder.append(bs_id);
+		builder.append(", serial_num=");
+		builder.append(serial_num);
+		builder.append(", mac=");
+		builder.append(mac);
+		builder.append(", bs_carrier=");
+		builder.append(bs_carrier);
+		builder.append(", bs_plan=");
+		builder.append(bs_plan);
+		builder.append(", lastUpdated=");
+		builder.append(lastUpdated);
+		builder.append(", state=");
+		builder.append(state);
+		builder.append(", currentServicePlan=");
+		builder.append(currentServicePlan);
+		builder.append(", ipAddress=");
+		builder.append(ipAddress);
+		builder.append(", customFields=");
+		builder.append(Arrays.toString(customFields));
+		builder.append(", deviceIds=");
+		builder.append(Arrays.toString(deviceIds));
+		builder.append(", extendedAttributes=");
+		builder.append(Arrays.toString(extendedAttributes));
+		builder.append(", accountName=");
+		builder.append(accountName);
+		builder.append(", billingCycleEndDate=");
+		builder.append(billingCycleEndDate);
+		builder.append(", groupName=");
+		builder.append(groupName);
+		builder.append(", connected=");
+		builder.append(connected);
+		builder.append(", createdAt=");
+		builder.append(createdAt);
+		builder.append(", lastActivationBy=");
+		builder.append(lastActivationBy);
+		builder.append(", lastActivationDate=");
+		builder.append(lastActivationDate);
+		builder.append(", lastConnectionDate=");
+		builder.append(lastConnectionDate);
+		builder.append(", voiceDispatchNumber=");
+		builder.append(voiceDispatchNumber);
+		builder.append(", currentSMSPlan=");
+		builder.append(currentSMSPlan);
+		builder.append(", futureSMSPlan=");
+		builder.append(futureSMSPlan);
+		builder.append(", futureDataPlan=");
+		builder.append(futureDataPlan);
+		builder.append(", dailySMSThreshold=");
+		builder.append(dailySMSThreshold);
+		builder.append(", dailyDataThreshold=");
+		builder.append(dailyDataThreshold);
+		builder.append(", monthlySMSThreshold=");
+		builder.append(monthlySMSThreshold);
+		builder.append(", monthlyDataThreshold=");
+		builder.append(monthlyDataThreshold);
+		builder.append(", lstHistoryOverLastYear=");
+		builder.append(Arrays.toString(lstHistoryOverLastYear));
+		builder.append(", lstFeatures=");
+		builder.append(Arrays.toString(lstFeatures));
+		builder.append(", lstExtFeatures=");
+		builder.append(Arrays.toString(lstExtFeatures));
+		builder.append("]");
+		return builder.toString();
 	}
+
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((accountName == null) ? 0 : accountName.hashCode());
+		result = prime
+				* result
+				+ ((billingCycleEndDate == null) ? 0 : billingCycleEndDate
+						.hashCode());
+		result = prime * result
+				+ ((bs_carrier == null) ? 0 : bs_carrier.hashCode());
+		result = prime * result + ((bs_id == null) ? 0 : bs_id.hashCode());
+		result = prime * result + ((bs_plan == null) ? 0 : bs_plan.hashCode());
+		result = prime * result + ((cell == null) ? 0 : cell.hashCode());
+		result = prime * result
+				+ ((connected == null) ? 0 : connected.hashCode());
+		result = prime * result
+				+ ((createdAt == null) ? 0 : createdAt.hashCode());
+		result = prime * result
+				+ ((currentSMSPlan == null) ? 0 : currentSMSPlan.hashCode());
+		result = prime
+				* result
+				+ ((currentServicePlan == null) ? 0 : currentServicePlan
+						.hashCode());
+		result = prime * result + Arrays.hashCode(customFields);
+		result = prime
+				* result
+				+ ((dailyDataThreshold == null) ? 0 : dailyDataThreshold
+						.hashCode());
+		result = prime
+				* result
+				+ ((dailySMSThreshold == null) ? 0 : dailySMSThreshold
+						.hashCode());
+		result = prime * result + Arrays.hashCode(deviceIds);
+		result = prime * result + Arrays.hashCode(extendedAttributes);
+		result = prime * result
+				+ ((futureDataPlan == null) ? 0 : futureDataPlan.hashCode());
+		result = prime * result
+				+ ((futureSMSPlan == null) ? 0 : futureSMSPlan.hashCode());
+		result = prime * result
+				+ ((groupName == null) ? 0 : groupName.hashCode());
+		result = prime * result
+				+ ((ipAddress == null) ? 0 : ipAddress.hashCode());
+		result = prime
+				* result
+				+ ((lastActivationBy == null) ? 0 : lastActivationBy.hashCode());
+		result = prime
+				* result
+				+ ((lastActivationDate == null) ? 0 : lastActivationDate
+						.hashCode());
+		result = prime
+				* result
+				+ ((lastConnectionDate == null) ? 0 : lastConnectionDate
+						.hashCode());
+		result = prime * result
+				+ ((lastUpdated == null) ? 0 : lastUpdated.hashCode());
+		result = prime * result + Arrays.hashCode(lstExtFeatures);
+		result = prime * result + Arrays.hashCode(lstFeatures);
+		result = prime * result + Arrays.hashCode(lstHistoryOverLastYear);
+		result = prime * result + ((mac == null) ? 0 : mac.hashCode());
+		result = prime
+				* result
+				+ ((midwayMasterDeviceId == null) ? 0 : midwayMasterDeviceId
+						.hashCode());
+		result = prime
+				* result
+				+ ((monthlyDataThreshold == null) ? 0 : monthlyDataThreshold
+						.hashCode());
+		result = prime
+				* result
+				+ ((monthlySMSThreshold == null) ? 0 : monthlySMSThreshold
+						.hashCode());
+		result = prime * result
+				+ ((netSuiteId == null) ? 0 : netSuiteId.hashCode());
+		result = prime * result
+				+ ((serial_num == null) ? 0 : serial_num.hashCode());
+		result = prime * result + ((state == null) ? 0 : state.hashCode());
+		result = prime
+				* result
+				+ ((voiceDispatchNumber == null) ? 0 : voiceDispatchNumber
+						.hashCode());
+		return result;
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DeviceInformation other = (DeviceInformation) obj;
+		if (accountName == null) {
+			if (other.accountName != null)
+				return false;
+		} else if (!accountName.equals(other.accountName))
+			return false;
+		if (billingCycleEndDate == null) {
+			if (other.billingCycleEndDate != null)
+				return false;
+		} else if (!billingCycleEndDate.equals(other.billingCycleEndDate))
+			return false;
+		if (bs_carrier == null) {
+			if (other.bs_carrier != null)
+				return false;
+		} else if (!bs_carrier.equals(other.bs_carrier))
+			return false;
+		if (bs_id == null) {
+			if (other.bs_id != null)
+				return false;
+		} else if (!bs_id.equals(other.bs_id))
+			return false;
+		if (bs_plan == null) {
+			if (other.bs_plan != null)
+				return false;
+		} else if (!bs_plan.equals(other.bs_plan))
+			return false;
+		if (cell == null) {
+			if (other.cell != null)
+				return false;
+		} else if (!cell.equals(other.cell))
+			return false;
+		if (connected == null) {
+			if (other.connected != null)
+				return false;
+		} else if (!connected.equals(other.connected))
+			return false;
+		if (createdAt == null) {
+			if (other.createdAt != null)
+				return false;
+		} else if (!createdAt.equals(other.createdAt))
+			return false;
+		if (currentSMSPlan == null) {
+			if (other.currentSMSPlan != null)
+				return false;
+		} else if (!currentSMSPlan.equals(other.currentSMSPlan))
+			return false;
+		if (currentServicePlan == null) {
+			if (other.currentServicePlan != null)
+				return false;
+		} else if (!currentServicePlan.equals(other.currentServicePlan))
+			return false;
+		if (!Arrays.equals(customFields, other.customFields))
+			return false;
+		if (dailyDataThreshold == null) {
+			if (other.dailyDataThreshold != null)
+				return false;
+		} else if (!dailyDataThreshold.equals(other.dailyDataThreshold))
+			return false;
+		if (dailySMSThreshold == null) {
+			if (other.dailySMSThreshold != null)
+				return false;
+		} else if (!dailySMSThreshold.equals(other.dailySMSThreshold))
+			return false;
+		if (!Arrays.equals(deviceIds, other.deviceIds))
+			return false;
+		if (!Arrays.equals(extendedAttributes, other.extendedAttributes))
+			return false;
+		if (futureDataPlan == null) {
+			if (other.futureDataPlan != null)
+				return false;
+		} else if (!futureDataPlan.equals(other.futureDataPlan))
+			return false;
+		if (futureSMSPlan == null) {
+			if (other.futureSMSPlan != null)
+				return false;
+		} else if (!futureSMSPlan.equals(other.futureSMSPlan))
+			return false;
+		if (groupName == null) {
+			if (other.groupName != null)
+				return false;
+		} else if (!groupName.equals(other.groupName))
+			return false;
+		if (ipAddress == null) {
+			if (other.ipAddress != null)
+				return false;
+		} else if (!ipAddress.equals(other.ipAddress))
+			return false;
+		if (lastActivationBy == null) {
+			if (other.lastActivationBy != null)
+				return false;
+		} else if (!lastActivationBy.equals(other.lastActivationBy))
+			return false;
+		if (lastActivationDate == null) {
+			if (other.lastActivationDate != null)
+				return false;
+		} else if (!lastActivationDate.equals(other.lastActivationDate))
+			return false;
+		if (lastConnectionDate == null) {
+			if (other.lastConnectionDate != null)
+				return false;
+		} else if (!lastConnectionDate.equals(other.lastConnectionDate))
+			return false;
+		if (lastUpdated == null) {
+			if (other.lastUpdated != null)
+				return false;
+		} else if (!lastUpdated.equals(other.lastUpdated))
+			return false;
+		if (!Arrays.equals(lstExtFeatures, other.lstExtFeatures))
+			return false;
+		if (!Arrays.equals(lstFeatures, other.lstFeatures))
+			return false;
+		if (!Arrays
+				.equals(lstHistoryOverLastYear, other.lstHistoryOverLastYear))
+			return false;
+		if (mac == null) {
+			if (other.mac != null)
+				return false;
+		} else if (!mac.equals(other.mac))
+			return false;
+		if (midwayMasterDeviceId == null) {
+			if (other.midwayMasterDeviceId != null)
+				return false;
+		} else if (!midwayMasterDeviceId.equals(other.midwayMasterDeviceId))
+			return false;
+		if (monthlyDataThreshold == null) {
+			if (other.monthlyDataThreshold != null)
+				return false;
+		} else if (!monthlyDataThreshold.equals(other.monthlyDataThreshold))
+			return false;
+		if (monthlySMSThreshold == null) {
+			if (other.monthlySMSThreshold != null)
+				return false;
+		} else if (!monthlySMSThreshold.equals(other.monthlySMSThreshold))
+			return false;
+		if (netSuiteId == null) {
+			if (other.netSuiteId != null)
+				return false;
+		} else if (!netSuiteId.equals(other.netSuiteId))
+			return false;
+		if (serial_num == null) {
+			if (other.serial_num != null)
+				return false;
+		} else if (!serial_num.equals(other.serial_num))
+			return false;
+		if (state == null) {
+			if (other.state != null)
+				return false;
+		} else if (!state.equals(other.state))
+			return false;
+		if (voiceDispatchNumber == null) {
+			if (other.voiceDispatchNumber != null)
+				return false;
+		} else if (!voiceDispatchNumber.equals(other.voiceDispatchNumber))
+			return false;
+		return true;
+	}
+	
+	
+	
+
+		
+		
+		
+	
+
 
 }

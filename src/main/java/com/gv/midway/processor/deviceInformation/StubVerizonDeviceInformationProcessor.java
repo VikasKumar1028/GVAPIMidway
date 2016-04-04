@@ -56,7 +56,7 @@ public class StubVerizonDeviceInformationProcessor implements Processor {
 		deviceInformation.setConnected("false");
 		deviceInformation.setCreatedAt("2014-09-10T14:32:09Z");
 		deviceInformation.setIpAddress("0.0.0.0");
-		deviceInformation.setStaticIP("null");
+		//deviceInformation.setStaticIP("null");
 		deviceInformation.setLastActivationBy("admingca43hpn");
 
 		deviceInformation.setLastActivationDate("2014-09-18T13:01:02Z");
@@ -76,7 +76,7 @@ public class StubVerizonDeviceInformationProcessor implements Processor {
 		carrierInformations.setState("null");
 		carrierInformations.setStatus("Active");
 		carrierInformations.setServicePlan("FakeServicePlan-1");
-		deviceInformation.setCarrierInformations(carrierInformations);
+		//deviceInformation.setCarrierInformations(carrierInformations);
 
 		/*
 		 * DeviceIds deviceIds = new DeviceIds(); deviceIds.setId("7010137536");
@@ -90,19 +90,19 @@ public class StubVerizonDeviceInformationProcessor implements Processor {
 		DeviceIds deviceIds1 = new DeviceIds();
 		DeviceIds deviceIds2 = new DeviceIds();
 		deviceIds.setId("2827264285");
-		deviceIds.setImsiOrMIN("null");
+		//deviceIds.setImsiOrMIN("null");
 		deviceIds.setKind("mdn");
-		deviceIds.setMsisdnOrMDN("null");
+		//deviceIds.setMsisdnOrMDN("null");
 
 		deviceIds1.setId("DAD20141201400");
-		deviceIds1.setImsiOrMIN("null");
+		//deviceIds1.setImsiOrMIN("null");
 		deviceIds1.setKind("meid");
-		deviceIds1.setMsisdnOrMDN("null");
+		//deviceIds1.setMsisdnOrMDN("null");
 
 		deviceIds2.setId("7725783367");
-		deviceIds2.setImsiOrMIN("null");
+		//deviceIds2.setImsiOrMIN("null");
 		deviceIds2.setKind("min");
-		deviceIds2.setMsisdnOrMDN("null");
+		//deviceIds2.setMsisdnOrMDN("null");
 
 		DeviceIds[] deviceIdsArray = { deviceIds, deviceIds1, deviceIds2 };
 		deviceInformation.setDeviceIds(deviceIdsArray);
@@ -158,9 +158,9 @@ public class StubVerizonDeviceInformationProcessor implements Processor {
 		deviceInformation.setCustomFields(arr);
 
 		String[] groupNames = { "BED20141" };
-		deviceInformation.setGroupNames(groupNames);
+		//deviceInformation.setGroupNames(groupNames);
 		deviceInformation.setVoiceDispatchNumber("null");
-		deviceInformation.setMostRecentLocateId("null");
+	/*	deviceInformation.setMostRecentLocateId("null");
 		deviceInformation.setPreviousLocateId("null");
 		deviceInformation.setMostRecentLocateDate("null");
 		deviceInformation.setMostRecentLatitude("null");
@@ -168,7 +168,7 @@ public class StubVerizonDeviceInformationProcessor implements Processor {
 		deviceInformation.setMostRecentAddress("null");
 		deviceInformation.setPreviousLocateDate("null");
 		deviceInformation.setPreviousLatitude("null");
-		deviceInformation.setPreviousLongitude("0000");
+		deviceInformation.setPreviousLongitude("0000");*/
 
 		String[] lstExtFeatures = { null };
 		deviceInformation.setLstExtFeatures(lstExtFeatures);
@@ -176,7 +176,7 @@ public class StubVerizonDeviceInformationProcessor implements Processor {
 		String[] lstHistoryOverLastYear = { null };
 		deviceInformation.setLstHistoryOverLastYear(lstHistoryOverLastYear);
 
-		deviceInformation.setPreviousAddress("null");
+		//deviceInformation.setPreviousAddress("null");
 
 		deviceInformationArray[0] = deviceInformation;
 		deviceInformationResponseDataArea.setDevices(deviceInformationArray);

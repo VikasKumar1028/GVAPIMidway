@@ -98,8 +98,9 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 					.getCreatedAt());
 			deviceInformation.setIpAddress(verizonResponse.getDevices()[i]
 					.getIpAddress());
-			deviceInformation.setGroupNames(verizonResponse.getDevices()[i]
-					.getGroupNames());
+			
+			deviceInformation.setGroupName(verizonResponse.getDevices()[i]
+					.getGroupNames().toString());
 			deviceInformation
 					.setLastActivationBy(verizonResponse.getDevices()[i]
 							.getLastActivationBy());
@@ -121,7 +122,7 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 								.getCarrierInformations()[j].getServicePlan());
 			}
 
-			deviceInformation.setCarrierInformations(carrierInformations);
+			//deviceInformation.setCarrierInformations(carrierInformations);
 
 			deviceInformation.setExtendedAttributes(verizonResponse
 					.getDevices()[i].getExtendedAttributes());

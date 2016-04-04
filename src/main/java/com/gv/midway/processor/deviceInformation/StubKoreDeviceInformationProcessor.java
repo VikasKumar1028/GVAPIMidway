@@ -56,7 +56,7 @@ public class StubKoreDeviceInformationProcessor implements Processor {
 		deviceInformation.setConnected("null");
 		deviceInformation.setCreatedAt("null");
 		deviceInformation.setIpAddress("null");
-		deviceInformation.setStaticIP("10.117.97.87");
+		//deviceInformation.setStaticIP("10.117.97.87");
 		deviceInformation.setLastActivationBy("null");
 
 		deviceInformation.setLastActivationDate("null");
@@ -79,13 +79,13 @@ public class StubKoreDeviceInformationProcessor implements Processor {
 		carrierInformations.setState("null");
 		carrierInformations.setCarrierName("null");
 		carrierInformations.setServicePlan("null");
-		deviceInformation.setCarrierInformations(carrierInformations);
+		//deviceInformation.setCarrierInformations(carrierInformations);
 
 		DeviceIds deviceIds = new DeviceIds();
 		deviceIds.setId("89014103277405946190");
-		deviceIds.setImsiOrMIN("310410740594619");
+		//deviceIds.setImsiOrMIN("310410740594619");
 		deviceIds.setKind("null");
-		deviceIds.setMsisdnOrMDN("5772933662");
+		//deviceIds.setMsisdnOrMDN("5772933662");
 
 		DeviceIds[] deviceIdsArray = { deviceIds };
 
@@ -143,8 +143,8 @@ public class StubKoreDeviceInformationProcessor implements Processor {
 		 * deviceInformation.setCustomField5(" ");
 		 * deviceInformation.setCustomField6(" ");
 		 */
-		String[] groupNames = { "null" };
-		deviceInformation.setGroupNames(groupNames);
+		//String[] groupNames = { "null" };
+		/*deviceInformation.setGroupNames(groupNames);
 
 		deviceInformation.setVoiceDispatchNumber("");
 		deviceInformation.setMostRecentLocateId("80");
@@ -156,7 +156,7 @@ public class StubKoreDeviceInformationProcessor implements Processor {
 				.setMostRecentAddress("111 Any Street, Any Town, Any County, Any State, Any Country 12345");
 		deviceInformation.setPreviousLocateDate("null");
 		deviceInformation.setPreviousLatitude("35.598510833333336");
-		deviceInformation.setPreviousLongitude("108.25793444444444");
+		deviceInformation.setPreviousLongitude("108.25793444444444");*/
 
 		String[] lstExtFeatures = { "lstExtFeatures" };
 		deviceInformation.setLstExtFeatures(lstExtFeatures);
@@ -164,7 +164,7 @@ public class StubKoreDeviceInformationProcessor implements Processor {
 		String[] lstHistoryOverLastYear = { "01/13/2016 18:46 | Activation (FEAT000601: USG Service - Data, FEAT001690: USG GPRS Static IP A10)" };
 		deviceInformation.setLstHistoryOverLastYear(lstHistoryOverLastYear);
 
-		deviceInformation.setPreviousAddress("null");
+		//deviceInformation.setPreviousAddress("null");
 
 		deviceInformationArray[0] = deviceInformation;
 		deviceInformationResponseDataArea.setDevices(deviceInformationArray);

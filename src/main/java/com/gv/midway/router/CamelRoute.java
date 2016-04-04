@@ -386,8 +386,16 @@ public class CamelRoute extends RouteBuilder {
 		    			.process(new KoreCheckStatusPreProcessor(env))
 						.to(uriRestKoreEndPoint).unmarshal()
 						.json(JsonLibrary.Jackson, KoreCheckStatusResponse.class)
+						/** Get the status of device update  carrier status in transaction DB */
 						.bean(iTransactionalService,"populateKoreTransactionalResponse")
+						/**
+						 * Prepare the netsuite call back response
+						 */
 						.process(new KoreDeviceInformationPostProcessor())
+						/**
+						 * Send to Netsuite restlet callback end point and update midway status in transaction DB
+						 */
+						 .to(uriRestNetsuitEndPoint)
 		    .doCatch(CxfOperationException.class)
 		    			.bean(iTransactionalService,"populateKoreTransactionalErrorResponse")
 		    			.bean(iAuditService, "auditExternalExceptionResponseCall")

@@ -12,6 +12,7 @@ import org.springframework.core.env.Environment;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.ResponseHeader;
+import com.gv.midway.pojo.activateDevice.verizon.CustomFields;
 import com.gv.midway.pojo.deviceInformation.kore.KoreDeviceInformationResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
@@ -72,9 +73,9 @@ public class KoreDeviceInformationPostProcessor implements Processor {
 
 		deviceInformationResponse.setHeader(responseheader);
 		deviceInformationResponse.setResponse(response);
-
+/*
 		deviceInformation.setCurrentDataPlan(koreDeviceInformationResponse
-				.getD().getCurrentDataPlan());
+				.getD().getCurrentDataPlan());*/
 		deviceInformation.setCurrentSMSPlan(koreDeviceInformationResponse
 				.getD().getCurrentSMSPlan());
 		deviceInformation.setDailyDataThreshold(koreDeviceInformationResponse
@@ -85,8 +86,8 @@ public class KoreDeviceInformationPostProcessor implements Processor {
 				.getD().getFutureDataPlan());
 		deviceInformation.setFutureSMSPlan(koreDeviceInformationResponse.getD()
 				.getFutureSMSPlan());
-		deviceInformation.setIMSIOrMIN(koreDeviceInformationResponse.getD()
-				.getIMSIOrMIN());
+		/*deviceInformation.setIMSIOrMIN(koreDeviceInformationResponse.getD()
+				.getIMSIOrMIN());*/
 		deviceInformation.setLstExtFeatures(koreDeviceInformationResponse
 				.getD().getLstExtFeatures());
 		deviceInformation.setLstFeatures(koreDeviceInformationResponse.getD()
@@ -98,7 +99,7 @@ public class KoreDeviceInformationPostProcessor implements Processor {
 				.getD().getMonthlyDataThreshold());
 		deviceInformation.setMonthlySMSThreshold(koreDeviceInformationResponse
 				.getD().getMonthlySMSThreshold());
-		deviceInformation.setMostRecentAddress(koreDeviceInformationResponse
+		/*deviceInformation.setMostRecentAddress(koreDeviceInformationResponse
 				.getD().getMostRecentAddress());
 		deviceInformation.setMostRecentLatitude(koreDeviceInformationResponse
 				.getD().getMostRecentLatitude());
@@ -119,11 +120,51 @@ public class KoreDeviceInformationPostProcessor implements Processor {
 		deviceInformation.setPreviousLatitude(koreDeviceInformationResponse
 				.getD().getPreviousLongitude());
 		deviceInformation.setStaticIP(koreDeviceInformationResponse.getD()
-				.getStaticIP());
+				.getStaticIP());*/
 		deviceInformation.setVoiceDispatchNumber(koreDeviceInformationResponse
 				.getD().getVoiceDispatchNumber());
+		
+		CustomFields[] customeFields=new CustomFields[6] ;
+		
+		CustomFields customFields1=new CustomFields();
+		customFields1.setKey("CustomField1");
+		customFields1.setValue(koreDeviceInformationResponse.getD()
+				.getCustomField1());
+		
+		CustomFields customFields2=new CustomFields();
+		customFields2.setKey("CustomField2");
+		customFields2.setValue(koreDeviceInformationResponse.getD()
+				.getCustomField2());
+		
+		CustomFields customFields3=new CustomFields();
+		customFields3.setKey("CustomField3");
+		customFields3.setValue(koreDeviceInformationResponse.getD()
+				.getCustomField3());
+		
+		CustomFields customFields4=new CustomFields();
+		customFields4.setKey("CustomField4");
+		customFields4.setKey(koreDeviceInformationResponse.getD()
+				.getCustomField4());
+		
+		CustomFields customFields5=new CustomFields();
+		customFields5.setKey("CustomField5");
+		customFields5.setKey(koreDeviceInformationResponse.getD()
+				.getCustomField5());
+		
+		CustomFields customFields6=new CustomFields();
+		customFields6.setKey("CustomField6");
+		customFields6.setKey(koreDeviceInformationResponse.getD()
+				.getCustomField6());
+		
+		customeFields[0]=customFields1;
+		customeFields[1]=customFields2;
+		customeFields[2]=customFields3;
+		customeFields[3]=customFields4;
+		customeFields[4]=customFields5;
+		customeFields[5]=customFields6;
+		
 
-		deviceInformation.setCustomField1(koreDeviceInformationResponse.getD()
+	/*	deviceInformation.setCustomField1(koreDeviceInformationResponse.getD()
 				.getCustomField1());
 		deviceInformation.setCustomField2(koreDeviceInformationResponse.getD()
 				.getCustomField2());
@@ -134,7 +175,7 @@ public class KoreDeviceInformationPostProcessor implements Processor {
 		deviceInformation.setCustomField5(koreDeviceInformationResponse.getD()
 				.getCustomField5());
 		deviceInformation.setCustomField6(koreDeviceInformationResponse.getD()
-				.getCustomField6());
+				.getCustomField6());*/
 
 		deviceInformationArray[0] = deviceInformation;
 		deviceInformationResponseDataArea.setDevices(deviceInformationArray);
