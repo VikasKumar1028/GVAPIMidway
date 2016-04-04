@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.gv.midway.pojo.ActivateDeviceId;
 import com.gv.midway.pojo.DeviceId;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
@@ -105,8 +106,8 @@ public class MidwayJunitTest extends Assert {
 
 		ActivateDeviceRequestDataArea dataArea = new ActivateDeviceRequestDataArea();
 
-		DeviceId[] deviceId = new DeviceId[1];
-		deviceId[0] = new DeviceId();
+		ActivateDeviceId[] deviceId = new ActivateDeviceId[1];
+		deviceId[0] = new ActivateDeviceId();
 		deviceId[0].setId("89014103277405946190");
 		deviceId[0].setKind("ghgjg");
 		deviceId[0].seteAPCode("eAPCode");

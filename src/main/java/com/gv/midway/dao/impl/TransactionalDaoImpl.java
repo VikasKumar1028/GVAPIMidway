@@ -17,6 +17,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.dao.ITransactionalDao;
+import com.gv.midway.pojo.ActivateDeviceId;
 import com.gv.midway.pojo.DeviceId;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequestDataArea;
@@ -48,12 +49,12 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		ActivateDeviceRequestDataArea activateDeviceRequestDataArea = (ActivateDeviceRequestDataArea) req.getDataArea();
 
-		DeviceId[] deviceIds = activateDeviceRequestDataArea.getDeviceId();
+		ActivateDeviceId[] deviceIds = activateDeviceRequestDataArea.getDeviceId();
 		Kryo kryo = new Kryo();
 
-		for (DeviceId actualDeviceId : deviceIds) {
-			DeviceId[] payLoadDeviceIds = new DeviceId[1];
-			DeviceId payLoadDeviceId = new DeviceId();
+		for (ActivateDeviceId actualDeviceId : deviceIds) {
+			ActivateDeviceId[] payLoadDeviceIds = new ActivateDeviceId[1];
+			ActivateDeviceId payLoadDeviceId = new ActivateDeviceId();
 			payLoadDeviceId.setId(actualDeviceId.getId());
 			payLoadDeviceId.setKind(actualDeviceId.getKind());
 			payLoadDeviceIds[0] = payLoadDeviceId;

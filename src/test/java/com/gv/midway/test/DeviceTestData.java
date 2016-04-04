@@ -3,6 +3,8 @@ package com.gv.midway.test;
 import org.apache.camel.Exchange;
 
 
+
+import com.gv.midway.pojo.ActivateDeviceId;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequestDataArea;
@@ -123,8 +125,8 @@ public class DeviceTestData extends Header {
 		ActivateDeviceRequestDataArea dataArea=new ActivateDeviceRequestDataArea();
 	
     
-        DeviceId [] deviceId = new DeviceId[1];
-        deviceId[0] = new DeviceId();
+		ActivateDeviceId [] deviceId = new ActivateDeviceId[1];
+        deviceId[0] = new ActivateDeviceId();
     	deviceId[0].setId("89014103277405946190");
 		deviceId[0].setKind("kind");
 		deviceId[0].seteAPCode("eAPCode");
