@@ -38,9 +38,10 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		log.info("Inside populateActivateDBPayload");
 		ArrayList<Transaction> list = new ArrayList<Transaction>();
 
-		long timestamp = System.currentTimeMillis();
-		String midwayTransationID = Long.toString(timestamp);
+		
+		String midwayTransationID=CommonUtil.getmidwayTransationId();
 		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_ID, midwayTransationID);
+		
 		String currentDataTime = CommonUtil.getCurrentTimeStamp();
 
 		ActivateDeviceRequest req = (ActivateDeviceRequest) exchange.getIn().getBody();
@@ -119,8 +120,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		log.info("Inside populateDeactivateDBPayload");
 		ArrayList<Transaction> list = new ArrayList<Transaction>();
 
-		long timestamp = System.currentTimeMillis();
-		String midwayTransationID = Long.toString(timestamp);
+		String midwayTransationID=CommonUtil.getmidwayTransationId();
 		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_ID, midwayTransationID);
 		String currentDataTime = CommonUtil.getCurrentTimeStamp();
 

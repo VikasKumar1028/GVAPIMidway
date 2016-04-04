@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.BaseRequest;
 import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
+import com.gv.midway.utility.CommonUtil;
 
 public class HeaderProcessor implements Processor {
 
@@ -28,6 +29,9 @@ public class HeaderProcessor implements Processor {
 				baseRequest.getHeader().getBsCarrier());
 		exchange.setProperty(IConstant.SOURCE_NAME, baseRequest.getHeader()
 				.getSourceName());
+		exchange.setProperty(IConstant.GV_TRANSACTION_ID, baseRequest.getHeader().getTransactionId());
+		exchange.setProperty(IConstant.GV_HOSTNAME,CommonUtil.getIpAddress());
+		
 
 		
 		

@@ -65,7 +65,8 @@ public class AuditDaoImpl implements IAuditDao {
 			audit.setTimeStamp(localTime);
 			audit.setAuditTransationID(exchange.getProperty(
 					IConstant.AUDIT_TRANSACTION_ID).toString());
-
+			audit.setGvTransationId(exchange.getProperty(IConstant.GV_TRANSACTION_ID).toString());
+			audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME).toString());
 			audit.setPayload(msgBody);
 			mongoTemplate.save(audit);
 
@@ -115,6 +116,10 @@ public class AuditDaoImpl implements IAuditDao {
 			audit.setTimeStamp(localTime);
 			audit.setAuditTransationID(exchange.getProperty(
 					IConstant.AUDIT_TRANSACTION_ID).toString());
+			audit.setGvTransationId(exchange.getProperty(
+					IConstant.GV_TRANSACTION_ID).toString());
+			audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME)
+					.toString());
 			/*
 			 * audit.setErrorDetais(exchange.getProperty(IConstant.
 			 * RESPONSE_DESCRIPTION).toString());
@@ -183,13 +188,17 @@ public class AuditDaoImpl implements IAuditDao {
 			audit.setTimeStamp(localTime);
 			audit.setAuditTransationID(exchange.getProperty(
 					IConstant.AUDIT_TRANSACTION_ID).toString());
+			audit.setGvTransationId(exchange.getProperty(
+					IConstant.GV_TRANSACTION_ID).toString());
+			audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME)
+					.toString());
 			audit.setErrorDetais(exchange.getProperty(
 					IConstant.RESPONSE_DESCRIPTION).toString());
 			audit.setErrorProblem(exchange.getProperty(
 					IConstant.RESPONSE_STATUS).toString());
 			audit.setErrorCode(exchange.getProperty(IConstant.RESPONSE_CODE)
 					.toString());
-			audit.setPayload(responseBody);
+				audit.setPayload(responseBody);
 			mongoTemplate.save(audit);
 
 		} catch (Exception e) {
@@ -248,6 +257,10 @@ public class AuditDaoImpl implements IAuditDao {
 			audit.setTimeStamp(localTime);
 			audit.setAuditTransationID(exchange.getProperty(
 					IConstant.AUDIT_TRANSACTION_ID).toString());
+			audit.setGvTransationId(exchange.getProperty(
+					IConstant.GV_TRANSACTION_ID).toString());
+			audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME)
+					.toString());
 			audit.setErrorDetais(exchange.getProperty(
 					IConstant.RESPONSE_DESCRIPTION).toString());
 			audit.setErrorProblem(exchange.getProperty(
@@ -255,6 +268,7 @@ public class AuditDaoImpl implements IAuditDao {
 			audit.setErrorCode(exchange.getProperty(IConstant.RESPONSE_CODE)
 					.toString());
 			audit.setPayload(responseBody);
+			
 			mongoTemplate.save(audit);
 
 		} catch (Exception e) {

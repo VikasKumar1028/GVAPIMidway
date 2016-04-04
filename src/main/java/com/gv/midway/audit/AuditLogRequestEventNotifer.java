@@ -67,6 +67,7 @@ public class AuditLogRequestEventNotifer extends EventNotifierSupport {
 				logger.info("apiOperationName"+apiOperationName);
 				
 				
+				
 				Audit audit = new Audit();
 				/*
 				 * audit.setCarrier(baseRequest.getHeader().getBsCarrier());
@@ -80,6 +81,8 @@ public class AuditLogRequestEventNotifer extends EventNotifierSupport {
 				audit.setTo(exchange.getFromEndpoint().toString());
 				audit.setTimeStamp(localTime);
 				audit.setAuditTransationID(TransactionId);
+				audit.setGvTransationId(exchange.getProperty(IConstant.GV_TRANSACTION_ID).toString());
+				audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME).toString());
 				// audit.setStatus(exchange.getProperty(name));
 
 				audit.setPayload(jsonInString);
