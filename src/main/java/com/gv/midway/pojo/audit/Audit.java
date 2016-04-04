@@ -17,7 +17,8 @@ public class Audit {
 	private String errorProblem;
 	private String errorCode;
 	private String errorDetais;
-	private String hostName;
+	//Which server it is running on
+	private String hostName; 
 	private String gvTransationId;
 
 	public String getApi_OpreationName() {

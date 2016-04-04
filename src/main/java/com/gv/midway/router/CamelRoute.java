@@ -215,6 +215,8 @@ public class CamelRoute extends RouteBuilder {
 									.when(header("sourceName").isEqualTo("VERIZON"))
 										.bean(iSessionService, "setContextTokenInExchange")
 										.bean(iTransactionalService,"populateActivateDBPayload")
+										//will store only one time in Audit even on connection failure
+										.bean(iAuditService, "auditExternalRequestCall")
 										.to("direct:VerizonActivationFlow")
 								.endChoice()
 							.end().to("log:input")
@@ -224,8 +226,8 @@ public class CamelRoute extends RouteBuilder {
 		from("direct:VerizonActivationFlow")
 					.doTry()						
 							.process(new VerizonActivateDevicePreProcessor())
-							//Audit will store record 3 times in case of failure (see onException for connection.class above)
-							.bean(iAuditService, "auditExternalRequestCall")
+							// REMOVED Audit will store record 3 times in case of failure (see onException for connection.class above)
+							//.bean(iAuditService, "auditExternalRequestCall")
 							.to(uriRestVerizonEndPoint)
 							.unmarshal()
 							.json(JsonLibrary.Jackson)
@@ -287,6 +289,7 @@ public class CamelRoute extends RouteBuilder {
 											.when(header("sourceName").isEqualTo("VERIZON"))											
 													.bean(iSessionService, "setContextTokenInExchange")
 													.bean(iTransactionalService,"populateDeactivateDBPayload")
+													.bean(iAuditService, "auditExternalRequestCall")
 													.to("direct:VerizonDeActivationFlow")
 														
 					.endChoice().
@@ -300,7 +303,7 @@ public class CamelRoute extends RouteBuilder {
 		.doTry()		
 		.process(new VerizonDeactivateDevicePreProcessor())
 		//Audit will store record 3 times in case of failure (see onException for connection.class above)
-		.bean(iAuditService, "auditExternalRequestCall")
+		//.bean(iAuditService, "auditExternalRequestCall")
 		.to(uriRestVerizonEndPoint)
 		.unmarshal().json(JsonLibrary.Jackson)
 		.bean(iTransactionalService,"populateVerizonTransactionalResponse")
