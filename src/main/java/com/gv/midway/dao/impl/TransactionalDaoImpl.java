@@ -288,7 +288,11 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 	public void populatePendingKoreCheckStatus(Exchange exchange) {
 		// TODO Auto-generated method stub
-		Query searchPendingCheckStatusQuery = new Query(Criteria.where("carrierStatus").is("Pending"));
+		Query searchPendingCheckStatusQuery = new Query(Criteria
+				.where("carrierStatus")
+				.is("Pending").andOperator(
+						Criteria.where("carrierName")
+						.is("KORE")));
 
 		List<Transaction> transactionListPendingStatus = mongoTemplate.find(searchPendingCheckStatusQuery, Transaction.class);
 		exchange.getIn().setBody(transactionListPendingStatus);

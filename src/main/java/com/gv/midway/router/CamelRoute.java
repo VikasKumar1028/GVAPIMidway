@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.exception.VerizonSessionTokenExpirationException;
+import com.gv.midway.pojo.checkstatus.kore.KoreCheckStatusResponse;
 import com.gv.midway.pojo.deviceInformation.kore.KoreDeviceInformationResponse;
 import com.gv.midway.pojo.deviceInformation.verizon.VerizonResponse;
 import com.gv.midway.pojo.token.VerizonAuthorizationResponse;
@@ -334,7 +335,7 @@ public class CamelRoute extends RouteBuilder {
 			.bean(iTransactionalService,"populateKoreTransactionalResponse")
 			.process(new KoreDeviceInformationPostProcessor());
 	
-//*****  DEVICE ACTIVATION END		
+//*****  DEVICE DEACTIVATION END		
 		
 		from("direct:insertDeviceDetails")
 				.bean(iDeviceService, "insertDeviceDetails").to("log:input")
@@ -381,7 +382,7 @@ public class CamelRoute extends RouteBuilder {
 		    .doTry()
 		    			.process(new KoreCheckStatusPreProcessor(env))
 						.to(uriRestKoreEndPoint).unmarshal()
-						.json(JsonLibrary.Jackson, KoreDeviceInformationResponse.class)
+						.json(JsonLibrary.Jackson, KoreCheckStatusResponse.class)
 						.bean(iTransactionalService,"populateKoreTransactionalResponse")
 						.process(new KoreDeviceInformationPostProcessor())
 		    .doCatch(CxfOperationException.class)

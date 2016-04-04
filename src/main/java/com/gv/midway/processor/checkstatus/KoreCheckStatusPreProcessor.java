@@ -40,6 +40,9 @@ public class KoreCheckStatusPreProcessor implements Processor {
 		ObjectMapper mapper = new ObjectMapper();
 		
 		String carrierTransationID=mapper.readValue(transaction.getCarrierTransationID(),String.class);
+		
+		net.sf.json.JSONObject obj = new net.sf.json.JSONObject();
+		obj.put("trackingNumber", carrierTransationID);
 	
 		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,transaction.getDeviceNumber());
 	
@@ -48,9 +51,9 @@ public class KoreCheckStatusPreProcessor implements Processor {
 		message.setHeader(Exchange.HTTP_METHOD, "POST");
 		message.setHeader("Authorization",
 				newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
-		message.setHeader(Exchange.HTTP_PATH, "/json/activateDevice");
+		message.setHeader(Exchange.HTTP_PATH, "/json/queryProvisioningRequest");
 
-		message.setBody(carrierTransationID);
+		message.setBody(obj);
 		
 		
 		
