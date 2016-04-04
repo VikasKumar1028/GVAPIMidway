@@ -63,7 +63,7 @@ public class AuditLogRequestEventNotifer extends EventNotifierSupport {
 				
 				logger.info("requestEndpintSpilt::"+requestEndpintSpilt[1].replaceAll("]", " "));
 				
-				String apiOperationName= "GV_"+requestEndpintSpilt[1].replaceAll("]", "")+"_BRequest";
+				String apiOperationName= "GV_"+requestEndpintSpilt[1].replaceAll("]", "")+"_ProxyRequest";
 				logger.info("apiOperationName"+apiOperationName);
 				
 				

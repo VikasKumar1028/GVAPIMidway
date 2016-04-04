@@ -58,7 +58,7 @@ public class AuditLogResponseEventNotifer extends EventNotifierSupport {
 				
 				logger.info("responseEndpintSpilt::"+responseEndpintSpilt[1].replaceAll("]", " "));
 				
-				String apiOperationName= "GV_"+responseEndpintSpilt[1].replaceAll("]", "")+"_BResponse";
+				String apiOperationName= "GV_"+responseEndpintSpilt[1].replaceAll("]", "")+"_ProxyResponse";
 				logger.info("apiOperationName"+apiOperationName);
 				
 				

@@ -46,7 +46,11 @@ public class AuditDaoImpl implements IAuditDao {
 
 			String apiOperationName = "GV_"
 					+ requestEndpintSpilt[1].replaceAll("]", "")
-					+ "_ProxyRequest";
+					+ "_BusinessRequest";
+			if(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER)!=null ){
+				apiOperationName=apiOperationName+"_deviceNumber_" + exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER).toString();
+			}
+			
 			log.info("apiOperationName" + apiOperationName);
 
 			Audit audit = new Audit();
@@ -92,7 +96,11 @@ public class AuditDaoImpl implements IAuditDao {
 
 			String apiOperationName = "GV_"
 					+ responseEndpintSpilt[1].replaceAll("]", "")
-					+ "_ProxyResponse";
+					+ "_BusinessResponse";
+			
+			if(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER)!=null ){
+				apiOperationName=apiOperationName+"_deviceNumber_" + exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER).toString();
+			}
 			log.info("apiOperationName" + apiOperationName);
 
 			Audit audit = new Audit();
@@ -155,7 +163,12 @@ public class AuditDaoImpl implements IAuditDao {
 
 			String apiOperationName = "GV_"
 					+ responseExceptionEndpintSpilt[1].replaceAll("]", "")
-					+ "_ProxyResponse";
+					+ "_BusinessResponse";
+			
+			if(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER)!=null ){
+				apiOperationName=apiOperationName+"_deviceNumber_" + exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER).toString();
+			}
+			
 			log.info("apiOperationName" + apiOperationName);
 
 			Audit audit = new Audit();
@@ -214,7 +227,13 @@ public class AuditDaoImpl implements IAuditDao {
 
 			String apiOperationName = "GV_"
 					+ responseExceptionEndpintSpilt[1].replaceAll("]", "")
-					+ "_ProxyResponse";
+					+ "_BusinessResponse";
+			
+			if(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER)!=null ){
+				apiOperationName=apiOperationName+"_deviceNumber_" +exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER).toString();
+			}
+			
+			
 			log.info("apiOperationName" + apiOperationName);
 
 			Audit audit = new Audit();

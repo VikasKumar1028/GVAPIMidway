@@ -11,6 +11,7 @@ public class Audit {
 	private String from;
 	private String to;
 	private Date timeStamp;
+	//status ??
 	private String status;
 	private String auditTransationId;
 	private String Payload;
@@ -19,6 +20,7 @@ public class Audit {
 	private String errorDetais;
 	//Which server it is running on
 	private String hostName; 
+	//GrantVitor Transaction Id Send
 	private String gvTransationId;
 
 	public String getApi_OpreationName() {
