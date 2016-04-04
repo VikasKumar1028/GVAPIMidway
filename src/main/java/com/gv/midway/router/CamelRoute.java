@@ -252,9 +252,9 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iTransactionalService,
 						"populateKoreTransactionalErrorResponse")
 				.bean(iAuditService, "auditExternalExceptionResponseCall")
-				.end()
-				.bean(iAuditService, "auditExternalRequestCall")
+				.end()				
 				.process(new KoreActivateDevicePreProcessor(env))
+				.bean(iAuditService, "auditExternalRequestCall")
 				.to(uriRestKoreEndPoint)
 				.unmarshal()
 				.json(JsonLibrary.Jackson, KoreDeviceInformationResponse.class)
@@ -329,9 +329,9 @@ public class CamelRoute extends RouteBuilder {
 			.bean(iTransactionalService,
 						"populateKoreTransactionalErrorResponse")
 			.bean(iAuditService, "auditExternalExceptionResponseCall")
-			.end()
-			.bean(iAuditService, "auditExternalRequestCall")
+			.end()			
 			.process(new KoreDeactivateDevicePreProcessor(env))
+			.bean(iAuditService, "auditExternalRequestCall")
 			.to(uriRestKoreEndPoint).unmarshal()
 			.json(JsonLibrary.Jackson, KoreDeviceInformationResponse.class)
 			.bean(iAuditService, "auditExternalResponseCall")
