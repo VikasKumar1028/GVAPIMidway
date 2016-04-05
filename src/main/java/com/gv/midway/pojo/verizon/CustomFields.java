@@ -1,8 +1,5 @@
-package com.gv.midway.pojo.deactivateDevice.request;
+package com.gv.midway.pojo.verizon;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class CustomFields {
 	private String value;
 
@@ -25,14 +22,6 @@ public class CustomFields {
 	}
 
 	@Override
-	public String toString() {
-		return "CustomFields [value=" + value + ", key=" + key + "]";
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -41,16 +30,13 @@ public class CustomFields {
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof CustomFields))
+		if (getClass() != obj.getClass())
 			return false;
 		CustomFields other = (CustomFields) obj;
 		if (key == null) {
@@ -66,4 +52,16 @@ public class CustomFields {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("CustomFields [value=");
+		builder.append(value);
+		builder.append(", key=");
+		builder.append(key);
+		builder.append("]");
+		return builder.toString();
+	}
+
+	
 }

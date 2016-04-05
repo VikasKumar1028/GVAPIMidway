@@ -42,8 +42,8 @@ public class StubKoreDeactivateDeviceProcessor implements Processor {
 		deactivateDeviceResponse.setHeader(responseheader);
 		deactivateDeviceResponse.setResponse(response);
 	
-		deactivateDeviceResponseDataArea.setRequestId("requestId(");
-		deactivateDeviceResponseDataArea.setTrackingNumber("trackingNumbe");
+		//deactivateDeviceResponseDataArea.setRequestId("requestId(");
+		deactivateDeviceResponseDataArea.setOrderNumber("trackingNumbe");
 		
 		deactivateDeviceResponse.setDataArea(deactivateDeviceResponseDataArea);
 		exchange.getIn().setBody(deactivateDeviceResponse);

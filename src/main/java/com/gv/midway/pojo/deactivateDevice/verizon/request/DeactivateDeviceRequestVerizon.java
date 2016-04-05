@@ -1,11 +1,14 @@
-package com.gv.midway.pojo.deactivateDevice.request;
+package com.gv.midway.pojo.deactivateDevice.verizon.request;
+
 import java.util.Arrays;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gv.midway.pojo.verizon.CustomFields;
-import com.gv.midway.pojo.verizon.DeviceId;
+import com.gv.midway.pojo.verizon.Devices;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DeactivateDeviceRequestDataArea {
+public class DeactivateDeviceRequestVerizon {
+
 	private String groupName;
 
 	private String accountName;
@@ -16,19 +19,7 @@ public class DeactivateDeviceRequestDataArea {
 
 	private String reasonCode;
 
-	private DeactivateDevices[] devices;
-
-	public DeactivateDevices[] getDevices() {
-		return devices;
-	}
-
-	public void setDevices(DeactivateDevices[] devices) {
-		this.devices = devices;
-	}
-
-	private String etfWaiver;
-
-	private Boolean flagScrap;
+	private Devices[] devices;
 
 	public String getGroupName() {
 		return groupName;
@@ -70,22 +61,12 @@ public class DeactivateDeviceRequestDataArea {
 		this.reasonCode = reasonCode;
 	}
 
-
-	public String getEtfWaiver() {
-		return etfWaiver;
+	public Devices[] getDevices() {
+		return devices;
 	}
 
-	public void setEtfWaiver(String etfWaiver) {
-		this.etfWaiver = etfWaiver;
-	}
-
-
-	public Boolean getFlagScrap() {
-		return flagScrap;
-	}
-
-	public void setFlagScrap(Boolean flagScrap) {
-		this.flagScrap = flagScrap;
+	public void setDevices(Devices[] devices) {
+		this.devices = devices;
 	}
 
 	@Override
@@ -96,10 +77,6 @@ public class DeactivateDeviceRequestDataArea {
 				+ ((accountName == null) ? 0 : accountName.hashCode());
 		result = prime * result + Arrays.hashCode(customFields);
 		result = prime * result + Arrays.hashCode(devices);
-		result = prime * result
-				+ ((etfWaiver == null) ? 0 : etfWaiver.hashCode());
-		result = prime * result
-				+ ((flagScrap == null) ? 0 : flagScrap.hashCode());
 		result = prime * result
 				+ ((groupName == null) ? 0 : groupName.hashCode());
 		result = prime * result
@@ -117,7 +94,7 @@ public class DeactivateDeviceRequestDataArea {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		DeactivateDeviceRequestDataArea other = (DeactivateDeviceRequestDataArea) obj;
+		DeactivateDeviceRequestVerizon other = (DeactivateDeviceRequestVerizon) obj;
 		if (accountName == null) {
 			if (other.accountName != null)
 				return false;
@@ -126,16 +103,6 @@ public class DeactivateDeviceRequestDataArea {
 		if (!Arrays.equals(customFields, other.customFields))
 			return false;
 		if (!Arrays.equals(devices, other.devices))
-			return false;
-		if (etfWaiver == null) {
-			if (other.etfWaiver != null)
-				return false;
-		} else if (!etfWaiver.equals(other.etfWaiver))
-			return false;
-		if (flagScrap == null) {
-			if (other.flagScrap != null)
-				return false;
-		} else if (!flagScrap.equals(other.flagScrap))
 			return false;
 		if (groupName == null) {
 			if (other.groupName != null)
@@ -158,7 +125,7 @@ public class DeactivateDeviceRequestDataArea {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("DeactivateDeviceRequestDataArea [groupName=");
+		builder.append("DeactivateDeviceRequestVerizon [groupName=");
 		builder.append(groupName);
 		builder.append(", accountName=");
 		builder.append(accountName);
@@ -170,14 +137,11 @@ public class DeactivateDeviceRequestDataArea {
 		builder.append(reasonCode);
 		builder.append(", devices=");
 		builder.append(Arrays.toString(devices));
-		builder.append(", etfWaiver=");
-		builder.append(etfWaiver);
-		builder.append(", flagScrap=");
-		builder.append(flagScrap);
 		builder.append("]");
 		return builder.toString();
 	}
+	
 
 	
-	
+
 }

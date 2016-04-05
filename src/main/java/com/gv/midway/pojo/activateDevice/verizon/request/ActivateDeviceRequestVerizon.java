@@ -1,15 +1,14 @@
-package com.gv.midway.pojo.activateDevice.request;
-
-
+package com.gv.midway.pojo.activateDevice.verizon.request;
 
 import java.util.Arrays;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gv.midway.pojo.verizon.CustomFields;
+import com.gv.midway.pojo.verizon.Devices;
 import com.gv.midway.pojo.verizon.PrimaryPlaceOfUse;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ActivateDeviceRequestDataArea {
+public class ActivateDeviceRequestVerizon {
 
 	private String groupName;
 
@@ -35,7 +34,8 @@ public class ActivateDeviceRequestDataArea {
 
 	private String mdnZipCode;
 
-	private ActivateDevices[] devices;
+	private Devices[] devices;
+	
 
 	public String getGroupName() {
 		return groupName;
@@ -133,15 +133,15 @@ public class ActivateDeviceRequestDataArea {
 		this.mdnZipCode = mdnZipCode;
 	}
 
-	
-	public ActivateDevices[] getDevices() {
+	public Devices[] getDevices() {
 		return devices;
 	}
 
-	public void setDevices(ActivateDevices[] devices) {
+	public void setDevices(Devices[] devices) {
 		this.devices = devices;
 	}
-
+	
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -157,7 +157,7 @@ public class ActivateDeviceRequestDataArea {
 		result = prime * result
 				+ ((costCenterCode == null) ? 0 : costCenterCode.hashCode());
 		result = prime * result + Arrays.hashCode(customFields);
-		result = prime * result + Arrays.hashCode(devices);
+		result = prime * result + ((devices == null) ? 0 : devices.hashCode());
 		result = prime * result
 				+ ((groupName == null) ? 0 : groupName.hashCode());
 		result = prime * result + ((leadId == null) ? 0 : leadId.hashCode());
@@ -186,7 +186,7 @@ public class ActivateDeviceRequestDataArea {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ActivateDeviceRequestDataArea other = (ActivateDeviceRequestDataArea) obj;
+		ActivateDeviceRequestVerizon other = (ActivateDeviceRequestVerizon) obj;
 		if (accountName == null) {
 			if (other.accountName != null)
 				return false;
@@ -209,7 +209,10 @@ public class ActivateDeviceRequestDataArea {
 			return false;
 		if (!Arrays.equals(customFields, other.customFields))
 			return false;
-		if (!Arrays.equals(devices, other.devices))
+		if (devices == null) {
+			if (other.devices != null)
+				return false;
+		} else if (!devices.equals(other.devices))
 			return false;
 		if (groupName == null) {
 			if (other.groupName != null)
@@ -252,7 +255,7 @@ public class ActivateDeviceRequestDataArea {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("ActivateDeviceRequestDataArea [groupName=");
+		builder.append("ActivateDeviceRequestVerizon [groupName=");
 		builder.append(groupName);
 		builder.append(", accountName=");
 		builder.append(accountName);
@@ -277,10 +280,12 @@ public class ActivateDeviceRequestDataArea {
 		builder.append(", mdnZipCode=");
 		builder.append(mdnZipCode);
 		builder.append(", devices=");
-		builder.append(Arrays.toString(devices));
+		builder.append(devices);
 		builder.append("]");
 		return builder.toString();
 	}
+
+	
 
 	
 

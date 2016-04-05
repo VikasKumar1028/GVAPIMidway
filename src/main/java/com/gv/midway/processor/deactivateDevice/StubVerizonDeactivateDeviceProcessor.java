@@ -42,8 +42,8 @@ public class StubVerizonDeactivateDeviceProcessor implements Processor {
 		deactivateDeviceResponse.setHeader(responseheader);
 		deactivateDeviceResponse.setResponse(response);
 
-		deactivateDeviceResponseDataArea.setRequestId("requestId");
-		deactivateDeviceResponseDataArea.setTrackingNumber("null");
+		//deactivateDeviceResponseDataArea.setRequestId("requestId");
+		deactivateDeviceResponseDataArea.setOrderNumber("null");
 		deactivateDeviceResponse.setDataArea(deactivateDeviceResponseDataArea);
 		exchange.getIn().setBody(deactivateDeviceResponse);
 		log.info("End::StubVerizonDeactivateDeviceProcessor");

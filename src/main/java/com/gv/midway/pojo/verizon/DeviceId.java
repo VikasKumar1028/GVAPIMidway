@@ -1,7 +1,6 @@
-package com.gv.midway.pojo;
+package com.gv.midway.pojo.verizon;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DeviceId {

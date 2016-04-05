@@ -17,8 +17,8 @@ import com.esotericsoftware.kryo.Kryo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.dao.ITransactionalDao;
-import com.gv.midway.pojo.ActivateDeviceId;
-import com.gv.midway.pojo.DeviceId;
+import com.gv.midway.pojo.verizon.DeviceId;
+import com.gv.midway.pojo.activateDevice.request.ActivateDeviceId;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequestDataArea;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
@@ -49,10 +49,10 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		ActivateDeviceRequestDataArea activateDeviceRequestDataArea = (ActivateDeviceRequestDataArea) req.getDataArea();
 
-		ActivateDeviceId[] deviceIds = activateDeviceRequestDataArea.getDeviceId();
+		//ActivateDeviceId[] deviceIds = activateDeviceRequestDataArea.getDeviceId();
 		Kryo kryo = new Kryo();
 
-		for (ActivateDeviceId actualDeviceId : deviceIds) {
+	/*	for (ActivateDeviceId actualDeviceId : deviceIds) {
 			ActivateDeviceId[] payLoadDeviceIds = new ActivateDeviceId[1];
 			ActivateDeviceId payLoadDeviceId = new ActivateDeviceId();
 			payLoadDeviceId.setId(actualDeviceId.getId());
@@ -60,14 +60,14 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			payLoadDeviceIds[0] = payLoadDeviceId;
 			ActivateDeviceRequest copy = kryo.copy(req);
 
-			copy.getDataArea().setDeviceId(payLoadDeviceIds);
+			//copy.getDataArea().setDeviceId(payLoadDeviceIds);
 
 			try {
 
 				ObjectMapper mapper = new ObjectMapper();
 				String msgBody = mapper.writeValueAsString(copy);
 
-				/*
+				
 				 * String midwayTransationID; //Main Thread String
 				 * deviceNumber;//Main Thread String devicePayload;//Main Thread
 				 * String midwayStatus;//Main Thread String carrierName;//Main
@@ -83,7 +83,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				 * callBackDelivered;//CallBack Thread Boolean
 				 * callBackReceived;//CallBack Thread String
 				 * callBackFailureToNetSuitReason;//CallBack Thread
-				 */
+				 
 
 				Transaction transaction = new Transaction();
 
@@ -113,7 +113,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		if (exchange.getProperty(IConstant.SOURCE_NAME).toString().equals("KORE")) {
 
 			exchange.getIn().setBody(list);
-		}
+		}*/
 	}
 //santosh:new method
 	public void populateDeactivateDBPayload(Exchange exchange) {
@@ -129,10 +129,10 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		DeactivateDeviceRequestDataArea deActivateDeviceRequestDataArea = (DeactivateDeviceRequestDataArea) req.getDataArea();
 
-		DeviceId[] deviceIds = deActivateDeviceRequestDataArea.getDeviceId();
+		//DeviceId[] deviceIds = deActivateDeviceRequestDataArea.getDeviceId();
 		Kryo kryo = new Kryo();
 
-		for (DeviceId actualDeviceId : deviceIds) {
+		/*for (DeviceId actualDeviceId : deviceIds) {
 			DeviceId[] payLoadDeviceIds = new DeviceId[1];
 			DeviceId payLoadDeviceId = new DeviceId();
 			payLoadDeviceId.setId(actualDeviceId.getId());
@@ -140,7 +140,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			payLoadDeviceIds[0] = payLoadDeviceId;
 			DeactivateDeviceRequest copy = kryo.copy(req);
 
-			copy.getDataArea().setDeviceId(payLoadDeviceIds);
+			//copy.getDataArea().setDeviceId(payLoadDeviceIds);
 
 			try {
 
@@ -165,7 +165,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			}
 
 		}
-		mongoTemplate.insertAll(list);
+		mongoTemplate.insertAll(list);*/
 		// For Kore We Need Wire Tap and SEDA component So the body should
 		// be set with arraylist of transaction for Verizon we simply add
 		// into database and do not change the exchange body

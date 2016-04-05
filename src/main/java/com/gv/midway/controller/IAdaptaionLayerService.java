@@ -8,8 +8,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
-import com.gv.midway.device.request.pojo.Device;
-import com.gv.midway.device.request.pojo.Devices;
+import com.gv.midway.device.request.pojo.SingleDevice;
+import com.gv.midway.device.request.pojo.BulkDevices;
 import com.gv.midway.device.response.pojo.InsertDeviceResponse;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
@@ -38,13 +38,13 @@ public interface IAdaptaionLayerService {
 	@Produces("application/json")
 	@Consumes("application/json")
 	@ApiOperation(value = "Insert Device Details")
-	InsertDeviceResponse insertDeviceDetails(Device device);
+	InsertDeviceResponse insertDeviceDetails(SingleDevice device);
 
 	@PUT
 	@Path("/cell/update")
 	@Produces("application/json")
 	@ApiOperation(value = "Update Device Details")
-	Object updateDeviceDetails(Device device);
+	Object updateDeviceDetails(SingleDevice device);
 
 	@GET
 	@Path("/cell/info/{id}")
@@ -63,7 +63,7 @@ public interface IAdaptaionLayerService {
 	@Produces("application/json")
 	@Consumes("application/json")
 	@ApiOperation(value = "Insert Device Details in Bulk")
-	Object insertDevicesDetailsInBatch(Devices device);
+	Object insertDevicesDetailsInBatch(BulkDevices device);
 
 	@POST
 	@Path("/device/information")

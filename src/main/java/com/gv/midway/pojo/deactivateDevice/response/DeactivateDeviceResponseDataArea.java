@@ -4,24 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DeactivateDeviceResponseDataArea {
-	private String requestId;
+	
+	private String orderNumber;
 
-	private String trackingNumber;
-
-	public String getRequestId() {
-		return requestId;
+	public String getOrderNumber() {
+		return orderNumber;
 	}
 
-	public void setRequestId(String requestId) {
-		this.requestId = requestId;
-	}
-
-	public String getTrackingNumber() {
-		return trackingNumber;
-	}
-
-	public void setTrackingNumber(String trackingNumber) {
-		this.trackingNumber = trackingNumber;
+	public void setOrderNumber(String orderNumber) {
+		this.orderNumber = orderNumber;
 	}
 
 	@Override
@@ -29,9 +20,7 @@ public class DeactivateDeviceResponseDataArea {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((requestId == null) ? 0 : requestId.hashCode());
-		result = prime * result
-				+ ((trackingNumber == null) ? 0 : trackingNumber.hashCode());
+				+ ((orderNumber == null) ? 0 : orderNumber.hashCode());
 		return result;
 	}
 
@@ -44,23 +33,22 @@ public class DeactivateDeviceResponseDataArea {
 		if (getClass() != obj.getClass())
 			return false;
 		DeactivateDeviceResponseDataArea other = (DeactivateDeviceResponseDataArea) obj;
-		if (requestId == null) {
-			if (other.requestId != null)
+		if (orderNumber == null) {
+			if (other.orderNumber != null)
 				return false;
-		} else if (!requestId.equals(other.requestId))
-			return false;
-		if (trackingNumber == null) {
-			if (other.trackingNumber != null)
-				return false;
-		} else if (!trackingNumber.equals(other.trackingNumber))
+		} else if (!orderNumber.equals(other.orderNumber))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "DeactivateDeviceResponseDataArea [requestId=" + requestId
-				+ ", trackingNumber=" + trackingNumber + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("DeactivateDeviceResponseDataArea [orderNumber=");
+		builder.append(orderNumber);
+		builder.append("]");
+		return builder.toString();
 	}
 
+	
 }

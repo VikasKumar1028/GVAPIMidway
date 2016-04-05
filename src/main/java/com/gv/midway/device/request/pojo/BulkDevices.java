@@ -8,7 +8,7 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Devices extends BaseRequest{
+public class BulkDevices extends BaseRequest{
 
 	@ApiModelProperty(value = "Device Information DataArea")
 	private DevicesDataArea dataArea;

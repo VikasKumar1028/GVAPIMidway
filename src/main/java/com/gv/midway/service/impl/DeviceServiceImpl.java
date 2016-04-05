@@ -5,8 +5,8 @@ import org.apache.camel.Exchange;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.gv.midway.dao.IDeviceDao;
-import com.gv.midway.device.request.pojo.Device;
-import com.gv.midway.device.request.pojo.Devices;
+import com.gv.midway.device.request.pojo.SingleDevice;
+import com.gv.midway.device.request.pojo.BulkDevices;
 import com.gv.midway.device.response.pojo.InsertDeviceResponse;
 import com.gv.midway.service.IDeviceService;
 
@@ -21,7 +21,7 @@ public class DeviceServiceImpl implements IDeviceService {
 
 	public InsertDeviceResponse insertDeviceDetails(Exchange exchange) {
 
-		Device device = (Device) exchange.getIn().getBody();
+		SingleDevice device = (SingleDevice) exchange.getIn().getBody();
 
 		return  iDeviceDao.insertDeviceDetails(device);
 		
@@ -75,7 +75,7 @@ public class DeviceServiceImpl implements IDeviceService {
 
 	public Object insertDevicesDetailsInBatch(Exchange exchange) {
 		// TODO Auto-generated method stub
-		Devices devices = (Devices) exchange.getIn().getBody();
+		BulkDevices devices = (BulkDevices) exchange.getIn().getBody();
 
 		return  iDeviceDao.insertDevicesDetailsInBatch(devices);
 	}

@@ -3,9 +3,9 @@ package com.gv.midway.controller;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.ProducerTemplate;
 
-import com.gv.midway.device.request.pojo.Device;
+import com.gv.midway.device.request.pojo.SingleDevice;
 import com.gv.midway.device.request.pojo.DeviceInformation;
-import com.gv.midway.device.request.pojo.Devices;
+import com.gv.midway.device.request.pojo.BulkDevices;
 import com.gv.midway.device.response.pojo.InsertDeviceResponse;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
@@ -29,7 +29,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 
 	}
 
-	public InsertDeviceResponse insertDeviceDetails(Device device) {
+	public InsertDeviceResponse insertDeviceDetails(SingleDevice device) {
 		// TODO Auto-generated method stub
 
 		System.out.println("device is...." + device.toString());
@@ -43,7 +43,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 		return response;
 	}
 
-	public Object updateDeviceDetails(Device device) {
+	public Object updateDeviceDetails(SingleDevice device) {
 		// TODO Auto-generated method stub
 		System.out.println("device id is...." );
 
@@ -88,7 +88,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 		return response;
 	}
 
-	public Object insertDevicesDetailsInBatch(Devices devices) {
+	public Object insertDevicesDetailsInBatch(BulkDevices devices) {
 		// TODO Auto-generated method stub
 		System.out.println("devices info is...." + devices.toString());
 

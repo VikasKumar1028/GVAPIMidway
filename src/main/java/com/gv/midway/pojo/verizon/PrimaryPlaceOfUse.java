@@ -1,4 +1,4 @@
-package com.gv.midway.pojo.activateDevice.verizon;
+package com.gv.midway.pojo.verizon;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

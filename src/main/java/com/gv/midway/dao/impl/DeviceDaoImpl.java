@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import com.gv.midway.dao.IDeviceDao;
-import com.gv.midway.device.request.pojo.Device;
+import com.gv.midway.device.request.pojo.SingleDevice;
 import com.gv.midway.device.request.pojo.DeviceInformation;
-import com.gv.midway.device.request.pojo.Devices;
+import com.gv.midway.device.request.pojo.BulkDevices;
 import com.gv.midway.device.response.pojo.InsertDeviceResponse;
 
 
@@ -23,7 +23,7 @@ public class DeviceDaoImpl implements IDeviceDao
 	@Autowired
 	MongoTemplate mongoTemplate;
 
-	public InsertDeviceResponse insertDeviceDetails(Device device) {
+	public InsertDeviceResponse insertDeviceDetails(SingleDevice device) {
 
 		// Simple way using template
 		DeviceInformation deviceInformation=null;
@@ -58,7 +58,7 @@ public class DeviceDaoImpl implements IDeviceDao
 
 	}
 
-	public Object updateDeviceDetails(String deviceId, Device device) {
+	public Object updateDeviceDetails(String deviceId, SingleDevice device) {
 		// TODO Auto-generated method stub
 		
 		//ResponseMessage responseMessage= new ResponseMessage();
@@ -158,7 +158,7 @@ public class DeviceDaoImpl implements IDeviceDao
 	}
 
 
-	public Object insertDevicesDetailsInBatch(Devices devices) {
+	public Object insertDevicesDetailsInBatch(BulkDevices devices) {
 		// TODO Auto-generated method stub
 	/*	BatchTask batchTask= new BatchTask(mongoTemplate,"insert" , devices);
 		
@@ -167,7 +167,7 @@ public class DeviceDaoImpl implements IDeviceDao
 		return null;
 	}
 
-	public Object updateDeviceDetails(Device device) {
+	public Object updateDeviceDetails(SingleDevice device) {
 		// TODO Auto-generated method stub
 		return null;
 	}

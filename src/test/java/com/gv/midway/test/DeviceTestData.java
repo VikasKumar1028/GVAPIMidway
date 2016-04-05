@@ -4,8 +4,9 @@ import org.apache.camel.Exchange;
 
 
 
-import com.gv.midway.pojo.ActivateDeviceId;
+
 import com.gv.midway.pojo.Header;
+import com.gv.midway.pojo.activateDevice.request.ActivateDeviceId;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequestDataArea;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
