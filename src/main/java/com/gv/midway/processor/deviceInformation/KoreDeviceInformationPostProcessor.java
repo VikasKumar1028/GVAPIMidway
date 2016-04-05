@@ -12,7 +12,7 @@ import org.springframework.core.env.Environment;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.device.request.pojo.DeviceInformation;
 import com.gv.midway.pojo.Response;
-import com.gv.midway.pojo.ResponseHeader;
+import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.activateDevice.verizon.CustomFields;
 import com.gv.midway.pojo.deviceInformation.kore.KoreDeviceInformationResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
@@ -51,7 +51,7 @@ public class KoreDeviceInformationPostProcessor implements Processor {
 		DeviceInformation deviceInformation = new DeviceInformation();
 		DeviceInformation[] deviceInformationArray = new DeviceInformation[1];
 
-		ResponseHeader responseheader = new ResponseHeader();
+		Header responseheader = new Header();
 
 		Response response = new Response();
 		

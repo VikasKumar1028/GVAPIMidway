@@ -3,14 +3,12 @@ package com.gv.midway.processor;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.springframework.core.env.Environment;
-
 import com.gv.midway.constant.IConstant;
+import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
-import com.gv.midway.pojo.ResponseHeader;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
@@ -31,7 +29,7 @@ public class GenericErrorProcessor implements Processor {
 
 	public void process(Exchange exchange) throws Exception {
 
-		ResponseHeader responseheader = new ResponseHeader();
+		Header responseheader = new Header();
 		Response response = new Response();
 		responseheader.setApplicationName(newEnv
 				.getProperty(IConstant.APPLICATION_NAME));

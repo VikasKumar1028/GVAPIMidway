@@ -11,7 +11,7 @@ import org.springframework.core.env.Environment;
 
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.Response;
-import com.gv.midway.pojo.ResponseHeader;
+import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 
 public class VerizonDeactivateDevicePostProcessor implements Processor {
@@ -38,7 +38,7 @@ public class VerizonDeactivateDevicePostProcessor implements Processor {
 		log.info("Start::VerizonDeactivateDevicePostProcessor");
 		
 		DeactivateDeviceResponse deactivateDeviceResponse = new DeactivateDeviceResponse();
-		ResponseHeader responseheader = new ResponseHeader();
+		Header responseheader = new Header();
 
 		Response response = new Response();
 		

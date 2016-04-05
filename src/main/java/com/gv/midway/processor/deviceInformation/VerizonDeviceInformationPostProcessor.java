@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.device.request.pojo.DeviceInformation;
 import com.gv.midway.pojo.Response;
-import com.gv.midway.pojo.ResponseHeader;
+import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponseDataArea;
 import com.gv.midway.pojo.deviceInformation.verizon.CarrierInformations;
@@ -64,7 +64,7 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 
 		log.info("deviceInformationArray::" + deviceInformationArray.length);
 
-		ResponseHeader responseheader = new ResponseHeader();
+		Header responseheader = new Header();
 
 		Response response = new Response();
 		response.setResponseCode(newEnv.getProperty(IConstant.RESPONSES_CODE));

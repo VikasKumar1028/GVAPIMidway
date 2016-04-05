@@ -11,7 +11,7 @@ import org.springframework.core.env.Environment;
 
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.Response;
-import com.gv.midway.pojo.ResponseHeader;
+import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.processor.deviceInformation.StubKoreDeviceInformationProcessor;
 
@@ -35,7 +35,7 @@ public class KoreDeactivateDevicePostProcessor implements Processor {
 		
 		// TODO Auto-generated method stub
 		DeactivateDeviceResponse deactivateDeviceResponse = new DeactivateDeviceResponse();
-		ResponseHeader responseheader = new ResponseHeader();
+		Header responseheader = new Header();
 
 		Response response = new Response();
 		responseheader.setApplicationName(newEnv.getProperty(IConstant.APPLICATION_NAME));

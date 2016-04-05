@@ -13,7 +13,7 @@ import org.springframework.core.env.Environment;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.exception.VerizonSessionTokenExpirationException;
 import com.gv.midway.pojo.Response;
-import com.gv.midway.pojo.ResponseHeader;
+import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
@@ -51,7 +51,7 @@ public class VerizonGenericExceptionProcessor implements Processor {
 		
 		//System.out.println("exception"+exception.getStatusText());
 		
-		ResponseHeader responseHeader = new ResponseHeader();
+		Header responseHeader = new Header();
 		responseHeader.setApplicationName(newEnv.getProperty(IConstant.APPLICATION_NAME));
 		responseHeader.setRegion(newEnv.getProperty(IConstant.REGION));
 		DateFormat dateFormat = new SimpleDateFormat(newEnv.getProperty(IConstant.DATE_FORMAT));

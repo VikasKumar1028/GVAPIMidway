@@ -11,8 +11,8 @@ import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
 
 import com.gv.midway.constant.IConstant;
+import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
-import com.gv.midway.pojo.ResponseHeader;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
@@ -41,7 +41,7 @@ public class KoreGenericExceptionProcessor implements Processor {
 		log.info("----KoreGenericExceptionProcessor----------"
 				+ exception.getResponseBody());
 
-		ResponseHeader responseHeader = new ResponseHeader();
+		Header responseHeader = new Header();
 		responseHeader.setApplicationName(newEnv
 				.getProperty(IConstant.APPLICATION_NAME));
 		responseHeader.setRegion(newEnv.getProperty(IConstant.REGION));

@@ -79,12 +79,93 @@ public class Header {
 	}
 
 	@Override
-	public String toString() {
-		return "Header [region=" + region + ", timestamp=" + timestamp
-				+ ", organization=" + organization + ", transactionId="
-				+ transactionId + ", sourceName=" + sourceName
-				+ ", applicationName=" + applicationName + ", bsCarrier="
-				+ bsCarrier + "]";
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((applicationName == null) ? 0 : applicationName.hashCode());
+		result = prime * result
+				+ ((bsCarrier == null) ? 0 : bsCarrier.hashCode());
+		result = prime * result
+				+ ((organization == null) ? 0 : organization.hashCode());
+		result = prime * result + ((region == null) ? 0 : region.hashCode());
+		result = prime * result
+				+ ((sourceName == null) ? 0 : sourceName.hashCode());
+		result = prime * result
+				+ ((timestamp == null) ? 0 : timestamp.hashCode());
+		result = prime * result
+				+ ((transactionId == null) ? 0 : transactionId.hashCode());
+		return result;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Header other = (Header) obj;
+		if (applicationName == null) {
+			if (other.applicationName != null)
+				return false;
+		} else if (!applicationName.equals(other.applicationName))
+			return false;
+		if (bsCarrier == null) {
+			if (other.bsCarrier != null)
+				return false;
+		} else if (!bsCarrier.equals(other.bsCarrier))
+			return false;
+		if (organization == null) {
+			if (other.organization != null)
+				return false;
+		} else if (!organization.equals(other.organization))
+			return false;
+		if (region == null) {
+			if (other.region != null)
+				return false;
+		} else if (!region.equals(other.region))
+			return false;
+		if (sourceName == null) {
+			if (other.sourceName != null)
+				return false;
+		} else if (!sourceName.equals(other.sourceName))
+			return false;
+		if (timestamp == null) {
+			if (other.timestamp != null)
+				return false;
+		} else if (!timestamp.equals(other.timestamp))
+			return false;
+		if (transactionId == null) {
+			if (other.transactionId != null)
+				return false;
+		} else if (!transactionId.equals(other.transactionId))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Header [region=");
+		builder.append(region);
+		builder.append(", timestamp=");
+		builder.append(timestamp);
+		builder.append(", organization=");
+		builder.append(organization);
+		builder.append(", transactionId=");
+		builder.append(transactionId);
+		builder.append(", sourceName=");
+		builder.append(sourceName);
+		builder.append(", applicationName=");
+		builder.append(applicationName);
+		builder.append(", bsCarrier=");
+		builder.append(bsCarrier);
+		builder.append("]");
+		return builder.toString();
+	}
+
+	
 
 }

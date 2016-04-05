@@ -1,6 +1,9 @@
 package com.gv.midway.device.response.pojo;
 
-public class InsertDeviceResponse {
+import com.gv.midway.pojo.BaseResponse;
+
+public class InsertDeviceResponse extends BaseResponse{
+	
 	
 	private String id;
 	

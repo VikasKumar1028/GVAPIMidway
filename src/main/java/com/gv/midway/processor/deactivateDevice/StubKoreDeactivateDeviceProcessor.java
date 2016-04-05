@@ -5,7 +5,7 @@ import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 
 import com.gv.midway.pojo.Response;
-import com.gv.midway.pojo.ResponseHeader;
+import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponseDataArea;
 
@@ -23,7 +23,7 @@ public class StubKoreDeactivateDeviceProcessor implements Processor {
 
 		log.info("Start::StubKoreDeactivateDeviceProcessor");
 		DeactivateDeviceResponse deactivateDeviceResponse = new DeactivateDeviceResponse();
-		ResponseHeader responseheader = new ResponseHeader();
+		Header responseheader = new Header();
 		DeactivateDeviceResponseDataArea deactivateDeviceResponseDataArea = new DeactivateDeviceResponseDataArea();
 
 		Response response = new Response();

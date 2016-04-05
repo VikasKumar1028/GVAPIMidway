@@ -6,7 +6,7 @@ import org.apache.log4j.Logger;
 
 import com.gv.midway.device.request.pojo.DeviceInformation;
 import com.gv.midway.pojo.Response;
-import com.gv.midway.pojo.ResponseHeader;
+import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponseDataArea;
 import com.gv.midway.pojo.deviceInformation.verizon.CarrierInformations;
@@ -29,7 +29,7 @@ public class StubKoreDeviceInformationProcessor implements Processor {
 		DeviceInformation deviceInformation = new DeviceInformation();
 		DeviceInformation[] deviceInformationArray = new DeviceInformation[1];
 
-		ResponseHeader responseheader = new ResponseHeader();
+		Header responseheader = new Header();
 
 		Response response = new Response();
 		response.setResponseCode("200");
