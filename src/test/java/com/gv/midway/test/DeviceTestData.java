@@ -13,11 +13,11 @@ import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequestDataArea;
 import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
 import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequestDataArea;
-import com.gv.midway.pojo.DeviceId;
+//import com.gv.midway.pojo.DeviceId;
 import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
 
 public class DeviceTestData extends Header {
-    protected ActivateDeviceRequest expectHeader;
+   /* protected ActivateDeviceRequest expectHeader;
     protected DeviceInformationRequest expectDeviceInfo;
     protected DeactivateDeviceRequest expectDeactiveDevice;
     Exchange exchange;
@@ -39,9 +39,9 @@ public class DeviceTestData extends Header {
     	   
     	   req.setHeader(header);   
     	  
-    	   /* ActivateDeviceRequest request = (ActivateDeviceRequest) exchange
+    	    ActivateDeviceRequest request = (ActivateDeviceRequest) exchange
     				.getIn().getBody(ActivateDeviceRequest.class);
-    	   */
+    	   
     	    
     	     System.out.println("Expected Header----------------" +expectHeader.getHeader()); 
     	     System.out.println("Delivered Header----------------" +req.getHeader()); 
@@ -190,6 +190,6 @@ public class DeviceTestData extends Header {
 					  				
 	}
 
-	
+	*/
 
 }

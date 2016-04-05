@@ -25,7 +25,7 @@ import org.junit.Test;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.gv.midway.pojo.DeviceId;
+//import com.gv.midway.pojo.DeviceId;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceId;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
@@ -36,7 +36,7 @@ import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
 import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequestDataArea;
 
 public class MidwayJunitTest extends Assert {
-	private AbstractApplicationContext applicationContext;
+	/*private AbstractApplicationContext applicationContext;
 	private ProducerTemplate template;
 
 	protected DeviceTestData testData = new DeviceTestData();
@@ -162,6 +162,6 @@ public class MidwayJunitTest extends Assert {
 
 	protected CamelContext getCamelContext() throws Exception {
 		return applicationContext.getBean("camel", CamelContext.class);
-	}
+	}*/
 
 }
