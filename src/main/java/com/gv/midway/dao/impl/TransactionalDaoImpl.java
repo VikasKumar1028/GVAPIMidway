@@ -51,9 +51,17 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		ActivateDevices[] activateDevices = activateDeviceRequestDataArea.getDevices();
 		
+		ActivateDeviceRequest dbPayload= new ActivateDeviceRequest();
+		dbPayload.setHeader(req.getHeader());
+		//ActivateDeviceRequestDataArea dbDataArea= new ActivateDeviceRequestDataArea();
+		//dbPayload.setDataArea(dataArea);
+		
+		
+		
+		
+		
 		Kryo kryo = new Kryo();
-		
-		
+	
 		
 		
 		
@@ -81,19 +89,19 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			//payLoadDevices =(ActivateDevices[])kryo.copy(activateDevices);
 			
 			
-			ActivateDeviceRequest copy = kryo.copy(req);
+			ActivateDeviceRequestDataArea copyDataArea = kryo.copy(req.getDataArea());
 
+			copyDataArea.setDevices(businessPayLoadDevicesArray);
+			dbPayload.setDataArea(copyDataArea);
 			
-		
-			copy.getDataArea().setDevices(businessPayLoadDevicesArray);
 			
-			System.out.println("---------88-------------"+req);
-			System.out.println("---------77------------"+copy);
-
+			//copy.getDataArea().setDevices();
+			
+	
 			try {
 
 				ObjectMapper mapper = new ObjectMapper();
-				String msgBody = mapper.writeValueAsString(copy);
+				String msgBody = mapper.writeValueAsString(dbPayload);
 				
 
 				/*
@@ -140,7 +148,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		// be set with arraylist of transaction for Verizon we simply add
 		// into database and do not change the exchange body
 
-		activateDeviceRequestDataArea.setDevices(activateDevices);
+	//	activateDeviceRequestDataArea.setDevices(activateDevices);
 		
 		if (exchange.getProperty(IConstant.SOURCE_NAME).toString().equals("KORE")) {
 
