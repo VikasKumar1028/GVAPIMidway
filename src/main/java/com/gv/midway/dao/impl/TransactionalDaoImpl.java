@@ -52,6 +52,11 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		ActivateDevices[] activateDevices = activateDeviceRequestDataArea.getDevices();
 		
 		Kryo kryo = new Kryo();
+		
+		
+		
+		
+		
 
 		for (ActivateDevices activateDevice : activateDevices) {
 			
@@ -78,7 +83,12 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			
 			ActivateDeviceRequest copy = kryo.copy(req);
 
+			
+		
 			copy.getDataArea().setDevices(businessPayLoadDevicesArray);
+			
+			System.out.println("---------88-------------"+req);
+			System.out.println("---------77------------"+copy);
 
 			try {
 
@@ -130,6 +140,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		// be set with arraylist of transaction for Verizon we simply add
 		// into database and do not change the exchange body
 
+		activateDeviceRequestDataArea.setDevices(activateDevices);
+		
 		if (exchange.getProperty(IConstant.SOURCE_NAME).toString().equals("KORE")) {
 
 			exchange.getIn().setBody(list);
