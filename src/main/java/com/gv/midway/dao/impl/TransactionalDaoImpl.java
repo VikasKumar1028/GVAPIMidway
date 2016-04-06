@@ -17,10 +17,10 @@ import com.esotericsoftware.kryo.Kryo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.dao.ITransactionalDao;
-import com.gv.midway.pojo.verizon.DeviceId;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceId;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequestDataArea;
+import com.gv.midway.pojo.activateDevice.request.ActivateDevices;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequestDataArea;
 import com.gv.midway.pojo.transaction.Transaction;
@@ -49,25 +49,44 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		ActivateDeviceRequestDataArea activateDeviceRequestDataArea = (ActivateDeviceRequestDataArea) req.getDataArea();
 
-		//ActivateDeviceId[] deviceIds = activateDeviceRequestDataArea.getDeviceId();
+		ActivateDevices[] activateDevices = activateDeviceRequestDataArea.getDevices();
+		
 		Kryo kryo = new Kryo();
 
-	/*	for (ActivateDeviceId actualDeviceId : deviceIds) {
-			ActivateDeviceId[] payLoadDeviceIds = new ActivateDeviceId[1];
-			ActivateDeviceId payLoadDeviceId = new ActivateDeviceId();
-			payLoadDeviceId.setId(actualDeviceId.getId());
-			payLoadDeviceId.setKind(actualDeviceId.getKind());
-			payLoadDeviceIds[0] = payLoadDeviceId;
+		for (ActivateDevices activateDevice : activateDevices) {
+			
+			ActivateDevices[] businessPayLoadDevicesArray = new ActivateDevices[1];
+			ActivateDevices businessPayLoadActivateDevices=new ActivateDevices();
+			ActivateDeviceId[] businessPayloadDeviceId= new ActivateDeviceId[activateDevice.getDeviceIds().length];
+			
+			for( int i=0; i< activateDevice.getDeviceIds().length ;i++){
+				ActivateDeviceId activateDeviceId=activateDevice.getDeviceIds()[i];
+				
+				ActivateDeviceId businessPayLoadActivateDeviceId=new ActivateDeviceId();
+				
+				businessPayLoadActivateDeviceId.seteAPCode(activateDeviceId.geteAPCode());
+				businessPayLoadActivateDeviceId.setId(activateDeviceId.getId());
+				businessPayLoadActivateDeviceId.setKind(activateDeviceId.getKind());
+				
+				businessPayloadDeviceId[i]=businessPayLoadActivateDeviceId;
+				
+			}
+			businessPayLoadActivateDevices.setDeviceIds(businessPayloadDeviceId);
+			businessPayLoadDevicesArray[0]=businessPayLoadActivateDevices;
+			//payLoadDevices =(ActivateDevices[])kryo.copy(activateDevices);
+			
+			
 			ActivateDeviceRequest copy = kryo.copy(req);
 
-			//copy.getDataArea().setDeviceId(payLoadDeviceIds);
+			copy.getDataArea().setDevices(businessPayLoadDevicesArray);
 
 			try {
 
 				ObjectMapper mapper = new ObjectMapper();
 				String msgBody = mapper.writeValueAsString(copy);
-
 				
+
+				/*
 				 * String midwayTransationID; //Main Thread String
 				 * deviceNumber;//Main Thread String devicePayload;//Main Thread
 				 * String midwayStatus;//Main Thread String carrierName;//Main
@@ -83,12 +102,13 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				 * callBackDelivered;//CallBack Thread Boolean
 				 * callBackReceived;//CallBack Thread String
 				 * callBackFailureToNetSuitReason;//CallBack Thread
-				 
+				 */
 
 				Transaction transaction = new Transaction();
 
 				transaction.setMidwayTransationID(midwayTransationID);
-				transaction.setDeviceNumber(actualDeviceId.getId());
+				//TODO if number of devices are more
+			//	transaction.setDeviceNumber(actualDeviceId.getId());
 				transaction.setDevicePayload(msgBody);
 				transaction.setMidwayStatus(IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
 				transaction.setCarrierName(exchange.getProperty(IConstant.BSCARRIER).toString());
@@ -113,7 +133,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		if (exchange.getProperty(IConstant.SOURCE_NAME).toString().equals("KORE")) {
 
 			exchange.getIn().setBody(list);
-		}*/
+		}
 	}
 //santosh:new method
 	public void populateDeactivateDBPayload(Exchange exchange) {

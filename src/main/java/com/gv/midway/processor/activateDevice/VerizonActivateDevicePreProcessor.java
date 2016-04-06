@@ -6,7 +6,12 @@ import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 
 import com.gv.midway.constant.IConstant;
+import com.gv.midway.pojo.activateDevice.request.ActivateDeviceId;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
+import com.gv.midway.pojo.activateDevice.request.ActivateDevices;
+import com.gv.midway.pojo.activateDevice.verizon.request.ActivateDeviceRequestVerizon;
+import com.gv.midway.pojo.verizon.DeviceId;
+import com.gv.midway.pojo.verizon.Devices;
 
 public class VerizonActivateDevicePreProcessor implements Processor {
 
@@ -22,12 +27,64 @@ public class VerizonActivateDevicePreProcessor implements Processor {
 		System.out.println("Session Parameters  VZAuthorization"
 				+ exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN));
 
-		ActivateDeviceRequest req = (ActivateDeviceRequest) exchange.getIn()
+			ActivateDeviceRequestVerizon businessRequest=new  ActivateDeviceRequestVerizon();	
+			ActivateDeviceRequest proxyRequest = (ActivateDeviceRequest) exchange.getIn()
 				.getBody();
+			businessRequest.setAccountName(proxyRequest.getDataArea().getAccountName());
+			businessRequest.setCarrierIpPoolName(proxyRequest.getDataArea().getCarrierIpPoolName());
+			businessRequest.setCarrierName(proxyRequest.getDataArea().getCarrierName());
+			businessRequest.setCostCenterCode(proxyRequest.getDataArea().getCostCenterCode());
+			businessRequest.setCustomFields(proxyRequest.getDataArea().getCustomFields());
+			businessRequest.setGroupName(proxyRequest.getDataArea().getGroupName());
+			businessRequest.setLeadId(proxyRequest.getDataArea().getLeadId());
+			businessRequest.setMdnZipCode(proxyRequest.getDataArea().getMdnZipCode());
+			businessRequest.setPrimaryPlaceOfUse(proxyRequest.getDataArea().getPrimaryPlaceOfUse());
+			businessRequest.setPublicIpRestriction(proxyRequest.getDataArea().getPublicIpRestriction());
+			businessRequest.setServicePlan(proxyRequest.getDataArea().getServicePlan());
+			businessRequest.setSkuNumber(proxyRequest.getDataArea().getSkuNumber());
+		
+	//copy of the device to businessRequest	
+	//As the payload is broken into indivisual devices so only one Device
+			
+	//Need to send the complete payload	with id and Kind as device parameters	
+	ActivateDevices[] proxyDevicesArray=	proxyRequest.getDataArea().getDevices();
+	Devices[] businessDevicesArray= new Devices[proxyDevicesArray.length];
+	
+	for(int j=0; j<proxyDevicesArray.length;j++)
+	{
+	
+	DeviceId[] businessDeviceIdArray = new DeviceId[proxyDevicesArray[j].getDeviceIds().length];
+	ActivateDevices proxyDevices= proxyDevicesArray[j];
+	
+	for ( int i=0; i<proxyDevices.getDeviceIds().length;i++)
+	{
+		ActivateDeviceId proxyDeviceId=proxyDevices.getDeviceIds()[i];
+		
+		DeviceId businessDeviceId=new DeviceId();
+		businessDeviceId.setId(proxyDeviceId.getId());
+		businessDeviceId.setKind(proxyDeviceId.getKind());
+		
+		System.out.println(proxyDeviceId.getId() );
+		
+		businessDeviceIdArray[i]=businessDeviceId;
+		
+		System.out.println(""+i);
+	}
+	System.out.println(""+j); 
+	businessDevicesArray[j].setDeviceIds(businessDeviceIdArray);	
+	}
+	businessRequest.setDevices(businessDevicesArray);
+			
+		
 		net.sf.json.JSONObject obj = new net.sf.json.JSONObject();
-		obj.put("req", req);
+		obj.put("req", businessRequest);
 
-		exchange.getIn().setBody(obj);
+		log.info("-----------------------------------------" +obj.get("req") );
+		
+		exchange.getIn().setBody(obj.get("req"));
+		
+		
+		
 		Message message = exchange.getIn();
 
 		message.setHeader("VZ-M2M-Token",

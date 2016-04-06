@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.BaseRequest;
 import com.gv.midway.pojo.audit.Audit;
+import com.gv.midway.utility.CommonUtil;
 
 public class AuditLogRequestEventNotifer extends EventNotifierSupport {
 
@@ -81,6 +82,11 @@ public class AuditLogRequestEventNotifer extends EventNotifierSupport {
 				audit.setTo(exchange.getFromEndpoint().toString());
 				audit.setTimeStamp(localTime);
 				audit.setAuditTransationID(TransactionId);
+				
+				exchange.setProperty(IConstant.GV_TRANSACTION_ID, baseRequest.getHeader().getTransactionId());
+				exchange.setProperty(IConstant.GV_HOSTNAME,CommonUtil.getIpAddress());
+				
+				
 				audit.setGvTransationId(exchange.getProperty(IConstant.GV_TRANSACTION_ID).toString());
 				audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME).toString());
 				// audit.setStatus(exchange.getProperty(name));

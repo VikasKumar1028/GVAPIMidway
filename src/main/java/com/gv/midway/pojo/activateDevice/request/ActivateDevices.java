@@ -4,30 +4,21 @@ import java.util.Arrays;
 
 public class ActivateDevices {
 	
-	private ActivateDeviceId[] activateDeviceIds;
+	private ActivateDeviceId[] deviceIds;
 
-	public ActivateDeviceId[] getActivateDeviceIds() {
-		return activateDeviceIds;
+	public ActivateDeviceId[] getDeviceIds() {
+		return deviceIds;
 	}
 
-	public void setActivateDeviceIds(ActivateDeviceId[] activateDeviceIds) {
-		this.activateDeviceIds = activateDeviceIds;
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("ActivateDeviceIds [activateDeviceIds=");
-		builder.append(Arrays.toString(activateDeviceIds));
-		builder.append("]");
-		return builder.toString();
+	public void setDeviceIds(ActivateDeviceId[] deviceIds) {
+		this.deviceIds = deviceIds;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Arrays.hashCode(activateDeviceIds);
+		result = prime * result + Arrays.hashCode(deviceIds);
 		return result;
 	}
 
@@ -40,10 +31,15 @@ public class ActivateDevices {
 		if (getClass() != obj.getClass())
 			return false;
 		ActivateDevices other = (ActivateDevices) obj;
-		if (!Arrays.equals(activateDeviceIds, other.activateDeviceIds))
+		if (!Arrays.equals(deviceIds, other.deviceIds))
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "ActivateDevices [deviceIds=" + Arrays.toString(deviceIds) + "]";
+	}
+
 	
- 
 }
