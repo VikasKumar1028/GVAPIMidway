@@ -21,8 +21,10 @@ import com.gv.midway.pojo.activateDevice.request.ActivateDeviceId;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequestDataArea;
 import com.gv.midway.pojo.activateDevice.request.ActivateDevices;
+import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceId;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequestDataArea;
+import com.gv.midway.pojo.deactivateDevice.request.DeactivateDevices;
 import com.gv.midway.pojo.transaction.Transaction;
 import com.gv.midway.utility.CommonUtil;
 import com.mongodb.WriteResult;
@@ -55,17 +57,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		dbPayload.setHeader(req.getHeader());
 		//ActivateDeviceRequestDataArea dbDataArea= new ActivateDeviceRequestDataArea();
 		//dbPayload.setDataArea(dataArea);
-		
-		
-		
-		
-		
 		Kryo kryo = new Kryo();
-	
-		
-		
-		
-
 		for (ActivateDevices activateDevice : activateDevices) {
 			
 			ActivateDevices[] businessPayLoadDevicesArray = new ActivateDevices[1];
@@ -88,12 +80,10 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			businessPayLoadDevicesArray[0]=businessPayLoadActivateDevices;
 			//payLoadDevices =(ActivateDevices[])kryo.copy(activateDevices);
 			
-			
 			ActivateDeviceRequestDataArea copyDataArea = kryo.copy(req.getDataArea());
 
 			copyDataArea.setDevices(businessPayLoadDevicesArray);
 			dbPayload.setDataArea(copyDataArea);
-			
 			
 			//copy.getDataArea().setDevices();
 			
@@ -102,31 +92,12 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 				ObjectMapper mapper = new ObjectMapper();
 				String msgBody = mapper.writeValueAsString(dbPayload);
-				
-
-				/*
-				 * String midwayTransationID; //Main Thread String
-				 * deviceNumber;//Main Thread String devicePayload;//Main Thread
-				 * String midwayStatus;//Main Thread String carrierName;//Main
-				 * Thread String TimeStampReceived;//Main Thread String
-				 * auditTransationID;//Main Thread String requestType;//Main
-				 * Thread
-				 * 
-				 * String carrierTransationID;//Call Back Thread String
-				 * carrierStatus;//Call Back Thread String
-				 * LastTimeStampUpdated;//CallBack Thread String
-				 * carrierErrorDecription;//CallBack Thread String
-				 * callBackPayload;//CallBack Thread Boolean
-				 * callBackDelivered;//CallBack Thread Boolean
-				 * callBackReceived;//CallBack Thread String
-				 * callBackFailureToNetSuitReason;//CallBack Thread
-				 */
 
 				Transaction transaction = new Transaction();
 
 				transaction.setMidwayTransationID(midwayTransationID);
 				//TODO if number of devices are more
-			//	transaction.setDeviceNumber(actualDeviceId.getId());
+				transaction.setDeviceNumber(businessPayloadDeviceId.toString());
 				transaction.setDevicePayload(msgBody);
 				transaction.setMidwayStatus(IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
 				transaction.setCarrierName(exchange.getProperty(IConstant.BSCARRIER).toString());
@@ -137,9 +108,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				list.add(transaction);
 
 			} catch (Exception ex) {
-				//santosh:logging
 				log.error("Inside populateActivateDBPayload");
-
 			}
 
 		}
@@ -166,30 +135,43 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		String currentDataTime = CommonUtil.getCurrentTimeStamp();
 
 		DeactivateDeviceRequest req = (DeactivateDeviceRequest) exchange.getIn().getBody();
-
 		DeactivateDeviceRequestDataArea deActivateDeviceRequestDataArea = (DeactivateDeviceRequestDataArea) req.getDataArea();
-
-		//DeviceId[] deviceIds = deActivateDeviceRequestDataArea.getDeviceId();
+		DeactivateDevices[] deactivateDevices = deActivateDeviceRequestDataArea.getDevices();
+		DeactivateDeviceRequest dbPayload= new DeactivateDeviceRequest();
+		dbPayload.setHeader(req.getHeader());
 		Kryo kryo = new Kryo();
 
-		/*for (DeviceId actualDeviceId : deviceIds) {
-			DeviceId[] payLoadDeviceIds = new DeviceId[1];
-			DeviceId payLoadDeviceId = new DeviceId();
-			payLoadDeviceId.setId(actualDeviceId.getId());
-			payLoadDeviceId.setKind(actualDeviceId.getKind());
-			payLoadDeviceIds[0] = payLoadDeviceId;
-			DeactivateDeviceRequest copy = kryo.copy(req);
+		for (DeactivateDevices deactivateDevice : deactivateDevices) {
+			DeactivateDevices[] businessPayloadDeviceArray = new DeactivateDevices[1];
+			DeactivateDevices businessPayLoadDeactivateDevices = new DeactivateDevices();
+			DeactivateDeviceId[] businessPayloadDeviceId = new DeactivateDeviceId[deactivateDevice.getDeviceIds().length];
+			
+			for(int i=0; i<deactivateDevice.getDeviceIds().length; i++){
+				DeactivateDeviceId deactivateDeviceId = deactivateDevice.getDeviceIds()[i];
+				DeactivateDeviceId businesspayLoadDeactivateDeviceId = new DeactivateDeviceId();
+				businesspayLoadDeactivateDeviceId.setFlagScrap(deactivateDeviceId.getFlagScrap());
+				businesspayLoadDeactivateDeviceId.setId(deactivateDeviceId.getId());
+				businesspayLoadDeactivateDeviceId.setKind(deactivateDeviceId.getKind());
+				businessPayloadDeviceId[i] = businesspayLoadDeactivateDeviceId;
+			}
 
-			//copy.getDataArea().setDeviceId(payLoadDeviceIds);
+			businessPayLoadDeactivateDevices.setDeviceIds(businessPayloadDeviceId);
+			businessPayloadDeviceArray[0]=businessPayLoadDeactivateDevices;
+			//payLoadDevices =(ActivateDevices[])kryo.copy(activateDevices);
+			
+			DeactivateDeviceRequestDataArea copyDataArea = kryo.copy(req.getDataArea());
 
+			copyDataArea.setDevices(businessPayloadDeviceArray);
+			dbPayload.setDataArea(copyDataArea);
+			
 			try {
 
 				ObjectMapper mapper = new ObjectMapper();
-				String msgBody = mapper.writeValueAsString(copy);
+				String msgBody = mapper.writeValueAsString(dbPayload);
 
 				Transaction transaction = new Transaction();
 				transaction.setMidwayTransationID(midwayTransationID);
-				transaction.setDeviceNumber(actualDeviceId.getId());
+				transaction.setDeviceNumber(businessPayloadDeviceId.toString());
 				transaction.setDevicePayload(msgBody);
 				transaction.setMidwayStatus(IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
 				transaction.setCarrierName(exchange.getProperty(IConstant.BSCARRIER).toString());
@@ -205,7 +187,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			}
 
 		}
-		mongoTemplate.insertAll(list);*/
+		mongoTemplate.insertAll(list);
 		// For Kore We Need Wire Tap and SEDA component So the body should
 		// be set with arraylist of transaction for Verizon we simply add
 		// into database and do not change the exchange body
