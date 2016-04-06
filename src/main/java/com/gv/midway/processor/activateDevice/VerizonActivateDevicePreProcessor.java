@@ -50,11 +50,14 @@ public class VerizonActivateDevicePreProcessor implements Processor {
 	ActivateDevices[] proxyDevicesArray=	proxyRequest.getDataArea().getDevices();
 	Devices[] businessDevicesArray= new Devices[proxyDevicesArray.length];
 	
+	
 	for(int j=0; j<proxyDevicesArray.length;j++)
 	{
 	
 	DeviceId[] businessDeviceIdArray = new DeviceId[proxyDevicesArray[j].getDeviceIds().length];
 	ActivateDevices proxyDevices= proxyDevicesArray[j];
+	Devices businessDevice= new Devices();
+	
 	
 	for ( int i=0; i<proxyDevices.getDeviceIds().length;i++)
 	{
@@ -68,9 +71,10 @@ public class VerizonActivateDevicePreProcessor implements Processor {
 		
 		businessDeviceIdArray[i]=businessDeviceId;
 		
-		System.out.println(""+i);
+	
 	}
-	System.out.println(""+j); 
+	businessDevicesArray[j]=businessDevice;
+	
 	businessDevicesArray[j].setDeviceIds(businessDeviceIdArray);	
 	}
 	businessRequest.setDevices(businessDevicesArray);
