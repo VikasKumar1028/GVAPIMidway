@@ -65,7 +65,7 @@ public class VerizonDeactivateDevicePostProcessor implements Processor {
 
 		} else {
 
-			response.setResponseCode("200");
+			response.setResponseCode("400");
 			response.setResponseStatus("errorMessage");
 			response.setResponseDescription(exchange.getIn().getBody().toString());
 		}

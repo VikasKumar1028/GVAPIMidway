@@ -173,7 +173,9 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 				Transaction transaction = new Transaction();
 				transaction.setMidwayTransationID(midwayTransationID);
-				transaction.setDeviceNumber(businessPayloadDeviceId.toString());
+				ObjectMapper obj =new ObjectMapper();
+				String strDeviceNumber=obj.writeValueAsString(businessPayloadDeviceId);				
+				transaction.setDeviceNumber(strDeviceNumber);
 				transaction.setDevicePayload(msgBody);
 				transaction.setMidwayStatus(IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
 				transaction.setCarrierName(exchange.getProperty(IConstant.BSCARRIER).toString());
@@ -203,8 +205,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 	public void populateVerizonTransactionalResponse(Exchange exchange) {
 
-		
-		System.out.println("****************populateVerizonTransactionalResponse***********************************");
 		Query searchUserQuery = new Query(Criteria.where("midwayTransationID").is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)));
 
 		/*

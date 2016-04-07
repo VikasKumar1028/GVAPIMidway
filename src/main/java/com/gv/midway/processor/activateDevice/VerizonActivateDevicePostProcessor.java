@@ -59,17 +59,15 @@ public class VerizonActivateDevicePostProcessor implements Processor {
 					VerizonResponse.class);*/
 			response.setResponseCode(newEnv
 					.getProperty(IConstant.RESPONSES_CODE));
-			response.setResponseStatus(newEnv
-					.getProperty(IConstant.RESPONSE_STATUS_SUCCESS));
+			response.setResponseStatus("Pending");
 			response.setResponseDescription(exchange.getIn().getBody().toString());
 
 		} else {
 			
-			response.setResponseCode("200");
+			response.setResponseCode("400");
 			response.setResponseStatus("errorMessage");
 			response.setResponseDescription(exchange.getIn().getBody().toString());
 		}
-
 		
 		responseheader.setApplicationName(newEnv
 				.getProperty(IConstant.APPLICATION_NAME));
