@@ -8,6 +8,7 @@ import org.springframework.core.env.Environment;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
+import com.gv.midway.pojo.deactivateDevice.kore.request.DeactivateDeviceRequestKore;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
 import com.gv.midway.pojo.transaction.Transaction;
 
@@ -41,16 +42,24 @@ public class KoreDeactivateDevicePreProcessor implements Processor {
 //		obj.put("flagScrap", flagScravalue);
 		
 		ObjectMapper mapper = new ObjectMapper();
-		
 		DeactivateDeviceRequest deactivateDeviceRequest=mapper.readValue(transaction.getDevicePayload(),DeactivateDeviceRequest.class);
 		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,transaction.getDeviceNumber());
+		
+		
+		String deviceId = deactivateDeviceRequest.getDataArea().getDevices()[0].getDeviceIds()[0].getId();
+		boolean flagScrap = deactivateDeviceRequest.getDataArea().getDevices()[0].getDeviceIds()[0].getFlagScrap();
+
+		DeactivateDeviceRequestKore deactivationDeviceRequestKore = new DeactivateDeviceRequestKore();
+		deactivationDeviceRequestKore.setDeviceNumber(deviceId);
+		deactivationDeviceRequestKore.setFlagScrap(flagScrap);
+		
 		
 		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.HTTP_METHOD, "POST");
 		message.setHeader("Authorization", newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
 		message.setHeader(Exchange.HTTP_PATH, "/json/deactivateDevice");
-		message.setBody(deactivateDeviceRequest);
+		message.setBody(deactivationDeviceRequestKore);
 
 		log.info("End:KoreDeactivateDevicePreProcessor");
 	}

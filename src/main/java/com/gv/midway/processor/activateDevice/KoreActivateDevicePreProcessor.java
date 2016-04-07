@@ -8,14 +8,13 @@ import org.springframework.core.env.Environment;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
+import com.gv.midway.pojo.activateDevice.kore.request.ActivateDeviceRequestKore;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
-import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
 import com.gv.midway.pojo.transaction.Transaction;
 
 public class KoreActivateDevicePreProcessor implements Processor {
 
-	Logger log = Logger.getLogger(KoreActivateDevicePreProcessor.class
-			.getName());
+	Logger log = Logger.getLogger(KoreActivateDevicePreProcessor.class.getName());
 
 	Environment newEnv;
 
@@ -27,84 +26,83 @@ public class KoreActivateDevicePreProcessor implements Processor {
 		super();
 		this.newEnv = env;
 	}
-	
-	
+
 	public void process(Exchange exchange) throws Exception {
-		System.out.println("*************Testing**************************************"+ exchange.getIn().getBody());
-		
-		
-		log.info("Start:KoreDeactivateDevicePreProcessor");
+		System.out.println("*************Testing**************************************" + exchange.getIn().getBody());
+
+		log.info("Start:KoreActivateDevicePreProcessor");
 		Message message = exchange.getIn();
 
-		Transaction transaction= exchange.getIn().getBody(Transaction.class);
-		
-//exchange		transaction.getDeviceNumber()
-
-		//santosh:cross check ObjectMapper with ur code
 		ObjectMapper mapper = new ObjectMapper();
-	
-		ActivateDeviceRequest activateDeviceRequest=mapper.readValue(transaction.getDevicePayload(),ActivateDeviceRequest.class);
-	
-		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,transaction.getDeviceNumber());
-	
-		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
-		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
-		message.setHeader(Exchange.HTTP_METHOD, "POST");
-		message.setHeader("Authorization",
-				newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
-		message.setHeader(Exchange.HTTP_PATH, "/json/activateDevice");
-
-		message.setBody(activateDeviceRequest);
-		
-		//santosh:logging
-		
-		log.info("End:KoreDeactivateDevicePreProcessor");
-	}
-
-	/*public void process(Exchange exchange) throws Exception {
-
-		log.info("Start:KoreActivateDevicePreProcessor.java");
-		
-		
-		System.out.println("**********************************************************************");
-
-		ActivateDeviceRequest activateDeviceRequest = exchange.getIn().getBody(
-				ActivateDeviceRequest.class);
-		System.out.println("activateDeviceRequest"
-				+ activateDeviceRequest.toString());
-
 		Transaction transaction = exchange.getIn().getBody(Transaction.class);
 
-		ObjectMapper mapper = new ObjectMapper();
+		ActivateDeviceRequest activateDeviceRequest = mapper.readValue(transaction.getDevicePayload(), ActivateDeviceRequest.class);
 
-		ActivateDeviceRequest activateDeviceRequest = mapper.readValue(
-				transaction.getPayload(), ActivateDeviceRequest.class);
+		String deviceId = activateDeviceRequest.getDataArea().getDevices()[0].getDeviceIds()[0].getId();
+		String eAPCode = activateDeviceRequest.getDataArea().getDevices()[0].getDeviceIds()[0].geteAPCode();
 
-		//activateDeviceRequest.getDataArea().getDeviceId();
-		
-		 * String deviceIds =
-		 * activateDeviceRequest.getDataArea().getDeviceId()[0].getId();
-		 * //String deviceIds ="89148000000800139708"; String eAPCode
-		 * =activateDeviceRequest.getDataArea().geteAPCode();
-		 * 
-		 * net.sf.json.JSONObject obj = new net.sf.json.JSONObject();
-		 * obj.put("deviceNumber", deviceIds);
-		 
-		// obj.put("EAPCode", eAPCode);
+		ActivateDeviceRequestKore acticationDeviceRequestKore = new ActivateDeviceRequestKore();
+		acticationDeviceRequestKore.setDeviceNumber(deviceId);
+		acticationDeviceRequestKore.setEapCode(eAPCode);
 
-		Message message = exchange.getIn();
-
+		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER, transaction.getDeviceNumber());
 		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.HTTP_METHOD, "POST");
-		message.setHeader("Authorization",
-				newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
+		message.setHeader("Authorization", newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
 		message.setHeader(Exchange.HTTP_PATH, "/json/activateDevice");
-		message.setBody(activateDeviceRequest);
 
-		log.info("End:KoreActivateDevicePreProcessor.java");
-		
+		message.setBody(acticationDeviceRequestKore);
 
+		log.info("End:KoreActivateDevicePreProcessor");
 	}
-*/
+
+	/*
+	 * public void process(Exchange exchange) throws Exception {
+	 * 
+	 * log.info("Start:KoreActivateDevicePreProcessor.java");
+	 * 
+	 * 
+	 * System.out.println(
+	 * "**********************************************************************"
+	 * );
+	 * 
+	 * ActivateDeviceRequest activateDeviceRequest = exchange.getIn().getBody(
+	 * ActivateDeviceRequest.class); System.out.println("activateDeviceRequest"
+	 * + activateDeviceRequest.toString());
+	 * 
+	 * Transaction transaction = exchange.getIn().getBody(Transaction.class);
+	 * 
+	 * ObjectMapper mapper = new ObjectMapper();
+	 * 
+	 * ActivateDeviceRequest activateDeviceRequest = mapper.readValue(
+	 * transaction.getPayload(), ActivateDeviceRequest.class);
+	 * 
+	 * //activateDeviceRequest.getDataArea().getDeviceId();
+	 * 
+	 * String deviceIds =
+	 * activateDeviceRequest.getDataArea().getDeviceId()[0].getId(); //String
+	 * deviceIds ="89148000000800139708"; String eAPCode
+	 * =activateDeviceRequest.getDataArea().geteAPCode();
+	 * 
+	 * net.sf.json.JSONObject obj = new net.sf.json.JSONObject();
+	 * obj.put("deviceNumber", deviceIds);
+	 * 
+	 * // obj.put("EAPCode", eAPCode);
+	 * 
+	 * Message message = exchange.getIn();
+	 * 
+	 * message.setHeader(Exchange.CONTENT_TYPE, "application/json");
+	 * message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
+	 * message.setHeader(Exchange.HTTP_METHOD, "POST");
+	 * message.setHeader("Authorization",
+	 * newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
+	 * message.setHeader(Exchange.HTTP_PATH, "/json/activateDevice");
+	 * message.setBody(activateDeviceRequest);
+	 * 
+	 * log.info("End:KoreActivateDevicePreProcessor.java");
+	 * 
+	 * 
+	 * }
+	 */
 }
