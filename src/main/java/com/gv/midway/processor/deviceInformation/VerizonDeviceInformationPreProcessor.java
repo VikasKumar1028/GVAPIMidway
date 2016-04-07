@@ -7,7 +7,7 @@ import org.apache.log4j.Logger;
 
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
-import com.gv.midway.pojo.deviceInformation.verizon.VerizonResponse;
+import com.gv.midway.pojo.deviceInformation.verizon.response.DeviceInformationResponseVerizon;
 import com.gv.midway.pojo.session.SessionBean;
 
 public class VerizonDeviceInformationPreProcessor implements Processor {

@@ -1,17 +1,24 @@
-package com.gv.midway.pojo.deviceInformation.verizon;
+package com.gv.midway.pojo.deviceInformation.verizon.response;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.wordnik.swagger.annotations.ApiModelProperty;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CustomFields {
-
-	@ApiModelProperty(value = "The value of the custom field. The value is not case-sensitive, but other than that it must match exactly with the value set for a device. Wildcards and partial matches are not supported.")
-	private String value;
+public class ExtendedAttributes {
 	
-	@ApiModelProperty(value = "The name of the custom field. Valid names are CustomField1, CustomField2, CustomField3, CustomField4, and CustomField5.")
-	private String key;
+	public ExtendedAttributes(String key, String value) {
+		//super();
+		this.key = key;
+		this.value = value;
+	}
 
+	
+	public ExtendedAttributes() {
+
+	}
+
+	@ApiModelProperty(value = "Key for the device as custom field")
+	private String key;
 	public String getValue() {
 		return value;
 	}
@@ -20,6 +27,9 @@ public class CustomFields {
 		this.value = value;
 	}
 
+	@ApiModelProperty(value = "Value for the device as custom field")
+	private String value;
+
 	public String getKey() {
 		return key;
 	}
@@ -27,6 +37,7 @@ public class CustomFields {
 	public void setKey(String key) {
 		this.key = key;
 	}
+
 
 	@Override
 	public int hashCode() {
@@ -37,6 +48,7 @@ public class CustomFields {
 		return result;
 	}
 
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -45,7 +57,7 @@ public class CustomFields {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		CustomFields other = (CustomFields) obj;
+		ExtendedAttributes other = (ExtendedAttributes) obj;
 		if (key == null) {
 			if (other.key != null)
 				return false;
@@ -59,17 +71,18 @@ public class CustomFields {
 		return true;
 	}
 
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("CustomFields [value=");
-		builder.append(value);
-		builder.append(", key=");
+		builder.append("ExtendedAttributes [key=");
 		builder.append(key);
+		builder.append(", value=");
+		builder.append(value);
 		builder.append("]");
 		return builder.toString();
 	}
 
-
+	
 
 }

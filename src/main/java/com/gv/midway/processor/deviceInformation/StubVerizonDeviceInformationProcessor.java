@@ -4,15 +4,15 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 
-import com.gv.midway.device.request.pojo.DeviceInformation;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.Header;
+import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponseDataArea;
-import com.gv.midway.pojo.deviceInformation.verizon.CarrierInformations;
-import com.gv.midway.pojo.deviceInformation.verizon.CustomFields;
-import com.gv.midway.pojo.deviceInformation.verizon.DeviceIds;
-import com.gv.midway.pojo.deviceInformation.verizon.ExtendedAttributes;
+import com.gv.midway.pojo.verizon.CustomFields;
+import com.gv.midway.pojo.verizon.DeviceId;
+import com.gv.midway.pojo.deviceInformation.verizon.response.CarrierInformations;
+import com.gv.midway.pojo.deviceInformation.verizon.response.ExtendedAttributes;
 
 public class StubVerizonDeviceInformationProcessor implements Processor {
 
@@ -27,7 +27,7 @@ public class StubVerizonDeviceInformationProcessor implements Processor {
 		DeviceInformationResponseDataArea deviceInformationResponseDataArea = new DeviceInformationResponseDataArea();
 
 		DeviceInformation deviceInformation = new DeviceInformation();
-		DeviceInformation[] deviceInformationArray = new DeviceInformation[1];
+		//DeviceInformation[] deviceInformationArray = new DeviceInformation[1];
 
 		Header responseheader = new Header();
 
@@ -53,7 +53,7 @@ public class StubVerizonDeviceInformationProcessor implements Processor {
 		deviceInformation.setMidwayMasterDeviceId("MMD001");
 		deviceInformation.setAccountName("TestAccount-1");
 		deviceInformation.setBillingCycleEndDate("2015-10-13T20:00:00Z");
-		deviceInformation.setConnected("false");
+		deviceInformation.setConnected(false);
 		deviceInformation.setCreatedAt("2014-09-10T14:32:09Z");
 		deviceInformation.setIpAddress("0.0.0.0");
 		//deviceInformation.setStaticIP("null");
@@ -65,16 +65,16 @@ public class StubVerizonDeviceInformationProcessor implements Processor {
 		deviceInformation.setFutureDataPlan("null");
 		deviceInformation.setFutureSMSPlan("null");
 
-		deviceInformation.setDailyDataThreshold("null");
+		/*deviceInformation.setDailyDataThreshold("null");
 		deviceInformation.setDailySMSThreshold("null");
 		deviceInformation.setMonthlyDataThreshold("null");
-		deviceInformation.setMonthlySMSThreshold("null");
+		deviceInformation.setMonthlySMSThreshold("null");*/
 
 		CarrierInformations carrierInformations = new CarrierInformations();
 		carrierInformations.setCarrierName("Verizon Wireless");
-		carrierInformations.setCurrentDataPlan("null");
+		//carrierInformations.setCurrentDataPlan("null");
 		carrierInformations.setState("null");
-		carrierInformations.setStatus("Active");
+		//carrierInformations.setStatus("Active");
 		carrierInformations.setServicePlan("FakeServicePlan-1");
 		//deviceInformation.setCarrierInformations(carrierInformations);
 
@@ -86,9 +86,9 @@ public class StubVerizonDeviceInformationProcessor implements Processor {
 		 * deviceInformation.setDeviceIds(deviceIds);
 		 */
 
-		DeviceIds deviceIds = new DeviceIds();
-		DeviceIds deviceIds1 = new DeviceIds();
-		DeviceIds deviceIds2 = new DeviceIds();
+		DeviceId deviceIds = new DeviceId();
+		DeviceId deviceIds1 = new DeviceId();
+		DeviceId deviceIds2 = new DeviceId();
 		deviceIds.setId("2827264285");
 		//deviceIds.setImsiOrMIN("null");
 		deviceIds.setKind("mdn");
@@ -104,7 +104,7 @@ public class StubVerizonDeviceInformationProcessor implements Processor {
 		deviceIds2.setKind("min");
 		//deviceIds2.setMsisdnOrMDN("null");
 
-		DeviceIds[] deviceIdsArray = { deviceIds, deviceIds1, deviceIds2 };
+		DeviceId[] deviceIdsArray = { deviceIds, deviceIds1, deviceIds2 };
 		deviceInformation.setDeviceIds(deviceIdsArray);
 
 		ExtendedAttributes[] extendedAttributes = new ExtendedAttributes[4];
@@ -178,8 +178,8 @@ public class StubVerizonDeviceInformationProcessor implements Processor {
 
 		//deviceInformation.setPreviousAddress("null");
 
-		deviceInformationArray[0] = deviceInformation;
-		deviceInformationResponseDataArea.setDevices(deviceInformationArray);
+		//deviceInformationArray[0] = deviceInformation;
+		deviceInformationResponseDataArea.setDevices(deviceInformation);
 
 		deviceInformationResponse
 				.setDataArea(deviceInformationResponseDataArea);

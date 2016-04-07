@@ -2,14 +2,16 @@ package com.gv.midway.dao.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
+
 import com.gv.midway.dao.IDeviceDao;
-import com.gv.midway.device.request.pojo.SingleDevice;
-import com.gv.midway.device.request.pojo.DeviceInformation;
-import com.gv.midway.device.request.pojo.BulkDevices;
-import com.gv.midway.device.response.pojo.InsertDeviceResponse;
+import com.gv.midway.pojo.device.request.BulkDevices;
+import com.gv.midway.pojo.device.request.SingleDevice;
+import com.gv.midway.pojo.device.response.InsertDeviceResponse;
+import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 
 
 

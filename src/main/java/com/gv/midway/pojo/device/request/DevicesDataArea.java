@@ -1,5 +1,6 @@
-package com.gv.midway.device.request.pojo;
+package com.gv.midway.pojo.device.request;
 
+import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 public class DevicesDataArea {

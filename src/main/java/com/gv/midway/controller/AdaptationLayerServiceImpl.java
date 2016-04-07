@@ -3,15 +3,15 @@ package com.gv.midway.controller;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.ProducerTemplate;
 
-import com.gv.midway.device.request.pojo.SingleDevice;
-import com.gv.midway.device.request.pojo.DeviceInformation;
-import com.gv.midway.device.request.pojo.BulkDevices;
-import com.gv.midway.device.response.pojo.InsertDeviceResponse;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
+import com.gv.midway.pojo.device.request.BulkDevices;
+import com.gv.midway.pojo.device.request.SingleDevice;
+import com.gv.midway.pojo.device.response.InsertDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
+import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.verizon.generic.callback.VerizonActivateCallBackRequest;
 

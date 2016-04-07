@@ -1,8 +1,8 @@
 package com.gv.midway.dao;
 
-import com.gv.midway.device.request.pojo.SingleDevice;
-import com.gv.midway.device.request.pojo.BulkDevices;
-import com.gv.midway.device.response.pojo.InsertDeviceResponse;
+import com.gv.midway.pojo.device.request.BulkDevices;
+import com.gv.midway.pojo.device.request.SingleDevice;
+import com.gv.midway.pojo.device.response.InsertDeviceResponse;
 
 
 	

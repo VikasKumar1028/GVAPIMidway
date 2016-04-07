@@ -10,11 +10,11 @@ import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
 
 import com.gv.midway.constant.IConstant;
-import com.gv.midway.device.request.pojo.DeviceInformation;
 import com.gv.midway.pojo.verizon.CustomFields;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.Header;
-import com.gv.midway.pojo.deviceInformation.kore.KoreDeviceInformationResponse;
+import com.gv.midway.pojo.deviceInformation.kore.response.DeviceInformationResponseKore;
+import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponseDataArea;
 
@@ -38,8 +38,8 @@ public class KoreDeviceInformationPostProcessor implements Processor {
 	public void process(Exchange exchange) throws Exception {
 		
 		log.info("Start:KoreDeviceInformationPostProcessor");
-		KoreDeviceInformationResponse koreDeviceInformationResponse = (KoreDeviceInformationResponse) exchange
-				.getIn().getBody(KoreDeviceInformationResponse.class);
+		DeviceInformationResponseKore koreDeviceInformationResponse = (DeviceInformationResponseKore) exchange
+				.getIn().getBody(DeviceInformationResponseKore.class);
 		
 		log.info("----exchange_Body- Post Processor-===++++++++++++---------"
 				+ koreDeviceInformationResponse.toString());
@@ -49,7 +49,7 @@ public class KoreDeviceInformationPostProcessor implements Processor {
 		DeviceInformationResponseDataArea deviceInformationResponseDataArea = new DeviceInformationResponseDataArea();
 
 		DeviceInformation deviceInformation = new DeviceInformation();
-		DeviceInformation[] deviceInformationArray = new DeviceInformation[1];
+		//DeviceInformation deviceInformationArray = new DeviceInformation();
 
 		Header responseheader = new Header();
 
@@ -177,8 +177,8 @@ public class KoreDeviceInformationPostProcessor implements Processor {
 		deviceInformation.setCustomField6(koreDeviceInformationResponse.getD()
 				.getCustomField6());*/
 
-		deviceInformationArray[0] = deviceInformation;
-		deviceInformationResponseDataArea.setDevices(deviceInformationArray);
+		//deviceInformationArray[0] = deviceInformation;
+		deviceInformationResponseDataArea.setDevices(deviceInformation);
 		deviceInformationResponse
 				.setDataArea(deviceInformationResponseDataArea);
 

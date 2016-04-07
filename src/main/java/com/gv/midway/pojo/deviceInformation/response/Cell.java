@@ -1,4 +1,4 @@
-package com.gv.midway.device.request.pojo;
+package com.gv.midway.pojo.deviceInformation.response;
 
 import com.wordnik.swagger.annotations.ApiModelProperty;
 

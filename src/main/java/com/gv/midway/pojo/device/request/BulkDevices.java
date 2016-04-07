@@ -1,23 +1,23 @@
-package com.gv.midway.device.request.pojo;
+package com.gv.midway.pojo.device.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.gv.midway.pojo.BaseRequest;
+import com.gv.midway.pojo.BaseResponse;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SingleDevice extends BaseRequest{
+public class BulkDevices extends BaseRequest{
 
 	@ApiModelProperty(value = "Device Information DataArea")
-	private DeviceDataArea dataArea;
+	private DevicesDataArea dataArea;
 
-	public DeviceDataArea getDataArea() {
+	public DevicesDataArea getDataArea() {
 		return dataArea;
 	}
 
-	public void setDataArea(DeviceDataArea dataArea) {
+	public void setDataArea(DevicesDataArea dataArea) {
 		this.dataArea = dataArea;
 	}
-
 }

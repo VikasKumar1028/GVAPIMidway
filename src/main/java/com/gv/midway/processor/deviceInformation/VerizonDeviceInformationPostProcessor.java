@@ -11,15 +11,16 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.gv.midway.constant.IConstant;
-import com.gv.midway.device.request.pojo.DeviceInformation;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.Header;
+import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponseDataArea;
-import com.gv.midway.pojo.deviceInformation.verizon.CarrierInformations;
-import com.gv.midway.pojo.deviceInformation.verizon.CustomFields;
-import com.gv.midway.pojo.deviceInformation.verizon.DeviceIds;
-import com.gv.midway.pojo.deviceInformation.verizon.VerizonResponse;
+import com.gv.midway.pojo.deviceInformation.verizon.response.CarrierInformations;
+import com.gv.midway.pojo.deviceInformation.verizon.response.DeviceInformationResponseVerizon;
+import com.gv.midway.pojo.verizon.CustomFields;
+import com.gv.midway.pojo.verizon.DeviceId;
+
 
 @Component
 public class VerizonDeviceInformationPostProcessor implements Processor {
@@ -51,8 +52,8 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 
 		log.info("Start:VerizonDeviceInformationPostProcessor");
 
-		VerizonResponse verizonResponse = exchange.getIn().getBody(
-				VerizonResponse.class);
+		DeviceInformationResponseVerizon verizonResponse = exchange.getIn().getBody(
+				DeviceInformationResponseVerizon.class);
 
 		int getDevicelenth = verizonResponse.getDevices().length;
 
@@ -60,9 +61,9 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 
 		DeviceInformationResponse deviceInformationResponse = new DeviceInformationResponse();
 
-		DeviceInformation[] deviceInformationArray = new DeviceInformation[getDevicelenth];
+		//DeviceInformation[] deviceInformationArray = new DeviceInformation[getDevicelenth];
 
-		log.info("deviceInformationArray::" + deviceInformationArray.length);
+		//log.info("deviceInformationArray::" + deviceInformationArray.length);
 
 		Header responseheader = new Header();
 
@@ -84,9 +85,11 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 		responseheader.setBsCarrier(newEnv.getProperty(IConstant.BSCARRIER_VERIZON));
 		deviceInformationResponse.setHeader(responseheader);
 		deviceInformationResponse.setResponse(response);
+		
+		DeviceInformation deviceInformation =null;
 
 		for (int i = 0; i < getDevicelenth; i++) {
-			DeviceInformation deviceInformation = new DeviceInformation();
+			deviceInformation = new DeviceInformation();
 
 			deviceInformation.setAccountName(verizonResponse.getDevices()[i]
 					.getAccountName());
@@ -130,10 +133,10 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 			deviceInformation.setLastConnectionDate(verizonResponse
 					.getDevices()[i].getLastConnectionDate());
 
-			DeviceIds deviceIds = new DeviceIds();
+			DeviceId deviceIds = new DeviceId();
 
 			if (verizonResponse.getDevices()[i].getDeviceIds() != null) {
-				DeviceIds[] deviceIdsArray = new DeviceIds[verizonResponse
+				DeviceId[] deviceIdsArray = new DeviceId[verizonResponse
 						.getDevices()[i].getDeviceIds().length];
 
 				for (int l = 0; l < deviceIdsArray.length; l++) {
@@ -167,12 +170,12 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 
 			}
 
-			deviceInformationArray[i] = deviceInformation;
+			//deviceInformationArray[i] = deviceInformation;
 		}
 
 		DeviceInformationResponseDataArea deviceInformationResponseDataArea = new DeviceInformationResponseDataArea();
 
-		deviceInformationResponseDataArea.setDevices(deviceInformationArray);
+		deviceInformationResponseDataArea.setDevices(deviceInformation);
 
 		deviceInformationResponse
 				.setDataArea(deviceInformationResponseDataArea);

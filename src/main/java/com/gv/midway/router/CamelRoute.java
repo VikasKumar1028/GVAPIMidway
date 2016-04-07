@@ -17,8 +17,8 @@ import org.springframework.stereotype.Component;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.exception.VerizonSessionTokenExpirationException;
 import com.gv.midway.pojo.checkstatus.kore.KoreCheckStatusResponse;
-import com.gv.midway.pojo.deviceInformation.kore.KoreDeviceInformationResponse;
-import com.gv.midway.pojo.deviceInformation.verizon.VerizonResponse;
+import com.gv.midway.pojo.deviceInformation.kore.response.DeviceInformationResponseKore;
+import com.gv.midway.pojo.deviceInformation.verizon.response.DeviceInformationResponseVerizon;
 import com.gv.midway.pojo.token.VerizonAuthorizationResponse;
 import com.gv.midway.pojo.token.VerizonSessionLoginResponse;
 import com.gv.midway.processor.GenericErrorProcessor;
@@ -160,7 +160,7 @@ public class CamelRoute extends RouteBuilder {
 											.bean(iAuditService, "auditExternalRequestCall")
 											.to(uriRestKoreEndPoint)
 											.unmarshal()
-											.json(JsonLibrary.Jackson, KoreDeviceInformationResponse.class)
+											.json(JsonLibrary.Jackson, DeviceInformationResponseKore.class)
 											.bean(iAuditService, "auditExternalResponseCall")
 											.process(new KoreDeviceInformationPostProcessor(env))
 										.doCatch(CxfOperationException.class)
@@ -177,7 +177,7 @@ public class CamelRoute extends RouteBuilder {
 										.bean(iAuditService, "auditExternalRequestCall")
 										.to(uriRestVerizonEndPoint)
 										.unmarshal()
-										.json(JsonLibrary.Jackson, VerizonResponse.class)
+										.json(JsonLibrary.Jackson, DeviceInformationResponseVerizon.class)
 										.bean(iAuditService, "auditExternalResponseCall")
 										.process(new VerizonDeviceInformationPostProcessor(env))
 									.doCatch(CxfOperationException.class)
@@ -257,7 +257,7 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iAuditService, "auditExternalRequestCall")
 				.to(uriRestKoreEndPoint)
 				.unmarshal()
-				.json(JsonLibrary.Jackson, KoreDeviceInformationResponse.class)
+				.json(JsonLibrary.Jackson, DeviceInformationResponseKore.class)
 				.bean(iTransactionalService,
 						"populateKoreTransactionalResponse")
 				.process(new KoreActivateDevicePostProcessor());
@@ -333,7 +333,7 @@ public class CamelRoute extends RouteBuilder {
 			.process(new KoreDeactivateDevicePreProcessor(env))
 			.bean(iAuditService, "auditExternalRequestCall")
 			.to(uriRestKoreEndPoint).unmarshal()
-			.json(JsonLibrary.Jackson, KoreDeviceInformationResponse.class)
+			.json(JsonLibrary.Jackson, DeviceInformationResponseKore.class)
 			.bean(iAuditService, "auditExternalResponseCall")
 			.bean(iTransactionalService,"populateKoreTransactionalResponse")
 			.process(new KoreDeactivateDevicePostProcessor());

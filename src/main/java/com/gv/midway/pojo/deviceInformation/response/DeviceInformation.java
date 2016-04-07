@@ -1,4 +1,4 @@
-package com.gv.midway.device.request.pojo;
+package com.gv.midway.pojo.deviceInformation.response;
 
 
 import java.util.Arrays;
@@ -7,11 +7,10 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.gv.midway.pojo.deviceInformation.verizon.CustomFields;
-import com.gv.midway.pojo.deviceInformation.verizon.DeviceIds;
-import com.gv.midway.pojo.deviceInformation.verizon.ExtendedAttributes;
+import com.gv.midway.pojo.verizon.CustomFields;
+import com.gv.midway.pojo.verizon.DeviceId;
+import com.gv.midway.pojo.deviceInformation.verizon.response.ExtendedAttributes;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
@@ -60,7 +59,7 @@ public class DeviceInformation {
 	private CustomFields[] customFields;
 	
 	@ApiModelProperty(value = "All identifiers for the device.")
-	private DeviceIds[] deviceIds;
+	private DeviceId[] deviceIds;
 	
 	@ApiModelProperty(value = "Any extended attributes for the device, as Key .It will only in case of Verizon")
 	private ExtendedAttributes[] extendedAttributes;
@@ -75,7 +74,7 @@ public class DeviceInformation {
 	private String groupName;
 
 	@ApiModelProperty(value = "True if the device is connected; false if it is not.It will only in case of Verizon")
-	private String connected;
+	private Boolean isConnected;
 	
 	@ApiModelProperty(value = "The date and time that the device was added to the system.It will only in case of Verizon")
 	private String createdAt;
@@ -102,16 +101,16 @@ public class DeviceInformation {
 	private String futureDataPlan;
 	
 	@ApiModelProperty(value = "dailySMSThreshold for the device.It will be only in case of Kore")
-	private String dailySMSThreshold;
+	private Integer dailySMSThreshold;
 	
 	@ApiModelProperty(value = "Daily Data Threshold of the device.It will be only in case of Kore")
-	private String dailyDataThreshold;
+	private Integer dailyDataThreshold;
 	
 	@ApiModelProperty(value = "monthly SMS Threshold of the device.It will be only in case of Kore")
-	private String monthlySMSThreshold;
+	private Integer monthlySMSThreshold;
 
 	@ApiModelProperty(value = "monthly Data Threshold of the device.It will be only in case of Kore")
-	private String monthlyDataThreshold;
+	private Integer monthlyDataThreshold;
 	
 	@ApiModelProperty(value = "Last year history details for the device.It will be only in case of Kore")
 	private String[] lstHistoryOverLastYear;
@@ -254,12 +253,12 @@ public class DeviceInformation {
 	}
 
 
-	public DeviceIds[] getDeviceIds() {
+	public DeviceId[] getDeviceIds() {
 		return deviceIds;
 	}
 
 
-	public void setDeviceIds(DeviceIds[] deviceIds) {
+	public void setDeviceIds(DeviceId[] deviceIds) {
 		this.deviceIds = deviceIds;
 	}
 
@@ -304,13 +303,13 @@ public class DeviceInformation {
 	}
 
 
-	public String getConnected() {
-		return connected;
+	public Boolean isConnected() {
+		return isConnected;
 	}
 
 
-	public void setConnected(String connected) {
-		this.connected = connected;
+	public void setConnected(Boolean isConnected) {
+		this.isConnected = isConnected;
 	}
 
 
@@ -394,42 +393,42 @@ public class DeviceInformation {
 	}
 
 
-	public String getDailySMSThreshold() {
+	public Integer getDailySMSThreshold() {
 		return dailySMSThreshold;
 	}
 
 
-	public void setDailySMSThreshold(String dailySMSThreshold) {
+	public void setDailySMSThreshold(Integer dailySMSThreshold) {
 		this.dailySMSThreshold = dailySMSThreshold;
 	}
 
 
-	public String getDailyDataThreshold() {
+	public Integer getDailyDataThreshold() {
 		return dailyDataThreshold;
 	}
 
 
-	public void setDailyDataThreshold(String dailyDataThreshold) {
+	public void setDailyDataThreshold(Integer dailyDataThreshold) {
 		this.dailyDataThreshold = dailyDataThreshold;
 	}
 
 
-	public String getMonthlySMSThreshold() {
+	public Integer getMonthlySMSThreshold() {
 		return monthlySMSThreshold;
 	}
 
 
-	public void setMonthlySMSThreshold(String monthlySMSThreshold) {
+	public void setMonthlySMSThreshold(Integer monthlySMSThreshold) {
 		this.monthlySMSThreshold = monthlySMSThreshold;
 	}
 
 
-	public String getMonthlyDataThreshold() {
+	public Integer getMonthlyDataThreshold() {
 		return monthlyDataThreshold;
 	}
 
 
-	public void setMonthlyDataThreshold(String monthlyDataThreshold) {
+	public void setMonthlyDataThreshold(Integer monthlyDataThreshold) {
 		this.monthlyDataThreshold = monthlyDataThreshold;
 	}
 
@@ -465,82 +464,6 @@ public class DeviceInformation {
 
 
 	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("DeviceInformation [midwayMasterDeviceId=");
-		builder.append(midwayMasterDeviceId);
-		builder.append(", netSuiteId=");
-		builder.append(netSuiteId);
-		builder.append(", cell=");
-		builder.append(cell);
-		builder.append(", bs_id=");
-		builder.append(bs_id);
-		builder.append(", serial_num=");
-		builder.append(serial_num);
-		builder.append(", mac=");
-		builder.append(mac);
-		builder.append(", bs_carrier=");
-		builder.append(bs_carrier);
-		builder.append(", bs_plan=");
-		builder.append(bs_plan);
-		builder.append(", lastUpdated=");
-		builder.append(lastUpdated);
-		builder.append(", state=");
-		builder.append(state);
-		builder.append(", currentServicePlan=");
-		builder.append(currentServicePlan);
-		builder.append(", ipAddress=");
-		builder.append(ipAddress);
-		builder.append(", customFields=");
-		builder.append(Arrays.toString(customFields));
-		builder.append(", deviceIds=");
-		builder.append(Arrays.toString(deviceIds));
-		builder.append(", extendedAttributes=");
-		builder.append(Arrays.toString(extendedAttributes));
-		builder.append(", accountName=");
-		builder.append(accountName);
-		builder.append(", billingCycleEndDate=");
-		builder.append(billingCycleEndDate);
-		builder.append(", groupName=");
-		builder.append(groupName);
-		builder.append(", connected=");
-		builder.append(connected);
-		builder.append(", createdAt=");
-		builder.append(createdAt);
-		builder.append(", lastActivationBy=");
-		builder.append(lastActivationBy);
-		builder.append(", lastActivationDate=");
-		builder.append(lastActivationDate);
-		builder.append(", lastConnectionDate=");
-		builder.append(lastConnectionDate);
-		builder.append(", voiceDispatchNumber=");
-		builder.append(voiceDispatchNumber);
-		builder.append(", currentSMSPlan=");
-		builder.append(currentSMSPlan);
-		builder.append(", futureSMSPlan=");
-		builder.append(futureSMSPlan);
-		builder.append(", futureDataPlan=");
-		builder.append(futureDataPlan);
-		builder.append(", dailySMSThreshold=");
-		builder.append(dailySMSThreshold);
-		builder.append(", dailyDataThreshold=");
-		builder.append(dailyDataThreshold);
-		builder.append(", monthlySMSThreshold=");
-		builder.append(monthlySMSThreshold);
-		builder.append(", monthlyDataThreshold=");
-		builder.append(monthlyDataThreshold);
-		builder.append(", lstHistoryOverLastYear=");
-		builder.append(Arrays.toString(lstHistoryOverLastYear));
-		builder.append(", lstFeatures=");
-		builder.append(Arrays.toString(lstFeatures));
-		builder.append(", lstExtFeatures=");
-		builder.append(Arrays.toString(lstExtFeatures));
-		builder.append("]");
-		return builder.toString();
-	}
-
-
-	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -555,8 +478,6 @@ public class DeviceInformation {
 		result = prime * result + ((bs_id == null) ? 0 : bs_id.hashCode());
 		result = prime * result + ((bs_plan == null) ? 0 : bs_plan.hashCode());
 		result = prime * result + ((cell == null) ? 0 : cell.hashCode());
-		result = prime * result
-				+ ((connected == null) ? 0 : connected.hashCode());
 		result = prime * result
 				+ ((createdAt == null) ? 0 : createdAt.hashCode());
 		result = prime * result
@@ -584,6 +505,8 @@ public class DeviceInformation {
 				+ ((groupName == null) ? 0 : groupName.hashCode());
 		result = prime * result
 				+ ((ipAddress == null) ? 0 : ipAddress.hashCode());
+		result = prime * result
+				+ ((isConnected == null) ? 0 : isConnected.hashCode());
 		result = prime
 				* result
 				+ ((lastActivationBy == null) ? 0 : lastActivationBy.hashCode());
@@ -665,11 +588,6 @@ public class DeviceInformation {
 				return false;
 		} else if (!cell.equals(other.cell))
 			return false;
-		if (connected == null) {
-			if (other.connected != null)
-				return false;
-		} else if (!connected.equals(other.connected))
-			return false;
 		if (createdAt == null) {
 			if (other.createdAt != null)
 				return false;
@@ -720,6 +638,11 @@ public class DeviceInformation {
 			if (other.ipAddress != null)
 				return false;
 		} else if (!ipAddress.equals(other.ipAddress))
+			return false;
+		if (isConnected == null) {
+			if (other.isConnected != null)
+				return false;
+		} else if (!isConnected.equals(other.isConnected))
 			return false;
 		if (lastActivationBy == null) {
 			if (other.lastActivationBy != null)
@@ -790,14 +713,83 @@ public class DeviceInformation {
 			return false;
 		return true;
 	}
-	
-	
-	
 
-		
-		
-		
-	
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("DeviceInformation [midwayMasterDeviceId=");
+		builder.append(midwayMasterDeviceId);
+		builder.append(", netSuiteId=");
+		builder.append(netSuiteId);
+		builder.append(", cell=");
+		builder.append(cell);
+		builder.append(", bs_id=");
+		builder.append(bs_id);
+		builder.append(", serial_num=");
+		builder.append(serial_num);
+		builder.append(", mac=");
+		builder.append(mac);
+		builder.append(", bs_carrier=");
+		builder.append(bs_carrier);
+		builder.append(", bs_plan=");
+		builder.append(bs_plan);
+		builder.append(", lastUpdated=");
+		builder.append(lastUpdated);
+		builder.append(", state=");
+		builder.append(state);
+		builder.append(", currentServicePlan=");
+		builder.append(currentServicePlan);
+		builder.append(", ipAddress=");
+		builder.append(ipAddress);
+		builder.append(", customFields=");
+		builder.append(Arrays.toString(customFields));
+		builder.append(", deviceIds=");
+		builder.append(Arrays.toString(deviceIds));
+		builder.append(", extendedAttributes=");
+		builder.append(Arrays.toString(extendedAttributes));
+		builder.append(", accountName=");
+		builder.append(accountName);
+		builder.append(", billingCycleEndDate=");
+		builder.append(billingCycleEndDate);
+		builder.append(", groupName=");
+		builder.append(groupName);
+		builder.append(", isConnected=");
+		builder.append(isConnected);
+		builder.append(", createdAt=");
+		builder.append(createdAt);
+		builder.append(", lastActivationBy=");
+		builder.append(lastActivationBy);
+		builder.append(", lastActivationDate=");
+		builder.append(lastActivationDate);
+		builder.append(", lastConnectionDate=");
+		builder.append(lastConnectionDate);
+		builder.append(", voiceDispatchNumber=");
+		builder.append(voiceDispatchNumber);
+		builder.append(", currentSMSPlan=");
+		builder.append(currentSMSPlan);
+		builder.append(", futureSMSPlan=");
+		builder.append(futureSMSPlan);
+		builder.append(", futureDataPlan=");
+		builder.append(futureDataPlan);
+		builder.append(", dailySMSThreshold=");
+		builder.append(dailySMSThreshold);
+		builder.append(", dailyDataThreshold=");
+		builder.append(dailyDataThreshold);
+		builder.append(", monthlySMSThreshold=");
+		builder.append(monthlySMSThreshold);
+		builder.append(", monthlyDataThreshold=");
+		builder.append(monthlyDataThreshold);
+		builder.append(", lstHistoryOverLastYear=");
+		builder.append(Arrays.toString(lstHistoryOverLastYear));
+		builder.append(", lstFeatures=");
+		builder.append(Arrays.toString(lstFeatures));
+		builder.append(", lstExtFeatures=");
+		builder.append(Arrays.toString(lstExtFeatures));
+		builder.append("]");
+		return builder.toString();
+	}
+
 
 
 }

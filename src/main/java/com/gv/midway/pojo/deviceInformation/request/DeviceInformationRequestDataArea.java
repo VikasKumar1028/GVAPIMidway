@@ -1,8 +1,8 @@
 package com.gv.midway.pojo.deviceInformation.request;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.gv.midway.pojo.deviceInformation.verizon.CustomFields;
-import com.gv.midway.pojo.deviceInformation.verizon.DeviceIds;
+import com.gv.midway.pojo.verizon.CustomFields;
+import com.gv.midway.pojo.verizon.DeviceId;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
@@ -32,7 +32,7 @@ public class DeviceInformationRequestDataArea {
 	private String deviceNumber;
 
 	@ApiModelProperty(value = "All identifiers for the device.")
-	private DeviceIds[] deviceId;
+	private DeviceId[] deviceId;
 	
 	@ApiModelProperty(value = "An identifier from NetSuite system")
 	private String netSuiteId;
@@ -119,11 +119,11 @@ public class DeviceInformationRequestDataArea {
 		this.deviceNumber = deviceNumber;
 	}
 
-	public DeviceIds[] getDeviceId() {
+	public DeviceId[] getDeviceId() {
 		return deviceId;
 	}
 
-	public void setDeviceId(DeviceIds[] deviceId) {
+	public void setDeviceId(DeviceId[] deviceId) {
 		this.deviceId = deviceId;
 	}
 

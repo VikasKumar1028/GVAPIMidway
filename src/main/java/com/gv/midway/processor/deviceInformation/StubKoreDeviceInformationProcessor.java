@@ -4,15 +4,15 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 
-import com.gv.midway.device.request.pojo.DeviceInformation;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.Header;
+import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponseDataArea;
-import com.gv.midway.pojo.deviceInformation.verizon.CarrierInformations;
-import com.gv.midway.pojo.deviceInformation.verizon.CustomFields;
-import com.gv.midway.pojo.deviceInformation.verizon.DeviceIds;
-import com.gv.midway.pojo.deviceInformation.verizon.ExtendedAttributes;
+import com.gv.midway.pojo.verizon.CustomFields;
+import com.gv.midway.pojo.deviceInformation.verizon.response.CarrierInformations;
+import com.gv.midway.pojo.deviceInformation.verizon.response.ExtendedAttributes;
+import com.gv.midway.pojo.verizon.DeviceId;
 
 public class StubKoreDeviceInformationProcessor implements Processor {
 
@@ -27,7 +27,7 @@ public class StubKoreDeviceInformationProcessor implements Processor {
 		DeviceInformationResponseDataArea deviceInformationResponseDataArea = new DeviceInformationResponseDataArea();
 
 		DeviceInformation deviceInformation = new DeviceInformation();
-		DeviceInformation[] deviceInformationArray = new DeviceInformation[1];
+		//DeviceInformation[] deviceInformationArray = new DeviceInformation[1];
 
 		Header responseheader = new Header();
 
@@ -53,7 +53,7 @@ public class StubKoreDeviceInformationProcessor implements Processor {
 		deviceInformation.setNetSuiteId("NS002");
 		deviceInformation.setMidwayMasterDeviceId("MMD002");
 		deviceInformation.setBillingCycleEndDate("null");
-		deviceInformation.setConnected("null");
+		deviceInformation.setConnected(false);
 		deviceInformation.setCreatedAt("null");
 		deviceInformation.setIpAddress("null");
 		//deviceInformation.setStaticIP("10.117.97.87");
@@ -67,27 +67,27 @@ public class StubKoreDeviceInformationProcessor implements Processor {
 		deviceInformation.setFutureSMSPlan("NA");
 		deviceInformation.setVoiceDispatchNumber("");
 
-		deviceInformation.setDailyDataThreshold("512");
-		deviceInformation.setDailySMSThreshold("4");
-		deviceInformation.setMonthlyDataThreshold("5120");
-		deviceInformation.setMonthlySMSThreshold("100");
+		deviceInformation.setDailyDataThreshold(512);
+		deviceInformation.setDailySMSThreshold(4);
+		deviceInformation.setMonthlyDataThreshold(5120);
+		deviceInformation.setMonthlySMSThreshold(100);
 
-		CarrierInformations carrierInformations = new CarrierInformations();
+		/*CarrierInformations carrierInformations = new CarrierInformations();
 		carrierInformations.setStatus("Active");
 		carrierInformations
 				.setCurrentDataPlan("PLAN000191: USG GPRS 5MB Pooled Plan");
 		carrierInformations.setState("null");
 		carrierInformations.setCarrierName("null");
-		carrierInformations.setServicePlan("null");
+		carrierInformations.setServicePlan("null");*/
 		//deviceInformation.setCarrierInformations(carrierInformations);
 
-		DeviceIds deviceIds = new DeviceIds();
+		DeviceId deviceIds = new DeviceId();
 		deviceIds.setId("89014103277405946190");
 		//deviceIds.setImsiOrMIN("310410740594619");
 		deviceIds.setKind("null");
 		//deviceIds.setMsisdnOrMDN("5772933662");
 
-		DeviceIds[] deviceIdsArray = { deviceIds };
+		DeviceId[] deviceIdsArray = { deviceIds };
 
 		deviceInformation.setDeviceIds(deviceIdsArray);
 
@@ -166,8 +166,8 @@ public class StubKoreDeviceInformationProcessor implements Processor {
 
 		//deviceInformation.setPreviousAddress("null");
 
-		deviceInformationArray[0] = deviceInformation;
-		deviceInformationResponseDataArea.setDevices(deviceInformationArray);
+		//deviceInformationArray[0] = deviceInformation;
+		deviceInformationResponseDataArea.setDevices(deviceInformation);
 		deviceInformationResponse
 				.setDataArea(deviceInformationResponseDataArea);
 

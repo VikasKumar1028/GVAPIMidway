@@ -1,4 +1,4 @@
-package com.gv.midway.device.response.pojo;
+package com.gv.midway.pojo.device.response;
 
 import com.gv.midway.pojo.BaseResponse;
 
