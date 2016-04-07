@@ -97,7 +97,9 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 				transaction.setMidwayTransationID(midwayTransationID);
 				//TODO if number of devices are more
-				transaction.setDeviceNumber(businessPayloadDeviceId.toString());
+				ObjectMapper obj =new ObjectMapper();
+				String strDeviceNumber=obj.writeValueAsString(businessPayloadDeviceId);				
+				transaction.setDeviceNumber(strDeviceNumber);
 				transaction.setDevicePayload(msgBody);
 				transaction.setMidwayStatus(IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
 				transaction.setCarrierName(exchange.getProperty(IConstant.BSCARRIER).toString());
@@ -201,6 +203,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 	public void populateVerizonTransactionalResponse(Exchange exchange) {
 
+		
+		System.out.println("****************populateVerizonTransactionalResponse***********************************");
 		Query searchUserQuery = new Query(Criteria.where("midwayTransationID").is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)));
 
 		/*
@@ -213,16 +217,30 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		 * callBackReceived;//CallBack Thread String
 		 * callBackFailureToNetSuitReason;//CallBack Thread
 		 */
+		
+		Update update = new Update();
 		if (exchange.getIn().getBody().toString().contains("errorMessage=")) {
 
-			Update update = new Update();
+			
 			update.set("callBackPayload", exchange.getIn().getBody().toString());
 			update.set("carrierErrorDecription", exchange.getIn().getBody().toString());
 			update.set("carrierErrorDecription", exchange.getIn().getBody().toString());
 			update.set("carrierStatus", "Error");
 			update.set("lastTimeStampUpdated", CommonUtil.getCurrentTimeStamp());
-			mongoTemplate.updateMulti(searchUserQuery, update, Transaction.class);
+			
+		}else{
+			
+			update.set("callBackPayload", exchange.getIn().getBody().toString());
+			//update.set("carrierErrorDecription", exchange.getIn().getBody().toString());
+			//update.set("carrierErrorDecription", exchange.getIn().getBody().toString());
+			update.set("carrierStatus", "SUCCESS");
+			update.set("lastTimeStampUpdated", CommonUtil.getCurrentTimeStamp());
+					
 		}
+		mongoTemplate.updateMulti(searchUserQuery, update, Transaction.class);
+		
+		
+		
 	}
 
 	public void populateKoreTransactionalErrorResponse(Exchange exchange) {
