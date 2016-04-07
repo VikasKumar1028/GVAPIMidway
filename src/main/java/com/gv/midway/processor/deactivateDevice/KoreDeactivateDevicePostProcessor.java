@@ -52,6 +52,7 @@ public class KoreDeactivateDevicePostProcessor implements Processor {
 	
 
 		deactivateDeviceResponse.setHeader(responseheader);
+		
 		deactivateDeviceResponse.setResponse(response);
 	/*	deactivateDeviceResponse.setRequestId("ReaLKORErequestId");
 		deactivateDeviceResponse.setTrackingNumber("ReaLKOREtrackingNumbe");*/

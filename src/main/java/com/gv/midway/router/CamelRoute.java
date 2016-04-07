@@ -336,7 +336,7 @@ public class CamelRoute extends RouteBuilder {
 			.json(JsonLibrary.Jackson, KoreDeviceInformationResponse.class)
 			.bean(iAuditService, "auditExternalResponseCall")
 			.bean(iTransactionalService,"populateKoreTransactionalResponse")
-			.process(new KoreDeviceInformationPostProcessor());
+			.process(new KoreDeactivateDevicePostProcessor());
 	
 //*****  DEVICE DEACTIVATION END		
 		
