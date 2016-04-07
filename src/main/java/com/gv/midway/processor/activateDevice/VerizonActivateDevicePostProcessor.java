@@ -61,6 +61,7 @@ public class VerizonActivateDevicePostProcessor implements Processor {
 					.getProperty(IConstant.RESPONSES_CODE));
 			response.setResponseStatus(newEnv
 					.getProperty(IConstant.RESPONSE_STATUS_SUCCESS));
+			response.setResponseDescription(exchange.getIn().getBody().toString());
 
 		} else {
 			
