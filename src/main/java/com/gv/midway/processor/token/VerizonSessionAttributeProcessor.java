@@ -4,11 +4,6 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 
 import com.gv.midway.constant.IConstant;
-import com.gv.midway.pojo.Response;
-import com.gv.midway.pojo.Header;
-import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
-import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
-import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponseDataArea;
 import com.gv.midway.pojo.token.VerizonSessionLoginResponse;
 
 public class VerizonSessionAttributeProcessor implements Processor {
@@ -24,6 +19,8 @@ public class VerizonSessionAttributeProcessor implements Processor {
 		
 		VerizonSessionLoginResponse resp =(VerizonSessionLoginResponse)exchange.getIn().getBody();
 		
+		
+		System.out.println("*********************resp.getSessionToken()*********************"+ resp.getSessionToken());
 		exchange.setProperty(IConstant.VZ_SEESION_TOKEN, resp.getSessionToken());
 		
 	/*	String str=resp.getSessionToken();

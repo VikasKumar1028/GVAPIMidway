@@ -19,19 +19,21 @@ public class VerizonSessionTokenProcessor implements Processor {
 
 		VerizonAuthorizationResponse authResponse=(VerizonAuthorizationResponse)exchange.getIn().getBody();
 
-		String json = "{\"username\":\"any\",\"password\":\"any\"}";
+		String json = "{\"username\":\"OPTCONNECTNUM2\",\"password\":\"E5Vj!86c\"}";
 		
 		exchange.getIn().setBody(json);
 		Message message = exchange.getIn();
 		
 		//Dynamic Values
-		//exchange.setProperty(IConstant.VZ_AUTHORIZATION_TOKEN, authResponse.getAccess_token());
-		//message.setHeader("Authorization","Bearer "+authResponse.getAccess_token());
+		exchange.setProperty(IConstant.VZ_AUTHORIZATION_TOKEN, authResponse.getAccess_token());
+		message.setHeader("Authorization","Bearer "+authResponse.getAccess_token());
 		
+		
+		System.out.println("-----------------authResponse.getAccess_token()---------------"+ authResponse.getAccess_token());
 		//Hard Coded Values
-		exchange.setProperty(IConstant.VZ_AUTHORIZATION_TOKEN, "89ba225e1438e95bd05c3cc288d3591");
+		/*exchange.setProperty(IConstant.VZ_AUTHORIZATION_TOKEN, "89ba225e1438e95bd05c3cc288d3591");
 		message.setHeader("Authorization","Bearer 89ba225e1438e95bd05c3cc288d3591");
-		
+		*/
 		
 		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");

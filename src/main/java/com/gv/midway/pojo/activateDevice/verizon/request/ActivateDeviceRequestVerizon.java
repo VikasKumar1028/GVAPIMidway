@@ -3,11 +3,14 @@ package com.gv.midway.pojo.activateDevice.verizon.request;
 import java.util.Arrays;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.gv.midway.pojo.verizon.CustomFields;
 import com.gv.midway.pojo.verizon.Devices;
 import com.gv.midway.pojo.verizon.PrimaryPlaceOfUse;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(Include.NON_EMPTY)
 public class ActivateDeviceRequestVerizon {
 
 	private String groupName;

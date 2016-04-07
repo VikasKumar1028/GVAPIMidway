@@ -44,7 +44,7 @@ public class SessionServiceImpl implements ISessionService,ServletContextAware {
 
 		System.out.println(exchange
 				.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN)
-				+ "Inside Session Set Attributes"
+				+ "Inside Session Set Attributes ***********************************"
 				+ exchange.getProperty(IConstant.VZ_SEESION_TOKEN));
 		// Set to DB remove Servlet Context
 		SessionBean sessionBean = new SessionBean();
@@ -57,6 +57,8 @@ public class SessionServiceImpl implements ISessionService,ServletContextAware {
 	}
 
 	public void synchronizeDBContextToken() {
+		
+		System.out.println("**************synchronizeDBContextToken*****************************");
 
 		SessionBean sessionBean = sessionDao.getSessionBean();
 
@@ -92,7 +94,8 @@ public class SessionServiceImpl implements ISessionService,ServletContextAware {
 	}
 
 	public void setContextTokenInExchange(Exchange exchange) {
-
+		
+	
 		if (servletContext.getAttribute(IConstant.VZ_SEESION_TOKEN) != null) {
 			exchange.setProperty(IConstant.VZ_SEESION_TOKEN, servletContext
 					.getAttribute(IConstant.VZ_SEESION_TOKEN).toString());
