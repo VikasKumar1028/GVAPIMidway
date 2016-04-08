@@ -5,7 +5,6 @@ import java.util.Arrays;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gv.midway.pojo.verizon.CustomFields;
 import com.gv.midway.pojo.verizon.DeviceId;
-import com.gv.midway.pojo.verizon.generic.callback.DeviceIds;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DeviceInformationDevices {

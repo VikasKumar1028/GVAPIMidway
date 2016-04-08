@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.dao.GVCallbackTransactionalDao;
+import com.gv.midway.pojo.callback.request.CallBackVerizonRequest;
 import com.gv.midway.pojo.transaction.Transaction;
-import com.gv.midway.pojo.verizon.generic.callback.VerizonActivateCallBackRequest;
 import com.gv.midway.service.callbacks.impl.GVCallbacksImpl;
 
 @Service
@@ -21,7 +21,7 @@ public class CallbackTransactionDaoImpl implements GVCallbackTransactionalDao {
 	public void populateCallbackDBPayload(Exchange exchange) {
 		log.info("CallbackTransactionDaoImpl-populateCallbackDBPayload");
 		log.info("Exchange inside" + exchange.getIn().getBody().toString());
-		VerizonActivateCallBackRequest req = (VerizonActivateCallBackRequest) exchange.getIn().getBody();
+		CallBackVerizonRequest req = (CallBackVerizonRequest) exchange.getIn().getBody();
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			String msgBody = mapper.writeValueAsString(req);

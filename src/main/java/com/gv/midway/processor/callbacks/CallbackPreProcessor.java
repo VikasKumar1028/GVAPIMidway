@@ -3,14 +3,14 @@ package com.gv.midway.processor.callbacks;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 
-import com.gv.midway.pojo.verizon.generic.callback.VerizonActivateCallBackRequest;
+import com.gv.midway.pojo.callback.request.CallBackVerizonRequest;
 
 public class CallbackPreProcessor implements Processor {
 
 	public void process(Exchange exchange) throws Exception {
 
-		VerizonActivateCallBackRequest req = (VerizonActivateCallBackRequest) exchange
-				.getIn().getBody(VerizonActivateCallBackRequest.class);
+		CallBackVerizonRequest req = (CallBackVerizonRequest) exchange
+				.getIn().getBody(CallBackVerizonRequest.class);
 
 		net.sf.json.JSONObject obj = new net.sf.json.JSONObject();
 		obj.put("req", req);
