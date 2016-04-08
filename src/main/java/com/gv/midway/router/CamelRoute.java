@@ -116,86 +116,29 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iAuditService, "auditExternalConnectionExceptionResponseCall")
 				.process(new GenericErrorProcessor(env));
 
-		/*
-		 * 
-		 * 
-		 
-		 		onException(VerizonSessionTokenExpirationException.class)
+		onException(VerizonSessionTokenExpirationException.class)
 				.routeId("ConnectionLoginExceptionRoute").handled(true)
-				.log(LoggingLevel.INFO, "Connection Error")
-				.maximumRedeliveries(1).redeliveryDelay(1000)
-				.bean(iSessionService, "checkToken").choice()
-				.when(body().contains("true"))
+				.log(LoggingLevel.INFO, "Connection Error").onRedelivery(new TokenProcessor())
+				.maximumRedeliveries(2).redeliveryDelay(1000)					
+				// The control will come to this processor when all attempts have been failed
+				.process(new GenericErrorProcessor(env)); 
+		
+		from("direct:tokenGeneration").bean(iSessionService, "checkToken")
+				.choice().when(body().contains("true"))
 				.log(LoggingLevel.INFO, "MATCH -REFETCHING ")
 				.process(new VerizonAuthorizationTokenProcessor(env))
 				.to(uriRestVerizonTokenEndPoint).unmarshal()
 				.json(JsonLibrary.Jackson, VerizonAuthorizationResponse.class)
 				.process(new VerizonSessionTokenProcessor())
-				.to(uriRestVerizonTokenEndPoint)
-				.unmarshal()
+				.to(uriRestVerizonTokenEndPoint).unmarshal()
 				.json(JsonLibrary.Jackson, VerizonSessionLoginResponse.class)
 				.process(new VerizonSessionAttributeProcessor())
 				.bean(iSessionService, "setVzToken")
 				. // saved this token in the DB
 				endChoice().otherwise().log(LoggingLevel.INFO, "NOT MATCH")
 				.to("log:input").end()
-				// sync DB and	 session token in	 the	 ServletContext
-				.bean(iSessionService, "synchronizeDBContextToken") 				
-				// The control will come to this processor when all attempts have been failed
-				.process(new GenericErrorProcessor(env)); 
-
-		 
-		 
-		 
-		 */
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-
-		onException(VerizonSessionTokenExpirationException.class)
-				.routeId("ConnectionLoginExceptionRoute").handled(true)
-				.log(LoggingLevel.INFO, "Connection Error").onRedelivery(new TokenProcessor())
-				.maximumRedeliveries(1).redeliveryDelay(1000)					
-				// The control will come to this processor when all attempts have been failed
-				.process(new GenericErrorProcessor(env)); 
-		
-		
-		
-		
-		from("direct:token")
-		.bean(iSessionService, "checkToken").choice()
-		.when(body().contains("true"))
-		.log(LoggingLevel.INFO, "MATCH -REFETCHING ")
-		.process(new VerizonAuthorizationTokenProcessor(env))
-		.to(uriRestVerizonTokenEndPoint)
-		
-		.unmarshal()
-		.json(JsonLibrary.Jackson, VerizonAuthorizationResponse.class)
-		.process(new VerizonSessionTokenProcessor())
-		.to(uriRestVerizonTokenEndPoint)
-		.unmarshal()
-		.json(JsonLibrary.Jackson, VerizonSessionLoginResponse.class)
-		.process(new VerizonSessionAttributeProcessor())
-		.bean(iSessionService, "setVzToken")
-		. // saved this token in the DB
-		endChoice().otherwise().log(LoggingLevel.INFO, "NOT MATCH")
-		.to("log:input").end()
-		// sync DB and	 session token in	 the	 ServletContext
-		.bean(iSessionService, "synchronizeDBContextToken") ;			
-		
+				// sync DB and session token in the ServletContext
+				.bean(iSessionService, "synchronizeDBContextToken");
 
 		from("direct:deviceInformation").process(new HeaderProcessor())
 				.choice()
@@ -278,12 +221,35 @@ public class CamelRoute extends RouteBuilder {
 							.end().to("log:input")
 			.endChoice().end();
 				
+		from("direct:VerizonActivationFlow")
+				.doTry()
+				.to("direct:VerizonActivationFlow1")
+				.doCatch(CxfOperationException.class)
+				.bean(iTransactionalService,
+						"populateVerizonTransactionalErrorResponse")
+				.bean(iAuditService, "auditExternalExceptionResponseCall")
+				.process(new VerizonGenericExceptionProcessor(env)).endDoTry()
+				.end();
 		
-		
+		// SubFlow: Device Verizon Activation
+		from("direct:VerizonActivationFlow1")
+				.errorHandler(noErrorHandler())
+				// REMOVED Audit will store record 3 times in case of failure
+				// (see onException for connection.class above)
+				// .bean(iAuditService, "auditExternalRequestCall")
+				.bean(iSessionService, "setContextTokenInExchange")
+				.process(new VerizonActivateDevicePreProcessor())
+				.to(uriRestVerizonEndPoint)
+				.unmarshal()
+				.json(JsonLibrary.Jackson)
+				.bean(iTransactionalService,
+						"populateVerizonTransactionalResponse")
+				.bean(iAuditService, "auditExternalResponseCall")
+				.process(new VerizonActivateDevicePostProcessor(env));
 		
 		
 //SubFlow: Device Verizon Activation 				
-		from("direct:VerizonActivationFlow")
+	/*	from("direct:VerizonActivationFlow")
 					.doTry()						
 							.process(new VerizonActivateDevicePreProcessor())
 							// REMOVED Audit will store record 3 times in case of failure (see onException for connection.class above)
@@ -299,7 +265,7 @@ public class CamelRoute extends RouteBuilder {
 						.bean(iAuditService, "auditExternalExceptionResponseCall")											
 						.process(new VerizonGenericExceptionProcessor(env))
 					.endDoTry()	.end();
-		
+		*/
 //SubFlow: Device Kore Activation 		
 		from("direct:processActivateKoreTransaction")
 			.log("Wire Tap Thread activation")

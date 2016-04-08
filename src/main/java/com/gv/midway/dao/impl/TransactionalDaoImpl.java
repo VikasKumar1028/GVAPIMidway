@@ -239,16 +239,18 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			//update.set("carrierErrorDecription", exchange.getIn().getBody().toString());
 			
 			String responseId=exchange.getIn().getBody().toString();
-			JSONObject obj= new JSONObject();
+			
+			System.out.println("****************************responseId****************"+ responseId);
+			/*JSONObject obj= new JSONObject();
 			obj.put("value", responseId);
 			
 			JSONObject object = (JSONObject) obj.get("value");
 			Object reqId = object.get("requestId");
-			System.out.println("--------" + reqId.toString());
+			System.out.println("--------" + reqId.toString());*/
 			
 
 			update.set("carrierStatus", "Pending");
-			update.set("carrierTransationID", reqId.toString());
+			update.set("carrierTransationID", responseId);
 			update.set("lastTimeStampUpdated", CommonUtil.getCurrentTimeStamp());
 					
 		}
