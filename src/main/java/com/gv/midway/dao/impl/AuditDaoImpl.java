@@ -192,12 +192,21 @@ public class AuditDaoImpl implements IAuditDao {
 					IConstant.GV_TRANSACTION_ID).toString());
 			audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME)
 					.toString());
-			audit.setErrorDetais(exchange.getProperty(
+	/*		audit.setErrorDetais(exchange.getProperty(
 					IConstant.RESPONSE_DESCRIPTION).toString());
 			audit.setErrorProblem(exchange.getProperty(
 					IConstant.RESPONSE_STATUS).toString());
-			audit.setErrorCode(exchange.getProperty(IConstant.RESPONSE_CODE)
+					
+					audit.setErrorCode(exchange.getProperty(IConstant.RESPONSE_CODE)
 					.toString());
+					*/
+			//TODO
+			
+			
+			audit.setErrorDetais("ERROR");
+					audit.setErrorProblem("ERROR ");
+					audit.setErrorCode("400");
+							
 				audit.setPayload(responseBody);
 			mongoTemplate.save(audit);
 

@@ -3,6 +3,8 @@ package com.gv.midway.dao.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sf.json.JSONObject;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.component.cxf.CxfOperationException;
 import org.apache.log4j.Logger;
@@ -231,9 +233,22 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		}else{
 			
 			update.set("callBackPayload", exchange.getIn().getBody().toString());
+			
+		//TODO
 			//update.set("carrierErrorDecription", exchange.getIn().getBody().toString());
 			//update.set("carrierErrorDecription", exchange.getIn().getBody().toString());
-			update.set("carrierStatus", "SUCCESS");
+			
+			String responseId=exchange.getIn().getBody().toString();
+			JSONObject obj= new JSONObject();
+			obj.put("value", responseId);
+			
+			JSONObject object = (JSONObject) obj.get("value");
+			Object reqId = object.get("requestId");
+			System.out.println("--------" + reqId.toString());
+			
+
+			update.set("carrierStatus", "Pending");
+			update.set("carrierTransationID", reqId.toString());
 			update.set("lastTimeStampUpdated", CommonUtil.getCurrentTimeStamp());
 					
 		}
