@@ -25,7 +25,7 @@ public class StubKoreActivateDeviceProcessor implements Processor {
 
 		Response response = new Response();
 		response.setResponseCode("200");
-		response.setResponseDescription("Device is Activated successfully");
+		response.setResponseDescription("Device is activated successfully");
 		response.setResponseStatus("SUCCESS");
 
 		responseheader.setApplicationName("WEB");
@@ -34,13 +34,12 @@ public class StubKoreActivateDeviceProcessor implements Processor {
 		responseheader.setOrganization("Grant Victor");
 		responseheader.setSourceName("KORE");
 		responseheader.setTransactionId("cde2131ksjd");
-		responseheader.setBsCarrier("KORE");// baseResponse.setHeader(header);
+		responseheader.setBsCarrier("KORE");
 
 		activateDeviceResponse.setHeader(responseheader);
 		activateDeviceResponse.setResponse(response);
-
-		//activateDeviceResponseDataArea.setTrackingNumber("TR001");
-		//activateDeviceResponseDataArea.setRequestId("requestId");
+		activateDeviceResponseDataArea.setOrderNumber("KR0123312313");
+		
 		activateDeviceResponse.setDataArea(activateDeviceResponseDataArea);
 
 		exchange.getIn().setBody(activateDeviceResponse);

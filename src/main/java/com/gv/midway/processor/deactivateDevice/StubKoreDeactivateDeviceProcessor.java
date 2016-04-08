@@ -28,7 +28,7 @@ public class StubKoreDeactivateDeviceProcessor implements Processor {
 
 		Response response = new Response();
 		response.setResponseCode("200");
-		response.setResponseDescription("Device Information is fetched successfully");
+		response.setResponseDescription("Device is deactivate successfully");
 		response.setResponseStatus("SUCESS");
 
 		responseheader.setApplicationName("WEB");
@@ -41,10 +41,8 @@ public class StubKoreDeactivateDeviceProcessor implements Processor {
 
 		deactivateDeviceResponse.setHeader(responseheader);
 		deactivateDeviceResponse.setResponse(response);
-	
-		//deactivateDeviceResponseDataArea.setRequestId("requestId(");
-		deactivateDeviceResponseDataArea.setOrderNumber("trackingNumbe");
-		
+		deactivateDeviceResponseDataArea.setOrderNumber("KR023335545");
+
 		deactivateDeviceResponse.setDataArea(deactivateDeviceResponseDataArea);
 		exchange.getIn().setBody(deactivateDeviceResponse);
 		log.info("End::StubKoreDeactivateDeviceProcessor");

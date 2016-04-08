@@ -25,7 +25,7 @@ public class StubVerizonActivateDeviceProcessor implements Processor {
 
 		Response response = new Response();
 		response.setResponseCode("200");
-		response.setResponseDescription("Device Activated successfully");
+		response.setResponseDescription("Device is activated successfully");
 		response.setResponseStatus("SUCESS");
 
 		responseheader.setApplicationName("WEB");
@@ -35,12 +35,10 @@ public class StubVerizonActivateDeviceProcessor implements Processor {
 		responseheader.setSourceName("VERIZON");
 		responseheader.setTransactionId("cde2131ksjd");
 		responseheader.setBsCarrier("VERIZON");
-		
+
 		activateDeviceResponse.setHeader(responseheader);
 		activateDeviceResponse.setResponse(response);
-
-		//activateDeviceResponseDataArea.setRequestId("R001");
-
+		activateDeviceResponseDataArea.setOrderNumber("KR012313512");
 		activateDeviceResponse.setDataArea(activateDeviceResponseDataArea);
 
 		exchange.getIn().setBody(activateDeviceResponse);

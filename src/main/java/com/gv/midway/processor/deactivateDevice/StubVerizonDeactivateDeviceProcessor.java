@@ -28,22 +28,21 @@ public class StubVerizonDeactivateDeviceProcessor implements Processor {
 
 		Response response = new Response();
 		response.setResponseCode("200");
-		response.setResponseDescription("Device Information is fetched successfully");
+		response.setResponseDescription("Device is deactivate successfully");
 		response.setResponseStatus("SUCESS");
 
 		responseheader.setApplicationName("WEB");
 		responseheader.setRegion("USA");
 		responseheader.setTimestamp("2016-03-08T21:49:45");
 		responseheader.setOrganization("Grant Victor");
-		responseheader.setSourceName("KORE");
+		responseheader.setSourceName("VERIZON");
 		responseheader.setTransactionId("cde2131ksjd");
-		responseheader.setBsCarrier("KORE");
+		responseheader.setBsCarrier("VERIZON");
 
 		deactivateDeviceResponse.setHeader(responseheader);
 		deactivateDeviceResponse.setResponse(response);
 
-		//deactivateDeviceResponseDataArea.setRequestId("requestId");
-		deactivateDeviceResponseDataArea.setOrderNumber("null");
+		deactivateDeviceResponseDataArea.setOrderNumber("VZ012345789");
 		deactivateDeviceResponse.setDataArea(deactivateDeviceResponseDataArea);
 		exchange.getIn().setBody(deactivateDeviceResponse);
 		log.info("End::StubVerizonDeactivateDeviceProcessor");
