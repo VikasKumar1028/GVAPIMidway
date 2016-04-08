@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.dao.GVCallbacksDao;
-import com.gv.midway.pojo.callback.CallbacResponse;
+import com.gv.midway.pojo.callback.CallbackResponse;
 import com.gv.midway.utility.CommonUtil;
 
 @Service
@@ -28,7 +28,7 @@ public class CallbackDaoImpl implements GVCallbacksDao{
 			ObjectMapper mapper = new ObjectMapper();
 			String msgBody = mapper.writeValueAsString(exchange.getIn().getBody());
 
-			CallbacResponse callback = new CallbacResponse();
+			CallbackResponse callback = new CallbackResponse();
 			callback.setPayload(msgBody);
 			mongoTemplate.save(callback);
 
@@ -50,7 +50,7 @@ public class CallbackDaoImpl implements GVCallbacksDao{
 
 		try {
 
-			CallbacResponse callback = new CallbacResponse();
+			CallbackResponse callback = new CallbackResponse();
 			callback.setPayload(responseBody);
 			mongoTemplate.save(callback);
 
@@ -69,7 +69,7 @@ public class CallbackDaoImpl implements GVCallbacksDao{
 
 			log.info("callbackRequestCall-jsonInString::" + msgBody);
 
-			CallbacResponse callback = new CallbacResponse();
+			CallbackResponse callback = new CallbackResponse();
 			callback.setRequestType(exchange.getFromEndpoint().toString());
 			callback.setCallBackDelivered(IConstant.MIDWAY_CALLBACK_CARRIER_STATUS_SUCCESS);
 			callback.setCallBackPayload(msgBody);
@@ -80,7 +80,7 @@ public class CallbackDaoImpl implements GVCallbacksDao{
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.fatal("callbackRequestCall-Exception");
-			CallbacResponse callback = new CallbacResponse();
+			CallbackResponse callback = new CallbackResponse();
 			callback.setLastTimeStampUpdated(CommonUtil.getCurrentTimeStamp());
 			callback.setRequestType(exchange.getFromEndpoint().toString());
 			callback.setCallBackDelivered(IConstant.MIDWAY_CALLBACK_DELIVERED_FAILED);
