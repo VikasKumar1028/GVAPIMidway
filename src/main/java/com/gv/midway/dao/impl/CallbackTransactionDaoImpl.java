@@ -1,7 +1,5 @@
 package com.gv.midway.dao.impl;
 
-import net.sf.json.JSONObject;
-
 import org.apache.camel.Exchange;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +11,12 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gv.midway.constant.IConstant;
 import com.gv.midway.dao.GVCallbackTransactionalDao;
-import com.gv.midway.pojo.callback.CallbackResponse;
 import com.gv.midway.pojo.callback.request.CallBackVerizonRequest;
 import com.gv.midway.pojo.transaction.Transaction;
 import com.gv.midway.service.callbacks.impl.GVCallbacksImpl;
 import com.gv.midway.utility.CommonUtil;
+import com.mongodb.WriteResult;
 
 @Service
 public class CallbackTransactionDaoImpl implements GVCallbackTransactionalDao {
@@ -45,6 +42,8 @@ public class CallbackTransactionDaoImpl implements GVCallbackTransactionalDao {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
+		
+		
 System.out.println("********************************************"+ strDeviceNumber);
 		Query searchUserQuery = new Query(Criteria.where("carrierTransationID").is(requestId).andOperator(Criteria.where("deviceNumber").is(strDeviceNumber)));
 
@@ -75,7 +74,9 @@ System.out.println("********************************************"+ strDeviceNumb
 			update.set("lastTimeStampUpdated", CommonUtil.getCurrentTimeStamp());
 					
 		}
-		mongoTemplate.updateMulti(searchUserQuery, update, Transaction.class);
+	//WriteResult writeResult=	mongoTemplate.updateFirst(searchUserQuery, update, Transaction.class);
+		WriteResult writeResult=	mongoTemplate.updateMulti(searchUserQuery, update, Transaction.class);
+	System.out.println(writeResult+"-------------------------");
 	
 	}
 }
