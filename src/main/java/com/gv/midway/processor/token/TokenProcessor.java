@@ -34,8 +34,11 @@ public class TokenProcessor implements Processor {
 	
 	public void process(Exchange exchange) throws Exception {
 
-		System.out.println("*****************************TOKEN************************************************");
+	//	System.out.println("*****************************TOKEN************************************************" + exchange.getOut().getBody());
 		exchange.getContext().createProducerTemplate().sendBody("direct:token",exchange.getIn().getBody());
+		
+	
+	
 		//producer.requestBody("direct:token");
 		
 	}

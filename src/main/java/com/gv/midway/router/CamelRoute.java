@@ -3,7 +3,6 @@ package com.gv.midway.router;
 import java.net.ConnectException;
 import java.net.UnknownHostException;
 
-import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.cxf.CxfOperationException;
@@ -45,6 +44,7 @@ import com.gv.midway.processor.deviceInformation.StubKoreDeviceInformationProces
 import com.gv.midway.processor.deviceInformation.StubVerizonDeviceInformationProcessor;
 import com.gv.midway.processor.deviceInformation.VerizonDeviceInformationPostProcessor;
 import com.gv.midway.processor.deviceInformation.VerizonDeviceInformationPreProcessor;
+import com.gv.midway.processor.token.TokenProcessor;
 import com.gv.midway.processor.token.VerizonAuthorizationTokenProcessor;
 import com.gv.midway.processor.token.VerizonSessionAttributeProcessor;
 import com.gv.midway.processor.token.VerizonSessionTokenProcessor;
@@ -115,9 +115,12 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iTransactionalService,"populateConnectionErrorResponse(${exchange},CONNECTION_ERROR)")
 				.bean(iAuditService, "auditExternalConnectionExceptionResponseCall")
 				.process(new GenericErrorProcessor(env));
-		
 
-		onException(VerizonSessionTokenExpirationException.class)
+		/*
+		 * 
+		 * 
+		 
+		 		onException(VerizonSessionTokenExpirationException.class)
 				.routeId("ConnectionLoginExceptionRoute").handled(true)
 				.log(LoggingLevel.INFO, "Connection Error")
 				.maximumRedeliveries(1).redeliveryDelay(1000)
@@ -140,6 +143,59 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iSessionService, "synchronizeDBContextToken") 				
 				// The control will come to this processor when all attempts have been failed
 				.process(new GenericErrorProcessor(env)); 
+
+		 
+		 
+		 
+		 */
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+
+		onException(VerizonSessionTokenExpirationException.class)
+				.routeId("ConnectionLoginExceptionRoute").handled(true)
+				.log(LoggingLevel.INFO, "Connection Error").onRedelivery(new TokenProcessor())
+				.maximumRedeliveries(1).redeliveryDelay(1000)					
+				// The control will come to this processor when all attempts have been failed
+				.process(new GenericErrorProcessor(env)); 
+		
+		
+		
+		
+		from("direct:token")
+		.bean(iSessionService, "checkToken").choice()
+		.when(body().contains("true"))
+		.log(LoggingLevel.INFO, "MATCH -REFETCHING ")
+		.process(new VerizonAuthorizationTokenProcessor(env))
+		.to(uriRestVerizonTokenEndPoint)
+		
+		.unmarshal()
+		.json(JsonLibrary.Jackson, VerizonAuthorizationResponse.class)
+		.process(new VerizonSessionTokenProcessor())
+		.to(uriRestVerizonTokenEndPoint)
+		.unmarshal()
+		.json(JsonLibrary.Jackson, VerizonSessionLoginResponse.class)
+		.process(new VerizonSessionAttributeProcessor())
+		.bean(iSessionService, "setVzToken")
+		. // saved this token in the DB
+		endChoice().otherwise().log(LoggingLevel.INFO, "NOT MATCH")
+		.to("log:input").end()
+		// sync DB and	 session token in	 the	 ServletContext
+		.bean(iSessionService, "synchronizeDBContextToken") ;			
+		
 
 		from("direct:deviceInformation").process(new HeaderProcessor())
 				.choice()
@@ -222,6 +278,10 @@ public class CamelRoute extends RouteBuilder {
 							.end().to("log:input")
 			.endChoice().end();
 				
+		
+		
+		
+		
 //SubFlow: Device Verizon Activation 				
 		from("direct:VerizonActivationFlow")
 					.doTry()						
