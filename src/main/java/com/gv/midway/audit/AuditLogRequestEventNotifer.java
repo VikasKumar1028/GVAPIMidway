@@ -38,9 +38,9 @@ public class AuditLogRequestEventNotifer extends EventNotifierSupport {
 			Exchange exchange = create.getExchange();
 			logger.info("In Audit log Request");
 
-			ObjectMapper mapper = new ObjectMapper();
+			/*ObjectMapper mapper = new ObjectMapper();
 			String jsonInString = mapper.writeValueAsString(exchange.getIn()
-					.getBody());
+					.getBody());*/
 
 			if (exchange.getIn().getBody() instanceof BaseRequest && exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID)==null) {
 				logger.info("In Audit log Request*************************************");
@@ -83,6 +83,18 @@ public class AuditLogRequestEventNotifer extends EventNotifierSupport {
 				audit.setTimeStamp(localTime);
 				audit.setAuditTransationID(TransactionId);
 				
+
+			
+				
+				exchange.setProperty(IConstant.BSCARRIER,
+						baseRequest.getHeader().getBsCarrier());
+				exchange.setProperty(IConstant.SOURCE_NAME, baseRequest.getHeader()
+						.getSourceName());
+				exchange.setProperty(IConstant.APPLICATION_NAME, baseRequest.getHeader().getApplicationName());
+				exchange.setProperty(IConstant.REGION,baseRequest.getHeader().getRegion());
+				exchange.setProperty(IConstant.DATE_FORMAT,baseRequest.getHeader().getTimestamp());
+				exchange.setProperty(IConstant.ORGANIZATION,baseRequest.getHeader().getOrganization());
+				
 				exchange.setProperty(IConstant.GV_TRANSACTION_ID, baseRequest.getHeader().getTransactionId());
 				exchange.setProperty(IConstant.GV_HOSTNAME,CommonUtil.getIpAddress());
 				
@@ -91,7 +103,8 @@ public class AuditLogRequestEventNotifer extends EventNotifierSupport {
 				audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME).toString());
 				// audit.setStatus(exchange.getProperty(name));
 
-				audit.setPayload(jsonInString);
+				audit.setPayload(exchange.getIn()
+						.getBody());
 				mongoTemplate.save(audit);
 
 			}

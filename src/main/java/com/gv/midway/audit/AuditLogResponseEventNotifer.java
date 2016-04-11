@@ -36,8 +36,8 @@ public class AuditLogResponseEventNotifer extends EventNotifierSupport {
 			logger.info("In Audit log Response");
 
 
-			ObjectMapper mapper = new ObjectMapper();
-			String jsonInString = mapper.writeValueAsString( exchange.getIn().getBody());
+			/*ObjectMapper mapper = new ObjectMapper();
+			String jsonInString = mapper.writeValueAsString( exchange.getIn().getBody());*/
 
 			if (exchange.getIn().getBody() instanceof BaseResponse) {
 				logger.info("In Audit log Response4");
@@ -80,7 +80,7 @@ public class AuditLogResponseEventNotifer extends EventNotifierSupport {
 				audit.setErrorDetais(baseResponse.getResponse().getResponseDescription());
 				audit.setErrorProblem(baseResponse.getResponse().getResponseStatus());
 				audit.setErrorCode(baseResponse.getResponse().getResponseCode());
-				audit.setPayload(jsonInString);
+				audit.setPayload(exchange.getIn().getBody());
 				
 				mongoTemplate.save(audit);
 

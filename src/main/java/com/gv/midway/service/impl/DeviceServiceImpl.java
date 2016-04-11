@@ -9,6 +9,9 @@ import com.gv.midway.dao.IDeviceDao;
 import com.gv.midway.pojo.device.request.BulkDevices;
 import com.gv.midway.pojo.device.request.SingleDevice;
 import com.gv.midway.pojo.device.response.InsertDeviceResponse;
+import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
+import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
+import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.service.IDeviceService;
 
 
@@ -34,7 +37,7 @@ public class DeviceServiceImpl implements IDeviceService {
 		// TODO Auto-generated method stub
 		
 		                       
-		/*Device device = (Device)exchange.getIn().getBody();
+		/*c
 		
 	    String deviceId = exchange.getIn().getHeader("id", String.class);
        
@@ -48,16 +51,22 @@ public class DeviceServiceImpl implements IDeviceService {
 		
 	}
 
-	public Object getDeviceDetails(Exchange exchange) {
+	public DeviceInformationResponse getDeviceInformationDB(Exchange exchange) {
 		// TODO Auto-generated method stub
 
 		
-	    String deviceId = exchange.getIn().getHeader("id", String.class);
+	   /* String deviceId = exchange.getIn().getHeader("id", String.class);
        
-		System.out.println("id is...."+deviceId);
+		System.out.println("id is...."+deviceId);*/
+		
+		DeviceInformationRequest deviceInformationRequest = (DeviceInformationRequest) exchange.getIn().getBody();
+		
+		System.out.println("device information is.........."+deviceInformationRequest.toString());
+		
+		String netSuiteId=deviceInformationRequest.getDataArea().getNetSuiteId();
 		
 		
-		return iDeviceDao.getDeviceDetails(deviceId);
+		return iDeviceDao.getDeviceInformationDB(deviceInformationRequest);
 	}
 
 	

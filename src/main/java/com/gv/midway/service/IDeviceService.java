@@ -3,6 +3,7 @@ package com.gv.midway.service;
 import org.apache.camel.Exchange;
 
 import com.gv.midway.pojo.device.response.InsertDeviceResponse;
+import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 
 public interface IDeviceService {
 	
@@ -10,7 +11,7 @@ public interface IDeviceService {
 
 	public Object updateDeviceDetails(Exchange exchange);
 	
-	public Object getDeviceDetails(Exchange exchange);
+	public DeviceInformationResponse getDeviceInformationDB(Exchange exchange);
 	
 	public Object getDeviceDetailsBsId(Exchange exchange);
 

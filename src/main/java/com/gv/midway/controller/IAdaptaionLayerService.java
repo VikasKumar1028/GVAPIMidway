@@ -7,6 +7,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
@@ -47,10 +48,12 @@ public interface IAdaptaionLayerService {
 	Object updateDeviceDetails(SingleDevice device);
 
 	@GET
-	@Path("/cell/info/{id}")
+	@Path("/cell/info/midway")
 	@Produces("application/json")
-	@ApiOperation(value = "Get Device Details")
-	Object getDeviceInfo(@PathParam("id") final String id);
+	@ApiOperation(value = "Get Device Details from Midway DB")
+	DeviceInformationResponse getDeviceInfoDB(@QueryParam("region") final String region,@QueryParam("timestamp") final String timestamp,
+			@QueryParam("organization") final String organization,@QueryParam("transactionId") final String transactionId,@QueryParam("sourceName") final String sourceName,
+			@QueryParam("applicationName") final String applicationName,@QueryParam("bsCarrier") final String bsCarrier,@QueryParam("netSuiteId") final String netSuiteId);
 
 	@GET
 	@Path("/cell/info/bs_id/{bs_id}")

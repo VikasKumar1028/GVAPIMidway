@@ -374,8 +374,8 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iDeviceService, "updateDeviceDetails").to("log:input")
 				.end();
 
-		from("direct:getDeviceDetails")
-				.bean(iDeviceService, "getDeviceDetails").to("log:input").end();
+		from("direct:getDeviceInformationDB")
+				.bean(iDeviceService, "getDeviceInformationDB").to("log:input").end();
 
 		from("direct:getDeviceDetailsBsId")
 				.bean(iDeviceService, "getDeviceDetailsBsId").to("log:input")

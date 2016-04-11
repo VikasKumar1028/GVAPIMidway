@@ -14,7 +14,7 @@ public class Audit {
 	//status ??
 	private String status;
 	private String auditTransationId;
-	private String Payload;
+	private Object Payload;
 	private String errorProblem;
 	private String errorCode;
 	private String errorDetais;
@@ -71,11 +71,11 @@ public class Audit {
 		this.auditTransationId = auditTransationID;
 	}
 
-	public String getPayload() {
+	public Object getPayload() {
 		return Payload;
 	}
 
-	public void setPayload(String payload) {
+	public void setPayload(Object payload) {
 		Payload = payload;
 	}
 

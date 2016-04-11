@@ -3,6 +3,8 @@ package com.gv.midway.dao;
 import com.gv.midway.pojo.device.request.BulkDevices;
 import com.gv.midway.pojo.device.request.SingleDevice;
 import com.gv.midway.pojo.device.response.InsertDeviceResponse;
+import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
+import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 
 
 	
@@ -13,7 +15,7 @@ public interface IDeviceDao {
 	
 	public Object updateDeviceDetails(SingleDevice device);
 	
-	public Object getDeviceDetails(String deviceId);
+	public DeviceInformationResponse getDeviceInformationDB(DeviceInformationRequest deviceInformationRequest);
 	
 	public Object getDeviceDetailsBsId(String bsId);
 

@@ -2,16 +2,24 @@ package com.gv.midway.dao.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import com.gv.midway.dao.IDeviceDao;
+import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.device.request.BulkDevices;
 import com.gv.midway.pojo.device.request.SingleDevice;
 import com.gv.midway.pojo.device.response.InsertDeviceResponse;
+import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
+import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
+import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponseDataArea;
+import com.gv.midway.pojo.verizon.Devices;
 
 
 
@@ -101,10 +109,76 @@ public class DeviceDaoImpl implements IDeviceDao
 		
 	}
 
-	public Object getDeviceDetails(String deviceId) {
+	public DeviceInformationResponse getDeviceInformationDB(DeviceInformationRequest deviceInformationRequest) {
 		// TODO Auto-generated method stub
 		
+		String netSuiteId=deviceInformationRequest.getDataArea().getNetSuiteId();
+		System.out.println("device dao netsuite id is..."+netSuiteId);
 		
+        DeviceInformationResponse deviceInformationResponse=new DeviceInformationResponse();
+		
+		deviceInformationResponse.setHeader(deviceInformationRequest.getHeader());
+		  Response response=new Response();
+		try{
+		
+		
+		
+		
+		Query searchDeviceQuery = new Query(Criteria
+				.where("netSuiteId")
+				.is(netSuiteId)
+				);
+		
+		DeviceInformation deviceInformation=(DeviceInformation) mongoTemplate.findOne(searchDeviceQuery,DeviceInformation.class);
+		
+	  
+	    
+	    if(deviceInformation==null)
+	    		
+	   {
+	    	response.setResponseCode("1999");
+	    	response.setResponseDescription("No data found in Midway DB");
+	    	response.setResponseStatus("ERROR");;
+	    	
+	    }
+	    
+	    else
+	    {
+	    	response.setResponseCode("2000");
+	    	response.setResponseDescription("Data Succesfully Found from Midway DB");
+	    	response.setResponseStatus("SUCCESS");;	
+	    	
+	    }
+	    
+	    deviceInformationResponse.setResponse(response);
+	    
+        DeviceInformationResponseDataArea deviceInformationResponseDataArea=new DeviceInformationResponseDataArea();
+		
+	    deviceInformationResponseDataArea.setDevices(deviceInformation);
+	    
+	    deviceInformationResponse.setDataArea(deviceInformationResponseDataArea);
+	    
+	    return deviceInformationResponse;
+		}
+		catch(Exception e){
+			
+			response.setResponseCode("1999");
+	    	response.setResponseDescription("Not able to connect the Midway DB");
+	    	response.setResponseStatus("ERROR");
+	    	
+	    	 deviceInformationResponse.setResponse(response);
+	 	    
+	         DeviceInformationResponseDataArea deviceInformationResponseDataArea=new DeviceInformationResponseDataArea();
+	 		
+	 	     deviceInformationResponseDataArea.setDevices(null);
+	 	    
+	 	     deviceInformationResponse.setDataArea(deviceInformationResponseDataArea);
+			
+			return deviceInformationResponse;
+		}
+	    
+	   
+	    
 		
 		/*Device device=mongoTemplate.findById(deviceId, Device.class);
 		if(device==null){
@@ -119,7 +193,7 @@ public class DeviceDaoImpl implements IDeviceDao
 	    return Response.status(200).entity(device).build(); */
 		
 		
-	return null;
+	
 		
 	}
 

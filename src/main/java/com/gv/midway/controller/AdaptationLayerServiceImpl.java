@@ -3,6 +3,7 @@ package com.gv.midway.controller;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.ProducerTemplate;
 
+import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
 import com.gv.midway.pojo.callback.request.CallBackVerizonRequest;
@@ -12,6 +13,7 @@ import com.gv.midway.pojo.device.request.BulkDevices;
 import com.gv.midway.pojo.device.request.SingleDevice;
 import com.gv.midway.pojo.device.response.InsertDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
+import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequestDataArea;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 
@@ -61,7 +63,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 		return response;
 	}
 
-	public Object getDeviceInfo(String id) {
+	/*public Object getDeviceInfo(String id) {
 		// TODO Auto-generated method stub
 
 		System.out.println("device id is...." + id);
@@ -72,6 +74,34 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 		System.out.println("direct:getDeviceDetails respsone is ........"
 				+ response);
 
+		return response;
+	}*/
+	
+	public DeviceInformationResponse getDeviceInfoDB(String region, String timestamp,
+			String organization, String transactionId, String sourceName,
+			String applicationName, String bsCarrier, String netSuiteId) {
+		// TODO Auto-generated method stub
+		
+		DeviceInformationRequest deviceInformationRequest=new DeviceInformationRequest();
+		
+		Header header=new Header();
+		header.setRegion(region);
+		header.setApplicationName(applicationName);
+		header.setBsCarrier(bsCarrier);
+		header.setSourceName(sourceName);
+		header.setTimestamp(timestamp);
+		header.setTransactionId(transactionId);
+		header.setOrganization(organization);
+		
+		DeviceInformationRequestDataArea dataArea=new DeviceInformationRequestDataArea();
+		dataArea.setNetSuiteId(netSuiteId);
+		
+		deviceInformationRequest.setHeader(header);
+		deviceInformationRequest.setDataArea(dataArea);
+		
+		DeviceInformationResponse response = (DeviceInformationResponse)producer.requestBody(
+				"direct:getDeviceInformationDB", deviceInformationRequest);
+		
 		return response;
 	}
 
@@ -125,4 +155,6 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 	public CallBackVerizonRequest activateCallback(CallBackVerizonRequest callbackRequest) {
 		return (CallBackVerizonRequest) producer.requestBody("direct:callbacks", callbackRequest);
 	}
+
+	
 }
