@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
 
 import com.gv.midway.constant.IConstant;
+import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
@@ -23,11 +24,6 @@ public class VerizonActivateDevicePostProcessor implements Processor {
 	Logger log = Logger.getLogger(VerizonDeviceInformationPostProcessor.class
 			.getName());
 
-	/*
-	 * public VerizonActivateDevicePostProcessor() {
-	 * 
-	 * }
-	 */
 	Environment newEnv;
 
 	public VerizonActivateDevicePostProcessor(Environment env) {
@@ -43,58 +39,60 @@ public class VerizonActivateDevicePostProcessor implements Processor {
 	 */
 	public void process(Exchange exchange) throws Exception {
 
-		log.info("Start:VerizonDeviceInformationPostProcessor");
-
-		System.out.println("-----------------"
-				+ exchange.getIn().getBody().toString());
+		log.info("Start:VerizonActivateDevicePostProcessor");
 
 		ActivateDeviceResponse activateDeviceResponse = new ActivateDeviceResponse();
 		ActivateDeviceResponseDataArea activateDeviceResponseDataArea = new ActivateDeviceResponseDataArea();
 		Header responseheader = new Header();
 		Response response = new Response();
 
-		if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
-			// Without error
-			/*VerizonResponse verizonResponse = exchange.getIn().getBody(
-					VerizonResponse.class);*/
-			response.setResponseCode(newEnv
-					.getProperty(IConstant.RESPONSES_CODE));
-			response.setResponseStatus("Pending");
-			response.setResponseDescription(exchange.getIn().getBody().toString());
-
-		} else {
-			
-			response.setResponseCode("400");
-			response.setResponseStatus("errorMessage");
-			response.setResponseDescription(exchange.getIn().getBody().toString());
-		}
-		
-		responseheader.setApplicationName(newEnv
-				.getProperty(IConstant.APPLICATION_NAME));
-		responseheader.setRegion(newEnv.getProperty(IConstant.REGION));
 		DateFormat dateFormat = new SimpleDateFormat(
 				newEnv.getProperty(IConstant.DATE_FORMAT));
+
 		Date date = new Date();
 
+		if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
+
+			log.info("RequestID::" + exchange.getIn().getBody().toString());
+			response.setResponseCode(newEnv
+					.getProperty(IConstant.RESPONSES_CODE));
+			response.setResponseStatus(newEnv
+					.getProperty(IConstant.RESPONSE_STATUS_SUCCESS));
+			response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
+
+		} else {
+
+			response.setResponseCode("400");
+			response.setResponseStatus("errorMessage");
+			response.setResponseDescription(exchange.getIn().getBody()
+					.toString());
+		}
+
+		responseheader.setApplicationName(exchange.getProperty(
+				IConstant.APPLICATION_NAME).toString());
+		responseheader.setRegion(exchange.getProperty(IConstant.REGION)
+				.toString());
+		responseheader.setOrganization(exchange.getProperty(
+				IConstant.ORGANIZATION).toString());
+
 		responseheader.setTimestamp(dateFormat.format(date));
-		responseheader.setOrganization(newEnv
-				.getProperty(IConstant.ORGANIZATION));
-		
-		String TransactionId = (String) exchange.getProperty(newEnv
-				.getProperty(IConstant.EXCHANEGE_PROPERTY));
-		responseheader.setTransactionId(TransactionId);
 
-		responseheader.setSourceName(exchange.getProperty(IConstant.SOURCE_NAME).toString());
-		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER).toString());
-
+		responseheader.setSourceName(exchange
+				.getProperty(IConstant.SOURCE_NAME).toString());
+		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
+				.toString());
+		responseheader.setTransactionId(exchange.getProperty(
+				IConstant.GV_TRANSACTION_ID).toString());
 
 		activateDeviceResponse.setHeader(responseheader);
 		activateDeviceResponse.setResponse(response);
-
-		//activateDeviceResponseDataArea.setRequestId("requestId");
-		//activateDeviceResponse.setDataArea(activateDeviceResponseDataArea);
+		activateDeviceResponseDataArea.setOrderNumber(exchange.getProperty(
+				IConstant.MIDWAY_TRANSACTION_ID).toString());
+		activateDeviceResponse.setDataArea(activateDeviceResponseDataArea);
 
 		exchange.getIn().setBody(activateDeviceResponse);
+
+		log.info("End:VerizonActivateDevicePostProcessor");
 
 	}
 

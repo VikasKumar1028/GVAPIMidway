@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
 
 import com.gv.midway.constant.IConstant;
+import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
@@ -17,7 +18,8 @@ import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponseDataArea
 
 public class KoreActivateDevicePostProcessor implements Processor {
 
-	Logger log = Logger.getLogger(KoreActivateDevicePostProcessor.class.getName());
+	Logger log = Logger.getLogger(KoreActivateDevicePostProcessor.class
+			.getName());
 
 	public KoreActivateDevicePostProcessor() {
 
@@ -33,13 +35,7 @@ public class KoreActivateDevicePostProcessor implements Processor {
 
 	public void process(Exchange exchange) throws Exception {
 
-		// bean exhange (deviceNumber, Midwayisd)
-
-		// update status
-
 		log.info("Start::KoreActivateDevicePostProcessor");
-		System.out.println("KoreActivateDevicePostProcessor------------------------------tracking no----------");
-		ActivateDeviceResponseDataArea deviceActivateResponseDataArea = new ActivateDeviceResponseDataArea();
 
 		ActivateDeviceResponse activateDeviceResponse = new ActivateDeviceResponse();
 
@@ -48,32 +44,39 @@ public class KoreActivateDevicePostProcessor implements Processor {
 		Header responseheader = new Header();
 
 		Response response = new Response();
-		
-		//santosh : here's null pointer
-		response.setResponseCode(newEnv.getProperty(IConstant.RESPONSES_CODE));
-		response.setResponseStatus(newEnv.getProperty(IConstant.RESPONSE_STATUS_SUCCESS));
 
-		responseheader.setApplicationName(newEnv.getProperty(IConstant.APPLICATION_NAME));
-		responseheader.setRegion(newEnv.getProperty(IConstant.REGION));
-		DateFormat dateFormat = new SimpleDateFormat(newEnv.getProperty(IConstant.DATE_FORMAT));
+		response.setResponseCode(newEnv.getProperty(IConstant.RESPONSES_CODE));
+		response.setResponseStatus(newEnv
+				.getProperty(IConstant.RESPONSE_STATUS_SUCCESS));
+
+		response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
+
+		responseheader.setApplicationName(exchange.getProperty(
+				IConstant.APPLICATION_NAME).toString());
+		responseheader.setRegion(exchange.getProperty(IConstant.REGION)
+				.toString());
+
+		DateFormat dateFormat = new SimpleDateFormat(
+				newEnv.getProperty(IConstant.DATE_FORMAT));
 		Date date = new Date();
 
 		responseheader.setTimestamp(dateFormat.format(date));
-		responseheader.setOrganization(newEnv.getProperty(IConstant.ORGANIZATION));
-		
-		
-		String TransactionId = (String) exchange.getProperty(newEnv.getProperty(IConstant.EXCHANEGE_PROPERTY));
-		responseheader.setTransactionId(TransactionId);
+		responseheader.setOrganization(exchange.getProperty(
+				IConstant.ORGANIZATION).toString());
 
-		responseheader.setSourceName(exchange.getProperty(IConstant.SOURCE_NAME).toString());
-		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER).toString());
-
-		// deviceActivateResponseDataArea.setRequestId("requestId");
+		responseheader.setSourceName(exchange
+				.getProperty(IConstant.SOURCE_NAME).toString());
+		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
+				.toString());
+		responseheader.setTransactionId(exchange.getProperty(
+				IConstant.GV_TRANSACTION_ID).toString());
 
 		activateDeviceResponse.setHeader(responseheader);
 		activateDeviceResponse.setResponse(response);
-		// deviceActivateResponseDataArea.setTrackingNumber("ReciptNumbergenratedByKORE");
-		activateDeviceResponse.setDataArea(deviceActivateResponseDataArea);
+		activateDeviceResponseDataArea.setOrderNumber(exchange.getProperty(
+				IConstant.MIDWAY_TRANSACTION_ID).toString());
+
+		activateDeviceResponse.setDataArea(activateDeviceResponseDataArea);
 
 		exchange.getIn().setBody(activateDeviceResponse);
 		log.info("End::KoreActivateDevicePostProcessor");

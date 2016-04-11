@@ -13,29 +13,15 @@ public class HeaderProcessor implements Processor {
 
 	Logger log = Logger.getLogger(HeaderProcessor.class.getName());
 
-
 	public void process(Exchange exchange) throws Exception {
 
 		log.info("Start:HeaderProcessor");
 
-		BaseRequest baseRequest = exchange.getIn()
+		// populate MidwayTransationID
+		String midwayTransationID = CommonUtil.getmidwayTransationId();
+		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_ID,
+				midwayTransationID);
 
-				.getBody(BaseRequest.class);
-
-		exchange.getIn().setHeader(IConstant.SOURCE_NAME,
-				baseRequest.getHeader().getSourceName());
-		
-		exchange.setProperty(IConstant.BSCARRIER,
-				baseRequest.getHeader().getBsCarrier());
-		exchange.setProperty(IConstant.SOURCE_NAME, baseRequest.getHeader()
-				.getSourceName());
-		exchange.setProperty(IConstant.GV_TRANSACTION_ID, baseRequest.getHeader().getTransactionId());
-		exchange.setProperty(IConstant.GV_HOSTNAME,CommonUtil.getIpAddress());
-		
-
-		
-		
-		
 	}
 
 }
