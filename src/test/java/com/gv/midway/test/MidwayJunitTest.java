@@ -61,7 +61,7 @@ public class MidwayJunitTest extends Assert {
 	}
 
 	// test case for header Information-common for all API
-	//@Test
+	@Test
 	public void testHeaderInformation() throws Exception {
 
 		Header header = new Header();
@@ -122,7 +122,7 @@ public class MidwayJunitTest extends Assert {
 	}
 
 	// test case for Activate Device
-	//@Test
+	@Test
 	public void testActivateDevice() throws Exception {
 
 		ActivateDeviceRequest req = new ActivateDeviceRequest();
@@ -161,7 +161,7 @@ public class MidwayJunitTest extends Assert {
 	}
 
 	// Test Case for Deactivate Device
-	//@Test
+	@Test
 	public void testDeactivateDevice() throws Exception {
 
 		DeactivateDeviceRequest req = new DeactivateDeviceRequest();
@@ -199,7 +199,7 @@ public class MidwayJunitTest extends Assert {
 	}
 	
 	//test case for Activate Device Response 
-	//@Test
+	@Test
 	public void testActivateDeviceResponse() throws Exception {
 
 		Exchange exchange;
@@ -235,7 +235,7 @@ public class MidwayJunitTest extends Assert {
 	
 	
 	//Test case for Activate callback 'Request Id'
-	//@Test
+	@Test
 	public void testActivateCallback() throws Exception {
 
 		CallBackVerizonRequest callbackReq = new CallBackVerizonRequest();
@@ -250,7 +250,7 @@ public class MidwayJunitTest extends Assert {
 	}
 	
 	//Test case for Cell 
-	//@Test
+	@Test
 	public void testCell() throws Exception{
 		Cell cell =new Cell();
 		cell.setEsn("ESN01");
