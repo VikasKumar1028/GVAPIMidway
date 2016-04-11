@@ -59,15 +59,19 @@ public class VerizonDeactivateDevicePostProcessor implements Processor {
 		
 		if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
 
+
 			response.setResponseCode(IResponse.SUCCESS_CODE);
 			response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
 			response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
 			
 
+
 		} else {
 
 			response.setResponseCode(400);
+
 			response.setResponseStatus(IResponse.ERROR_MESSAGE);
+
 			response.setResponseDescription(exchange.getIn().getBody().toString());
 		}
 

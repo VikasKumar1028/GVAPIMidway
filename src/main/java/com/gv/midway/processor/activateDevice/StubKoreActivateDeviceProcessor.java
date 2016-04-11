@@ -4,6 +4,8 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 
+import com.gv.midway.constant.IConstant;
+import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
@@ -24,7 +26,9 @@ public class StubKoreActivateDeviceProcessor implements Processor {
 	    Header responseheader = new Header();
 
 		Response response = new Response();
-		response.setResponseCode(2000);
+
+		response.setResponseCode(IResponse.SUCCESS_CODE);
+
 		response.setResponseDescription("Device is activated successfully");
 		response.setResponseStatus("SUCCESS");
 

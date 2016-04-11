@@ -2,24 +2,29 @@ package com.gv.midway.dao.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
+import org.apache.camel.Exchange;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import com.gv.midway.constant.IConstant;
+import com.gv.midway.constant.IResponse;
 import com.gv.midway.dao.IDeviceDao;
+import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.device.request.BulkDevices;
 import com.gv.midway.pojo.device.request.SingleDevice;
 import com.gv.midway.pojo.device.response.InsertDeviceResponse;
+import com.gv.midway.pojo.device.response.InsertDeviceResponseDataArea;
+import com.gv.midway.pojo.device.response.UpdateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponseDataArea;
-import com.gv.midway.pojo.verizon.Devices;
 
 
 
@@ -32,7 +37,9 @@ public class DeviceDaoImpl implements IDeviceDao
 	 */
 	@Autowired
 	MongoTemplate mongoTemplate;
-
+	
+	private Logger log = Logger.getLogger(DeviceDaoImpl.class.getName());
+	
 	public InsertDeviceResponse insertDeviceDetails(SingleDevice device) {
 
 		// Simple way using template
@@ -52,7 +59,16 @@ public class DeviceDaoImpl implements IDeviceDao
        {
     	   System.out.println("error in insert is..."+e.getMessage());
     	   InsertDeviceResponse insertDeviceResponse= new InsertDeviceResponse();
-  	   	   insertDeviceResponse.setMessage("failed to insert record in midway layer ");
+    	   
+    	  Header header= device.getHeader();
+    	  
+    	  Response response=new Response();
+    	  response.setResponseCode(IResponse.DB_ERROR_CODE);
+    	  response.setResponseDescription(IResponse.ERROR_DESCRIPTION_INSERTDEVICE_MIDWAYDB);
+    	  response.setResponseStatus(IResponse.ERROR_MESSAGE);
+    	  insertDeviceResponse.setResponse(response);
+    	  insertDeviceResponse.setHeader(header);
+  	   	   //insertDeviceResponse.setMessage("failed to insert record in midway layer ");
     	  
     	   
     	   return insertDeviceResponse;
@@ -61,19 +77,99 @@ public class DeviceDaoImpl implements IDeviceDao
 		System.out.println("device data is...."+device.toString());
 		
 		 InsertDeviceResponse insertDeviceResponse= new InsertDeviceResponse();
-		 insertDeviceResponse.setId(deviceInformation.getMidwayMasterDeviceId());
-	   	 insertDeviceResponse.setMessage("Success");
+		 
+		 Header header= device.getHeader();
+   	  
+		Response response = new Response();
+		response.setResponseCode(IResponse.SUCCESS_CODE);
+		response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_INSERT_MIDWAYDB);
+		response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+		insertDeviceResponse.setResponse(response);
+		insertDeviceResponse.setHeader(header);
+		InsertDeviceResponseDataArea insertDeviceResponseDataArea=new InsertDeviceResponseDataArea();
+		insertDeviceResponseDataArea.setId(deviceInformation.getMidwayMasterDeviceId());
+		
    	    
    	 return insertDeviceResponse;
 
 	}
+	
+	public UpdateDeviceResponse updateDeviceDetails(SingleDevice device) {
+		// TODO Auto-generated method stub
+		
+		DeviceInformation deviceInfomation=null;
+      try{
+			
+			
+    	  Query searchDeviceQuery = new Query(Criteria
+  				.where("netSuiteId")
+  				.is(device.getDataArea().getDevice().getNetSuiteId())
+  				);
+  		
+    	  deviceInfomation=(DeviceInformation) mongoTemplate.findOne(searchDeviceQuery,DeviceInformation.class);
+			
+			if(deviceInfomation==null){
+				
+				 Header header= device.getHeader();
+		    	  
+		    	  Response response=new Response();
+		    	  response.setResponseCode(IResponse.NO_DATA_FOUND_CODE);
+		    	  response.setResponseDescription(IResponse.ERROR_DESCRIPTION_NODATA_UPDATEDEVCIE_MIDWAYDB);
+		    	  response.setResponseStatus(IResponse.ERROR_MESSAGE);
+				
+				  UpdateDeviceResponse updateDeviceResponse=new UpdateDeviceResponse();
+				  updateDeviceResponse.setHeader(header);
+				  updateDeviceResponse.setResponse(response);
+				  
+				  return updateDeviceResponse;
+			}
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+		    device.getDataArea().getDevice().setLastUpdated(sdf.format(new Date()));
+		    
+		    DeviceInformation deviceInformationToUpdate= device.getDataArea().getDevice();
+			
+			mongoTemplate.save(deviceInformationToUpdate);
+	       }
+	       
+	       catch(Exception e)
+	       {
+	    	   
+	    	Header header = device.getHeader();
 
-	public Object updateDeviceDetails(String deviceId, SingleDevice device) {
+	   		Response response = new Response();
+	   		response.setResponseCode(IResponse.DB_ERROR_CODE);
+	   		response.setResponseDescription(IResponse.ERROR_DESCRIPTION_UPDATE_MIDWAYDB);
+	   		response.setResponseStatus(IResponse.ERROR_MESSAGE);
+
+	   		UpdateDeviceResponse updateDeviceResponse = new UpdateDeviceResponse();
+	   		updateDeviceResponse.setHeader(header);
+	   		updateDeviceResponse.setResponse(response);
+	    	
+	   		return updateDeviceResponse;
+	    	 
+	       }
+      
+		Header header = device.getHeader();
+
+		Response response = new Response();
+		response.setResponseCode(IResponse.SUCCESS_CODE);
+		response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_UPDATE_MIDWAYDB);
+		response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+
+		UpdateDeviceResponse updateDeviceResponse = new UpdateDeviceResponse();
+		updateDeviceResponse.setHeader(header);
+		updateDeviceResponse.setResponse(response);
+
+		return updateDeviceResponse;
+			
+	}
+
+	/*public Object updateDeviceDetails(String deviceId, SingleDevice device) {
 		// TODO Auto-generated method stub
 		
 		//ResponseMessage responseMessage= new ResponseMessage();
 		
-		/*try{
+		try{
 			
 			Device deviceExist=mongoTemplate.findById(deviceId, Device.class);
 			
@@ -102,12 +198,12 @@ public class DeviceDaoImpl implements IDeviceDao
 			//System.out.println(  mongoTemplate.getDb().toString()+"-----"+"----------xcxc-----"+device.toString());
 			System.out.println("device data is...."+device.toString());
 			//responseMessage.setMessage("device record updated successfully in midway layer");
-		    return Response.status(200).entity(responseMessage).build(); */
+		    return Response.status(200).entity(responseMessage).build(); 
 		
 		return null;
 			
 		
-	}
+	}*/
 
 	public DeviceInformationResponse getDeviceInformationDB(DeviceInformationRequest deviceInformationRequest) {
 		// TODO Auto-generated method stub
@@ -136,17 +232,21 @@ public class DeviceDaoImpl implements IDeviceDao
 	    if(deviceInformation==null)
 	    		
 	   {
-	    	response.setResponseCode(1999);
-	    	response.setResponseDescription("No data found in Midway DB");
-	    	response.setResponseStatus("ERROR");;
+
+	    	response.setResponseCode(IResponse.NO_DATA_FOUND_CODE);
+	    	response.setResponseDescription(IResponse.ERROR_DESCRIPTION_NODATA_DEVCIEINFO_MIDWAYDB);
+	    	response.setResponseStatus(IResponse.ERROR_MESSAGE);
+
 	    	
 	    }
 	    
 	    else
 	    {
-	    	response.setResponseCode(2000);
-	    	response.setResponseDescription("Data Succesfully Found from Midway DB");
-	    	response.setResponseStatus("SUCCESS");;	
+
+	    	response.setResponseCode(IResponse.SUCCESS_CODE);
+	    	response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_MIDWAYDB);
+	    	response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+
 	    	
 	    }
 	    
@@ -162,9 +262,11 @@ public class DeviceDaoImpl implements IDeviceDao
 		}
 		catch(Exception e){
 			
-			response.setResponseCode(1999);
-	    	response.setResponseDescription("Not able to connect the Midway DB");
-	    	response.setResponseStatus("ERROR");
+
+			response.setResponseCode(IResponse.DB_ERROR_CODE);
+	    	response.setResponseDescription(IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB);
+	    	response.setResponseStatus(IResponse.ERROR_MESSAGE);
+
 	    	
 	    	 deviceInformationResponse.setResponse(response);
 	 	    
@@ -243,10 +345,49 @@ public class DeviceDaoImpl implements IDeviceDao
 		return null;
 	}
 
-	public Object updateDeviceDetails(SingleDevice device) {
+	public void setDeviceInformationDB(Exchange exchange) {
 		// TODO Auto-generated method stub
-		return null;
+		
+		String netSuiteId=(String) exchange.getProperty(IConstant.MIDWAY_NETSUITE_ID);
+		DeviceInformation deviceInformation=null;
+		try{
+		
+		
+		Query searchDeviceQuery = new Query(Criteria
+				.where("netSuiteId")
+				.is(netSuiteId)
+				);
+		
+		deviceInformation=(DeviceInformation) mongoTemplate.findOne(searchDeviceQuery,DeviceInformation.class);
+		
+		exchange.setProperty(IConstant.MIDWAY_DEVICEINFO_DB,deviceInformation);
+	    
+		}
+		
+		catch(Exception e)
+		{
+			
+			log.info("Not able to fetch the data from DB....."+e.getMessage());
+		}
+	    
 	}
+
+	public void updateDeviceInformationDB(Exchange exchange) {
+		// TODO Auto-generated method stub
+		DeviceInformationResponse deviceInformationResponse=(DeviceInformationResponse)exchange.getIn().getBody();
+		
+		if(exchange.getProperty(IConstant.MIDWAY_DEVICEINFO_DB)!=null)
+		{
+			
+			DeviceInformation deviceInformation=deviceInformationResponse.getDataArea().getDevices();
+			
+			log.info("device info carrier is........."+deviceInformation.toString());
+			
+			mongoTemplate.save(deviceInformation);
+		}
+	}
+
+	
 
 	/*public String insertDevicesDetailsInBatch(Devices devices) {
 

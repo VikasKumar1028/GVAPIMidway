@@ -54,6 +54,15 @@ public interface IAdaptaionLayerService {
 	DeviceInformationResponse getDeviceInfoDB(@QueryParam("region") final String region,@QueryParam("timestamp") final String timestamp,
 			@QueryParam("organization") final String organization,@QueryParam("transactionId") final String transactionId,@QueryParam("sourceName") final String sourceName,
 			@QueryParam("applicationName") final String applicationName,@QueryParam("bsCarrier") final String bsCarrier,@QueryParam("netSuiteId") final String netSuiteId);
+	
+	@GET
+	@Path("/cell/info/carrier")
+	@Produces("application/json")
+	@ApiOperation(value = "Get Device Details from Midway DB")
+	DeviceInformationResponse getDeviceInfoCarrier(@QueryParam("region") final String region,@QueryParam("timestamp") final String timestamp,
+			@QueryParam("organization") final String organization,@QueryParam("transactionId") final String transactionId,@QueryParam("sourceName") final String sourceName,
+			@QueryParam("applicationName") final String applicationName,@QueryParam("bsCarrier") final String bsCarrier,@QueryParam("netSuiteId") final String netSuiteId,
+			@QueryParam("deviceId") final String deviceId,@QueryParam("kind") final String kind);
 
 	@GET
 	@Path("/cell/info/bs_id/{bs_id}")
@@ -68,13 +77,13 @@ public interface IAdaptaionLayerService {
 	@ApiOperation(value = "Insert Device Details in Bulk")
 	Object insertDevicesDetailsInBatch(BulkDevices device);
 
-	@POST
+	/*@POST
 	@Path("/device/information")
 	@Produces("application/json")
 	@Consumes("application/json")
 	@ApiOperation(value = "DeviceInformationService")
 	DeviceInformationResponse deviceInformationDevice(
-			DeviceInformationRequest deviceInformationRequest);
+			DeviceInformationRequest deviceInformationRequest);*/
 	
 	@POST
 	@Path("/device/deactivate")

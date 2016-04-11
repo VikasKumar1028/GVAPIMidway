@@ -79,14 +79,19 @@ public class AuditLogResponseEventNotifer extends EventNotifierSupport {
 				audit.setGvTransationId(exchange.getProperty(IConstant.GV_TRANSACTION_ID).toString());
 				audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME).toString());
 				audit.setPayload(exchange.getIn().getBody());
-				if(IResponse.SUCCESS_CODE.intValue()!=baseResponse.getResponse().getResponseCode().intValue())
+				if(IResponse.SUCCESS_CODE!=baseResponse.getResponse().getResponseCode())
 				{
 				audit.setErrorDetais(baseResponse.getResponse().getResponseDescription());
 				audit.setErrorProblem(baseResponse.getResponse().getResponseStatus());
+
 				audit.setErrorCode(baseResponse.getResponse().getResponseCode());
 			
 				}
 				
+
+				
+				audit.setPayload(exchange.getIn().getBody());
+
 				
 				mongoTemplate.save(audit);
 

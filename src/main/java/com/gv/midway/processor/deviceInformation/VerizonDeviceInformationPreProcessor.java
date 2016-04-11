@@ -9,6 +9,7 @@ import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
 import com.gv.midway.pojo.deviceInformation.verizon.response.DeviceInformationResponseVerizon;
 import com.gv.midway.pojo.session.SessionBean;
+import com.gv.midway.pojo.verizon.DeviceId;
 
 public class VerizonDeviceInformationPreProcessor implements Processor {
 
@@ -26,10 +27,12 @@ public class VerizonDeviceInformationPreProcessor implements Processor {
 
 		DeviceInformationRequest req = (DeviceInformationRequest) exchange
 				.getIn().getBody();
+		
+		DeviceId deviceId=req.getDataArea().getDeviceId();
 		/*String accountName =req.getDataArea().getAccountName();
 		log.info("Account Number"+req.getDataArea().getAccountName());*/
 		net.sf.json.JSONObject obj = new net.sf.json.JSONObject();
-		obj.put("req", req);
+		obj.put("deviceId", deviceId);
 /*
 		System.out.println("req.getDataArea()" + req.getDataArea());
 		String json = "{\"accountName\":\"ABC\"}";*/

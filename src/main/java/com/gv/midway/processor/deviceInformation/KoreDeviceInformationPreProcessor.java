@@ -5,6 +5,7 @@ import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 
+import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
 
 public class KoreDeviceInformationPreProcessor implements Processor {
@@ -20,9 +21,9 @@ public class KoreDeviceInformationPreProcessor implements Processor {
 		// wrap it in a Subject
 		DeviceInformationRequest request = (DeviceInformationRequest) exchange
 				.getIn().getBody(DeviceInformationRequest.class);
-		//String deviceId = request.getDataArea().getDeviceId()[0].getId();
-		//System.out.println("deviceId::"+deviceId);
-		String deviceId = "89014103277405946190";
+		exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID, request.getDataArea().getNetSuiteId());
+		String deviceId=request.getDataArea().getDeviceId().getId();
+		//String deviceId = "89014103277405946190";
 		// String json = "{\"deviceNumber\":\""+deviceId+"\"}";
 		net.sf.json.JSONObject obj = new net.sf.json.JSONObject();
 		obj.put("deviceNumber", deviceId);

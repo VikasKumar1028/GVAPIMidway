@@ -53,6 +53,7 @@ public class VerizonActivateDevicePostProcessor implements Processor {
 
 		if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
 
+
 			log.info("RequestID::" + exchange.getIn().getBody().toString());
 			response.setResponseCode(IResponse.SUCCESS_CODE);
 			response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
@@ -64,7 +65,9 @@ public class VerizonActivateDevicePostProcessor implements Processor {
 			response.setResponseStatus(IResponse.ERROR_MESSAGE);
 			response.setResponseDescription(exchange.getIn().getBody()
 					.toString());
-		}
+
+
+		} 
 
 		responseheader.setApplicationName(exchange.getProperty(
 				IConstant.APPLICATION_NAME).toString());
@@ -73,7 +76,8 @@ public class VerizonActivateDevicePostProcessor implements Processor {
 		responseheader.setOrganization(exchange.getProperty(
 				IConstant.ORGANIZATION).toString());
 
-		responseheader.setTimestamp(dateFormat.format(date));
+		responseheader.setTimestamp(exchange.getProperty(
+				IConstant.DATE_FORMAT).toString());
 
 		responseheader.setSourceName(exchange
 				.getProperty(IConstant.SOURCE_NAME).toString());

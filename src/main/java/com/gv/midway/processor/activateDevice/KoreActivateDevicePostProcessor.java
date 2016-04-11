@@ -45,6 +45,7 @@ public class KoreActivateDevicePostProcessor implements Processor {
 
 		Response response = new Response();
 
+
 		response.setResponseCode(IResponse.SUCCESS_CODE);
 		response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
 		response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
@@ -54,11 +55,11 @@ public class KoreActivateDevicePostProcessor implements Processor {
 		responseheader.setRegion(exchange.getProperty(IConstant.REGION)
 				.toString());
 
-		DateFormat dateFormat = new SimpleDateFormat(
-				newEnv.getProperty(IConstant.DATE_FORMAT));
-		Date date = new Date();
+		
+	
 
-		responseheader.setTimestamp(dateFormat.format(date));
+		responseheader.setTimestamp(exchange.getProperty(
+				IConstant.DATE_FORMAT).toString());
 		responseheader.setOrganization(exchange.getProperty(
 				IConstant.ORGANIZATION).toString());
 

@@ -71,7 +71,6 @@ public class CamelRoute extends RouteBuilder {
 	 */
 
 	@Autowired
-	
 	private IDeviceService iDeviceService;
 
 	@Autowired
@@ -140,7 +139,7 @@ public class CamelRoute extends RouteBuilder {
 				// sync DB and session token in the ServletContext
 				.bean(iSessionService, "synchronizeDBContextToken");
 
-		from("direct:deviceInformation").process(new HeaderProcessor())
+		from("direct:deviceInformationCarrier").process(new HeaderProcessor())
 				.choice()
 					.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
 						.choice()
@@ -160,8 +159,8 @@ public class CamelRoute extends RouteBuilder {
 											.to(uriRestKoreEndPoint)
 											.unmarshal()
 											.json(JsonLibrary.Jackson, DeviceInformationResponseKore.class)
-											.bean(iAuditService, "auditExternalResponseCall")
-											.process(new KoreDeviceInformationPostProcessor(env))
+											.bean(iAuditService, "auditExternalResponseCall").bean(iDeviceService, "setDeviceInformationDB")
+											.process(new KoreDeviceInformationPostProcessor(env)).bean(iDeviceService, "updateDeviceInformationDB")
 										.doCatch(CxfOperationException.class)
 											.bean(iAuditService, "auditExternalExceptionResponseCall")
 											.process(new KoreGenericExceptionProcessor(env))
@@ -177,8 +176,8 @@ public class CamelRoute extends RouteBuilder {
 										.to(uriRestVerizonEndPoint)
 										.unmarshal()
 										.json(JsonLibrary.Jackson, DeviceInformationResponseVerizon.class)
-										.bean(iAuditService, "auditExternalResponseCall")
-										.process(new VerizonDeviceInformationPostProcessor(env))
+										.bean(iAuditService, "auditExternalResponseCall").bean(iDeviceService, "setDeviceInformationDB")
+										.process(new VerizonDeviceInformationPostProcessor(env)).bean(iAuditService, "updateDeviceInformationDB")
 									.doCatch(CxfOperationException.class)
 										.bean(iAuditService, "auditExternalExceptionResponseCall")
 										.process(new VerizonGenericExceptionProcessor(env))

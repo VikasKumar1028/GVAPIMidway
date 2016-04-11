@@ -35,6 +35,8 @@ public interface IConstant {
 	static String MIDWAY_TRANSACTION_STATUS_SUCCESS="Success";
 	static String MIDWAY_TRANSACTION_DEVICE_NUMBER="TransactionDeviceNumber";
 	static String MIDWAY_CONNECTION_ERROR="ConnectionError";
+	public static String MIDWAY_NETSUITE_ID="midwayNetsuiteId";
+	public static String MIDWAY_DEVICEINFO_DB="midwayDeviceInfoDB";
 	static String GV_TRANSACTION_ID="transactionId";
 	static String GV_HOSTNAME="hostName";
 	

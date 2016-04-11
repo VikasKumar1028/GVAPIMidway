@@ -32,45 +32,47 @@ public class GenericErrorProcessor implements Processor {
 
 	public void process(Exchange exchange) throws Exception {
 
-		Header responseheader = new Header();
+		Header responseHeader = new Header();
 		Response response = new Response();
-		responseheader.setApplicationName(newEnv
-				.getProperty(IConstant.APPLICATION_NAME));
-		responseheader.setRegion(newEnv.getProperty(IConstant.REGION));
-		DateFormat dateFormat = new SimpleDateFormat(
-				newEnv.getProperty(IConstant.DATE_FORMAT));
-		Date date = new Date();
-
-		responseheader.setTimestamp(dateFormat.format(date));
-		responseheader.setOrganization(newEnv
-				.getProperty(IConstant.ORGANIZATION));
-		responseheader.setSourceName(exchange.getIn().getHeader("sourceName")
-				.toString());
-
-		responseheader.setTransactionId("");
-
+		
+		
+		responseHeader.setApplicationName(exchange.getProperty(IConstant.APPLICATION_NAME).toString());
+		responseHeader.setRegion(exchange.getProperty(IConstant.REGION).toString());
+		
+		responseHeader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT).toString());
+		responseHeader.setOrganization(exchange.getProperty(IConstant.ORGANIZATION).toString());
+		responseHeader.setSourceName(exchange.getProperty(IConstant.SOURCE_NAME).toString());
+		//String TransactionId = (String) exchange.getProperty(newEnv.getProperty(IConstant.EXCHANEGE_PROPERTY));
+		responseHeader.setTransactionId(exchange.getProperty(IConstant.GV_TRANSACTION_ID).toString());
+		responseHeader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER_KORE).toString());
+		
 		if (exchange.getProperty(IConstant.RESPONSE_CODE) != null) {
 
-			response.setResponseCode(IResponse.SUCCESS_CODE);
-			response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
-			response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
+			response.setResponseCode(Integer.parseInt(exchange.getProperty(
+					IConstant.RESPONSE_CODE).toString()));
+			response.setResponseStatus(exchange.getProperty(
+					IConstant.RESPONSE_STATUS).toString());
+			response.setResponseDescription(exchange.getProperty(
+					IConstant.RESPONSE_DESCRIPTION).toString());
 
 		} else {
 
 			response.setResponseCode(IResponse.CONNECTION_ERROR_CODE);
 			response.setResponseStatus(IResponse.ERROR_MESSAGE);
+
 			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_CONNECTION_MIDWAYDB);
+
 		}
 
-		String TransactionId = (String) exchange.getProperty(newEnv
+		/*String TransactionId = (String) exchange.getProperty(newEnv
 				.getProperty(IConstant.EXCHANEGE_PROPERTY));
-		responseheader.setTransactionId(TransactionId);
+		responseheader.setTransactionId(TransactionId);*/
 
-		if ("Endpoint[direct://deviceInformation]".equals(exchange
+		if ("Endpoint[direct://deviceInformationCarrier]".equals(exchange
 				.getFromEndpoint().toString())) {
 
 			DeviceInformationResponse deviceInformationResponse = new DeviceInformationResponse();
-			deviceInformationResponse.setHeader(responseheader);
+			deviceInformationResponse.setHeader(responseHeader);
 			deviceInformationResponse.setResponse(response);
 			exchange.getIn().setBody(deviceInformationResponse);
 
@@ -80,7 +82,7 @@ public class GenericErrorProcessor implements Processor {
 				.getFromEndpoint().toString())) {
 
 			ActivateDeviceResponse activateDeviceResponse = new ActivateDeviceResponse();
-			activateDeviceResponse.setHeader(responseheader);
+			activateDeviceResponse.setHeader(responseHeader);
 			activateDeviceResponse.setResponse(response);
 			exchange.getIn().setBody(activateDeviceResponse);
 
@@ -90,7 +92,7 @@ public class GenericErrorProcessor implements Processor {
 				.getFromEndpoint().toString())) {
 
 			DeactivateDeviceResponse deactivateDeviceResponse = new DeactivateDeviceResponse();
-			deactivateDeviceResponse.setHeader(responseheader);
+			deactivateDeviceResponse.setHeader(responseHeader);
 			deactivateDeviceResponse.setResponse(response);
 			exchange.getIn().setBody(deactivateDeviceResponse);
 

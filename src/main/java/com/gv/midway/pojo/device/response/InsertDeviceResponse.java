@@ -5,43 +5,31 @@ import com.gv.midway.pojo.BaseResponse;
 public class InsertDeviceResponse extends BaseResponse{
 	
 	
-	private String id;
-	
-	private String message;
+	private InsertDeviceResponseDataArea dataArea;
+
+	public InsertDeviceResponseDataArea getDataArea() {
+		return dataArea;
+	}
+
+	public void setDataArea(InsertDeviceResponseDataArea dataArea) {
+		this.dataArea = dataArea;
+	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("InsertDeviceResponse [id=");
-		builder.append(id);
-		builder.append(", message=");
-		builder.append(message);
+		builder.append("InsertDeviceResponse [dataArea=");
+		builder.append(dataArea);
 		builder.append("]");
 		return builder.toString();
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((message == null) ? 0 : message.hashCode());
+		int result = super.hashCode();
+		result = prime * result
+				+ ((dataArea == null) ? 0 : dataArea.hashCode());
 		return result;
 	}
 
@@ -49,22 +37,22 @@ public class InsertDeviceResponse extends BaseResponse{
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
 		InsertDeviceResponse other = (InsertDeviceResponse) obj;
-		if (id == null) {
-			if (other.id != null)
+		if (dataArea == null) {
+			if (other.dataArea != null)
 				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (message == null) {
-			if (other.message != null)
-				return false;
-		} else if (!message.equals(other.message))
+		} else if (!dataArea.equals(other.dataArea))
 			return false;
 		return true;
 	}
+	
+
+	
+
+	
 
 }

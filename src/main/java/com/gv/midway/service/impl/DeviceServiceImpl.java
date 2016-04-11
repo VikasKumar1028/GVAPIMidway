@@ -9,6 +9,7 @@ import com.gv.midway.dao.IDeviceDao;
 import com.gv.midway.pojo.device.request.BulkDevices;
 import com.gv.midway.pojo.device.request.SingleDevice;
 import com.gv.midway.pojo.device.response.InsertDeviceResponse;
+import com.gv.midway.pojo.device.response.UpdateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
@@ -33,20 +34,19 @@ public class DeviceServiceImpl implements IDeviceService {
 		
 	}
 
-	public Object updateDeviceDetails(Exchange exchange) {
+	public UpdateDeviceResponse updateDeviceDetails(Exchange exchange) {
 		// TODO Auto-generated method stub
 		
 		                       
 		/*c
 		
 	    String deviceId = exchange.getIn().getHeader("id", String.class);
-       
-		System.out.println("id is...."+deviceId);
+       ;*/
 		
+		SingleDevice device = (SingleDevice) exchange.getIn().getBody();
+
+		return  iDeviceDao.updateDeviceDetails(device);
 		
-		return iDeviceDao.updateDeviceDetails(deviceId, device);*/
-		
-		return null;
 		
 		
 	}
@@ -88,6 +88,16 @@ public class DeviceServiceImpl implements IDeviceService {
 		BulkDevices devices = (BulkDevices) exchange.getIn().getBody();
 
 		return  iDeviceDao.insertDevicesDetailsInBatch(devices);
+	}
+
+	public void setDeviceInformationDB(Exchange exchange) {
+		// TODO Auto-generated method stub
+		 iDeviceDao.setDeviceInformationDB(exchange);
+	}
+	
+	public void updateDeviceInformationDB(Exchange exchange) {
+		// TODO Auto-generated method stub
+		 iDeviceDao.updateDeviceInformationDB(exchange);
 	}
 
 	

@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IResponse;
 import com.gv.midway.dao.IAuditDao;
@@ -33,11 +32,11 @@ public class AuditDaoImpl implements IAuditDao {
 
 		try {
 
-			ObjectMapper mapper = new ObjectMapper();
+			/*ObjectMapper mapper = new ObjectMapper();
 			String msgBody = mapper.writeValueAsString(exchange.getIn()
-					.getBody());
+					.getBody());*/
 
-			log.info("auditExternalRequestCall-jsonInString::" + msgBody);
+			log.info("auditExternalRequestCall-jsonInString::" + exchange.getIn().getBody().toString());
 
 			String requestEndpint = exchange.getFromEndpoint().toString();
 			String requestEndpintSpilt[] = requestEndpint.split("//");
@@ -71,12 +70,12 @@ public class AuditDaoImpl implements IAuditDao {
 			audit.setTimeStamp(localTime);
 			audit.setAuditTransationID(exchange.getProperty(
 					IConstant.AUDIT_TRANSACTION_ID).toString());
-			audit.setGvTransationId(exchange.getProperty(
-					IConstant.GV_TRANSACTION_ID).toString());
-			audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME)
-					.toString());
-			audit.setPayload(msgBody);
-			mongoTemplate.save(audit);
+
+			audit.setGvTransationId(exchange.getProperty(IConstant.GV_TRANSACTION_ID).toString());
+			audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME).toString());
+			audit.setPayload(exchange.getIn().getBody());
+			mongoTemplate.insert(audit);
+
 
 		} catch (Exception e) {
 			log.info("auditExternalRequestCall-Exception" + e);
@@ -93,9 +92,9 @@ public class AuditDaoImpl implements IAuditDao {
 
 		try {
 
-			ObjectMapper mapper = new ObjectMapper();
+			/*ObjectMapper mapper = new ObjectMapper();
 			String msgBody = mapper.writeValueAsString(exchange.getIn()
-					.getBody());
+					.getBody());*/
 
 			String responseEndpint = exchange.getFromEndpoint().toString();
 			String responseEndpintSpilt[] = responseEndpint.split("//");
@@ -142,8 +141,8 @@ public class AuditDaoImpl implements IAuditDao {
 			 * (exchange.getProperty(IConstant.RESPONSE_CODE).toString());
 			 */
 
-			audit.setPayload(msgBody);
-			mongoTemplate.save(audit);
+			audit.setPayload(exchange.getIn().getBody());
+			mongoTemplate.insert(audit);
 
 			// }
 		} catch (Exception e) {

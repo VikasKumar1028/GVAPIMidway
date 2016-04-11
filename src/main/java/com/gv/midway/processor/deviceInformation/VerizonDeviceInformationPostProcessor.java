@@ -59,42 +59,44 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 		int getDevicelenth = verizonResponse.getDevices().length;
 
 		log.info("getDevicelenth::" + getDevicelenth);
+		
+	   DeviceInformation deviceInformation=(DeviceInformation)exchange.getProperty(IConstant.MIDWAY_DEVICEINFO_DB);
+		
+		if(deviceInformation==null){
+			
+			deviceInformation=new DeviceInformation();
+		}
 
 		DeviceInformationResponse deviceInformationResponse = new DeviceInformationResponse();
 
-		//DeviceInformation[] deviceInformationArray = new DeviceInformation[getDevicelenth];
-
-		//log.info("deviceInformationArray::" + deviceInformationArray.length);
-
+		
+		
 		Header responseheader = new Header();
 
 		Response response = new Response();
-		/*response.setResponseCode(newEnv.getProperty(IConstant.RESPONSES_CODE));
-		response.setResponseStatus(newEnv.getProperty(IConstant.RESPONSE_STATUS_SUCCESS));*/
 		
 		response.setResponseCode(IResponse.SUCCESS_CODE);
 		response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
-		response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
-		
-		
-		responseheader.setApplicationName(newEnv.getProperty(IConstant.APPLICATION_NAME));
-		
-		
-		responseheader.setRegion(newEnv.getProperty(IConstant.REGION));
-		DateFormat dateFormat = new SimpleDateFormat(newEnv.getProperty(IConstant.DATE_FORMAT));
-		Date date = new Date();
+		response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_CARRIER);
 
-		responseheader.setTimestamp(dateFormat.format(date));
-		responseheader.setOrganization(newEnv.getProperty(IConstant.ORGANIZATION));
-		responseheader.setSourceName(newEnv.getProperty(IConstant.SOURCE_NAME_VERIZON));
-		String TransactionId = (String) exchange.getProperty(newEnv.getProperty(IConstant.EXCHANEGE_PROPERTY));
-		responseheader.setTransactionId(TransactionId);
+		responseheader.setApplicationName(exchange.getProperty(IConstant.APPLICATION_NAME).toString());
+		responseheader.setRegion(exchange.getProperty(IConstant.REGION).toString());
+		/*DateFormat dateFormat = new SimpleDateFormat(newEnv.getProperty(IConstant.DATE_FORMAT));
+		Date date = new Date();*/
 
-		responseheader.setBsCarrier(newEnv.getProperty(IConstant.BSCARRIER_VERIZON));
+		responseheader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT).toString());
+		responseheader.setOrganization(exchange.getProperty(IConstant.ORGANIZATION).toString());
+		responseheader.setSourceName(exchange.getProperty(IConstant.SOURCE_NAME).toString());
+		//String TransactionId = (String) exchange.getProperty(newEnv.getProperty(IConstant.EXCHANEGE_PROPERTY));
+		responseheader.setTransactionId(exchange.getProperty(IConstant.GV_TRANSACTION_ID).toString());
+		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER_KORE).toString());
+
 		deviceInformationResponse.setHeader(responseheader);
 		deviceInformationResponse.setResponse(response);
 		
-		DeviceInformation deviceInformation =null;
+		
+		
+		//DeviceInformation deviceInformation =null;
 
 		for (int i = 0; i < getDevicelenth; i++) {
 			deviceInformation = new DeviceInformation();
