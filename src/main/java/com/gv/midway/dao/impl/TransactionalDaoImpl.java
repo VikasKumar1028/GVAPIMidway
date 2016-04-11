@@ -43,47 +43,38 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		String currentDataTime = CommonUtil.getCurrentTimeStamp();
 
-		ActivateDeviceRequest req = (ActivateDeviceRequest) exchange.getIn()
-				.getBody();
+		ActivateDeviceRequest req = (ActivateDeviceRequest) exchange.getIn().getBody();
 
-		ActivateDeviceRequestDataArea activateDeviceRequestDataArea = (ActivateDeviceRequestDataArea) req
-				.getDataArea();
+		ActivateDeviceRequestDataArea activateDeviceRequestDataArea = (ActivateDeviceRequestDataArea) req.getDataArea();
 
-		ActivateDevices[] activateDevices = activateDeviceRequestDataArea
-				.getDevices();
+		ActivateDevices[] activateDevices = activateDeviceRequestDataArea.getDevices();
 
 		ActivateDeviceRequest dbPayload = new ActivateDeviceRequest();
 		dbPayload.setHeader(req.getHeader());
-	
+
 		Kryo kryo = new Kryo();
 		for (ActivateDevices activateDevice : activateDevices) {
 
 			ActivateDevices[] businessPayLoadDevicesArray = new ActivateDevices[1];
 			ActivateDevices businessPayLoadActivateDevices = new ActivateDevices();
-			ActivateDeviceId[] businessPayloadDeviceId = new ActivateDeviceId[activateDevice
-					.getDeviceIds().length];
+			ActivateDeviceId[] businessPayloadDeviceId = new ActivateDeviceId[activateDevice.getDeviceIds().length];
 
 			for (int i = 0; i < activateDevice.getDeviceIds().length; i++) {
-				ActivateDeviceId activateDeviceId = activateDevice
-						.getDeviceIds()[i];
+				ActivateDeviceId activateDeviceId = activateDevice.getDeviceIds()[i];
 
 				ActivateDeviceId businessPayLoadActivateDeviceId = new ActivateDeviceId();
 
-				businessPayLoadActivateDeviceId.seteAPCode(activateDeviceId
-						.geteAPCode());
+				businessPayLoadActivateDeviceId.seteAPCode(activateDeviceId.geteAPCode());
 				businessPayLoadActivateDeviceId.setId(activateDeviceId.getId());
-				businessPayLoadActivateDeviceId.setKind(activateDeviceId
-						.getKind());
+				businessPayLoadActivateDeviceId.setKind(activateDeviceId.getKind());
 
 				businessPayloadDeviceId[i] = businessPayLoadActivateDeviceId;
 
 			}
-			businessPayLoadActivateDevices
-					.setDeviceIds(businessPayloadDeviceId);
+			businessPayLoadActivateDevices.setDeviceIds(businessPayloadDeviceId);
 			businessPayLoadDevicesArray[0] = businessPayLoadActivateDevices;
-		
-			ActivateDeviceRequestDataArea copyDataArea = kryo.copy(req
-					.getDataArea());
+
+			ActivateDeviceRequestDataArea copyDataArea = kryo.copy(req.getDataArea());
 
 			copyDataArea.setDevices(businessPayLoadDevicesArray);
 			dbPayload.setDataArea(copyDataArea);
@@ -97,23 +88,17 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 				Transaction transaction = new Transaction();
 
-				transaction.setMidwayTransationID(exchange.getProperty(
-						IConstant.MIDWAY_TRANSACTION_ID).toString());
+				transaction.setMidwayTransationID(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID).toString());
 				// TODO if number of devices are more
 				ObjectMapper obj = new ObjectMapper();
-				String strDeviceNumber = obj
-						.writeValueAsString(businessPayloadDeviceId);
+				String strDeviceNumber = obj.writeValueAsString(businessPayloadDeviceId);
 				transaction.setDeviceNumber(strDeviceNumber);
 				transaction.setDevicePayload(msgBody);
-				transaction
-						.setMidwayStatus(IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
-				transaction.setCarrierName(exchange.getProperty(
-						IConstant.BSCARRIER).toString());
+				transaction.setMidwayStatus(IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
+				transaction.setCarrierName(exchange.getProperty(IConstant.BSCARRIER).toString());
 				transaction.setTimeStampReceived(currentDataTime);
-				transaction.setAuditTransationID(exchange.getProperty(
-						IConstant.AUDIT_TRANSACTION_ID).toString());
-				transaction.setRequestType(exchange.getFromEndpoint()
-						.toString());
+				transaction.setAuditTransationID(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
+				transaction.setRequestType(exchange.getFromEndpoint().toString());
 
 				list.add(transaction);
 
@@ -129,8 +114,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		// activateDeviceRequestDataArea.setDevices(activateDevices);
 
-		if (exchange.getProperty(IConstant.SOURCE_NAME).toString()
-				.equals("KORE")) {
+		if (exchange.getProperty(IConstant.SOURCE_NAME).toString().equals("KORE")) {
 
 			exchange.getIn().setBody(list);
 		}
@@ -144,12 +128,9 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		String currentDataTime = CommonUtil.getCurrentTimeStamp();
 
-		DeactivateDeviceRequest req = (DeactivateDeviceRequest) exchange
-				.getIn().getBody();
-		DeactivateDeviceRequestDataArea deActivateDeviceRequestDataArea = (DeactivateDeviceRequestDataArea) req
-				.getDataArea();
-		DeactivateDevices[] deactivateDevices = deActivateDeviceRequestDataArea
-				.getDevices();
+		DeactivateDeviceRequest req = (DeactivateDeviceRequest) exchange.getIn().getBody();
+		DeactivateDeviceRequestDataArea deActivateDeviceRequestDataArea = (DeactivateDeviceRequestDataArea) req.getDataArea();
+		DeactivateDevices[] deactivateDevices = deActivateDeviceRequestDataArea.getDevices();
 		DeactivateDeviceRequest dbPayload = new DeactivateDeviceRequest();
 		dbPayload.setHeader(req.getHeader());
 		Kryo kryo = new Kryo();
@@ -157,29 +138,22 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		for (DeactivateDevices deactivateDevice : deactivateDevices) {
 			DeactivateDevices[] businessPayloadDeviceArray = new DeactivateDevices[1];
 			DeactivateDevices businessPayLoadDeactivateDevices = new DeactivateDevices();
-			DeactivateDeviceId[] businessPayloadDeviceId = new DeactivateDeviceId[deactivateDevice
-					.getDeviceIds().length];
+			DeactivateDeviceId[] businessPayloadDeviceId = new DeactivateDeviceId[deactivateDevice.getDeviceIds().length];
 
 			for (int i = 0; i < deactivateDevice.getDeviceIds().length; i++) {
-				DeactivateDeviceId deactivateDeviceId = deactivateDevice
-						.getDeviceIds()[i];
+				DeactivateDeviceId deactivateDeviceId = deactivateDevice.getDeviceIds()[i];
 				DeactivateDeviceId businesspayLoadDeactivateDeviceId = new DeactivateDeviceId();
-				businesspayLoadDeactivateDeviceId
-						.setFlagScrap(deactivateDeviceId.getFlagScrap());
-				businesspayLoadDeactivateDeviceId.setId(deactivateDeviceId
-						.getId());
-				businesspayLoadDeactivateDeviceId.setKind(deactivateDeviceId
-						.getKind());
+				businesspayLoadDeactivateDeviceId.setFlagScrap(deactivateDeviceId.getFlagScrap());
+				businesspayLoadDeactivateDeviceId.setId(deactivateDeviceId.getId());
+				businesspayLoadDeactivateDeviceId.setKind(deactivateDeviceId.getKind());
 				businessPayloadDeviceId[i] = businesspayLoadDeactivateDeviceId;
 			}
 
-			businessPayLoadDeactivateDevices
-					.setDeviceIds(businessPayloadDeviceId);
+			businessPayLoadDeactivateDevices.setDeviceIds(businessPayloadDeviceId);
 			businessPayloadDeviceArray[0] = businessPayLoadDeactivateDevices;
 			// payLoadDevices =(ActivateDevices[])kryo.copy(activateDevices);
 
-			DeactivateDeviceRequestDataArea copyDataArea = kryo.copy(req
-					.getDataArea());
+			DeactivateDeviceRequestDataArea copyDataArea = kryo.copy(req.getDataArea());
 
 			copyDataArea.setDevices(businessPayloadDeviceArray);
 			dbPayload.setDataArea(copyDataArea);
@@ -192,19 +166,14 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				Transaction transaction = new Transaction();
 				transaction.setMidwayTransationID(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID).toString());
 				ObjectMapper obj = new ObjectMapper();
-				String strDeviceNumber = obj
-						.writeValueAsString(businessPayloadDeviceId);
+				String strDeviceNumber = obj.writeValueAsString(businessPayloadDeviceId);
 				transaction.setDeviceNumber(strDeviceNumber);
 				transaction.setDevicePayload(msgBody);
-				transaction
-						.setMidwayStatus(IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
-				transaction.setCarrierName(exchange.getProperty(
-						IConstant.BSCARRIER).toString());
+				transaction.setMidwayStatus(IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
+				transaction.setCarrierName(exchange.getProperty(IConstant.BSCARRIER).toString());
 				transaction.setTimeStampReceived(currentDataTime);
-				transaction.setAuditTransationID(exchange.getProperty(
-						IConstant.AUDIT_TRANSACTION_ID).toString());
-				transaction.setRequestType(exchange.getFromEndpoint()
-						.toString());
+				transaction.setAuditTransationID(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
+				transaction.setRequestType(exchange.getFromEndpoint().toString());
 
 				list.add(transaction);
 
@@ -219,8 +188,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		// be set with arraylist of transaction for Verizon we simply add
 		// into database and do not change the exchange body
 
-		if (exchange.getProperty(IConstant.SOURCE_NAME).toString()
-				.equals("KORE")) {
+		if (exchange.getProperty(IConstant.SOURCE_NAME).toString().equals("KORE")) {
 
 			exchange.getIn().setBody(list);
 		}
@@ -229,8 +197,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 	public void populateVerizonTransactionalResponse(Exchange exchange) {
 
-		Query searchUserQuery = new Query(Criteria.where("midwayTransationID")
-				.is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)));
+		Query searchUserQuery = new Query(Criteria.where("midwayTransationID").is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)));
 
 		/*
 		 * String carrierTransationID;//Call Back Thread String
@@ -247,10 +214,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		if (exchange.getIn().getBody().toString().contains("errorMessage=")) {
 
 			update.set("callBackPayload", exchange.getIn().getBody().toString());
-			update.set("carrierErrorDecription", exchange.getIn().getBody()
-					.toString());
-			update.set("carrierErrorDecription", exchange.getIn().getBody()
-					.toString());
+			update.set("carrierErrorDecription", exchange.getIn().getBody().toString());
+			update.set("carrierErrorDecription", exchange.getIn().getBody().toString());
 			update.set("carrierStatus", "Error");
 			update.set("lastTimeStampUpdated", CommonUtil.getCurrentTimeStamp());
 
@@ -266,9 +231,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 			String responseId = exchange.getIn().getBody().toString();
 
-			System.out
-					.println("****************************responseId****************"
-							+ responseId);
+			System.out.println("****************************responseId****************" + responseId);
 			/*
 			 * JSONObject obj= new JSONObject(); obj.put("value", responseId);
 			 * 
@@ -288,14 +251,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 	public void populateKoreTransactionalErrorResponse(Exchange exchange) {
 
-		Query searchUserQuery = new Query(
-				Criteria.where("midwayTransationID")
-						.is(exchange
-								.getProperty(IConstant.MIDWAY_TRANSACTION_ID))
-						.andOperator(
-								Criteria.where("deviceNumber")
-										.is(exchange
-												.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
+		Query searchUserQuery = new Query(Criteria.where("midwayTransationID").is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)).andOperator(Criteria.where("deviceNumber").is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
 
 		/*
 		 * String carrierTransationID;//Call Back Thread String
@@ -307,8 +263,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		 * callBackReceived;//CallBack Thread String
 		 * callBackFailureToNetSuitReason;//CallBack Thread
 		 */
-		CxfOperationException exception = (CxfOperationException) exchange
-				.getProperty(Exchange.EXCEPTION_CAUGHT);
+		CxfOperationException exception = (CxfOperationException) exchange.getProperty(Exchange.EXCEPTION_CAUGHT);
 
 		String errorResponseBody = exception.getResponseBody();
 
@@ -336,22 +291,12 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 	}
 
-	public void populateConnectionErrorResponse(Exchange exchange,
-			String errorType) {
+	public void populateConnectionErrorResponse(Exchange exchange, String errorType) {
 
-		System.out
-				.println("**************************ERROR TYPE**************************************"
-						+ errorType);
+		System.out.println("**************************ERROR TYPE**************************************" + errorType);
 		Query searchUserQuery = null;
 		if ("KORE".equals(exchange.getProperty(IConstant.SOURCE_NAME))) {
-			searchUserQuery = new Query(
-					Criteria.where("midwayTransationID")
-							.is(exchange
-									.getProperty(IConstant.MIDWAY_TRANSACTION_ID))
-							.andOperator(
-									Criteria.where("deviceNumber")
-											.is(exchange
-													.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
+			searchUserQuery = new Query(Criteria.where("midwayTransationID").is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)).andOperator(Criteria.where("deviceNumber").is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
 			String errorResponseBody = IConstant.MIDWAY_CONNECTION_ERROR;
 
 			Update update = new Update();
@@ -360,30 +305,24 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			update.set("carrierErrorDecription", errorResponseBody);
 			update.set("carrierStatus", "Error");
 			update.set("lastTimeStampUpdated", CommonUtil.getCurrentTimeStamp());
-			mongoTemplate.updateMulti(searchUserQuery, update,
-					Transaction.class);
+			mongoTemplate.updateMulti(searchUserQuery, update, Transaction.class);
 
-		} else if ("VERIZON"
-				.equals(exchange.getProperty(IConstant.SOURCE_NAME))) {
+		} else if ("VERIZON".equals(exchange.getProperty(IConstant.SOURCE_NAME))) {
 
-			System.out
-					.println("**************************1111111111111**************************************"
-							+ exchange.getIn().getBody().toString());
+			System.out.println("**************************1111111111111**************************************" + exchange.getIn().getBody().toString());
 
-			searchUserQuery = new Query(Criteria.where("midwayTransationID")
-					.is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)));
+			searchUserQuery = new Query(Criteria.where("midwayTransationID").is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)));
 
 			Update update = new Update();
 			update.set("callBackPayload", "CONNECTION_ERROR".toString());
 			update.set("carrierErrorDecription", "CONNECTION_ERROR".toString());
 			update.set("carrierErrorDecription", "CONNECTION_ERROR".toString());
 			update.set("carrierStatus", "Error");
+			update.set("carrierTransationID", "");
 			update.set("lastTimeStampUpdated", CommonUtil.getCurrentTimeStamp());
-			WriteResult result = mongoTemplate.updateMulti(searchUserQuery,
-					update, Transaction.class);
+			WriteResult result = mongoTemplate.updateMulti(searchUserQuery, update, Transaction.class);
 
-			System.out.println("*******************************************"
-					+ result);
+			System.out.println("*******************************************" + result);
 
 		}
 
@@ -395,12 +334,9 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 	public void populatePendingKoreCheckStatus(Exchange exchange) {
 		// TODO Auto-generated method stub
-		Query searchPendingCheckStatusQuery = new Query(Criteria
-				.where("carrierStatus").is("Pending")
-				.andOperator(Criteria.where("carrierName").is("KORE")));
+		Query searchPendingCheckStatusQuery = new Query(Criteria.where("carrierStatus").is("Pending").andOperator(Criteria.where("carrierName").is("KORE")));
 
-		List<Transaction> transactionListPendingStatus = mongoTemplate.find(
-				searchPendingCheckStatusQuery, Transaction.class);
+		List<Transaction> transactionListPendingStatus = mongoTemplate.find(searchPendingCheckStatusQuery, Transaction.class);
 		exchange.getIn().setBody(transactionListPendingStatus);
 	}
 

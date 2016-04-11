@@ -16,7 +16,6 @@ import com.gv.midway.pojo.callback.request.CallBackVerizonRequest;
 import com.gv.midway.pojo.transaction.Transaction;
 import com.gv.midway.service.callbacks.impl.GVCallbacksImpl;
 import com.gv.midway.utility.CommonUtil;
-import com.mongodb.WriteResult;
 
 @Service
 public class CallbackTransactionDaoImpl implements GVCallbackTransactionalDao {
@@ -39,14 +38,11 @@ public class CallbackTransactionDaoImpl implements GVCallbackTransactionalDao {
 		try {
 			strDeviceNumber = objectMapper.writeValueAsString(callBackVerizonRequest.getDeviceIds());
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
 		
 		
-System.out.println("********************************************"+ strDeviceNumber);
 		Query searchUserQuery = new Query(Criteria.where("carrierTransationID").is(requestId).andOperator(Criteria.where("deviceNumber").is(strDeviceNumber)));
-
 
 		/*
 		 * String carrierTransationID;//Call Back Thread String
@@ -74,9 +70,7 @@ System.out.println("********************************************"+ strDeviceNumb
 			update.set("lastTimeStampUpdated", CommonUtil.getCurrentTimeStamp());
 					
 		}
-	//WriteResult writeResult=	mongoTemplate.updateFirst(searchUserQuery, update, Transaction.class);
-		WriteResult writeResult=	mongoTemplate.updateMulti(searchUserQuery, update, Transaction.class);
-	System.out.println(writeResult+"-------------------------");
+		mongoTemplate.upsert(searchUserQuery, update, Transaction.class);
 	
 	}
 }
