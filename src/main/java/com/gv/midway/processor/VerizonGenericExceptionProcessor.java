@@ -65,8 +65,8 @@ public class VerizonGenericExceptionProcessor implements Processor {
 		responseHeader.setBsCarrier(newEnv.getProperty(IConstant.BSCARRIER_VERIZON));
 
 		Response response = new Response();
-		response.setResponseCode("InValid Data");
-		response.setResponseStatus("4");
+		response.setResponseCode(4);
+		response.setResponseStatus("InValid Data");
 		response.setResponseDescription(exception.getResponseBody());
 
 		if (exception.getStatusCode() == 401) {

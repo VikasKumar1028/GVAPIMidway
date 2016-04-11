@@ -32,7 +32,7 @@ public class StubKoreDeviceInformationProcessor implements Processor {
 		Header responseheader = new Header();
 
 		Response response = new Response();
-		response.setResponseCode("200");
+		response.setResponseCode(2000);
 		response.setResponseDescription("Device Information is fetched successfully");
 		response.setResponseStatus("SUCESS");
 

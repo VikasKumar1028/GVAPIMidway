@@ -13,8 +13,8 @@ public interface IConstant {
 	static String RESPONSE_DESCRIPTION = "ResponseDescription";
 
 	static String APPLICATION_NAME="application.name";
-	static String RESPONSE_STATUS_SUCCESS ="response.status.success";
-	static 	String RESPONSES_CODE ="response.code";
+	//static String RESPONSE_STATUS_SUCCESS ="response.status.success";
+	//static 	String RESPONSES_CODE ="response.code";
 	static String REGION ="region";
 	static	String ORGANIZATION="organization";
 	static String SOURCE_NAME_VERIZON ="source.name.verizon";

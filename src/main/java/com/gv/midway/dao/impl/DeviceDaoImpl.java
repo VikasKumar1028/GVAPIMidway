@@ -136,7 +136,7 @@ public class DeviceDaoImpl implements IDeviceDao
 	    if(deviceInformation==null)
 	    		
 	   {
-	    	response.setResponseCode("1999");
+	    	response.setResponseCode(1999);
 	    	response.setResponseDescription("No data found in Midway DB");
 	    	response.setResponseStatus("ERROR");;
 	    	
@@ -144,7 +144,7 @@ public class DeviceDaoImpl implements IDeviceDao
 	    
 	    else
 	    {
-	    	response.setResponseCode("2000");
+	    	response.setResponseCode(2000);
 	    	response.setResponseDescription("Data Succesfully Found from Midway DB");
 	    	response.setResponseStatus("SUCCESS");;	
 	    	
@@ -162,7 +162,7 @@ public class DeviceDaoImpl implements IDeviceDao
 		}
 		catch(Exception e){
 			
-			response.setResponseCode("1999");
+			response.setResponseCode(1999);
 	    	response.setResponseDescription("Not able to connect the Midway DB");
 	    	response.setResponseStatus("ERROR");
 	    	

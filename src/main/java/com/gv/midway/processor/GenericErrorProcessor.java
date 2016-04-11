@@ -3,10 +3,13 @@ package com.gv.midway.processor;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.springframework.core.env.Environment;
+
 import com.gv.midway.constant.IConstant;
+import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
@@ -45,20 +48,18 @@ public class GenericErrorProcessor implements Processor {
 				.toString());
 
 		responseheader.setTransactionId("");
-		
+
 		if (exchange.getProperty(IConstant.RESPONSE_CODE) != null) {
 
-			response.setResponseCode(exchange.getProperty(
-					IConstant.RESPONSE_CODE).toString());
-			response.setResponseStatus(exchange.getProperty(
-					IConstant.RESPONSE_STATUS).toString());
-			response.setResponseDescription(exchange.getProperty(
-					IConstant.RESPONSE_DESCRIPTION).toString());
+			response.setResponseCode(IResponse.SUCCESS_CODE);
+			response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+			response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
+
 		} else {
 
-			response.setResponseCode("Conenction Error");
-			response.setResponseStatus("Conenction Error");
-			response.setResponseDescription("Conenction Error");
+			response.setResponseCode(IResponse.CONNECTION_ERROR_CODE);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
+			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_CONNECTION_MIDWAYDB);
 		}
 
 		String TransactionId = (String) exchange.getProperty(newEnv
@@ -84,7 +85,7 @@ public class GenericErrorProcessor implements Processor {
 			exchange.getIn().setBody(activateDeviceResponse);
 
 		}
-		
+
 		if ("Endpoint[direct://deactivateDevice]".equals(exchange
 				.getFromEndpoint().toString())) {
 

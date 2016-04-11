@@ -63,8 +63,8 @@ public class KoreGenericExceptionProcessor implements Processor {
 		Response response = new Response();
 		// response.setResponseCode("InValid Data");
 		int statusCodeInt = exception.getStatusCode();
-		String statusCode = String.valueOf(statusCodeInt);
-		response.setResponseCode(statusCode);
+		//String statusCode = String.valueOf(statusCodeInt);
+		response.setResponseCode(statusCodeInt);
 		// response.setResponseStatus("4");
 		response.setResponseStatus(exception.getStatusText());
 		response.setResponseDescription(exception.getResponseBody());

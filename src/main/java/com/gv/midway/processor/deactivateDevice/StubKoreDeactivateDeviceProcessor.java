@@ -27,7 +27,7 @@ public class StubKoreDeactivateDeviceProcessor implements Processor {
 		DeactivateDeviceResponseDataArea deactivateDeviceResponseDataArea = new DeactivateDeviceResponseDataArea();
 
 		Response response = new Response();
-		response.setResponseCode("200");
+		response.setResponseCode(2000);
 		response.setResponseDescription("Device is deactivate successfully");
 		response.setResponseStatus("SUCESS");
 

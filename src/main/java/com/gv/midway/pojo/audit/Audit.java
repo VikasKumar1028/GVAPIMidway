@@ -16,7 +16,7 @@ public class Audit {
 	private String auditTransationId;
 	private Object Payload;
 	private String errorProblem;
-	private String errorCode;
+	private Integer errorCode;
 	private String errorDetais;
 	//Which server it is running on
 	private String hostName; 
@@ -87,11 +87,11 @@ public class Audit {
 		this.errorProblem = errorProblem;
 	}
 
-	public String getErrorCode() {
+	public Integer getErrorCode() {
 		return errorCode;
 	}
 
-	public void setErrorCode(String errorCode) {
+	public void setErrorCode(Integer errorCode) {
 		this.errorCode = errorCode;
 	}
 
@@ -218,7 +218,7 @@ public class Audit {
 	public String toString() {
 		return "Audit [api_OpreationName=" + api_OpreationName + ", from="
 				+ from + ", to=" + to + ", timeStamp=" + timeStamp
-				+ ", status=" + status + ", auditTransationID="
+				+ ", status=" + status + ", auditTransationId="
 				+ auditTransationId + ", Payload=" + Payload
 				+ ", errorProblem=" + errorProblem + ", errorCode=" + errorCode
 				+ ", errorDetais=" + errorDetais + ", hostName=" + hostName

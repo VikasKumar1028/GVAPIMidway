@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
+import com.gv.midway.constant.IResponse;
 import com.gv.midway.dao.IAuditDao;
 import com.gv.midway.pojo.audit.Audit;
 
@@ -47,10 +48,15 @@ public class AuditDaoImpl implements IAuditDao {
 			String apiOperationName = "GV_"
 					+ requestEndpintSpilt[1].replaceAll("]", "")
 					+ "_BusinessRequest";
-			if(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER)!=null ){
-				apiOperationName=apiOperationName+"_deviceNumber_" + exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER).toString();
+			if (exchange
+					.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER) != null) {
+				apiOperationName = apiOperationName
+						+ "_deviceNumber_"
+						+ exchange.getProperty(
+								IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER)
+								.toString();
 			}
-			
+
 			log.info("apiOperationName" + apiOperationName);
 
 			Audit audit = new Audit();
@@ -65,8 +71,10 @@ public class AuditDaoImpl implements IAuditDao {
 			audit.setTimeStamp(localTime);
 			audit.setAuditTransationID(exchange.getProperty(
 					IConstant.AUDIT_TRANSACTION_ID).toString());
-			audit.setGvTransationId(exchange.getProperty(IConstant.GV_TRANSACTION_ID).toString());
-			audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME).toString());
+			audit.setGvTransationId(exchange.getProperty(
+					IConstant.GV_TRANSACTION_ID).toString());
+			audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME)
+					.toString());
 			audit.setPayload(msgBody);
 			mongoTemplate.save(audit);
 
@@ -98,9 +106,14 @@ public class AuditDaoImpl implements IAuditDao {
 			String apiOperationName = "GV_"
 					+ responseEndpintSpilt[1].replaceAll("]", "")
 					+ "_BusinessResponse";
-			
-			if(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER)!=null ){
-				apiOperationName=apiOperationName+"_deviceNumber_" + exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER).toString();
+
+			if (exchange
+					.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER) != null) {
+				apiOperationName = apiOperationName
+						+ "_deviceNumber_"
+						+ exchange.getProperty(
+								IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER)
+								.toString();
 			}
 			log.info("apiOperationName" + apiOperationName);
 
@@ -145,11 +158,10 @@ public class AuditDaoImpl implements IAuditDao {
 
 		log.info("Start-AuditDaoImpl:auditExternalExceptionResponseCall");
 		String responseBody = "";
-		
+
 		CxfOperationException exception = null;
-		
-		if ( exchange
-				.getProperty(Exchange.EXCEPTION_CAUGHT) != null) {
+
+		if (exchange.getProperty(Exchange.EXCEPTION_CAUGHT) != null) {
 			exception = (CxfOperationException) exchange
 					.getProperty(Exchange.EXCEPTION_CAUGHT);
 			responseBody = exception.getResponseBody();
@@ -169,11 +181,16 @@ public class AuditDaoImpl implements IAuditDao {
 			String apiOperationName = "GV_"
 					+ responseExceptionEndpintSpilt[1].replaceAll("]", "")
 					+ "_BusinessResponse";
-			
-			if(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER)!=null ){
-				apiOperationName=apiOperationName+"_deviceNumber_" + exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER).toString();
+
+			if (exchange
+					.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER) != null) {
+				apiOperationName = apiOperationName
+						+ "_deviceNumber_"
+						+ exchange.getProperty(
+								IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER)
+								.toString();
 			}
-			
+
 			log.info("apiOperationName" + apiOperationName);
 
 			Audit audit = new Audit();
@@ -192,22 +209,22 @@ public class AuditDaoImpl implements IAuditDao {
 					IConstant.GV_TRANSACTION_ID).toString());
 			audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME)
 					.toString());
-	/*		audit.setErrorDetais(exchange.getProperty(
-					IConstant.RESPONSE_DESCRIPTION).toString());
-			audit.setErrorProblem(exchange.getProperty(
-					IConstant.RESPONSE_STATUS).toString());
-					
-					audit.setErrorCode(exchange.getProperty(IConstant.RESPONSE_CODE)
-					.toString());
-					*/
-			//TODO
-			
-			
+			/*
+			 * audit.setErrorDetais(exchange.getProperty(
+			 * IConstant.RESPONSE_DESCRIPTION).toString());
+			 * audit.setErrorProblem(exchange.getProperty(
+			 * IConstant.RESPONSE_STATUS).toString());
+			 * 
+			 * audit.setErrorCode(exchange.getProperty(IConstant.RESPONSE_CODE)
+			 * .toString());
+			 */
+			// TODO
+
 			audit.setErrorDetais("ERROR");
-					audit.setErrorProblem("ERROR ");
-					audit.setErrorCode("400");
-							
-				audit.setPayload(responseBody);
+			audit.setErrorProblem("ERROR ");
+			audit.setErrorCode(400);
+
+			audit.setPayload(responseBody);
 			mongoTemplate.save(audit);
 
 		} catch (Exception e) {
@@ -215,20 +232,17 @@ public class AuditDaoImpl implements IAuditDao {
 		}
 	}
 
-	
-	
 	public void auditExternalConnectionExceptionResponseCall(Exchange exchange) {
 
 		log.info("Start-auditExternalConnectionExceptionResponseCall");
 		String responseBody = "";
-		
+
 		CxfOperationException exception = null;
-		
-		if ( exchange
-				.getProperty(Exchange.EXCEPTION_CAUGHT) != null) {
-			
-			String str=exchange
-					.getProperty(Exchange.EXCEPTION_CAUGHT).toString();
+
+		if (exchange.getProperty(Exchange.EXCEPTION_CAUGHT) != null) {
+
+			String str = exchange.getProperty(Exchange.EXCEPTION_CAUGHT)
+					.toString();
 			responseBody = str;
 		}
 
@@ -246,12 +260,16 @@ public class AuditDaoImpl implements IAuditDao {
 			String apiOperationName = "GV_"
 					+ responseExceptionEndpintSpilt[1].replaceAll("]", "")
 					+ "_BusinessResponse";
-			
-			if(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER)!=null ){
-				apiOperationName=apiOperationName+"_deviceNumber_" +exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER).toString();
+
+			if (exchange
+					.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER) != null) {
+				apiOperationName = apiOperationName
+						+ "_deviceNumber_"
+						+ exchange.getProperty(
+								IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER)
+								.toString();
 			}
-			
-			
+
 			log.info("apiOperationName" + apiOperationName);
 
 			Audit audit = new Audit();
@@ -274,10 +292,9 @@ public class AuditDaoImpl implements IAuditDao {
 					IConstant.RESPONSE_DESCRIPTION).toString());
 			audit.setErrorProblem(exchange.getProperty(
 					IConstant.RESPONSE_STATUS).toString());
-			audit.setErrorCode(exchange.getProperty(IConstant.RESPONSE_CODE)
-					.toString());
+			audit.setErrorCode(IResponse.CONNECTION_ERROR_CODE);
 			audit.setPayload(responseBody);
-			
+
 			mongoTemplate.save(audit);
 
 		} catch (Exception e) {
@@ -285,8 +302,4 @@ public class AuditDaoImpl implements IAuditDao {
 		}
 	}
 
-	
-	
-	
-	
 }

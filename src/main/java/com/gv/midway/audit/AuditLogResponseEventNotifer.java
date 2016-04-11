@@ -18,6 +18,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
+import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.BaseResponse;
 import com.gv.midway.pojo.audit.Audit;
 
@@ -77,10 +78,15 @@ public class AuditLogResponseEventNotifer extends EventNotifierSupport {
 				audit.setAuditTransationID(TransactionId);
 				audit.setGvTransationId(exchange.getProperty(IConstant.GV_TRANSACTION_ID).toString());
 				audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME).toString());
+				audit.setPayload(exchange.getIn().getBody());
+				if(IResponse.SUCCESS_CODE.intValue()!=baseResponse.getResponse().getResponseCode().intValue())
+				{
 				audit.setErrorDetais(baseResponse.getResponse().getResponseDescription());
 				audit.setErrorProblem(baseResponse.getResponse().getResponseStatus());
 				audit.setErrorCode(baseResponse.getResponse().getResponseCode());
-				audit.setPayload(exchange.getIn().getBody());
+			
+				}
+				
 				
 				mongoTemplate.save(audit);
 

@@ -11,6 +11,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.gv.midway.constant.IConstant;
+import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
@@ -68,10 +69,17 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 		Header responseheader = new Header();
 
 		Response response = new Response();
-		response.setResponseCode(newEnv.getProperty(IConstant.RESPONSES_CODE));
-		response.setResponseStatus(newEnv.getProperty(IConstant.RESPONSE_STATUS_SUCCESS));
-
+		/*response.setResponseCode(newEnv.getProperty(IConstant.RESPONSES_CODE));
+		response.setResponseStatus(newEnv.getProperty(IConstant.RESPONSE_STATUS_SUCCESS));*/
+		
+		response.setResponseCode(IResponse.SUCCESS_CODE);
+		response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+		response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
+		
+		
 		responseheader.setApplicationName(newEnv.getProperty(IConstant.APPLICATION_NAME));
+		
+		
 		responseheader.setRegion(newEnv.getProperty(IConstant.REGION));
 		DateFormat dateFormat = new SimpleDateFormat(newEnv.getProperty(IConstant.DATE_FORMAT));
 		Date date = new Date();

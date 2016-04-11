@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
 
 import com.gv.midway.constant.IConstant;
+import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.verizon.CustomFields;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.Header;
@@ -55,7 +56,7 @@ public class KoreDeviceInformationPostProcessor implements Processor {
 
 		Response response = new Response();
 		
-		response.setResponseCode(newEnv.getProperty(IConstant.RESPONSES_CODE));
+		response.setResponseCode(IResponse.SUCCESS_CODE);
 		response.setResponseStatus(koreDeviceInformationResponse.getD()
 				.getStatus());
 

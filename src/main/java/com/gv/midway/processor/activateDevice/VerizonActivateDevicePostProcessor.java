@@ -54,16 +54,14 @@ public class VerizonActivateDevicePostProcessor implements Processor {
 		if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
 
 			log.info("RequestID::" + exchange.getIn().getBody().toString());
-			response.setResponseCode(newEnv
-					.getProperty(IConstant.RESPONSES_CODE));
-			response.setResponseStatus(newEnv
-					.getProperty(IConstant.RESPONSE_STATUS_SUCCESS));
+			response.setResponseCode(IResponse.SUCCESS_CODE);
+			response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
 			response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
 
 		} else {
 
-			response.setResponseCode("400");
-			response.setResponseStatus("errorMessage");
+			response.setResponseCode(400);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
 			response.setResponseDescription(exchange.getIn().getBody()
 					.toString());
 		}

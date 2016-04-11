@@ -45,10 +45,8 @@ public class KoreActivateDevicePostProcessor implements Processor {
 
 		Response response = new Response();
 
-		response.setResponseCode(newEnv.getProperty(IConstant.RESPONSES_CODE));
-		response.setResponseStatus(newEnv
-				.getProperty(IConstant.RESPONSE_STATUS_SUCCESS));
-
+		response.setResponseCode(IResponse.SUCCESS_CODE);
+		response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
 		response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
 
 		responseheader.setApplicationName(exchange.getProperty(

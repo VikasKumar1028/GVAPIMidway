@@ -1,13 +1,15 @@
 package com.gv.midway.pojo;
+
 import com.wordnik.swagger.annotations.ApiModelProperty;
+
 public class Response {
 
 	@ApiModelProperty(value = "Response code for triggered request.")
-	private String responseCode;
+	private Integer responseCode;
 
 	@ApiModelProperty(value = "Reesponse status : SUCCESS or FAILURE")
 	private String responseStatus;
-	
+
 	@ApiModelProperty(value = "Details of the response status received.")
 	private String responseDescription;
 
@@ -27,11 +29,11 @@ public class Response {
 		this.responseDescription = responseDescription;
 	}
 
-	public String getResponseCode() {
+	public Integer getResponseCode() {
 		return responseCode;
 	}
 
-	public void setResponseCode(String responseCode) {
+	public void setResponseCode(Integer responseCode) {
 		this.responseCode = responseCode;
 	}
 
@@ -79,16 +81,9 @@ public class Response {
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Response [responseCode=");
-		builder.append(responseCode);
-		builder.append(", responseStatus=");
-		builder.append(responseStatus);
-		builder.append(", responseDescription=");
-		builder.append(responseDescription);
-		builder.append("]");
-		return builder.toString();
+		return "Response [responseCode=" + responseCode + ", responseStatus="
+				+ responseStatus + ", responseDescription="
+				+ responseDescription + "]";
 	}
 
-	
 }
