@@ -10,18 +10,21 @@ import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
 
 import com.gv.midway.constant.IConstant;
-import com.gv.midway.pojo.Response;
+import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.Header;
+import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
-import com.gv.midway.processor.deviceInformation.StubKoreDeviceInformationProcessor;
+import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponseDataArea;
 
 public class KoreDeactivateDevicePostProcessor implements Processor {
 
 	Logger log = Logger.getLogger(KoreDeactivateDevicePostProcessor.class
 			.getName());
+
 	public KoreDeactivateDevicePostProcessor() {
 
 	}
+
 	Environment newEnv;
 
 	public KoreDeactivateDevicePostProcessor(Environment env) {
@@ -31,31 +34,54 @@ public class KoreDeactivateDevicePostProcessor implements Processor {
 	}
 
 	public void process(Exchange exchange) throws Exception {
-		
-		
+
 		// TODO Auto-generated method stub
 		DeactivateDeviceResponse deactivateDeviceResponse = new DeactivateDeviceResponse();
+		DeactivateDeviceResponseDataArea deactivateDeviceResponseDataArea = new DeactivateDeviceResponseDataArea();
+
 		Header responseheader = new Header();
 
 		Response response = new Response();
-		responseheader.setApplicationName(newEnv.getProperty(IConstant.APPLICATION_NAME));
-		responseheader.setRegion(newEnv.getProperty(IConstant.REGION));
-		DateFormat dateFormat = new SimpleDateFormat(newEnv.getProperty(IConstant.DATE_FORMAT));
+		if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
+
+			response.setResponseCode(IResponse.SUCCESS_CODE);
+			response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+			response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
+			deactivateDeviceResponse
+					.setDataArea(deactivateDeviceResponseDataArea);
+
+		} else {
+
+			response.setResponseCode(400);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
+			//response.setResponseDescription(exchange.getIn().getBody().toString());
+			response.setResponseDescription(exchange.getIn().getMessageId());
+		}
+
+		responseheader.setApplicationName(exchange.getProperty(
+				IConstant.APPLICATION_NAME).toString());
+		responseheader.setRegion(exchange.getProperty(IConstant.REGION)
+				.toString());
+		DateFormat dateFormat = new SimpleDateFormat(
+				newEnv.getProperty(IConstant.DATE_FORMAT));
 		Date date = new Date();
 		responseheader.setTimestamp(dateFormat.format(date));
-		responseheader.setOrganization(newEnv.getProperty(IConstant.ORGANIZATION));
-		responseheader.setSourceName(exchange.getProperty(IConstant.SOURCE_NAME).toString());
-	
-		String TransactionId = (String) exchange.getProperty(newEnv	.getProperty(IConstant.EXCHANEGE_PROPERTY));
-		responseheader.setTransactionId(TransactionId);
-		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER).toString());
-	
+		responseheader.setOrganization(exchange.getProperty(
+				IConstant.ORGANIZATION).toString());
+		responseheader.setSourceName(exchange
+				.getProperty(IConstant.SOURCE_NAME).toString());
+
+		responseheader.setTransactionId(exchange.getProperty(
+				IConstant.GV_TRANSACTION_ID).toString());
+		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
+				.toString());
 
 		deactivateDeviceResponse.setHeader(responseheader);
-		
+
 		deactivateDeviceResponse.setResponse(response);
-	/*	deactivateDeviceResponse.setRequestId("ReaLKORErequestId");
-		deactivateDeviceResponse.setTrackingNumber("ReaLKOREtrackingNumbe");*/
+		deactivateDeviceResponseDataArea.setOrderNumber(exchange.getProperty(
+				IConstant.MIDWAY_TRANSACTION_ID).toString());
+
 		exchange.getIn().setBody(deactivateDeviceResponse);
 	}
 }

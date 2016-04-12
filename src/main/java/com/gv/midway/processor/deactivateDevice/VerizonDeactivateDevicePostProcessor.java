@@ -14,10 +14,10 @@ import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
+import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponseDataArea;
 
 public class VerizonDeactivateDevicePostProcessor implements Processor {
 
-	
 	Logger log = Logger.getLogger(VerizonDeactivateDevicePostProcessor.class
 			.getName());
 	Environment newEnv;
@@ -35,36 +35,40 @@ public class VerizonDeactivateDevicePostProcessor implements Processor {
 
 	public void process(Exchange exchange) throws Exception {
 		// TODO Auto-generated method stub
-	
+
 		log.info("Start::VerizonDeactivateDevicePostProcessor");
-		
+
 		DeactivateDeviceResponse deactivateDeviceResponse = new DeactivateDeviceResponse();
+		DeactivateDeviceResponseDataArea deactivateDeviceResponseDataArea = new DeactivateDeviceResponseDataArea();
+
 		Header responseheader = new Header();
 
 		Response response = new Response();
-		
-		responseheader.setApplicationName(newEnv.getProperty(IConstant.APPLICATION_NAME));
-		responseheader.setRegion(newEnv.getProperty(IConstant.REGION));
-		DateFormat dateFormat = new SimpleDateFormat(newEnv.getProperty(IConstant.DATE_FORMAT));
+
+		responseheader.setApplicationName(exchange.getProperty(
+				IConstant.APPLICATION_NAME).toString());
+		responseheader.setRegion(exchange.getProperty(IConstant.REGION)
+				.toString());
+		DateFormat dateFormat = new SimpleDateFormat(
+				newEnv.getProperty(IConstant.DATE_FORMAT));
 		Date date = new Date();
 		responseheader.setTimestamp(dateFormat.format(date));
-		responseheader.setOrganization(newEnv.getProperty(IConstant.ORGANIZATION));
-		//responseheader.setSourceName(newEnv	.getProperty(IConstant.SOURCE_NAME_VERIZON));
-		String TransactionId = (String) exchange.getProperty(newEnv	.getProperty(IConstant.EXCHANEGE_PROPERTY));
-		responseheader.setTransactionId(TransactionId);
-		//responseheader.setBsCarrier(newEnv.getProperty(IConstant.BSCARRIER_VERIZON));
-		responseheader.setSourceName(exchange.getProperty(IConstant.SOURCE_NAME).toString());
-		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER).toString());
+		responseheader.setOrganization(exchange.getProperty(
+				IConstant.ORGANIZATION).toString());
 
-		
+		responseheader.setTransactionId(exchange.getProperty(
+				IConstant.GV_TRANSACTION_ID).toString());
+		responseheader.setSourceName(exchange
+				.getProperty(IConstant.SOURCE_NAME).toString());
+		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
+				.toString());
+
 		if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
-
 
 			response.setResponseCode(IResponse.SUCCESS_CODE);
 			response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
 			response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
-			
-
+			deactivateDeviceResponse.setDataArea(deactivateDeviceResponseDataArea);
 
 		} else {
 
@@ -72,12 +76,15 @@ public class VerizonDeactivateDevicePostProcessor implements Processor {
 
 			response.setResponseStatus(IResponse.ERROR_MESSAGE);
 
-			response.setResponseDescription(exchange.getIn().getBody().toString());
+			response.setResponseDescription(exchange.getIn().getBody()
+					.toString());
 		}
 
 		deactivateDeviceResponse.setHeader(responseheader);
 		deactivateDeviceResponse.setResponse(response);
-		
+		deactivateDeviceResponseDataArea.setOrderNumber(exchange.getProperty(
+				IConstant.MIDWAY_TRANSACTION_ID).toString());
+
 		exchange.getIn().setBody(deactivateDeviceResponse);
 		log.info("End::VerizonDeactivateDevicePostProcessor");
 	}

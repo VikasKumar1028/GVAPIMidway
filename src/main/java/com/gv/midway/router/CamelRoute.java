@@ -177,7 +177,7 @@ public class CamelRoute extends RouteBuilder {
 										.unmarshal()
 										.json(JsonLibrary.Jackson, DeviceInformationResponseVerizon.class)
 										.bean(iAuditService, "auditExternalResponseCall").bean(iDeviceService, "setDeviceInformationDB")
-										.process(new VerizonDeviceInformationPostProcessor(env)).bean(iAuditService, "updateDeviceInformationDB")
+										.process(new VerizonDeviceInformationPostProcessor(env)).bean(iDeviceService, "updateDeviceInformationDB")
 									.doCatch(CxfOperationException.class)
 										.bean(iAuditService, "auditExternalExceptionResponseCall")
 										.process(new VerizonGenericExceptionProcessor(env))
