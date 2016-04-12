@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.esotericsoftware.kryo.Kryo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
+import com.gv.midway.constant.ITransaction;
 import com.gv.midway.dao.ITransactionalDao;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceId;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
@@ -213,11 +214,11 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		Update update = new Update();
 		if (exchange.getIn().getBody().toString().contains("errorMessage=")) {
 
-			update.set("callBackPayload", exchange.getIn().getBody().toString());
-			update.set("carrierErrorDecription", exchange.getIn().getBody().toString());
-			update.set("carrierErrorDecription", exchange.getIn().getBody().toString());
-			update.set("carrierStatus", "Error");
-			update.set("lastTimeStampUpdated", CommonUtil.getCurrentTimeStamp());
+			update.set(ITransaction.CALL_BACK_PAYLOAD, exchange.getIn().getBody().toString());
+			update.set(ITransaction.CARRIER_ERROR_DECRIPTION, exchange.getIn().getBody().toString());
+			update.set(ITransaction.CARRIER_ERROR_DECRIPTION, exchange.getIn().getBody().toString());
+			update.set(ITransaction.CARRIER_STATUS, "Error");
+			update.set(ITransaction.LAST_TIME_STAMPUPDATED, CommonUtil.getCurrentTimeStamp());
 
 		} else {
 
@@ -240,9 +241,9 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			 * reqId.toString());
 			 */
 
-			update.set("carrierStatus", "Pending");
-			update.set("carrierTransationID", responseId);
-			update.set("lastTimeStampUpdated", CommonUtil.getCurrentTimeStamp());
+			update.set(ITransaction.CARRIER_STATUS, "Pending");
+			update.set(ITransaction.CARRIER_TRANSATION_ID, responseId);
+			update.set(ITransaction.LAST_TIME_STAMPUPDATED, CommonUtil.getCurrentTimeStamp());
 
 		}
 		mongoTemplate.updateMulti(searchUserQuery, update, Transaction.class);
@@ -268,11 +269,11 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		String errorResponseBody = exception.getResponseBody();
 
 		Update update = new Update();
-		update.set("callBackPayload", errorResponseBody);
-		update.set("carrierErrorDecription", errorResponseBody);
-		update.set("carrierErrorDecription", errorResponseBody);
-		update.set("carrierStatus", "Error");
-		update.set("lastTimeStampUpdated", CommonUtil.getCurrentTimeStamp());
+		update.set(ITransaction.CALL_BACK_PAYLOAD, errorResponseBody);
+		update.set(ITransaction.CARRIER_ERROR_DECRIPTION, errorResponseBody);
+		update.set(ITransaction.CARRIER_ERROR_DECRIPTION, errorResponseBody);
+		update.set(ITransaction.CARRIER_STATUS, "Error");
+		update.set(ITransaction.LAST_TIME_STAMPUPDATED, CommonUtil.getCurrentTimeStamp());
 		mongoTemplate.updateMulti(searchUserQuery, update, Transaction.class);
 
 		exchange.setProperty(IConstant.RESPONSE_DESCRIPTION, errorResponseBody);
@@ -300,11 +301,11 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			String errorResponseBody = IConstant.MIDWAY_CONNECTION_ERROR;
 
 			Update update = new Update();
-			update.set("callBackPayload", errorResponseBody);
-			update.set("carrierErrorDecription", errorResponseBody);
-			update.set("carrierErrorDecription", errorResponseBody);
-			update.set("carrierStatus", "Error");
-			update.set("lastTimeStampUpdated", CommonUtil.getCurrentTimeStamp());
+			update.set(ITransaction.CALL_BACK_PAYLOAD, errorResponseBody);
+			update.set(ITransaction.CARRIER_ERROR_DECRIPTION, errorResponseBody);
+			update.set(ITransaction.CARRIER_ERROR_DECRIPTION, errorResponseBody);
+			update.set(ITransaction.CARRIER_STATUS, "Error");
+			update.set(ITransaction.LAST_TIME_STAMPUPDATED, CommonUtil.getCurrentTimeStamp());
 			mongoTemplate.updateMulti(searchUserQuery, update, Transaction.class);
 
 		} else if ("VERIZON".equals(exchange.getProperty(IConstant.SOURCE_NAME))) {
@@ -314,12 +315,12 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			searchUserQuery = new Query(Criteria.where("midwayTransationID").is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)));
 
 			Update update = new Update();
-			update.set("callBackPayload", "CONNECTION_ERROR".toString());
-			update.set("carrierErrorDecription", "CONNECTION_ERROR".toString());
-			update.set("carrierErrorDecription", "CONNECTION_ERROR".toString());
-			update.set("carrierStatus", "Error");
-			update.set("carrierTransationID", "");
-			update.set("lastTimeStampUpdated", CommonUtil.getCurrentTimeStamp());
+			update.set(ITransaction.CALL_BACK_PAYLOAD, "CONNECTION_ERROR".toString());
+			update.set(ITransaction.CARRIER_ERROR_DECRIPTION, "CONNECTION_ERROR".toString());
+			update.set(ITransaction.CARRIER_ERROR_DECRIPTION, "CONNECTION_ERROR".toString());
+			update.set(ITransaction.CARRIER_STATUS, "Error");
+			update.set(ITransaction.CARRIER_TRANSATION_ID, "");
+			update.set(ITransaction.LAST_TIME_STAMPUPDATED, CommonUtil.getCurrentTimeStamp());
 			WriteResult result = mongoTemplate.updateMulti(searchUserQuery, update, Transaction.class);
 
 			System.out.println("*******************************************" + result);
