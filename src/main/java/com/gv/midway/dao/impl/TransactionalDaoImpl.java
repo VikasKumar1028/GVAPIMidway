@@ -51,12 +51,14 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		ActivateDevices[] activateDevices = activateDeviceRequestDataArea.getDevices();
 
-		ActivateDeviceRequest dbPayload = new ActivateDeviceRequest();
-		dbPayload.setHeader(req.getHeader());
+		
 
 		Kryo kryo = new Kryo();
 		for (ActivateDevices activateDevice : activateDevices) {
 
+			ActivateDeviceRequest dbPayload = new ActivateDeviceRequest();
+			dbPayload.setHeader(req.getHeader());
+			
 			ActivateDevices[] businessPayLoadDevicesArray = new ActivateDevices[1];
 			ActivateDevices businessPayLoadActivateDevices = new ActivateDevices();
 			ActivateDeviceId[] businessPayloadDeviceId = new ActivateDeviceId[activateDevice.getDeviceIds().length];
@@ -133,11 +135,13 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		DeactivateDeviceRequest req = (DeactivateDeviceRequest) exchange.getIn().getBody();
 		DeactivateDeviceRequestDataArea deActivateDeviceRequestDataArea = (DeactivateDeviceRequestDataArea) req.getDataArea();
 		DeactivateDevices[] deactivateDevices = deActivateDeviceRequestDataArea.getDevices();
-		DeactivateDeviceRequest dbPayload = new DeactivateDeviceRequest();
-		dbPayload.setHeader(req.getHeader());
+		
 		Kryo kryo = new Kryo();
 
 		for (DeactivateDevices deactivateDevice : deactivateDevices) {
+			DeactivateDeviceRequest dbPayload = new DeactivateDeviceRequest();
+			dbPayload.setHeader(req.getHeader());
+			
 			DeactivateDevices[] businessPayloadDeviceArray = new DeactivateDevices[1];
 			DeactivateDevices businessPayLoadDeactivateDevices = new DeactivateDevices();
 			DeactivateDeviceId[] businessPayloadDeviceId = new DeactivateDeviceId[deactivateDevice.getDeviceIds().length];
