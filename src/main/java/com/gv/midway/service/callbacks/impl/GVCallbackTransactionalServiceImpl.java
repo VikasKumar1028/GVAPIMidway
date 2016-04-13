@@ -18,5 +18,9 @@ public class GVCallbackTransactionalServiceImpl implements GVCallbackTransaction
 
 		gvCallbackTransactionalDao.populateCallbackDBPayload(exchange);
 	}
+	public void getCallbackMidwayTransactionID(Exchange exchange) {
+		log.info("GVCallbackTransactionalServiceImpl-getCallbackMidwayTransactionID");
 
+		gvCallbackTransactionalDao.getCallbackMidwayTransactionID(exchange);
+	}
 }

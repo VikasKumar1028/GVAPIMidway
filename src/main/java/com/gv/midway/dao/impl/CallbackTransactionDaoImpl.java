@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gv.midway.constant.IConstant;
 import com.gv.midway.dao.GVCallbackTransactionalDao;
 import com.gv.midway.pojo.callback.request.CallBackVerizonRequest;
 import com.gv.midway.pojo.transaction.Transaction;
@@ -71,6 +72,67 @@ public class CallbackTransactionDaoImpl implements GVCallbackTransactionalDao {
 					
 		}
 		mongoTemplate.upsert(searchUserQuery, update, Transaction.class);
-	
+
+	}
+
+	public void getCallbackMidwayTransactionID(Exchange exchange) {
+
+		log.info("CallbackTransactionDaoImpl-getCallbackMidwayTransactionID");
+		log.info("Exchange inside" + exchange.getIn().getBody());
+
+		CallBackVerizonRequest callBackVerizonRequest = (CallBackVerizonRequest) exchange.getIn().getBody(CallBackVerizonRequest.class);
+
+		String requestId = callBackVerizonRequest.getRequestId();
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		String strDeviceNumber = "";
+		try {
+			strDeviceNumber = objectMapper.writeValueAsString(callBackVerizonRequest.getDeviceIds());
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+
+		Query searchUserQuery = new Query(Criteria.where("carrierTransationID").is(requestId).andOperator(Criteria.where("deviceNumber").is(strDeviceNumber)));
+
+		/*
+		 * String carrierTransationID;//Call Back Thread String
+		 * carrierStatus;//Call Back Thread String
+		 * LastTimeStampUpdated;//CallBack Thread String
+		 * carrierErrorDecription;//CallBack Thread String
+		 * callBackPayload;//CallBack Thread Boolean
+		 * callBackDelivered;//CallBack Thread Boolean
+		 * callBackReceived;//CallBack Thread String
+		 * callBackFailureToNetSuitReason;//CallBack Thread
+		 */
+
+		/*Update update = new Update();
+		if (exchange.getIn().getBody().toString().contains("errorMessage=")) {
+			update.set("callBackPayload", exchange.getIn().getBody().toString());
+			update.set("carrierErrorDecription", exchange.getIn().getBody().toString());
+			update.set("carrierErrorDecription", exchange.getIn().getBody().toString());
+			update.set("carrierStatus", "Error");
+			update.set("lastTimeStampUpdated", CommonUtil.getCurrentTimeStamp());
+
+		} else {
+
+			update.set("callBackPayload", exchange.getIn().getBody().toString());
+			update.set("carrierStatus", "SUCCESS");
+			update.set("lastTimeStampUpdated", CommonUtil.getCurrentTimeStamp());
+
+		}*/
+		Transaction findOne = mongoTemplate.findOne(searchUserQuery,Transaction.class);
+		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_ID, findOne.getMidwayTransationID());
+		//TODO
+		if(null != findOne.getCarrierTransationID())
+			exchange.setProperty(IConstant.GV_TRANSACTION_ID,findOne.getCarrierTransationID());
+		else
+			exchange.setProperty(IConstant.GV_TRANSACTION_ID,"");
+			
+		
+		if(null != findOne.getCarrierTransationID())
+			exchange.setProperty(IConstant.GV_HOSTNAME,findOne.getCarrierTransationID());
+		else
+			exchange.setProperty(IConstant.GV_HOSTNAME,"");
+
 	}
 }

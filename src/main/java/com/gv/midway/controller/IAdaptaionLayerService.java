@@ -11,6 +11,7 @@ import javax.ws.rs.QueryParam;
 
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
+import com.gv.midway.pojo.callback.NetsuitGenericResponse;
 import com.gv.midway.pojo.callback.request.CallBackVerizonRequest;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
@@ -18,7 +19,6 @@ import com.gv.midway.pojo.device.request.BulkDevices;
 import com.gv.midway.pojo.device.request.SingleDevice;
 import com.gv.midway.pojo.device.response.BatchDeviceResponse;
 import com.gv.midway.pojo.device.response.InsertDeviceResponse;
-import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -107,5 +107,5 @@ public interface IAdaptaionLayerService {
 	@Produces("application/json")
 	@Consumes("application/json")
 	@ApiOperation(value = "ActivateDeviceCallbackService")
-	CallBackVerizonRequest activateCallback(CallBackVerizonRequest activateDeviceRequest);
+	NetsuitGenericResponse activateCallback(CallBackVerizonRequest activateDeviceRequest);
 }

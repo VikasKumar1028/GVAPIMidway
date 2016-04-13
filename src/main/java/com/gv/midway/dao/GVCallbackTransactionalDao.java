@@ -4,4 +4,5 @@ import org.apache.camel.Exchange;
 
 public interface GVCallbackTransactionalDao {
 	public void populateCallbackDBPayload(Exchange exchange);
+	public void getCallbackMidwayTransactionID(Exchange exchange);
 }
