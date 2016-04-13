@@ -3,8 +3,6 @@ package com.gv.midway.router;
 import java.net.ConnectException;
 import java.net.UnknownHostException;
 
-import org.apache.camel.Exchange;
-import org.apache.camel.Expression;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.cxf.CxfOperationException;
@@ -74,6 +72,7 @@ public class CamelRoute extends RouteBuilder {
 	 */
 
 	@Autowired
+	
 	private IDeviceService iDeviceService;
 
 	@Autowired
@@ -407,11 +406,14 @@ public class CamelRoute extends RouteBuilder {
 			.process(new CallbackPreProcessor())
 			.bean(gvCallBacks, "callbackRequestCall")
 			//******************DONOT REMOVE THIS COMMENTED CODE **********************
-	//		.to("kafka:10.13.37.26:9092?topic=test&serializerClass=kafka.serializer.StringEncoder")
-//			.doTry()
+			//			.doTry()
 //			.to(uriRestNetsuitEndPoint)
 //			.doCatch(CxfOperationException.class)
 			.bean(gvCallbackTransactionalService,"populateCallbackDBPayload")
+			.process(new CallbackPostProcessor())
+//			.to("kafka:10.10.2.190:9092,10.10.2.190:9093,10.10.2.190:9094?topic=my-replicated-topic")
+			.to("kafka:localhost:9092?topic=topic")
+			.process(new CallbackNewPostProcessor())
 		.end();
 		
 	

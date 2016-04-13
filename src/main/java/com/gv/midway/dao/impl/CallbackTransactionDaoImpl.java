@@ -26,10 +26,10 @@ public class CallbackTransactionDaoImpl implements GVCallbackTransactionalDao {
 	public void populateCallbackDBPayload(Exchange exchange) {
 		
 		log.info("CallbackTransactionDaoImpl-populateCallbackDBPayload");
-		log.info("Exchange inside" + exchange.getIn().getBody().toString());
+		log.info("Exchange inside" + exchange.getIn().getBody());
 		
 		
-		CallBackVerizonRequest callBackVerizonRequest=(CallBackVerizonRequest)exchange.getIn().getBody();
+		CallBackVerizonRequest callBackVerizonRequest=(CallBackVerizonRequest)exchange.getIn().getBody(CallBackVerizonRequest.class);
 		
 		String requestId=callBackVerizonRequest.getRequestId();
 		
