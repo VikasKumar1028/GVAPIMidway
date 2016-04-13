@@ -99,7 +99,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				transaction.setDeviceNumber(strDeviceNumber);
 				transaction.setDevicePayload(dbPayload);
 				transaction.setMidwayStatus(IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
-				transaction.setCarrierName(exchange.getProperty(IConstant.BSCARRIER).toString());
+				transaction.setCarrierName(exchange.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString());
 				transaction.setTimeStampReceived(currentDataTime);
 				transaction.setAuditTransationID(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
 				transaction.setRequestType(exchange.getFromEndpoint().toString());
@@ -176,7 +176,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				transaction.setDeviceNumber(strDeviceNumber);
 				transaction.setDevicePayload(dbPayload);
 				transaction.setMidwayStatus(IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
-				transaction.setCarrierName(exchange.getProperty(IConstant.BSCARRIER).toString());
+				transaction.setCarrierName(exchange.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString());
 				transaction.setTimeStampReceived(currentDataTime);
 				transaction.setAuditTransationID(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
 				transaction.setRequestType(exchange.getFromEndpoint().toString());

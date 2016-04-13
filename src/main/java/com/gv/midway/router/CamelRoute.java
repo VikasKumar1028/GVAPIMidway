@@ -113,7 +113,7 @@ public class CamelRoute extends RouteBuilder {
 		onException(UnknownHostException.class, ConnectException.class)
 				.routeId("ConnectionExceptionRoute").handled(true)
 				.log(LoggingLevel.ERROR, "Connection Error")
-				.maximumRedeliveries(3).redeliveryDelay(1000)
+				.maximumRedeliveries(1).redeliveryDelay(100)
 				.bean(iTransactionalService,"populateConnectionErrorResponse(${exchange},CONNECTION_ERROR)")
 				.bean(iAuditService, "auditExternalConnectionExceptionResponseCall")
 				.process(new GenericErrorProcessor(env));
@@ -320,7 +320,6 @@ public class CamelRoute extends RouteBuilder {
 													.bean(iSessionService, "setContextTokenInExchange")
 													.bean(iTransactionalService,"populateDeactivateDBPayload")
 													.bean(iAuditService, "auditExternalRequestCall")
-													.to("direct:VerizonDeactivationFlow")
 														
 					.endChoice().
 					end().to("log:input").
