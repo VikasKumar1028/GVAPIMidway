@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.esotericsoftware.kryo.Kryo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
+import com.gv.midway.constant.IResponse;
 import com.gv.midway.constant.ITransaction;
 import com.gv.midway.dao.ITransactionalDao;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceId;
@@ -327,9 +328,9 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		}
 
-		exchange.setProperty(IConstant.RESPONSE_DESCRIPTION, "CONNECTION_ERROR");
-		exchange.setProperty(IConstant.RESPONSE_STATUS, "CONNECTION_ERROR");
-		exchange.setProperty(IConstant.RESPONSE_CODE, "CONNECTION_ERROR");
+		exchange.setProperty(IConstant.RESPONSE_DESCRIPTION, IResponse.ERROR_DESCRIPTION_CONNECTION_MIDWAYDB);
+		exchange.setProperty(IConstant.RESPONSE_STATUS, IResponse.ERROR_MESSAGE);
+		exchange.setProperty(IConstant.RESPONSE_CODE, IResponse.CONNECTION_ERROR_CODE);
 
 	}
 
