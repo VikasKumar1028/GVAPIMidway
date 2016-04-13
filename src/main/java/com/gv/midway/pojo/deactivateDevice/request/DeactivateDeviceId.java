@@ -1,14 +1,17 @@
 package com.gv.midway.pojo.deactivateDevice.request;
-
+import com.wordnik.swagger.annotations.ApiModelProperty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DeactivateDeviceId {
 	// @JsonProperty("id")
+	@ApiModelProperty(value = "The value of device indentifier.", required = true)
 	private String id;
 	// @JsonProperty("kind")
+	@ApiModelProperty(value = "The type of device indentifier.", required = true)
 	private String kind;
+	
 	private Boolean flagScrap;
 
 	public String getId() {

@@ -4,18 +4,26 @@ import java.util.Arrays;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gv.midway.pojo.verizon.CustomFields;
 import com.gv.midway.pojo.verizon.DeviceId;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DeactivateDeviceRequestDataArea {
+	@ApiModelProperty(value = "The name of device group.")
 	private String groupName;
 
+	@ApiModelProperty(value = "The name of Billing Account.")
 	private String accountName;
 
+	@ApiModelProperty(value = "Custom field names and values.")
 	private CustomFields[] customFields;
 
+	@ApiModelProperty(value = "The name of Service Plan.")
 	private String servicePlan;
-
+	
+	@ApiModelProperty(value = "Code identifying the reason for the deactivation.")
 	private String reasonCode;
 
+	@ApiModelProperty(value = "List of devices for the deactivation.")
 	private DeactivateDevices[] devices;
 
 	public DeactivateDevices[] getDevices() {
@@ -25,7 +33,7 @@ public class DeactivateDeviceRequestDataArea {
 	public void setDevices(DeactivateDevices[] devices) {
 		this.devices = devices;
 	}
-
+	@ApiModelProperty(value = "Early Termination Fee Waiver.")
 	private String etfWaiver;
 
 	private Boolean flagScrap;
