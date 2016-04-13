@@ -23,6 +23,7 @@ public class ActivateDeviceRequestVerizon {
 	@ApiModelProperty(value = "Stock Keeping Unit(SKU) number of a 4G device.")
 	private String skuNumber;
 
+	@ApiModelProperty(value = "The name and value of any custom field that can be set during activation.")
 	private CustomFields[] customFields;
 
 	@ApiModelProperty(value = "Cost Center Identifier having 36 characters .")

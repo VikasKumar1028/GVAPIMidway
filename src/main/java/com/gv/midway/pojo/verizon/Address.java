@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Address {
+	@ApiModelProperty(value = "Street address.", required = true)
 	private String addressLine1;
 	
 	@ApiModelProperty(value = "Additional street address.")
