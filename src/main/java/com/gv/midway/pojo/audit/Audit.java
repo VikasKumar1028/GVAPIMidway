@@ -17,7 +17,7 @@ public class Audit {
 	private Object Payload;
 	private String errorProblem;
 	private Integer errorCode;
-	private String errorDetais;
+	private String errorDetails;
 	//Which server it is running on
 	private String hostName; 
 	//GrantVitor Transaction Id Send
@@ -95,13 +95,7 @@ public class Audit {
 		this.errorCode = errorCode;
 	}
 
-	public String getErrorDetais() {
-		return errorDetais;
-	}
 
-	public void setErrorDetais(String errorDetais) {
-		this.errorDetais = errorDetais;
-	}
 
 	public String getHostName() {
 		return hostName;
@@ -127,7 +121,7 @@ public class Audit {
 		result = prime * result
 				+ ((errorCode == null) ? 0 : errorCode.hashCode());
 		result = prime * result
-				+ ((errorDetais == null) ? 0 : errorDetais.hashCode());
+				+ ((errorDetails == null) ? 0 : errorDetails.hashCode());
 		result = prime * result
 				+ ((errorProblem == null) ? 0 : errorProblem.hashCode());
 		result = prime * result + ((from == null) ? 0 : from.hashCode());
@@ -171,10 +165,10 @@ public class Audit {
 				return false;
 		} else if (!errorCode.equals(other.errorCode))
 			return false;
-		if (errorDetais == null) {
-			if (other.errorDetais != null)
+		if (errorDetails == null) {
+			if (other.errorDetails != null)
 				return false;
-		} else if (!errorDetais.equals(other.errorDetais))
+		} else if (!errorDetails.equals(other.errorDetails))
 			return false;
 		if (errorProblem == null) {
 			if (other.errorProblem != null)
@@ -221,7 +215,7 @@ public class Audit {
 				+ ", status=" + status + ", auditTransationId="
 				+ auditTransationId + ", Payload=" + Payload
 				+ ", errorProblem=" + errorProblem + ", errorCode=" + errorCode
-				+ ", errorDetais=" + errorDetais + ", hostName=" + hostName
+				+ ", errorDetails=" + errorDetails + ", hostName=" + hostName
 				+ ", gvTransationId=" + gvTransationId + "]";
 	}
 
@@ -231,5 +225,21 @@ public class Audit {
 
 	public void setGvTransationId(String gvTransationId) {
 		this.gvTransationId = gvTransationId;
+	}
+
+	public String getAuditTransationId() {
+		return auditTransationId;
+	}
+
+	public void setAuditTransationId(String auditTransationId) {
+		this.auditTransationId = auditTransationId;
+	}
+
+	public String getErrorDetails() {
+		return errorDetails;
+	}
+
+	public void setErrorDetails(String errorDetails) {
+		this.errorDetails = errorDetails;
 	}
 }

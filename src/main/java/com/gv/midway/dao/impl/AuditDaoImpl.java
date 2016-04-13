@@ -157,7 +157,9 @@ public class AuditDaoImpl implements IAuditDao {
 
 		log.info("Start-AuditDaoImpl:auditExternalExceptionResponseCall");
 		String responseBody = "";
-
+		//TODO populate into below object
+		//KoreErrorResponse errorBody 
+		
 		CxfOperationException exception = null;
 
 		if (exchange.getProperty(Exchange.EXCEPTION_CAUGHT) != null) {
@@ -219,7 +221,7 @@ public class AuditDaoImpl implements IAuditDao {
 			 */
 			// TODO
 
-			audit.setErrorDetais("ERROR");
+			audit.setErrorDetails("ERROR");
 			audit.setErrorProblem("ERROR ");
 			audit.setErrorCode(400);
 
@@ -287,7 +289,7 @@ public class AuditDaoImpl implements IAuditDao {
 					IConstant.GV_TRANSACTION_ID).toString());
 			audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME)
 					.toString());
-			audit.setErrorDetais(exchange.getProperty(
+			audit.setErrorDetails(exchange.getProperty(
 					IConstant.RESPONSE_DESCRIPTION).toString());
 			audit.setErrorProblem(exchange.getProperty(
 					IConstant.RESPONSE_STATUS).toString());

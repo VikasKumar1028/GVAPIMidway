@@ -81,7 +81,7 @@ public class AuditLogResponseEventNotifer extends EventNotifierSupport {
 				audit.setPayload(exchange.getIn().getBody());
 				if(IResponse.SUCCESS_CODE!=baseResponse.getResponse().getResponseCode())
 				{
-				audit.setErrorDetais(baseResponse.getResponse().getResponseDescription());
+				audit.setErrorDetails(baseResponse.getResponse().getResponseDescription());
 				audit.setErrorProblem(baseResponse.getResponse().getResponseStatus());
 
 				audit.setErrorCode(baseResponse.getResponse().getResponseCode());

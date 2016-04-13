@@ -222,6 +222,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			update.set(ITransaction.CALL_BACK_PAYLOAD, exchange.getIn().getBody().toString());
 			update.set(ITransaction.CARRIER_ERROR_DECRIPTION, exchange.getIn().getBody().toString());
 			update.set(ITransaction.CARRIER_ERROR_DECRIPTION, exchange.getIn().getBody().toString());
+			update.set(ITransaction.MIDWAY_STATUS,IResponse.ERROR_MESSAGE);
 			update.set(ITransaction.CARRIER_STATUS, "Error");
 			update.set(ITransaction.LAST_TIME_STAMPUPDATED, CommonUtil.getCurrentTimeStamp());
 
@@ -320,6 +321,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			searchUserQuery = new Query(Criteria.where("midwayTransationID").is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)));
 
 			Update update = new Update();
+			
+			update.set(ITransaction.MIDWAY_STATUS,IResponse.ERROR_MESSAGE);
 			update.set(ITransaction.CALL_BACK_PAYLOAD, "CONNECTION_ERROR".toString());
 			update.set(ITransaction.CARRIER_ERROR_DECRIPTION, "CONNECTION_ERROR".toString());
 			update.set(ITransaction.CARRIER_ERROR_DECRIPTION, "CONNECTION_ERROR".toString());

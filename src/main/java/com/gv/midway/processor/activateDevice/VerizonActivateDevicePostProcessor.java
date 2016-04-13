@@ -58,6 +58,8 @@ public class VerizonActivateDevicePostProcessor implements Processor {
 			response.setResponseCode(IResponse.SUCCESS_CODE);
 			response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
 			response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
+			activateDeviceResponseDataArea.setOrderNumber(exchange.getProperty(
+					IConstant.MIDWAY_TRANSACTION_ID).toString());
 
 		} else {
 
@@ -89,8 +91,7 @@ public class VerizonActivateDevicePostProcessor implements Processor {
 
 		activateDeviceResponse.setHeader(responseheader);
 		activateDeviceResponse.setResponse(response);
-		activateDeviceResponseDataArea.setOrderNumber(exchange.getProperty(
-				IConstant.MIDWAY_TRANSACTION_ID).toString());
+
 		activateDeviceResponse.setDataArea(activateDeviceResponseDataArea);
 
 		exchange.getIn().setBody(activateDeviceResponse);
