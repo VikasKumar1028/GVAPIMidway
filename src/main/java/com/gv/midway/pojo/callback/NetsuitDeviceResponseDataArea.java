@@ -4,15 +4,16 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class NetsuitDeviceResponseDataArea {
-	private String orderNumber;
+	private String midwaytransactionId;
 
-	public String getOrderNumber() {
-		return orderNumber;
+	public String getMidwaytransactionId() {
+		return midwaytransactionId;
 	}
 
-	public void setOrderNumber(String orderNumber) {
-		this.orderNumber = orderNumber;
+	public void setMidwaytransactionId(String midwaytransactionId) {
+		this.midwaytransactionId = midwaytransactionId;
 	}
+
 	
 	
 }
