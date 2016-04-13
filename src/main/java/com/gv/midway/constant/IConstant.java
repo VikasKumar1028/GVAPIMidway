@@ -39,7 +39,7 @@ public interface IConstant {
 	public static String MIDWAY_DEVICEINFO_DB="midwayDeviceInfoDB";
 	static String GV_TRANSACTION_ID="transactionId";
 	static String GV_HOSTNAME="hostName";
-	
+	static String MIDWAY_DERIVED_CARRIER_NAME="derivedCarrierName";
 	
 	public static String BULK_SUCCESS_LIST="bulkSuccessList";
 	public static String BULK_ERROR_LIST="bulkErrorList";

@@ -106,9 +106,7 @@ public class CamelRoute extends RouteBuilder {
 	@Override
 	public void configure() throws Exception {
 
-		System.out.println("Source Name is...."
-				+ (env.getProperty(IConstant.SOURCE_NAME_KORE)));
-
+		
 		onException(UnknownHostException.class, ConnectException.class)
 				.routeId("ConnectionExceptionRoute").handled(true)
 				.log(LoggingLevel.ERROR, "Connection Error")
@@ -146,16 +144,16 @@ public class CamelRoute extends RouteBuilder {
 				.choice()
 					.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
 						.choice()
-							.when(header("sourceName").isEqualTo("KORE"))
+							.when(header("derivedCarrierName").isEqualTo("KORE"))
 									.process(new StubKoreDeviceInformationProcessor())
 									.to("log:input")
-							.when(header("sourceName").isEqualTo("VERIZON"))
+							.when(header("derivedCarrierName").isEqualTo("VERIZON"))
 									.process(new StubVerizonDeviceInformationProcessor())
 									.to("log:input").endChoice()
 					.otherwise()
 						.choice()
 						
-							.when(header("sourceName").isEqualTo("KORE"))
+							.when(header("derivedCarrierName").isEqualTo("KORE"))
 										.doTry()
 											.process(new KoreDeviceInformationPreProcessor())
 											.bean(iAuditService, "auditExternalRequestCall")
@@ -171,7 +169,7 @@ public class CamelRoute extends RouteBuilder {
 	
 							.endChoice()
 	
-							.when(header("sourceName").isEqualTo("VERIZON"))
+							.when(header("derivedCarrierName").isEqualTo("VERIZON"))
 									.doTry()
 										.bean(iSessionService, "setContextTokenInExchange")
 										.process(new VerizonDeviceInformationPreProcessor())
@@ -201,19 +199,20 @@ public class CamelRoute extends RouteBuilder {
 			.choice()
 						.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
 						.choice()
-								.when(header("sourceName").isEqualTo("KORE"))
+								.when(header("derivedCarrierName").isEqualTo("KORE")).
+								log("message"+header("derivedSourceName"))
 									.process(new StubKoreActivateDeviceProcessor())
 									.to("log:input")
-								.when(header("sourceName").isEqualTo("VERIZON"))
+								.when(header("derivedCarrierName").isEqualTo("VERIZON"))
 									.process(new StubVerizonActivateDeviceProcessor())
 									.to("log:input").
 						endChoice().otherwise()
 							.choice()
-									.when(header("sourceName").isEqualTo("KORE"))
+									.when(header("derivedCarrierName").isEqualTo("KORE")).log("KORE12121")
 									.wireTap("direct:processActivateKoreTransaction")
 									.process(new KoreActivateDevicePostProcessor(env))
 							.endChoice()
-									.when(header("sourceName").isEqualTo("VERIZON"))
+									.when(header("derivedCarrierName").isEqualTo("VERIZON"))
 										.bean(iSessionService, "setContextTokenInExchange")
 										.bean(iTransactionalService,"populateActivateDBPayload")
 										//will store only one time in Audit even on connection failure
@@ -301,20 +300,20 @@ public class CamelRoute extends RouteBuilder {
 			.choice()
 						.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
 							.choice()
-								.when(header("sourceName").isEqualTo("KORE"))
+								.when(header("derivedCarrierName").isEqualTo("KORE"))
 									.process(new StubKoreDeactivateDeviceProcessor())
 									.to("log:input")
-								.when(header("sourceName").isEqualTo("VERIZON"))
+								.when(header("derivedCarrierName").isEqualTo("VERIZON"))
 									.process(new StubVerizonDeactivateDeviceProcessor())
 									.to("log:input").endChoice().
 									otherwise()
 									.choice()//santosh:
-											.when(header("sourceName").isEqualTo("KORE"))
+											.when(header("derivedCarrierName").isEqualTo("KORE"))
 											.wireTap("direct:processDeactivateKoreTransaction")
 											.process(new KoreDeactivateDevicePostProcessor(env))
 				
 								  .endChoice()				
-											.when(header("sourceName").isEqualTo("VERIZON"))											
+											.when(header("derivedCarrierName").isEqualTo("VERIZON"))											
 													.bean(iSessionService, "setContextTokenInExchange")
 													.bean(iTransactionalService,"populateDeactivateDBPayload")
 													.bean(iAuditService, "auditExternalRequestCall")

@@ -29,9 +29,7 @@
        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 	<!-- We still need it for loading the CXFServlet -->
 
-	<import resource="classpath:META-INF/cxf/cxf.xml" />
-	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
-	
+		
 	 <context:annotation-config />
 
 	<context:component-scan base-package="com.gv.midway" />
