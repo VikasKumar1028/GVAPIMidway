@@ -8,7 +8,7 @@ public class Transaction {
 	String midwayTransationID;
 	String carrierTransationID;
 	String deviceNumber;
-	String devicePayload;
+	Object devicePayload;
 	String midwayStatus;
 	String carrierStatus;
 	String carrierName;
@@ -50,11 +50,11 @@ public class Transaction {
 		this.deviceNumber = deviceNumber;
 	}
 
-	public String getDevicePayload() {
+	public Object getDevicePayload() {
 		return devicePayload;
 	}
 
-	public void setDevicePayload(String devicePayload) {
+	public void setDevicePayload(Object devicePayload) {
 		this.devicePayload = devicePayload;
 	}
 
@@ -146,8 +146,8 @@ public class Transaction {
 				+ ", deviceNumber=" + deviceNumber + ", devicePayload="
 				+ devicePayload + ", midwayStatus=" + midwayStatus
 				+ ", carrierStatus=" + carrierStatus + ", carrierName="
-				+ carrierName + ", TimeStampReceived=" + timeStampReceived
-				+ ", LastTimeStampUpdated=" + lastTimeStampUpdated
+				+ carrierName + ", timeStampReceived=" + timeStampReceived
+				+ ", lastTimeStampUpdated=" + lastTimeStampUpdated
 				+ ", carrierErrorDecription=" + carrierErrorDecription
 				+ ", requestType=" + requestType + ", callBackPayload="
 				+ callBackPayload + ", callBackDelivered=" + callBackDelivered
@@ -161,14 +161,6 @@ public class Transaction {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime
-				* result
-				+ ((lastTimeStampUpdated == null) ? 0 : lastTimeStampUpdated
-						.hashCode());
-		result = prime
-				* result
-				+ ((timeStampReceived == null) ? 0 : timeStampReceived
-						.hashCode());
 		result = prime
 				* result
 				+ ((auditTransationID == null) ? 0 : auditTransationID
@@ -202,6 +194,10 @@ public class Transaction {
 				+ ((deviceNumber == null) ? 0 : deviceNumber.hashCode());
 		result = prime * result
 				+ ((devicePayload == null) ? 0 : devicePayload.hashCode());
+		result = prime
+				* result
+				+ ((lastTimeStampUpdated == null) ? 0 : lastTimeStampUpdated
+						.hashCode());
 		result = prime * result
 				+ ((midwayStatus == null) ? 0 : midwayStatus.hashCode());
 		result = prime
@@ -210,6 +206,10 @@ public class Transaction {
 						.hashCode());
 		result = prime * result
 				+ ((requestType == null) ? 0 : requestType.hashCode());
+		result = prime
+				* result
+				+ ((timeStampReceived == null) ? 0 : timeStampReceived
+						.hashCode());
 		return result;
 	}
 
@@ -222,16 +222,6 @@ public class Transaction {
 		if (getClass() != obj.getClass())
 			return false;
 		Transaction other = (Transaction) obj;
-		if (lastTimeStampUpdated == null) {
-			if (other.lastTimeStampUpdated != null)
-				return false;
-		} else if (!lastTimeStampUpdated.equals(other.lastTimeStampUpdated))
-			return false;
-		if (timeStampReceived == null) {
-			if (other.timeStampReceived != null)
-				return false;
-		} else if (!timeStampReceived.equals(other.timeStampReceived))
-			return false;
 		if (auditTransationID == null) {
 			if (other.auditTransationID != null)
 				return false;
@@ -288,6 +278,11 @@ public class Transaction {
 				return false;
 		} else if (!devicePayload.equals(other.devicePayload))
 			return false;
+		if (lastTimeStampUpdated == null) {
+			if (other.lastTimeStampUpdated != null)
+				return false;
+		} else if (!lastTimeStampUpdated.equals(other.lastTimeStampUpdated))
+			return false;
 		if (midwayStatus == null) {
 			if (other.midwayStatus != null)
 				return false;
@@ -302,6 +297,11 @@ public class Transaction {
 			if (other.requestType != null)
 				return false;
 		} else if (!requestType.equals(other.requestType))
+			return false;
+		if (timeStampReceived == null) {
+			if (other.timeStampReceived != null)
+				return false;
+		} else if (!timeStampReceived.equals(other.timeStampReceived))
 			return false;
 		return true;
 	}

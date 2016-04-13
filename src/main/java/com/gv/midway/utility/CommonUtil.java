@@ -37,4 +37,20 @@ public class CommonUtil {
 		return Long.toString(timestamp);
 
 	}
+
+	public static String getDerivedCarrierName(String carrierName) {
+
+		String sourceDirived = null;
+
+		if (carrierName.startsWith("V")) {
+
+			return sourceDirived = "VERIZON";
+
+		} else if (carrierName.startsWith("K")) {
+
+			return sourceDirived = "KORE";
+		}
+
+		return sourceDirived;
+	}
 }

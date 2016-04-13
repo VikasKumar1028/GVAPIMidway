@@ -106,9 +106,7 @@ public class CamelRoute extends RouteBuilder {
 	@Override
 	public void configure() throws Exception {
 
-		System.out.println("Source Name is...."
-				+ (env.getProperty(IConstant.SOURCE_NAME_KORE)));
-
+		
 		onException(UnknownHostException.class, ConnectException.class)
 				.routeId("ConnectionExceptionRoute").handled(true)
 				.log(LoggingLevel.ERROR, "Connection Error")
@@ -146,16 +144,16 @@ public class CamelRoute extends RouteBuilder {
 				.choice()
 					.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
 						.choice()
-							.when(header("sourceName").isEqualTo("KORE"))
+							.when(header("derivedCarrierName").isEqualTo("KORE"))
 									.process(new StubKoreDeviceInformationProcessor())
 									.to("log:input")
-							.when(header("sourceName").isEqualTo("VERIZON"))
+							.when(header("derivedCarrierName").isEqualTo("VERIZON"))
 									.process(new StubVerizonDeviceInformationProcessor())
 									.to("log:input").endChoice()
 					.otherwise()
 						.choice()
 						
-							.when(header("sourceName").isEqualTo("KORE"))
+							.when(header("derivedCarrierName").isEqualTo("KORE"))
 										.doTry()
 											.process(new KoreDeviceInformationPreProcessor())
 											.bean(iAuditService, "auditExternalRequestCall")
@@ -171,7 +169,7 @@ public class CamelRoute extends RouteBuilder {
 	
 							.endChoice()
 	
-							.when(header("sourceName").isEqualTo("VERIZON"))
+							.when(header("derivedCarrierName").isEqualTo("VERIZON"))
 									.doTry()
 										.bean(iSessionService, "setContextTokenInExchange")
 										.process(new VerizonDeviceInformationPreProcessor())
@@ -201,31 +199,32 @@ public class CamelRoute extends RouteBuilder {
 			.choice()
 						.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
 						.choice()
-								.when(header("sourceName").isEqualTo("KORE"))
+								.when(header("derivedCarrierName").isEqualTo("KORE")).
+								log("message"+header("derivedSourceName"))
 									.process(new StubKoreActivateDeviceProcessor())
 									.to("log:input")
-								.when(header("sourceName").isEqualTo("VERIZON"))
+								.when(header("derivedCarrierName").isEqualTo("VERIZON"))
 									.process(new StubVerizonActivateDeviceProcessor())
 									.to("log:input").
 						endChoice().otherwise()
 							.choice()
-									.when(header("sourceName").isEqualTo("KORE"))
+									.when(header("derivedCarrierName").isEqualTo("KORE")).log("KORE12121")
 									.wireTap("direct:processActivateKoreTransaction")
 									.process(new KoreActivateDevicePostProcessor(env))
 							.endChoice()
-									.when(header("sourceName").isEqualTo("VERIZON"))
+									.when(header("derivedCarrierName").isEqualTo("VERIZON"))
 										.bean(iSessionService, "setContextTokenInExchange")
 										.bean(iTransactionalService,"populateActivateDBPayload")
 										//will store only one time in Audit even on connection failure
 										.bean(iAuditService, "auditExternalRequestCall")
-										.to("direct:VerizonActivationFlow")
+										.to("direct:VerizonActivationFlow1")
 								.endChoice()
 							.end().to("log:input")
 			.endChoice().end();
 				
-		from("direct:VerizonActivationFlow")
+		from("direct:VerizonActivationFlow1")
 				.doTry()
-				.to("direct:VerizonActivationFlow1")
+				.to("direct:VerizonActivationFlow2")
 				.doCatch(CxfOperationException.class)
 				.bean(iTransactionalService,
 						"populateVerizonTransactionalErrorResponse")
@@ -234,7 +233,7 @@ public class CamelRoute extends RouteBuilder {
 				.end();
 		
 		// SubFlow: Device Verizon Activation
-		from("direct:VerizonActivationFlow1")
+		from("direct:VerizonActivationFlow2")
 				.errorHandler(noErrorHandler())
 				// REMOVED Audit will store record 3 times in case of failure
 				// (see onException for connection.class above)
@@ -301,24 +300,24 @@ public class CamelRoute extends RouteBuilder {
 			.choice()
 						.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
 							.choice()
-								.when(header("sourceName").isEqualTo("KORE"))
+								.when(header("derivedCarrierName").isEqualTo("KORE"))
 									.process(new StubKoreDeactivateDeviceProcessor())
 									.to("log:input")
-								.when(header("sourceName").isEqualTo("VERIZON"))
+								.when(header("derivedCarrierName").isEqualTo("VERIZON"))
 									.process(new StubVerizonDeactivateDeviceProcessor())
 									.to("log:input").endChoice().
 									otherwise()
 									.choice()//santosh:
-											.when(header("sourceName").isEqualTo("KORE"))
+											.when(header("derivedCarrierName").isEqualTo("KORE"))
 											.wireTap("direct:processDeactivateKoreTransaction")
 											.process(new KoreDeactivateDevicePostProcessor(env))
 				
 								  .endChoice()				
-											.when(header("sourceName").isEqualTo("VERIZON"))											
+											.when(header("derivedCarrierName").isEqualTo("VERIZON"))											
 													.bean(iSessionService, "setContextTokenInExchange")
 													.bean(iTransactionalService,"populateDeactivateDBPayload")
 													.bean(iAuditService, "auditExternalRequestCall")
-													.to("direct:VerizonDeActivationFlow")
+													.to("direct:VerizonDeactivationFlow")
 														
 					.endChoice().
 					end().to("log:input").
@@ -327,21 +326,36 @@ public class CamelRoute extends RouteBuilder {
 			
 //SubFlow: Device Verizon DeActivation 			
 		
-		from("direct:VerizonDeActivationFlow")
-		.doTry()		
-		.process(new VerizonDeactivateDevicePreProcessor())
-		//Audit will store record 3 times in case of failure (see onException for connection.class above)
-		//.bean(iAuditService, "auditExternalRequestCall")
-		.to(uriRestVerizonEndPoint)
-		.unmarshal().json(JsonLibrary.Jackson)
-		.bean(iTransactionalService,"populateVerizonTransactionalResponse")
-		.bean(iAuditService, "auditExternalResponseCall")
-		.process(new VerizonDeactivateDevicePostProcessor(env))
-		.doCatch(CxfOperationException.class)
-		.bean(iAuditService, "auditExternalExceptionResponseCall")
-		.process(new VerizonGenericExceptionProcessor(env))
-		.endDoTry()	;
-			
+		from("direct:VerizonDeactivationFlow1")
+					.doTry()
+				.to("direct:VerizonDeactivationFlow2")
+				.doCatch(CxfOperationException.class)
+				.bean(iTransactionalService,
+						"populateVerizonTransactionalErrorResponse")
+				.bean(iAuditService, "auditExternalExceptionResponseCall")
+				.process(new VerizonGenericExceptionProcessor(env)).endDoTry()
+				.end();
+		
+
+		//SubFlow: Device Verizon DeActivation 			
+		
+				from("direct:VerizonDeactivationFlow2")
+				.errorHandler(noErrorHandler())
+				// REMOVED Audit will store record 3 times in case of failure
+				// (see onException for connection.class above)
+				// .bean(iAuditService, "auditExternalRequestCall")
+				.bean(iSessionService, "setContextTokenInExchange")					
+				.process(new VerizonDeactivateDevicePreProcessor())
+				//Audit will store record 3 times in case of failure (see onException for connection.class above)
+				//.bean(iAuditService, "auditExternalRequestCall")
+				.to(uriRestVerizonEndPoint)
+				.unmarshal().json(JsonLibrary.Jackson)
+				.bean(iTransactionalService,"populateVerizonTransactionalResponse")
+				.bean(iAuditService, "auditExternalResponseCall")
+				.process(new VerizonDeactivateDevicePostProcessor(env))
+				;
+		
+		
 		
 //SubFlow: Device Kore DeActivation 		
 		

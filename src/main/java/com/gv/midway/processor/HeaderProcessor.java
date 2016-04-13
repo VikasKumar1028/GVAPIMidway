@@ -11,6 +11,7 @@ import com.gv.midway.utility.CommonUtil;
 
 public class HeaderProcessor implements Processor {
 
+	private String name = null;
 	Logger log = Logger.getLogger(HeaderProcessor.class.getName());
 
 	public void process(Exchange exchange) throws Exception {
@@ -21,7 +22,13 @@ public class HeaderProcessor implements Processor {
 		String midwayTransationID = CommonUtil.getmidwayTransationId();
 		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_ID,
 				midwayTransationID);
+		
+		String derivedCarrierName =CommonUtil.getDerivedCarrierName(exchange.getProperty(IConstant.BSCARRIER).toString());
 
+		System.out.println("derivedSourceName::"+derivedCarrierName);
+		
+		exchange.getIn().setHeader(IConstant.MIDWAY_DERIVED_CARRIER_NAME,	derivedCarrierName);
+		exchange.setProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME, derivedCarrierName);
 	}
 
 }

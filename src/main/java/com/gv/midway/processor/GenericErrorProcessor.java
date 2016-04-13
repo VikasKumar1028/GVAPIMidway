@@ -44,7 +44,7 @@ public class GenericErrorProcessor implements Processor {
 		responseHeader.setSourceName(exchange.getProperty(IConstant.SOURCE_NAME).toString());
 		//String TransactionId = (String) exchange.getProperty(newEnv.getProperty(IConstant.EXCHANEGE_PROPERTY));
 		responseHeader.setTransactionId(exchange.getProperty(IConstant.GV_TRANSACTION_ID).toString());
-		responseHeader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER_KORE).toString());
+		responseHeader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER).toString());
 		
 		if (exchange.getProperty(IConstant.RESPONSE_CODE) != null) {
 
@@ -59,7 +59,6 @@ public class GenericErrorProcessor implements Processor {
 
 			response.setResponseCode(IResponse.CONNECTION_ERROR_CODE);
 			response.setResponseStatus(IResponse.ERROR_MESSAGE);
-
 			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_CONNECTION_MIDWAYDB);
 
 		}
