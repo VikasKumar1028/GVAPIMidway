@@ -48,7 +48,7 @@ public class CallbackKafkaPostProcessor implements Processor {
 		 */
 		String midwayTransactionId = (String) exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID);
 
-		netsuitDeviceResponseDataArea.setMidwaytransactionId(midwayTransactionId);
+		netsuitDeviceResponseDataArea.setMidwayTransactionId(midwayTransactionId);
 
 		netsuitResponse.setHeader(responseheader);
 		netsuitResponse.setDataArea(netsuitDeviceResponseDataArea);

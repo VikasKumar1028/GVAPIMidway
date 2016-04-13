@@ -6,11 +6,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class NetsuitDeviceResponseDataArea {
 	private String midwayTransactionId;
 
-	public String getMidwaytransactionId() {
+	public String getMidwayTransactionId() {
 		return midwayTransactionId;
 	}
 
-	public void setMidwaytransactionId(String midwayTransactionId) {
+	public void setMidwayTransactionId(String midwayTransactionId) {
 		this.midwayTransactionId = midwayTransactionId;
 	}
 
