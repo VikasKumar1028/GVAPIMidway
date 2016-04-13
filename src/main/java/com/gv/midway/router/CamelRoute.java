@@ -31,6 +31,8 @@ import com.gv.midway.processor.activateDevice.StubKoreActivateDeviceProcessor;
 import com.gv.midway.processor.activateDevice.StubVerizonActivateDeviceProcessor;
 import com.gv.midway.processor.activateDevice.VerizonActivateDevicePostProcessor;
 import com.gv.midway.processor.activateDevice.VerizonActivateDevicePreProcessor;
+import com.gv.midway.processor.callbacks.CallbackKafkaPostProcessor;
+import com.gv.midway.processor.callbacks.CallbackKafkaPreProcessor;
 import com.gv.midway.processor.callbacks.CallbackPreProcessor;
 import com.gv.midway.processor.checkstatus.KoreCheckStatusPreProcessor;
 import com.gv.midway.processor.deactivateDevice.KoreDeactivateDevicePostProcessor;
@@ -419,15 +421,21 @@ public class CamelRoute extends RouteBuilder {
 		from("direct:callbacks")
 			.process(new CallbackPreProcessor())
 			.bean(gvCallBacks, "callbackRequestCall")
-			//******************DONOT REMOVE THIS COMMENTED CODE **********************
+		
 			//			.doTry()
 //			.to(uriRestNetsuitEndPoint)
 //			.doCatch(CxfOperationException.class)
 			.bean(gvCallbackTransactionalService,"populateCallbackDBPayload")
-			.process(new CallbackPostProcessor())
+//			.process(new CallbackKafkaPostProcessor())
+				//******************DONOT REMOVE THIS COMMENTED CODE **********************
 //			.to("kafka:10.10.2.190:9092,10.10.2.190:9093,10.10.2.190:9094?topic=my-replicated-topic")
-			.to("kafka:localhost:9092?topic=topic")
-			.process(new CallbackNewPostProcessor())
+//			.to("kafka:localhost:9092?topic=topic")
+//			.process(new CallbackNewPostProcessor())
+			
+			.process(new CallbackKafkaPreProcessor())
+			.bean(gvCallbackTransactionalService,"getCallbackMidwayTransactionID")
+			.process(new CallbackKafkaPostProcessor())
+
 		.end();
 		
 	

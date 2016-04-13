@@ -35,10 +35,9 @@ public class KoreActivateDevicePreProcessor implements Processor {
 		log.info("Start:KoreActivateDevicePreProcessor");
 		Message message = exchange.getIn();
 
-		ObjectMapper mapper = new ObjectMapper();
+	
 		Transaction transaction = exchange.getIn().getBody(Transaction.class);
-
-		
+	
 		ActivateDeviceRequest activateDeviceRequest = (ActivateDeviceRequest)
 				transaction.getDevicePayload();
 

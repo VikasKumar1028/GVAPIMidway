@@ -1,12 +1,17 @@
-package com.gv.midway.router;
+package com.gv.midway.processor.callbacks;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gv.midway.constant.IConstant;
+import com.gv.midway.constant.IResponse;
+import com.gv.midway.pojo.Header;
+import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.callback.request.CallBackVerizonRequest;
+import com.gv.midway.utility.CommonUtil;
 
-public class CallbackNewPostProcessor implements Processor {
+public class CallbackKafkaPreProcessor implements Processor {
 
 	public void process(Exchange exchange) throws Exception {
 
@@ -18,7 +23,6 @@ public class CallbackNewPostProcessor implements Processor {
 		byte[] body = (byte[]) exchange.getIn().getBody();
 
 		CallBackVerizonRequest req = mapper.readValue(body, CallBackVerizonRequest.class);
-		System.out.println("CallBackVerizonRequest req" + req.getComment());
 		
 		exchange.getIn().setBody(req);
 	}
