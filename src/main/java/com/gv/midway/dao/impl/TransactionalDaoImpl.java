@@ -85,8 +85,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 			try {
 
-				ObjectMapper mapper = new ObjectMapper();
-				String msgBody = mapper.writeValueAsString(dbPayload);
+				/*ObjectMapper mapper = new ObjectMapper();
+				String msgBody = mapper.writeValueAsString(dbPayload);*/
 
 				Transaction transaction = new Transaction();
 
@@ -95,7 +95,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				ObjectMapper obj = new ObjectMapper();
 				String strDeviceNumber = obj.writeValueAsString(businessPayloadDeviceId);
 				transaction.setDeviceNumber(strDeviceNumber);
-				transaction.setDevicePayload(msgBody);
+				transaction.setDevicePayload(dbPayload);
 				transaction.setMidwayStatus(IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
 				transaction.setCarrierName(exchange.getProperty(IConstant.BSCARRIER).toString());
 				transaction.setTimeStampReceived(currentDataTime);
@@ -116,7 +116,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		// activateDeviceRequestDataArea.setDevices(activateDevices);
 
-		if (exchange.getProperty(IConstant.SOURCE_NAME).toString().equals("KORE")) {
+		if (exchange.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString().equals("KORE")) {
 
 			exchange.getIn().setBody(list);
 		}
@@ -162,15 +162,15 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 			try {
 
-				ObjectMapper mapper = new ObjectMapper();
+			/*	ObjectMapper mapper = new ObjectMapper();
 				String msgBody = mapper.writeValueAsString(dbPayload);
-
+*/
 				Transaction transaction = new Transaction();
 				transaction.setMidwayTransationID(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID).toString());
 				ObjectMapper obj = new ObjectMapper();
 				String strDeviceNumber = obj.writeValueAsString(businessPayloadDeviceId);
 				transaction.setDeviceNumber(strDeviceNumber);
-				transaction.setDevicePayload(msgBody);
+				transaction.setDevicePayload(dbPayload);
 				transaction.setMidwayStatus(IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
 				transaction.setCarrierName(exchange.getProperty(IConstant.BSCARRIER).toString());
 				transaction.setTimeStampReceived(currentDataTime);
@@ -190,7 +190,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		// be set with arraylist of transaction for Verizon we simply add
 		// into database and do not change the exchange body
 
-		if (exchange.getProperty(IConstant.SOURCE_NAME).toString().equals("KORE")) {
+		if (exchange.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString().equals("KORE")) {
 
 			exchange.getIn().setBody(list);
 		}
@@ -297,7 +297,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		System.out.println("**************************ERROR TYPE**************************************" + errorType);
 		Query searchUserQuery = null;
-		if ("KORE".equals(exchange.getProperty(IConstant.SOURCE_NAME))) {
+		if ("KORE".equals(exchange.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME))) {
 			searchUserQuery = new Query(Criteria.where("midwayTransationID").is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)).andOperator(Criteria.where("deviceNumber").is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
 			String errorResponseBody = IConstant.MIDWAY_CONNECTION_ERROR;
 
@@ -309,7 +309,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			update.set(ITransaction.LAST_TIME_STAMPUPDATED, CommonUtil.getCurrentTimeStamp());
 			mongoTemplate.updateMulti(searchUserQuery, update, Transaction.class);
 
-		} else if ("VERIZON".equals(exchange.getProperty(IConstant.SOURCE_NAME))) {
+		} else if ("VERIZON".equals(exchange.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME))) {
 
 			System.out.println("**************************1111111111111**************************************" + exchange.getIn().getBody().toString());
 

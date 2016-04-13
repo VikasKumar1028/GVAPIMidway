@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "callbacks")
 public class CallbackResponse {
 	String responseCode;
-	String payload;
+	Object payload;
 	String callbackStatus;
 	String requestType;
 
@@ -13,7 +13,7 @@ public class CallbackResponse {
 	String carrierStatus;
 	String lastTimeStampUpdated;
 	String carrierErrorDecription;
-	String callBackPayload;
+	Object callBackPayload;
 	String callBackDelivered;
 	String callBackReceived;
 	String callBackFailureToNetSuitReason;
@@ -29,13 +29,13 @@ public class CallbackResponse {
 	/**
 	 * @return the payload
 	 */
-	public String getPayload() {
+	public Object getPayload() {
 		return payload;
 	}
 	/**
 	 * @param payload the payload to set
 	 */
-	public void setPayload(String payload) {
+	public void setPayload(Object payload) {
 		this.payload = payload;
 	}
 	/**
@@ -113,13 +113,13 @@ public class CallbackResponse {
 	/**
 	 * @return the callBackPayload
 	 */
-	public String getCallBackPayload() {
+	public Object getCallBackPayload() {
 		return callBackPayload;
 	}
 	/**
 	 * @param callBackPayload the callBackPayload to set
 	 */
-	public void setCallBackPayload(String callBackPayload) {
+	public void setCallBackPayload(Object callBackPayload) {
 		this.callBackPayload = callBackPayload;
 	}
 	/**
@@ -158,44 +158,67 @@ public class CallbackResponse {
 	public void setCallBackFailureToNetSuitReason(String callBackFailureToNetSuitReason) {
 		this.callBackFailureToNetSuitReason = callBackFailureToNetSuitReason;
 	}
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
-		return "Callbacks [responseCode=" + responseCode + ", payload=" + payload + ", callbackStatus=" + callbackStatus + ", requestType=" + requestType + ", carrierTransationID=" + carrierTransationID + ", carrierStatus=" + carrierStatus + ", lastTimeStampUpdated=" + lastTimeStampUpdated + ", carrierErrorDecription=" + carrierErrorDecription + ", callBackPayload=" + callBackPayload + ", callBackDelivered=" + callBackDelivered + ", callBackReceived=" + callBackReceived + ", callBackFailureToNetSuitReason=" + callBackFailureToNetSuitReason + "]";
+		return "CallbackResponse [responseCode=" + responseCode + ", payload="
+				+ payload + ", callbackStatus=" + callbackStatus
+				+ ", requestType=" + requestType + ", carrierTransationID="
+				+ carrierTransationID + ", carrierStatus=" + carrierStatus
+				+ ", lastTimeStampUpdated=" + lastTimeStampUpdated
+				+ ", carrierErrorDecription=" + carrierErrorDecription
+				+ ", callBackPayload=" + callBackPayload
+				+ ", callBackDelivered=" + callBackDelivered
+				+ ", callBackReceived=" + callBackReceived
+				+ ", callBackFailureToNetSuitReason="
+				+ callBackFailureToNetSuitReason + "]";
 	}
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((callBackDelivered == null) ? 0 : callBackDelivered.hashCode());
-		result = prime * result + ((callBackFailureToNetSuitReason == null) ? 0 : callBackFailureToNetSuitReason.hashCode());
-		result = prime * result + ((callBackPayload == null) ? 0 : callBackPayload.hashCode());
-		result = prime * result + ((callBackReceived == null) ? 0 : callBackReceived.hashCode());
-		result = prime * result + ((callbackStatus == null) ? 0 : callbackStatus.hashCode());
-		result = prime * result + ((carrierErrorDecription == null) ? 0 : carrierErrorDecription.hashCode());
-		result = prime * result + ((carrierStatus == null) ? 0 : carrierStatus.hashCode());
-		result = prime * result + ((carrierTransationID == null) ? 0 : carrierTransationID.hashCode());
-		result = prime * result + ((lastTimeStampUpdated == null) ? 0 : lastTimeStampUpdated.hashCode());
+		result = prime
+				* result
+				+ ((callBackDelivered == null) ? 0 : callBackDelivered
+						.hashCode());
+		result = prime
+				* result
+				+ ((callBackFailureToNetSuitReason == null) ? 0
+						: callBackFailureToNetSuitReason.hashCode());
+		result = prime * result
+				+ ((callBackPayload == null) ? 0 : callBackPayload.hashCode());
+		result = prime
+				* result
+				+ ((callBackReceived == null) ? 0 : callBackReceived.hashCode());
+		result = prime * result
+				+ ((callbackStatus == null) ? 0 : callbackStatus.hashCode());
+		result = prime
+				* result
+				+ ((carrierErrorDecription == null) ? 0
+						: carrierErrorDecription.hashCode());
+		result = prime * result
+				+ ((carrierStatus == null) ? 0 : carrierStatus.hashCode());
+		result = prime
+				* result
+				+ ((carrierTransationID == null) ? 0 : carrierTransationID
+						.hashCode());
+		result = prime
+				* result
+				+ ((lastTimeStampUpdated == null) ? 0 : lastTimeStampUpdated
+						.hashCode());
 		result = prime * result + ((payload == null) ? 0 : payload.hashCode());
-		result = prime * result + ((requestType == null) ? 0 : requestType.hashCode());
-		result = prime * result + ((responseCode == null) ? 0 : responseCode.hashCode());
+		result = prime * result
+				+ ((requestType == null) ? 0 : requestType.hashCode());
+		result = prime * result
+				+ ((responseCode == null) ? 0 : responseCode.hashCode());
 		return result;
 	}
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof CallbackResponse))
+		if (getClass() != obj.getClass())
 			return false;
 		CallbackResponse other = (CallbackResponse) obj;
 		if (callBackDelivered == null) {
@@ -206,7 +229,8 @@ public class CallbackResponse {
 		if (callBackFailureToNetSuitReason == null) {
 			if (other.callBackFailureToNetSuitReason != null)
 				return false;
-		} else if (!callBackFailureToNetSuitReason.equals(other.callBackFailureToNetSuitReason))
+		} else if (!callBackFailureToNetSuitReason
+				.equals(other.callBackFailureToNetSuitReason))
 			return false;
 		if (callBackPayload == null) {
 			if (other.callBackPayload != null)
