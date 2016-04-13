@@ -320,6 +320,7 @@ public class CamelRoute extends RouteBuilder {
 													.bean(iSessionService, "setContextTokenInExchange")
 													.bean(iTransactionalService,"populateDeactivateDBPayload")
 													.bean(iAuditService, "auditExternalRequestCall")
+													.to("direct:VerizonDeactivationFlow1")
 														
 					.endChoice().
 					end().to("log:input").

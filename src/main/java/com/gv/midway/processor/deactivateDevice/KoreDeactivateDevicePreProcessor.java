@@ -48,12 +48,16 @@ public class KoreDeactivateDevicePreProcessor implements Processor {
 		
 		
 		String deviceId = deactivateDeviceRequest.getDataArea().getDevices()[0].getDeviceIds()[0].getId();
-		boolean flagScrap = deactivateDeviceRequest.getDataArea().getDevices()[0].getDeviceIds()[0].getFlagScrap();
+		
+		
 
 		DeactivateDeviceRequestKore deactivationDeviceRequestKore = new DeactivateDeviceRequestKore();
 		deactivationDeviceRequestKore.setDeviceNumber(deviceId);
-		deactivationDeviceRequestKore.setFlagScrap(flagScrap);
-		
+		//boolean flagScrap = deactivateDeviceRequest.getDataArea().getDevices()[0].getDeviceIds()[0].getFlagScrap();
+		if( deactivateDeviceRequest.getDataArea().getDevices()[0].getDeviceIds()[0].getFlagScrap()!=null)
+		{
+		deactivationDeviceRequestKore.setFlagScrap( deactivateDeviceRequest.getDataArea().getDevices()[0].getDeviceIds()[0].getFlagScrap());
+		}
 		
 		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
