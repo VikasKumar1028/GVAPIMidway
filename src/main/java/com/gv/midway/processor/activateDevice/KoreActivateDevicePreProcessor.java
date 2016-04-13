@@ -38,8 +38,9 @@ public class KoreActivateDevicePreProcessor implements Processor {
 		ObjectMapper mapper = new ObjectMapper();
 		Transaction transaction = exchange.getIn().getBody(Transaction.class);
 
-		ActivateDeviceRequest activateDeviceRequest = mapper.readValue(
-				transaction.getDevicePayload(), ActivateDeviceRequest.class);
+		
+		ActivateDeviceRequest activateDeviceRequest = (ActivateDeviceRequest)
+				transaction.getDevicePayload();
 
 		String deviceId = activateDeviceRequest.getDataArea().getDevices()[0]
 				.getDeviceIds()[0].getId();

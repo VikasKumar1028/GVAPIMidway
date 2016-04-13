@@ -41,8 +41,9 @@ public class KoreDeactivateDevicePreProcessor implements Processor {
 //		obj.put("deviceNumber", deviceId);
 //		obj.put("flagScrap", flagScravalue);
 		
-		ObjectMapper mapper = new ObjectMapper();
-		DeactivateDeviceRequest deactivateDeviceRequest=mapper.readValue(transaction.getDevicePayload(),DeactivateDeviceRequest.class);
+		
+		
+		DeactivateDeviceRequest deactivateDeviceRequest=(DeactivateDeviceRequest)transaction.getDevicePayload();
 		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,transaction.getDeviceNumber());
 		
 		
