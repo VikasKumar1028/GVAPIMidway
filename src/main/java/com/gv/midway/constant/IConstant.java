@@ -40,5 +40,11 @@ public interface IConstant {
 	static String GV_TRANSACTION_ID="transactionId";
 	static String GV_HOSTNAME="hostName";
 	
+	
+	public static String BULK_SUCCESS_LIST="bulkSuccessList";
+	public static String BULK_ERROR_LIST="bulkErrorList";
+	public static String BULK_SYNC_OPERATION="bulkInsertOperation";
+	
+	
 			
 }

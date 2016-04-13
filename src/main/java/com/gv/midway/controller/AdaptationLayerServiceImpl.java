@@ -11,6 +11,7 @@ import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.pojo.device.request.BulkDevices;
 import com.gv.midway.pojo.device.request.SingleDevice;
+import com.gv.midway.pojo.device.response.BatchDeviceResponse;
 import com.gv.midway.pojo.device.response.InsertDeviceResponse;
 import com.gv.midway.pojo.device.response.UpdateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
@@ -155,12 +156,16 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 		return response;
 	}
 
-	public Object insertDevicesDetailsInBatch(BulkDevices devices) {
+	public BatchDeviceResponse insertDevicesDetailsInBatch(BulkDevices devices) {
 		// TODO Auto-generated method stub
 		System.out.println("devices info is...." + devices.toString());
 
-		Object response = producer.requestBody(
+		Object responseActual = producer.requestBody(
 				"direct:insertDeviceDetailsinBatch", devices);
+		
+		System.out.println("resposne actual is........"+responseActual.toString());
+		
+		BatchDeviceResponse response=(BatchDeviceResponse)responseActual;
 
 		System.out.println(" insertDeviceDetails in Batch respsone is ........"
 				+ response);

@@ -45,6 +45,10 @@
 	<bean id="checkStatusSplitter" class="com.gv.midway.splitter.CheckStatusSplitter" />
 	
 	<bean id="koreCheckStatusServiceRouter" class="com.gv.midway.router.KoreCheckStatusServiceRouter" />
+	
+	<bean id="bulkOperationSplitter" class="com.gv.midway.splitter.BulkOperationSplitter" />
+	
+	<bean id="bulkOperationServiceRouter" class="com.gv.midway.router.BulkOperationServiceRouter" />
 
 	<bean id="adaptationLayerService" class="com.gv.midway.controller.AdaptationLayerServiceImpl" />
 

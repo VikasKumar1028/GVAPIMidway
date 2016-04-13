@@ -14,6 +14,7 @@ public class BaseResponse {
 	}
 
 	public void setResponse(Response response) {
+		System.out.println("set response invoked..........."+response.toString());
 		this.response = response;
 	}
 
@@ -22,6 +23,7 @@ public class BaseResponse {
 	}
 
 	public void setHeader(Header header) {
+		System.out.println("set header invoked..........."+header.toString());
 		this.header = header;
 	}
 

@@ -27,8 +27,10 @@ public interface IDeviceDao {
 	public void setDeviceInformationDB(Exchange e);
 	
 	public void updateDeviceInformationDB(Exchange e);
+	
+	public void bulkOperationDeviceInsert(Exchange exchange);
 
-	/*public String updateDevicesDetailsInBatch(Devices devices); */
+	public void bulkOperationDeviceUpdate(Exchange exchange);
 
 	
 

@@ -16,6 +16,7 @@ import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.pojo.device.request.BulkDevices;
 import com.gv.midway.pojo.device.request.SingleDevice;
+import com.gv.midway.pojo.device.response.BatchDeviceResponse;
 import com.gv.midway.pojo.device.response.InsertDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
@@ -58,7 +59,7 @@ public interface IAdaptaionLayerService {
 	@GET
 	@Path("/cell/info/carrier")
 	@Produces("application/json")
-	@ApiOperation(value = "Get Device Details from Midway DB")
+	@ApiOperation(value = "Get Device Details from Carrier")
 	DeviceInformationResponse getDeviceInfoCarrier(@QueryParam("region") final String region,@QueryParam("timestamp") final String timestamp,
 			@QueryParam("organization") final String organization,@QueryParam("transactionId") final String transactionId,@QueryParam("sourceName") final String sourceName,
 			@QueryParam("applicationName") final String applicationName,@QueryParam("bsCarrier") final String bsCarrier,@QueryParam("netSuiteId") final String netSuiteId,
@@ -75,7 +76,7 @@ public interface IAdaptaionLayerService {
 	@Produces("application/json")
 	@Consumes("application/json")
 	@ApiOperation(value = "Insert Device Details in Bulk")
-	Object insertDevicesDetailsInBatch(BulkDevices device);
+	BatchDeviceResponse insertDevicesDetailsInBatch(BulkDevices device);
 
 	/*@POST
 	@Path("/device/information")

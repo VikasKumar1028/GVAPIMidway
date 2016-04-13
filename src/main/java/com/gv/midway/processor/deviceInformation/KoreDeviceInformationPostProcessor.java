@@ -80,7 +80,7 @@ public class KoreDeviceInformationPostProcessor implements Processor {
 		responseheader.setSourceName(exchange.getProperty(IConstant.SOURCE_NAME).toString());
 		//String TransactionId = (String) exchange.getProperty(newEnv.getProperty(IConstant.EXCHANEGE_PROPERTY));
 		responseheader.setTransactionId(exchange.getProperty(IConstant.GV_TRANSACTION_ID).toString());
-		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER_KORE).toString());
+		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER).toString());
 
 
 		deviceInformationResponse.setHeader(responseheader);

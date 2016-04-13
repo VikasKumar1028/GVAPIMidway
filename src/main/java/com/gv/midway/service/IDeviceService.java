@@ -16,11 +16,13 @@ public interface IDeviceService {
 	
 	public Object getDeviceDetailsBsId(Exchange exchange);
 
-	public Object insertDevicesDetailsInBatch(Exchange exchange);
+	public void insertDevicesDetailsInBatch(Exchange exchange);
 	
 	public void setDeviceInformationDB(Exchange exchange);
 	
 	public void updateDeviceInformationDB(Exchange exchange);
+	
+	public void bulkOperationDeviceSyncInDB(Exchange exchange);
 	
 	/**public String updateDevicesDetailsInBatch(Exchange exchange);*/
 

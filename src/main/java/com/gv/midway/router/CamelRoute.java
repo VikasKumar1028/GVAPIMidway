@@ -3,6 +3,8 @@ package com.gv.midway.router;
 import java.net.ConnectException;
 import java.net.UnknownHostException;
 
+import org.apache.camel.Exchange;
+import org.apache.camel.Expression;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.cxf.CxfOperationException;
@@ -20,6 +22,7 @@ import com.gv.midway.pojo.deviceInformation.kore.response.DeviceInformationRespo
 import com.gv.midway.pojo.deviceInformation.verizon.response.DeviceInformationResponseVerizon;
 import com.gv.midway.pojo.token.VerizonAuthorizationResponse;
 import com.gv.midway.pojo.token.VerizonSessionLoginResponse;
+import com.gv.midway.processor.BulkDeviceProcessor;
 import com.gv.midway.processor.GenericErrorProcessor;
 import com.gv.midway.processor.HeaderProcessor;
 import com.gv.midway.processor.KoreGenericExceptionProcessor;
@@ -139,6 +142,7 @@ public class CamelRoute extends RouteBuilder {
 				// sync DB and session token in the ServletContext
 				.bean(iSessionService, "synchronizeDBContextToken");
 
+		/**Get DeviceInformation from  Carrier and update in MasterDB and return back to Calling System. **/
 		from("direct:deviceInformationCarrier").process(new HeaderProcessor())
 				.choice()
 					.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
@@ -365,14 +369,17 @@ public class CamelRoute extends RouteBuilder {
 	
 //*****  DEVICE DEACTIVATION END		
 		
+		/**Insert Single Device details in MasterDB **/
 		from("direct:insertDeviceDetails")
 				.bean(iDeviceService, "insertDeviceDetails").to("log:input")
 				.end();
 
+		/**Update Single Device details in MasterDB **/
 		from("direct:updateDeviceDetails")
 				.bean(iDeviceService, "updateDeviceDetails").to("log:input")
 				.end();
 
+		/**Get DeviceInformation from MasterDB and return back to Calling System.**/
 		from("direct:getDeviceInformationDB")
 				.bean(iDeviceService, "getDeviceInformationDB").to("log:input").end();
 
@@ -380,9 +387,21 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iDeviceService, "getDeviceDetailsBsId").to("log:input")
 				.end();
 
-		from("direct:insertDeviceDetailsinBatch")
-				.bean(iDeviceService, "insertDevicesDetailsInBatch")
-				.to("log:input").end();
+		/**Insert Batch Device details in MasterDB.**/
+		from("direct:insertDeviceDetailsinBatch").onCompletion().modeBeforeConsumer().setBody().body().process(new BulkDeviceProcessor()).end()
+				.bean(iDeviceService, "insertDevicesDetailsInBatch").split().method("bulkOperationSplitter").recipientList().method("bulkOperationServiceRouter")
+				;
+		
+		
+		
+		/**
+		 * Bulk Insert or Update the device in MasterDB using Seda
+		 */
+		 from("seda:bulkOperationDeviceSyncInDB?concurrentConsumers=5")
+		 .bean(iDeviceService, "bulkOperationDeviceSyncInDB");
+						
+		    
+		 
 		
 		from("direct:callbacks")
 			.process(new CallbackPreProcessor())

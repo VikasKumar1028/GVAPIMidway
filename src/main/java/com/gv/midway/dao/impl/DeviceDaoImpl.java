@@ -1,7 +1,9 @@
 package com.gv.midway.dao.impl;
 
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.camel.Exchange;
 import org.apache.log4j.Logger;
@@ -18,6 +20,7 @@ import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.device.request.BulkDevices;
 import com.gv.midway.pojo.device.request.SingleDevice;
+import com.gv.midway.pojo.device.response.BatchDeviceId;
 import com.gv.midway.pojo.device.response.InsertDeviceResponse;
 import com.gv.midway.pojo.device.response.InsertDeviceResponseDataArea;
 import com.gv.midway.pojo.device.response.UpdateDeviceResponse;
@@ -88,6 +91,7 @@ public class DeviceDaoImpl implements IDeviceDao
 		insertDeviceResponse.setHeader(header);
 		InsertDeviceResponseDataArea insertDeviceResponseDataArea=new InsertDeviceResponseDataArea();
 		insertDeviceResponseDataArea.setId(deviceInformation.getMidwayMasterDeviceId());
+		insertDeviceResponse.setDataArea(insertDeviceResponseDataArea);
 		
    	    
    	 return insertDeviceResponse;
@@ -127,7 +131,9 @@ public class DeviceDaoImpl implements IDeviceDao
 		    device.getDataArea().getDevice().setLastUpdated(sdf.format(new Date()));
 		    
 		    DeviceInformation deviceInformationToUpdate= device.getDataArea().getDevice();
-			
+		    
+		    deviceInformationToUpdate.setMidwayMasterDeviceId(deviceInfomation.getMidwayMasterDeviceId());
+		    
 			mongoTemplate.save(deviceInformationToUpdate);
 	       }
 	       
@@ -385,6 +391,57 @@ public class DeviceDaoImpl implements IDeviceDao
 			
 			mongoTemplate.save(deviceInformation);
 		}
+	}
+
+	public void bulkOperationDeviceInsert(Exchange exchange)
+	{
+		// TODO Auto-generated method stub
+
+		DeviceInformation deviceInformation = (DeviceInformation) exchange
+				.getIn().getBody();
+
+		try {
+
+			SimpleDateFormat sdf = new SimpleDateFormat(
+					"yyyy-MM-dd'T'HH:mm:ssZ");
+			deviceInformation.setLastUpdated(sdf.format(new Date()));
+
+			mongoTemplate.insert(deviceInformation);
+		}
+
+		catch (Exception e) {
+
+			
+			List<BatchDeviceId> batchDeviceList = (List<BatchDeviceId>) exchange
+					.getProperty(IConstant.BULK_ERROR_LIST);
+			BatchDeviceId errorBatchDeviceId = new BatchDeviceId();
+			errorBatchDeviceId.setNetSuiteId(deviceInformation.getNetSuiteId());
+			batchDeviceList.add(errorBatchDeviceId);
+
+		
+			exchange.setProperty(IConstant.BULK_ERROR_LIST, batchDeviceList);
+			
+			return;
+		}
+
+		
+		
+		List<BatchDeviceId> batchDeviceList = (List<BatchDeviceId>) exchange
+				.getProperty(IConstant.BULK_SUCCESS_LIST);
+		BatchDeviceId successBatchDeviceId = new BatchDeviceId();
+		successBatchDeviceId.setNetSuiteId(deviceInformation.getNetSuiteId());
+		batchDeviceList.add(successBatchDeviceId);
+		
+		exchange.setProperty(IConstant.BULK_SUCCESS_LIST, batchDeviceList);
+				
+	}
+	
+	
+	public void bulkOperationDeviceUpdate(Exchange exchange)
+	{
+		// TODO Auto-generated method stub
+		
+		
 	}
 
 	
