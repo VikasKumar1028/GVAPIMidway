@@ -1,15 +1,19 @@
 package com.gv.midway.pojo.verizon;
-
+import com.wordnik.swagger.annotations.ApiModelProperty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CustomerName {
+	@ApiModelProperty(value = "Customer's first name.", required = true)
 	private String firstName;
 
+	@ApiModelProperty(value = "Customer's last name.", required = true)
 	private String lastName;
 
+	@ApiModelProperty(value = "Customer's middle name.")
 	private String middleName;
 
+	@ApiModelProperty(value = "Title for Customer.")
 	private String title;
 
 	public String getMiddleName() {

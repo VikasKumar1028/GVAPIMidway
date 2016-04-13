@@ -1,19 +1,24 @@
 package com.gv.midway.pojo.verizon;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
+import com.wordnik.swagger.annotations.ApiModelProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Address {
 	private String addressLine1;
-
+	
+	@ApiModelProperty(value = "Additional street address.")
 	private String addressLine2;
 
+	@ApiModelProperty(value = "City." , required = true)
 	private String city;
 
+	@ApiModelProperty(value = "Sate", required = true)
 	private String state;
 
+	@ApiModelProperty(value = "Country." , required = true)
 	private String country;
 
+	@ApiModelProperty(value = "Zip Code of Address" , required = true)
 	private String zip;
 
 	public String getZip() {

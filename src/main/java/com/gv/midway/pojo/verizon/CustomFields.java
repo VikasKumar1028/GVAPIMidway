@@ -1,8 +1,10 @@
 package com.gv.midway.pojo.verizon;
-
+import com.wordnik.swagger.annotations.ApiModelProperty;
 public class CustomFields {
+	@ApiModelProperty(value = "Name of Custom Fields.", required = true)
 	private String value;
 
+	@ApiModelProperty(value = "Value of Custom Fields.", required = true)
 	private String key;
 
 	public String getValue() {

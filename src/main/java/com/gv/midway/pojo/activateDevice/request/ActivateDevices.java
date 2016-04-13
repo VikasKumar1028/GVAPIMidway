@@ -2,8 +2,11 @@ package com.gv.midway.pojo.activateDevice.request;
 
 import java.util.Arrays;
 
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
 public class ActivateDevices {
 	
+	@ApiModelProperty(value = "Having type and value of device identifier")
 	private ActivateDeviceId[] deviceIds;
 
 	public ActivateDeviceId[] getDeviceIds() {

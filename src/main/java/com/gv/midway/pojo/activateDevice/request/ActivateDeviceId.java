@@ -2,13 +2,19 @@ package com.gv.midway.pojo.activateDevice.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ActivateDeviceId {
 	// @JsonProperty("id")
+	@ApiModelProperty(value = "Value of device identifier.", required = true)
 	private String id;
+	
 	// @JsonProperty("kind")
+	@ApiModelProperty(value = "Type of device identifier.", required = true)
 	private String kind;
+	
+	@ApiModelProperty(value = "Extensible Authentication Protocol Code.")
 	private String eAPCode;
 
 	public String getId() {

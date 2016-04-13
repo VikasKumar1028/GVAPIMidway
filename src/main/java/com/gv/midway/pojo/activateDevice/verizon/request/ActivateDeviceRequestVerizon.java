@@ -8,33 +8,45 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.gv.midway.pojo.verizon.CustomFields;
 import com.gv.midway.pojo.verizon.Devices;
 import com.gv.midway.pojo.verizon.PrimaryPlaceOfUse;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_EMPTY)
 public class ActivateDeviceRequestVerizon {
 
+	@ApiModelProperty(value = "Include Device Id/Name for Activation")
 	private String groupName;
 
+	@ApiModelProperty(value = "Name of billing account.")
 	private String accountName;
 
+	@ApiModelProperty(value = "Stock Keeping Unit(SKU) number of a 4G device.")
 	private String skuNumber;
 
 	private CustomFields[] customFields;
 
+	@ApiModelProperty(value = "Cost Center Identifier having 36 characters .")
 	private String costCenterCode;
 
+	@ApiModelProperty(value = "IP Address Pool Name.")
 	private String carrierIpPoolName;
 
+	@ApiModelProperty(value = "Plan Code associated with Device.", required=true)
 	private String servicePlan;
 
+	@ApiModelProperty(value = "Include Customer Name and Address")
 	private PrimaryPlaceOfUse primaryPlaceOfUse;
 
+	@ApiModelProperty(value = "Id of Customer Lead")
 	private String leadId;
 
+	@ApiModelProperty(value = "Name of Carrier")
 	private String carrierName;
 
+	@ApiModelProperty(value = "Access for Internet.Valid values are restricted/unrestricted.")
 	private String publicIpRestriction;
 
+	@ApiModelProperty(value = "Location Zip Code" , required=true)
 	private String mdnZipCode;
 
 	private Devices[] devices;

@@ -1,11 +1,13 @@
 package com.gv.midway.pojo.verizon;
-
+import com.wordnik.swagger.annotations.ApiModelProperty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PrimaryPlaceOfUse {
+	@ApiModelProperty(value = "Customer's address.", required = true)
 	private Address address;
 
+	@ApiModelProperty(value = "Customer's name.", required = true)
 	private CustomerName customerName;
 
 	public Address getAddress() {

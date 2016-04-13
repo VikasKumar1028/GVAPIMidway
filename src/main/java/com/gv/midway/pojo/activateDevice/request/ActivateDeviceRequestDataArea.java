@@ -1,5 +1,5 @@
 package com.gv.midway.pojo.activateDevice.request;
-
+import com.wordnik.swagger.annotations.ApiModelProperty;
 
 
 import java.util.Arrays;
@@ -11,30 +11,43 @@ import com.gv.midway.pojo.verizon.PrimaryPlaceOfUse;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ActivateDeviceRequestDataArea {
 
+	@ApiModelProperty(value = "Include Device Id/Name for Activation")
 	private String groupName;
 
+	@ApiModelProperty(value = "Name of billing account.")
 	private String accountName;
 
+	@ApiModelProperty(value = "Stock Keeping Unit(SKU) number of a 4G device.")
 	private String skuNumber;
 
+	@ApiModelProperty(value = "The names and values of any custom fields that you want to set during activation.")
 	private CustomFields[] customFields;
 
+	@ApiModelProperty(value = "Cost Center Identifier having 36 characters .")
 	private String costCenterCode;
 
+	@ApiModelProperty(value = "IP Address Pool Name.")
 	private String carrierIpPoolName;
 
+	@ApiModelProperty(value = "Plan Code associated with Device.", required=true)
 	private String servicePlan;
 
+	@ApiModelProperty(value = "Include Customer Name and Address")
 	private PrimaryPlaceOfUse primaryPlaceOfUse;
 
+	@ApiModelProperty(value = "Id of Customer Lead")
 	private String leadId;
 
+	@ApiModelProperty(value = "Name of Carrier")
 	private String carrierName;
-
+	
+	@ApiModelProperty(value = "Access for Internet.Valid values are restricted/unrestricted.")
 	private String publicIpRestriction;
 
+	@ApiModelProperty(value = "Location Zip Code" , required=true)
 	private String mdnZipCode;
 
+	@ApiModelProperty(value = "Activate Devices")
 	private ActivateDevices[] devices;
 
 	public String getGroupName() {
