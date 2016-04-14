@@ -4,22 +4,22 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Address {
-	@ApiModelProperty(value = "Street address.", required = true)
+	@ApiModelProperty(value = "Name of addressLine1", required = true)
 	private String addressLine1;
 	
-	@ApiModelProperty(value = "Additional street address.")
+	@ApiModelProperty(value = "Name of addressLine2")
 	private String addressLine2;
 
-	@ApiModelProperty(value = "City." , required = true)
+	@ApiModelProperty(value = "Name of City" , required = true)
 	private String city;
 
-	@ApiModelProperty(value = "Sate", required = true)
+	@ApiModelProperty(value = "Name of State", required = true)
 	private String state;
 
-	@ApiModelProperty(value = "Country." , required = true)
+	@ApiModelProperty(value = "Name of Country" , required = true)
 	private String country;
 
-	@ApiModelProperty(value = "Zip Code of Address" , required = true)
+	@ApiModelProperty(value = "Zip code of the address area" , required = true)
 	private String zip;
 
 	public String getZip() {

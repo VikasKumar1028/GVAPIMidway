@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PrimaryPlaceOfUse {
-	@ApiModelProperty(value = "Customer's address.", required = true)
+	@ApiModelProperty(value = "The residential street address or the primary business street address of the customer", required = true)
 	private Address address;
 
-	@ApiModelProperty(value = "Customer's name.", required = true)
+	@ApiModelProperty(value = "Name of the Customer", required = true)
 	private CustomerName customerName;
 
 	public Address getAddress() {

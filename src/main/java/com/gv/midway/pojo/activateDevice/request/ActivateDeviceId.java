@@ -14,7 +14,8 @@ public class ActivateDeviceId {
 	@ApiModelProperty(value = "Type of device identifier.", required = true)
 	private String kind;
 	
-	@ApiModelProperty(value = "Extensible Authentication Protocol Code.")
+	// activation KORE field
+	@ApiModelProperty(value = "The EAP code is the Express Activation Profile to use for the activation.")
 	private String eAPCode;
 
 	public String getId() {

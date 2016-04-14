@@ -10,16 +10,16 @@ public class Header {
 	@ApiModelProperty(value = "Organization name of the request.")
 	private String organization;
 	
-	@ApiModelProperty(value = "Unique id of entire flow request ")
+	@ApiModelProperty(value = "Unique id of the entire flow for the request.")
 	private String transactionId;
 	
-	@ApiModelProperty(value = "Name of the source from where the request trigger.")
+	@ApiModelProperty(value = "Name of the source from where the request is triggered.")
 	private String sourceName;
 	
-	@ApiModelProperty(value = "Mode of request triggered")
+	@ApiModelProperty(value = "Mode of the request triggered.")
 	private String applicationName;
 	
-	@ApiModelProperty(value = "Target System of request")
+	@ApiModelProperty(value = "Target System of the request.")
 	private String bsCarrier;
 
 	public String getBsCarrier() {

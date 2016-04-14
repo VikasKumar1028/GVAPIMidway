@@ -4,10 +4,10 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 
 public class Response {
 
-	@ApiModelProperty(value = "Response code for triggered request.")
+	@ApiModelProperty(value = "Response code for the triggered request.")
 	private Integer responseCode;
 
-	@ApiModelProperty(value = "Reesponse status : SUCCESS or FAILURE")
+	@ApiModelProperty(value = "Response status : SUCCESS or FAILURE")
 	private String responseStatus;
 
 	@ApiModelProperty(value = "Details of the response status received.")

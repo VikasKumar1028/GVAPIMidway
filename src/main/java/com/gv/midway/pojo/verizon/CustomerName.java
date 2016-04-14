@@ -4,16 +4,16 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CustomerName {
-	@ApiModelProperty(value = "Customer's first name.", required = true)
+	@ApiModelProperty(value = "First name of the Customer", required = true)
 	private String firstName;
 
-	@ApiModelProperty(value = "Customer's last name.", required = true)
+	@ApiModelProperty(value = "Last name of the Customer", required = true)
 	private String lastName;
 
-	@ApiModelProperty(value = "Customer's middle name.")
+	@ApiModelProperty(value = "Middle name of the Customer")
 	private String middleName;
 
-	@ApiModelProperty(value = "Title for Customer.")
+	@ApiModelProperty(value = "Title for the Customer. Eg: Mr , Mrs , etc")
 	private String title;
 
 	public String getMiddleName() {

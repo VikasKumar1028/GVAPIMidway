@@ -11,43 +11,43 @@ import com.gv.midway.pojo.verizon.PrimaryPlaceOfUse;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ActivateDeviceRequestDataArea {
 
-	@ApiModelProperty(value = "Include Device Id/Name for Activation")
+	@ApiModelProperty(value = "The device group that the requested device belongs to.")
 	private String groupName;
 
-	@ApiModelProperty(value = "Name of billing account.")
+	@ApiModelProperty(value = "Name of the billing account.")
 	private String accountName;
 
 	@ApiModelProperty(value = "Stock Keeping Unit(SKU) number of a 4G device.")
 	private String skuNumber;
 
-	@ApiModelProperty(value = "The names and values of any custom fields that you want to set during activation.")
+	@ApiModelProperty(value = "The custom fields and values that have been set for the device.")
 	private CustomFields[] customFields;
 
-	@ApiModelProperty(value = "Cost Center Identifier having 36 characters .")
+	@ApiModelProperty(value = "Name of cost Center Code.")
 	private String costCenterCode;
 
-	@ApiModelProperty(value = "IP Address Pool Name.")
+	@ApiModelProperty(value = "Name of the carrier Ip Pool.")
 	private String carrierIpPoolName;
 
-	@ApiModelProperty(value = "Plan Code associated with Device.", required=true)
+	@ApiModelProperty(value = "Service Plan that that device belongs to.", required=true)
 	private String servicePlan;
 
-	@ApiModelProperty(value = "Include Customer Name and Address")
+	@ApiModelProperty(value = "The residential street address or the primary business street address of the Customer and Customer Name")
 	private PrimaryPlaceOfUse primaryPlaceOfUse;
 
-	@ApiModelProperty(value = "Id of Customer Lead")
+	@ApiModelProperty(value = "The device lead id that the device belongs to.")
 	private String leadId;
 
-	@ApiModelProperty(value = "Name of Carrier")
+	@ApiModelProperty(value = "The name of the Carrier.")
 	private String carrierName;
 	
-	@ApiModelProperty(value = "Access for Internet.Valid values are restricted/unrestricted.")
+	@ApiModelProperty(value = "Name of Public IP Restriction.It may be restricted/unrestricted.")
 	private String publicIpRestriction;
 
-	@ApiModelProperty(value = "Location Zip Code" , required=true)
+	@ApiModelProperty(value = "MDN zip code number" , required=true)
 	private String mdnZipCode;
 
-	@ApiModelProperty(value = "Activate Devices")
+	@ApiModelProperty(value = "All identifiers for the device.")
 	private ActivateDevices[] devices;
 
 	public String getGroupName() {

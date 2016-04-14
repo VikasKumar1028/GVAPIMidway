@@ -1,12 +1,14 @@
 package com.gv.midway.pojo.verizon;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
+import com.wordnik.swagger.annotations.ApiModelProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DeviceId {
 	// @JsonProperty("id")
+	@ApiModelProperty(value = "The value of the device identifier.")
 	private String id;
 	// @JsonProperty("kind")
+	@ApiModelProperty(value = "The type of the device identifier.")
 	private String kind;
 	
 

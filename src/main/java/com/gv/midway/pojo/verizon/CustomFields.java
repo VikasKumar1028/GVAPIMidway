@@ -1,10 +1,10 @@
 package com.gv.midway.pojo.verizon;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 public class CustomFields {
-	@ApiModelProperty(value = "Name of Custom Fields.", required = true)
+	@ApiModelProperty(value = "The value of the custom field. The value is not case-sensitive.Wildcards and partial matches are not supported.", required = true)
 	private String value;
 
-	@ApiModelProperty(value = "Value of Custom Fields.", required = true)
+	@ApiModelProperty(value = "The name of the custom field. Valid names are CustomField1, CustomField2, CustomField3, CustomField4, and CustomField5.", required = true)
 	private String key;
 
 	public String getValue() {

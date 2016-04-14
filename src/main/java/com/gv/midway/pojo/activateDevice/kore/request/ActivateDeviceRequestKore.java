@@ -1,10 +1,12 @@
 package com.gv.midway.pojo.activateDevice.kore.request;
-
+import com.wordnik.swagger.annotations.ApiModelProperty;
 public class ActivateDeviceRequestKore {
 
+	@ApiModelProperty(value = "The number of Device that has to be activated.")
 	private String deviceNumber;
 	
-	private String eapCode;
+		@ApiModelProperty(value = "The EAP code is the Express Activation Profile to use for the activation.")
+		private String eapCode;
 
 	public String getDeviceNumber() {
 		return deviceNumber;

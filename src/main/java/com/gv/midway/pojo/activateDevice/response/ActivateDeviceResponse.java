@@ -4,11 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.gv.midway.pojo.BaseResponse;
-
+import com.wordnik.swagger.annotations.ApiModelProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_EMPTY)
 public class ActivateDeviceResponse extends BaseResponse {
 
+	@ApiModelProperty(value = "Data area for Activate device response")
 	private ActivateDeviceResponseDataArea dataArea;
 
 	public ActivateDeviceResponseDataArea getDataArea() {
