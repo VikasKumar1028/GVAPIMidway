@@ -1,9 +1,12 @@
 package com.gv.midway.pojo.deactivateDevice.request;
- 
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
 import java.util.Arrays;
+
+import com.wordnik.swagger.annotations.ApiModelProperty;
  
 public class DeactivateDevices {
-      
+	@ApiModelProperty(value = "All identifiers for the device")
        private DeactivateDeviceId[] deviceIds;
  
        public DeactivateDeviceId[] getDeviceIds() {

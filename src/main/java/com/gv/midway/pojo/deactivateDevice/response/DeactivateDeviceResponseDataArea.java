@@ -1,10 +1,12 @@
 package com.gv.midway.pojo.deactivateDevice.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DeactivateDeviceResponseDataArea {
 	
+	@ApiModelProperty(value = "Order number is an unique Id of the request submitted from the source. Can be Numeric or Alphanumeric" )
 	private String orderNumber;
 
 	public String getOrderNumber() {

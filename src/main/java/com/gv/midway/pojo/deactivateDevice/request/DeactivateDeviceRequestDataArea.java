@@ -8,22 +8,22 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DeactivateDeviceRequestDataArea {
-	@ApiModelProperty(value = "The name of device group.")
+	@ApiModelProperty(value = "The device group that the device belongs to.")
 	private String groupName;
 
-	@ApiModelProperty(value = "The name of Billing Account.")
+	@ApiModelProperty(value = "The billing account for which a list of devices will be returned.")
 	private String accountName;
 
-	@ApiModelProperty(value = "Custom field names and values.")
+	@ApiModelProperty(value = "The custom fields and values that have been set for the device.")
 	private CustomFields[] customFields;
 
-	@ApiModelProperty(value = "The name of Service Plan.")
+	@ApiModelProperty(value = "Service Plan that that device belongs to.")
 	private String servicePlan;
 	
 	@ApiModelProperty(value = "Code identifying the reason for the deactivation.")
 	private String reasonCode;
 
-	@ApiModelProperty(value = "List of devices for the deactivation.")
+	@ApiModelProperty(value = "All identifiers for the device.")
 	private DeactivateDevices[] devices;
 
 	public DeactivateDevices[] getDevices() {
@@ -33,9 +33,10 @@ public class DeactivateDeviceRequestDataArea {
 	public void setDevices(DeactivateDevices[] devices) {
 		this.devices = devices;
 	}
-	@ApiModelProperty(value = "Early Termination Fee Waiver.")
+	@ApiModelProperty(value = "The etfWaiver parameter waives the Early Termination Fee (ETF), if applicable.")
 	private String etfWaiver;
 
+	@ApiModelProperty(value = "A flag indicating whether to scrap the device or just deactivate it to stock.")
 	private Boolean flagScrap;
 
 	public String getGroupName() {
