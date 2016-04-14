@@ -11,12 +11,14 @@ import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
 
 import com.gv.midway.constant.IConstant;
+import com.gv.midway.constant.IResponse;
 import com.gv.midway.exception.VerizonSessionTokenExpirationException;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
+import com.gv.midway.pojo.verizon.VerizonErrorResponse;
 
 public class VerizonGenericExceptionProcessor implements Processor {
 
@@ -45,11 +47,9 @@ public class VerizonGenericExceptionProcessor implements Processor {
 
 		log.info("----VerizonGenericExceptionProcessor----------"
 				+ exception.getResponseBody());
+		log.info("----.getStatusCode()----------"
+				+ exception.getStatusCode());
 
-		System.out.println("exception"+exception.getStatusText());
-		System.out.println("exception"+exception.getStatusCode());
-		
-		//System.out.println("exception"+exception.getStatusText());
 		
 		Header responseHeader = new Header();
 		responseHeader.setApplicationName(newEnv.getProperty(IConstant.APPLICATION_NAME));
@@ -65,10 +65,11 @@ public class VerizonGenericExceptionProcessor implements Processor {
 		responseHeader.setBsCarrier(newEnv.getProperty(IConstant.BSCARRIER_VERIZON));
 
 		Response response = new Response();
-		response.setResponseCode(4);
-		response.setResponseStatus("InValid Data");
+		response.setResponseCode(exception.getStatusCode());
+		response.setResponseStatus(IResponse.ERROR_MESSAGE);
 		response.setResponseDescription(exception.getResponseBody());
 
+		//TODO
 		if (exception.getStatusCode() == 401) {
 			exchange.setProperty(IConstant.RESPONSE_CODE, "401");
 			exchange.setProperty(IConstant.RESPONSE_STATUS, "Invalid Token");

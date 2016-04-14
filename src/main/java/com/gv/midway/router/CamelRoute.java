@@ -212,7 +212,7 @@ public class CamelRoute extends RouteBuilder {
 									.to("log:input").
 						endChoice().otherwise()
 							.choice()
-									.when(header("derivedCarrierName").isEqualTo("KORE")).log("KORE12121")
+									.when(header("derivedCarrierName").isEqualTo("KORE"))
 									.wireTap("direct:processActivateKoreTransaction")
 									.process(new KoreActivateDevicePostProcessor(env))
 							.endChoice()
@@ -353,7 +353,8 @@ public class CamelRoute extends RouteBuilder {
 				//Audit will store record 3 times in case of failure (see onException for connection.class above)
 				//.bean(iAuditService, "auditExternalRequestCall")
 				.to(uriRestVerizonEndPoint)
-				.unmarshal().json(JsonLibrary.Jackson)
+				.unmarshal()
+				.json(JsonLibrary.Jackson,VerizonProvisoningResponse.class)
 				.bean(iTransactionalService,"populateVerizonTransactionalResponse")
 				.bean(iAuditService, "auditExternalResponseCall")
 				.process(new VerizonDeactivateDevicePostProcessor(env))
