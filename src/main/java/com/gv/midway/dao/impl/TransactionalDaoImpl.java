@@ -313,7 +313,12 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		Update update = new Update();
 		update.set(ITransaction.CALL_BACK_PAYLOAD, errorResponsePayload);
 		update.set(ITransaction.CARRIER_ERROR_DECRIPTION, errorResponseBody);
-		update.set(ITransaction.CARRIER_STATUS, "Error");
+
+		update.set(ITransaction.MIDWAY_STATUS,
+				IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
+		update.set(ITransaction.CARRIER_STATUS,
+				IConstant.CARRIER_TRANSACTION_STATUS_ERROR);
+
 		update.set(ITransaction.LAST_TIME_STAMPUPDATED,
 				CommonUtil.getCurrentTimeStamp());
 		mongoTemplate.updateMulti(searchUserQuery, update, Transaction.class);
@@ -344,8 +349,10 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			update.set(ITransaction.CARRIER_ERROR_DECRIPTION,
 					responsePayload.getErrorMessage());
 
-			update.set(ITransaction.MIDWAY_STATUS, IResponse.ERROR_MESSAGE);
-			update.set(ITransaction.CARRIER_STATUS, "Error");
+			update.set(ITransaction.MIDWAY_STATUS,
+					IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
+			update.set(ITransaction.CARRIER_STATUS,
+					IConstant.CARRIER_TRANSACTION_STATUS_ERROR);
 			update.set(ITransaction.LAST_TIME_STAMPUPDATED,
 					CommonUtil.getCurrentTimeStamp());
 

@@ -255,9 +255,8 @@ public class AuditDaoImpl implements IAuditDao {
 								KoreErrorResponse.class);
 					
 						audit.setErrorDetails(responsePayload.getErrorMessage());
-						audit.setErrorProblem(responsePayload.getErrorCode());	
-						//TODO Change the error code
-						audit.setErrorCode(400);
+						audit.setErrorProblem(IConstant.CARRIER_TRANSACTION_STATUS_ERROR);	
+						audit.setErrorCode(Integer.parseInt(responsePayload.getErrorCode()));
 						audit.setPayload(responsePayload);
 					}
 					
