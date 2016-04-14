@@ -1,13 +1,18 @@
 package com.gv.midway.pojo.callback;
-
+import com.wordnik.swagger.annotations.ApiModelProperty;
 public class CallbackSuspendResponse {
+	
+	@ApiModelProperty(value = "No. of maximum days allowed to suspend device.")
 	private String maxSuspendDaysAllowed;
 
-    private String expectedResumeDate;
+	@ApiModelProperty(value = "Expected Resume Date")
+	private String expectedResumeDate;
 
-    private String numDaysSuspendAllowedCurrent12Months;
+	@ApiModelProperty(value = "No. of suspended days allowed in current 12 months.")
+	private String numDaysSuspendAllowedCurrent12Months;
 
-    private String numDaysSuspendedLast12Months;
+	@ApiModelProperty(value = "No. of suspended days in last 12 months.")
+	private String numDaysSuspendedLast12Months;
 
     public String getMaxSuspendDaysAllowed ()
     {
