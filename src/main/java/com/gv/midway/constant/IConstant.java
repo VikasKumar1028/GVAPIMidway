@@ -28,11 +28,10 @@ public interface IConstant {
 	static String BSCARRIER="bsCarrier";
 	static String AUDIT_TRANSACTION_ID="com.gv.midway.audit.TransactionID";
 	static String MIDWAY_TRANSACTION_ID="MidwayTransactionId";
+	
 	static String MIDWAY_CALLBACK_CARRIER_STATUS_SUCCESS="Success";
 	static String MIDWAY_CALLBACK_DELIVERED_FAILED="Fail";
-	static String MIDWAY_TRANSACTION_STATUS_PENDING="Pending";
-	static String MIDWAY_TRANSACTION_STATUS_ERROR="Error";
-	static String MIDWAY_TRANSACTION_STATUS_SUCCESS="Success";
+
 	static String MIDWAY_TRANSACTION_DEVICE_NUMBER="TransactionDeviceNumber";
 	static String MIDWAY_CONNECTION_ERROR="ConnectionError";
 	public static String MIDWAY_NETSUITE_ID="midwayNetsuiteId";
@@ -44,6 +43,15 @@ public interface IConstant {
 	public static String BULK_SUCCESS_LIST="bulkSuccessList";
 	public static String BULK_ERROR_LIST="bulkErrorList";
 	public static String BULK_SYNC_OPERATION="bulkInsertOperation";
+	
+	
+	static String MIDWAY_TRANSACTION_STATUS_PENDING="Pending";
+	static String MIDWAY_TRANSACTION_STATUS_ERROR="Error";
+	static String MIDWAY_TRANSACTION_STATUS_SUCCESS="Success";
+
+	static String CARRIER_TRANSACTION_STATUS_PENDING="Pending";
+	static String CARRIER_TRANSACTION_STATUS_ERROR="Error";
+	static String CARRIER_TRANSACTION_STATUS_SUCCESS="Success";
 	
 	
 			
