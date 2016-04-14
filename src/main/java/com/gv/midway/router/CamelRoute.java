@@ -246,7 +246,7 @@ public class CamelRoute extends RouteBuilder {
 				.process(new VerizonActivateDevicePreProcessor())
 				.to(uriRestVerizonEndPoint)
 				.unmarshal()
-				.json(JsonLibrary.Jackson,VerizonProvisoningResponse.class)
+				.json(JsonLibrary.Jackson)
 				.bean(iTransactionalService,
 						"populateVerizonTransactionalResponse")
 				.bean(iAuditService, "auditExternalResponseCall")
@@ -354,7 +354,7 @@ public class CamelRoute extends RouteBuilder {
 				//.bean(iAuditService, "auditExternalRequestCall")
 				.to(uriRestVerizonEndPoint)
 				.unmarshal()
-				.json(JsonLibrary.Jackson,VerizonProvisoningResponse.class)
+				.json(JsonLibrary.Jackson)
 				.bean(iTransactionalService,"populateVerizonTransactionalResponse")
 				.bean(iAuditService, "auditExternalResponseCall")
 				.process(new VerizonDeactivateDevicePostProcessor(env))

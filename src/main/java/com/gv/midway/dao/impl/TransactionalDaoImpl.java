@@ -2,6 +2,7 @@ package com.gv.midway.dao.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.component.cxf.CxfOperationException;
@@ -231,6 +232,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 	public void populateVerizonTransactionalResponse(Exchange exchange) {
 
+		Map map = exchange.getIn().getBody(Map.class);
 		Query searchUserQuery = new Query(Criteria.where("midwayTransationID")
 				.is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)));
 
@@ -246,37 +248,49 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		 */
 
 		Update update = new Update();
-		if (exchange.getIn().getBody().toString().contains("errorMessage=")) {
+		ObjectMapper mapper = new ObjectMapper();
 
-			update.set(ITransaction.CALL_BACK_PAYLOAD, exchange.getIn()
-					.getBody().toString());
-			update.set(ITransaction.CARRIER_ERROR_DECRIPTION, exchange.getIn()
-					.getBody().toString());
-			update.set(ITransaction.CARRIER_ERROR_DECRIPTION, exchange.getIn()
-					.getBody().toString());
-			update.set(ITransaction.MIDWAY_STATUS, IResponse.ERROR_MESSAGE);
-			update.set(ITransaction.CARRIER_STATUS, "Error");
-			update.set(ITransaction.LAST_TIME_STAMPUPDATED,
-					CommonUtil.getCurrentTimeStamp());
+		try {
+			String jsonString = jsonString = mapper.writeValueAsString(map);
+			if (map.containsKey("errorMessage")) {
 
-		} else {
+				VerizonErrorResponse responsePayload = mapper.readValue(
+						jsonString, VerizonErrorResponse.class);
 
-			VerizonProvisoningResponse response = (VerizonProvisoningResponse) exchange
-					.getIn().getBody();
+				update.set(ITransaction.CALL_BACK_PAYLOAD, responsePayload);
+				update.set(ITransaction.CARRIER_ERROR_DECRIPTION,
+						responsePayload.getErrorMessage());
+				update.set(ITransaction.CARRIER_STATUS,
+						IConstant.CARRIER_TRANSACTION_STATUS_ERROR);
+				update.set(ITransaction.LAST_TIME_STAMPUPDATED,
+						CommonUtil.getCurrentTimeStamp());
+		
+			} else {
 
-			update.set("callBackPayload", response);
+				VerizonProvisoningResponse responsePayload = mapper.readValue(
+						jsonString, VerizonProvisoningResponse.class);
 
-			update.set(ITransaction.CARRIER_STATUS, "Pending");
-			update.set(ITransaction.CARRIER_TRANSATION_ID,
-					response.getRequestId());
-			update.set(ITransaction.LAST_TIME_STAMPUPDATED,
-					CommonUtil.getCurrentTimeStamp());
+				update.set(ITransaction.CALL_BACK_PAYLOAD, responsePayload);
 
+				update.set(ITransaction.CARRIER_STATUS,
+						IConstant.CARRIER_TRANSACTION_STATUS_PENDING);
+				update.set(ITransaction.CARRIER_TRANSATION_ID,
+						responsePayload.getRequestId());
+				update.set(ITransaction.LAST_TIME_STAMPUPDATED,
+						CommonUtil.getCurrentTimeStamp());
+
+			}
+			mongoTemplate.updateMulti(searchUserQuery, update,
+					Transaction.class);
+		} catch (Exception ex) {
+			log.error("Error in populateVerizonTransactionalResponse" + ex);
 		}
-		mongoTemplate.updateMulti(searchUserQuery, update, Transaction.class);
 
 	}
 
+	
+	
+	
 	public void populateKoreTransactionalErrorResponse(Exchange exchange) {
 
 		Query searchUserQuery = new Query(

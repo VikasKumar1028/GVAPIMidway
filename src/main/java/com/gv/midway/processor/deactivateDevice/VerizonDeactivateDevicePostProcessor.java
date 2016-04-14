@@ -63,6 +63,7 @@ public class VerizonDeactivateDevicePostProcessor implements Processor {
 		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
 				.toString());
 
+		
 		if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
 
 			response.setResponseCode(IResponse.SUCCESS_CODE);
@@ -73,9 +74,7 @@ public class VerizonDeactivateDevicePostProcessor implements Processor {
 		} else {
 
 			response.setResponseCode(400);
-
 			response.setResponseStatus(IResponse.ERROR_MESSAGE);
-
 			response.setResponseDescription(exchange.getIn().getBody()
 					.toString());
 		}

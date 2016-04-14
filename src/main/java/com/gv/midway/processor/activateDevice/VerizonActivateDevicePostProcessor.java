@@ -50,7 +50,11 @@ public class VerizonActivateDevicePostProcessor implements Processor {
 				newEnv.getProperty(IConstant.DATE_FORMAT));
 
 		Date date = new Date();
+		
 
+		System.out.println("exchange.getIn().getBody().toString()***************************************"+ exchange.getIn().getBody().toString());
+
+		
 		if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
 
 
