@@ -1,9 +1,5 @@
 package com.gv.midway.processor;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.springframework.core.env.Environment;

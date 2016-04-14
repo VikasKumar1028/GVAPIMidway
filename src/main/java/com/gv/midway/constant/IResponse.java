@@ -7,6 +7,8 @@ public class IResponse {
 	public static final Integer DB_ERROR_CODE=1901;
 	public static final Integer CONNECTION_ERROR_CODE=1903;
 	public static final Integer DEVICEINFO_ERROR_CODE_CARRIER=1904;
+	public static final Integer INVALID_PAYLOAD=1905;
+	
 	
 	public static final String SUCCESS_MESSAGE="Success";
 	public static final String SUCCESS_DESCRIPTION_INSERT_MIDWAYDB="Record succesfully inserted in Midway";
