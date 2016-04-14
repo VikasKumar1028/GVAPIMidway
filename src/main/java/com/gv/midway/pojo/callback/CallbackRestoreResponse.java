@@ -1,6 +1,8 @@
 package com.gv.midway.pojo.callback;
 
+import com.wordnik.swagger.annotations.ApiModelProperty;
 public class CallbackRestoreResponse {
+	@ApiModelProperty(value = "Restored Devices.")
 	private String restored;
 
     public String getRestored ()

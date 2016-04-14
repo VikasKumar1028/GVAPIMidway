@@ -1,6 +1,15 @@
 package com.gv.midway.pojo.callback;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+import java.util.Arrays;
+
+import com.gv.midway.pojo.callback.CallbackDeviceResponse;
+import com.gv.midway.pojo.callback.CallbackFaultResponse;
+import com.gv.midway.pojo.callback.CallbackSummary;
+import com.gv.midway.pojo.verizon.DeviceId;
 
 public class CallbackSummary {
+	
+	@ApiModelProperty(value = "Requested Devices for Callback")
 	private String devicesRequested;
 
     public String getDevicesRequested ()

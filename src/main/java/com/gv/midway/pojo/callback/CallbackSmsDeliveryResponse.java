@@ -1,9 +1,12 @@
 package com.gv.midway.pojo.callback;
 
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
 public class CallbackSmsDeliveryResponse {
 	private CallbackFaultResponse faultResponse;
 
-    private String confirmation;
+	@ApiModelProperty(value = "Confirmation in SMS delivery response .")
+	private String confirmation;
 
     public CallbackFaultResponse getFaultResponse ()
     {

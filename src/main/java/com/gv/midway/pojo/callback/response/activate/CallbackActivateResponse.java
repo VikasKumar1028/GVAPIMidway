@@ -4,19 +4,25 @@ import java.util.Arrays;
 
 import com.gv.midway.pojo.callback.CallbackDeviceCredential;
 import com.gv.midway.pojo.verizon.DeviceId;
-
+import com.wordnik.swagger.annotations.ApiModelProperty;
 public class CallbackActivateResponse {
+	@ApiModelProperty(value = "List of Feature Codes.")
 	private String[] featureCodes;
+	
+	@ApiModelProperty(value = "Having type and value of device identifier.")
+	private DeviceId[] deviceIds;
 
-    private DeviceId[] deviceIds;
+	@ApiModelProperty(value = "Request State.")
+	private String state;
 
-    private String state;
+	@ApiModelProperty(value = "Callback Device Credentials.")
+	private CallbackDeviceCredential deviceCredential;
 
-    private CallbackDeviceCredential deviceCredential;
+	@ApiModelProperty(value = "Service Plan for Device.")
+	private String servicePlan;
 
-    private String servicePlan;
-
-    private String ipAddress;
+	@ApiModelProperty(value = "ip Address.")
+	private String ipAddress;
 
     public String[] getFeatureCodes ()
     {

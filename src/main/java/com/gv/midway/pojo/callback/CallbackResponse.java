@@ -1,21 +1,40 @@
 package com.gv.midway.pojo.callback;
-
+import com.wordnik.swagger.annotations.ApiModelProperty;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "callbacks")
 public class CallbackResponse {
+	@ApiModelProperty(value = "Response code for the triggered request.")
 	String responseCode;
+	
 	Object payload;
+	
+	@ApiModelProperty(value = "Callback Status for the request.")
 	String callbackStatus;
+	
+	@ApiModelProperty(value = "Request Type.")
 	String requestType;
 
+	@ApiModelProperty(value = "Carrier Transaction Id.")
 	String carrierTransationID;
+	
+	@ApiModelProperty(value = "Carrier Status.")
 	String carrierStatus;
+	
+	@ApiModelProperty(value = "Stamp Updated Last Time.")
 	String lastTimeStampUpdated;
+	
+	@ApiModelProperty(value = "Carrier Error Description.")
 	String carrierErrorDecription;
+	
 	Object callBackPayload;
+	@ApiModelProperty(value = "Delivered Callback.")
 	String callBackDelivered;
+	
+	@ApiModelProperty(value = "Received Callback.")
 	String callBackReceived;
+	
+	@ApiModelProperty(value = "Callback Failure Reson to NetSuite.")
 	String callBackFailureToNetSuitReason;
 	/**
 	 * @return the responseCode

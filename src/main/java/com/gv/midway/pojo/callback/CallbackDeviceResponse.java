@@ -1,21 +1,27 @@
 package com.gv.midway.pojo.callback;
-
+import com.wordnik.swagger.annotations.ApiModelProperty;
 import com.gv.midway.pojo.callback.response.activate.CallbackActivateResponse;
 import com.gv.midway.pojo.callback.response.deactivate.CallbackDeactivateResponse;
 
 
 public class CallbackDeviceResponse {
+	@ApiModelProperty(value = "Device Suspend Response from callback")
 	private CallbackSuspendResponse suspendResponse;
 
-    private CallbackPrlInformationResponse prlInformationResponse;
+	@ApiModelProperty(value = "Prl Information Response from Callback")
+	private CallbackPrlInformationResponse prlInformationResponse;
 
-    private CallbackActivateResponse activateResponse;
+	@ApiModelProperty(value = "Activate Device Response from Callback")
+	private CallbackActivateResponse activateResponse;
 
-    private CallbackRestoreResponse restoreResponse;
+	@ApiModelProperty(value = "Restore Device Response from Callback")
+	private CallbackRestoreResponse restoreResponse;
 
-    private CallbackSmsDeliveryResponse smsDeliveryResponse;
+	@ApiModelProperty(value = "SMS Response from Callback")
+	private CallbackSmsDeliveryResponse smsDeliveryResponse;
 
-    private CallbackDeactivateResponse deactivateResponse;
+	@ApiModelProperty(value = "Deactivate Response from Callback")
+	private CallbackDeactivateResponse deactivateResponse;
 
     public CallbackSuspendResponse getSuspendResponse ()
     {

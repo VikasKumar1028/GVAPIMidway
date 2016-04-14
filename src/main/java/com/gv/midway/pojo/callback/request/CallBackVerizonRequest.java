@@ -1,5 +1,5 @@
 package com.gv.midway.pojo.callback.request;
-
+import com.wordnik.swagger.annotations.ApiModelProperty;
 import java.util.Arrays;
 
 import com.gv.midway.pojo.callback.CallbackDeviceResponse;
@@ -8,22 +8,31 @@ import com.gv.midway.pojo.callback.CallbackSummary;
 import com.gv.midway.pojo.verizon.DeviceId;
 
 public class CallBackVerizonRequest {
+	@ApiModelProperty(value = "Summary of requested device callback")
 	private CallbackSummary summary;
 
+	@ApiModelProperty(value = "The User Name returned in callback message.Use it to authenticate callback messages ,")
 	private String username;
 
+	@ApiModelProperty(value = "Request Id for Callback")
 	private String requestId;
 
+	@ApiModelProperty(value = "Callback Fault Response Details")
 	private CallbackFaultResponse faultResponse;
 
+	@ApiModelProperty(value = "All Identifier for the device")
 	private DeviceId[] deviceIds;
 
+	@ApiModelProperty(value = "Response of Callback for Requested Device")
 	private CallbackDeviceResponse deviceResponse;
 
+	@ApiModelProperty(value = "Callback Comment")
 	private String comment;
 
+	@ApiModelProperty(value = "Callback SMS Message")
 	private String smsMessage;
 
+	@ApiModelProperty(value = "Password for authentication  of Callback message.")
 	private String password;
 
 	public CallbackSummary getSummary() {

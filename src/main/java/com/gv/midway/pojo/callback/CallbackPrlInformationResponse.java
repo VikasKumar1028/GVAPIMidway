@@ -1,9 +1,13 @@
 package com.gv.midway.pojo.callback;
 
-public class CallbackPrlInformationResponse {
-	 private String prlVersion;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 
-	    private CallbackFaultResponse faultResponse;
+public class CallbackPrlInformationResponse {
+	@ApiModelProperty(value = "Prl version in Callback Response")
+	private String prlVersion;
+
+	@ApiModelProperty(value = "Fault Response in Callback")
+	 private CallbackFaultResponse faultResponse;
 
 	    public String getPrlVersion ()
 	    {

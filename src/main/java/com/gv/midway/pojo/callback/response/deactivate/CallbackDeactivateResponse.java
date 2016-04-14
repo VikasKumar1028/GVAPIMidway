@@ -1,7 +1,10 @@
 package com.gv.midway.pojo.callback.response.deactivate;
 
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
 public class CallbackDeactivateResponse {
-	 private String deactivated;
+	@ApiModelProperty(value = "Deactivated devices in Callback Response .")
+	private String deactivated;
 
 	    public String getDeactivated ()
 	    {

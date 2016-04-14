@@ -1,9 +1,12 @@
 package com.gv.midway.pojo.callback;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 
 public class CallbackDeviceCredential {
+	@ApiModelProperty(value = "The User Name returned in callback message.Use it to authenticate callback messages")
 	private String username;
 
-    private String password;
+	@ApiModelProperty(value = "The Password returned in callback message.Use it to authenticate callback messages")
+	private String password;
 
     public String getUsername ()
     {
