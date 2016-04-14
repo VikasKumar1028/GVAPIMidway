@@ -12,10 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IResponse;
 import com.gv.midway.dao.IAuditDao;
 import com.gv.midway.pojo.audit.Audit;
+import com.gv.midway.pojo.kore.KoreErrorResponse;
+import com.gv.midway.pojo.verizon.VerizonErrorResponse;
 
 @Service
 public class AuditDaoImpl implements IAuditDao {
@@ -32,11 +35,13 @@ public class AuditDaoImpl implements IAuditDao {
 
 		try {
 
-			/*ObjectMapper mapper = new ObjectMapper();
-			String msgBody = mapper.writeValueAsString(exchange.getIn()
-					.getBody());*/
+			/*
+			 * ObjectMapper mapper = new ObjectMapper(); String msgBody =
+			 * mapper.writeValueAsString(exchange.getIn() .getBody());
+			 */
 
-			log.info("auditExternalRequestCall-jsonInString::" + exchange.getIn().getBody().toString());
+			log.info("auditExternalRequestCall-jsonInString::"
+					+ exchange.getIn().getBody().toString());
 
 			String requestEndpint = exchange.getFromEndpoint().toString();
 			String requestEndpintSpilt[] = requestEndpint.split("//");
@@ -71,11 +76,12 @@ public class AuditDaoImpl implements IAuditDao {
 			audit.setAuditTransationID(exchange.getProperty(
 					IConstant.AUDIT_TRANSACTION_ID).toString());
 
-			audit.setGvTransationId(exchange.getProperty(IConstant.GV_TRANSACTION_ID).toString());
-			audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME).toString());
+			audit.setGvTransationId(exchange.getProperty(
+					IConstant.GV_TRANSACTION_ID).toString());
+			audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME)
+					.toString());
 			audit.setPayload(exchange.getIn().getBody());
 			mongoTemplate.insert(audit);
-
 
 		} catch (Exception e) {
 			log.info("auditExternalRequestCall-Exception" + e);
@@ -92,9 +98,10 @@ public class AuditDaoImpl implements IAuditDao {
 
 		try {
 
-			/*ObjectMapper mapper = new ObjectMapper();
-			String msgBody = mapper.writeValueAsString(exchange.getIn()
-					.getBody());*/
+			/*
+			 * ObjectMapper mapper = new ObjectMapper(); String msgBody =
+			 * mapper.writeValueAsString(exchange.getIn() .getBody());
+			 */
 
 			String responseEndpint = exchange.getFromEndpoint().toString();
 			String responseEndpintSpilt[] = responseEndpint.split("//");
@@ -157,9 +164,9 @@ public class AuditDaoImpl implements IAuditDao {
 
 		log.info("Start-AuditDaoImpl:auditExternalExceptionResponseCall");
 		String responseBody = "";
-		//TODO populate into below object
-		//KoreErrorResponse errorBody 
-		
+		// TODO populate into below object
+		// KoreErrorResponse errorBody
+
 		CxfOperationException exception = null;
 
 		if (exchange.getProperty(Exchange.EXCEPTION_CAUGHT) != null) {
@@ -221,11 +228,45 @@ public class AuditDaoImpl implements IAuditDao {
 			 */
 			// TODO
 
-			audit.setErrorDetails("ERROR");
-			audit.setErrorProblem("ERROR ");
-			audit.setErrorCode(400);
+			
+			ObjectMapper mapper = new ObjectMapper();
+			
+			
+				try {
+					if ("VERIZON".equals(exchange
+							.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME))) {
+						
+						
+						VerizonErrorResponse responsePayload = mapper.readValue(responseBody,
+							VerizonErrorResponse.class);
+					
+						
+						
+						audit.setErrorDetails(responsePayload.getErrorMessage());
+						audit.setErrorProblem(responsePayload.getErrorCode());
+						//TODO Change the error code
+						audit.setErrorCode(400);					
+						
+						audit.setPayload(responsePayload);
+						
+					}else if ("KORE".equals(exchange
+							.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME))) {
+						KoreErrorResponse responsePayload = mapper.readValue(responseBody,
+								KoreErrorResponse.class);
+					
+						audit.setErrorDetails(responsePayload.getErrorMessage());
+						audit.setErrorProblem(responsePayload.getErrorCode());	
+						//TODO Change the error code
+						audit.setErrorCode(400);
+						audit.setPayload(responsePayload);
+					}
+					
+					
+				} catch (Exception ex) {
+					log.error("Error in Parsing Json");
+				}
 
-			audit.setPayload(responseBody);
+			
 			mongoTemplate.save(audit);
 
 		} catch (Exception e) {

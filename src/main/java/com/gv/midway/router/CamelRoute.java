@@ -20,6 +20,7 @@ import com.gv.midway.pojo.deviceInformation.kore.response.DeviceInformationRespo
 import com.gv.midway.pojo.deviceInformation.verizon.response.DeviceInformationResponseVerizon;
 import com.gv.midway.pojo.token.VerizonAuthorizationResponse;
 import com.gv.midway.pojo.token.VerizonSessionLoginResponse;
+import com.gv.midway.pojo.verizon.VerizonProvisoningResponse;
 import com.gv.midway.processor.BulkDeviceProcessor;
 import com.gv.midway.processor.GenericErrorProcessor;
 import com.gv.midway.processor.HeaderProcessor;
@@ -245,7 +246,7 @@ public class CamelRoute extends RouteBuilder {
 				.process(new VerizonActivateDevicePreProcessor())
 				.to(uriRestVerizonEndPoint)
 				.unmarshal()
-				.json(JsonLibrary.Jackson)
+				.json(JsonLibrary.Jackson,VerizonProvisoningResponse.class)
 				.bean(iTransactionalService,
 						"populateVerizonTransactionalResponse")
 				.bean(iAuditService, "auditExternalResponseCall")
