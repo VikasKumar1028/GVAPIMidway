@@ -97,11 +97,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 			try {
 
-				/*
-				 * ObjectMapper mapper = new ObjectMapper(); String msgBody =
-				 * mapper.writeValueAsString(dbPayload);
-				 */
-
 				Transaction transaction = new Transaction();
 
 				transaction.setMidwayTransationID(exchange.getProperty(
@@ -195,10 +190,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 			try {
 
-				/*
-				 * ObjectMapper mapper = new ObjectMapper(); String msgBody =
-				 * mapper.writeValueAsString(dbPayload);
-				 */
 				Transaction transaction = new Transaction();
 				transaction.setMidwayTransationID(exchange.getProperty(
 						IConstant.MIDWAY_TRANSACTION_ID).toString());
@@ -274,20 +265,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 					.getIn().getBody();
 
 			update.set("callBackPayload", response);
-
-			// TODO
-			// update.set("carrierErrorDecription",
-			// exchange.getIn().getBody().toString());
-			// update.set("carrierErrorDecription",
-			// exchange.getIn().getBody().toString());
-
-			/*
-			 * JSONObject obj= new JSONObject(); obj.put("value", responseId);
-			 * 
-			 * JSONObject object = (JSONObject) obj.get("value"); Object reqId =
-			 * object.get("requestId"); System.out.println("--------" +
-			 * reqId.toString());
-			 */
 
 			update.set(ITransaction.CARRIER_STATUS, "Pending");
 			update.set(ITransaction.CARRIER_TRANSATION_ID,
@@ -388,9 +365,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 	public void populateConnectionErrorResponse(Exchange exchange,
 			String errorType) {
 
-		System.out
-				.println("**************************ERROR TYPE**************************************"
-						+ errorType);
 		Query searchUserQuery = null;
 		if ("KORE".equals(exchange
 				.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME))) {
@@ -417,10 +391,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		} else if ("VERIZON".equals(exchange
 				.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME))) {
 
-			System.out
-					.println("**************************1111111111111**************************************"
-							+ exchange.getIn().getBody().toString());
-
 			searchUserQuery = new Query(Criteria.where("midwayTransationID")
 					.is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)));
 
@@ -428,20 +398,16 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 			update.set(ITransaction.MIDWAY_STATUS, IResponse.ERROR_MESSAGE);
 			update.set(ITransaction.CALL_BACK_PAYLOAD,
-					"CONNECTION_ERROR".toString());
+					IConstant.MIDWAY_CONNECTION_ERROR);
 			update.set(ITransaction.CARRIER_ERROR_DECRIPTION,
-					"CONNECTION_ERROR".toString());
-			update.set(ITransaction.CARRIER_ERROR_DECRIPTION,
-					"CONNECTION_ERROR".toString());
-			update.set(ITransaction.CARRIER_STATUS, "Error");
+					IConstant.MIDWAY_CONNECTION_ERROR);
+			update.set(ITransaction.CARRIER_STATUS,
+					IConstant.CARRIER_TRANSACTION_STATUS_ERROR);
 			update.set(ITransaction.CARRIER_TRANSATION_ID, "");
 			update.set(ITransaction.LAST_TIME_STAMPUPDATED,
 					CommonUtil.getCurrentTimeStamp());
 			WriteResult result = mongoTemplate.updateMulti(searchUserQuery,
 					update, Transaction.class);
-
-			System.out.println("*******************************************"
-					+ result);
 
 		}
 
@@ -456,8 +422,10 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 	public void populatePendingKoreCheckStatus(Exchange exchange) {
 		// TODO Auto-generated method stub
 		Query searchPendingCheckStatusQuery = new Query(Criteria
-				.where("carrierStatus").is("Pending")
-				.andOperator(Criteria.where("carrierName").is("KORE")));
+				.where(ITransaction.CARRIER_STATUS)
+				.is(IConstant.CARRIER_TRANSACTION_STATUS_PENDING)
+				.andOperator(
+						Criteria.where(ITransaction.CARRIER_NAME).is("KORE")));
 
 		List<Transaction> transactionListPendingStatus = mongoTemplate.find(
 				searchPendingCheckStatusQuery, Transaction.class);

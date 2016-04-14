@@ -1,0 +1,65 @@
+
+//Multipuls Device ID
+{  
+   "dataArea":{  
+      "accountName":"0442090022-00001",
+      "servicePlan":"M2MPERMB",
+      "mdnZipCode":"38523",
+      "devices":[  
+         {  
+            "deviceIds":[  
+               {  
+                  "id":"89148000002377648495",
+                  "kind":"ICCID"
+               }
+            ]
+         },
+         {  
+            "deviceIds":[  
+               {  
+                  "id":"353238063289994",
+                  "kind":"IMEI"
+               }
+            ]
+         }
+      ]
+   },
+   "header":{  
+      "region":"USA",
+      "timestamp":"string",
+      "organization":"Grant Victor",
+      "transactionId":"gv123666",
+      "sourceName":"NetSuit",
+      "applicationName":"WEB",
+      "bsCarrier":"VERIZON"
+   }
+}
+
+
+//Singal Device id
+{  
+   "dataArea":{  
+      "accountName":"0442090022-00001",
+      "servicePlan":"M2MPERMB",
+      "mdnZipCode":"38523",
+      "devices":[  
+         {  
+            "deviceIds":[  
+               {  
+                  "id":"89148000002377648495",
+                  "kind":"ICCID"
+               }
+            ]
+         }
+      ]
+   },
+   "header":{  
+      "region":"USA",
+      "timestamp":"string",
+      "organization":"Grant Victor",
+      "transactionId":"gv123666",
+      "sourceName":"NetSuit",
+      "applicationName":"WEB",
+      "bsCarrier":"VERIZON"
+   }
+}
