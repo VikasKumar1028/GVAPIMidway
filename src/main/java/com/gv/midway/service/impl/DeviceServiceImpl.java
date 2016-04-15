@@ -36,7 +36,7 @@ public class DeviceServiceImpl implements IDeviceService {
 	
 	private Logger log = Logger.getLogger(DeviceServiceImpl.class.getName());
 
-	public InsertDeviceResponse insertDeviceDetails(Exchange exchange) {
+	/*public InsertDeviceResponse insertDeviceDetails(Exchange exchange) {
 
 		SingleDevice device = (SingleDevice) exchange.getIn().getBody();
 
@@ -44,7 +44,7 @@ public class DeviceServiceImpl implements IDeviceService {
 		
 		
 		
-	}
+	}*/
 
 	public UpdateDeviceResponse updateDeviceDetails(Exchange exchange) {
 		// TODO Auto-generated method stub
@@ -82,7 +82,7 @@ public class DeviceServiceImpl implements IDeviceService {
 	}
 
 	
-	public Object getDeviceDetailsBsId(Exchange exchange) {
+	/*public Object getDeviceDetailsBsId(Exchange exchange) {
 		// TODO Auto-generated method stub
 		
 		String bs_Id = exchange.getIn().getHeader("bs_id", String.class);
@@ -93,9 +93,9 @@ public class DeviceServiceImpl implements IDeviceService {
 		return iDeviceDao.getDeviceDetailsBsId(bs_Id);	
 		
 	}
+*/
 
-
-	public void insertDevicesDetailsInBatch(Exchange exchange) {
+	public void updateDevicesDetailsBulk(Exchange exchange) {
 		// TODO Auto-generated method stub
 		BulkDevices devices = (BulkDevices) exchange.getIn().getBody();
 
@@ -107,7 +107,7 @@ public class DeviceServiceImpl implements IDeviceService {
 		
 		List<BatchDeviceId> failureList=new ArrayList<BatchDeviceId>();
 		
-		exchange.setProperty(IConstant.BULK_SYNC_OPERATION, "insert");
+		
 		
 		exchange.setProperty(IConstant.BULK_SUCCESS_LIST, successList);
 		exchange.setProperty(IConstant.BULK_ERROR_LIST,failureList);
@@ -135,18 +135,7 @@ public class DeviceServiceImpl implements IDeviceService {
 
 	public void bulkOperationDeviceSyncInDB(Exchange exchange) {
 		// TODO Auto-generated method stub
-		if(exchange.getProperty(IConstant.BULK_SYNC_OPERATION).equals("insert"))
-		{
-			
-			iDeviceDao.bulkOperationDeviceInsert(exchange);
-		}
-		
-		
-		else
-		{
-			iDeviceDao.bulkOperationDeviceUpdate(exchange);
-			
-		}
+		iDeviceDao.bulkOperationDeviceUpload(exchange);	
 	}
 
 	

@@ -27,14 +27,14 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 	@EndpointInject(uri = "")
 	ProducerTemplate producer;
 
-	public String activateDevice() {
+	/*public String activateDevice() {
 		producer.requestBody("direct:verizon");
 
 		return null;
 
-	}
+	}*/
 
-	public InsertDeviceResponse insertDeviceDetails(SingleDevice device) {
+	/*public InsertDeviceResponse insertDeviceDetails(SingleDevice device) {
 		// TODO Auto-generated method stub
 
 		System.out.println("device is...." + device.toString());
@@ -46,7 +46,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 				+ response);
 
 		return response;
-	}
+	}*/
 
 	public UpdateDeviceResponse updateDeviceDetails(SingleDevice device) {
 		// TODO Auto-generated method stub
@@ -143,7 +143,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 	}
 	
 
-	public Object getDeviceInfoBsId(String bs_id) {
+	/*public Object getDeviceInfoBsId(String bs_id) {
 		// TODO Auto-generated method stub
 		System.out.println("device bs_id is...." + bs_id);
 
@@ -154,9 +154,9 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 				+ response);
 
 		return response;
-	}
+	}*/
 
-	public BatchDeviceResponse insertDevicesDetailsInBatch(BulkDevices devices) {
+	public BatchDeviceResponse updateDevicesDetailsBulk(BulkDevices devices) {
 		// TODO Auto-generated method stub
 		System.out.println("devices info is...." + devices.toString());
 

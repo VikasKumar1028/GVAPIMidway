@@ -14,23 +14,23 @@ import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 
 public interface IDeviceDao {
 	
-	public InsertDeviceResponse insertDeviceDetails(SingleDevice device);
+	/*public InsertDeviceResponse insertDeviceDetails(SingleDevice device);*/
 	
 	public UpdateDeviceResponse updateDeviceDetails(SingleDevice device);
 	
 	public DeviceInformationResponse getDeviceInformationDB(DeviceInformationRequest deviceInformationRequest);
 	
-	public Object getDeviceDetailsBsId(String bsId);
+	/*public Object getDeviceDetailsBsId(String bsId);
 
-	public Object insertDevicesDetailsInBatch(BulkDevices devices);
+	public Object insertDevicesDetailsInBatch(BulkDevices devices);*/
 	
 	public void setDeviceInformationDB(Exchange e);
 	
 	public void updateDeviceInformationDB(Exchange e);
 	
-	public void bulkOperationDeviceInsert(Exchange exchange);
+	/*public void bulkOperationDeviceInsert(Exchange exchange);*/
 
-	public void bulkOperationDeviceUpdate(Exchange exchange);
+	public void bulkOperationDeviceUpload(Exchange exchange);
 
 	
 

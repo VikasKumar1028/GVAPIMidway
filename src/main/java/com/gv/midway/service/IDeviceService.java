@@ -8,15 +8,15 @@ import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 
 public interface IDeviceService {
 	
-	public InsertDeviceResponse insertDeviceDetails(Exchange exchange);
+	/*public InsertDeviceResponse insertDeviceDetails(Exchange exchange);*/
 
 	public UpdateDeviceResponse updateDeviceDetails(Exchange exchange);
 	
 	public DeviceInformationResponse getDeviceInformationDB(Exchange exchange);
 	
-	public Object getDeviceDetailsBsId(Exchange exchange);
+	/*public Object getDeviceDetailsBsId(Exchange exchange);*/
 
-	public void insertDevicesDetailsInBatch(Exchange exchange);
+	public void updateDevicesDetailsBulk(Exchange exchange);
 	
 	public void setDeviceInformationDB(Exchange exchange);
 	

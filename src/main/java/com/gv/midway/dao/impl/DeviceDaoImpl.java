@@ -43,7 +43,7 @@ public class DeviceDaoImpl implements IDeviceDao
 	
 	private Logger log = Logger.getLogger(DeviceDaoImpl.class.getName());
 	
-	public InsertDeviceResponse insertDeviceDetails(SingleDevice device) {
+	/*public InsertDeviceResponse insertDeviceDetails(SingleDevice device) {
 
 		// Simple way using template
 		DeviceInformation deviceInformation=null;
@@ -96,29 +96,25 @@ public class DeviceDaoImpl implements IDeviceDao
    	    
    	 return insertDeviceResponse;
 
-	}
+	}*/
 	
 	public UpdateDeviceResponse updateDeviceDetails(SingleDevice device) {
 		// TODO Auto-generated method stub
 		
 		DeviceInformation deviceInfomation=null;
       try{
-			
-			
-    	  Query searchDeviceQuery = new Query(Criteria
-  				.where("netSuiteId")
-  				.is(device.getDataArea().getDevice().getNetSuiteId())
-  				);
-  		
-    	  deviceInfomation=(DeviceInformation) mongoTemplate.findOne(searchDeviceQuery,DeviceInformation.class);
-			
-			if(deviceInfomation==null){
-				
+		
+    	  DeviceInformation deviceInformationToUpdate=device.getDataArea().getDevice();
+    	  String netSuiteId=device.getDataArea().getDevice().getNetSuiteId();
+    	  
+    	  if(netSuiteId==null||netSuiteId.trim().equals("")){
+    		  
+
 				 Header header= device.getHeader();
 		    	  
 		    	  Response response=new Response();
-		    	  response.setResponseCode(IResponse.NO_DATA_FOUND_CODE);
-		    	  response.setResponseDescription(IResponse.ERROR_DESCRIPTION_NODATA_UPDATEDEVCIE_MIDWAYDB);
+		    	  response.setResponseCode(IResponse.INVALID_PAYLOAD);
+		    	  response.setResponseDescription(IResponse.ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB);
 		    	  response.setResponseStatus(IResponse.ERROR_MESSAGE);
 				
 				  UpdateDeviceResponse updateDeviceResponse=new UpdateDeviceResponse();
@@ -126,15 +122,48 @@ public class DeviceDaoImpl implements IDeviceDao
 				  updateDeviceResponse.setResponse(response);
 				  
 				  return updateDeviceResponse;
+    	  }
+			
+    	  Query searchDeviceQuery = new Query(Criteria
+  				.where("netSuiteId")
+  				.is(device.getDataArea().getDevice().getNetSuiteId())
+  				);
+  		
+    	  deviceInfomation=(DeviceInformation) mongoTemplate.findOne(searchDeviceQuery,DeviceInformation.class);
+    	  
+    	  SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+    	  
+    	  deviceInformationToUpdate.setLastUpdated(sdf.format(new Date()));
+    	  
+    	  Header header= device.getHeader();
+    	  Response response=new Response();
+    	  
+    	  response.setResponseCode(IResponse.SUCCESS_CODE);
+    	  response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_UPDATE_MIDWAYDB);
+    	  response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+		
+		  UpdateDeviceResponse updateDeviceResponse=new UpdateDeviceResponse();
+		  updateDeviceResponse.setHeader(header);
+		  updateDeviceResponse.setResponse(response);
+			
+			if(deviceInfomation==null){
+				
+				  mongoTemplate.insert(deviceInformationToUpdate);
+				  
+				  
 			}
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-		    device.getDataArea().getDevice().setLastUpdated(sdf.format(new Date()));
+			
+			else
+			{
+				deviceInformationToUpdate.setMidwayMasterDeviceId(deviceInfomation.getMidwayMasterDeviceId());
+				
+				 mongoTemplate.save(deviceInformationToUpdate);
+				
+				
+			}
+			
+			return updateDeviceResponse;
 		    
-		    DeviceInformation deviceInformationToUpdate= device.getDataArea().getDevice();
-		    
-		    deviceInformationToUpdate.setMidwayMasterDeviceId(deviceInfomation.getMidwayMasterDeviceId());
-		    
-			mongoTemplate.save(deviceInformationToUpdate);
 	       }
 	       
 	       catch(Exception e)
@@ -155,18 +184,7 @@ public class DeviceDaoImpl implements IDeviceDao
 	    	 
 	       }
       
-		Header header = device.getHeader();
-
-		Response response = new Response();
-		response.setResponseCode(IResponse.SUCCESS_CODE);
-		response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_UPDATE_MIDWAYDB);
-		response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
-
-		UpdateDeviceResponse updateDeviceResponse = new UpdateDeviceResponse();
-		updateDeviceResponse.setHeader(header);
-		updateDeviceResponse.setResponse(response);
-
-		return updateDeviceResponse;
+		
 			
 	}
 
@@ -306,9 +324,9 @@ public class DeviceDaoImpl implements IDeviceDao
 	}
 
 
-	public Object getDeviceDetailsBsId(String bsId) {
+	/*public Object getDeviceDetailsBsId(String bsId) {
 		// TODO Auto-generated method stub
-		/*
+		
 		Integer bs_id;
 		try{
 			
@@ -336,20 +354,20 @@ public class DeviceDaoImpl implements IDeviceDao
 			return Response.status(404).entity(responseMessage).build(); 
 		}
 		
-		return Response.status(200).entity(deviceList).build(); */
+		return Response.status(200).entity(deviceList).build(); 
 		
 		return null;
-	}
+	}*/
 
 
-	public Object insertDevicesDetailsInBatch(BulkDevices devices) {
+	/*public Object insertDevicesDetailsInBatch(BulkDevices devices) {
 		// TODO Auto-generated method stub
-	/*	BatchTask batchTask= new BatchTask(mongoTemplate,"insert" , devices);
+		BatchTask batchTask= new BatchTask(mongoTemplate,"insert" , devices);
 		
-		return batchTask.doBatchJob();*/
+		return batchTask.doBatchJob();
 		
 		return null;
-	}
+	}*/
 
 	public void setDeviceInformationDB(Exchange exchange) {
 		// TODO Auto-generated method stub
@@ -393,20 +411,75 @@ public class DeviceDaoImpl implements IDeviceDao
 		}
 	}
 
-	public void bulkOperationDeviceInsert(Exchange exchange)
+	public void bulkOperationDeviceUpload(Exchange exchange)
 	{
 		// TODO Auto-generated method stub
 
-		DeviceInformation deviceInformation = (DeviceInformation) exchange
+		DeviceInformation deviceInformationToUpdate = (DeviceInformation) exchange
 				.getIn().getBody();
+		
+		String netSuiteId=deviceInformationToUpdate.getNetSuiteId();
 
 		try {
 
-			SimpleDateFormat sdf = new SimpleDateFormat(
-					"yyyy-MM-dd'T'HH:mm:ssZ");
-			deviceInformation.setLastUpdated(sdf.format(new Date()));
+	    	  if(netSuiteId==null||netSuiteId.trim().equals("")){
+	    		  
 
-			mongoTemplate.insert(deviceInformation);
+	    	   List<BatchDeviceId> batchDeviceList = (List<BatchDeviceId>) exchange
+	  					.getProperty(IConstant.BULK_ERROR_LIST);
+	  			BatchDeviceId errorBatchDeviceId = new BatchDeviceId();
+	  			errorBatchDeviceId.setErrorMessage(IResponse.ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB);
+	  			batchDeviceList.add(errorBatchDeviceId);
+
+	  		
+	  			exchange.setProperty(IConstant.BULK_ERROR_LIST, batchDeviceList);	
+					
+					 
+	    	  }
+	    	  
+	    	  else
+	    	  {
+	    		Query searchDeviceQuery = new Query(Criteria
+	    					.where("netSuiteId")
+	    					.is(netSuiteId)
+	    					);
+	    			
+	    		DeviceInformation deviceInformation=(DeviceInformation) mongoTemplate.findOne(searchDeviceQuery,DeviceInformation.class); 
+	    		
+	    		SimpleDateFormat sdf = new SimpleDateFormat(
+						"yyyy-MM-dd'T'HH:mm:ssZ");
+				deviceInformationToUpdate.setLastUpdated(sdf.format(new Date()));
+	    			
+	    	     if(deviceInformation==null)
+	    	     
+	    	     {
+	    				
+	  				mongoTemplate.insert(deviceInformationToUpdate);
+	  				  
+	  				
+	  				  
+	  				  
+	  			}
+	  			
+	  			else
+	  			{
+	  				deviceInformationToUpdate.setMidwayMasterDeviceId(deviceInformation.getMidwayMasterDeviceId());
+	  				
+	  				 mongoTemplate.save(deviceInformationToUpdate);
+	  				
+	  				
+	  			}
+	    		  
+	    	  }
+			
+
+	    	   List<BatchDeviceId> batchDeviceList = (List<BatchDeviceId>) exchange
+						.getProperty(IConstant.BULK_SUCCESS_LIST);
+				BatchDeviceId successBatchDeviceId = new BatchDeviceId();
+				successBatchDeviceId.setNetSuiteId(netSuiteId);
+				batchDeviceList.add(successBatchDeviceId);
+				
+				exchange.setProperty(IConstant.BULK_SUCCESS_LIST, batchDeviceList);
 		}
 
 		catch (Exception e) {
@@ -415,34 +488,29 @@ public class DeviceDaoImpl implements IDeviceDao
 			List<BatchDeviceId> batchDeviceList = (List<BatchDeviceId>) exchange
 					.getProperty(IConstant.BULK_ERROR_LIST);
 			BatchDeviceId errorBatchDeviceId = new BatchDeviceId();
-			errorBatchDeviceId.setNetSuiteId(deviceInformation.getNetSuiteId());
+			errorBatchDeviceId.setNetSuiteId(netSuiteId);
+			errorBatchDeviceId.setErrorMessage(IResponse.ERROR_DESCRIPTION_UPDATE_MIDWAYDB);
 			batchDeviceList.add(errorBatchDeviceId);
 
 		
 			exchange.setProperty(IConstant.BULK_ERROR_LIST, batchDeviceList);
 			
-			return;
+			
 		}
 
 		
 		
-		List<BatchDeviceId> batchDeviceList = (List<BatchDeviceId>) exchange
-				.getProperty(IConstant.BULK_SUCCESS_LIST);
-		BatchDeviceId successBatchDeviceId = new BatchDeviceId();
-		successBatchDeviceId.setNetSuiteId(deviceInformation.getNetSuiteId());
-		batchDeviceList.add(successBatchDeviceId);
 		
-		exchange.setProperty(IConstant.BULK_SUCCESS_LIST, batchDeviceList);
 				
 	}
 	
 	
-	public void bulkOperationDeviceUpdate(Exchange exchange)
+	/*public void bulkOperationDeviceUpdate(Exchange exchange)
 	{
 		// TODO Auto-generated method stub
 		
 		
-	}
+	}*/
 
 	
 

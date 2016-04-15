@@ -19,6 +19,7 @@ import com.gv.midway.pojo.device.request.BulkDevices;
 import com.gv.midway.pojo.device.request.SingleDevice;
 import com.gv.midway.pojo.device.response.BatchDeviceResponse;
 import com.gv.midway.pojo.device.response.InsertDeviceResponse;
+import com.gv.midway.pojo.device.response.UpdateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -35,18 +36,18 @@ public interface IAdaptaionLayerService {
 	@ApiOperation(value = "Activate devices")
 	String activateDevice();
 */
-	@POST
+	/*@POST
 	@Path("/cell")
 	@Produces("application/json")
 	@Consumes("application/json")
 	@ApiOperation(value = "Insert Device Details")
-	InsertDeviceResponse insertDeviceDetails(SingleDevice device);
+	InsertDeviceResponse insertDeviceDetails(SingleDevice device);*/
 
 	@PUT
-	@Path("/cell/update")
+	@Path("/cell/upload")
 	@Produces("application/json")
-	@ApiOperation(value = "Update Device Details")
-	Object updateDeviceDetails(SingleDevice device);
+	@ApiOperation(value = "Insert or Update Device Details")
+	UpdateDeviceResponse updateDeviceDetails(SingleDevice device);
 
 	@GET
 	@Path("/cell/info/midway")
@@ -65,18 +66,18 @@ public interface IAdaptaionLayerService {
 			@QueryParam("applicationName") final String applicationName,@QueryParam("bsCarrier") final String bsCarrier,@QueryParam("netSuiteId") final String netSuiteId,
 			@QueryParam("deviceId") final String deviceId,@QueryParam("kind") final String kind);
 
-	@GET
+	/*@GET
 	@Path("/cell/info/bs_id/{bs_id}")
 	@Produces("application/json")
 	@ApiOperation(value = "Get Device Details By bsId")
-	Object getDeviceInfoBsId(@PathParam("bs_id") final String bs_id);
+	Object getDeviceInfoBsId(@PathParam("bs_id") final String bs_id);*/
 
 	@POST
-	@Path("/cells")
+	@Path("/cells/upload/bulk")
 	@Produces("application/json")
 	@Consumes("application/json")
-	@ApiOperation(value = "Insert Device Details in Bulk")
-	BatchDeviceResponse insertDevicesDetailsInBatch(BulkDevices device);
+	@ApiOperation(value = "Insert or Update Device Details in Bulk")
+	BatchDeviceResponse updateDevicesDetailsBulk(BulkDevices device);
 
 	/*@POST
 	@Path("/device/information")

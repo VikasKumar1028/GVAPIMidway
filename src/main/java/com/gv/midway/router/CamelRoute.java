@@ -76,7 +76,6 @@ public class CamelRoute extends RouteBuilder {
 	 */
 
 	@Autowired
-	
 	private IDeviceService iDeviceService;
 
 	@Autowired
@@ -387,12 +386,12 @@ public class CamelRoute extends RouteBuilder {
 	
 //*****  DEVICE DEACTIVATION END		
 		
-		/**Insert Single Device details in MasterDB **/
+		/**Insert Single Device details in MasterDB **//*
 		from("direct:insertDeviceDetails")
 				.bean(iDeviceService, "insertDeviceDetails").to("log:input")
-				.end();
+				.end();*/
 
-		/**Update Single Device details in MasterDB **/
+		/**Insert or Update Single Device details in MasterDB **/
 		from("direct:updateDeviceDetails")
 				.bean(iDeviceService, "updateDeviceDetails").to("log:input")
 				.end();
@@ -401,13 +400,13 @@ public class CamelRoute extends RouteBuilder {
 		from("direct:getDeviceInformationDB")
 				.bean(iDeviceService, "getDeviceInformationDB").to("log:input").end();
 
-		from("direct:getDeviceDetailsBsId")
+		/*from("direct:getDeviceDetailsBsId")
 				.bean(iDeviceService, "getDeviceDetailsBsId").to("log:input")
-				.end();
+				.end();*/
 
-		/**Insert Batch Device details in MasterDB.**/
-		from("direct:insertDeviceDetailsinBatch").onCompletion().modeBeforeConsumer().setBody().body().process(new BulkDeviceProcessor()).end()
-				.bean(iDeviceService, "insertDevicesDetailsInBatch").split().method("bulkOperationSplitter").recipientList().method("bulkOperationServiceRouter")
+		/**Insert or Upload Batch Device details in MasterDB.**/
+		from("direct:updateDevicesDetailsBulk").onCompletion().modeBeforeConsumer().setBody().body().process(new BulkDeviceProcessor()).end()
+				.bean(iDeviceService, "updateDevicesDetailsBulk").split().method("bulkOperationSplitter").recipientList().method("bulkOperationServiceRouter")
 				;
 		
 		

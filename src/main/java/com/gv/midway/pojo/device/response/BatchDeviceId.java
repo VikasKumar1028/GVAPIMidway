@@ -4,6 +4,7 @@ public class BatchDeviceId {
 
 	 private String netSuiteId;
 	 
+	 private String errorMessage;
 
 	public String getNetSuiteId() {
 		return netSuiteId;
@@ -13,19 +14,20 @@ public class BatchDeviceId {
 		this.netSuiteId = netSuiteId;
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("BatchDeviceId [netSuiteId=");
-		builder.append(netSuiteId);
-		builder.append("]");
-		return builder.toString();
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result
+				+ ((errorMessage == null) ? 0 : errorMessage.hashCode());
 		result = prime * result
 				+ ((netSuiteId == null) ? 0 : netSuiteId.hashCode());
 		return result;
@@ -40,6 +42,11 @@ public class BatchDeviceId {
 		if (getClass() != obj.getClass())
 			return false;
 		BatchDeviceId other = (BatchDeviceId) obj;
+		if (errorMessage == null) {
+			if (other.errorMessage != null)
+				return false;
+		} else if (!errorMessage.equals(other.errorMessage))
+			return false;
 		if (netSuiteId == null) {
 			if (other.netSuiteId != null)
 				return false;
@@ -47,6 +54,20 @@ public class BatchDeviceId {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("BatchDeviceId [netSuiteId=");
+		builder.append(netSuiteId);
+		builder.append(", errorMessage=");
+		builder.append(errorMessage);
+		builder.append("]");
+		return builder.toString();
+	}
+	 
+
+	
 	 
 	 
 }
