@@ -75,8 +75,10 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 				ActivateDeviceId businessPayLoadActivateDeviceId = new ActivateDeviceId();
 
-				/*businessPayLoadActivateDeviceId.seteAPCode(activateDeviceId
-						.geteAPCode());*/
+				/*
+				 * businessPayLoadActivateDeviceId.seteAPCode(activateDeviceId
+				 * .geteAPCode());
+				 */
 				businessPayLoadActivateDeviceId.setId(activateDeviceId.getId());
 				businessPayLoadActivateDeviceId.setKind(activateDeviceId
 						.getKind());
@@ -264,7 +266,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 						IConstant.CARRIER_TRANSACTION_STATUS_ERROR);
 				update.set(ITransaction.LAST_TIME_STAMPUPDATED,
 						CommonUtil.getCurrentTimeStamp());
-		
+
 			} else {
 
 				VerizonProvisoningResponse responsePayload = mapper.readValue(
@@ -288,9 +290,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 	}
 
-	
-	
-	
 	public void populateKoreTransactionalErrorResponse(Exchange exchange) {
 
 		Query searchUserQuery = new Query(
@@ -383,55 +382,114 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 	}
 
+	/*
+	 * public void populateConnectionErrorResponse(Exchange exchange, String
+	 * errorType) {
+	 * 
+	 * Query searchUserQuery = null; if ("KORE".equals(exchange
+	 * .getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME))) { searchUserQuery =
+	 * new Query( Criteria.where("midwayTransationID") .is(exchange
+	 * .getProperty(IConstant.MIDWAY_TRANSACTION_ID)) .andOperator(
+	 * Criteria.where("deviceNumber") .is(exchange
+	 * .getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER)))); String
+	 * errorResponseBody = IConstant.MIDWAY_CONNECTION_ERROR;
+	 * 
+	 * Update update = new Update(); update.set(ITransaction.CALL_BACK_PAYLOAD,
+	 * errorResponseBody); update.set(ITransaction.CARRIER_ERROR_DECRIPTION,
+	 * errorResponseBody); update.set(ITransaction.CARRIER_ERROR_DECRIPTION,
+	 * errorResponseBody); update.set(ITransaction.CARRIER_STATUS, "Error");
+	 * update.set(ITransaction.LAST_TIME_STAMPUPDATED,
+	 * CommonUtil.getCurrentTimeStamp());
+	 * mongoTemplate.updateMulti(searchUserQuery, update, Transaction.class);
+	 * 
+	 * } else if ("VERIZON".equals(exchange
+	 * .getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME))) {
+	 * 
+	 * searchUserQuery = new Query(Criteria.where("midwayTransationID")
+	 * .is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)));
+	 * 
+	 * Update update = new Update();
+	 * 
+	 * update.set(ITransaction.MIDWAY_STATUS, IResponse.ERROR_MESSAGE);
+	 * update.set(ITransaction.CALL_BACK_PAYLOAD,
+	 * IConstant.MIDWAY_CONNECTION_ERROR);
+	 * update.set(ITransaction.CARRIER_ERROR_DECRIPTION,
+	 * IConstant.MIDWAY_CONNECTION_ERROR);
+	 * update.set(ITransaction.CARRIER_STATUS,
+	 * IConstant.CARRIER_TRANSACTION_STATUS_ERROR);
+	 * update.set(ITransaction.CARRIER_TRANSATION_ID, "");
+	 * update.set(ITransaction.LAST_TIME_STAMPUPDATED,
+	 * CommonUtil.getCurrentTimeStamp()); WriteResult result =
+	 * mongoTemplate.updateMulti(searchUserQuery, update, Transaction.class);
+	 * 
+	 * }
+	 * 
+	 * exchange.setProperty(IConstant.RESPONSE_DESCRIPTION,
+	 * IResponse.ERROR_DESCRIPTION_CONNECTION_MIDWAYDB);
+	 * exchange.setProperty(IConstant.RESPONSE_STATUS, IResponse.ERROR_MESSAGE);
+	 * exchange.setProperty(IConstant.RESPONSE_CODE,
+	 * IResponse.CONNECTION_ERROR_CODE);
+	 * 
+	 * }
+	 */
 	public void populateConnectionErrorResponse(Exchange exchange,
 			String errorType) {
 
-		Query searchUserQuery = null;
-		if ("KORE".equals(exchange
-				.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME))) {
-			searchUserQuery = new Query(
-					Criteria.where("midwayTransationID")
-							.is(exchange
-									.getProperty(IConstant.MIDWAY_TRANSACTION_ID))
-							.andOperator(
-									Criteria.where("deviceNumber")
-											.is(exchange
-													.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
-			String errorResponseBody = IConstant.MIDWAY_CONNECTION_ERROR;
+		// Applicable for provisioning request where we have Transaction Table
+		// Not Applicable for device Information
+		if (CommonUtil.isProvisioningMethod(exchange.getFromEndpoint()
+				.toString())) {
+			Query searchUserQuery = null;
+			if ("KORE".equals(exchange
+					.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME))) {
+				searchUserQuery = new Query(
+						Criteria.where("midwayTransationID")
+								.is(exchange
+										.getProperty(IConstant.MIDWAY_TRANSACTION_ID))
+								.andOperator(
+										Criteria.where("deviceNumber")
+												.is(exchange
+														.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
+				String errorResponseBody = IConstant.MIDWAY_CONNECTION_ERROR;
 
-			Update update = new Update();
-			update.set(ITransaction.CALL_BACK_PAYLOAD, errorResponseBody);
-			update.set(ITransaction.CARRIER_ERROR_DECRIPTION, errorResponseBody);
-			update.set(ITransaction.CARRIER_ERROR_DECRIPTION, errorResponseBody);
-			update.set(ITransaction.CARRIER_STATUS, "Error");
-			update.set(ITransaction.LAST_TIME_STAMPUPDATED,
-					CommonUtil.getCurrentTimeStamp());
-			mongoTemplate.updateMulti(searchUserQuery, update,
-					Transaction.class);
+				Update update = new Update();
+				update.set(ITransaction.CALL_BACK_PAYLOAD, errorResponseBody);
+				update.set(ITransaction.CARRIER_ERROR_DECRIPTION,
+						errorResponseBody);
+				update.set(ITransaction.CARRIER_ERROR_DECRIPTION,
+						errorResponseBody);
+				update.set(ITransaction.CARRIER_STATUS, "Error");
+				update.set(ITransaction.LAST_TIME_STAMPUPDATED,
+						CommonUtil.getCurrentTimeStamp());
+				mongoTemplate.updateMulti(searchUserQuery, update,
+						Transaction.class);
 
-		} else if ("VERIZON".equals(exchange
-				.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME))) {
+			} else if ("VERIZON".equals(exchange
+					.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME))) {
 
-			searchUserQuery = new Query(Criteria.where("midwayTransationID")
-					.is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)));
+				searchUserQuery = new Query(Criteria
+						.where("midwayTransationID")
+						.is(exchange
+								.getProperty(IConstant.MIDWAY_TRANSACTION_ID)));
 
-			Update update = new Update();
+				Update update = new Update();
 
-			update.set(ITransaction.MIDWAY_STATUS, IResponse.ERROR_MESSAGE);
-			update.set(ITransaction.CALL_BACK_PAYLOAD,
-					IConstant.MIDWAY_CONNECTION_ERROR);
-			update.set(ITransaction.CARRIER_ERROR_DECRIPTION,
-					IConstant.MIDWAY_CONNECTION_ERROR);
-			update.set(ITransaction.CARRIER_STATUS,
-					IConstant.CARRIER_TRANSACTION_STATUS_ERROR);
-			update.set(ITransaction.CARRIER_TRANSATION_ID, "");
-			update.set(ITransaction.LAST_TIME_STAMPUPDATED,
-					CommonUtil.getCurrentTimeStamp());
-			WriteResult result = mongoTemplate.updateMulti(searchUserQuery,
-					update, Transaction.class);
+				update.set(ITransaction.MIDWAY_STATUS, IResponse.ERROR_MESSAGE);
+				update.set(ITransaction.CALL_BACK_PAYLOAD,
+						IConstant.MIDWAY_CONNECTION_ERROR);
+				update.set(ITransaction.CARRIER_ERROR_DECRIPTION,
+						IConstant.MIDWAY_CONNECTION_ERROR);
+				update.set(ITransaction.CARRIER_STATUS,
+						IConstant.CARRIER_TRANSACTION_STATUS_ERROR);
+				update.set(ITransaction.CARRIER_TRANSATION_ID, "");
+				update.set(ITransaction.LAST_TIME_STAMPUPDATED,
+						CommonUtil.getCurrentTimeStamp());
+				WriteResult result = mongoTemplate.updateMulti(searchUserQuery,
+						update, Transaction.class);
+
+			}
 
 		}
-
 		exchange.setProperty(IConstant.RESPONSE_DESCRIPTION,
 				IResponse.ERROR_DESCRIPTION_CONNECTION_MIDWAYDB);
 		exchange.setProperty(IConstant.RESPONSE_STATUS, IResponse.ERROR_MESSAGE);

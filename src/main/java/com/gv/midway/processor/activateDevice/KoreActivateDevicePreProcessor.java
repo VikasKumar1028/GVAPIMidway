@@ -6,10 +6,11 @@ import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.activateDevice.kore.request.ActivateDeviceRequestKore;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
+import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequestDataArea;
+import com.gv.midway.pojo.activateDevice.verizon.request.ActivateDeviceRequestVerizon;
 import com.gv.midway.pojo.transaction.Transaction;
 
 public class KoreActivateDevicePreProcessor implements Processor {
@@ -41,11 +42,20 @@ public class KoreActivateDevicePreProcessor implements Processor {
 		ActivateDeviceRequest activateDeviceRequest = (ActivateDeviceRequest)
 				transaction.getDevicePayload();
 
+		ActivateDeviceRequestVerizon businessRequest=new  ActivateDeviceRequestVerizon();	
+		ActivateDeviceRequest proxyRequest = (ActivateDeviceRequest) exchange.getIn()
+			.getBody();
+		
+		businessRequest.setDeviceNumber(proxyRequest.getDataArea().getDevices()[0].getDeviceIds()[0].getId());
+		
+				
 		String deviceId = activateDeviceRequest.getDataArea().getDevices()[0]
 				.getDeviceIds()[0].getId();
-		String eAPCode = activateDeviceRequest.getDataArea().getDevices()[0]
-				.getDeviceIds()[0].geteAPCode();
-
+/*		String eAPCode = activateDeviceRequest.getDataArea().getDevices()[0]
+				.getDeviceIds()[0].geteAPCode();*/
+		String eAPCode = activateDeviceRequest.getDataArea().geteAPCode();
+		
+		
 		ActivateDeviceRequestKore acticationDeviceRequestKore = new ActivateDeviceRequestKore();
 		acticationDeviceRequestKore.setDeviceNumber(deviceId);
 		acticationDeviceRequestKore.setEapCode(eAPCode);

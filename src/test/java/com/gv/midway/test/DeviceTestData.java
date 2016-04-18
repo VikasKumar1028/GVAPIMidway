@@ -143,7 +143,7 @@ public class DeviceTestData extends Header {
 		
 		deviceId.setId("89014103277405946190");
 		deviceId.setKind("ghgjg");
-		deviceId.seteAPCode("eAPCode");
+		/*deviceId.seteAPCode("eAPCode");*/
 		
 
 		ActivateDeviceIdArray[0] = deviceId;
@@ -160,9 +160,9 @@ public class DeviceTestData extends Header {
 	     System.out.println("Delivered Source Name----------------" +req.getHeader().getSourceName()); 
 	      
 	     //null pointer check for EAP Code if Source is 'KORE'
-	     if(req.getHeader().getSourceName()!=null && req.getHeader().getSourceName().equalsIgnoreCase("KORE") && req.getDataArea().getDevices()[0].getDeviceIds()[0].geteAPCode().isEmpty()){
+	    /* if(req.getHeader().getSourceName()!=null && req.getHeader().getSourceName().equalsIgnoreCase("KORE") && req.getDataArea().getDevices()[0].getDeviceIds()[0].geteAPCode().isEmpty()){
 	    	 throw new AssertionError("EAP Code is Mandatory for KORE");
-	     }
+	     }*/
 			  
 	     if(!expectedActivateDeviceRequest.getHeader().getSourceName().equals(req.getHeader().getSourceName())){
 	    	 throw new AssertionError("Source Name is not correct");

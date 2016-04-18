@@ -53,4 +53,15 @@ public class CommonUtil {
 
 		return sourceDirived;
 	}
+
+	public static boolean isProvisioningMethod(String endPoint) {
+
+		if (endPoint.contains("activate") || endPoint.contains("deactivate")) {
+
+			return true;
+
+		} else
+
+			return false;
+	}
 }

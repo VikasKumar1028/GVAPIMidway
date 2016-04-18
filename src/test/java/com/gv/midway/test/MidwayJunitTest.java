@@ -140,7 +140,7 @@ public class MidwayJunitTest extends Assert {
 		
 		deviceId.setId("89014103277405946190");
 		deviceId.setKind("ghgjg");
-		deviceId.seteAPCode("eAPCode");
+	/*	deviceId.seteAPCode("eAPCode");*/
 		
 
 		ActivateDeviceIdArray[0] = deviceId;
