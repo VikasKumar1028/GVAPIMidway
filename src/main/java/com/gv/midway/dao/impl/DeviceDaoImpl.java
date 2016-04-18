@@ -400,15 +400,37 @@ public class DeviceDaoImpl implements IDeviceDao
 		// TODO Auto-generated method stub
 		DeviceInformationResponse deviceInformationResponse=(DeviceInformationResponse)exchange.getIn().getBody();
 		
+		DeviceInformation deviceInformation=deviceInformationResponse.getDataArea().getDevices();
+		
 		if(exchange.getProperty(IConstant.MIDWAY_DEVICEINFO_DB)!=null)
 		{
 			
-			DeviceInformation deviceInformation=deviceInformationResponse.getDataArea().getDevices();
+			log.info("device info was already in master DB");
 			
 			log.info("device info carrier is........."+deviceInformation.toString());
 			
+			deviceInformation.setMidwayMasterDeviceId(deviceInformation.getMidwayMasterDeviceId());
+			
 			mongoTemplate.save(deviceInformation);
 		}
+		
+		else
+		{
+			log.info("device info was not already in master DB");
+			
+			String netSuiteId=(String) exchange.getProperty(IConstant.MIDWAY_NETSUITE_ID);
+			
+			log.info("device info to insert for netsuideId "+netSuiteId);
+			
+			deviceInformation.setNetSuiteId(netSuiteId);
+			
+			mongoTemplate.insert(deviceInformation);
+			
+		}
+		DeviceInformationResponseDataArea deviceInformationResponseDataArea=deviceInformationResponse.getDataArea();
+		deviceInformationResponseDataArea.setDevices(deviceInformation);
+		deviceInformationResponse.setDataArea(deviceInformationResponseDataArea);
+		exchange.getIn().setBody(deviceInformationResponse);
 	}
 
 	public void bulkOperationDeviceUpload(Exchange exchange)

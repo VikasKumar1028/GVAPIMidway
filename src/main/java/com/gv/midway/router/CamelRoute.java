@@ -173,8 +173,9 @@ public class CamelRoute extends RouteBuilder {
 							.endChoice()
 	
 							.when(header("derivedCarrierName").isEqualTo("VERIZON"))
-									.doTry()
+									/*.doTry()
 										.bean(iSessionService, "setContextTokenInExchange")
+										.bean(iTransactionalService,"populateActivateDBPayload")
 										.process(new VerizonDeviceInformationPreProcessor())
 										.bean(iAuditService, "auditExternalRequestCall")
 										.to(uriRestVerizonEndPoint)
@@ -185,7 +186,11 @@ public class CamelRoute extends RouteBuilder {
 									.doCatch(CxfOperationException.class)
 										.bean(iAuditService, "auditExternalExceptionResponseCall")
 										.process(new VerizonGenericExceptionProcessor(env))
-									.endDoTry()
+									.endDoTry()*/
+									
+									//will store only one time in Audit even on connection failure
+									.bean(iAuditService, "auditExternalRequestCall")
+									.to("direct:VerizonDeviceInformationCarrierSubProcess")
 	
 							.endChoice()
 							.end()
@@ -193,6 +198,30 @@ public class CamelRoute extends RouteBuilder {
 					.to("log:input")
 				.endChoice()
 				.end();
+		
+		
+		from("direct:VerizonDeviceInformationCarrierSubProcess")
+		.doTry()
+		.to("direct:VerizonDeviceInformationCarrierSubProcessFlow")
+		.doCatch(CxfOperationException.class)
+		.bean(iAuditService, "auditExternalExceptionResponseCall")
+		.process(new VerizonGenericExceptionProcessor(env)).endDoTry()
+		.end();
+
+// SubFlow: Verizon Device Information
+from("direct:VerizonDeviceInformationCarrierSubProcessFlow")
+		.errorHandler(noErrorHandler())
+		// REMOVED Audit will store record 3 times in case of failure
+		// (see onException for connection.class above)
+		// .bean(iAuditService, "auditExternalRequestCall")
+		.bean(iSessionService, "setContextTokenInExchange")
+		.process(new VerizonDeviceInformationPreProcessor())
+		.to(uriRestVerizonEndPoint)
+		.unmarshal()
+		.json(JsonLibrary.Jackson, DeviceInformationResponseVerizon.class)
+		.bean(iAuditService, "auditExternalResponseCall").bean(iDeviceService, "setDeviceInformationDB")
+		.process(new VerizonDeviceInformationPostProcessor(env)).bean(iDeviceService, "updateDeviceInformationDB");
+		
 		
 //***** DEVICE ACTIVATION BEGIN		
 		

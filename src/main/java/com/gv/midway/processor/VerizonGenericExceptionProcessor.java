@@ -88,7 +88,7 @@ public class VerizonGenericExceptionProcessor implements Processor {
 		
 		}
 
-		if ("Endpoint[direct://deviceInformation]".equals(exchange
+		if ("Endpoint[direct:deviceInformationCarrier]".equals(exchange
 				.getFromEndpoint().toString())) {
 
 			DeviceInformationResponse responseObject = new DeviceInformationResponse();

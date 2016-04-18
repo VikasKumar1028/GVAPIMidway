@@ -137,7 +137,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 		deviceInformationRequest.setDataArea(dataArea);
 		
 		DeviceInformationResponse response = (DeviceInformationResponse)producer.requestBody(
-				"direct:getDeviceInformationCarrier", deviceInformationRequest);
+				"direct:deviceInformationCarrier", deviceInformationRequest);
 		
 		return response;
 	}

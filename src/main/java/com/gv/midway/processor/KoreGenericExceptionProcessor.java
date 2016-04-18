@@ -78,7 +78,7 @@ public class KoreGenericExceptionProcessor implements Processor {
 		response.setResponseStatus(IResponse.ERROR_MESSAGE);
 		response.setResponseDescription(exception.getStatusText());
 
-		if ("Endpoint[direct://deviceInformationCarrier]".equals(exchange
+		if ("Endpoint[direct:deviceInformationCarrier]".equals(exchange
 				.getFromEndpoint().toString())) {
 
 			DeviceInformationResponse responseObject = new DeviceInformationResponse();
