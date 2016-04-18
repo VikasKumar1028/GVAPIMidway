@@ -3,6 +3,7 @@ package com.gv.midway.pojo.deactivateDevice.verizon.request;
 import java.util.Arrays;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.gv.midway.pojo.verizon.CustomFields;
 import com.gv.midway.pojo.verizon.Devices;
@@ -10,6 +11,7 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(Include.NON_EMPTY)
 public class DeactivateDeviceRequestVerizon {
 
 	@ApiModelProperty(value = "The device group that the device belongs to.")
@@ -26,6 +28,9 @@ public class DeactivateDeviceRequestVerizon {
 
 	@ApiModelProperty(value = "Code identifying the reason for the deactivation.")
 	private String reasonCode;
+
+	@ApiModelProperty(value = "The etfWaiver parameter waives the Early Termination Fee (ETF), if applicable.")
+	private String etfWaiver;
 
 	@ApiModelProperty(value = "All identifiers for the device.")
 	private Devices[] devices;
@@ -78,6 +83,14 @@ public class DeactivateDeviceRequestVerizon {
 		this.devices = devices;
 	}
 
+	public String getEtfWaiver() {
+		return etfWaiver;
+	}
+
+	public void setEtfWaiver(String etfWaiver) {
+		this.etfWaiver = etfWaiver;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -86,6 +99,8 @@ public class DeactivateDeviceRequestVerizon {
 				+ ((accountName == null) ? 0 : accountName.hashCode());
 		result = prime * result + Arrays.hashCode(customFields);
 		result = prime * result + Arrays.hashCode(devices);
+		result = prime * result
+				+ ((etfWaiver == null) ? 0 : etfWaiver.hashCode());
 		result = prime * result
 				+ ((groupName == null) ? 0 : groupName.hashCode());
 		result = prime * result
@@ -113,6 +128,11 @@ public class DeactivateDeviceRequestVerizon {
 			return false;
 		if (!Arrays.equals(devices, other.devices))
 			return false;
+		if (etfWaiver == null) {
+			if (other.etfWaiver != null)
+				return false;
+		} else if (!etfWaiver.equals(other.etfWaiver))
+			return false;
 		if (groupName == null) {
 			if (other.groupName != null)
 				return false;
@@ -133,24 +153,11 @@ public class DeactivateDeviceRequestVerizon {
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("DeactivateDeviceRequestVerizon [groupName=");
-		builder.append(groupName);
-		builder.append(", accountName=");
-		builder.append(accountName);
-		builder.append(", customFields=");
-		builder.append(Arrays.toString(customFields));
-		builder.append(", servicePlan=");
-		builder.append(servicePlan);
-		builder.append(", reasonCode=");
-		builder.append(reasonCode);
-		builder.append(", devices=");
-		builder.append(Arrays.toString(devices));
-		builder.append("]");
-		return builder.toString();
+		return "DeactivateDeviceRequestVerizon [groupName=" + groupName
+				+ ", accountName=" + accountName + ", customFields="
+				+ Arrays.toString(customFields) + ", servicePlan="
+				+ servicePlan + ", reasonCode=" + reasonCode + ", etfWaiver="
+				+ etfWaiver + ", devices=" + Arrays.toString(devices) + "]";
 	}
-	
-
-	
 
 }
