@@ -41,13 +41,7 @@ public class KoreActivateDevicePreProcessor implements Processor {
 	
 		ActivateDeviceRequest activateDeviceRequest = (ActivateDeviceRequest)
 				transaction.getDevicePayload();
-
-		ActivateDeviceRequestVerizon businessRequest=new  ActivateDeviceRequestVerizon();	
-		ActivateDeviceRequest proxyRequest = (ActivateDeviceRequest) exchange.getIn()
-			.getBody();
-		
-		businessRequest.setDeviceNumber(proxyRequest.getDataArea().getDevices()[0].getDeviceIds()[0].getId());
-		
+	
 				
 		String deviceId = activateDeviceRequest.getDataArea().getDevices()[0]
 				.getDeviceIds()[0].getId();
