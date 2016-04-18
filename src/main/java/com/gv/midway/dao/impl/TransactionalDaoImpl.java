@@ -75,8 +75,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 				ActivateDeviceId businessPayLoadActivateDeviceId = new ActivateDeviceId();
 
-				businessPayLoadActivateDeviceId.seteAPCode(activateDeviceId
-						.geteAPCode());
+				/*businessPayLoadActivateDeviceId.seteAPCode(activateDeviceId
+						.geteAPCode());*/
 				businessPayLoadActivateDeviceId.setId(activateDeviceId.getId());
 				businessPayLoadActivateDeviceId.setKind(activateDeviceId
 						.getKind());

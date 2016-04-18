@@ -2,6 +2,8 @@ package com.gv.midway.pojo.activateDevice.request;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 
+
+
 import java.util.Arrays;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -46,6 +48,10 @@ public class ActivateDeviceRequestDataArea {
 
 	@ApiModelProperty(value = "MDN zip code number" , required=true)
 	private String mdnZipCode;
+	
+	@ApiModelProperty(value = "The EAP code is the Express Activation Profile to use for the activation.")
+	private String eAPCode;
+
 
 	@ApiModelProperty(value = "All identifiers for the device.")
 	private ActivateDevices[] devices;
@@ -171,6 +177,7 @@ public class ActivateDeviceRequestDataArea {
 				+ ((costCenterCode == null) ? 0 : costCenterCode.hashCode());
 		result = prime * result + Arrays.hashCode(customFields);
 		result = prime * result + Arrays.hashCode(devices);
+		result = prime * result + ((eAPCode == null) ? 0 : eAPCode.hashCode());
 		result = prime * result
 				+ ((groupName == null) ? 0 : groupName.hashCode());
 		result = prime * result + ((leadId == null) ? 0 : leadId.hashCode());
@@ -224,6 +231,11 @@ public class ActivateDeviceRequestDataArea {
 			return false;
 		if (!Arrays.equals(devices, other.devices))
 			return false;
+		if (eAPCode == null) {
+			if (other.eAPCode != null)
+				return false;
+		} else if (!eAPCode.equals(other.eAPCode))
+			return false;
 		if (groupName == null) {
 			if (other.groupName != null)
 				return false;
@@ -264,35 +276,24 @@ public class ActivateDeviceRequestDataArea {
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("ActivateDeviceRequestDataArea [groupName=");
-		builder.append(groupName);
-		builder.append(", accountName=");
-		builder.append(accountName);
-		builder.append(", skuNumber=");
-		builder.append(skuNumber);
-		builder.append(", customFields=");
-		builder.append(Arrays.toString(customFields));
-		builder.append(", costCenterCode=");
-		builder.append(costCenterCode);
-		builder.append(", carrierIpPoolName=");
-		builder.append(carrierIpPoolName);
-		builder.append(", servicePlan=");
-		builder.append(servicePlan);
-		builder.append(", primaryPlaceOfUse=");
-		builder.append(primaryPlaceOfUse);
-		builder.append(", leadId=");
-		builder.append(leadId);
-		builder.append(", carrierName=");
-		builder.append(carrierName);
-		builder.append(", publicIpRestriction=");
-		builder.append(publicIpRestriction);
-		builder.append(", mdnZipCode=");
-		builder.append(mdnZipCode);
-		builder.append(", devices=");
-		builder.append(Arrays.toString(devices));
-		builder.append("]");
-		return builder.toString();
+		return "ActivateDeviceRequestDataArea [groupName=" + groupName
+				+ ", accountName=" + accountName + ", skuNumber=" + skuNumber
+				+ ", customFields=" + Arrays.toString(customFields)
+				+ ", costCenterCode=" + costCenterCode + ", carrierIpPoolName="
+				+ carrierIpPoolName + ", servicePlan=" + servicePlan
+				+ ", primaryPlaceOfUse=" + primaryPlaceOfUse + ", leadId="
+				+ leadId + ", carrierName=" + carrierName
+				+ ", publicIpRestriction=" + publicIpRestriction
+				+ ", mdnZipCode=" + mdnZipCode + ", eAPCode=" + eAPCode
+				+ ", devices=" + Arrays.toString(devices) + "]";
+	}
+
+	public String geteAPCode() {
+		return eAPCode;
+	}
+
+	public void seteAPCode(String eAPCode) {
+		this.eAPCode = eAPCode;
 	}
 
 	
