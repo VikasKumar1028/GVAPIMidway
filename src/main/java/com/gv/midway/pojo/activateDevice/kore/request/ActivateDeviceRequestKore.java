@@ -1,26 +1,41 @@
 package com.gv.midway.pojo.activateDevice.kore.request;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.wordnik.swagger.annotations.ApiModelProperty;
+
+@SuppressWarnings("unused")
+@JsonAutoDetect()
 public class ActivateDeviceRequestKore {
 
 	@ApiModelProperty(value = "The number of Device that has to be activated.")
 	private String deviceNumber;
 	
 		@ApiModelProperty(value = "The EAP code is the Express Activation Profile to use for the activation.")
+		@JsonProperty("EAPCode")
 		private String EAPCode;
 
 	public String getDeviceNumber() {
 		return deviceNumber;
 	}
 
+	
 	public void setDeviceNumber(String deviceNumber) {
 		this.deviceNumber = deviceNumber;
 	}
 
-	public String getEapCode() {
+	@SuppressWarnings("unchecked")
+	@JsonSerialize
+	@JsonProperty("EAPCode")
+	public String getEAPCode() {
 		return EAPCode;
 	}
 
-	public void setEapCode(String EAPCode) {
+	@SuppressWarnings("unchecked")
+	@JsonDeserialize
+	@JsonProperty("EAPCode")
+	public void setEAPCode(String EAPCode) {
 		this.EAPCode = EAPCode;
 	}
 
@@ -61,7 +76,7 @@ public class ActivateDeviceRequestKore {
 		StringBuilder builder = new StringBuilder();
 		builder.append("ActivateDeviceRequestKore [deviceNumber=");
 		builder.append(deviceNumber);
-		builder.append(", eapCode=");
+		builder.append(", EAPCode=");
 		builder.append(EAPCode);
 		builder.append("]");
 		return builder.toString();

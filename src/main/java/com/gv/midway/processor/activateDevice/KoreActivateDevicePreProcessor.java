@@ -47,12 +47,12 @@ public class KoreActivateDevicePreProcessor implements Processor {
 				.getDeviceIds()[0].getId();
 /*		String eAPCode = activateDeviceRequest.getDataArea().getDevices()[0]
 				.getDeviceIds()[0].geteAPCode();*/
-		String eAPCode = activateDeviceRequest.getDataArea().geteAPCode();
+		String EAPCode = activateDeviceRequest.getDataArea().geteAPCode();
 		
 		
 		ActivateDeviceRequestKore acticationDeviceRequestKore = new ActivateDeviceRequestKore();
 		acticationDeviceRequestKore.setDeviceNumber(deviceId);
-		acticationDeviceRequestKore.setEapCode(eAPCode);
+		acticationDeviceRequestKore.setEAPCode(EAPCode);
 
 		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,
 				transaction.getDeviceNumber());
