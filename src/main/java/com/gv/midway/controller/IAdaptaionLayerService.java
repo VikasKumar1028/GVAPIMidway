@@ -11,7 +11,7 @@ import javax.ws.rs.QueryParam;
 
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
-import com.gv.midway.pojo.callback.NetsuitGenericResponse;
+import com.gv.midway.pojo.callback.TargetResponse;
 import com.gv.midway.pojo.callback.request.CallBackVerizonRequest;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
@@ -85,6 +85,6 @@ public interface IAdaptaionLayerService {
 	@Path("/device/callback")
 	@Produces("application/json")
 	@Consumes("application/json")
-	@ApiOperation(value = "ActivateDeviceCallbackService")
-	NetsuitGenericResponse activateCallback(CallBackVerizonRequest activateDeviceRequest);
+	@ApiOperation(value = "CallbackService")
+	TargetResponse callbacks(CallBackVerizonRequest activateDeviceRequest);
 }

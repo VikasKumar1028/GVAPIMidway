@@ -62,8 +62,6 @@ import com.gv.midway.service.IDeviceService;
 // import static org.apache.camel.language.simple.SimpleLanguage.simple;
 import com.gv.midway.service.ISessionService;
 import com.gv.midway.service.ITransactionalService;
-import com.gv.midway.service.callbacks.GVCallbackTransactionalService;
-import com.gv.midway.service.callbacks.GVCallbacksService;
 
 /**
  * The Camel route
@@ -90,11 +88,6 @@ public class CamelRoute extends RouteBuilder {
 	@Autowired
 	private ITransactionalService iTransactionalService;
 	
-	@Autowired
-	private GVCallbacksService gvCallBacks;
-	@Autowired
-	private GVCallbackTransactionalService gvCallbackTransactionalService;
-
 	/*
 	 * @Autowired private SessionBean sessionBean;
 	 */
@@ -469,19 +462,19 @@ endChoice()
 		 
 		
 		from("direct:callbacks")
+			.bean(iTransactionalService, "populateCallbackDBPayload")
 			.process(new CallbackPreProcessor())
-			.bean(gvCallBacks, "callbackRequestCall")
+			.bean(iTransactionalService,"findMidwayTransactionId")
 		
-			//			.doTry()
-//			.to(uriRestNetsuitEndPoint)
-//			.doCatch(CxfOperationException.class)
-			.bean(gvCallbackTransactionalService,"populateCallbackDBPayload")
-				//******************DONOT REMOVE THIS COMMENTED CODE **********************
+			//******************DONOT REMOVE THIS COMMENTED CODE **********************
+			//.doTry()
+			//.to(uriRestNetsuitEndPoint)
+			//.doCatch(CxfOperationException.class)
+			
+			
 			.process(new CallbackPostProcessor())
 			.to("kafka:localhost:9092?topic=topic")
 //			.to("kafka:10.10.2.190:9092,10.10.2.190:9093,10.10.2.190:9094?topic=my-replicated-topic")
-			.process(new CallbackKafkaPreProcessor())
-			.bean(gvCallbackTransactionalService,"getCallbackMidwayTransactionID")
 			.process(new CallbackKafkaPostProcessor())
 
 		.end();

@@ -6,7 +6,7 @@ import org.apache.camel.ProducerTemplate;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
-import com.gv.midway.pojo.callback.NetsuitGenericResponse;
+import com.gv.midway.pojo.callback.TargetResponse;
 import com.gv.midway.pojo.callback.request.CallBackVerizonRequest;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
@@ -19,7 +19,6 @@ import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
 import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequestDataArea;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.verizon.DeviceId;
-
 
 @SuppressWarnings("all")
 public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
@@ -53,10 +52,10 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 			String organization, String transactionId, String sourceName,
 			String applicationName, String bsCarrier, String netSuiteId) {
 		// TODO Auto-generated method stub
-		
-		DeviceInformationRequest deviceInformationRequest=new DeviceInformationRequest();
-		
-		Header header=new Header();
+
+		DeviceInformationRequest deviceInformationRequest = new DeviceInformationRequest();
+
+		Header header = new Header();
 		header.setRegion(region);
 		header.setApplicationName(applicationName);
 		header.setBsCarrier(bsCarrier);
@@ -64,10 +63,10 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 		header.setTimestamp(timestamp);
 		header.setTransactionId(transactionId);
 		header.setOrganization(organization);
-		
-		DeviceInformationRequestDataArea dataArea=new DeviceInformationRequestDataArea();
+
+		DeviceInformationRequestDataArea dataArea = new DeviceInformationRequestDataArea();
 		dataArea.setNetSuiteId(netSuiteId);
-		
+
 		deviceInformationRequest.setHeader(header);
 		deviceInformationRequest.setDataArea(dataArea);
 		
@@ -83,10 +82,10 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 			String organization, String transactionId, String sourceName,
 			String applicationName, String bsCarrier, String netSuiteId,String deviceId,String kind) {
 		// TODO Auto-generated method stub
-		
-		DeviceInformationRequest deviceInformationRequest=new DeviceInformationRequest();
-		
-		Header header=new Header();
+
+		DeviceInformationRequest deviceInformationRequest = new DeviceInformationRequest();
+
+		Header header = new Header();
 		header.setRegion(region);
 		header.setApplicationName(applicationName);
 		header.setBsCarrier(bsCarrier);
@@ -94,14 +93,14 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 		header.setTimestamp(timestamp);
 		header.setTransactionId(transactionId);
 		header.setOrganization(organization);
-		
-		DeviceInformationRequestDataArea dataArea=new DeviceInformationRequestDataArea();
+
+		DeviceInformationRequestDataArea dataArea = new DeviceInformationRequestDataArea();
 		dataArea.setNetSuiteId(netSuiteId);
-		DeviceId deviceIdObj=new DeviceId();
+		DeviceId deviceIdObj = new DeviceId();
 		deviceIdObj.setId(deviceId);
 		deviceIdObj.setKind(kind);
 		dataArea.setDeviceId(deviceIdObj);
-		
+
 		deviceInformationRequest.setHeader(header);
 		deviceInformationRequest.setDataArea(dataArea);
 		
@@ -146,9 +145,8 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 				"direct:activateDevice", activateDeviceRequest);
 	}
 
-	public NetsuitGenericResponse activateCallback(CallBackVerizonRequest callbackRequest) {
-		return (NetsuitGenericResponse) producer.requestBody("direct:callbacks", callbackRequest);
+	public TargetResponse callbacks(CallBackVerizonRequest callbackRequest) {
+		return (TargetResponse) producer.requestBody("direct:callbacks", callbackRequest);
 	}
 
-	
 }

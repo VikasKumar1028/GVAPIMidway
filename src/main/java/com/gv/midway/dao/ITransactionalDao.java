@@ -12,4 +12,6 @@ public interface ITransactionalDao {
 	public void populateKoreTransactionalErrorResponse(Exchange exchange);
 	public void populateConnectionErrorResponse(Exchange exchange,String errorType);
 	public void populatePendingKoreCheckStatus(Exchange exchange);
+	public void populateCallbackDBPayload(Exchange exchange);
+	public void findMidwayTransactionId(Exchange exchange);
 }

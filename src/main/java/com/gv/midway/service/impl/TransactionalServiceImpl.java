@@ -49,5 +49,13 @@ public class TransactionalServiceImpl implements ITransactionalService {
 	public void populateConnectionErrorResponse(Exchange exchange,String errorType){
 		transactionalDao.populateConnectionErrorResponse(exchange,errorType);
 	}
+	public void populateCallbackDBPayload(Exchange exchange) {
+		transactionalDao.populateCallbackDBPayload(exchange);
+		
+	}
+	public void findMidwayTransactionId(Exchange exchange) {
+		 transactionalDao.findMidwayTransactionId(exchange);
+		
+	}
 
 }
