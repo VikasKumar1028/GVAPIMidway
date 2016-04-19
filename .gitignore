@@ -2,3 +2,4 @@
 
 src/main/java/com/gv/midway/processor/deviceInformation/VerizonDeviceInformationPreProcessor.java
 src/main/java/com/gv/midway/processor/deviceInformation/VerizonDeviceInformationPreProcessor.java
+/target/

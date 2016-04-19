@@ -169,21 +169,6 @@ public class CamelRoute extends RouteBuilder {
 							.endChoice()
 	
 							.when(header("derivedCarrierName").isEqualTo("VERIZON"))
-									/*.doTry()
-										.bean(iSessionService, "setContextTokenInExchange")
-										.bean(iTransactionalService,"populateActivateDBPayload")
-										.process(new VerizonDeviceInformationPreProcessor())
-										.bean(iAuditService, "auditExternalRequestCall")
-										.to(uriRestVerizonEndPoint)
-										.unmarshal()
-										.json(JsonLibrary.Jackson, DeviceInformationResponseVerizon.class)
-										.bean(iAuditService, "auditExternalResponseCall").bean(iDeviceService, "setDeviceInformationDB")
-										.process(new VerizonDeviceInformationPostProcessor(env)).bean(iDeviceService, "updateDeviceInformationDB")
-									.doCatch(CxfOperationException.class)
-										.bean(iAuditService, "auditExternalExceptionResponseCall")
-										.process(new VerizonGenericExceptionProcessor(env))
-									.endDoTry()*/
-									
 									//will store only one time in Audit even on connection failure
 									.bean(iAuditService, "auditExternalRequestCall")
 									.to("direct:VerizonDeviceInformationCarrierSubProcess")
@@ -277,24 +262,6 @@ from("direct:VerizonDeviceInformationCarrierSubProcessFlow")
 				.process(new VerizonActivateDevicePostProcessor(env));
 		
 		
-//SubFlow: Device Verizon Activation 				
-	/*	from("direct:VerizonActivationFlow")
-					.doTry()						
-							.process(new VerizonActivateDevicePreProcessor())
-							// REMOVED Audit will store record 3 times in case of failure (see onException for connection.class above)
-							//.bean(iAuditService, "auditExternalRequestCall")
-							.to(uriRestVerizonEndPoint)
-							.unmarshal()
-							.json(JsonLibrary.Jackson)
-							.bean(iTransactionalService,"populateVerizonTransactionalResponse")
-							.bean(iAuditService, "auditExternalResponseCall")
-							.process(new VerizonActivateDevicePostProcessor(env))
-					.doCatch(CxfOperationException.class)
-						.bean(iTransactionalService,"populateVerizonTransactionalErrorResponse")
-						.bean(iAuditService, "auditExternalExceptionResponseCall")											
-						.process(new VerizonGenericExceptionProcessor(env))
-					.endDoTry()	.end();
-		*/
 //SubFlow: Device Kore Activation 		
 		from("direct:processActivateKoreTransaction")
 			.log("Wire Tap Thread activation")
@@ -416,18 +383,13 @@ from("direct:VerizonDeviceInformationCarrierSubProcessFlow")
 
 		/**Insert or Update Single Device details in MasterDB **/
 		
-		from("direct:updateDeviceDetails").process(new HeaderProcessor())
-		.choice()
+		from("direct:updateDeviceDetails").choice()
 					.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
-						.choice()
-						.when(header("derivedCarrierName").isEqualTo("VERIZON"))
-								.process(new StubCellUploadProcessor())
-								.to("log:input").endChoice().
+						.process(new StubCellUploadProcessor())
+								.endChoice().
 								otherwise().
-								bean(iDeviceService, "updateDeviceDetails").				
-				to("log:input").
-		endChoice()
-		.end();
+								bean(iDeviceService, "updateDeviceDetails").end();				
+		
 
 		/**Get DeviceInformation from MasterDB and return back to Calling System.**/
 		from("direct:getDeviceInformationDB")
@@ -443,14 +405,11 @@ from("direct:VerizonDeviceInformationCarrierSubProcessFlow")
 		from("direct:updateDevicesDetailsBulk")
 		.choice()
 		.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
-			.choice()
-			.when(header("derivedCarrierName").isEqualTo("VERIZON"))
 					.process(new StubCellBulkUploadProcessor())
-					.to("log:input").endChoice().
-					otherwise().to("direct:updateDevicesDetailsBulkActual").					
-	to("log:input").
-endChoice()
-.end();
+					.endChoice().
+					otherwise().to("direct:updateDevicesDetailsBulkActual").end();					
+
+
 		
 		/**
 		 * Bulk Insert or Update the device in MasterDB using Seda

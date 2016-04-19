@@ -80,7 +80,7 @@ public class DeactivateDeviceId {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("ActivateDeviceId [id=");
+		builder.append("DeactivateDeviceId [id=");
 		builder.append(id);
 		builder.append(", kind=");
 		builder.append(kind);
@@ -90,8 +90,5 @@ public class DeactivateDeviceId {
 		return builder.toString();
 	}
 
-	
-
-	
 
 }
