@@ -389,9 +389,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		Query searchPendingCheckStatusQuery = new Query(Criteria.where(ITransaction.CARRIER_NAME).is("KORE").andOperator(Criteria.where(ITransaction.CARRIER_STATUS).is(IConstant.CARRIER_TRANSACTION_STATUS_PENDING).orOperator(Criteria.where(ITransaction.CARRIER_STATUS).is(IConstant.CARRIER_TRANSACTION_STATUS_ERROR))).andOperator(Criteria.where(ITransaction.MIDWAY_STATUS).is(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR)));
 
-		// List<Transaction> transactionListPendingStatus =
-		// mongoTemplate.find(searchPendingCheckStatusQuery, Transaction.class);
-		// exchange.getIn().setBody(transactionListPendingStatus);
+		List<Transaction> transactionListPendingStatus = mongoTemplate.find(searchPendingCheckStatusQuery, Transaction.class);
+		exchange.getIn().setBody(transactionListPendingStatus);
 	}
 
 	public void populateCallbackDBPayload(Exchange exchange) {
