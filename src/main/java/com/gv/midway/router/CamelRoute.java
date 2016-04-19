@@ -18,6 +18,7 @@ import com.gv.midway.exception.VerizonSessionTokenExpirationException;
 import com.gv.midway.pojo.checkstatus.kore.KoreCheckStatusResponse;
 import com.gv.midway.pojo.deviceInformation.kore.response.DeviceInformationResponseKore;
 import com.gv.midway.pojo.deviceInformation.verizon.response.DeviceInformationResponseVerizon;
+import com.gv.midway.pojo.kore.KoreProvisoningResponse;
 import com.gv.midway.pojo.token.VerizonAuthorizationResponse;
 import com.gv.midway.pojo.token.VerizonSessionLoginResponse;
 import com.gv.midway.pojo.verizon.VerizonProvisoningResponse;
@@ -318,10 +319,11 @@ from("direct:VerizonDeviceInformationCarrierSubProcessFlow")
 				.bean(iAuditService, "auditExternalRequestCall")
 				.to(uriRestKoreEndPoint)
 				.unmarshal()
-				.json(JsonLibrary.Jackson, DeviceInformationResponseKore.class)
+				.json(JsonLibrary.Jackson, KoreProvisoningResponse.class)
 				.bean(iTransactionalService,
 						"populateKoreTransactionalResponse")
-				.process(new KoreActivateDevicePostProcessor());
+				.bean(iAuditService, "auditExternalResponseCall");
+				
 
 //*****  DEVICE ACTIVATION END
 		 
@@ -410,22 +412,17 @@ from("direct:VerizonDeviceInformationCarrierSubProcessFlow")
 			.process(new KoreDeactivateDevicePreProcessor(env))
 			.bean(iAuditService, "auditExternalRequestCall")
 			.to(uriRestKoreEndPoint).unmarshal()
-			.json(JsonLibrary.Jackson, DeviceInformationResponseKore.class)
+			.json(JsonLibrary.Jackson, KoreProvisoningResponse.class)
 			.bean(iAuditService, "auditExternalResponseCall")
-			.bean(iTransactionalService,"populateKoreTransactionalResponse")
-			.process(new KoreDeactivateDevicePostProcessor());
+			.bean(iTransactionalService,"populateKoreTransactionalResponse");
+			
 	
 //*****  DEVICE DEACTIVATION END		
 		
-		/**Insert Single Device details in MasterDB **//*
-		from("direct:insertDeviceDetails")
-				.bean(iDeviceService, "insertDeviceDetails").to("log:input")
-				.end();*/
+		
 
 		/**Insert or Update Single Device details in MasterDB **/
-		/*from("direct:updateDeviceDetails")
-				.bean(iDeviceService, "updateDeviceDetails").to("log:input")
-				.end();*/
+		
 		from("direct:updateDeviceDetails").process(new HeaderProcessor())
 		.choice()
 					.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
@@ -443,9 +440,7 @@ from("direct:VerizonDeviceInformationCarrierSubProcessFlow")
 		from("direct:getDeviceInformationDB")
 				.bean(iDeviceService, "getDeviceInformationDB").to("log:input").end();
 
-		/*from("direct:getDeviceDetailsBsId")
-				.bean(iDeviceService, "getDeviceDetailsBsId").to("log:input")
-				.end();*/
+	
 
 		/**Insert or Upload Batch Device details in MasterDB.**/
 		from("direct:updateDevicesDetailsBulkActual").onCompletion().modeBeforeConsumer().setBody().body().process(new BulkDeviceProcessor()).end()
@@ -463,19 +458,7 @@ from("direct:VerizonDeviceInformationCarrierSubProcessFlow")
 	to("log:input").
 endChoice()
 .end();
-		/*from("direct:updateDeviceDetails").process(new HeaderProcessor())
-		.choice()
-					.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
-						.choice()
-						.when(header("derivedCarrierName").isEqualTo("VERIZON"))
-								.process(new StubCellUploadProcessor())
-								.to("log:input").endChoice().
-								otherwise().
-								bean(iDeviceService, "updateDeviceDetails").				
-				to("log:input").
-		endChoice()
-		.end();
-		*/
+		
 		/**
 		 * Bulk Insert or Update the device in MasterDB using Seda
 		 */

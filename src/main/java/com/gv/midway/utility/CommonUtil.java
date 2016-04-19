@@ -32,7 +32,7 @@ public class CommonUtil {
 
 	}
 
-	public static String getmidwayTransationId() {
+	public static String getMidwayTransactionID() {
 		long timestamp = System.currentTimeMillis();
 		return Long.toString(timestamp);
 

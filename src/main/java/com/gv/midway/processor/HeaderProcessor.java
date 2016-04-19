@@ -19,9 +19,9 @@ public class HeaderProcessor implements Processor {
 		log.info("Start:HeaderProcessor");
 
 		// populate MidwayTransationID
-		String midwayTransationID = CommonUtil.getmidwayTransationId();
+		String midwayTransactionID = CommonUtil.getMidwayTransactionID();
 		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_ID,
-				midwayTransationID);
+				midwayTransactionID);
 		
 		String derivedCarrierName =CommonUtil.getDerivedCarrierName(exchange.getProperty(IConstant.BSCARRIER).toString());
 

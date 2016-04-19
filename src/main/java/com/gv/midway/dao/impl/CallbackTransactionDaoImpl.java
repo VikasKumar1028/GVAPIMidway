@@ -49,7 +49,7 @@ public class CallbackTransactionDaoImpl implements GVCallbackTransactionalDao {
 		 * String carrierTransationID;//Call Back Thread String
 		 * carrierStatus;//Call Back Thread String
 		 * LastTimeStampUpdated;//CallBack Thread String
-		 * carrierErrorDecription;//CallBack Thread String
+		 * carrierErrorDescription;//CallBack Thread String
 		 * callBackPayload;//CallBack Thread Boolean
 		 * callBackDelivered;//CallBack Thread Boolean
 		 * callBackReceived;//CallBack Thread String
@@ -58,15 +58,15 @@ public class CallbackTransactionDaoImpl implements GVCallbackTransactionalDao {
 		
 		Update update = new Update();
 		if (exchange.getIn().getBody().toString().contains("errorMessage=")) {
-			update.set("callBackPayload", exchange.getIn().getBody().toString());
-			update.set("carrierErrorDecription", exchange.getIn().getBody().toString());
-			update.set("carrierErrorDecription", exchange.getIn().getBody().toString());
+			update.set("callBackPayload", exchange.getIn().getBody());
+			update.set("carrierErrorDescription", exchange.getIn().getBody().toString());
+			update.set("carrierErrorDescription", exchange.getIn().getBody().toString());
 			update.set("carrierStatus", "Error");
 			update.set("lastTimeStampUpdated", CommonUtil.getCurrentTimeStamp());
 			
 		}else{
 			
-			update.set("callBackPayload", exchange.getIn().getBody().toString());
+			update.set("callBackPayload", exchange.getIn().getBody());
 			update.set("carrierStatus", "SUCCESS");
 			update.set("lastTimeStampUpdated", CommonUtil.getCurrentTimeStamp());
 					
@@ -98,7 +98,7 @@ public class CallbackTransactionDaoImpl implements GVCallbackTransactionalDao {
 		 * String carrierTransationID;//Call Back Thread String
 		 * carrierStatus;//Call Back Thread String
 		 * LastTimeStampUpdated;//CallBack Thread String
-		 * carrierErrorDecription;//CallBack Thread String
+		 * carrierErrorDescription;//CallBack Thread String
 		 * callBackPayload;//CallBack Thread Boolean
 		 * callBackDelivered;//CallBack Thread Boolean
 		 * callBackReceived;//CallBack Thread String
@@ -107,30 +107,30 @@ public class CallbackTransactionDaoImpl implements GVCallbackTransactionalDao {
 
 		/*Update update = new Update();
 		if (exchange.getIn().getBody().toString().contains("errorMessage=")) {
-			update.set("callBackPayload", exchange.getIn().getBody().toString());
-			update.set("carrierErrorDecription", exchange.getIn().getBody().toString());
-			update.set("carrierErrorDecription", exchange.getIn().getBody().toString());
+			update.set("callBackPayload", exchange.getIn().getBody());
+			update.set("carrierErrorDescription", exchange.getIn().getBody().toString());
+			update.set("carrierErrorDescription", exchange.getIn().getBody().toString());
 			update.set("carrierStatus", "Error");
 			update.set("lastTimeStampUpdated", CommonUtil.getCurrentTimeStamp());
 
 		} else {
 
-			update.set("callBackPayload", exchange.getIn().getBody().toString());
+			update.set("callBackPayload", exchange.getIn().getBody());
 			update.set("carrierStatus", "SUCCESS");
 			update.set("lastTimeStampUpdated", CommonUtil.getCurrentTimeStamp());
 
 		}*/
 		Transaction findOne = mongoTemplate.findOne(searchUserQuery,Transaction.class);
-		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_ID, findOne.getMidwayTransationID());
+		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_ID, findOne.getMidwayTransactionID());
 		//TODO
-		if(null != findOne.getCarrierTransationID())
-			exchange.setProperty(IConstant.GV_TRANSACTION_ID,findOne.getCarrierTransationID());
+		if(null != findOne.getCarrierTransactionID())
+			exchange.setProperty(IConstant.GV_TRANSACTION_ID,findOne.getCarrierTransactionID());
 		else
 			exchange.setProperty(IConstant.GV_TRANSACTION_ID,"");
 			
 		
-		if(null != findOne.getCarrierTransationID())
-			exchange.setProperty(IConstant.GV_HOSTNAME,findOne.getCarrierTransationID());
+		if(null != findOne.getCarrierTransactionID())
+			exchange.setProperty(IConstant.GV_HOSTNAME,findOne.getCarrierTransactionID());
 		else
 			exchange.setProperty(IConstant.GV_HOSTNAME,"");
 

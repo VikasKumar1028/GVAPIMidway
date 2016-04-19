@@ -5,11 +5,8 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
-import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
-import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
 import com.gv.midway.pojo.transaction.Transaction;
 
 public class KoreCheckStatusPreProcessor implements Processor {
@@ -39,12 +36,14 @@ public class KoreCheckStatusPreProcessor implements Processor {
 		
 		ObjectMapper mapper = new ObjectMapper();
 		
-		String carrierTransationID=mapper.readValue(transaction.getCarrierTransationID(),String.class);
+		String carrierTransationID=mapper.readValue(transaction.getCarrierTransactionID(),String.class);
 		
 		net.sf.json.JSONObject obj = new net.sf.json.JSONObject();
 		obj.put("trackingNumber", carrierTransationID);
 	
 		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,transaction.getDeviceNumber());
+
+		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_ID,transaction.getMidwayTransactionID());
 	
 		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");

@@ -27,26 +27,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 	@EndpointInject(uri = "")
 	ProducerTemplate producer;
 
-	/*public String activateDevice() {
-		producer.requestBody("direct:verizon");
-
-		return null;
-
-	}*/
-
-	/*public InsertDeviceResponse insertDeviceDetails(SingleDevice device) {
-		// TODO Auto-generated method stub
-
-		System.out.println("device is...." + device.toString());
-
-		InsertDeviceResponse response = (InsertDeviceResponse) producer.requestBody("direct:insertDeviceDetails",
-				device);
-
-		System.out.println(" insertDeviceDetails respsone is ........"
-				+ response);
-
-		return response;
-	}*/
+	
 
 	public UpdateDeviceResponse updateDeviceDetails(SingleDevice device) {
 		// TODO Auto-generated method stub
@@ -66,19 +47,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 		return response;
 	}
 
-	/*public Object getDeviceInfo(String id) {
-		// TODO Auto-generated method stub
-
-		System.out.println("device id is...." + id);
-
-		Object response = producer.requestBodyAndHeader(
-				"direct:getDeviceDetails", null, "id", id);
-
-		System.out.println("direct:getDeviceDetails respsone is ........"
-				+ response);
-
-		return response;
-	}*/
+	
 	
 	public DeviceInformationResponse getDeviceInfoDB(String region, String timestamp,
 			String organization, String transactionId, String sourceName,
@@ -143,18 +112,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 	}
 	
 
-	/*public Object getDeviceInfoBsId(String bs_id) {
-		// TODO Auto-generated method stub
-		System.out.println("device bs_id is...." + bs_id);
-
-		Object response = producer.requestBodyAndHeader(
-				"direct:getDeviceDetailsBsId", null, "bs_id", bs_id);
-
-		System.out.println("direct:getDeviceDetailsBs_Id respsone is ........"
-				+ response);
-
-		return response;
-	}*/
+	
 
 	public BatchDeviceResponse updateDevicesDetailsBulk(BulkDevices devices) {
 		// TODO Auto-generated method stub
@@ -173,13 +131,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 		return response;
 	}
 
-	/*public DeviceInformationResponse deviceInformationDevice(
-			DeviceInformationRequest deviceInformationRequest) {
-
-		return (DeviceInformationResponse) producer.requestBody(
-				"direct:deviceInformation", deviceInformationRequest);
-	}
-*/
+	
 	public DeactivateDeviceResponse deactivateDevice(
 			DeactivateDeviceRequest deactivateDeviceRequest) {
 		

@@ -5,48 +5,48 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "transactionalDetail")
 public class Transaction {
 
-	String midwayTransationID;
-	String carrierTransationID;
-	String deviceNumber;
-	Object devicePayload;
-	String midwayStatus;
-	String carrierStatus;
-	String carrierName;
-	String timeStampReceived;
-	String lastTimeStampUpdated;
-	String carrierErrorDecription;
-	String requestType;
-	String callBackPayload;
-	Boolean callBackDelivered;
-	String auditTransationID;
-	Boolean callBackReceived;
-	String callBackFailureToNetSuitReason;
+	private String midwayTransactionID; 
+	private String carrierTransactionID;
+	private Object deviceNumber;
+	private Object devicePayload;
+	private String midwayStatus;
+	private String carrierStatus;
+	private String carrierName;
+	private String timeStampReceived;
+	private String lastTimeStampUpdated;
+	private String carrierErrorDescription;
+	private String requestType;
+	private Object callBackPayload;
+	private Boolean callBackDelivered;
+	private String auditTransationID;
+	private Boolean callBackReceived;
+	private String callBackFailureToNetSuitReason;
 
 	public Transaction() {
 		super();
 	}
 
-	public String getMidwayTransationID() {
-		return midwayTransationID;
+	public String getMidwayTransactionID() {
+		return midwayTransactionID;
 	}
 
-	public void setMidwayTransationID(String midwayTransationID) {
-		this.midwayTransationID = midwayTransationID;
+	public void setMidwayTransactionID(String midwayTransactionID) {
+		this.midwayTransactionID = midwayTransactionID;
 	}
 
-	public String getCarrierTransationID() {
-		return carrierTransationID;
+	public String getCarrierTransactionID() {
+		return carrierTransactionID;
 	}
 
-	public void setCarrierTransationID(String carrierTransationID) {
-		this.carrierTransationID = carrierTransationID;
+	public void setCarrierTransactionID(String carrierTransactionID) {
+		this.carrierTransactionID = carrierTransactionID;
 	}
 
-	public String getDeviceNumber() {
+	public Object getDeviceNumber() {
 		return deviceNumber;
 	}
 
-	public void setDeviceNumber(String deviceNumber) {
+	public void setDeviceNumber(Object deviceNumber) {
 		this.deviceNumber = deviceNumber;
 	}
 
@@ -82,12 +82,12 @@ public class Transaction {
 		this.carrierName = carrierName;
 	}
 
-	public String getCarrierErrorDecription() {
-		return carrierErrorDecription;
+	public String getCarrierErrorDescription() {
+		return carrierErrorDescription;
 	}
 
-	public void setCarrierErrorDecription(String carrierErrorDecription) {
-		this.carrierErrorDecription = carrierErrorDecription;
+	public void setCarrierErrorDescription(String carrierErrorDescription) {
+		this.carrierErrorDescription = carrierErrorDescription;
 	}
 
 	public String getRequestType() {
@@ -98,11 +98,11 @@ public class Transaction {
 		this.requestType = requestType;
 	}
 
-	public String getCallBackPayload() {
+	public Object getCallBackPayload() {
 		return callBackPayload;
 	}
 
-	public void setCallBackPayload(String callBackPayload) {
+	public void setCallBackPayload(Object callBackPayload) {
 		this.callBackPayload = callBackPayload;
 	}
 
@@ -141,14 +141,14 @@ public class Transaction {
 
 	@Override
 	public String toString() {
-		return "Transaction [midwayTransationID=" + midwayTransationID
-				+ ", carrierTransationID=" + carrierTransationID
+		return "Transaction [midwayTransactionID=" + midwayTransactionID
+				+ ", carrierTransactionID=" + carrierTransactionID
 				+ ", deviceNumber=" + deviceNumber + ", devicePayload="
 				+ devicePayload + ", midwayStatus=" + midwayStatus
 				+ ", carrierStatus=" + carrierStatus + ", carrierName="
 				+ carrierName + ", timeStampReceived=" + timeStampReceived
 				+ ", lastTimeStampUpdated=" + lastTimeStampUpdated
-				+ ", carrierErrorDecription=" + carrierErrorDecription
+				+ ", carrierErrorDescription=" + carrierErrorDescription
 				+ ", requestType=" + requestType + ", callBackPayload="
 				+ callBackPayload + ", callBackDelivered=" + callBackDelivered
 				+ ", auditTransationID=" + auditTransationID
@@ -180,15 +180,15 @@ public class Transaction {
 				+ ((callBackReceived == null) ? 0 : callBackReceived.hashCode());
 		result = prime
 				* result
-				+ ((carrierErrorDecription == null) ? 0
-						: carrierErrorDecription.hashCode());
+				+ ((carrierErrorDescription == null) ? 0
+						: carrierErrorDescription.hashCode());
 		result = prime * result
 				+ ((carrierName == null) ? 0 : carrierName.hashCode());
 		result = prime * result
 				+ ((carrierStatus == null) ? 0 : carrierStatus.hashCode());
 		result = prime
 				* result
-				+ ((carrierTransationID == null) ? 0 : carrierTransationID
+				+ ((carrierTransactionID == null) ? 0 : carrierTransactionID
 						.hashCode());
 		result = prime * result
 				+ ((deviceNumber == null) ? 0 : deviceNumber.hashCode());
@@ -202,7 +202,7 @@ public class Transaction {
 				+ ((midwayStatus == null) ? 0 : midwayStatus.hashCode());
 		result = prime
 				* result
-				+ ((midwayTransationID == null) ? 0 : midwayTransationID
+				+ ((midwayTransactionID == null) ? 0 : midwayTransactionID
 						.hashCode());
 		result = prime * result
 				+ ((requestType == null) ? 0 : requestType.hashCode());
@@ -248,10 +248,10 @@ public class Transaction {
 				return false;
 		} else if (!callBackReceived.equals(other.callBackReceived))
 			return false;
-		if (carrierErrorDecription == null) {
-			if (other.carrierErrorDecription != null)
+		if (carrierErrorDescription == null) {
+			if (other.carrierErrorDescription != null)
 				return false;
-		} else if (!carrierErrorDecription.equals(other.carrierErrorDecription))
+		} else if (!carrierErrorDescription.equals(other.carrierErrorDescription))
 			return false;
 		if (carrierName == null) {
 			if (other.carrierName != null)
@@ -263,10 +263,10 @@ public class Transaction {
 				return false;
 		} else if (!carrierStatus.equals(other.carrierStatus))
 			return false;
-		if (carrierTransationID == null) {
-			if (other.carrierTransationID != null)
+		if (carrierTransactionID == null) {
+			if (other.carrierTransactionID != null)
 				return false;
-		} else if (!carrierTransationID.equals(other.carrierTransationID))
+		} else if (!carrierTransactionID.equals(other.carrierTransactionID))
 			return false;
 		if (deviceNumber == null) {
 			if (other.deviceNumber != null)
@@ -288,10 +288,10 @@ public class Transaction {
 				return false;
 		} else if (!midwayStatus.equals(other.midwayStatus))
 			return false;
-		if (midwayTransationID == null) {
-			if (other.midwayTransationID != null)
+		if (midwayTransactionID == null) {
+			if (other.midwayTransactionID != null)
 				return false;
-		} else if (!midwayTransationID.equals(other.midwayTransationID))
+		} else if (!midwayTransactionID.equals(other.midwayTransactionID))
 			return false;
 		if (requestType == null) {
 			if (other.requestType != null)

@@ -28,20 +28,8 @@ import com.wordnik.swagger.annotations.ApiOperation;
 @Path("/v1")
 @Api(value = "/v1", description = "MidWay API Integration")
 public interface IAdaptaionLayerService {
-/*
-	@POST
-	@Path("/device/activate")
-	@Produces("application/json")
-	@Consumes("application/json")
-	@ApiOperation(value = "Activate devices")
-	String activateDevice();
-*/
-	/*@POST
-	@Path("/cell")
-	@Produces("application/json")
-	@Consumes("application/json")
-	@ApiOperation(value = "Insert Device Details")
-	InsertDeviceResponse insertDeviceDetails(SingleDevice device);*/
+
+	
 
 	@PUT
 	@Path("/cell/upload")
@@ -66,11 +54,7 @@ public interface IAdaptaionLayerService {
 			@QueryParam("applicationName") final String applicationName,@QueryParam("bsCarrier") final String bsCarrier,@QueryParam("netSuiteId") final String netSuiteId,
 			@QueryParam("deviceId") final String deviceId,@QueryParam("kind") final String kind);
 
-	/*@GET
-	@Path("/cell/info/bs_id/{bs_id}")
-	@Produces("application/json")
-	@ApiOperation(value = "Get Device Details By bsId")
-	Object getDeviceInfoBsId(@PathParam("bs_id") final String bs_id);*/
+	
 
 	@POST
 	@Path("/cells/upload/bulk")
@@ -79,13 +63,7 @@ public interface IAdaptaionLayerService {
 	@ApiOperation(value = "Insert or Update Device Details in Bulk")
 	BatchDeviceResponse updateDevicesDetailsBulk(BulkDevices device);
 
-	/*@POST
-	@Path("/device/information")
-	@Produces("application/json")
-	@Consumes("application/json")
-	@ApiOperation(value = "DeviceInformationService")
-	DeviceInformationResponse deviceInformationDevice(
-			DeviceInformationRequest deviceInformationRequest);*/
+	
 	
 	@POST
 	@Path("/device/deactivate")

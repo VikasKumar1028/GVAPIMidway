@@ -6,7 +6,7 @@ public class ActivateDeviceRequestKore {
 	private String deviceNumber;
 	
 		@ApiModelProperty(value = "The EAP code is the Express Activation Profile to use for the activation.")
-		private String eapCode;
+		private String EAPCode;
 
 	public String getDeviceNumber() {
 		return deviceNumber;
@@ -17,11 +17,11 @@ public class ActivateDeviceRequestKore {
 	}
 
 	public String getEapCode() {
-		return eapCode;
+		return EAPCode;
 	}
 
-	public void setEapCode(String eapCode) {
-		this.eapCode = eapCode;
+	public void setEapCode(String EAPCode) {
+		this.EAPCode = EAPCode;
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public class ActivateDeviceRequestKore {
 		int result = 1;
 		result = prime * result
 				+ ((deviceNumber == null) ? 0 : deviceNumber.hashCode());
-		result = prime * result + ((eapCode == null) ? 0 : eapCode.hashCode());
+		result = prime * result + ((EAPCode == null) ? 0 : EAPCode.hashCode());
 		return result;
 	}
 
@@ -48,10 +48,10 @@ public class ActivateDeviceRequestKore {
 				return false;
 		} else if (!deviceNumber.equals(other.deviceNumber))
 			return false;
-		if (eapCode == null) {
-			if (other.eapCode != null)
+		if (EAPCode == null) {
+			if (other.EAPCode != null)
 				return false;
-		} else if (!eapCode.equals(other.eapCode))
+		} else if (!EAPCode.equals(other.EAPCode))
 			return false;
 		return true;
 	}
@@ -62,7 +62,7 @@ public class ActivateDeviceRequestKore {
 		builder.append("ActivateDeviceRequestKore [deviceNumber=");
 		builder.append(deviceNumber);
 		builder.append(", eapCode=");
-		builder.append(eapCode);
+		builder.append(EAPCode);
 		builder.append("]");
 		return builder.toString();
 	}

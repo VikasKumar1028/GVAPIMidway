@@ -2,36 +2,21 @@ package com.gv.midway.pojo.kore;
 
 public class KoreProvisoningResponse {
 
-	private String trackingNumber;
-	
-	private String requestStatus;
-	
-	
+	private DKoreProvisoning d;
 
-	public String getTrackingNumber() {
-		return trackingNumber;
+	public DKoreProvisoning getD() {
+		return d;
 	}
 
-	public void setTrackingNumber(String trackingNumber) {
-		this.trackingNumber = trackingNumber;
-	}
-
-	public String getRequestStatus() {
-		return requestStatus;
-	}
-
-	public void setRequestStatus(String requestStatus) {
-		this.requestStatus = requestStatus;
+	public void setD(DKoreProvisoning d) {
+		this.d = d;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((requestStatus == null) ? 0 : requestStatus.hashCode());
-		result = prime * result
-				+ ((trackingNumber == null) ? 0 : trackingNumber.hashCode());
+		result = prime * result + ((d == null) ? 0 : d.hashCode());
 		return result;
 	}
 
@@ -44,15 +29,10 @@ public class KoreProvisoningResponse {
 		if (getClass() != obj.getClass())
 			return false;
 		KoreProvisoningResponse other = (KoreProvisoningResponse) obj;
-		if (requestStatus == null) {
-			if (other.requestStatus != null)
+		if (d == null) {
+			if (other.d != null)
 				return false;
-		} else if (!requestStatus.equals(other.requestStatus))
-			return false;
-		if (trackingNumber == null) {
-			if (other.trackingNumber != null)
-				return false;
-		} else if (!trackingNumber.equals(other.trackingNumber))
+		} else if (!d.equals(other.d))
 			return false;
 		return true;
 	}
@@ -60,13 +40,15 @@ public class KoreProvisoningResponse {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("KoreProvisoningResponse [trackingNumber=");
-		builder.append(trackingNumber);
-		builder.append(", requestStatus=");
-		builder.append(requestStatus);
+		builder.append("KoreProvisoningResponse [d=");
+		builder.append(d);
 		builder.append("]");
 		return builder.toString();
 	}
+	
+	
+
+	
 	
 	
 }

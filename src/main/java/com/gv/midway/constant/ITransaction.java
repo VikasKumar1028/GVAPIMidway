@@ -6,8 +6,8 @@ public class ITransaction {
 	public static final String CARRIER_ERROR_DECRIPTION = "carrierErrorDecription";
 	public static final String CARRIER_STATUS = "carrierStatus";
 	public static final String LAST_TIME_STAMPUPDATED = "lastTimeStampUpdated";
-	public static final String CARRIER_TRANSATION_ID = "carrierTransationID";
-	public static final String MIDWAY_TRANSATION_ID = "midwayTransationID";
+	public static final String CARRIER_TRANSATION_ID = "carrierTransactionID";
+	public static final String MIDWAY_TRANSATION_ID = "midwayTransactionID";
 	public static final String DEVICE_NUMBER = "deviceNumber";
 	public static final String MIDWAY_STATUS = "midwayStatus";
 	public static final String CARRIER_NAME = "carrierName";

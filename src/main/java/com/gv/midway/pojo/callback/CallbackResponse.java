@@ -16,7 +16,7 @@ public class CallbackResponse {
 	String requestType;
 
 	@ApiModelProperty(value = "Carrier Transaction Id.")
-	String carrierTransationID;
+	String carrierTransactionID;
 	
 	@ApiModelProperty(value = "Carrier Status.")
 	String carrierStatus;
@@ -25,7 +25,7 @@ public class CallbackResponse {
 	String lastTimeStampUpdated;
 	
 	@ApiModelProperty(value = "Carrier Error Description.")
-	String carrierErrorDecription;
+	String carrierErrorDescription;
 	
 	Object callBackPayload;
 	@ApiModelProperty(value = "Delivered Callback.")
@@ -82,16 +82,16 @@ public class CallbackResponse {
 		this.requestType = requestType;
 	}
 	/**
-	 * @return the carrierTransationID
+	 * @return the carrierTransactionID
 	 */
-	public String getCarrierTransationID() {
-		return carrierTransationID;
+	public String getCarrierTransactionID() {
+		return carrierTransactionID;
 	}
 	/**
 	 * @param carrierTransationID the carrierTransationID to set
 	 */
-	public void setCarrierTransationID(String carrierTransationID) {
-		this.carrierTransationID = carrierTransationID;
+	public void setCarrierTransactionID(String carrierTransactionID) {
+		this.carrierTransactionID = carrierTransactionID;
 	}
 	/**
 	 * @return the carrierStatus
@@ -120,14 +120,14 @@ public class CallbackResponse {
 	/**
 	 * @return the carrierErrorDecription
 	 */
-	public String getCarrierErrorDecription() {
-		return carrierErrorDecription;
+	public String getCarrierErrorDescription() {
+		return carrierErrorDescription;
 	}
 	/**
 	 * @param carrierErrorDecription the carrierErrorDecription to set
 	 */
-	public void setCarrierErrorDecription(String carrierErrorDecription) {
-		this.carrierErrorDecription = carrierErrorDecription;
+	public void setCarrierErrorDescription(String carrierErrorDescription) {
+		this.carrierErrorDescription = carrierErrorDescription;
 	}
 	/**
 	 * @return the callBackPayload
@@ -181,10 +181,10 @@ public class CallbackResponse {
 	public String toString() {
 		return "CallbackResponse [responseCode=" + responseCode + ", payload="
 				+ payload + ", callbackStatus=" + callbackStatus
-				+ ", requestType=" + requestType + ", carrierTransationID="
-				+ carrierTransationID + ", carrierStatus=" + carrierStatus
+				+ ", requestType=" + requestType + ", carrierTransactionID="
+				+ carrierTransactionID + ", carrierStatus=" + carrierStatus
 				+ ", lastTimeStampUpdated=" + lastTimeStampUpdated
-				+ ", carrierErrorDecription=" + carrierErrorDecription
+				+ ", carrierErrorDescription=" + carrierErrorDescription
 				+ ", callBackPayload=" + callBackPayload
 				+ ", callBackDelivered=" + callBackDelivered
 				+ ", callBackReceived=" + callBackReceived
@@ -212,13 +212,13 @@ public class CallbackResponse {
 				+ ((callbackStatus == null) ? 0 : callbackStatus.hashCode());
 		result = prime
 				* result
-				+ ((carrierErrorDecription == null) ? 0
-						: carrierErrorDecription.hashCode());
+				+ ((carrierErrorDescription == null) ? 0
+						: carrierErrorDescription.hashCode());
 		result = prime * result
 				+ ((carrierStatus == null) ? 0 : carrierStatus.hashCode());
 		result = prime
 				* result
-				+ ((carrierTransationID == null) ? 0 : carrierTransationID
+				+ ((carrierTransactionID == null) ? 0 : carrierTransactionID
 						.hashCode());
 		result = prime
 				* result
@@ -266,20 +266,20 @@ public class CallbackResponse {
 				return false;
 		} else if (!callbackStatus.equals(other.callbackStatus))
 			return false;
-		if (carrierErrorDecription == null) {
-			if (other.carrierErrorDecription != null)
+		if (carrierErrorDescription == null) {
+			if (other.carrierErrorDescription != null)
 				return false;
-		} else if (!carrierErrorDecription.equals(other.carrierErrorDecription))
+		} else if (!carrierErrorDescription.equals(other.carrierErrorDescription))
 			return false;
 		if (carrierStatus == null) {
 			if (other.carrierStatus != null)
 				return false;
 		} else if (!carrierStatus.equals(other.carrierStatus))
 			return false;
-		if (carrierTransationID == null) {
-			if (other.carrierTransationID != null)
+		if (carrierTransactionID == null) {
+			if (other.carrierTransactionID != null)
 				return false;
-		} else if (!carrierTransationID.equals(other.carrierTransationID))
+		} else if (!carrierTransactionID.equals(other.carrierTransactionID))
 			return false;
 		if (lastTimeStampUpdated == null) {
 			if (other.lastTimeStampUpdated != null)
