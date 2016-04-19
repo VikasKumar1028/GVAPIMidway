@@ -102,7 +102,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				// TODO if number of devices are more
 				ObjectMapper obj = new ObjectMapper();
 				String strDeviceNumber = obj.writeValueAsString(businessPayloadDeviceId);
-				transaction.setDeviceNumber(businessPayLoadActivateDevices);
+				transaction.setDeviceNumber(strDeviceNumber);
 				transaction.setDevicePayload(dbPayload);
 				transaction.setMidwayStatus(IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
 				transaction.setCarrierName(exchange.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString());
