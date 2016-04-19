@@ -36,6 +36,8 @@ import com.gv.midway.processor.callbacks.CallbackKafkaPostProcessor;
 import com.gv.midway.processor.callbacks.CallbackKafkaPreProcessor;
 import com.gv.midway.processor.callbacks.CallbackPostProcessor;
 import com.gv.midway.processor.callbacks.CallbackPreProcessor;
+import com.gv.midway.processor.cell.StubCellBulkUploadProcessor;
+import com.gv.midway.processor.cell.StubCellUploadProcessor;
 import com.gv.midway.processor.checkstatus.KoreCheckStatusPreProcessor;
 import com.gv.midway.processor.deactivateDevice.KoreDeactivateDevicePostProcessor;
 import com.gv.midway.processor.deactivateDevice.KoreDeactivateDevicePreProcessor;
@@ -421,9 +423,21 @@ from("direct:VerizonDeviceInformationCarrierSubProcessFlow")
 				.end();*/
 
 		/**Insert or Update Single Device details in MasterDB **/
-		from("direct:updateDeviceDetails")
+		/*from("direct:updateDeviceDetails")
 				.bean(iDeviceService, "updateDeviceDetails").to("log:input")
-				.end();
+				.end();*/
+		from("direct:updateDeviceDetails").process(new HeaderProcessor())
+		.choice()
+					.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
+						.choice()
+						.when(header("derivedCarrierName").isEqualTo("VERIZON"))
+								.process(new StubCellUploadProcessor())
+								.to("log:input").endChoice().
+								otherwise().
+								bean(iDeviceService, "updateDeviceDetails").				
+				to("log:input").
+		endChoice()
+		.end();
 
 		/**Get DeviceInformation from MasterDB and return back to Calling System.**/
 		from("direct:getDeviceInformationDB")
@@ -434,12 +448,34 @@ from("direct:VerizonDeviceInformationCarrierSubProcessFlow")
 				.end();*/
 
 		/**Insert or Upload Batch Device details in MasterDB.**/
-		from("direct:updateDevicesDetailsBulk").onCompletion().modeBeforeConsumer().setBody().body().process(new BulkDeviceProcessor()).end()
+		from("direct:updateDevicesDetailsBulkActual").onCompletion().modeBeforeConsumer().setBody().body().process(new BulkDeviceProcessor()).end()
 				.bean(iDeviceService, "updateDevicesDetailsBulk").split().method("bulkOperationSplitter").recipientList().method("bulkOperationServiceRouter")
 				;
 		
-		
-		
+		from("direct:updateDevicesDetailsBulk")
+		.choice()
+		.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
+			.choice()
+			.when(header("derivedCarrierName").isEqualTo("VERIZON"))
+					.process(new StubCellBulkUploadProcessor())
+					.to("log:input").endChoice().
+					otherwise().to("direct:updateDevicesDetailsBulkActual").					
+	to("log:input").
+endChoice()
+.end();
+		/*from("direct:updateDeviceDetails").process(new HeaderProcessor())
+		.choice()
+					.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
+						.choice()
+						.when(header("derivedCarrierName").isEqualTo("VERIZON"))
+								.process(new StubCellUploadProcessor())
+								.to("log:input").endChoice().
+								otherwise().
+								bean(iDeviceService, "updateDeviceDetails").				
+				to("log:input").
+		endChoice()
+		.end();
+		*/
 		/**
 		 * Bulk Insert or Update the device in MasterDB using Seda
 		 */
