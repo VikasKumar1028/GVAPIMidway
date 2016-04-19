@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.CriteriaDefinition;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
@@ -500,12 +501,17 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 	public void populatePendingKoreCheckStatus(Exchange exchange) {
 		// TODO Auto-generated method stub
-		Query searchPendingCheckStatusQuery = new Query(Criteria
+	/*	Query searchPendingCheckStatusQuery = new Query(Criteria
 				.where(ITransaction.CARRIER_STATUS)
-				.is(IConstant.CARRIER_TRANSACTION_STATUS_PENDING)
+				.is(IConstant.CARRIER_TRANSACTION_STATUS_PENDING).andOperator(Criteria.where(ITransaction.MIDWAY_STATUS).is(IConstant.MIDWAY_TRANSACTION_STATUS_PENDING))
 				.andOperator(
-						Criteria.where(ITransaction.CARRIER_NAME).is("KORE")));
+						Criteria.where(ITransaction.CARRIER_NAME).is("KORE")));*/
 
+		Query searchPendingCheckStatusQuery= new Query(Criteria.where(ITransaction.CARRIER_NAME).is("KORE").
+				andOperator(Criteria.where(ITransaction.CARRIER_STATUS).is(IConstant.CARRIER_TRANSACTION_STATUS_PENDING).
+						orOperator(Criteria.where(ITransaction.CARRIER_STATUS).is(IConstant.CARRIER_TRANSACTION_STATUS_ERROR))).
+						andOperator(Criteria.where(ITransaction.MIDWAY_STATUS).is(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR)));
+		
 		List<Transaction> transactionListPendingStatus = mongoTemplate.find(
 				searchPendingCheckStatusQuery, Transaction.class);
 		exchange.getIn().setBody(transactionListPendingStatus);

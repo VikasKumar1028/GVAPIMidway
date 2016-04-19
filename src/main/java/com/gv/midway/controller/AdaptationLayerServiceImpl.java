@@ -161,13 +161,13 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 		System.out.println("devices info is...." + devices.toString());
 
 		Object responseActual = producer.requestBody(
-				"direct:insertDeviceDetailsinBatch", devices);
+				"direct:updateDevicesDetailsBulk", devices);
 		
 		System.out.println("resposne actual is........"+responseActual.toString());
 		
 		BatchDeviceResponse response=(BatchDeviceResponse)responseActual;
 
-		System.out.println(" insertDeviceDetails in Batch respsone is ........"
+		System.out.println(" direct:updateDevicesDetails in Batch respsone is ........"
 				+ response);
 
 		return response;

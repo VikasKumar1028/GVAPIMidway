@@ -6,7 +6,7 @@ import com.gv.midway.pojo.transaction.Transaction;
 
 public class CheckStatusSplitter {
 
-	 public List<Transaction> split(List deviceList) {
+	 public List<Transaction> split(List<Transaction> deviceList) {
 	    	
 	    	System.out.println("*****************SPLITTER*********************"+deviceList.size());
 	        return deviceList;
