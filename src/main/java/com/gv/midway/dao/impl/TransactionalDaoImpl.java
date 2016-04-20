@@ -339,12 +339,13 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		// Applicable for provisioning request where we have Transaction Table
 		// Not Applicable for device Information
 		log.info("populate connection error....."+exchange.getFromEndpoint().toString());
+		log.info("device number is.........."+exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER));
 		if (CommonUtil.isProvisioningMethod(exchange.getFromEndpoint().toString())) {
 			Query searchQuery = null;
 			if ("KORE".equals(exchange.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME))) {
 				searchQuery = new Query(Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)).andOperator(Criteria.where(ITransaction.DEVICE_NUMBER).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
 				
-
+				log.info("device number in Kore is.........."+exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER));
 				Update update = new Update();
 				update.set(ITransaction.MIDWAY_STATUS, IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
 				update.set(ITransaction.CALL_BACK_PAYLOAD, IConstant.MIDWAY_CONNECTION_ERROR);

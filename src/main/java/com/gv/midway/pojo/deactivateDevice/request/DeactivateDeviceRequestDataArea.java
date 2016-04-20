@@ -1,9 +1,10 @@
 package com.gv.midway.pojo.deactivateDevice.request;
+
+
 import java.util.Arrays;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gv.midway.pojo.verizon.CustomFields;
-import com.gv.midway.pojo.verizon.DeviceId;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -36,8 +37,7 @@ public class DeactivateDeviceRequestDataArea {
 	@ApiModelProperty(value = "The etfWaiver parameter waives the Early Termination Fee (ETF), if applicable.")
 	private String etfWaiver;
 
-	@ApiModelProperty(value = "A flag indicating whether to scrap the device or just deactivate it to stock.")
-	private Boolean flagScrap;
+	
 
 	public String getGroupName() {
 		return groupName;
@@ -88,15 +88,6 @@ public class DeactivateDeviceRequestDataArea {
 		this.etfWaiver = etfWaiver;
 	}
 
-
-	public Boolean getFlagScrap() {
-		return flagScrap;
-	}
-
-	public void setFlagScrap(Boolean flagScrap) {
-		this.flagScrap = flagScrap;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -107,8 +98,6 @@ public class DeactivateDeviceRequestDataArea {
 		result = prime * result + Arrays.hashCode(devices);
 		result = prime * result
 				+ ((etfWaiver == null) ? 0 : etfWaiver.hashCode());
-		result = prime * result
-				+ ((flagScrap == null) ? 0 : flagScrap.hashCode());
 		result = prime * result
 				+ ((groupName == null) ? 0 : groupName.hashCode());
 		result = prime * result
@@ -140,11 +129,6 @@ public class DeactivateDeviceRequestDataArea {
 			if (other.etfWaiver != null)
 				return false;
 		} else if (!etfWaiver.equals(other.etfWaiver))
-			return false;
-		if (flagScrap == null) {
-			if (other.flagScrap != null)
-				return false;
-		} else if (!flagScrap.equals(other.flagScrap))
 			return false;
 		if (groupName == null) {
 			if (other.groupName != null)
@@ -181,11 +165,10 @@ public class DeactivateDeviceRequestDataArea {
 		builder.append(Arrays.toString(devices));
 		builder.append(", etfWaiver=");
 		builder.append(etfWaiver);
-		builder.append(", flagScrap=");
-		builder.append(flagScrap);
 		builder.append("]");
 		return builder.toString();
 	}
+
 
 	
 	
