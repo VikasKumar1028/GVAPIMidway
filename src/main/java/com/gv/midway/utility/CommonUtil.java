@@ -4,9 +4,28 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
+import com.esotericsoftware.minlog.Log;
+import com.gv.midway.constant.IEndPoints;
+import com.gv.midway.dao.impl.TransactionalDaoImpl;
 
 public class CommonUtil {
+	
+	private static Logger log = Logger.getLogger(CommonUtil.class);
+	
+	public static List<String> endPointList=new ArrayList<String>();
+	
+	static{
+		
+		endPointList.add(IEndPoints.ACTIVATION_ENDPOINT);
+		endPointList.add(IEndPoints.DEACTIVATION_ENDPOINT);
+		endPointList.add(IEndPoints.ACTIVATION_SEDA_KORE_ENDPOINT);
+	}
 
 	public static String getCurrentTimeStamp() {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -55,8 +74,17 @@ public class CommonUtil {
 	}
 
 	public static boolean isProvisioningMethod(String endPoint) {
+		
+		log.info("endpoint is......."+endPoint);
+		
+		/*if(endPointList.contains(endPoint)){
+			
+			return true;
+		}
 
-		if (endPoint.contains("activate") || endPoint.contains("deactivate")) {
+		return false;*/
+		if (endPoint.contains(IEndPoints.ACTIVATION_ENDPOINT) || endPoint.contains(IEndPoints.ACTIVATION_ENDPOINT)|| 
+				endPoint.contains(IEndPoints.ACTIVATION_SEDA_KORE_ENDPOINT) || endPoint.contains(IEndPoints.DEACTIVATION_SEDA_KORE_ENDPOINT)) {
 
 			return true;
 

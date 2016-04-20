@@ -442,33 +442,33 @@ from("direct:VerizonDeviceInformationCarrierSubProcessFlow")
 		/**
 		 * Get all the Kore devices with carrier status pending from TransactionDB 
 		 */
-		from("timer://koreCheckStatusTimer?period=5m").bean(iTransactionalService,"populatePendingKoreCheckStatus")
-	    .split().method("checkStatusSplitter").recipientList().method("koreCheckStatusServiceRouter");
+		/*from("timer://koreCheckStatusTimer?period=5m").bean(iTransactionalService,"populatePendingKoreCheckStatus")
+	    .split().method("checkStatusSplitter").recipientList().method("koreCheckStatusServiceRouter");*/
 		
 		/**
 		 * Check status of all the Kore devices with carrier status pending and updated it in TransactionDB if it is 
 		 * completed from Kore and call the netsuiteEndpoint for them
 		 */
-		 from("seda:koreSedaCheckStatus?concurrentConsumers=5")
+		/* from("seda:koreSedaCheckStatus?concurrentConsumers=5")
 		    .doTry()
 		    			.process(new KoreCheckStatusPreProcessor(env))
 						.to(uriRestKoreEndPoint).unmarshal()
 						.json(JsonLibrary.Jackson, KoreCheckStatusResponse.class)
-						/** Get the status of device update  carrier status in transaction DB */
+						*//** Get the status of device update  carrier status in transaction DB *//*
 						.bean(iTransactionalService,"populateKoreTransactionalResponse")
-						/**
+						*//**
 						 * Prepare the netsuite call back response
-						 */
+						 *//*
 						.process(new KoreDeviceInformationPostProcessor())
-						/**
+						*//**
 						 * Send to Netsuite restlet callback end point and update midway status in transaction DB
-						 */
+						 *//*
 						 .to(uriRestNetsuitEndPoint)
 		    .doCatch(CxfOperationException.class)
 		    			.bean(iTransactionalService,"populateKoreTransactionalErrorResponse")
 		    			.bean(iAuditService, "auditExternalExceptionResponseCall")
 		    			.process(new KoreGenericExceptionProcessor(env))
-		    .endDoTry();
+		    .endDoTry();*/
 	    
 	}
 }

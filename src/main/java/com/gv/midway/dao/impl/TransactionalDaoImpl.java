@@ -108,6 +108,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				transaction.setTimeStampReceived(currentDataTime);
 				transaction.setAuditTransactionId(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
 				transaction.setRequestType(exchange.getFromEndpoint().toString());
+				transaction.setCallBackReceived(false);
 
 				list.add(transaction);
 
@@ -182,7 +183,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				transaction.setTimeStampReceived(currentDataTime);
 				transaction.setAuditTransactionId(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
 				transaction.setRequestType(exchange.getFromEndpoint().toString());
-
+				transaction.setCallBackReceived(false);
 				list.add(transaction);
 
 			} catch (Exception ex) {
@@ -337,6 +338,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		// Applicable for provisioning request where we have Transaction Table
 		// Not Applicable for device Information
+		log.info("populate connection error....."+exchange.getFromEndpoint().toString());
 		if (CommonUtil.isProvisioningMethod(exchange.getFromEndpoint().toString())) {
 			Query searchQuery = null;
 			if ("KORE".equals(exchange.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME))) {
