@@ -1,6 +1,7 @@
 package com.gv.midway.processor.deactivateDevice;
 
 import org.apache.camel.Exchange;
+import org.apache.camel.ExchangePattern;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
@@ -65,6 +66,8 @@ public class KoreDeactivateDevicePreProcessor implements Processor {
 		message.setHeader("Authorization", newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
 		message.setHeader(Exchange.HTTP_PATH, "/json/deactivateDevice");
 		message.setBody(deactivationDeviceRequestKore);
+		
+		exchange.setPattern(ExchangePattern.InOut);
 
 		log.info("End:KoreDeactivateDevicePreProcessor");
 	}

@@ -43,60 +43,7 @@ public class DeviceDaoImpl implements IDeviceDao
 	
 	private Logger log = Logger.getLogger(DeviceDaoImpl.class.getName());
 	
-	/*public InsertDeviceResponse insertDeviceDetails(SingleDevice device) {
-
-		// Simple way using template
-		DeviceInformation deviceInformation=null;
-       try{
-        //device.setStatus("activate");
-        device.getDataArea().getDevice().setState("activate");
-        //device.setIpAddress("127.0.0.1");
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-        device.getDataArea().getDevice().setLastUpdated(sdf.format(new Date()));
-        
-       deviceInformation= device.getDataArea().getDevice();
-		mongoTemplate.insert(deviceInformation);
-       }
-       
-       catch(Exception e)
-       {
-    	   System.out.println("error in insert is..."+e.getMessage());
-    	   InsertDeviceResponse insertDeviceResponse= new InsertDeviceResponse();
-    	   
-    	  Header header= device.getHeader();
-    	  
-    	  Response response=new Response();
-    	  response.setResponseCode(IResponse.DB_ERROR_CODE);
-    	  response.setResponseDescription(IResponse.ERROR_DESCRIPTION_INSERTDEVICE_MIDWAYDB);
-    	  response.setResponseStatus(IResponse.ERROR_MESSAGE);
-    	  insertDeviceResponse.setResponse(response);
-    	  insertDeviceResponse.setHeader(header);
-  	   	   //insertDeviceResponse.setMessage("failed to insert record in midway layer ");
-    	  
-    	   
-    	   return insertDeviceResponse;
-       }
-		//System.out.println(  mongoTemplate.getDb().toString()+"-----"+"----------xcxc-----"+device.toString());
-		System.out.println("device data is...."+device.toString());
-		
-		 InsertDeviceResponse insertDeviceResponse= new InsertDeviceResponse();
-		 
-		 Header header= device.getHeader();
-   	  
-		Response response = new Response();
-		response.setResponseCode(IResponse.SUCCESS_CODE);
-		response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_INSERT_MIDWAYDB);
-		response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
-		insertDeviceResponse.setResponse(response);
-		insertDeviceResponse.setHeader(header);
-		InsertDeviceResponseDataArea insertDeviceResponseDataArea=new InsertDeviceResponseDataArea();
-		insertDeviceResponseDataArea.setId(deviceInformation.getMidwayMasterDeviceId());
-		insertDeviceResponse.setDataArea(insertDeviceResponseDataArea);
-		
-   	    
-   	 return insertDeviceResponse;
-
-	}*/
+	
 	
 	public UpdateDeviceResponse updateDeviceDetails(SingleDevice device) {
 		// TODO Auto-generated method stub
@@ -188,46 +135,7 @@ public class DeviceDaoImpl implements IDeviceDao
 			
 	}
 
-	/*public Object updateDeviceDetails(String deviceId, SingleDevice device) {
-		// TODO Auto-generated method stub
-		
-		//ResponseMessage responseMessage= new ResponseMessage();
-		
-		try{
-			
-			Device deviceExist=mongoTemplate.findById(deviceId, Device.class);
-			
-			
-			
-			if(deviceExist==null){
-				
-		    	responseMessage.setMessage("no device Id found for update");
-		    	return Response.status(404).entity(responseMessage).build(); 
-				
-				
-			}
-	        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-	      //  device.setLastUpdated(sdf.format(new Date()));
-	       // device.setId(deviceId);
-			mongoTemplate.save(device);
-	       }
-	       
-	       catch(Exception e)
-	       {
-	    	   System.out.println("error in update is..."+e.getMessage());
-	    	 //  responseMessage.setMessage("failed to update record in midway layer");
-		       return Response.status(500).entity(responseMessage).build(); 
-	    	 
-	       }
-			//System.out.println(  mongoTemplate.getDb().toString()+"-----"+"----------xcxc-----"+device.toString());
-			System.out.println("device data is...."+device.toString());
-			//responseMessage.setMessage("device record updated successfully in midway layer");
-		    return Response.status(200).entity(responseMessage).build(); 
-		
-		return null;
-			
-		
-	}*/
+	
 
 	public DeviceInformationResponse getDeviceInformationDB(DeviceInformationRequest deviceInformationRequest) {
 		// TODO Auto-generated method stub
@@ -303,71 +211,11 @@ public class DeviceDaoImpl implements IDeviceDao
 			return deviceInformationResponse;
 		}
 	    
-	   
-	    
-		
-		/*Device device=mongoTemplate.findById(deviceId, Device.class);
-		if(device==null){
-			
-			ResponseMessage responseMessage= new ResponseMessage();
-			responseMessage.setMessage("no record found for this device Id");
-			return Response.status(404).entity(responseMessage).build(); 
-			
-		
-		}
-		
-	    return Response.status(200).entity(device).build(); */
-		
-		
-	
 		
 	}
 
 
-	/*public Object getDeviceDetailsBsId(String bsId) {
-		// TODO Auto-generated method stub
-		
-		Integer bs_id;
-		try{
-			
-			bs_id=Integer.parseInt(bsId);
-		}
-		
-		catch(NumberFormatException e){
-			
-			ResponseMessage responseMessage=new ResponseMessage();
-			responseMessage.setMessage("bsid format is not valid");
-			return Response.status(500).entity(responseMessage).build(); 
-		}
-		
-		Query searchUserQuery = new Query(Criteria
-				.where("bsId")
-				.is(bs_id)
-				);
-		
-		List<Device> deviceList=mongoTemplate.find(searchUserQuery, Device.class);
-		
-		if(deviceList==null || deviceList.size()==0)
-		{
-			ResponseMessage responseMessage=new ResponseMessage();
-			responseMessage.setMessage("no record found for this bsId");
-			return Response.status(404).entity(responseMessage).build(); 
-		}
-		
-		return Response.status(200).entity(deviceList).build(); 
-		
-		return null;
-	}*/
-
-
-	/*public Object insertDevicesDetailsInBatch(BulkDevices devices) {
-		// TODO Auto-generated method stub
-		BatchTask batchTask= new BatchTask(mongoTemplate,"insert" , devices);
-		
-		return batchTask.doBatchJob();
-		
-		return null;
-	}*/
+	
 
 	public void setDeviceInformationDB(Exchange exchange) {
 		// TODO Auto-generated method stub
@@ -527,57 +375,5 @@ public class DeviceDaoImpl implements IDeviceDao
 	}
 	
 	
-	/*public void bulkOperationDeviceUpdate(Exchange exchange)
-	{
-		// TODO Auto-generated method stub
-		
-		
-	}*/
-
-	
-
-	/*public String insertDevicesDetailsInBatch(Devices devices) {
-
-		//mongoTemplate.setWriteResultChecking(WriteResultChecking.EXCEPTION);
-		mongoTemplate.insertAll(Arrays.asList(devices.getDevices()));
-
-		return null;
-	}
-*/
-	/*public String updateDevicesDetailsInBatch(String deviceId) {
-
-		// mongoTemplate.setWriteResultChecking(WriteResultChecking.EXCEPTION);
-
-		for (Device device : devices.getDevices()) {
-			Query searchUserQuery = new Query(Criteria
-					.where("id")
-					.is(device.getId())
-					);
-
-			Update update = new Update();
-			update.set("bs_id", device.getBsId());
-			mongoTemplate.updateFirst(searchUserQuery, update, Device.class);
-
-		}
-
-		return null;
-	}
-
-	public String updateDeviceDetails(Device device) {
-
-		Query searchUserQuery = new Query(Criteria
-				.where("cell.esn")
-				.is(device.getCell().getEsn())
-				.andOperator(
-						Criteria.where("cell.sim")
-								.is(device.getCell().getSim())));
-
-		WriteResult wr = mongoTemplate.updateFirst(searchUserQuery,
-				Update.update("bs_id", device.getBsId()), Device.class);
-
-	
-		return device.getId();
-
-	}*/
 
 }

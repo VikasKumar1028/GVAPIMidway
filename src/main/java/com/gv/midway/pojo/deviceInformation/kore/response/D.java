@@ -3,9 +3,14 @@ package com.gv.midway.pojo.deviceInformation.kore.response;
 import java.util.Arrays;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@SuppressWarnings("unused")
+@JsonAutoDetect()
 public class D
 {
 	private String __type;
@@ -75,115 +80,201 @@ public class D
     private String previousAddress;
 
     private String[] lstExtFeatures;
-
+    
+    
+    @SuppressWarnings("unchecked")
+	@JsonSerialize
+	@JsonProperty("__type")
 	public String get__type() {
 		return __type;
 	}
 
+    @SuppressWarnings("unchecked")
+	@JsonDeserialize
+	@JsonProperty("__type")
 	public void set__type(String __type) {
 		this.__type = __type;
 	}
 
+    @SuppressWarnings("unchecked")
+	@JsonSerialize
+	@JsonProperty("requestStatus")
 	public String getRequestStatus() {
 		return requestStatus;
 	}
-
+    
+    @SuppressWarnings("unchecked")
+   	@JsonDeserialize
+   	@JsonProperty("requestStatus")
 	public void setRequestStatus(String requestStatus) {
 		this.requestStatus = requestStatus;
 	}
 
+
+    @SuppressWarnings("unchecked")
+	@JsonSerialize
+	@JsonProperty("MSISDNOrMDN")
 	public String getMSISDNOrMDN() {
 		return MSISDNOrMDN;
 	}
 
+    @SuppressWarnings("unchecked")
+   	@JsonDeserialize
+   	@JsonProperty("MSISDNOrMDN")
 	public void setMSISDNOrMDN(String mSISDNOrMDN) {
 		MSISDNOrMDN = mSISDNOrMDN;
 	}
 
+    @SuppressWarnings("unchecked")
+    @JsonSerialize
+   	@JsonProperty("IMSIOrMIN")
 	public String getIMSIOrMIN() {
 		return IMSIOrMIN;
 	}
 
+	 @SuppressWarnings("unchecked")
+	 @JsonDeserialize
+	 @JsonProperty("IMSIOrMIN")
 	public void setIMSIOrMIN(String iMSIOrMIN) {
 		IMSIOrMIN = iMSIOrMIN;
 	}
 
+	 @SuppressWarnings("unchecked")
+	 @JsonSerialize
+	 @JsonProperty("status")
 	public String getStatus() {
 		return status;
 	}
 
+	@SuppressWarnings("unchecked")
+	 @JsonDeserialize
+	 @JsonProperty("status")
 	public void setStatus(String status) {
 		this.status = status;
 	}
 
+	@SuppressWarnings("unchecked")
+	@JsonSerialize
+	 @JsonProperty("currentDataPlan")
 	public String getCurrentDataPlan() {
 		return currentDataPlan;
 	}
 
+	@SuppressWarnings("unchecked")
+	 @JsonDeserialize
+	 @JsonProperty("currentDataPlan")
 	public void setCurrentDataPlan(String currentDataPlan) {
 		this.currentDataPlan = currentDataPlan;
 	}
 
+	@SuppressWarnings("unchecked")
+	@JsonSerialize
+	 @JsonProperty("currentSMSPlan")
 	public String getCurrentSMSPlan() {
 		return currentSMSPlan;
 	}
 
+	@SuppressWarnings("unchecked")
+	 @JsonDeserialize
+	 @JsonProperty("currentSMSPlan")
 	public void setCurrentSMSPlan(String currentSMSPlan) {
 		this.currentSMSPlan = currentSMSPlan;
 	}
 
+	@SuppressWarnings("unchecked")
+	@JsonSerialize
+	 @JsonProperty("futureDataPlan")
 	public String getFutureDataPlan() {
 		return futureDataPlan;
 	}
 
+	@SuppressWarnings("unchecked")
+	@JsonDeserialize
+	 @JsonProperty("futureDataPlan")
 	public void setFutureDataPlan(String futureDataPlan) {
 		this.futureDataPlan = futureDataPlan;
 	}
 
+	@SuppressWarnings("unchecked")
+	@JsonSerialize
+	 @JsonProperty("futureSMSPlan")
 	public String getFutureSMSPlan() {
 		return futureSMSPlan;
 	}
 
+	@SuppressWarnings("unchecked")
+	@JsonDeserialize
+	 @JsonProperty("futureSMSPlan")
 	public void setFutureSMSPlan(String futureSMSPlan) {
 		this.futureSMSPlan = futureSMSPlan;
 	}
-
+	
+	@SuppressWarnings("unchecked")
+	@JsonSerialize
+	 @JsonProperty("dailyDataThreshold")
 	public Integer getDailyDataThreshold() {
 		return dailyDataThreshold;
 	}
 
+	@SuppressWarnings("unchecked")
+	@JsonDeserialize
+	 @JsonProperty("dailyDataThreshold")
 	public void setDailyDataThreshold(Integer dailyDataThreshold) {
 		this.dailyDataThreshold = dailyDataThreshold;
 	}
 
+	@SuppressWarnings("unchecked")
+	@JsonSerialize
+	 @JsonProperty("dailySMSThreshold")
 	public Integer getDailySMSThreshold() {
 		return dailySMSThreshold;
 	}
 
+	@SuppressWarnings("unchecked")
+	@JsonDeserialize
+	 @JsonProperty("dailySMSThreshold")
 	public void setDailySMSThreshold(Integer dailySMSThreshold) {
 		this.dailySMSThreshold = dailySMSThreshold;
 	}
 
+	@SuppressWarnings("unchecked")
+	@JsonSerialize
+	 @JsonProperty("monthlyDataThreshold")
 	public Integer getMonthlyDataThreshold() {
 		return monthlyDataThreshold;
 	}
 
+	@SuppressWarnings("unchecked")
+	@JsonDeserialize
+	 @JsonProperty("monthlyDataThreshold")
 	public void setMonthlyDataThreshold(Integer monthlyDataThreshold) {
 		this.monthlyDataThreshold = monthlyDataThreshold;
 	}
 
+	@SuppressWarnings("unchecked")
+	@JsonSerialize
+	 @JsonProperty("monthlySMSThreshold")
 	public Integer getMonthlySMSThreshold() {
 		return monthlySMSThreshold;
 	}
 
+	@SuppressWarnings("unchecked")
+	@JsonDeserialize
+	 @JsonProperty("monthlySMSThreshold")
 	public void setMonthlySMSThreshold(Integer monthlySMSThreshold) {
 		this.monthlySMSThreshold = monthlySMSThreshold;
 	}
 
+	@SuppressWarnings("unchecked")
+	@JsonSerialize
+	 @JsonProperty("customField1")
 	public String getCustomField1() {
 		return customField1;
 	}
 
+	@SuppressWarnings("unchecked")
+	@JsonDeserialize
+	 @JsonProperty("customField1")
 	public void setCustomField1(String customField1) {
 		this.customField1 = customField1;
 	}

@@ -4,11 +4,14 @@ package com.gv.midway.processor.deviceInformation;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
+
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.verizon.CustomFields;
@@ -162,17 +165,17 @@ public class KoreDeviceInformationPostProcessor implements Processor {
 		
 		CustomFields customFields4=new CustomFields();
 		customFields4.setKey("CustomField4");
-		customFields4.setKey(koreDeviceInformationResponse.getD()
+		customFields4.setValue(koreDeviceInformationResponse.getD()
 				.getCustomField4());
 		
 		CustomFields customFields5=new CustomFields();
 		customFields5.setKey("CustomField5");
-		customFields5.setKey(koreDeviceInformationResponse.getD()
+		customFields5.setValue(koreDeviceInformationResponse.getD()
 				.getCustomField5());
 		
 		CustomFields customFields6=new CustomFields();
 		customFields6.setKey("CustomField6");
-		customFields6.setKey(koreDeviceInformationResponse.getD()
+		customFields6.setValue(koreDeviceInformationResponse.getD()
 				.getCustomField6());
 		
 		customeFields[0]=customFields1;
@@ -203,9 +206,16 @@ public class KoreDeviceInformationPostProcessor implements Processor {
 			deviceIdList.add(deviceId2);
 		}
 		
-		DeviceId[] deviceIds=(DeviceId[])deviceIdList.toArray();
+		DeviceId[] deviceIds=new DeviceId[deviceIdList.size()];
+		for (int i = 0; i < deviceIds.length; i++) {
+			deviceIds[i]=deviceIdList.get(i);
+		}
+		
+	/*	DeviceId[] deviceIds=(DeviceId[])deviceIdList.toArray();*/
 		
 		deviceInformation.setDeviceIds(deviceIds);
+		
+		deviceInformation.setCustomFields(customeFields);
 		
 		 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 		 deviceInformation.setLastUpdated(sdf.format(new Date()));
@@ -231,7 +241,7 @@ public class KoreDeviceInformationPostProcessor implements Processor {
 				.setDataArea(deviceInformationResponseDataArea);
 
 		exchange.getIn().setBody(deviceInformationResponse);
-		log.info("end:KoreDeviceInformationPostProcessor");
+		log.info("end:KoreDeviceInformationPostProcessor..............."+deviceInformation.toString());
 	}
 
 }

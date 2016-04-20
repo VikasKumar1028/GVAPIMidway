@@ -147,6 +147,8 @@ public class AuditDaoImpl implements IAuditDao {
 			 * audit.setErrorCode
 			 * (exchange.getProperty(IConstant.RESPONSE_CODE).toString());
 			 */
+			log.info("business resposne is.........."
+					+ exchange.getIn().getBody());
 
 			audit.setPayload(exchange.getIn().getBody());
 			mongoTemplate.insert(audit);

@@ -55,6 +55,9 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 
 		DeviceInformationResponseVerizon verizonResponse = exchange.getIn().getBody(
 				DeviceInformationResponseVerizon.class);
+		
+		log.info("----exchange_Body- Post Processor-===++++++++++++---------"
+				+ verizonResponse.toString());
 
 		int getDevicelenth = verizonResponse.getDevices().length;
 
@@ -98,8 +101,11 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 		
 		//DeviceInformation deviceInformation =null;
 
-		for (int i = 0; i < getDevicelenth; i++) {
-			deviceInformation = new DeviceInformation();
+		/****
+		 * There will be only one element in Array . As we are passing only one device in request.
+		 */
+		for (int i = 0; i < 1; i++) {
+			
 
 			deviceInformation.setAccountName(verizonResponse.getDevices()[i]
 					.getAccountName());
@@ -112,19 +118,27 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 			deviceInformation.setIpAddress(verizonResponse.getDevices()[i]
 					.getIpAddress());
 			
-			deviceInformation.setGroupName(verizonResponse.getDevices()[i]
-					.getGroupNames().toString());
+			String[] groupNamesArr=verizonResponse.getDevices()[i].getGroupNames();
+			
+			String groupName=groupNamesArr[0];
+			
+			deviceInformation.setGroupName(groupName);
+			
 			deviceInformation
 					.setLastActivationBy(verizonResponse.getDevices()[i]
 							.getLastActivationBy());
 			deviceInformation.setLastActivationDate(verizonResponse
 					.getDevices()[i].getLastActivationDate());
 
-			CarrierInformations carrierInformations = new CarrierInformations();
-			CarrierInformations[] carrierInformationsArray = new CarrierInformations[verizonResponse
-					.getDevices()[i].getCarrierInformations().length];
+			//CarrierInformations carrierInformations = new CarrierInformations();
+			CarrierInformations[] carrierInformationsArray = verizonResponse.getDevices()[i].getCarrierInformations();
+			
+			CarrierInformations carrierInformations= carrierInformationsArray[0];
+			
+			deviceInformation.setState(carrierInformations.getState());
+			deviceInformation.setCurrentServicePlan(carrierInformations.getServicePlan());
 
-			for (int j = 0; j < carrierInformationsArray.length; j++) {
+			/*for (int j = 0; j < carrierInformationsArray.length; j++) {
 				carrierInformations
 						.setCarrierName(verizonResponse.getDevices()[i]
 								.getCarrierInformations()[j].getCarrierName());
@@ -133,7 +147,7 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 				carrierInformations
 						.setServicePlan(verizonResponse.getDevices()[i]
 								.getCarrierInformations()[j].getServicePlan());
-			}
+			}*/
 
 			//deviceInformation.setCarrierInformations(carrierInformations);
 
@@ -183,6 +197,11 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 			//deviceInformationArray[i] = deviceInformation;
 		}
 
+
+		 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+		 
+		 deviceInformation.setLastUpdated(sdf.format(new Date()));
+		 
 		DeviceInformationResponseDataArea deviceInformationResponseDataArea = new DeviceInformationResponseDataArea();
 
 		deviceInformationResponseDataArea.setDevices(deviceInformation);

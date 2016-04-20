@@ -54,17 +54,17 @@ public class VerizonGenericExceptionProcessor implements Processor {
 		
 	
 		Header responseHeader = new Header();
-		responseHeader.setApplicationName(newEnv.getProperty(IConstant.APPLICATION_NAME));
-		responseHeader.setRegion(newEnv.getProperty(IConstant.REGION));
-		DateFormat dateFormat = new SimpleDateFormat(newEnv.getProperty(IConstant.DATE_FORMAT));
-		Date date = new Date();
-
-		responseHeader.setTimestamp(dateFormat.format(date));
-		responseHeader.setOrganization(newEnv.getProperty(IConstant.ORGANIZATION));
-		responseHeader.setSourceName(newEnv.getProperty(IConstant.SOURCE_NAME_VERIZON));
-		String TransactionId = (String) exchange.getProperty(newEnv.getProperty(IConstant.EXCHANEGE_PROPERTY));
-		responseHeader.setTransactionId(TransactionId);
-		responseHeader.setBsCarrier(newEnv.getProperty(IConstant.BSCARRIER_VERIZON));
+		
+		
+		responseHeader.setApplicationName(exchange.getProperty(IConstant.APPLICATION_NAME).toString());
+		responseHeader.setRegion(exchange.getProperty(IConstant.REGION).toString());
+		
+		responseHeader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT).toString());
+		responseHeader.setOrganization(exchange.getProperty(IConstant.ORGANIZATION).toString());
+		responseHeader.setSourceName(exchange.getProperty(IConstant.SOURCE_NAME).toString());
+	
+		responseHeader.setTransactionId(exchange.getProperty(IConstant.GV_TRANSACTION_ID).toString());
+		responseHeader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER).toString());
 
 		Response response = new Response();
 
@@ -79,8 +79,12 @@ public class VerizonGenericExceptionProcessor implements Processor {
 		
 			ObjectMapper mapper= new ObjectMapper();
 			
-			VerizonErrorResponse responsePayload = mapper.readValue( exception.getResponseBody(),
-				VerizonErrorResponse.class);	
+			VerizonErrorResponse responsePayload = mapper.readValue(exception.getResponseBody(),
+				VerizonErrorResponse.class);
+
+			log.info("----response payload is----------"
+					+ responsePayload.toString());
+			
 			response.setResponseCode(IResponse.INVALID_PAYLOAD);
 			response.setResponseStatus(IResponse.ERROR_MESSAGE);
 			response.setResponseDescription(responsePayload.getErrorMessage());
@@ -88,12 +92,17 @@ public class VerizonGenericExceptionProcessor implements Processor {
 		
 		}
 
-		if ("Endpoint[direct:deviceInformationCarrier]".equals(exchange
+		log.info("exchange endpoint of error........."+exchange.getFromEndpoint().toString());
+		
+		if ("Endpoint[direct://deviceInformationCarrier]".equals(exchange
 				.getFromEndpoint().toString())) {
-
+            
+			log.info("----log info inside deviceInfo ----------");
+			
 			DeviceInformationResponse responseObject = new DeviceInformationResponse();
 			responseObject.setHeader(responseHeader);
 			responseObject.setResponse(response);
+			
 			exchange.getIn().setBody(responseObject);
 		}
 		

@@ -23,15 +23,12 @@ public class KoreDeviceInformationPreProcessor implements Processor {
 				.getIn().getBody(DeviceInformationRequest.class);
 		exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID, request.getDataArea().getNetSuiteId());
 		String deviceId=request.getDataArea().getDeviceId().getId();
-		//String deviceId = "89014103277405946190";
-		// String json = "{\"deviceNumber\":\""+deviceId+"\"}";
+		
 		net.sf.json.JSONObject obj = new net.sf.json.JSONObject();
 		obj.put("deviceNumber", deviceId);
 
 		Message message = exchange.getIn();
-		// message .setHeader("VZ-M2M-Token",
-		// "1d1f8e7a-c8bb-4f3c-a924-cf612b562425");
-
+		
 		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.HTTP_METHOD, "POST");

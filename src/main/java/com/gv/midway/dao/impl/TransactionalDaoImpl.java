@@ -329,7 +329,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		update.set(ITransaction.CARRIER_STATUS, IConstant.CARRIER_TRANSACTION_STATUS_PENDING);
 		update.set(ITransaction.CARRIER_TRANSACTION_ID, koreProvisoningResponse.getD().getTrackingNumber());
 		update.set(ITransaction.LAST_TIME_STAMP_UPDATED, CommonUtil.getCurrentTimeStamp());
-
+		update.set(ITransaction.CALL_BACK_PAYLOAD, koreProvisoningResponse);
+		
 		mongoTemplate.updateFirst(searchQuery, update, Transaction.class);
 
 	}
