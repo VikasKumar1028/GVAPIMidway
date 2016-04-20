@@ -188,7 +188,7 @@ public class AuditDaoImpl implements IAuditDao {
 
 			String apiOperationName = "GV_"
 					+ responseExceptionEndpintSpilt[1].replaceAll("]", "")
-					+ "_BusinessResponse";
+					+ "_BusinessExternalError";
 
 			if (exchange
 					.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER) != null) {
@@ -300,7 +300,7 @@ public class AuditDaoImpl implements IAuditDao {
 
 			String apiOperationName = "GV_"
 					+ responseExceptionEndpintSpilt[1].replaceAll("]", "")
-					+ "_BusinessResponse";
+					+ "_BusinessConnectionError";
 
 			if (exchange
 					.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER) != null) {

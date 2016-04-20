@@ -343,15 +343,16 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			Query searchQuery = null;
 			if ("KORE".equals(exchange.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME))) {
 				searchQuery = new Query(Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)).andOperator(Criteria.where(ITransaction.DEVICE_NUMBER).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
-				String errorResponseBody = IConstant.MIDWAY_CONNECTION_ERROR;
+				
 
 				Update update = new Update();
-				update.set(ITransaction.CALL_BACK_PAYLOAD, errorResponseBody);
-				update.set(ITransaction.CARRIER_ERROR_DESCRIPTION, errorResponseBody);
-				update.set(ITransaction.CARRIER_ERROR_DESCRIPTION, errorResponseBody);
-				update.set(ITransaction.CARRIER_STATUS, "Error");
+				update.set(ITransaction.MIDWAY_STATUS, IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
+				update.set(ITransaction.CALL_BACK_PAYLOAD, IConstant.MIDWAY_CONNECTION_ERROR);
+				update.set(ITransaction.CARRIER_ERROR_DESCRIPTION, IConstant.MIDWAY_CONNECTION_ERROR);
+				
+				update.set(ITransaction.CARRIER_STATUS, IConstant.CARRIER_TRANSACTION_STATUS_ERROR);
 				update.set(ITransaction.LAST_TIME_STAMP_UPDATED, CommonUtil.getCurrentTimeStamp());
-				mongoTemplate.updateMulti(searchQuery, update, Transaction.class);
+				mongoTemplate.updateFirst(searchQuery, update, Transaction.class);
 
 			} else if ("VERIZON".equals(exchange.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME))) {
 
@@ -359,11 +360,11 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 				Update update = new Update();
 
-				update.set(ITransaction.MIDWAY_STATUS, IResponse.ERROR_MESSAGE);
+				update.set(ITransaction.MIDWAY_STATUS, IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
 				update.set(ITransaction.CALL_BACK_PAYLOAD, IConstant.MIDWAY_CONNECTION_ERROR);
 				update.set(ITransaction.CARRIER_ERROR_DESCRIPTION, IConstant.MIDWAY_CONNECTION_ERROR);
 				update.set(ITransaction.CARRIER_STATUS, IConstant.CARRIER_TRANSACTION_STATUS_ERROR);
-				update.set(ITransaction.CARRIER_TRANSACTION_ID, "");
+				
 				update.set(ITransaction.LAST_TIME_STAMP_UPDATED, CommonUtil.getCurrentTimeStamp());
 				mongoTemplate.updateMulti(searchQuery, update, Transaction.class);
 
