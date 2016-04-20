@@ -7,13 +7,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "audit")
 public class Audit {
 
-	private String api_OpreationName;
+	private String apiOperationName;
 	private String from;
 	private String to;
 	private Date timeStamp;
 	//status ??
 	private String status;
-	private String auditTransationId;
+	private String auditTransactionId;
 	private Object Payload;
 	private String errorProblem;
 	private Integer errorCode;
@@ -21,15 +21,9 @@ public class Audit {
 	//Which server it is running on
 	private String hostName; 
 	//GrantVitor Transaction Id Send
-	private String gvTransationId;
+	private String gvTransactionId;
 
-	public String getApi_OpreationName() {
-		return api_OpreationName;
-	}
 
-	public void setApi_OpreationName(String api_OpreationName) {
-		this.api_OpreationName = api_OpreationName;
-	}
 
 	public String getFrom() {
 		return from;
@@ -63,13 +57,6 @@ public class Audit {
 		this.status = status;
 	}
 
-	public String getAuditTransationID() {
-		return auditTransationId;
-	}
-
-	public void setAuditTransationID(String auditTransationID) {
-		this.auditTransationId = auditTransationID;
-	}
 
 	public Object getPayload() {
 		return Payload;
@@ -105,6 +92,42 @@ public class Audit {
 		this.hostName = hostName;
 	}
 
+
+
+
+
+	public String getErrorDetails() {
+		return errorDetails;
+	}
+
+	public void setErrorDetails(String errorDetails) {
+		this.errorDetails = errorDetails;
+	}
+
+	public String getAuditTransactionId() {
+		return auditTransactionId;
+	}
+
+	public void setAuditTransactionId(String auditTransactionId) {
+		this.auditTransactionId = auditTransactionId;
+	}
+
+	public String getGvTransactionId() {
+		return gvTransactionId;
+	}
+
+	public void setGvTransactionId(String gvTransactionId) {
+		this.gvTransactionId = gvTransactionId;
+	}
+
+	public String getApiOperationName() {
+		return apiOperationName;
+	}
+
+	public void setApiOperationName(String apiOperationName) {
+		this.apiOperationName = apiOperationName;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -112,11 +135,10 @@ public class Audit {
 		result = prime * result + ((Payload == null) ? 0 : Payload.hashCode());
 		result = prime
 				* result
-				+ ((api_OpreationName == null) ? 0 : api_OpreationName
-						.hashCode());
+				+ ((apiOperationName == null) ? 0 : apiOperationName.hashCode());
 		result = prime
 				* result
-				+ ((auditTransationId == null) ? 0 : auditTransationId
+				+ ((auditTransactionId == null) ? 0 : auditTransactionId
 						.hashCode());
 		result = prime * result
 				+ ((errorCode == null) ? 0 : errorCode.hashCode());
@@ -126,7 +148,7 @@ public class Audit {
 				+ ((errorProblem == null) ? 0 : errorProblem.hashCode());
 		result = prime * result + ((from == null) ? 0 : from.hashCode());
 		result = prime * result
-				+ ((gvTransationId == null) ? 0 : gvTransationId.hashCode());
+				+ ((gvTransactionId == null) ? 0 : gvTransactionId.hashCode());
 		result = prime * result
 				+ ((hostName == null) ? 0 : hostName.hashCode());
 		result = prime * result + ((status == null) ? 0 : status.hashCode());
@@ -150,15 +172,15 @@ public class Audit {
 				return false;
 		} else if (!Payload.equals(other.Payload))
 			return false;
-		if (api_OpreationName == null) {
-			if (other.api_OpreationName != null)
+		if (apiOperationName == null) {
+			if (other.apiOperationName != null)
 				return false;
-		} else if (!api_OpreationName.equals(other.api_OpreationName))
+		} else if (!apiOperationName.equals(other.apiOperationName))
 			return false;
-		if (auditTransationId == null) {
-			if (other.auditTransationId != null)
+		if (auditTransactionId == null) {
+			if (other.auditTransactionId != null)
 				return false;
-		} else if (!auditTransationId.equals(other.auditTransationId))
+		} else if (!auditTransactionId.equals(other.auditTransactionId))
 			return false;
 		if (errorCode == null) {
 			if (other.errorCode != null)
@@ -180,10 +202,10 @@ public class Audit {
 				return false;
 		} else if (!from.equals(other.from))
 			return false;
-		if (gvTransationId == null) {
-			if (other.gvTransationId != null)
+		if (gvTransactionId == null) {
+			if (other.gvTransactionId != null)
 				return false;
-		} else if (!gvTransationId.equals(other.gvTransationId))
+		} else if (!gvTransactionId.equals(other.gvTransactionId))
 			return false;
 		if (hostName == null) {
 			if (other.hostName != null)
@@ -210,36 +232,35 @@ public class Audit {
 
 	@Override
 	public String toString() {
-		return "Audit [api_OpreationName=" + api_OpreationName + ", from="
-				+ from + ", to=" + to + ", timeStamp=" + timeStamp
-				+ ", status=" + status + ", auditTransationId="
-				+ auditTransationId + ", Payload=" + Payload
-				+ ", errorProblem=" + errorProblem + ", errorCode=" + errorCode
-				+ ", errorDetails=" + errorDetails + ", hostName=" + hostName
-				+ ", gvTransationId=" + gvTransationId + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("Audit [apiOperationName=");
+		builder.append(apiOperationName);
+		builder.append(", from=");
+		builder.append(from);
+		builder.append(", to=");
+		builder.append(to);
+		builder.append(", timeStamp=");
+		builder.append(timeStamp);
+		builder.append(", status=");
+		builder.append(status);
+		builder.append(", auditTransactionId=");
+		builder.append(auditTransactionId);
+		builder.append(", Payload=");
+		builder.append(Payload);
+		builder.append(", errorProblem=");
+		builder.append(errorProblem);
+		builder.append(", errorCode=");
+		builder.append(errorCode);
+		builder.append(", errorDetails=");
+		builder.append(errorDetails);
+		builder.append(", hostName=");
+		builder.append(hostName);
+		builder.append(", gvTransactionId=");
+		builder.append(gvTransactionId);
+		builder.append("]");
+		return builder.toString();
 	}
 
-	public String getGvTransationId() {
-		return gvTransationId;
-	}
 
-	public void setGvTransationId(String gvTransationId) {
-		this.gvTransationId = gvTransationId;
-	}
 
-	public String getAuditTransationId() {
-		return auditTransationId;
-	}
-
-	public void setAuditTransationId(String auditTransationId) {
-		this.auditTransationId = auditTransationId;
-	}
-
-	public String getErrorDetails() {
-		return errorDetails;
-	}
-
-	public void setErrorDetails(String errorDetails) {
-		this.errorDetails = errorDetails;
-	}
 }

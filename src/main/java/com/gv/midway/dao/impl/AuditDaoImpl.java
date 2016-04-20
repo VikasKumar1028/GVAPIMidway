@@ -69,14 +69,14 @@ public class AuditDaoImpl implements IAuditDao {
 			DateFormat converter = new SimpleDateFormat("dd/MM/yyyy:HH:mm:ss");
 			converter.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-			audit.setApi_OpreationName(apiOperationName);
+			audit.setApiOperationName(apiOperationName);
 			audit.setFrom(exchange.getProperty("sourceName").toString());
 			audit.setTo(exchange.getFromEndpoint().toString());
 			audit.setTimeStamp(localTime);
-			audit.setAuditTransationID(exchange.getProperty(
+			audit.setAuditTransactionId(exchange.getProperty(
 					IConstant.AUDIT_TRANSACTION_ID).toString());
 
-			audit.setGvTransationId(exchange.getProperty(
+			audit.setGvTransactionId(exchange.getProperty(
 					IConstant.GV_TRANSACTION_ID).toString());
 			audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME)
 					.toString());
@@ -129,13 +129,13 @@ public class AuditDaoImpl implements IAuditDao {
 			DateFormat converter = new SimpleDateFormat("dd/MM/yyyy:HH:mm:ss");
 			converter.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-			audit.setApi_OpreationName(apiOperationName);
+			audit.setApiOperationName(apiOperationName);
 			audit.setFrom(exchange.getProperty("sourceName").toString());
 			audit.setTo(exchange.getFromEndpoint().toString());
 			audit.setTimeStamp(localTime);
-			audit.setAuditTransationID(exchange.getProperty(
+			audit.setAuditTransactionId(exchange.getProperty(
 					IConstant.AUDIT_TRANSACTION_ID).toString());
-			audit.setGvTransationId(exchange.getProperty(
+			audit.setGvTransactionId(exchange.getProperty(
 					IConstant.GV_TRANSACTION_ID).toString());
 			audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME)
 					.toString());
@@ -207,13 +207,13 @@ public class AuditDaoImpl implements IAuditDao {
 			DateFormat converter = new SimpleDateFormat("dd/MM/yyyy:HH:mm:ss");
 			converter.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-			audit.setApi_OpreationName(apiOperationName);
+			audit.setApiOperationName(apiOperationName);
 			audit.setFrom(exchange.getProperty("sourceName").toString());
 			audit.setTo(exchange.getFromEndpoint().toString());
 			audit.setTimeStamp(localTime);
-			audit.setAuditTransationID(exchange.getProperty(
+			audit.setAuditTransactionId(exchange.getProperty(
 					IConstant.AUDIT_TRANSACTION_ID).toString());
-			audit.setGvTransationId(exchange.getProperty(
+			audit.setGvTransactionId(exchange.getProperty(
 					IConstant.GV_TRANSACTION_ID).toString());
 			audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME)
 					.toString());
@@ -319,13 +319,13 @@ public class AuditDaoImpl implements IAuditDao {
 			DateFormat converter = new SimpleDateFormat("dd/MM/yyyy:HH:mm:ss");
 			converter.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-			audit.setApi_OpreationName(apiOperationName);
+			audit.setApiOperationName(apiOperationName);
 			audit.setFrom(exchange.getProperty("sourceName").toString());
 			audit.setTo(exchange.getFromEndpoint().toString());
 			audit.setTimeStamp(localTime);
-			audit.setAuditTransationID(exchange.getProperty(
+			audit.setAuditTransactionId(exchange.getProperty(
 					IConstant.AUDIT_TRANSACTION_ID).toString());
-			audit.setGvTransationId(exchange.getProperty(
+			audit.setGvTransactionId(exchange.getProperty(
 					IConstant.GV_TRANSACTION_ID).toString());
 			audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME)
 					.toString());

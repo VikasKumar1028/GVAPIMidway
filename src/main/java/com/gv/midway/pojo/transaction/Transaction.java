@@ -5,8 +5,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "transactionalDetail")
 public class Transaction {
 
-	private String midwayTransactionID; 
-	private String carrierTransactionID;
+	private String midwayTransactionId; 
+	private String carrierTransactionId;
 	private Object deviceNumber;
 	private Object devicePayload;
 	private String midwayStatus;
@@ -18,29 +18,15 @@ public class Transaction {
 	private String requestType;
 	private Object callBackPayload;
 	private Boolean callBackDelivered;
-	private String auditTransationID;
+	private String auditTransactionId;
 	private Boolean callBackReceived;
-	private String callBackFailureToNetSuitReason;
+	private String callBackFailureToNetSuiteReason;
 
 	public Transaction() {
 		super();
 	}
 
-	public String getMidwayTransactionID() {
-		return midwayTransactionID;
-	}
 
-	public void setMidwayTransactionID(String midwayTransactionID) {
-		this.midwayTransactionID = midwayTransactionID;
-	}
-
-	public String getCarrierTransactionID() {
-		return carrierTransactionID;
-	}
-
-	public void setCarrierTransactionID(String carrierTransactionID) {
-		this.carrierTransactionID = carrierTransactionID;
-	}
 
 	public Object getDeviceNumber() {
 		return deviceNumber;
@@ -106,22 +92,7 @@ public class Transaction {
 		this.callBackPayload = callBackPayload;
 	}
 
-	public String getAuditTransationID() {
-		return auditTransationID;
-	}
 
-	public void setAuditTransationID(String auditTransationID) {
-		this.auditTransationID = auditTransationID;
-	}
-
-	public String getCallBackFailureToNetSuitReason() {
-		return callBackFailureToNetSuitReason;
-	}
-
-	public void setCallBackFailureToNetSuitReason(
-			String callBackFailureToNetSuitReason) {
-		this.callBackFailureToNetSuitReason = callBackFailureToNetSuitReason;
-	}
 
 	public Boolean getCallBackDelivered() {
 		return callBackDelivered;
@@ -139,23 +110,73 @@ public class Transaction {
 		this.callBackReceived = callBackReceived;
 	}
 
-	@Override
-	public String toString() {
-		return "Transaction [midwayTransactionID=" + midwayTransactionID
-				+ ", carrierTransactionID=" + carrierTransactionID
-				+ ", deviceNumber=" + deviceNumber + ", devicePayload="
-				+ devicePayload + ", midwayStatus=" + midwayStatus
-				+ ", carrierStatus=" + carrierStatus + ", carrierName="
-				+ carrierName + ", timeStampReceived=" + timeStampReceived
-				+ ", lastTimeStampUpdated=" + lastTimeStampUpdated
-				+ ", carrierErrorDescription=" + carrierErrorDescription
-				+ ", requestType=" + requestType + ", callBackPayload="
-				+ callBackPayload + ", callBackDelivered=" + callBackDelivered
-				+ ", auditTransationID=" + auditTransationID
-				+ ", callBackReceived=" + callBackReceived
-				+ ", callBackFailureToNetSuitReason="
-				+ callBackFailureToNetSuitReason + "]";
+	
+	public String getTimeStampReceived() {
+		return timeStampReceived;
 	}
+
+	public void setTimeStampReceived(String timeStampReceived) {
+		this.timeStampReceived = timeStampReceived;
+	}
+
+	public String getLastTimeStampUpdated() {
+		return lastTimeStampUpdated;
+	}
+
+	public void setLastTimeStampUpdated(String lastTimeStampUpdated) {
+		this.lastTimeStampUpdated = lastTimeStampUpdated;
+	}
+
+
+
+	public String getMidwayTransactionId() {
+		return midwayTransactionId;
+	}
+
+
+
+	public void setMidwayTransactionId(String midwayTransactionId) {
+		this.midwayTransactionId = midwayTransactionId;
+	}
+
+
+
+	public String getCarrierTransactionId() {
+		return carrierTransactionId;
+	}
+
+
+
+	public void setCarrierTransactionId(String carrierTransactionId) {
+		this.carrierTransactionId = carrierTransactionId;
+	}
+
+
+
+	public String getAuditTransactionId() {
+		return auditTransactionId;
+	}
+
+
+
+	public void setAuditTransactionId(String auditTransactionId) {
+		this.auditTransactionId = auditTransactionId;
+	}
+
+
+
+	public String getCallBackFailureToNetSuiteReason() {
+		return callBackFailureToNetSuiteReason;
+	}
+
+
+
+	public void setCallBackFailureToNetSuiteReason(
+			String callBackFailureToNetSuiteReason) {
+		this.callBackFailureToNetSuiteReason = callBackFailureToNetSuiteReason;
+	}
+
+
 
 	@Override
 	public int hashCode() {
@@ -163,7 +184,7 @@ public class Transaction {
 		int result = 1;
 		result = prime
 				* result
-				+ ((auditTransationID == null) ? 0 : auditTransationID
+				+ ((auditTransactionId == null) ? 0 : auditTransactionId
 						.hashCode());
 		result = prime
 				* result
@@ -171,8 +192,8 @@ public class Transaction {
 						.hashCode());
 		result = prime
 				* result
-				+ ((callBackFailureToNetSuitReason == null) ? 0
-						: callBackFailureToNetSuitReason.hashCode());
+				+ ((callBackFailureToNetSuiteReason == null) ? 0
+						: callBackFailureToNetSuiteReason.hashCode());
 		result = prime * result
 				+ ((callBackPayload == null) ? 0 : callBackPayload.hashCode());
 		result = prime
@@ -188,7 +209,7 @@ public class Transaction {
 				+ ((carrierStatus == null) ? 0 : carrierStatus.hashCode());
 		result = prime
 				* result
-				+ ((carrierTransactionID == null) ? 0 : carrierTransactionID
+				+ ((carrierTransactionId == null) ? 0 : carrierTransactionId
 						.hashCode());
 		result = prime * result
 				+ ((deviceNumber == null) ? 0 : deviceNumber.hashCode());
@@ -202,7 +223,7 @@ public class Transaction {
 				+ ((midwayStatus == null) ? 0 : midwayStatus.hashCode());
 		result = prime
 				* result
-				+ ((midwayTransactionID == null) ? 0 : midwayTransactionID
+				+ ((midwayTransactionId == null) ? 0 : midwayTransactionId
 						.hashCode());
 		result = prime * result
 				+ ((requestType == null) ? 0 : requestType.hashCode());
@@ -213,6 +234,8 @@ public class Transaction {
 		return result;
 	}
 
+
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -222,21 +245,21 @@ public class Transaction {
 		if (getClass() != obj.getClass())
 			return false;
 		Transaction other = (Transaction) obj;
-		if (auditTransationID == null) {
-			if (other.auditTransationID != null)
+		if (auditTransactionId == null) {
+			if (other.auditTransactionId != null)
 				return false;
-		} else if (!auditTransationID.equals(other.auditTransationID))
+		} else if (!auditTransactionId.equals(other.auditTransactionId))
 			return false;
 		if (callBackDelivered == null) {
 			if (other.callBackDelivered != null)
 				return false;
 		} else if (!callBackDelivered.equals(other.callBackDelivered))
 			return false;
-		if (callBackFailureToNetSuitReason == null) {
-			if (other.callBackFailureToNetSuitReason != null)
+		if (callBackFailureToNetSuiteReason == null) {
+			if (other.callBackFailureToNetSuiteReason != null)
 				return false;
-		} else if (!callBackFailureToNetSuitReason
-				.equals(other.callBackFailureToNetSuitReason))
+		} else if (!callBackFailureToNetSuiteReason
+				.equals(other.callBackFailureToNetSuiteReason))
 			return false;
 		if (callBackPayload == null) {
 			if (other.callBackPayload != null)
@@ -251,7 +274,8 @@ public class Transaction {
 		if (carrierErrorDescription == null) {
 			if (other.carrierErrorDescription != null)
 				return false;
-		} else if (!carrierErrorDescription.equals(other.carrierErrorDescription))
+		} else if (!carrierErrorDescription
+				.equals(other.carrierErrorDescription))
 			return false;
 		if (carrierName == null) {
 			if (other.carrierName != null)
@@ -263,10 +287,10 @@ public class Transaction {
 				return false;
 		} else if (!carrierStatus.equals(other.carrierStatus))
 			return false;
-		if (carrierTransactionID == null) {
-			if (other.carrierTransactionID != null)
+		if (carrierTransactionId == null) {
+			if (other.carrierTransactionId != null)
 				return false;
-		} else if (!carrierTransactionID.equals(other.carrierTransactionID))
+		} else if (!carrierTransactionId.equals(other.carrierTransactionId))
 			return false;
 		if (deviceNumber == null) {
 			if (other.deviceNumber != null)
@@ -288,10 +312,10 @@ public class Transaction {
 				return false;
 		} else if (!midwayStatus.equals(other.midwayStatus))
 			return false;
-		if (midwayTransactionID == null) {
-			if (other.midwayTransactionID != null)
+		if (midwayTransactionId == null) {
+			if (other.midwayTransactionId != null)
 				return false;
-		} else if (!midwayTransactionID.equals(other.midwayTransactionID))
+		} else if (!midwayTransactionId.equals(other.midwayTransactionId))
 			return false;
 		if (requestType == null) {
 			if (other.requestType != null)
@@ -306,20 +330,45 @@ public class Transaction {
 		return true;
 	}
 
-	public String getTimeStampReceived() {
-		return timeStampReceived;
-	}
 
-	public void setTimeStampReceived(String timeStampReceived) {
-		this.timeStampReceived = timeStampReceived;
-	}
 
-	public String getLastTimeStampUpdated() {
-		return lastTimeStampUpdated;
-	}
-
-	public void setLastTimeStampUpdated(String lastTimeStampUpdated) {
-		this.lastTimeStampUpdated = lastTimeStampUpdated;
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Transaction [midwayTransactionId=");
+		builder.append(midwayTransactionId);
+		builder.append(", carrierTransactionId=");
+		builder.append(carrierTransactionId);
+		builder.append(", deviceNumber=");
+		builder.append(deviceNumber);
+		builder.append(", devicePayload=");
+		builder.append(devicePayload);
+		builder.append(", midwayStatus=");
+		builder.append(midwayStatus);
+		builder.append(", carrierStatus=");
+		builder.append(carrierStatus);
+		builder.append(", carrierName=");
+		builder.append(carrierName);
+		builder.append(", timeStampReceived=");
+		builder.append(timeStampReceived);
+		builder.append(", lastTimeStampUpdated=");
+		builder.append(lastTimeStampUpdated);
+		builder.append(", carrierErrorDescription=");
+		builder.append(carrierErrorDescription);
+		builder.append(", requestType=");
+		builder.append(requestType);
+		builder.append(", callBackPayload=");
+		builder.append(callBackPayload);
+		builder.append(", callBackDelivered=");
+		builder.append(callBackDelivered);
+		builder.append(", auditTransactionId=");
+		builder.append(auditTransactionId);
+		builder.append(", callBackReceived=");
+		builder.append(callBackReceived);
+		builder.append(", callBackFailureToNetSuiteReason=");
+		builder.append(callBackFailureToNetSuiteReason);
+		builder.append("]");
+		return builder.toString();
 	}
 
 }

@@ -36,14 +36,14 @@ public class KoreCheckStatusPreProcessor implements Processor {
 		
 		ObjectMapper mapper = new ObjectMapper();
 		
-		String carrierTransationID=mapper.readValue(transaction.getCarrierTransactionID(),String.class);
+		String carrierTransationID=mapper.readValue(transaction.getCarrierTransactionId(),String.class);
 		
 		net.sf.json.JSONObject obj = new net.sf.json.JSONObject();
 		obj.put("trackingNumber", carrierTransationID);
 	
 		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,transaction.getDeviceNumber());
 
-		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_ID,transaction.getMidwayTransactionID());
+		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_ID,transaction.getMidwayTransactionId());
 	
 		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");

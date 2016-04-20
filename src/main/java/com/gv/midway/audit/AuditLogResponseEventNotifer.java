@@ -71,12 +71,12 @@ public class AuditLogResponseEventNotifer extends EventNotifierSupport {
 				audit.setInboundURL(exchange.getFromEndpoint().toString());
 				audit.setTransactionId(TransactionId);*/
 				
-				audit.setApi_OpreationName(apiOperationName);
+				audit.setApiOperationName(apiOperationName);
 				audit.setFrom(baseResponse.getHeader().getSourceName());
 				audit.setTo(exchange.getFromEndpoint().toString());
 				audit.setTimeStamp(localTime);
-				audit.setAuditTransationID(TransactionId);
-				audit.setGvTransationId(exchange.getProperty(IConstant.GV_TRANSACTION_ID).toString());
+				audit.setAuditTransactionId(TransactionId);
+				audit.setGvTransactionId(exchange.getProperty(IConstant.GV_TRANSACTION_ID).toString());
 				audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME).toString());
 				audit.setPayload(exchange.getIn().getBody());
 				if(IResponse.SUCCESS_CODE!=baseResponse.getResponse().getResponseCode())

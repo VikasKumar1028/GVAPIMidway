@@ -77,11 +77,11 @@ public class AuditLogRequestEventNotifer extends EventNotifierSupport {
 				 * audit.setInboundURL(exchange.getFromEndpoint().toString());
 				 * audit.setTransactionId(TransactionId);
 				 */
-				audit.setApi_OpreationName(apiOperationName);
+				audit.setApiOperationName(apiOperationName);
 				audit.setFrom(baseRequest.getHeader().getSourceName());
 				audit.setTo(exchange.getFromEndpoint().toString());
 				audit.setTimeStamp(localTime);
-				audit.setAuditTransationID(TransactionId);
+				audit.setAuditTransactionId(TransactionId);
 				
 
 			
@@ -99,7 +99,7 @@ public class AuditLogRequestEventNotifer extends EventNotifierSupport {
 				exchange.setProperty(IConstant.GV_HOSTNAME,CommonUtil.getIpAddress());
 				
 				
-				audit.setGvTransationId(exchange.getProperty(IConstant.GV_TRANSACTION_ID).toString());
+				audit.setGvTransactionId(exchange.getProperty(IConstant.GV_TRANSACTION_ID).toString());
 				audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME).toString());
 				// audit.setStatus(exchange.getProperty(name));
 
