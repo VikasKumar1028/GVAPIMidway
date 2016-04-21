@@ -7,6 +7,7 @@ public interface ITransactionalService {
 	public void populateActivateDBPayload(Exchange exchange);
 	//santosh:new method
 	public void populateDeactivateDBPayload(Exchange exchange);
+	public void populateSuspendDBPayload(Exchange exchange);
 	public void populateVerizonTransactionalResponse(Exchange exchange);
 	public void populateVerizonTransactionalErrorResponse(Exchange exchange);
 	public void populateKoreTransactionalResponse(Exchange exchange);

@@ -21,6 +21,12 @@ public class TransactionalServiceImpl implements ITransactionalService {
 
 		transactionalDao.populateDeactivateDBPayload(exchange);
 	}
+	
+	public void populateSuspendDBPayload(Exchange exchange) {
+
+		transactionalDao.populateSuspendDBPayload(exchange);
+	}
+	
 	public void populateVerizonTransactionalResponse(Exchange exchange) {
 		transactionalDao.populateVerizonTransactionalResponse(exchange);
 		

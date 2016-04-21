@@ -14,6 +14,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.gv.midway.constant.IConstant;
+import com.gv.midway.exception.InvalidParameterException;
 import com.gv.midway.exception.VerizonSessionTokenExpirationException;
 import com.gv.midway.pojo.checkstatus.kore.KoreCheckStatusResponse;
 import com.gv.midway.pojo.deviceInformation.kore.response.DeviceInformationResponseKore;
@@ -52,6 +53,12 @@ import com.gv.midway.processor.deviceInformation.StubKoreDeviceInformationProces
 import com.gv.midway.processor.deviceInformation.StubVerizonDeviceInformationProcessor;
 import com.gv.midway.processor.deviceInformation.VerizonDeviceInformationPostProcessor;
 import com.gv.midway.processor.deviceInformation.VerizonDeviceInformationPreProcessor;
+import com.gv.midway.processor.suspendDevice.KoreSuspendDevicePostProcessor;
+import com.gv.midway.processor.suspendDevice.KoreSuspendDevicePreProcessor;
+import com.gv.midway.processor.suspendDevice.StubKoreSuspendDeviceProcessor;
+import com.gv.midway.processor.suspendDevice.StubVerizonSuspendDeviceProcessor;
+import com.gv.midway.processor.suspendDevice.VerizonSuspendDevicePostProcessor;
+import com.gv.midway.processor.suspendDevice.VerizonSuspendDevicePreProcessor;
 import com.gv.midway.processor.token.TokenProcessor;
 import com.gv.midway.processor.token.VerizonAuthorizationTokenProcessor;
 import com.gv.midway.processor.token.VerizonSessionAttributeProcessor;
@@ -120,6 +127,10 @@ public class CamelRoute extends RouteBuilder {
 				.maximumRedeliveries(2).redeliveryDelay(1000)					
 				// The control will come to this processor when all attempts have been failed
 				.process(new GenericErrorProcessor(env)); 
+		
+		onException(InvalidParameterException.class).handled(true)
+		.log(LoggingLevel.INFO, "Invalid Parameter Passed Error")
+		.process(new GenericErrorProcessor(env));
 		
 		from("direct:tokenGeneration").bean(iSessionService, "checkToken")
 				.choice().when(body().contains("true"))
@@ -379,7 +390,90 @@ from("direct:VerizonDeviceInformationCarrierSubProcessFlow")
 	
 //*****  DEVICE DEACTIVATION END		
 		
-		
+
+		// ***** DEVICE SUSPEND BEGIN
+
+		// Main: Device Suspension Flow
+
+		from("direct:suspendDevice").process(new HeaderProcessor()).choice()
+				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
+				.choice().when(header("derivedCarrierName").isEqualTo("KORE"))
+				.process(new StubKoreSuspendDeviceProcessor()).to("log:input")
+				.when(header("derivedCarrierName").isEqualTo("VERIZON"))
+				.process(new StubVerizonSuspendDeviceProcessor())
+				.to("log:input").endChoice().otherwise().choice()
+				.when(header("derivedCarrierName").isEqualTo("KORE"))
+				.wireTap("direct:processSuspendKoreTransaction")
+				.process(new KoreSuspendDevicePostProcessor(env))
+
+				.endChoice()
+				.when(header("derivedCarrierName").isEqualTo("VERIZON"))
+				.bean(iSessionService, "setContextTokenInExchange")
+				.bean(iTransactionalService, "populateSuspendDBPayload")
+				.bean(iAuditService, "auditExternalRequestCall")
+				.to("direct:VerizonSuspendFlow1")
+
+				.endChoice().end().to("log:input").endChoice().end();
+
+		// SubFlow: Device Verizon Suspension
+
+		from("direct:VerizonSuspendFlow1")
+				.doTry()
+				.to("direct:VerizonSuspendFlow2")
+				.doCatch(CxfOperationException.class)
+				.bean(iTransactionalService,
+						"populateVerizonTransactionalErrorResponse")
+				.bean(iAuditService, "auditExternalExceptionResponseCall")
+				.process(new VerizonGenericExceptionProcessor(env)).endDoTry()
+				.end();
+
+		// SubFlow: Device Verizon Suspension
+
+		from("direct:VerizonSuspendFlow2")
+				.errorHandler(noErrorHandler())
+				// REMOVED Audit will store record 3 times in case of failure
+				// (see onException for connection.class above)
+				// .bean(iAuditService, "auditExternalRequestCall")
+				.bean(iSessionService, "setContextTokenInExchange")
+				.process(new VerizonSuspendDevicePreProcessor())
+				// Audit will store record 3 times in case of failure (see
+				// onException for connection.class above)
+				// .bean(iAuditService, "auditExternalRequestCall")
+				.to(uriRestVerizonEndPoint)
+				.unmarshal()
+				.json(JsonLibrary.Jackson)
+				.bean(iTransactionalService,
+						"populateVerizonTransactionalResponse")
+				.bean(iAuditService, "auditExternalResponseCall")
+				.process(new VerizonSuspendDevicePostProcessor(env));
+
+		// SubFlow: Device Kore Suspension
+
+		from("direct:processSuspendKoreTransaction")
+				.log("Wire Tap Thread suspension")
+				.bean(iTransactionalService, "populateSuspendDBPayload")
+				.split().method("deviceSplitter").recipientList()
+				.method("koreDeviceServiceRouter");
+
+		// SubFlow: Device Kore Suspension- SEDA CALL
+		from("seda:koreSedaSuspend?concurrentConsumers=5")
+				.onException(CxfOperationException.class)
+				.handled(true)
+				.bean(iTransactionalService,
+						"populateKoreTransactionalErrorResponse")
+				.bean(iAuditService, "auditExternalExceptionResponseCall")
+				.end()
+				.process(new KoreSuspendDevicePreProcessor(env))
+				.bean(iAuditService, "auditExternalRequestCall")
+				.to(uriRestKoreEndPoint)
+				.unmarshal()
+				.json(JsonLibrary.Jackson, DeviceInformationResponseKore.class)
+				.bean(iAuditService, "auditExternalResponseCall")
+				.bean(iTransactionalService,
+						"populateKoreTransactionalResponse")
+				.process(new KoreSuspendDevicePostProcessor());
+
+		// ***** DEVICE Suspension END
 
 		/**Insert or Update Single Device details in MasterDB **/
 		
