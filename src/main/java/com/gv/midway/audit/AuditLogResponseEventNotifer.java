@@ -16,16 +16,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.BaseResponse;
 import com.gv.midway.pojo.audit.Audit;
+import com.gv.midway.pojo.callback.TargetResponse;
 
 public class AuditLogResponseEventNotifer extends EventNotifierSupport {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(AuditLogResponseEventNotifer.class); // Initializing
+	private static final Logger logger = LoggerFactory.getLogger(AuditLogResponseEventNotifer.class); // Initializing
 
 	@Autowired
 	MongoTemplate mongoTemplate;
@@ -36,65 +35,63 @@ public class AuditLogResponseEventNotifer extends EventNotifierSupport {
 			Exchange exchange = create.getExchange();
 			logger.info("In Audit log Response");
 
-
-			/*ObjectMapper mapper = new ObjectMapper();
-			String jsonInString = mapper.writeValueAsString( exchange.getIn().getBody());*/
+			/*
+			 * ObjectMapper mapper = new ObjectMapper(); String jsonInString =
+			 * mapper.writeValueAsString( exchange.getIn().getBody());
+			 */
 
 			if (exchange.getIn().getBody() instanceof BaseResponse) {
 				logger.info("In Audit log Response4");
-				BaseResponse baseResponse = (BaseResponse) exchange.getIn()
-						.getBody();
-				
-				String TransactionId = (String) exchange
-						.getProperty(IConstant.AUDIT_TRANSACTION_ID);
-				
-				Date localTime = new Date();
-				DateFormat converter = new SimpleDateFormat(
-						"dd/MM/yyyy:HH:mm:ss");
-				converter.setTimeZone(TimeZone.getTimeZone("GMT"));
-			
-				String responseEndpint =exchange.getFromEndpoint().toString();
-				String responseEndpintSpilt[] =responseEndpint.split("//");
-				
-				
-				logger.info("responseEndpintSpilt::"+responseEndpintSpilt[1].replaceAll("]", " "));
-				
-				String apiOperationName= "GV_"+responseEndpintSpilt[1].replaceAll("]", "")+"_ProxyResponse";
-				logger.info("apiOperationName"+apiOperationName);
-				
-				
-				
-				Audit audit = new Audit();
-			  /*  audit.setCarrier(baseResponse.getHeader().getBsCarrier());
-				audit.setSource(baseResponse.getHeader().getSourceName());
-				audit.setApiAction(exchange.getFromEndpoint().toString());
-				audit.setInboundURL(exchange.getFromEndpoint().toString());
-				audit.setTransactionId(TransactionId);*/
-				
-				audit.setApiOperationName(apiOperationName);
-				audit.setFrom(baseResponse.getHeader().getSourceName());
-				audit.setTo(exchange.getFromEndpoint().toString());
-				audit.setTimeStamp(localTime);
-				audit.setAuditTransactionId(TransactionId);
-				audit.setGvTransactionId(exchange.getProperty(IConstant.GV_TRANSACTION_ID).toString());
-				audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME).toString());
-				audit.setPayload(exchange.getIn().getBody());
-				if(IResponse.SUCCESS_CODE!=baseResponse.getResponse().getResponseCode())
-				{
-				audit.setErrorDetails(baseResponse.getResponse().getResponseDescription());
-				audit.setErrorProblem(baseResponse.getResponse().getResponseStatus());
+				if (!(exchange.getIn().getBody() instanceof TargetResponse)) {
+					BaseResponse baseResponse = (BaseResponse) exchange.getIn().getBody();
 
-				audit.setErrorCode(baseResponse.getResponse().getResponseCode());
-			
+					String TransactionId = (String) exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID);
+
+					Date localTime = new Date();
+					DateFormat converter = new SimpleDateFormat("dd/MM/yyyy:HH:mm:ss");
+					converter.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+					String responseEndpint = exchange.getFromEndpoint().toString();
+					String responseEndpintSpilt[] = responseEndpint.split("//");
+
+					logger.info("responseEndpintSpilt::" + responseEndpintSpilt[1].replaceAll("]", " "));
+
+					String apiOperationName = "GV_" + responseEndpintSpilt[1].replaceAll("]", "") + "_ProxyResponse";
+					logger.info("apiOperationName" + apiOperationName);
+
+					Audit audit = new Audit();
+					/*
+					 * audit.setCarrier(baseResponse.getHeader().getBsCarrier());
+					 * audit
+					 * .setSource(baseResponse.getHeader().getSourceName());
+					 * audit
+					 * .setApiAction(exchange.getFromEndpoint().toString());
+					 * audit
+					 * .setInboundURL(exchange.getFromEndpoint().toString());
+					 * audit.setTransactionId(TransactionId);
+					 */
+
+					audit.setApiOperationName(apiOperationName);
+					audit.setFrom(baseResponse.getHeader().getSourceName());
+					audit.setTo(exchange.getFromEndpoint().toString());
+					audit.setTimeStamp(localTime);
+					audit.setAuditTransactionId(TransactionId);
+					audit.setGvTransactionId(exchange.getProperty(IConstant.GV_TRANSACTION_ID).toString());
+					audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME).toString());
+					audit.setPayload(exchange.getIn().getBody());
+					if (IResponse.SUCCESS_CODE != baseResponse.getResponse().getResponseCode()) {
+						audit.setErrorDetails(baseResponse.getResponse().getResponseDescription());
+						audit.setErrorProblem(baseResponse.getResponse().getResponseStatus());
+
+						audit.setErrorCode(baseResponse.getResponse().getResponseCode());
+
+					}
+
+					audit.setPayload(exchange.getIn().getBody());
+
+					mongoTemplate.save(audit);
+
 				}
-				
-
-				
-				audit.setPayload(exchange.getIn().getBody());
-
-				
-				mongoTemplate.save(audit);
-
 			}
 		}
 

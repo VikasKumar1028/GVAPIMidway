@@ -21,6 +21,8 @@ import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IResponse;
 import com.gv.midway.constant.ITransaction;
 import com.gv.midway.dao.ITransactionalDao;
+import com.gv.midway.pojo.BaseRequest;
+import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceId;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequestDataArea;
@@ -436,6 +438,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		} else {
 
 			update.set(ITransaction.CALL_BACK_PAYLOAD, callBackVerizonRequest);
+			update.set(ITransaction.CALL_BACK_RECEIVED, true);
 			update.set(ITransaction.CARRIER_STATUS, IConstant.CARRIER_TRANSACTION_STATUS_SUCCESS);
 			update.set(ITransaction.LAST_TIME_STAMP_UPDATED, CommonUtil.getCurrentTimeStamp());
 
@@ -445,6 +448,14 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 	}
 
 	public void findMidwayTransactionId(Exchange exchange) {
+
+		/**
+		 * fetching midwayTransactionID from MongoDB as per requestID and device
+		 * number and setting it to target response
+		 * 
+		 * 
+		 * 
+		 * */
 
 		log.info("CallbackTransactionDaoImpl-getCallbackMidwayTransactionID");
 		log.info("Exchange inside" + exchange.getIn().getBody());
@@ -477,13 +488,15 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		Transaction findOne = mongoTemplate.findOne(searchUserQuery, Transaction.class);
 		String midwayTransationID = findOne.getMidwayTransactionId() != null ? findOne.getMidwayTransactionId() : "";
 		String carrierTransationID = findOne.getCarrierTransactionId() != null ? findOne.getCarrierTransactionId() : "";
-
+		BaseRequest devicePayload = (BaseRequest)findOne.getDevicePayload();
+		Header header = devicePayload.getHeader();
+		
 		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_ID, midwayTransationID);
 		exchange.setProperty(IConstant.GV_TRANSACTION_ID, carrierTransationID);
 		// TODO
 		exchange.setProperty(IConstant.GV_HOSTNAME, carrierTransationID);
 
 		targetResponse.getDataArea().setMidwayTransactionId(midwayTransationID);
-
+		targetResponse.setHeader(header);
 	}
 }
