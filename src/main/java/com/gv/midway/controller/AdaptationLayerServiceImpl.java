@@ -18,6 +18,8 @@ import com.gv.midway.pojo.device.response.UpdateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
 import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequestDataArea;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
+import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequest;
+import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
 import com.gv.midway.pojo.verizon.DeviceId;
 
 @SuppressWarnings("all")
@@ -145,6 +147,13 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 				"direct:activateDevice", activateDeviceRequest);
 	}
 
+	public SuspendDeviceResponse suspendDevice(
+			SuspendDeviceRequest suspendDeviceRequest) {
+		
+		return (SuspendDeviceResponse) producer.requestBody(
+				"direct:suspendDevice", suspendDeviceRequest);
+	}
+	
 	public TargetResponse callbacks(CallBackVerizonRequest callbackRequest) {
 		return (TargetResponse) producer.requestBody("direct:callbacks", callbackRequest);
 	}
