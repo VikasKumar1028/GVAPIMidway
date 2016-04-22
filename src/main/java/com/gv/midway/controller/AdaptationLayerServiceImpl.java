@@ -28,31 +28,30 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 	@EndpointInject(uri = "")
 	ProducerTemplate producer;
 
-	
-
 	public UpdateDeviceResponse updateDeviceDetails(SingleDevice device) {
 		// TODO Auto-generated method stub
-		
+
 		System.out.println("device info to update is...." + device.toString());
 
-		/*UpdateDeviceResponse response =(UpdateDeviceResponse)  producer.requestBodyAndHeader(
-				"direct:updateDeviceDetails", device, "id", id);*/
-		
-		
-		UpdateDeviceResponse response =(UpdateDeviceResponse) producer.requestBody(
-				"direct:updateDeviceDetails", device);
-				
+		/*
+		 * UpdateDeviceResponse response =(UpdateDeviceResponse)
+		 * producer.requestBodyAndHeader( "direct:updateDeviceDetails", device,
+		 * "id", id);
+		 */
+
+		UpdateDeviceResponse response = (UpdateDeviceResponse) producer
+				.requestBody("direct:updateDeviceDetails", device);
+
 		System.out.println("updateDeviceDetails respsone is ........"
 				+ response);
 
 		return response;
 	}
 
-	
-	
-	public DeviceInformationResponse getDeviceInfoDB(String region, String timestamp,
-			String organization, String transactionId, String sourceName,
-			String applicationName, String bsCarrier, String netSuiteId) {
+	public DeviceInformationResponse getDeviceInfoDB(String region,
+			String timestamp, String organization, String transactionId,
+			String sourceName, String applicationName, String bsCarrier,
+			String netSuiteId) {
 		// TODO Auto-generated method stub
 
 		DeviceInformationRequest deviceInformationRequest = new DeviceInformationRequest();
@@ -71,18 +70,18 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 
 		deviceInformationRequest.setHeader(header);
 		deviceInformationRequest.setDataArea(dataArea);
-		
-		DeviceInformationResponse response = (DeviceInformationResponse)producer.requestBody(
-				"direct:getDeviceInformationDB", deviceInformationRequest);
-		
+
+		DeviceInformationResponse response = (DeviceInformationResponse) producer
+				.requestBody("direct:getDeviceInformationDB",
+						deviceInformationRequest);
+
 		return response;
 	}
-	
-	
-	
-	public DeviceInformationResponse getDeviceInfoCarrier(String region, String timestamp,
-			String organization, String transactionId, String sourceName,
-			String applicationName, String bsCarrier, String netSuiteId,String deviceId,String kind) {
+
+	public DeviceInformationResponse getDeviceInfoCarrier(String region,
+			String timestamp, String organization, String transactionId,
+			String sourceName, String applicationName, String bsCarrier,
+			String netSuiteId, String deviceId, String kind) {
 		// TODO Auto-generated method stub
 
 		DeviceInformationRequest deviceInformationRequest = new DeviceInformationRequest();
@@ -105,15 +104,13 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 
 		deviceInformationRequest.setHeader(header);
 		deviceInformationRequest.setDataArea(dataArea);
-		
-		DeviceInformationResponse response = (DeviceInformationResponse)producer.requestBody(
-				"direct:deviceInformationCarrier", deviceInformationRequest);
-		
+
+		DeviceInformationResponse response = (DeviceInformationResponse) producer
+				.requestBody("direct:deviceInformationCarrier",
+						deviceInformationRequest);
+
 		return response;
 	}
-	
-
-	
 
 	public BatchDeviceResponse updateDevicesDetailsBulk(BulkDevices devices) {
 		// TODO Auto-generated method stub
@@ -121,41 +118,49 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 
 		Object responseActual = producer.requestBody(
 				"direct:updateDevicesDetailsBulk", devices);
-		
-		System.out.println("resposne actual is........"+responseActual.toString());
-		
-		BatchDeviceResponse response=(BatchDeviceResponse)responseActual;
 
-		System.out.println(" direct:updateDevicesDetails in Batch respsone is ........"
-				+ response);
+		System.out.println("resposne actual is........"
+				+ responseActual.toString());
+
+		BatchDeviceResponse response = (BatchDeviceResponse) responseActual;
+
+		System.out
+				.println(" direct:updateDevicesDetails in Batch respsone is ........"
+						+ response);
 
 		return response;
 	}
 
-	
 	public DeactivateDeviceResponse deactivateDevice(
 			DeactivateDeviceRequest deactivateDeviceRequest) {
-		
+
 		return (DeactivateDeviceResponse) producer.requestBody(
 				"direct:deactivateDevice", deactivateDeviceRequest);
 	}
-	
+
 	public ActivateDeviceResponse activateDevice(
 			ActivateDeviceRequest activateDeviceRequest) {
-		
+
 		return (ActivateDeviceResponse) producer.requestBody(
 				"direct:activateDevice", activateDeviceRequest);
 	}
 
 	public SuspendDeviceResponse suspendDevice(
 			SuspendDeviceRequest suspendDeviceRequest) {
-		
+
 		return (SuspendDeviceResponse) producer.requestBody(
 				"direct:suspendDevice", suspendDeviceRequest);
 	}
-	
+
+	public SuspendDeviceResponse updateCustomeFieldDevice(
+			SuspendDeviceRequest activateDeviceRequest) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	public TargetResponse callbacks(CallBackVerizonRequest callbackRequest) {
-		return (TargetResponse) producer.requestBody("direct:callbacks", callbackRequest);
+		return (TargetResponse) producer.requestBody("direct:callbacks",
+				callbackRequest);
 	}
 
 }
