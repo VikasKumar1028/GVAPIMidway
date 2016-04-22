@@ -8,6 +8,8 @@ import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
 import com.gv.midway.pojo.callback.TargetResponse;
 import com.gv.midway.pojo.callback.request.CallBackVerizonRequest;
+import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationRequest;
+import com.gv.midway.pojo.connectionInformation.response.ConnectionInformationResponse;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.pojo.device.request.BulkDevices;
@@ -164,6 +166,12 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 	public TargetResponse callbacks(CallBackVerizonRequest callbackRequest) {
 		return (TargetResponse) producer.requestBody("direct:callbacks",
 				callbackRequest);
+	}
+
+	public ConnectionInformationResponse connectionInformation(
+			ConnectionInformationRequest connectionInformationRequest) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	
