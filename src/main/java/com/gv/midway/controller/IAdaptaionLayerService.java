@@ -94,7 +94,7 @@ public interface IAdaptaionLayerService {
 			SuspendDeviceRequest activateDeviceRequest);
 
 	@POST
-	@Path("/device/suspend")
+	@Path("/device/updateCustomeField")
 	@Produces("application/json")
 	@Consumes("application/json")
 	@ApiOperation(value = "updateCustomeFieldDevice")
