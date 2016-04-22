@@ -7,9 +7,8 @@ import org.apache.log4j.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
-import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceId;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequest;
-import com.gv.midway.pojo.suspendDevice.request.SuspendDevices;
+
 import com.gv.midway.pojo.suspendDevice.verizon.request.SuspendDeviceRequestVerizon;
 import com.gv.midway.pojo.verizon.DeviceId;
 import com.gv.midway.pojo.verizon.Devices;
@@ -40,7 +39,7 @@ public class VerizonSuspendDevicePreProcessor implements Processor {
 	//As the payload is broken into indivisual devices so only one Device
 			
 	//Need to send the complete payload	with id and Kind as device parameters	
-	SuspendDevices[] proxyDevicesArray=	proxyRequest.getDataArea().getDevices();
+	Devices[] proxyDevicesArray=	proxyRequest.getDataArea().getDevices();
 	Devices[] businessDevicesArray= new Devices[proxyDevicesArray.length];
 	
 	
@@ -48,13 +47,13 @@ public class VerizonSuspendDevicePreProcessor implements Processor {
 	{
 	
 	DeviceId[] businessDeviceIdArray = new DeviceId[proxyDevicesArray[j].getDeviceIds().length];
-	SuspendDevices proxyDevices= proxyDevicesArray[j];
+	Devices proxyDevices= proxyDevicesArray[j];
 	Devices businessDevice= new Devices();
 	
 	
 	for ( int i=0; i<proxyDevices.getDeviceIds().length;i++)
 	{
-		SuspendDeviceId proxyDeviceId=proxyDevices.getDeviceIds()[i];
+		DeviceId proxyDeviceId=proxyDevices.getDeviceIds()[i];
 		
 		DeviceId businessDeviceId=new DeviceId();
 		businessDeviceId.setId(proxyDeviceId.getId());

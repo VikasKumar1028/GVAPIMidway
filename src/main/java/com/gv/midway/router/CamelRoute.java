@@ -74,7 +74,9 @@ import com.gv.midway.service.ITransactionalService;
  * 
  * @version
  */
-@PropertySource({ "classpath:stub.properties" ,"classpath:midway.properties","classpath:koreAuthentication.properties","classpath:verizonAuthentication.properties"})
+@PropertySource({ "classpath:stub.properties", "classpath:midway.properties",
+		"classpath:koreAuthentication.properties",
+		"classpath:verizonAuthentication.properties" })
 @Component
 public class CamelRoute extends RouteBuilder {
 
@@ -90,10 +92,10 @@ public class CamelRoute extends RouteBuilder {
 
 	@Autowired
 	private IAuditService iAuditService;
-	
+
 	@Autowired
 	private ITransactionalService iTransactionalService;
-	
+
 	/*
 	 * @Autowired private SessionBean sessionBean;
 	 */
@@ -102,7 +104,7 @@ public class CamelRoute extends RouteBuilder {
 	private String uriRestVerizonTokenEndPoint = "cxfrs://bean://rsVerizonTokenClient";
 	private String uriRestKoreEndPoint = "cxfrs://bean://rsKoreClient";
 	private String uriRestNetsuitEndPoint = "cxfrs://bean://rsNetsuitClient";
-	
+
 	Logger log = Logger.getLogger(CamelRoute.class.getName());
 
 	@Autowired
@@ -111,26 +113,31 @@ public class CamelRoute extends RouteBuilder {
 	@Override
 	public void configure() throws Exception {
 
-		
 		onException(UnknownHostException.class, ConnectException.class)
-				.routeId("ConnectionExceptionRoute").handled(true)
+				.routeId("ConnectionExceptionRoute")
+				.handled(true)
 				.log(LoggingLevel.ERROR, "Connection Error")
-				.maximumRedeliveries(1).redeliveryDelay(100)
-				.bean(iTransactionalService,"populateConnectionErrorResponse(${exchange},CONNECTION_ERROR)")
-				.bean(iAuditService, "auditExternalConnectionExceptionResponseCall")
+				.maximumRedeliveries(1)
+				.redeliveryDelay(100)
+				.bean(iTransactionalService,
+						"populateConnectionErrorResponse(${exchange},CONNECTION_ERROR)")
+				.bean(iAuditService,
+						"auditExternalConnectionExceptionResponseCall")
 				.process(new GenericErrorProcessor(env));
 
 		onException(VerizonSessionTokenExpirationException.class)
 				.routeId("ConnectionLoginExceptionRoute").handled(true)
-				.log(LoggingLevel.INFO, "Connection Error").onRedelivery(new TokenProcessor())
-				.maximumRedeliveries(2).redeliveryDelay(1000)					
-				// The control will come to this processor when all attempts have been failed
-				.process(new GenericErrorProcessor(env)); 
-		
+				.log(LoggingLevel.INFO, "Connection Error")
+				.onRedelivery(new TokenProcessor()).maximumRedeliveries(2)
+				.redeliveryDelay(1000)
+				// The control will come to this processor when all attempts
+				// have been failed
+				.process(new GenericErrorProcessor(env));
+
 		onException(InvalidParameterException.class).handled(true)
-		.log(LoggingLevel.INFO, "Invalid Parameter Passed Error")
-		.process(new GenericErrorProcessor(env));
-		
+				.log(LoggingLevel.INFO, "Invalid Parameter Passed Error")
+				.process(new GenericErrorProcessor(env));
+
 		from("direct:tokenGeneration").bean(iSessionService, "checkToken")
 				.choice().when(body().contains("true"))
 				.log(LoggingLevel.INFO, "MATCH -REFETCHING ")
@@ -148,103 +155,92 @@ public class CamelRoute extends RouteBuilder {
 				// sync DB and session token in the ServletContext
 				.bean(iSessionService, "synchronizeDBContextToken");
 
-		/**Get DeviceInformation from  Carrier and update in MasterDB and return back to Calling System. **/
+		/**
+		 * Get DeviceInformation from Carrier and update in MasterDB and return
+		 * back to Calling System.
+		 **/
 		from("direct:deviceInformationCarrier").process(new HeaderProcessor())
 				.choice()
-					.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
-						.choice()
-							.when(header("derivedCarrierName").isEqualTo("KORE"))
-									.process(new StubKoreDeviceInformationProcessor())
-									.to("log:input")
-							.when(header("derivedCarrierName").isEqualTo("VERIZON"))
-									.process(new StubVerizonDeviceInformationProcessor())
-									.to("log:input").endChoice()
-					.otherwise()
-						.choice()
-						
-							.when(header("derivedCarrierName").isEqualTo("KORE"))
-										.doTry()
-											.process(new KoreDeviceInformationPreProcessor())
-											.bean(iAuditService, "auditExternalRequestCall")
-											.to(uriRestKoreEndPoint)
-											.unmarshal()
-											.json(JsonLibrary.Jackson, DeviceInformationResponseKore.class)
-											.bean(iAuditService, "auditExternalResponseCall").bean(iDeviceService, "setDeviceInformationDB")
-											.process(new KoreDeviceInformationPostProcessor(env)).bean(iDeviceService, "updateDeviceInformationDB")
-										.doCatch(CxfOperationException.class)
-											.bean(iAuditService, "auditExternalExceptionResponseCall")
-											.process(new KoreGenericExceptionProcessor(env))
-										.endDoTry()
-	
-							.endChoice()
-	
-							.when(header("derivedCarrierName").isEqualTo("VERIZON"))
-									//will store only one time in Audit even on connection failure
-									.bean(iAuditService, "auditExternalRequestCall")
-									.to("direct:VerizonDeviceInformationCarrierSubProcess")
-	
-							.endChoice()
-							.end()
-	
-					.to("log:input")
-				.endChoice()
-				.end();
-		
-		
-		from("direct:VerizonDeviceInformationCarrierSubProcess")
-		.doTry()
-		.to("direct:VerizonDeviceInformationCarrierSubProcessFlow")
-		.doCatch(CxfOperationException.class)
-		.bean(iAuditService, "auditExternalExceptionResponseCall")
-		.process(new VerizonGenericExceptionProcessor(env)).endDoTry()
-		.end();
+				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
+				.choice().when(header("derivedCarrierName").isEqualTo("KORE"))
+				.process(new StubKoreDeviceInformationProcessor())
+				.to("log:input")
+				.when(header("derivedCarrierName").isEqualTo("VERIZON"))
+				.process(new StubVerizonDeviceInformationProcessor())
+				.to("log:input").endChoice().otherwise().choice()
 
-// SubFlow: Verizon Device Information
-from("direct:VerizonDeviceInformationCarrierSubProcessFlow")
-		.errorHandler(noErrorHandler())
-		// REMOVED Audit will store record 3 times in case of failure
-		// (see onException for connection.class above)
-		// .bean(iAuditService, "auditExternalRequestCall")
-		.bean(iSessionService, "setContextTokenInExchange")
-		.process(new VerizonDeviceInformationPreProcessor())
-		.to(uriRestVerizonEndPoint)
-		.unmarshal()
-		.json(JsonLibrary.Jackson, DeviceInformationResponseVerizon.class)
-		.bean(iAuditService, "auditExternalResponseCall").bean(iDeviceService, "setDeviceInformationDB")
-		.process(new VerizonDeviceInformationPostProcessor(env)).bean(iDeviceService, "updateDeviceInformationDB");
-		
-		
-//***** DEVICE ACTIVATION BEGIN		
-		
-//Main: Device Activation Flow
-		
-		from("direct:activateDevice").process(new HeaderProcessor())
-			.choice()
-						.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
-						.choice()
-								.when(header("derivedCarrierName").isEqualTo("KORE")).
-								log("message"+header("derivedSourceName"))
-									.process(new StubKoreActivateDeviceProcessor())
-									.to("log:input")
-								.when(header("derivedCarrierName").isEqualTo("VERIZON"))
-									.process(new StubVerizonActivateDeviceProcessor())
-									.to("log:input").
-						endChoice().otherwise()
-							.choice()
-									.when(header("derivedCarrierName").isEqualTo("KORE"))
-									.wireTap("direct:processActivateKoreTransaction")
-									.process(new KoreActivateDevicePostProcessor(env))
-							.endChoice()
-									.when(header("derivedCarrierName").isEqualTo("VERIZON"))
-										.bean(iSessionService, "setContextTokenInExchange")
-										.bean(iTransactionalService,"populateActivateDBPayload")
-										//will store only one time in Audit even on connection failure
-										.bean(iAuditService, "auditExternalRequestCall")
-										.to("direct:VerizonActivationFlow1")
-								.endChoice()
-							.end().to("log:input")
-			.endChoice().end();
-				
+				.when(header("derivedCarrierName").isEqualTo("KORE")).doTry()
+				.process(new KoreDeviceInformationPreProcessor())
+				.bean(iAuditService, "auditExternalRequestCall")
+				.to(uriRestKoreEndPoint).unmarshal()
+				.json(JsonLibrary.Jackson, DeviceInformationResponseKore.class)
+				.bean(iAuditService, "auditExternalResponseCall")
+				.bean(iDeviceService, "setDeviceInformationDB")
+				.process(new KoreDeviceInformationPostProcessor(env))
+				.bean(iDeviceService, "updateDeviceInformationDB")
+				.doCatch(CxfOperationException.class)
+				.bean(iAuditService, "auditExternalExceptionResponseCall")
+				.process(new KoreGenericExceptionProcessor(env)).endDoTry()
+
+				.endChoice()
+
+				.when(header("derivedCarrierName").isEqualTo("VERIZON"))
+				// will store only one time in Audit even on connection failure
+				.bean(iAuditService, "auditExternalRequestCall")
+				.to("direct:VerizonDeviceInformationCarrierSubProcess")
+
+				.endChoice().end()
+
+				.to("log:input").endChoice().end();
+
+		from("direct:VerizonDeviceInformationCarrierSubProcess").doTry()
+				.to("direct:VerizonDeviceInformationCarrierSubProcessFlow")
+				.doCatch(CxfOperationException.class)
+				.bean(iAuditService, "auditExternalExceptionResponseCall")
+				.process(new VerizonGenericExceptionProcessor(env)).endDoTry()
+				.end();
+
+		// SubFlow: Verizon Device Information
+		from("direct:VerizonDeviceInformationCarrierSubProcessFlow")
+				.errorHandler(noErrorHandler())
+				// REMOVED Audit will store record 3 times in case of failure
+				// (see onException for connection.class above)
+				// .bean(iAuditService, "auditExternalRequestCall")
+				.bean(iSessionService, "setContextTokenInExchange")
+				.process(new VerizonDeviceInformationPreProcessor())
+				.to(uriRestVerizonEndPoint)
+				.unmarshal()
+				.json(JsonLibrary.Jackson,
+						DeviceInformationResponseVerizon.class)
+				.bean(iAuditService, "auditExternalResponseCall")
+				.bean(iDeviceService, "setDeviceInformationDB")
+				.process(new VerizonDeviceInformationPostProcessor(env))
+				.bean(iDeviceService, "updateDeviceInformationDB");
+
+		// ***** DEVICE ACTIVATION BEGIN
+
+		// Main: Device Activation Flow
+
+		from("direct:activateDevice").process(new HeaderProcessor()).choice()
+				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
+				.choice().when(header("derivedCarrierName").isEqualTo("KORE"))
+				.log("message" + header("derivedSourceName"))
+				.process(new StubKoreActivateDeviceProcessor()).to("log:input")
+				.when(header("derivedCarrierName").isEqualTo("VERIZON"))
+				.process(new StubVerizonActivateDeviceProcessor())
+				.to("log:input").endChoice().otherwise().choice()
+				.when(header("derivedCarrierName").isEqualTo("KORE"))
+				.wireTap("direct:processActivateKoreTransaction")
+				.process(new KoreActivateDevicePostProcessor(env))
+				.endChoice()
+				.when(header("derivedCarrierName").isEqualTo("VERIZON"))
+				.bean(iSessionService, "setContextTokenInExchange")
+				.bean(iTransactionalService, "populateActivateDBPayload")
+				// will store only one time in Audit even on connection failure
+				.bean(iAuditService, "auditExternalRequestCall")
+				.to("direct:VerizonActivationFlow1").endChoice().end()
+				.to("log:input").endChoice().end();
+
 		from("direct:VerizonActivationFlow1")
 				.doTry()
 				.to("direct:VerizonActivationFlow2")
@@ -254,7 +250,7 @@ from("direct:VerizonDeviceInformationCarrierSubProcessFlow")
 				.bean(iAuditService, "auditExternalExceptionResponseCall")
 				.process(new VerizonGenericExceptionProcessor(env)).endDoTry()
 				.end();
-		
+
 		// SubFlow: Device Verizon Activation
 		from("direct:VerizonActivationFlow2")
 				.errorHandler(noErrorHandler())
@@ -270,21 +266,22 @@ from("direct:VerizonDeviceInformationCarrierSubProcessFlow")
 						"populateVerizonTransactionalResponse")
 				.bean(iAuditService, "auditExternalResponseCall")
 				.process(new VerizonActivateDevicePostProcessor(env));
-		
-		
-//SubFlow: Device Kore Activation 		
-		from("direct:processActivateKoreTransaction")
-			.log("Wire Tap Thread activation")
-			.bean(iTransactionalService,"populateActivateDBPayload")
-		    .split().method("deviceSplitter").recipientList().method("koreDeviceServiceRouter");
 
-//SubFlow: Device Kore Acitvation- SEDA CALL 
-		 from("seda:koreSedaActivation?concurrentConsumers=5")
-		 .onException(CxfOperationException.class).handled(true)
+		// SubFlow: Device Kore Activation
+		from("direct:processActivateKoreTransaction")
+				.log("Wire Tap Thread activation")
+				.bean(iTransactionalService, "populateActivateDBPayload")
+				.split().method("deviceSplitter").recipientList()
+				.method("koreDeviceServiceRouter");
+
+		// SubFlow: Device Kore Acitvation- SEDA CALL
+		from("seda:koreSedaActivation?concurrentConsumers=5")
+				.onException(CxfOperationException.class)
+				.handled(true)
 				.bean(iTransactionalService,
 						"populateKoreTransactionalErrorResponse")
 				.bean(iAuditService, "auditExternalExceptionResponseCall")
-				.end()				
+				.end()
 				.process(new KoreActivateDevicePreProcessor(env))
 				.bean(iAuditService, "auditExternalRequestCall")
 				.to(uriRestKoreEndPoint)
@@ -293,47 +290,44 @@ from("direct:VerizonDeviceInformationCarrierSubProcessFlow")
 				.bean(iTransactionalService,
 						"populateKoreTransactionalResponse")
 				.bean(iAuditService, "auditExternalResponseCall");
-				
 
-//*****  DEVICE ACTIVATION END
-		 
-		 
-//***** DEVICE DEACTIVATION BEGIN		
-			
-//Main: Device DeActivation Flow
-		 
+		// ***** DEVICE ACTIVATION END
+
+		// ***** DEVICE DEACTIVATION BEGIN
+
+		// Main: Device DeActivation Flow
+
 		from("direct:deactivateDevice").process(new HeaderProcessor())
-			.choice()
-						.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
-							.choice()
-								.when(header("derivedCarrierName").isEqualTo("KORE"))
-									.process(new StubKoreDeactivateDeviceProcessor())
-									.to("log:input")
-								.when(header("derivedCarrierName").isEqualTo("VERIZON"))
-									.process(new StubVerizonDeactivateDeviceProcessor())
-									.to("log:input").endChoice().
-									otherwise()
-									.choice()//santosh:
-											.when(header("derivedCarrierName").isEqualTo("KORE"))
-											.wireTap("direct:processDeactivateKoreTransaction")
-											.process(new KoreDeactivateDevicePostProcessor(env))
-				
-								  .endChoice()				
-											.when(header("derivedCarrierName").isEqualTo("VERIZON"))											
-													.bean(iSessionService, "setContextTokenInExchange")
-													.bean(iTransactionalService,"populateDeactivateDBPayload")
-													.bean(iAuditService, "auditExternalRequestCall")
-													.to("direct:VerizonDeactivationFlow1")
-														
-					.endChoice().
-					end().to("log:input").
-			endChoice()
-			.end();
-			
-//SubFlow: Device Verizon DeActivation 			
-		
+				.choice()
+				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
+				.choice()
+				.when(header("derivedCarrierName").isEqualTo("KORE"))
+				.process(new StubKoreDeactivateDeviceProcessor())
+				.to("log:input")
+				.when(header("derivedCarrierName").isEqualTo("VERIZON"))
+				.process(new StubVerizonDeactivateDeviceProcessor())
+				.to("log:input")
+				.endChoice()
+				.otherwise()
+				.choice()
+				// santosh:
+				.when(header("derivedCarrierName").isEqualTo("KORE"))
+				.wireTap("direct:processDeactivateKoreTransaction")
+				.process(new KoreDeactivateDevicePostProcessor(env))
+
+				.endChoice()
+				.when(header("derivedCarrierName").isEqualTo("VERIZON"))
+				.bean(iSessionService, "setContextTokenInExchange")
+				.bean(iTransactionalService, "populateDeactivateDBPayload")
+				.bean(iAuditService, "auditExternalRequestCall")
+				.to("direct:VerizonDeactivationFlow1")
+
+				.endChoice().end().to("log:input").endChoice().end();
+
+		// SubFlow: Device Verizon DeActivation
+
 		from("direct:VerizonDeactivationFlow1")
-					.doTry()
+				.doTry()
 				.to("direct:VerizonDeactivationFlow2")
 				.doCatch(CxfOperationException.class)
 				.bean(iTransactionalService,
@@ -341,54 +335,53 @@ from("direct:VerizonDeviceInformationCarrierSubProcessFlow")
 				.bean(iAuditService, "auditExternalExceptionResponseCall")
 				.process(new VerizonGenericExceptionProcessor(env)).endDoTry()
 				.end();
-		
 
-		//SubFlow: Device Verizon DeActivation 			
-		
-				from("direct:VerizonDeactivationFlow2")
+		// SubFlow: Device Verizon DeActivation
+
+		from("direct:VerizonDeactivationFlow2")
 				.errorHandler(noErrorHandler())
 				// REMOVED Audit will store record 3 times in case of failure
 				// (see onException for connection.class above)
 				// .bean(iAuditService, "auditExternalRequestCall")
-				.bean(iSessionService, "setContextTokenInExchange")					
+				.bean(iSessionService, "setContextTokenInExchange")
 				.process(new VerizonDeactivateDevicePreProcessor())
-				//Audit will store record 3 times in case of failure (see onException for connection.class above)
-				//.bean(iAuditService, "auditExternalRequestCall")
+				// Audit will store record 3 times in case of failure (see
+				// onException for connection.class above)
+				// .bean(iAuditService, "auditExternalRequestCall")
 				.to(uriRestVerizonEndPoint)
 				.unmarshal()
 				.json(JsonLibrary.Jackson)
-				.bean(iTransactionalService,"populateVerizonTransactionalResponse")
+				.bean(iTransactionalService,
+						"populateVerizonTransactionalResponse")
 				.bean(iAuditService, "auditExternalResponseCall")
-				.process(new VerizonDeactivateDevicePostProcessor(env))
-				;
-		
-		
-		
-//SubFlow: Device Kore DeActivation 		
-		
+				.process(new VerizonDeactivateDevicePostProcessor(env));
+
+		// SubFlow: Device Kore DeActivation
+
 		from("direct:processDeactivateKoreTransaction")
-		.log("Wire Tap Thread deactivation")
-		.bean(iTransactionalService,"populateDeactivateDBPayload")
-	    .split().method("deviceSplitter").recipientList().method("koreDeviceServiceRouter");	
-		
-		
-//SubFlow: Device Kore DeAcitvation- SEDA CALL 		
+				.log("Wire Tap Thread deactivation")
+				.bean(iTransactionalService, "populateDeactivateDBPayload")
+				.split().method("deviceSplitter").recipientList()
+				.method("koreDeviceServiceRouter");
+
+		// SubFlow: Device Kore DeAcitvation- SEDA CALL
 		from("seda:koreSedaDeactivation?concurrentConsumers=5")
-		.onException(CxfOperationException.class).handled(true)
-			.bean(iTransactionalService,
+				.onException(CxfOperationException.class)
+				.handled(true)
+				.bean(iTransactionalService,
 						"populateKoreTransactionalErrorResponse")
-			.bean(iAuditService, "auditExternalExceptionResponseCall")
-			.end()			
-			.process(new KoreDeactivateDevicePreProcessor(env))
-			.bean(iAuditService, "auditExternalRequestCall")
-			.to(uriRestKoreEndPoint).unmarshal()
-			.json(JsonLibrary.Jackson, KoreProvisoningResponse.class)
-			.bean(iAuditService, "auditExternalResponseCall")
-			.bean(iTransactionalService,"populateKoreTransactionalResponse");
-			
-	
-//*****  DEVICE DEACTIVATION END		
-		
+				.bean(iAuditService, "auditExternalExceptionResponseCall")
+				.end()
+				.process(new KoreDeactivateDevicePreProcessor(env))
+				.bean(iAuditService, "auditExternalRequestCall")
+				.to(uriRestKoreEndPoint)
+				.unmarshal()
+				.json(JsonLibrary.Jackson, KoreProvisoningResponse.class)
+				.bean(iAuditService, "auditExternalResponseCall")
+				.bean(iTransactionalService,
+						"populateKoreTransactionalResponse");
+
+		// ***** DEVICE DEACTIVATION END
 
 		// ***** DEVICE SUSPEND BEGIN
 
@@ -474,93 +467,99 @@ from("direct:VerizonDeviceInformationCarrierSubProcessFlow")
 
 		// ***** DEVICE Suspension END
 
-		/**Insert or Update Single Device details in MasterDB **/
-		
+		/** Insert or Update Single Device details in MasterDB **/
+
 		from("direct:updateDeviceDetails").choice()
-					.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
-						.process(new StubCellUploadProcessor())
-								.endChoice().
-								otherwise().
-								bean(iDeviceService, "updateDeviceDetails").end();				
-		
+				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
+				.process(new StubCellUploadProcessor()).endChoice().otherwise()
+				.bean(iDeviceService, "updateDeviceDetails").end();
 
-		/**Get DeviceInformation from MasterDB and return back to Calling System.**/
+		/**
+		 * Get DeviceInformation from MasterDB and return back to Calling
+		 * System.
+		 **/
 		from("direct:getDeviceInformationDB")
-				.bean(iDeviceService, "getDeviceInformationDB").to("log:input").end();
+				.bean(iDeviceService, "getDeviceInformationDB").to("log:input")
+				.end();
 
-	
+		/** Insert or Upload Batch Device details in MasterDB. **/
+		from("direct:updateDevicesDetailsBulkActual").onCompletion()
+				.modeBeforeConsumer().setBody().body()
+				.process(new BulkDeviceProcessor()).end()
+				.bean(iDeviceService, "updateDevicesDetailsBulk").split()
+				.method("bulkOperationSplitter").recipientList()
+				.method("bulkOperationServiceRouter");
 
-		/**Insert or Upload Batch Device details in MasterDB.**/
-		from("direct:updateDevicesDetailsBulkActual").onCompletion().modeBeforeConsumer().setBody().body().process(new BulkDeviceProcessor()).end()
-				.bean(iDeviceService, "updateDevicesDetailsBulk").split().method("bulkOperationSplitter").recipientList().method("bulkOperationServiceRouter")
-				;
-		
-		from("direct:updateDevicesDetailsBulk")
-		.choice()
-		.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
-					.process(new StubCellBulkUploadProcessor())
-					.endChoice().
-					otherwise().to("direct:updateDevicesDetailsBulkActual").end();					
+		from("direct:updateDevicesDetailsBulk").choice()
+				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
+				.process(new StubCellBulkUploadProcessor()).endChoice()
+				.otherwise().to("direct:updateDevicesDetailsBulkActual").end();
 
-
-		
 		/**
 		 * Bulk Insert or Update the device in MasterDB using Seda
 		 */
-		 from("seda:bulkOperationDeviceSyncInDB?concurrentConsumers=5")
-		 .bean(iDeviceService, "bulkOperationDeviceSyncInDB");
-						
-		    
-			
-		 /**saving callbacks from verizon into MongoDB and and sending it 
-			 * to target the target system
-			 * 
-			 * */
+		from("seda:bulkOperationDeviceSyncInDB?concurrentConsumers=5").bean(
+				iDeviceService, "bulkOperationDeviceSyncInDB");
+
+		/**
+		 * saving callbacks from verizon into MongoDB and and sending it to
+		 * target the target system
+		 * 
+		 * */
 		from("direct:callbacks")
-			.bean(iTransactionalService, "populateCallbackDBPayload")
-			.process(new CallbackPreProcessor(env))
-			.bean(iTransactionalService,"findMidwayTransactionId")
-			.process(new CallbackPostProcessor())
-			.to("kafka:localhost:9092?topic=topic")
-//			.to("kafka:10.10.2.190:9092,10.10.2.190:9093,10.10.2.190:9094?topic=my-replicated-topic")
-			.process(new CallbackKafkaPostProcessor())
-			//******************DONOT REMOVE THIS COMMENTED CODE **********************
-//			.doTry()
-//				.to(uriRestNetsuitEndPoint)
-//			.doCatch(CxfOperationException.class)
-		.end();
-		
-	
+				.bean(iTransactionalService, "populateCallbackDBPayload")
+				.process(new CallbackPreProcessor(env))
+				.bean(iTransactionalService, "findMidwayTransactionId")
+				.process(new CallbackPostProcessor())
+				.to("kafka:localhost:9092?topic=topic")
+				// .to("kafka:10.10.2.190:9092,10.10.2.190:9093,10.10.2.190:9094?topic=my-replicated-topic")
+				.process(new CallbackKafkaPostProcessor())
+				// ******************DONOT REMOVE THIS COMMENTED CODE
+				// **********************
+				// .doTry()
+				// .to(uriRestNetsuitEndPoint)
+				// .doCatch(CxfOperationException.class)
+				.end();
+
 		/**
-		 * Get all the Kore devices with carrier status pending from TransactionDB 
+		 * Get all the Kore devices with carrier status pending from
+		 * TransactionDB
 		 */
-		/*from("timer://koreCheckStatusTimer?period=5m").bean(iTransactionalService,"populatePendingKoreCheckStatus")
-	    .split().method("checkStatusSplitter").recipientList().method("koreCheckStatusServiceRouter");*/
-		
+		/*
+		 * from("timer://koreCheckStatusTimer?period=5m").bean(iTransactionalService
+		 * ,"populatePendingKoreCheckStatus")
+		 * .split().method("checkStatusSplitter"
+		 * ).recipientList().method("koreCheckStatusServiceRouter");
+		 */
+
 		/**
-		 * Check status of all the Kore devices with carrier status pending and updated it in TransactionDB if it is 
-		 * completed from Kore and call the netsuiteEndpoint for them
+		 * Check status of all the Kore devices with carrier status pending and
+		 * updated it in TransactionDB if it is completed from Kore and call the
+		 * netsuiteEndpoint for them
 		 */
-		/* from("seda:koreSedaCheckStatus?concurrentConsumers=5")
-		    .doTry()
-		    			.process(new KoreCheckStatusPreProcessor(env))
-						.to(uriRestKoreEndPoint).unmarshal()
-						.json(JsonLibrary.Jackson, KoreCheckStatusResponse.class)
-						*//** Get the status of device update  carrier status in transaction DB *//*
-						.bean(iTransactionalService,"populateKoreTransactionalResponse")
-						*//**
-						 * Prepare the netsuite call back response
-						 *//*
-						.process(new KoreDeviceInformationPostProcessor())
-						*//**
-						 * Send to Netsuite restlet callback end point and update midway status in transaction DB
-						 *//*
-						 .to(uriRestNetsuitEndPoint)
-		    .doCatch(CxfOperationException.class)
-		    			.bean(iTransactionalService,"populateKoreTransactionalErrorResponse")
-		    			.bean(iAuditService, "auditExternalExceptionResponseCall")
-		    			.process(new KoreGenericExceptionProcessor(env))
-		    .endDoTry();*/
-	    
+		/*
+		 * from("seda:koreSedaCheckStatus?concurrentConsumers=5") .doTry()
+		 * .process(new KoreCheckStatusPreProcessor(env))
+		 * .to(uriRestKoreEndPoint).unmarshal() .json(JsonLibrary.Jackson,
+		 * KoreCheckStatusResponse.class)
+		 *//** Get the status of device update carrier status in transaction DB */
+		/*
+		 * .bean(iTransactionalService,"populateKoreTransactionalResponse")
+		 *//**
+		 * Prepare the netsuite call back response
+		 */
+		/*
+		 * .process(new KoreDeviceInformationPostProcessor())
+		 *//**
+		 * Send to Netsuite restlet callback end point and update midway
+		 * status in transaction DB
+		 */
+		/*
+		 * .to(uriRestNetsuitEndPoint) .doCatch(CxfOperationException.class)
+		 * .bean(iTransactionalService,"populateKoreTransactionalErrorResponse")
+		 * .bean(iAuditService, "auditExternalExceptionResponseCall")
+		 * .process(new KoreGenericExceptionProcessor(env)) .endDoTry();
+		 */
+
 	}
 }

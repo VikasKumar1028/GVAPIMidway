@@ -35,11 +35,11 @@ import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequestDataAr
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDevices;
 import com.gv.midway.pojo.kore.KoreErrorResponse;
 import com.gv.midway.pojo.kore.KoreProvisoningResponse;
-import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceId;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequest;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequestDataArea;
-import com.gv.midway.pojo.suspendDevice.request.SuspendDevices;
 import com.gv.midway.pojo.transaction.Transaction;
+import com.gv.midway.pojo.verizon.DeviceId;
+import com.gv.midway.pojo.verizon.Devices;
 import com.gv.midway.pojo.verizon.VerizonErrorResponse;
 import com.gv.midway.pojo.verizon.VerizonProvisoningResponse;
 import com.gv.midway.utility.CommonUtil;
@@ -219,21 +219,21 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		SuspendDeviceRequest req = (SuspendDeviceRequest) exchange.getIn().getBody();
 		SuspendDeviceRequestDataArea suspendDeviceRequestDataArea = (SuspendDeviceRequestDataArea) req.getDataArea();
-		SuspendDevices[] suspendDevices = suspendDeviceRequestDataArea.getDevices();
+		Devices[] suspendDevices = suspendDeviceRequestDataArea.getDevices();
 
 		Kryo kryo = new Kryo();
 
-		for (SuspendDevices suspendDevice : suspendDevices) {
+		for (Devices suspendDevice : suspendDevices) {
 			SuspendDeviceRequest dbPayload = new SuspendDeviceRequest();
 			dbPayload.setHeader(req.getHeader());
 
-			SuspendDevices[] businessPayloadDeviceArray = new SuspendDevices[1];
-			SuspendDevices businessPayLoadSuspendDevices = new SuspendDevices();
-			SuspendDeviceId[] businessPayloadDeviceId = new SuspendDeviceId[suspendDevice.getDeviceIds().length];
+			Devices[] businessPayloadDeviceArray = new Devices[1];
+			Devices businessPayLoadSuspendDevices = new Devices();
+			DeviceId[] businessPayloadDeviceId = new DeviceId[suspendDevice.getDeviceIds().length];
 
 			for (int i = 0; i < suspendDevice.getDeviceIds().length; i++) {
-				SuspendDeviceId suspendDeviceId = suspendDevice.getDeviceIds()[i];
-				SuspendDeviceId businesspayLoadSuspendDeviceId = new SuspendDeviceId();
+				DeviceId suspendDeviceId = suspendDevice.getDeviceIds()[i];
+				DeviceId businesspayLoadSuspendDeviceId = new DeviceId();
 				businesspayLoadSuspendDeviceId.setId(suspendDeviceId.getId());
 				businesspayLoadSuspendDeviceId.setKind(suspendDeviceId.getKind());
 				businessPayloadDeviceId[i] = businesspayLoadSuspendDeviceId;

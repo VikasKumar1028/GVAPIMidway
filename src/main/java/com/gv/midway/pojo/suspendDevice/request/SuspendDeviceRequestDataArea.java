@@ -4,13 +4,14 @@ import java.util.Arrays;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gv.midway.pojo.verizon.CustomFields;
+import com.gv.midway.pojo.verizon.Devices;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SuspendDeviceRequestDataArea {
 
 	@ApiModelProperty(value = "All identifiers for the device.")
-	private SuspendDevices[] devices;
+	private Devices[] devices;
 	
 	@ApiModelProperty(value = "Name of the billing account.")
 	private String accountName;
@@ -28,11 +29,11 @@ public class SuspendDeviceRequestDataArea {
 	private String deviceNumber;*/
 
 
-	public SuspendDevices[] getDevices() {
+	public Devices[] getDevices() {
 		return devices;
 	}
 
-	public void setDevices(SuspendDevices[] devices) {
+	public void setDevices(Devices[] devices) {
 		this.devices = devices;
 	}
 
