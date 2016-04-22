@@ -13,13 +13,14 @@ import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.pojo.device.request.BulkDevices;
 import com.gv.midway.pojo.device.request.SingleDevice;
 import com.gv.midway.pojo.device.response.BatchDeviceResponse;
-import com.gv.midway.pojo.device.response.InsertDeviceResponse;
 import com.gv.midway.pojo.device.response.UpdateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
 import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequestDataArea;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequest;
 import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
+import com.gv.midway.pojo.updateCustomeDevice.request.UpdateCustomeFieldDeviceRequest;
+import com.gv.midway.pojo.updateCustomeDevice.response.UpdateCustomeFieldDeviceResponse;
 import com.gv.midway.pojo.verizon.DeviceId;
 
 @SuppressWarnings("all")
@@ -152,10 +153,12 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 				"direct:suspendDevice", suspendDeviceRequest);
 	}
 
-	public SuspendDeviceResponse updateCustomeFieldDevice(
-			SuspendDeviceRequest activateDeviceRequest) {
-		// TODO Auto-generated method stub
-		return null;
+	public UpdateCustomeFieldDeviceResponse updateCustomeFieldDevice(
+			UpdateCustomeFieldDeviceRequest updateCustomeFieldDeviceRequest) {
+
+		return (UpdateCustomeFieldDeviceResponse) producer.requestBody(
+				"direct:updateCustomeFieldDevice",
+				updateCustomeFieldDeviceRequest);
 	}
 
 	public TargetResponse callbacks(CallBackVerizonRequest callbackRequest) {
@@ -163,4 +166,5 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 				callbackRequest);
 	}
 
+	
 }

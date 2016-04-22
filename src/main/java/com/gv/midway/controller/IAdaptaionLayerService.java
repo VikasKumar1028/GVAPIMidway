@@ -23,6 +23,8 @@ import com.gv.midway.pojo.device.response.UpdateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequest;
 import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
+import com.gv.midway.pojo.updateCustomeDevice.request.UpdateCustomeFieldDeviceRequest;
+import com.gv.midway.pojo.updateCustomeDevice.response.UpdateCustomeFieldDeviceResponse;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 
@@ -96,8 +98,8 @@ public interface IAdaptaionLayerService {
 	@Produces("application/json")
 	@Consumes("application/json")
 	@ApiOperation(value = "updateCustomeFieldDevice")
-	SuspendDeviceResponse updateCustomeFieldDevice(
-			SuspendDeviceRequest activateDeviceRequest);
+	UpdateCustomeFieldDeviceResponse updateCustomeFieldDevice(
+			UpdateCustomeFieldDeviceRequest updateCustomeFieldDeviceRequest);
 
 	@POST
 	@Path("/device/callback")

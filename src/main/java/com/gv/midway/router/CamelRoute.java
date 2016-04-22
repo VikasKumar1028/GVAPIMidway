@@ -16,13 +16,11 @@ import org.springframework.stereotype.Component;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.exception.InvalidParameterException;
 import com.gv.midway.exception.VerizonSessionTokenExpirationException;
-import com.gv.midway.pojo.checkstatus.kore.KoreCheckStatusResponse;
 import com.gv.midway.pojo.deviceInformation.kore.response.DeviceInformationResponseKore;
 import com.gv.midway.pojo.deviceInformation.verizon.response.DeviceInformationResponseVerizon;
 import com.gv.midway.pojo.kore.KoreProvisoningResponse;
 import com.gv.midway.pojo.token.VerizonAuthorizationResponse;
 import com.gv.midway.pojo.token.VerizonSessionLoginResponse;
-import com.gv.midway.pojo.verizon.VerizonProvisoningResponse;
 import com.gv.midway.processor.BulkDeviceProcessor;
 import com.gv.midway.processor.GenericErrorProcessor;
 import com.gv.midway.processor.HeaderProcessor;
@@ -39,7 +37,6 @@ import com.gv.midway.processor.callbacks.CallbackPostProcessor;
 import com.gv.midway.processor.callbacks.CallbackPreProcessor;
 import com.gv.midway.processor.cell.StubCellBulkUploadProcessor;
 import com.gv.midway.processor.cell.StubCellUploadProcessor;
-import com.gv.midway.processor.checkstatus.KoreCheckStatusPreProcessor;
 import com.gv.midway.processor.deactivateDevice.KoreDeactivateDevicePostProcessor;
 import com.gv.midway.processor.deactivateDevice.KoreDeactivateDevicePreProcessor;
 import com.gv.midway.processor.deactivateDevice.StubKoreDeactivateDeviceProcessor;
@@ -62,6 +59,8 @@ import com.gv.midway.processor.token.TokenProcessor;
 import com.gv.midway.processor.token.VerizonAuthorizationTokenProcessor;
 import com.gv.midway.processor.token.VerizonSessionAttributeProcessor;
 import com.gv.midway.processor.token.VerizonSessionTokenProcessor;
+import com.gv.midway.processor.updateCustomeFieldDevice.StubKoreUpdateCustomeFieldDeviceProcessor;
+import com.gv.midway.processor.updateCustomeFieldDevice.StubVerizonUpdateCustomeFieldDeviceProcessor;
 import com.gv.midway.service.IAuditService;
 import com.gv.midway.service.IDeviceService;
 // this static import is needed for older versions of Camel than 2.5
@@ -561,5 +560,15 @@ public class CamelRoute extends RouteBuilder {
 		 * .process(new KoreGenericExceptionProcessor(env)) .endDoTry();
 		 */
 
+		/**  UpdateCustomeFieldDevice **/
+		from("direct:updateCustomeFieldDevice").process(new HeaderProcessor())
+				.choice()
+				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
+				.choice().when(header("derivedCarrierName").isEqualTo("KORE"))
+				.process(new StubKoreUpdateCustomeFieldDeviceProcessor())
+				.to("log:input")
+				.when(header("derivedCarrierName").isEqualTo("VERIZON"))
+				.process(new StubVerizonUpdateCustomeFieldDeviceProcessor())
+				.to("log:input").endChoice().otherwise().choice().end();
 	}
 }
