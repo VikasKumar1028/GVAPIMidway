@@ -35,7 +35,6 @@ import com.gv.midway.processor.activateDevice.StubVerizonActivateDeviceProcessor
 import com.gv.midway.processor.activateDevice.VerizonActivateDevicePostProcessor;
 import com.gv.midway.processor.activateDevice.VerizonActivateDevicePreProcessor;
 import com.gv.midway.processor.callbacks.CallbackKafkaPostProcessor;
-import com.gv.midway.processor.callbacks.CallbackKafkaPreProcessor;
 import com.gv.midway.processor.callbacks.CallbackPostProcessor;
 import com.gv.midway.processor.callbacks.CallbackPreProcessor;
 import com.gv.midway.processor.cell.StubCellBulkUploadProcessor;
@@ -512,24 +511,23 @@ from("direct:VerizonDeviceInformationCarrierSubProcessFlow")
 		 .bean(iDeviceService, "bulkOperationDeviceSyncInDB");
 						
 		    
-		 
-		
+			
+		 /**saving callbacks from verizon into MongoDB and and sending it 
+			 * to target the target system
+			 * 
+			 * */
 		from("direct:callbacks")
 			.bean(iTransactionalService, "populateCallbackDBPayload")
-			.process(new CallbackPreProcessor())
+			.process(new CallbackPreProcessor(env))
 			.bean(iTransactionalService,"findMidwayTransactionId")
-		
-			//******************DONOT REMOVE THIS COMMENTED CODE **********************
-			//.doTry()
-			//.to(uriRestNetsuitEndPoint)
-			//.doCatch(CxfOperationException.class)
-			
-			
 			.process(new CallbackPostProcessor())
 			.to("kafka:localhost:9092?topic=topic")
 //			.to("kafka:10.10.2.190:9092,10.10.2.190:9093,10.10.2.190:9094?topic=my-replicated-topic")
 			.process(new CallbackKafkaPostProcessor())
-
+			//******************DONOT REMOVE THIS COMMENTED CODE **********************
+//			.doTry()
+//				.to(uriRestNetsuitEndPoint)
+//			.doCatch(CxfOperationException.class)
 		.end();
 		
 	
