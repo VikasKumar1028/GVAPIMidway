@@ -24,8 +24,8 @@ public class SuspendDeviceRequestDataArea {
 	@ApiModelProperty(value = "The custom fields and values that have been set for the device.")
 	private CustomFields[] customFields;
 	
-	@ApiModelProperty(value = "The number of Device that has to be activated.")
-	private String deviceNumber;
+/*	@ApiModelProperty(value = "The number of Device that has to be activated.")
+	private String deviceNumber;*/
 
 
 	public SuspendDevices[] getDevices() {
@@ -68,13 +68,13 @@ public class SuspendDeviceRequestDataArea {
 		this.customFields = customFields;
 	}
 
-	public String getDeviceNumber() {
+/*	public String getDeviceNumber() {
 		return deviceNumber;
 	}
 
 	public void setDeviceNumber(String deviceNumber) {
 		this.deviceNumber = deviceNumber;
-	}
+	}*/
 
 	@Override
 	public int hashCode() {
@@ -83,8 +83,8 @@ public class SuspendDeviceRequestDataArea {
 		result = prime * result
 				+ ((accountName == null) ? 0 : accountName.hashCode());
 		result = prime * result + Arrays.hashCode(customFields);
-		result = prime * result
-				+ ((deviceNumber == null) ? 0 : deviceNumber.hashCode());
+		/*result = prime * result
+				+ ((deviceNumber == null) ? 0 : deviceNumber.hashCode());*/
 		result = prime * result + Arrays.hashCode(devices);
 		result = prime * result
 				+ ((groupName == null) ? 0 : groupName.hashCode());
@@ -109,11 +109,11 @@ public class SuspendDeviceRequestDataArea {
 			return false;
 		if (!Arrays.equals(customFields, other.customFields))
 			return false;
-		if (deviceNumber == null) {
+		/*if (deviceNumber == null) {
 			if (other.deviceNumber != null)
 				return false;
 		} else if (!deviceNumber.equals(other.deviceNumber))
-			return false;
+			return false;*/
 		if (!Arrays.equals(devices, other.devices))
 			return false;
 		if (groupName == null) {
@@ -135,7 +135,7 @@ public class SuspendDeviceRequestDataArea {
 				+ Arrays.toString(devices) + ", accountName=" + accountName
 				+ ", groupName=" + groupName + ", servicePlan=" + servicePlan
 				+ ", customFields=" + Arrays.toString(customFields)
-				+ ", deviceNumber=" + deviceNumber + "]";
+				/*+ ", deviceNumber=" + deviceNumber */+ "]";
 	}
 	
 	
