@@ -28,6 +28,7 @@ public class VerizonCustomFieldsUpdatePreProcessor implements Processor {
 		Message message = exchange.getIn();
 		String sessionToken = "";
 		String authorizationToken = "";
+		
 
 		if (exchange.getProperty(IConstant.VZ_SEESION_TOKEN) != null
 				&& exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN) != null) {
@@ -38,6 +39,7 @@ public class VerizonCustomFieldsUpdatePreProcessor implements Processor {
 		}
 
 		exchange.getIn().setBody(customFieldsUpdateDeviceRequest);
+		
 		message.setHeader("VZ-M2M-Token", sessionToken);
 		message.setHeader("Authorization", "Bearer " + authorizationToken);
 		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
@@ -45,6 +47,7 @@ public class VerizonCustomFieldsUpdatePreProcessor implements Processor {
 		message.setHeader(Exchange.HTTP_METHOD, "POST");
 		message.setHeader(Exchange.HTTP_PATH, "/devices/actions/customFields");
 
+		
 		log.info("End::VerizonUpdateCustomeFieldDevicePreProcessor");
 	}
 
