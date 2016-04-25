@@ -17,5 +17,5 @@ public interface ITransactionalService {
 	
 	public void populateCallbackDBPayload(Exchange exchange);
 	public void findMidwayTransactionId(Exchange exchange);
-	public void populateReActivateDBPayload(Exchange exchange);
+	public void populateReactivateDBPayload(Exchange exchange);
 }

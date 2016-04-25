@@ -1,4 +1,4 @@
-package com.gv.midway.processor.reActivateDevice;
+package com.gv.midway.processor.reactivate;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
@@ -19,7 +19,6 @@ public class KoreReactivateDevicePreProcessor implements Processor {
 	Environment newEnv;
 
 	public KoreReactivateDevicePreProcessor() {
-
 	}
 
 	public KoreReactivateDevicePreProcessor(Environment env) {
@@ -46,7 +45,7 @@ public class KoreReactivateDevicePreProcessor implements Processor {
 		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.HTTP_METHOD, "POST");
 		message.setHeader("Authorization", newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
-		message.setHeader(Exchange.HTTP_PATH, "/json/reActivateDevice");
+		message.setHeader(Exchange.HTTP_PATH, "/json/reactivateDevice");
 
 		message.setBody(reActicationDeviceRequestKore);
 

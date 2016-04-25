@@ -52,9 +52,9 @@ import com.gv.midway.processor.deviceInformation.StubKoreDeviceInformationProces
 import com.gv.midway.processor.deviceInformation.StubVerizonDeviceInformationProcessor;
 import com.gv.midway.processor.deviceInformation.VerizonDeviceInformationPostProcessor;
 import com.gv.midway.processor.deviceInformation.VerizonDeviceInformationPreProcessor;
-import com.gv.midway.processor.reactivateDevice.KoreReactivateDevicePostProcessor;
-import com.gv.midway.processor.reactivateDevice.KoreReactivateDevicePreProcessor;
-import com.gv.midway.processor.reactivateDevice.StubKoreReactivateDeviceProcessor;
+import com.gv.midway.processor.reactivate.KoreReactivateDevicePostProcessor;
+import com.gv.midway.processor.reactivate.KoreReactivateDevicePreProcessor;
+import com.gv.midway.processor.reactivate.StubKoreReactivateDeviceProcessor;
 import com.gv.midway.processor.suspendDevice.KoreSuspendDevicePostProcessor;
 import com.gv.midway.processor.suspendDevice.KoreSuspendDevicePreProcessor;
 import com.gv.midway.processor.suspendDevice.StubKoreSuspendDeviceProcessor;
@@ -299,7 +299,7 @@ public class CamelRoute extends RouteBuilder {
 		
 		//Main: Device ReActivation Flow
 				
-				from("direct:reActivateDevice").process(new HeaderProcessor())
+				from("direct:reactivateDevice").process(new HeaderProcessor())
 					.choice()
 								.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
 								.choice()
@@ -310,7 +310,7 @@ public class CamelRoute extends RouteBuilder {
 								 endChoice().otherwise()
 									    .choice()
 											.when(header("derivedCarrierName").isEqualTo("KORE"))
-											.wireTap("direct:processReActivateKoreTransaction")
+											.wireTap("direct:processReactivateKoreTransaction")
 											.process(new KoreReactivateDevicePostProcessor(env))
 										.endChoice()
 									.end().to("log:input")
@@ -319,15 +319,15 @@ public class CamelRoute extends RouteBuilder {
 				//SubFlow: Device Kore Reactivation 	
 				
 				
-				from("direct:processReActivateKoreTransaction")
+				from("direct:processReactivateKoreTransaction")
 					.log("Wire Tap Thread reactivation")
-					.bean(iTransactionalService,"populateReActivateDBPayload")
+					.bean(iTransactionalService,"populateReactivateDBPayload")
 				    .split().method("deviceSplitter").recipientList().method("koreDeviceServiceRouter");
 
 		//SubFlow: Device Kore Reactivation- SEDA CALL 
 				
 				
-				 from("seda:koreSedaReActivation?concurrentConsumers=5")
+				 from("seda:koreSedaReactivation?concurrentConsumers=5")
 				 .onException(CxfOperationException.class).handled(true)
 						.bean(iTransactionalService,
 								"populateKoreTransactionalErrorResponse")

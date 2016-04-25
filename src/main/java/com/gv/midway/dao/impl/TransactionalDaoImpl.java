@@ -212,8 +212,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 	}
 
-	public void populateSuspendDBPayload(Exchange exchange){
-		
+	public void populateSuspendDBPayload(Exchange exchange) {
+
 		log.info("Inside populateSuspendDBPayload");
 		ArrayList<Transaction> list = new ArrayList<Transaction>();
 
@@ -251,7 +251,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			try {
 
 				Transaction transaction = new Transaction();
-				transaction.setMidwayTransactionId(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID).toString());;
+				transaction.setMidwayTransactionId(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID).toString());
+				;
 				ObjectMapper obj = new ObjectMapper();
 				String strDeviceNumber = obj.writeValueAsString(businessPayloadDeviceId);
 				transaction.setDeviceNumber(strDeviceNumber);
@@ -279,8 +280,9 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 			exchange.getIn().setBody(list);
 		}
-		
+
 	}
+
 	public void populateVerizonTransactionalResponse(Exchange exchange) {
 
 		Map map = exchange.getIn().getBody(Map.class);
@@ -359,7 +361,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		update.set(ITransaction.MIDWAY_STATUS, IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
 		update.set(ITransaction.CARRIER_STATUS, IConstant.CARRIER_TRANSACTION_STATUS_ERROR);
-		update.set(ITransaction.CALL_BACK_PAYLOAD,errorResponsePayload);
+		update.set(ITransaction.CALL_BACK_PAYLOAD, errorResponsePayload);
 		update.set(ITransaction.LAST_TIME_STAMP_UPDATED, CommonUtil.getCurrentTimeStamp());
 		mongoTemplate.updateFirst(searchQuery, update, Transaction.class);
 
@@ -383,7 +385,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			Update update = new Update();
 			update.set(ITransaction.CALL_BACK_PAYLOAD, responsePayload);
 			update.set(ITransaction.CARRIER_ERROR_DESCRIPTION, responsePayload.getErrorMessage());
-			update.set(ITransaction.CALL_BACK_PAYLOAD,responsePayload);
+			update.set(ITransaction.CALL_BACK_PAYLOAD, responsePayload);
 			update.set(ITransaction.MIDWAY_STATUS, IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
 			update.set(ITransaction.CARRIER_STATUS, IConstant.CARRIER_TRANSACTION_STATUS_ERROR);
 			update.set(ITransaction.LAST_TIME_STAMP_UPDATED, CommonUtil.getCurrentTimeStamp());
@@ -407,7 +409,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		update.set(ITransaction.CARRIER_TRANSACTION_ID, koreProvisoningResponse.getD().getTrackingNumber());
 		update.set(ITransaction.LAST_TIME_STAMP_UPDATED, CommonUtil.getCurrentTimeStamp());
 		update.set(ITransaction.CALL_BACK_PAYLOAD, koreProvisoningResponse);
-		
+
 		mongoTemplate.updateFirst(searchQuery, update, Transaction.class);
 
 	}
@@ -416,19 +418,19 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		// Applicable for provisioning request where we have Transaction Table
 		// Not Applicable for device Information
-		log.info("populate connection error....."+exchange.getFromEndpoint().toString());
-		log.info("device number is.........."+exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER));
+		log.info("populate connection error....." + exchange.getFromEndpoint().toString());
+		log.info("device number is.........." + exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER));
 		if (CommonUtil.isProvisioningMethod(exchange.getFromEndpoint().toString())) {
 			Query searchQuery = null;
 			if ("KORE".equals(exchange.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME))) {
 				searchQuery = new Query(Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)).andOperator(Criteria.where(ITransaction.DEVICE_NUMBER).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
-				
-				log.info("device number in Kore is.........."+exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER));
+
+				log.info("device number in Kore is.........." + exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER));
 				Update update = new Update();
 				update.set(ITransaction.MIDWAY_STATUS, IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
 				update.set(ITransaction.CALL_BACK_PAYLOAD, IConstant.MIDWAY_CONNECTION_ERROR);
 				update.set(ITransaction.CARRIER_ERROR_DESCRIPTION, IConstant.MIDWAY_CONNECTION_ERROR);
-				
+
 				update.set(ITransaction.CARRIER_STATUS, IConstant.CARRIER_TRANSACTION_STATUS_ERROR);
 				update.set(ITransaction.LAST_TIME_STAMP_UPDATED, CommonUtil.getCurrentTimeStamp());
 				mongoTemplate.updateFirst(searchQuery, update, Transaction.class);
@@ -443,7 +445,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				update.set(ITransaction.CALL_BACK_PAYLOAD, IConstant.MIDWAY_CONNECTION_ERROR);
 				update.set(ITransaction.CARRIER_ERROR_DESCRIPTION, IConstant.MIDWAY_CONNECTION_ERROR);
 				update.set(ITransaction.CARRIER_STATUS, IConstant.CARRIER_TRANSACTION_STATUS_ERROR);
-				
+
 				update.set(ITransaction.LAST_TIME_STAMP_UPDATED, CommonUtil.getCurrentTimeStamp());
 				mongoTemplate.updateMulti(searchQuery, update, Transaction.class);
 
@@ -563,9 +565,9 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		Transaction findOne = mongoTemplate.findOne(searchUserQuery, Transaction.class);
 		String midwayTransationID = findOne.getMidwayTransactionId() != null ? findOne.getMidwayTransactionId() : "";
 		String carrierTransationID = findOne.getCarrierTransactionId() != null ? findOne.getCarrierTransactionId() : "";
-		BaseRequest devicePayload = (BaseRequest)findOne.getDevicePayload();
+		BaseRequest devicePayload = (BaseRequest) findOne.getDevicePayload();
 		Header header = devicePayload.getHeader();
-		
+
 		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_ID, midwayTransationID);
 		exchange.setProperty(IConstant.GV_TRANSACTION_ID, carrierTransationID);
 		// TODO
@@ -574,8 +576,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		targetResponse.getDataArea().setMidwayTransactionId(midwayTransationID);
 		targetResponse.setHeader(header);
 	}
-	
-	public void populateReActivateDBPayload(Exchange exchange) {
+
+	public void populateReactivateDBPayload(Exchange exchange) {
 
 		log.info("Inside populateReActivateDBPayload");
 		ArrayList<Transaction> list = new ArrayList<Transaction>();
@@ -656,6 +658,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 			exchange.getIn().setBody(list);
 		}
-	
+
 	}
 }

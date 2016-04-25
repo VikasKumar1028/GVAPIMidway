@@ -99,7 +99,7 @@ public interface IAdaptaionLayerService {
 	@Produces("application/json")
 	@Consumes("application/json")
 	@ApiOperation(value = "ReactivateDeviceService")
-	ReactivateDeviceResponse reActivateDevice(
+	ReactivateDeviceResponse reactivateDevice(
 			ReactivateDeviceRequest reActivateDeviceRequest);
 
 	@POST

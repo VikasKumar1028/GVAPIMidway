@@ -15,6 +15,7 @@ import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.kore.KoreErrorResponse;
+import com.gv.midway.pojo.reActivateDevice.response.ReactivateDeviceResponse;
 import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
 
@@ -104,6 +105,16 @@ public class KoreGenericExceptionProcessor implements Processor {
 				.getFromEndpoint().toString())) {
 
 			SuspendDeviceResponse responseObject = new SuspendDeviceResponse();
+			responseObject.setHeader(responseHeader);
+			responseObject.setResponse(response);
+			exchange.getIn().setBody(responseObject);
+		}
+		
+		
+		if ("Endpoint[direct://reactivateDevice]".equals(exchange
+				.getFromEndpoint().toString())) {
+
+			ReactivateDeviceResponse responseObject = new ReactivateDeviceResponse();
 			responseObject.setHeader(responseHeader);
 			responseObject.setResponse(response);
 			exchange.getIn().setBody(responseObject);

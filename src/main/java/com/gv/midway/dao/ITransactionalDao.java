@@ -14,5 +14,5 @@ public interface ITransactionalDao {
 	public void populatePendingKoreCheckStatus(Exchange exchange);
 	public void populateCallbackDBPayload(Exchange exchange);
 	public void findMidwayTransactionId(Exchange exchange);
-	public void populateReActivateDBPayload(Exchange exchange);
+	public void populateReactivateDBPayload(Exchange exchange);
 }
