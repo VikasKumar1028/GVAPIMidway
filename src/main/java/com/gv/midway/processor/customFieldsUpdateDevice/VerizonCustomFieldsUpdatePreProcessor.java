@@ -1,4 +1,4 @@
-package com.gv.midway.processor.updateCustomeFieldDevice;
+package com.gv.midway.processor.customFieldsUpdateDevice;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -6,9 +6,9 @@ import org.apache.log4j.Logger;
 
 import com.gv.midway.processor.activateDevice.KoreActivateDevicePostProcessor;
 
-public class VerizonUpdateCustomeFieldDevicePreProcessor implements Processor {
+public class VerizonCustomFieldsUpdatePreProcessor implements Processor {
 
-	Logger log = Logger.getLogger(KoreActivateDevicePostProcessor.class
+	Logger log = Logger.getLogger(VerizonCustomFieldsUpdatePostProcessor.class
 			.getName());
 
 	public void process(Exchange exchange) throws Exception {

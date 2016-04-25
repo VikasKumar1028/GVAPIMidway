@@ -10,6 +10,8 @@ import com.gv.midway.pojo.callback.TargetResponse;
 import com.gv.midway.pojo.callback.request.CallBackVerizonRequest;
 import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationRequest;
 import com.gv.midway.pojo.connectionInformation.response.ConnectionInformationResponse;
+import com.gv.midway.pojo.customFieldsUpdateDevice.request.CustomFieldsUpdateDeviceRequest;
+import com.gv.midway.pojo.customFieldsUpdateDevice.response.CustomFieldsUpdateDeviceResponse;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.pojo.device.request.BulkDevices;
@@ -21,8 +23,6 @@ import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequestData
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequest;
 import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
-import com.gv.midway.pojo.updateCustomeDevice.request.UpdateCustomeFieldDeviceRequest;
-import com.gv.midway.pojo.updateCustomeDevice.response.UpdateCustomeFieldDeviceResponse;
 import com.gv.midway.pojo.verizon.DeviceId;
 
 @SuppressWarnings("all")
@@ -155,12 +155,11 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 				"direct:suspendDevice", suspendDeviceRequest);
 	}
 
-	public UpdateCustomeFieldDeviceResponse updateCustomeFieldDevice(
-			UpdateCustomeFieldDeviceRequest updateCustomeFieldDeviceRequest) {
+	public CustomFieldsUpdateDeviceResponse customFieldsUpdateRequest(
+			CustomFieldsUpdateDeviceRequest customeFieldDeviceRequest) {
 
-		return (UpdateCustomeFieldDeviceResponse) producer.requestBody(
-				"direct:updateCustomeFieldDevice",
-				updateCustomeFieldDeviceRequest);
+		return (CustomFieldsUpdateDeviceResponse) producer.requestBody(
+				"direct:customeFields", customeFieldDeviceRequest);
 	}
 
 	public TargetResponse callbacks(CallBackVerizonRequest callbackRequest) {
@@ -174,5 +173,4 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 		return null;
 	}
 
-	
 }

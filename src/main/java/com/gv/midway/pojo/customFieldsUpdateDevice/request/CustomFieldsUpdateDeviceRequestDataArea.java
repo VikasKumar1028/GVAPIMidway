@@ -1,4 +1,4 @@
-package com.gv.midway.pojo.updateCustomeDevice.request;
+package com.gv.midway.pojo.customFieldsUpdateDevice.request;
 
 import java.util.Arrays;
 
@@ -8,15 +8,19 @@ import com.gv.midway.pojo.verizon.CustomFieldsToUpdate;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UpdateCustomeFieldDeviceRequestDataArea {
+public class CustomFieldsUpdateDeviceRequestDataArea {
 	@ApiModelProperty(value = "All identifiers for the device.")
-	private UpdateCustomeFieldDevices[] devices;
+	private CustomFieldsUpdateDevices[] devices;
 
 	@ApiModelProperty(value = "Name of the billing account.")
 	private String accountName;
 
-	public UpdateCustomeFieldDeviceRequestDataArea(
-			UpdateCustomeFieldDevices[] devices, String accountName,
+	public CustomFieldsUpdateDeviceRequestDataArea()
+	{
+		
+	}
+	public CustomFieldsUpdateDeviceRequestDataArea(
+			CustomFieldsUpdateDevices[] devices, String accountName,
 			String groupName, String servicePlan, CustomFields[] customFields,
 			CustomFieldsToUpdate[] customFieldsToUpdate) {
 		super();
@@ -64,7 +68,7 @@ public class UpdateCustomeFieldDeviceRequestDataArea {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		UpdateCustomeFieldDeviceRequestDataArea other = (UpdateCustomeFieldDeviceRequestDataArea) obj;
+		CustomFieldsUpdateDeviceRequestDataArea other = (CustomFieldsUpdateDeviceRequestDataArea) obj;
 		if (accountName == null) {
 			if (other.accountName != null)
 				return false;
@@ -89,11 +93,11 @@ public class UpdateCustomeFieldDeviceRequestDataArea {
 		return true;
 	}
 
-	public UpdateCustomeFieldDevices[] getDevices() {
+	public CustomFieldsUpdateDevices[] getDevices() {
 		return devices;
 	}
 
-	public void setDevices(UpdateCustomeFieldDevices[] devices) {
+	public void setDevices(CustomFieldsUpdateDevices[] devices) {
 		this.devices = devices;
 	}
 
@@ -136,6 +140,15 @@ public class UpdateCustomeFieldDeviceRequestDataArea {
 	public void setCustomFieldsToUpdate(
 			CustomFieldsToUpdate[] customFieldsToUpdate) {
 		this.customFieldsToUpdate = customFieldsToUpdate;
+	}
+	@Override
+	public String toString() {
+		return "CustomFieldsUpdateDeviceRequestDataArea [devices="
+				+ Arrays.toString(devices) + ", accountName=" + accountName
+				+ ", groupName=" + groupName + ", servicePlan=" + servicePlan
+				+ ", customFields=" + Arrays.toString(customFields)
+				+ ", customFieldsToUpdate="
+				+ Arrays.toString(customFieldsToUpdate) + "]";
 	}
 
 }

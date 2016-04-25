@@ -1,19 +1,19 @@
-package com.gv.midway.pojo.updateCustomeDevice.request;
+package com.gv.midway.pojo.customFieldsUpdateDevice.request;
 
 import java.util.Arrays;
 
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
-public class UpdateCustomeFieldDevices {
+public class CustomFieldsUpdateDevices {
 
 	@ApiModelProperty(value = "Having type and value of device identifier")
-	private UpdateCustomeFieldDeviceId[] deviceIds;
+	private CustomFieldsUpdateDeviceId[] deviceIds;
 
-	public UpdateCustomeFieldDeviceId[] getDeviceIds() {
+	public CustomFieldsUpdateDeviceId[] getDeviceIds() {
 		return deviceIds;
 	}
 
-	public void setDeviceIds(UpdateCustomeFieldDeviceId[] deviceIds) {
+	public void setDeviceIds(CustomFieldsUpdateDeviceId[] deviceIds) {
 		this.deviceIds = deviceIds;
 	}
 
@@ -33,7 +33,7 @@ public class UpdateCustomeFieldDevices {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		UpdateCustomeFieldDevices other = (UpdateCustomeFieldDevices) obj;
+		CustomFieldsUpdateDevices other = (CustomFieldsUpdateDevices) obj;
 		if (!Arrays.equals(deviceIds, other.deviceIds))
 			return false;
 		return true;
@@ -41,7 +41,7 @@ public class UpdateCustomeFieldDevices {
 
 	@Override
 	public String toString() {
-		return "UpdateCustomeFieldDevices [deviceIds="
+		return "CustomFieldsUpdateDevices [deviceIds="
 				+ Arrays.toString(deviceIds) + "]";
 	}
 	

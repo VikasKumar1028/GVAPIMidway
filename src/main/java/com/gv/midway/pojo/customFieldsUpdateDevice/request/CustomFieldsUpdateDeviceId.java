@@ -1,8 +1,8 @@
-package com.gv.midway.pojo.updateCustomeDevice.request;
+package com.gv.midway.pojo.customFieldsUpdateDevice.request;
 
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
-public class UpdateCustomeFieldDeviceId {
+public class CustomFieldsUpdateDeviceId {
 	@ApiModelProperty(value = "Value of device identifier.", required = true)
 	private String id;
 	
@@ -42,7 +42,7 @@ public class UpdateCustomeFieldDeviceId {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		UpdateCustomeFieldDeviceId other = (UpdateCustomeFieldDeviceId) obj;
+		CustomFieldsUpdateDeviceId other = (CustomFieldsUpdateDeviceId) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -58,6 +58,6 @@ public class UpdateCustomeFieldDeviceId {
 
 	@Override
 	public String toString() {
-		return "UpdateCustomeFieldDeviceId [id=" + id + ", kind=" + kind + "]";
+		return "CustomFieldsUpdateDeviceId [id=" + id + ", kind=" + kind + "]";
 	}
 }

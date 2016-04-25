@@ -1,34 +1,35 @@
-package com.gv.midway.pojo.updateCustomeDevice.response;
+package com.gv.midway.pojo.customFieldsUpdateDevice.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.gv.midway.pojo.BaseResponse;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_EMPTY)
-public class UpdateCustomeFieldDeviceResponse {
+public class CustomFieldsUpdateDeviceResponse extends BaseResponse {
 
 
 	@ApiModelProperty(value = "Data area for Activate device response")
-	private UpdateCustomeFieldDeviceResponseDataArea dataArea;
+	private CustomFieldsUpdateDeviceResponseDataArea dataArea;
 
-	public UpdateCustomeFieldDeviceResponseDataArea getDataArea() {
+	public CustomFieldsUpdateDeviceResponseDataArea getDataArea() {
 		return dataArea;
 	}
 
-	public void setDataArea(UpdateCustomeFieldDeviceResponseDataArea dataArea) {
+	public void setDataArea(CustomFieldsUpdateDeviceResponseDataArea dataArea) {
 		this.dataArea = dataArea;
 	}
 
 	@Override
 	public String toString() {
-		return "UpdateCustomeFieldDeviceResponse [dataArea=" + dataArea + "]";
+		return "CustomFieldsUpdateDeviceResponse [dataArea=" + dataArea + "]";
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
 		result = prime * result
 				+ ((dataArea == null) ? 0 : dataArea.hashCode());
 		return result;
@@ -38,11 +39,11 @@ public class UpdateCustomeFieldDeviceResponse {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		UpdateCustomeFieldDeviceResponse other = (UpdateCustomeFieldDeviceResponse) obj;
+		CustomFieldsUpdateDeviceResponse other = (CustomFieldsUpdateDeviceResponse) obj;
 		if (dataArea == null) {
 			if (other.dataArea != null)
 				return false;

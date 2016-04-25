@@ -37,6 +37,8 @@ import com.gv.midway.processor.callbacks.CallbackPostProcessor;
 import com.gv.midway.processor.callbacks.CallbackPreProcessor;
 import com.gv.midway.processor.cell.StubCellBulkUploadProcessor;
 import com.gv.midway.processor.cell.StubCellUploadProcessor;
+import com.gv.midway.processor.customFieldsUpdateDevice.StubKoreCustomFieldsUpdateProcessor;
+import com.gv.midway.processor.customFieldsUpdateDevice.StubVerizonCustomFieldsUpdateProcessor;
 import com.gv.midway.processor.deactivateDevice.KoreDeactivateDevicePostProcessor;
 import com.gv.midway.processor.deactivateDevice.KoreDeactivateDevicePreProcessor;
 import com.gv.midway.processor.deactivateDevice.StubKoreDeactivateDeviceProcessor;
@@ -59,8 +61,6 @@ import com.gv.midway.processor.token.TokenProcessor;
 import com.gv.midway.processor.token.VerizonAuthorizationTokenProcessor;
 import com.gv.midway.processor.token.VerizonSessionAttributeProcessor;
 import com.gv.midway.processor.token.VerizonSessionTokenProcessor;
-import com.gv.midway.processor.updateCustomeFieldDevice.StubKoreUpdateCustomeFieldDeviceProcessor;
-import com.gv.midway.processor.updateCustomeFieldDevice.StubVerizonUpdateCustomeFieldDeviceProcessor;
 import com.gv.midway.service.IAuditService;
 import com.gv.midway.service.IDeviceService;
 // this static import is needed for older versions of Camel than 2.5
@@ -561,14 +561,14 @@ public class CamelRoute extends RouteBuilder {
 		 */
 
 		/**  UpdateCustomeFieldDevice **/
-		from("direct:updateCustomeFieldDevice").process(new HeaderProcessor())
+		from("direct:customeFields").process(new HeaderProcessor())
 				.choice()
 				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
 				.choice().when(header("derivedCarrierName").isEqualTo("KORE"))
-				.process(new StubKoreUpdateCustomeFieldDeviceProcessor())
+				.process(new StubKoreCustomFieldsUpdateProcessor())
 				.to("log:input")
 				.when(header("derivedCarrierName").isEqualTo("VERIZON"))
-				.process(new StubVerizonUpdateCustomeFieldDeviceProcessor())
+				.process(new StubVerizonCustomFieldsUpdateProcessor())
 				.to("log:input").endChoice().otherwise().choice().end();
 	}
 }
