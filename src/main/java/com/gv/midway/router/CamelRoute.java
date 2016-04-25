@@ -639,7 +639,7 @@ public class CamelRoute extends RouteBuilder {
 		
 		.when(header("derivedCarrierName").isEqualTo("VERIZON"))
 		//.bean(iSessionService, "setContextTokenInExchange")
-		//.bean(iTransactionalService, "populateDeactivateDBPayload")
+		.bean(iTransactionalService, "populateCustomeFieldsDBPayload")
 		.bean(iAuditService, "auditExternalRequestCall")
 		.to("direct:VerizoncustomeFieldsFlow1")
 
@@ -674,7 +674,7 @@ public class CamelRoute extends RouteBuilder {
 
 		from("direct:processcustomeFieldsKoreTransaction")
 				.log("Wire Tap Thread customeField")
-				//.bean(iTransactionalService, "populateDeactivateDBPayload")
+				.bean(iTransactionalService, "populateCustomeFieldsDBPayload")
 				.split().method("deviceSplitter").recipientList()
 				.method("koreDeviceServiceRouter");
 	
