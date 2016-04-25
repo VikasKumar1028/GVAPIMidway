@@ -63,5 +63,8 @@ public class TransactionalServiceImpl implements ITransactionalService {
 		 transactionalDao.findMidwayTransactionId(exchange);
 		
 	}
+	public void populateReActivateDBPayload(Exchange exchange) {
+		transactionalDao.populateReActivateDBPayload(exchange);
 
+	}
 }

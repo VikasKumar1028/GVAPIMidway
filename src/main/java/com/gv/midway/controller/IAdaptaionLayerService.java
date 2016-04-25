@@ -23,6 +23,8 @@ import com.gv.midway.pojo.device.request.SingleDevice;
 import com.gv.midway.pojo.device.response.BatchDeviceResponse;
 import com.gv.midway.pojo.device.response.UpdateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
+import com.gv.midway.pojo.reActivateDevice.request.ReactivateDeviceRequest;
+import com.gv.midway.pojo.reActivateDevice.response.ReactivateDeviceResponse;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequest;
 import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
 import com.wordnik.swagger.annotations.Api;
@@ -91,6 +93,14 @@ public interface IAdaptaionLayerService {
 	@ApiOperation(value = "ActivateDeviceService")
 	ActivateDeviceResponse activateDevice(
 			ActivateDeviceRequest activateDeviceRequest);
+	
+	@POST
+	@Path("/device/reactivate")
+	@Produces("application/json")
+	@Consumes("application/json")
+	@ApiOperation(value = "ReactivateDeviceService")
+	ReactivateDeviceResponse reActivateDevice(
+			ReactivateDeviceRequest reActivateDeviceRequest);
 
 	@POST
 	@Path("/device/suspend")

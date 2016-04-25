@@ -52,6 +52,9 @@ import com.gv.midway.processor.deviceInformation.StubKoreDeviceInformationProces
 import com.gv.midway.processor.deviceInformation.StubVerizonDeviceInformationProcessor;
 import com.gv.midway.processor.deviceInformation.VerizonDeviceInformationPostProcessor;
 import com.gv.midway.processor.deviceInformation.VerizonDeviceInformationPreProcessor;
+import com.gv.midway.processor.reActivateDevice.KoreReActivateDevicePostProcessor;
+import com.gv.midway.processor.reActivateDevice.KoreReactivateDevicePreProcessor;
+import com.gv.midway.processor.reActivateDevice.StubKoreReActivateDeviceProcessor;
 import com.gv.midway.processor.suspendDevice.KoreSuspendDevicePostProcessor;
 import com.gv.midway.processor.suspendDevice.KoreSuspendDevicePreProcessor;
 import com.gv.midway.processor.suspendDevice.StubKoreSuspendDeviceProcessor;
@@ -292,7 +295,54 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iAuditService, "auditExternalResponseCall");
 
 		// ***** DEVICE ACTIVATION END
+		//***** DEVICE REACTIVATION BEGIN		
+		
+		//Main: Device ReActivation Flow
+				
+				from("direct:reActivateDevice").process(new HeaderProcessor())
+					.choice()
+								.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
+								.choice()
+										.when(header("derivedCarrierName").isEqualTo("KORE")).
+										log("message"+header("derivedSourceName"))
+											.process(new StubKoreReActivateDeviceProcessor())
+											.to("log:input").
+								 endChoice().otherwise()
+									    .choice()
+											.when(header("derivedCarrierName").isEqualTo("KORE"))
+											.wireTap("direct:processReActivateKoreTransaction")
+											.process(new KoreReActivateDevicePostProcessor(env))
+										.endChoice()
+									.end().to("log:input")
+					.endChoice().end();		 
+		 
+				//SubFlow: Device Kore Reactivation 	
+				
+				
+				from("direct:processReActivateKoreTransaction")
+					.log("Wire Tap Thread reactivation")
+					.bean(iTransactionalService,"populateReActivateDBPayload")
+				    .split().method("deviceSplitter").recipientList().method("koreDeviceServiceRouter");
 
+		//SubFlow: Device Kore Reactivation- SEDA CALL 
+				
+				
+				 from("seda:koreSedaReActivation?concurrentConsumers=5")
+				 .onException(CxfOperationException.class).handled(true)
+						.bean(iTransactionalService,
+								"populateKoreTransactionalErrorResponse")
+						.bean(iAuditService, "auditExternalExceptionResponseCall")
+						.end()				
+						.process(new KoreReactivateDevicePreProcessor(env))
+						.bean(iAuditService, "auditExternalRequestCall")
+						.to(uriRestKoreEndPoint)
+						.unmarshal()
+						.json(JsonLibrary.Jackson, KoreProvisoningResponse.class)
+						.bean(iTransactionalService,
+								"populateKoreTransactionalResponse")
+						.bean(iAuditService, "auditExternalResponseCall");		 
+		 
+//*****  DEVICE REACTIVATION END
 		// ***** DEVICE DEACTIVATION BEGIN
 
 		// Main: Device DeActivation Flow

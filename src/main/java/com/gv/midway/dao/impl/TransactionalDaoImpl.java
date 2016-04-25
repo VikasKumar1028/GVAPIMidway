@@ -35,6 +35,10 @@ import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequestDataAr
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDevices;
 import com.gv.midway.pojo.kore.KoreErrorResponse;
 import com.gv.midway.pojo.kore.KoreProvisoningResponse;
+import com.gv.midway.pojo.reActivateDevice.request.ReactivateDeviceId;
+import com.gv.midway.pojo.reActivateDevice.request.ReactivateDeviceRequest;
+import com.gv.midway.pojo.reActivateDevice.request.ReactivateDeviceRequestDataArea;
+import com.gv.midway.pojo.reActivateDevice.request.ReactivateDevices;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequest;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequestDataArea;
 import com.gv.midway.pojo.transaction.Transaction;
@@ -571,5 +575,89 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		targetResponse.getDataArea().setMidwayTransactionId(midwayTransationID);
 		targetResponse.setHeader(header);
+	}
+	
+	public void populateReActivateDBPayload(Exchange exchange) {
+
+		log.info("Inside populateReActivateDBPayload");
+		ArrayList<Transaction> list = new ArrayList<Transaction>();
+
+		String currentDataTime = CommonUtil.getCurrentTimeStamp();
+
+		ReactivateDeviceRequest req = (ReactivateDeviceRequest) exchange.getIn().getBody();
+
+		ReactivateDeviceRequestDataArea reActivateDeviceRequestDataArea = (ReactivateDeviceRequestDataArea) req.getDataArea();
+
+		ReactivateDevices[] reActivateDevices = reActivateDeviceRequestDataArea.getDevices();
+
+		Kryo kryo = new Kryo();
+		for (ReactivateDevices reActivateDevice : reActivateDevices) {
+
+			ReactivateDeviceRequest dbPayload = new ReactivateDeviceRequest();
+			dbPayload.setHeader(req.getHeader());
+
+			ReactivateDevices[] businessPayLoadDevicesArray = new ReactivateDevices[1];
+			ReactivateDevices businessPayLoadActivateDevices = new ReactivateDevices();
+			ReactivateDeviceId[] businessPayloadDeviceId = new ReactivateDeviceId[reActivateDevice.getDeviceIds().length];
+
+			for (int i = 0; i < reActivateDevice.getDeviceIds().length; i++) {
+				ReactivateDeviceId reActivateDeviceId = reActivateDevice.getDeviceIds()[i];
+
+				ReactivateDeviceId businessPayLoadActivateDeviceId = new ReactivateDeviceId();
+
+				/*
+				 * businessPayLoadActivateDeviceId.seteAPCode(activateDeviceId
+				 * .geteAPCode());
+				 */
+				businessPayLoadActivateDeviceId.setId(reActivateDeviceId.getId());
+				businessPayLoadActivateDeviceId.setKind(reActivateDeviceId.getKind());
+
+				businessPayloadDeviceId[i] = businessPayLoadActivateDeviceId;
+
+			}
+			businessPayLoadActivateDevices.setDeviceIds(businessPayloadDeviceId);
+			businessPayLoadDevicesArray[0] = businessPayLoadActivateDevices;
+
+			ReactivateDeviceRequestDataArea copyDataArea = kryo.copy(req.getDataArea());
+
+			copyDataArea.setDevices(businessPayLoadDevicesArray);
+			dbPayload.setDataArea(copyDataArea);
+
+			// copy.getDataArea().setDevices();
+
+			try {
+
+				Transaction transaction = new Transaction();
+
+				transaction.setMidwayTransactionId(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID).toString());
+				// TODO if number of devices are more
+				ObjectMapper obj = new ObjectMapper();
+				String strDeviceNumber = obj.writeValueAsString(businessPayloadDeviceId);
+				transaction.setDeviceNumber(strDeviceNumber);
+				transaction.setDevicePayload(dbPayload);
+				transaction.setMidwayStatus(IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
+				transaction.setCarrierName(exchange.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString());
+				transaction.setTimeStampReceived(currentDataTime);
+				transaction.setAuditTransactionId(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
+				transaction.setRequestType(exchange.getFromEndpoint().toString());
+				transaction.setCallBackReceived(false);
+
+				list.add(transaction);
+
+			} catch (Exception ex) {
+				log.error("Inside populateActivateDBPayload");
+			}
+
+		}
+		mongoTemplate.insertAll(list);
+		// For Kore We Need Wire Tap and SEDA component So the body should
+		// be set with arraylist of transaction for Verizon we simply add
+		// into database and do not change the exchange body
+
+		if (exchange.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString().equals("KORE")) {
+
+			exchange.getIn().setBody(list);
+		}
+	
 	}
 }

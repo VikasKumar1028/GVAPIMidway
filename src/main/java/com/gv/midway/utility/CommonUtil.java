@@ -84,7 +84,7 @@ public class CommonUtil {
 
 		return false;*/
 		if (endPoint.contains(IEndPoints.ACTIVATION_ENDPOINT) || endPoint.contains(IEndPoints.ACTIVATION_ENDPOINT)|| 
-				endPoint.contains(IEndPoints.ACTIVATION_SEDA_KORE_ENDPOINT) || endPoint.contains(IEndPoints.DEACTIVATION_SEDA_KORE_ENDPOINT)) {
+				endPoint.contains(IEndPoints.ACTIVATION_SEDA_KORE_ENDPOINT) || endPoint.contains(IEndPoints.DEACTIVATION_SEDA_KORE_ENDPOINT) || endPoint.contains(IEndPoints.REACTIVATION_SEDA_KORE_ENDPOINT)) {
 
 			return true;
 

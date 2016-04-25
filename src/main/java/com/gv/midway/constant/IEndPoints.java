@@ -11,5 +11,6 @@ public interface IEndPoints {
 	public final String ACTIVATION_SEDA_KORE_ENDPOINT="koreSedaActivation";
 	
 	public final String DEACTIVATION_SEDA_KORE_ENDPOINT="koreSedaDeactivation";
+	public final String REACTIVATION_SEDA_KORE_ENDPOINT="koreSedaReActivation";
 
 }

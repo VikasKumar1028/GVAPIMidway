@@ -3,7 +3,6 @@ package com.gv.midway.dao;
 import org.apache.camel.Exchange;
 
 public interface ITransactionalDao {
-	//santosh:declared new methods
 	public void populateActivateDBPayload(Exchange exchange);
 	public void populateDeactivateDBPayload(Exchange exchange);
 	public void populateSuspendDBPayload(Exchange exchange);
@@ -15,4 +14,5 @@ public interface ITransactionalDao {
 	public void populatePendingKoreCheckStatus(Exchange exchange);
 	public void populateCallbackDBPayload(Exchange exchange);
 	public void findMidwayTransactionId(Exchange exchange);
+	public void populateReActivateDBPayload(Exchange exchange);
 }
