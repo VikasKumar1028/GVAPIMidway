@@ -1,4 +1,4 @@
-package com.gv.midway.processor.reactivateDevice;
+package com.gv.midway.processor.reActivateDevice;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -13,13 +13,13 @@ import com.gv.midway.pojo.reActivateDevice.response.ReactivateDeviceResponse;
 import com.gv.midway.pojo.reActivateDevice.response.ReactivateDeviceResponseDataArea;
 import com.gv.midway.processor.activateDevice.KoreActivateDevicePostProcessor;
 
-public class KoreReactivateDevicePostProcessor implements Processor {
+public class KoreReActivateDevicePostProcessor implements Processor {
 	Logger log = Logger.getLogger(KoreActivateDevicePostProcessor.class.getName());
 
-	public KoreReactivateDevicePostProcessor() {
+	public KoreReActivateDevicePostProcessor() {
 
 	}
-	public KoreReactivateDevicePostProcessor(Environment env) {
+	public KoreReActivateDevicePostProcessor(Environment env) {
 	}
 
 	public void process(Exchange exchange) throws Exception {
