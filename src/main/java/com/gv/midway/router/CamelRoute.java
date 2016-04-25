@@ -52,9 +52,9 @@ import com.gv.midway.processor.deviceInformation.StubKoreDeviceInformationProces
 import com.gv.midway.processor.deviceInformation.StubVerizonDeviceInformationProcessor;
 import com.gv.midway.processor.deviceInformation.VerizonDeviceInformationPostProcessor;
 import com.gv.midway.processor.deviceInformation.VerizonDeviceInformationPreProcessor;
-import com.gv.midway.processor.reActivateDevice.KoreReActivateDevicePostProcessor;
-import com.gv.midway.processor.reActivateDevice.KoreReactivateDevicePreProcessor;
-import com.gv.midway.processor.reActivateDevice.StubKoreReActivateDeviceProcessor;
+import com.gv.midway.processor.reactivateDevice.KoreReactivateDevicePostProcessor;
+import com.gv.midway.processor.reactivateDevice.KoreReactivateDevicePreProcessor;
+import com.gv.midway.processor.reactivateDevice.StubKoreReactivateDeviceProcessor;
 import com.gv.midway.processor.suspendDevice.KoreSuspendDevicePostProcessor;
 import com.gv.midway.processor.suspendDevice.KoreSuspendDevicePreProcessor;
 import com.gv.midway.processor.suspendDevice.StubKoreSuspendDeviceProcessor;
@@ -305,13 +305,13 @@ public class CamelRoute extends RouteBuilder {
 								.choice()
 										.when(header("derivedCarrierName").isEqualTo("KORE")).
 										log("message"+header("derivedSourceName"))
-											.process(new StubKoreReActivateDeviceProcessor())
+											.process(new StubKoreReactivateDeviceProcessor())
 											.to("log:input").
 								 endChoice().otherwise()
 									    .choice()
 											.when(header("derivedCarrierName").isEqualTo("KORE"))
 											.wireTap("direct:processReActivateKoreTransaction")
-											.process(new KoreReActivateDevicePostProcessor(env))
+											.process(new KoreReactivateDevicePostProcessor(env))
 										.endChoice()
 									.end().to("log:input")
 					.endChoice().end();		 
@@ -397,7 +397,7 @@ public class CamelRoute extends RouteBuilder {
 				.process(new VerizonDeactivateDevicePreProcessor())
 				// Audit will store record 3 times in case of failure (see
 				// onException for connection.class above)
-				// .bean(iAuditService, "auditExternalRequestCall")
+				// .bean(iAuditService, "auditExternalRequesktCall")
 				.to(uriRestVerizonEndPoint)
 				.unmarshal()
 				.json(JsonLibrary.Jackson)

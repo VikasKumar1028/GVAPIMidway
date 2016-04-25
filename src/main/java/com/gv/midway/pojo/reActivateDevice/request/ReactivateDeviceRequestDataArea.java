@@ -2,23 +2,24 @@ package com.gv.midway.pojo.reActivateDevice.request;
 
 import java.util.Arrays;
 
+import com.gv.midway.pojo.verizon.Devices;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 public class ReactivateDeviceRequestDataArea {
 	@ApiModelProperty(value = "All identifiers for the device.")
-	private ReactivateDevices[] devices;
+	private Devices[] devices;
 
 	/**
 	 * @return the devices
 	 */
-	public ReactivateDevices[] getDevices() {
+	public Devices[] getDevices() {
 		return devices;
 	}
 
 	/**
 	 * @param devices the devices to set
 	 */
-	public void setDevices(ReactivateDevices[] devices) {
+	public void setDevices(Devices[] devices) {
 		this.devices = devices;
 	}
 

@@ -35,10 +35,8 @@ import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequestDataAr
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDevices;
 import com.gv.midway.pojo.kore.KoreErrorResponse;
 import com.gv.midway.pojo.kore.KoreProvisoningResponse;
-import com.gv.midway.pojo.reActivateDevice.request.ReactivateDeviceId;
 import com.gv.midway.pojo.reActivateDevice.request.ReactivateDeviceRequest;
 import com.gv.midway.pojo.reActivateDevice.request.ReactivateDeviceRequestDataArea;
-import com.gv.midway.pojo.reActivateDevice.request.ReactivateDevices;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequest;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequestDataArea;
 import com.gv.midway.pojo.transaction.Transaction;
@@ -588,22 +586,22 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		ReactivateDeviceRequestDataArea reActivateDeviceRequestDataArea = (ReactivateDeviceRequestDataArea) req.getDataArea();
 
-		ReactivateDevices[] reActivateDevices = reActivateDeviceRequestDataArea.getDevices();
+		Devices[] reActivateDevices = reActivateDeviceRequestDataArea.getDevices();
 
 		Kryo kryo = new Kryo();
-		for (ReactivateDevices reActivateDevice : reActivateDevices) {
+		for (Devices reActivateDevice : reActivateDevices) {
 
 			ReactivateDeviceRequest dbPayload = new ReactivateDeviceRequest();
 			dbPayload.setHeader(req.getHeader());
 
-			ReactivateDevices[] businessPayLoadDevicesArray = new ReactivateDevices[1];
-			ReactivateDevices businessPayLoadActivateDevices = new ReactivateDevices();
-			ReactivateDeviceId[] businessPayloadDeviceId = new ReactivateDeviceId[reActivateDevice.getDeviceIds().length];
+			Devices[] businessPayLoadDevicesArray = new Devices[1];
+			Devices businessPayLoadActivateDevices = new Devices();
+			DeviceId[] businessPayloadDeviceId = new DeviceId[reActivateDevice.getDeviceIds().length];
 
 			for (int i = 0; i < reActivateDevice.getDeviceIds().length; i++) {
-				ReactivateDeviceId reActivateDeviceId = reActivateDevice.getDeviceIds()[i];
+				DeviceId reActivateDeviceId = reActivateDevice.getDeviceIds()[i];
 
-				ReactivateDeviceId businessPayLoadActivateDeviceId = new ReactivateDeviceId();
+				DeviceId businessPayLoadActivateDeviceId = new DeviceId();
 
 				/*
 				 * businessPayLoadActivateDeviceId.seteAPCode(activateDeviceId
