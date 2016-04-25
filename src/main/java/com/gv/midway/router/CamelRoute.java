@@ -39,6 +39,7 @@ import com.gv.midway.processor.cell.StubCellBulkUploadProcessor;
 import com.gv.midway.processor.cell.StubCellUploadProcessor;
 import com.gv.midway.processor.customFieldsUpdateDevice.StubKoreCustomFieldsUpdateProcessor;
 import com.gv.midway.processor.customFieldsUpdateDevice.StubVerizonCustomFieldsUpdateProcessor;
+import com.gv.midway.processor.customFieldsUpdateDevice.VerizonCustomFieldsUpdatePreProcessor;
 import com.gv.midway.processor.deactivateDevice.KoreDeactivateDevicePostProcessor;
 import com.gv.midway.processor.deactivateDevice.KoreDeactivateDevicePreProcessor;
 import com.gv.midway.processor.deactivateDevice.StubKoreDeactivateDeviceProcessor;
@@ -569,6 +570,9 @@ public class CamelRoute extends RouteBuilder {
 				.to("log:input")
 				.when(header("derivedCarrierName").isEqualTo("VERIZON"))
 				.process(new StubVerizonCustomFieldsUpdateProcessor())
-				.to("log:input").endChoice().otherwise().choice().end();
+				.to("log:input").endChoice().otherwise().choice()
+				.when(header("derivedCarrierName").isEqualTo("VERIZON"))
+				.process(new VerizonCustomFieldsUpdatePreProcessor()).log("VerizonCustomFieldsUpdatePreProcessor")
+				.end();
 	}
 }
