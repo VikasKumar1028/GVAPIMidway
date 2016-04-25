@@ -37,8 +37,11 @@ import com.gv.midway.processor.callbacks.CallbackPostProcessor;
 import com.gv.midway.processor.callbacks.CallbackPreProcessor;
 import com.gv.midway.processor.cell.StubCellBulkUploadProcessor;
 import com.gv.midway.processor.cell.StubCellUploadProcessor;
+import com.gv.midway.processor.customFieldsUpdateDevice.KoreCustomFieldsUpdatePostProcessor;
+import com.gv.midway.processor.customFieldsUpdateDevice.KoreCustomFieldsUpdatePreProcessor;
 import com.gv.midway.processor.customFieldsUpdateDevice.StubKoreCustomFieldsUpdateProcessor;
 import com.gv.midway.processor.customFieldsUpdateDevice.StubVerizonCustomFieldsUpdateProcessor;
+import com.gv.midway.processor.customFieldsUpdateDevice.VerizonCustomFieldsUpdatePostProcessor;
 import com.gv.midway.processor.customFieldsUpdateDevice.VerizonCustomFieldsUpdatePreProcessor;
 import com.gv.midway.processor.deactivateDevice.KoreDeactivateDevicePostProcessor;
 import com.gv.midway.processor.deactivateDevice.KoreDeactivateDevicePreProcessor;
@@ -619,18 +622,82 @@ public class CamelRoute extends RouteBuilder {
 
 		/**  UpdateCustomeFieldDevice **/
 		from("direct:customeFields").process(new HeaderProcessor())
-				.choice()
-				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
-				.choice().when(header("derivedCarrierName").isEqualTo("KORE"))
-				.process(new StubKoreCustomFieldsUpdateProcessor())
-				.to("log:input")
-				.when(header("derivedCarrierName").isEqualTo("VERIZON"))
-				.process(new StubVerizonCustomFieldsUpdateProcessor())
-				.to("log:input").endChoice().otherwise().choice()
-				.when(header("derivedCarrierName").isEqualTo("VERIZON"))
-				.process(new VerizonCustomFieldsUpdatePreProcessor()).log("VerizonCustomFieldsUpdatePreProcessor")
-				.end();
+		.choice()
+		.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
+		.choice().when(header("derivedCarrierName").isEqualTo("KORE"))
+		.process(new StubKoreCustomFieldsUpdateProcessor())
+		.to("log:input")
+		.when(header("derivedCarrierName").isEqualTo("VERIZON"))
+		.process(new StubVerizonCustomFieldsUpdateProcessor())
+		.to("log:input").endChoice().otherwise().choice()
 		
+		.when(header("derivedCarrierName").isEqualTo("KORE"))
+		.wireTap("direct:processcustomeFieldsKoreTransaction")
+		.process(new KoreCustomFieldsUpdatePostProcessor(env))
+
+		.endChoice()
+		
+		.when(header("derivedCarrierName").isEqualTo("VERIZON"))
+		//.bean(iSessionService, "setContextTokenInExchange")
+		//.bean(iTransactionalService, "populateDeactivateDBPayload")
+		.bean(iAuditService, "auditExternalRequestCall")
+		.to("direct:VerizoncustomeFieldsFlow1")
+
+		.endChoice().end().to("log:input").endChoice().end();
+
+        // Flow-1
+		from("direct:VerizoncustomeFieldsFlow1")
+		.doTry()
+		.to("direct:VerizoncustomeFieldsFlow2")
+		.doCatch(CxfOperationException.class)
+		.bean(iTransactionalService,
+				"populateVerizonTransactionalErrorResponse")
+		.bean(iAuditService, "auditExternalExceptionResponseCall")
+		.process(new VerizonGenericExceptionProcessor(env)).endDoTry()
+		.end();
+		
+		/// Flow-2
+		from("direct:VerizoncustomeFieldsFlow2")
+		.errorHandler(noErrorHandler())
+	
+		.bean(iSessionService, "setContextTokenInExchange")
+		.process(new VerizonCustomFieldsUpdatePreProcessor())
+		.to(uriRestVerizonEndPoint)
+		.unmarshal()
+		.json(JsonLibrary.Jackson)
+		.bean(iTransactionalService,
+				"populateVerizonTransactionalResponse")
+		.bean(iAuditService, "auditExternalResponseCall")
+		.process(new VerizonCustomFieldsUpdatePostProcessor(env));
+		
+		// SubFlow: Device Kore DeActivation
+
+		from("direct:processcustomeFieldsKoreTransaction")
+				.log("Wire Tap Thread customeField")
+				//.bean(iTransactionalService, "populateDeactivateDBPayload")
+				.split().method("deviceSplitter").recipientList()
+				.method("koreDeviceServiceRouter");
+	
+	
+		// SubFlow: Device Kore DeAcitvation- SEDA CALL
+		from("seda:koreSedacustomeFields?concurrentConsumers=5")
+				.onException(CxfOperationException.class)
+				.handled(true)
+				.bean(iTransactionalService,
+						"populateKoreTransactionalErrorResponse")
+				.bean(iAuditService, "auditExternalExceptionResponseCall")
+				.end()
+				
+				.process(new KoreCustomFieldsUpdatePreProcessor(env))
+				.log("KoreCustomFieldsUpdatePreProcessor-----------")
+				.bean(iAuditService, "auditExternalRequestCall")
+				.to(uriRestKoreEndPoint)
+				.unmarshal()
+				.json(JsonLibrary.Jackson, KoreProvisoningResponse.class)
+				.bean(iAuditService, "auditExternalResponseCall")
+				.bean(iTransactionalService,
+						"populateKoreTransactionalResponse");
+
 		
 		// Main: Restore Device Flow
 

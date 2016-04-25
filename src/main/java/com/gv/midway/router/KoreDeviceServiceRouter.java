@@ -33,6 +33,8 @@ public class KoreDeviceServiceRouter {
 			return "seda:koreSedaReactivation";
 		 if (transaction.getRequestType().contains("direct://restoreDevice"))
 			return "seda:koreSedaRestore";
+		 else if (transaction.getRequestType().contains("direct://customeFields"))
+				return "seda:koreSedacustomeFields";
 		else
 			return null;
 	}

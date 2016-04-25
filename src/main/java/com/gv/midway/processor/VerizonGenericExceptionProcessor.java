@@ -1,9 +1,5 @@
 package com.gv.midway.processor;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.component.cxf.CxfOperationException;
@@ -17,6 +13,7 @@ import com.gv.midway.exception.VerizonSessionTokenExpirationException;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
+import com.gv.midway.pojo.customFieldsUpdateDevice.response.CustomFieldsUpdateDeviceResponse;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
@@ -131,6 +128,15 @@ public class VerizonGenericExceptionProcessor implements Processor {
 			responseObject.setHeader(responseHeader);
 			responseObject.setResponse(response);
 			exchange.getIn().setBody(responseObject);
+		}
+		
+		if ("Endpoint[direct://customeFields]".equals(exchange
+				.getFromEndpoint().toString())) {
+			CustomFieldsUpdateDeviceResponse responseObject = new CustomFieldsUpdateDeviceResponse();
+			responseObject.setHeader(responseHeader);
+			responseObject.setResponse(response);
+			exchange.getIn().setBody(responseObject);
+			
 		}
 	}
 }

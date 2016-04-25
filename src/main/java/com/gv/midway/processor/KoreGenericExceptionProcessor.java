@@ -12,12 +12,13 @@ import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
+import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
+import com.gv.midway.pojo.customFieldsUpdateDevice.response.CustomFieldsUpdateDeviceResponse;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.kore.KoreErrorResponse;
 import com.gv.midway.pojo.reActivateDevice.response.ReactivateDeviceResponse;
 import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
-import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
 
 public class KoreGenericExceptionProcessor implements Processor {
 
@@ -115,6 +116,15 @@ public class KoreGenericExceptionProcessor implements Processor {
 				.getFromEndpoint().toString())) {
 
 			ReactivateDeviceResponse responseObject = new ReactivateDeviceResponse();
+			responseObject.setHeader(responseHeader);
+			responseObject.setResponse(response);
+			exchange.getIn().setBody(responseObject);
+		}
+		
+		if ("Endpoint[direct://customeFields]".equals(exchange
+				.getFromEndpoint().toString())) {
+
+			CustomFieldsUpdateDeviceResponse responseObject = new CustomFieldsUpdateDeviceResponse();
 			responseObject.setHeader(responseHeader);
 			responseObject.setResponse(response);
 			exchange.getIn().setBody(responseObject);
