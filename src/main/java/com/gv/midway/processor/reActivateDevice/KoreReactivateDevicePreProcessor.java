@@ -1,4 +1,4 @@
-package com.gv.midway.processor.reActivateDevice;
+package com.gv.midway.processor.reactivateDevice;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
