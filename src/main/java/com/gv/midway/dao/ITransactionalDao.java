@@ -15,4 +15,5 @@ public interface ITransactionalDao {
 	public void populateCallbackDBPayload(Exchange exchange);
 	public void findMidwayTransactionId(Exchange exchange);
 	public void populateReactivateDBPayload(Exchange exchange);
+	public void populateRestoreDBPayload(Exchange exchange);
 }

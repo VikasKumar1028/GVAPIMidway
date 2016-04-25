@@ -184,7 +184,7 @@ public class MidwayJunitTest extends Assert {
  		ddevices.setDeviceIds(DeActivateDeviceIdArray);
  		deDevices[0] = ddevices;
  		dataArea.setDevices(deDevices);
- 		dataArea.setFlagScrap(Boolean.FALSE);
+ 		//dataArea.setFlagScrap(Boolean.FALSE);
  		req.setDataArea(dataArea);
          
   		 header.setSourceName("KORE");

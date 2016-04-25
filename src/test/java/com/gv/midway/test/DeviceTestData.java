@@ -198,7 +198,7 @@ public class DeviceTestData extends Header {
 		 		ddevices.setDeviceIds(DeActivateDeviceIdArray);
 		 		deDevices[0] = ddevices;
 		 		dataArea.setDevices(deDevices);
-		 		dataArea.setFlagScrap(Boolean.FALSE);
+		 		//dataArea.setFlagScrap(Boolean.FALSE);
 		 		req.setDataArea(dataArea);
 		         
 		  		 header.setSourceName("KORE");
@@ -208,9 +208,9 @@ public class DeviceTestData extends Header {
 			     System.out.println("Delivered Source Name----------------" +req.getHeader().getSourceName()); 
 			   
 			     //null pointer check for Flag Scrap
-			     if(req.getDataArea().getFlagScrap()==null){
-			    	 throw new AssertionError("Flag Scrap is Mandatory");
-			     }
+			    // if(req.getDataArea().getFlagScrap()==null){
+			    //	 throw new AssertionError("Flag Scrap is Mandatory");
+			  //   }
 					
 			   //null pointer check for device Id
 			     if(req.getDataArea().getDevices()[0].getDeviceIds()[0].getId()==null || req.getDataArea().getDevices()[0].getDeviceIds()[0].getId().isEmpty()){

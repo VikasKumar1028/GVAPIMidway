@@ -25,6 +25,8 @@ import com.gv.midway.pojo.device.response.UpdateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.reActivateDevice.request.ReactivateDeviceRequest;
 import com.gv.midway.pojo.reActivateDevice.response.ReactivateDeviceResponse;
+import com.gv.midway.pojo.restoreDevice.request.RestoreDeviceRequest;
+import com.gv.midway.pojo.restoreDevice.response.RestoreDeviceResponse;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequest;
 import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
 import com.wordnik.swagger.annotations.Api;
@@ -132,5 +134,12 @@ public interface IAdaptaionLayerService {
 	@ApiOperation(value = "CallbackService")
 	ConnectionInformationResponse connectionInformation(
 			ConnectionInformationRequest connectionInformationRequest);
-
+	
+	@POST
+	@Path("/device/restore")
+	@Produces("application/json")
+	@Consumes("application/json")
+	@ApiOperation(value = "RestoreDeviceService")
+	RestoreDeviceResponse restoreDevice(
+			RestoreDeviceRequest restoreDeviceRequest);
 }

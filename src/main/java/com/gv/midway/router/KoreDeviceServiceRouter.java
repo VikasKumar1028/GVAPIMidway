@@ -29,8 +29,10 @@ public class KoreDeviceServiceRouter {
 			return "seda:koreSedaDeactivation";
 		else if (transaction.getRequestType().contains("direct://suspendDevice"))
 			return "seda:koreSedaSuspend";
-		if (transaction.getRequestType().contains("direct://reactivateDevice"))
+		else if (transaction.getRequestType().contains("direct://reactivateDevice"))
 			return "seda:koreSedaReactivation";
+		 if (transaction.getRequestType().contains("direct://restoreDevice"))
+			return "seda:koreSedaRestore";
 		else
 			return null;
 	}

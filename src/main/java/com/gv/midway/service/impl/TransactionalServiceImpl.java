@@ -73,4 +73,7 @@ public class TransactionalServiceImpl implements ITransactionalService {
 		transactionalDao.populateReactivateDBPayload(exchange);
 
 	}
+	public void populateRestoreDBPayload(Exchange exchange) {
+		  transactionalDao.populateRestoreDBPayload(exchange);
+	}
 }

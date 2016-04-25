@@ -55,6 +55,12 @@ import com.gv.midway.processor.deviceInformation.VerizonDeviceInformationPreProc
 import com.gv.midway.processor.reactivate.KoreReactivateDevicePostProcessor;
 import com.gv.midway.processor.reactivate.KoreReactivateDevicePreProcessor;
 import com.gv.midway.processor.reactivate.StubKoreReactivateDeviceProcessor;
+import com.gv.midway.processor.restoreDevice.KoreRestoreDevicePostProcessor;
+import com.gv.midway.processor.restoreDevice.KoreRestoreDevicePreProcessor;
+import com.gv.midway.processor.restoreDevice.StubKoreRestoreDeviceProcessor;
+import com.gv.midway.processor.restoreDevice.StubVerizonRestoreDeviceProcessor;
+import com.gv.midway.processor.restoreDevice.VerizonRestoreDevicePostProcessor;
+import com.gv.midway.processor.restoreDevice.VerizonRestoreDevicePreProcessor;
 import com.gv.midway.processor.suspendDevice.KoreSuspendDevicePostProcessor;
 import com.gv.midway.processor.suspendDevice.KoreSuspendDevicePreProcessor;
 import com.gv.midway.processor.suspendDevice.StubKoreSuspendDeviceProcessor;
@@ -624,5 +630,81 @@ public class CamelRoute extends RouteBuilder {
 				.when(header("derivedCarrierName").isEqualTo("VERIZON"))
 				.process(new VerizonCustomFieldsUpdatePreProcessor()).log("VerizonCustomFieldsUpdatePreProcessor")
 				.end();
-	}
+		
+		
+		// Main: Restore Device Flow
+
+		from("direct:restoreDevice").process(new HeaderProcessor()).choice()
+				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
+				.choice().when(header("derivedCarrierName").isEqualTo("KORE"))
+				.log("message" + header("derivedSourceName"))
+				.process(new StubKoreRestoreDeviceProcessor()).to("log:input")
+				.when(header("derivedCarrierName").isEqualTo("VERIZON"))
+				.process(new StubVerizonRestoreDeviceProcessor())
+				.to("log:input").endChoice().otherwise().choice()
+				.when(header("derivedCarrierName").isEqualTo("KORE"))
+				.wireTap("direct:processRestoreKoreTransaction")
+				.process(new KoreRestoreDevicePostProcessor(env))
+				.endChoice()
+				.when(header("derivedCarrierName").isEqualTo("VERIZON"))
+				.bean(iSessionService, "setContextTokenInExchange")
+				.bean(iTransactionalService, "populateRestoreDBPayload")
+				// will store only one time in Audit even on connection failure
+				.bean(iAuditService, "auditExternalRequestCall")
+				.to("direct:VerizonRestoreFlow1").endChoice().end()
+				.to("log:input").endChoice().end();
+
+		from("direct:VerizonRestoreFlow1")
+				.doTry()
+				.to("direct:VerizonRestoreFlow2")
+				.doCatch(CxfOperationException.class)
+				.bean(iTransactionalService,
+						"populateVerizonTransactionalErrorResponse")
+				.bean(iAuditService, "auditExternalExceptionResponseCall")
+				.process(new VerizonGenericExceptionProcessor(env)).endDoTry()
+				.end();
+
+		// SubFlow: Device Verizon Restore
+		from("direct:VerizonRestoreFlow2")
+				.errorHandler(noErrorHandler())
+				// REMOVED Audit will store record 3 times in case of failure
+				// (see onException for connection.class above)
+				// .bean(iAuditService, "auditExternalRequestCall")
+				.bean(iSessionService, "setContextTokenInExchange")
+				.process(new VerizonRestoreDevicePreProcessor())
+				.to(uriRestVerizonEndPoint)
+				.unmarshal()
+				.json(JsonLibrary.Jackson)
+				.bean(iTransactionalService,
+						"populateVerizonTransactionalResponse")
+				.bean(iAuditService, "auditExternalResponseCall")
+				.process(new VerizonRestoreDevicePostProcessor(env));
+
+		// SubFlow: Device Kore Restore
+		from("direct:processRestoreKoreTransaction")
+				.log("Wire Tap Thread activation")
+				.bean(iTransactionalService, "populateRestoreDBPayload")
+				.split().method("deviceSplitter").recipientList()
+				.method("koreDeviceServiceRouter");
+
+		// SubFlow: Device Kore Restore- SEDA CALL
+		from("seda:koreSedaRestore?concurrentConsumers=5")
+				.onException(CxfOperationException.class)
+				.handled(true)
+				.bean(iTransactionalService,
+						"populateKoreTransactionalErrorResponse")
+				.bean(iAuditService, "auditExternalExceptionResponseCall")
+				.end()
+				.process(new KoreRestoreDevicePreProcessor(env))
+				.bean(iAuditService, "auditExternalRequestCall")
+				.to(uriRestKoreEndPoint)
+				.unmarshal()
+				.json(JsonLibrary.Jackson, KoreProvisoningResponse.class)
+				.bean(iTransactionalService,
+						"populateKoreTransactionalResponse")
+				.bean(iAuditService, "auditExternalResponseCall");
+
+		// ***** DEVICE Restore END
+		}
+	
 }

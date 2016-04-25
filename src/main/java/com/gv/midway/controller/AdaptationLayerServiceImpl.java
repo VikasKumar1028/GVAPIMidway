@@ -23,6 +23,8 @@ import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequestData
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.reActivateDevice.request.ReactivateDeviceRequest;
 import com.gv.midway.pojo.reActivateDevice.response.ReactivateDeviceResponse;
+import com.gv.midway.pojo.restoreDevice.request.RestoreDeviceRequest;
+import com.gv.midway.pojo.restoreDevice.response.RestoreDeviceResponse;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequest;
 import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
 import com.gv.midway.pojo.verizon.DeviceId;
@@ -152,5 +154,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	public RestoreDeviceResponse restoreDevice(RestoreDeviceRequest restoreDeviceRequest) {
+		return (RestoreDeviceResponse) producer.requestBody("direct:restoreDevice", restoreDeviceRequest);
+	}
 }

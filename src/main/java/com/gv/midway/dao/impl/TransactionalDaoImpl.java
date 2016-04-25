@@ -37,6 +37,9 @@ import com.gv.midway.pojo.kore.KoreErrorResponse;
 import com.gv.midway.pojo.kore.KoreProvisoningResponse;
 import com.gv.midway.pojo.reActivateDevice.request.ReactivateDeviceRequest;
 import com.gv.midway.pojo.reActivateDevice.request.ReactivateDeviceRequestDataArea;
+import com.gv.midway.pojo.restoreDevice.request.RestoreDeviceRequest;
+import com.gv.midway.pojo.restoreDevice.request.RestoreDeviceRequestDataArea;
+import com.gv.midway.pojo.restoreDevice.request.RestoreDevices;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequest;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequestDataArea;
 import com.gv.midway.pojo.transaction.Transaction;
@@ -659,5 +662,85 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			exchange.getIn().setBody(list);
 		}
 
+	}
+	
+	public void populateRestoreDBPayload(Exchange exchange) {
+		log.info("Inside populateRestoreDBPayload");
+		ArrayList<Transaction> list = new ArrayList<Transaction>();
+
+		String currentDataTime = CommonUtil.getCurrentTimeStamp();
+
+		RestoreDeviceRequest req = (RestoreDeviceRequest) exchange.getIn().getBody();
+
+		RestoreDeviceRequestDataArea restoreDeviceRequestDataArea = (RestoreDeviceRequestDataArea) req.getDataArea();
+
+		RestoreDevices[] restoreDevices = restoreDeviceRequestDataArea.getDevices();
+
+		Kryo kryo = new Kryo();
+		for (RestoreDevices restoreDevice : restoreDevices) {
+
+			RestoreDeviceRequest dbPayload = new RestoreDeviceRequest();
+			dbPayload.setHeader(req.getHeader());
+
+			RestoreDevices[] businessPayLoadDevicesArray = new RestoreDevices[1];
+			RestoreDevices businessPayLoadRestoreDevices = new RestoreDevices();
+			DeviceId[] businessPayloadDeviceId = new DeviceId[restoreDevice.getDeviceIds().length];
+
+			for (int i = 0; i < restoreDevice.getDeviceIds().length; i++) {
+				DeviceId deviceId = restoreDevice.getDeviceIds()[i];
+
+				DeviceId businessPayLoadRestoreDeviceId = new DeviceId();
+
+				
+				businessPayLoadRestoreDeviceId.setId(deviceId.getId());
+				businessPayLoadRestoreDeviceId.setKind(deviceId.getKind());
+
+				businessPayloadDeviceId[i] = businessPayLoadRestoreDeviceId;
+
+			}
+			businessPayLoadRestoreDevices.setDeviceIds(businessPayloadDeviceId);
+			businessPayLoadDevicesArray[0] = businessPayLoadRestoreDevices;
+
+			RestoreDeviceRequestDataArea copyDataArea = kryo.copy(req.getDataArea());
+
+			copyDataArea.setDevices(businessPayLoadDevicesArray);
+			dbPayload.setDataArea(copyDataArea);
+
+		
+			try {
+
+				Transaction transaction = new Transaction();
+
+				transaction.setMidwayTransactionId(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID).toString());
+				// TODO if number of devices are more
+				ObjectMapper obj = new ObjectMapper();
+				String strDeviceNumber = obj.writeValueAsString(businessPayloadDeviceId);
+				transaction.setDeviceNumber(strDeviceNumber);
+				transaction.setDevicePayload(dbPayload);
+				transaction.setMidwayStatus(IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
+				transaction.setCarrierName(exchange.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString());
+				transaction.setTimeStampReceived(currentDataTime);
+				transaction.setAuditTransactionId(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
+				transaction.setRequestType(exchange.getFromEndpoint().toString());
+				transaction.setCallBackReceived(false);
+
+				list.add(transaction);
+
+			} catch (Exception ex) {
+				log.error("Inside populateRestoreDBPayload");
+			}
+
+		}
+		mongoTemplate.insertAll(list);
+		// For Kore We Need Wire Tap and SEDA component So the body should
+		// be set with arraylist of transaction for Verizon we simply add
+		// into database and do not change the exchange body
+
+		
+
+		if (exchange.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString().equals("KORE")) {
+
+			exchange.getIn().setBody(list);
+		}
 	}
 }
