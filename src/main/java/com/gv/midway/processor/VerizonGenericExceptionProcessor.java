@@ -65,15 +65,20 @@ public class VerizonGenericExceptionProcessor implements Processor {
 		responseHeader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER).toString());
 
 		Response response = new Response();
-
-		//TODO SAME Functionality
-		if (exception.getStatusCode() == 401 ) {
+		// TODO SAME Functionality
+		if (exception.getStatusCode() == 401
+				|| exception
+						.getResponseBody()
+						.contains(
+								"UnifiedWebService.REQUEST_FAILED.SessionToken.Expired")) {
 			exchange.setProperty(IConstant.RESPONSE_CODE, "401");
 			exchange.setProperty(IConstant.RESPONSE_STATUS, "Invalid Token");
 			exchange.setProperty(IConstant.RESPONSE_DESCRIPTION,
 					"Not able to retrieve  valid authentication token");
 			throw new VerizonSessionTokenExpirationException("401", "401");
-		}else{
+		}
+		//TODO SAME Functionality
+		else{
 		
 			ObjectMapper mapper= new ObjectMapper();
 			
