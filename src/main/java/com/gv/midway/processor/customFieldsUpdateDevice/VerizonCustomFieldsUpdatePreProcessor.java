@@ -44,7 +44,7 @@ public class VerizonCustomFieldsUpdatePreProcessor implements Processor {
 		message.setHeader("Authorization", "Bearer " + authorizationToken);
 		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
-		message.setHeader(Exchange.HTTP_METHOD, "POST");
+		message.setHeader(Exchange.HTTP_METHOD, "PUT");
 		message.setHeader(Exchange.HTTP_PATH, "/devices/actions/customFields");
 
 		

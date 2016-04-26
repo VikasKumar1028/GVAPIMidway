@@ -1,7 +1,8 @@
 package com.gv.midway.pojo.customFieldsUpdateDevice.request;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.wordnik.swagger.annotations.ApiModelProperty;
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CustomFieldsUpdateDeviceId {
 	@ApiModelProperty(value = "Value of device identifier.", required = true)
 	private String id;

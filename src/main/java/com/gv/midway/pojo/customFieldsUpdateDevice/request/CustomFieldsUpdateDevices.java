@@ -2,8 +2,10 @@ package com.gv.midway.pojo.customFieldsUpdateDevice.request;
 
 import java.util.Arrays;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CustomFieldsUpdateDevices {
 
 	@ApiModelProperty(value = "Having type and value of device identifier")
