@@ -44,7 +44,13 @@ import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequestData
 import com.gv.midway.pojo.deviceInformation.response.Cell;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
+import com.gv.midway.pojo.restoreDevice.request.RestoreDeviceRequest;
+import com.gv.midway.pojo.restoreDevice.request.RestoreDeviceRequestDataArea;
+import com.gv.midway.pojo.restoreDevice.request.RestoreDevices;
+import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequest;
+import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequestDataArea;
 import com.gv.midway.pojo.verizon.DeviceId;
+import com.gv.midway.pojo.verizon.Devices;
 
 public class MidwayJunitTest extends Assert {
 	private AbstractApplicationContext applicationContext;
@@ -61,7 +67,7 @@ public class MidwayJunitTest extends Assert {
 	}
 
 	// test case for header Information-common for all API
-	//@Test
+	@Test
 	public void testHeaderInformation() throws Exception {
 
 		Header header = new Header();
@@ -112,12 +118,14 @@ public class MidwayJunitTest extends Assert {
         req.setDataArea(dataArea);
        
  		header.setSourceName("KORE"); 				
+ 		header.setTransactionId("cde2131ksjd");
+ 		 header.setBsCarrier("KORE");
  		 req.setHeader(header);
  		 
 
 		// System.out.println("Request in Junit Test:"+req);
 		testData.setExpectedDeviceInformation(req);
-		template.sendBody("direct:deviceInformation", req);
+		template.sendBody("direct:deviceInformationCarrier", req);
 		testData.verifyDeviceInformationData();
 	}
 
@@ -151,7 +159,9 @@ public class MidwayJunitTest extends Assert {
 		req.setDataArea(dataArea);
 
 		header.setSourceName("KORE");
-		req.setHeader(header);
+		header.setTransactionId("cde2131ksjd");
+ 		 header.setBsCarrier("KORE");
+ 		 req.setHeader(header);
 
 		System.out.println("Request in Junit Test:" + req);
 		testData.setExpectedActivateDevice(req);
@@ -187,7 +197,9 @@ public class MidwayJunitTest extends Assert {
  		//dataArea.setFlagScrap(Boolean.FALSE);
  		req.setDataArea(dataArea);
          
-  		 header.setSourceName("KORE");
+  		 header.setSourceName("VERIZON");
+  		 header.setTransactionId("cde2131ksjd");
+  		 header.setBsCarrier("VERIZON");
   		 req.setHeader(header);
   		 
 
@@ -219,17 +231,16 @@ public class MidwayJunitTest extends Assert {
 		testData.setExpectedActivateDeviceResponse(activateDeviceResponse);
 		
 		//template.sendBody("direct:activateDevice", req);
-		ActivateDeviceResponse response = (ActivateDeviceResponse) template.requestBody(
-			      "direct:activateDevice", req);
-		DeviceInformationResponse  response1 =    (DeviceInformationResponse)template.requestBody(
-			      "direct:deviceInformation", req);
+		//for real time response
+		//ActivateDeviceResponse response = (ActivateDeviceResponse) template.requestBody("direct:activateDevice", req);
+		//DeviceInformationResponse  response1 =    (DeviceInformationResponse)template.requestBody("direct:deviceInformation", req);
 		/*ActivateDeviceRequest request = (ActivateDeviceRequest) exchange
 				.getIn().getBody(ActivateDeviceRequest.class);
 		
 		*/
-		System.out.println("Rsponse in Junit Test:" + response);
-		System.out.println("Device Information Response in Junit Test................:" + response1);
-		testData.verifyDeviceActivationResponseData(response);
+		//System.out.println("Rsponse in Junit Test:" + response);
+		//System.out.println("Device Information Response in Junit Test................:" + response1);
+		testData.verifyDeviceActivationResponseData(activateDeviceResponse);
 
 	}	
 	
@@ -240,8 +251,11 @@ public class MidwayJunitTest extends Assert {
 
 		CallBackVerizonRequest callbackReq = new CallBackVerizonRequest();
 	
+		Header header = new Header();
 		callbackReq.setRequestId("R001");
-  		
+		header.setTransactionId("cde2131ksjd");
+ 		header.setBsCarrier("VERIZON");
+ 		
 		System.out.println("Request in Junit Test:" + callbackReq);
 		testData.setExpectedActivateCallback(callbackReq);
 		template.sendBody("direct:callbacks", callbackReq);
@@ -250,7 +264,7 @@ public class MidwayJunitTest extends Assert {
 	}
 	
 	//Test case for Cell 
-	//@Test
+	@Test
 	public void testCell() throws Exception{
 		Cell cell =new Cell();
 		cell.setEsn("ESN01");
@@ -263,7 +277,7 @@ public class MidwayJunitTest extends Assert {
 	}
 
 	//Test case for cell Update
-	//@Test
+	@Test
 	public void testCellUpdate() throws Exception{
 		Cell cell =new Cell();
 		cell.setEsn("ESN01");
@@ -274,6 +288,84 @@ public class MidwayJunitTest extends Assert {
 		//template.sendBody("direct:cell", cellUpdate);
 		testData.verifyCellUpdateInformation();
 	}
+	
+	// Test Case for Restore Device
+		//@Test
+		public void testRestoreDevice() throws Exception {
+
+			RestoreDeviceRequest req = new RestoreDeviceRequest();
+			Header header = new Header();
+
+			RestoreDeviceRequestDataArea dataArea = new RestoreDeviceRequestDataArea();
+
+			Devices [] deDevices=new Devices[1];
+			Devices ddevices = new Devices();
+
+	        DeviceId[] restoreDeviceIdArray = new DeviceId[1];
+	 		 
+	 		DeviceId restoreDeviceId= new DeviceId();
+	 		
+	 		restoreDeviceId.setId("89014103277405946190");
+	 		restoreDeviceId.setKind("ghgjg");
+	 		
+	 		restoreDeviceIdArray[0] = restoreDeviceId;
+	 		
+	 		ddevices.setDeviceIds(restoreDeviceIdArray);
+	 		deDevices[0] = ddevices;
+	 		dataArea.setDevices(deDevices);
+	 		req.setDataArea(dataArea);
+	         
+	  		 header.setSourceName("VERIZON");
+	  		 header.setTransactionId("cde2131ksjd");
+	  		 header.setBsCarrier("VERIZON");
+	  		 req.setHeader(header);
+	  		 
+
+			System.out.println("Request in Junit Test:" + req);
+			testData.setExpectedRestoreDevice(req);
+			template.sendBody("direct:restoreDevice", req);
+			testData.verifyDeviceRestoreData();
+
+		}
+
+		// Test Case for Suspended Device
+			//	@Test
+				public void testSuspendDevice() throws Exception {
+
+					SuspendDeviceRequest req = new SuspendDeviceRequest();
+					Header header = new Header();
+
+					SuspendDeviceRequestDataArea dataArea = new SuspendDeviceRequestDataArea();
+
+					Devices [] deDevices=new Devices[1];
+					Devices ddevices = new Devices();
+
+			        DeviceId[] suspendDeviceIdArray = new DeviceId[1];
+			 		 
+			 		DeviceId suspendDeviceId= new DeviceId();
+			 		
+			 		suspendDeviceId.setId("89014103277405946190");
+			 		suspendDeviceId.setKind("ghgjg");
+			 		
+			 		suspendDeviceIdArray[0] = suspendDeviceId;
+			 		
+			 		ddevices.setDeviceIds(suspendDeviceIdArray);
+			 		deDevices[0] = ddevices;
+			 		dataArea.setDevices(deDevices);
+			 		req.setDataArea(dataArea);
+			         
+			  		 header.setSourceName("VERIZON");
+			  		 header.setTransactionId("cde2131ksjd");
+			  		 header.setBsCarrier("VERIZON");
+			  		 req.setHeader(header);
+			  		 
+
+					System.out.println("Request in Junit Test:" + req);
+					testData.setExpectedSuspendDevice(req);
+					template.sendBody("direct:restoreDevice", req);
+					testData.verifyDeviceSuspendData();
+
+				}
 
 	@After
 	public void tearDown() throws Exception {
