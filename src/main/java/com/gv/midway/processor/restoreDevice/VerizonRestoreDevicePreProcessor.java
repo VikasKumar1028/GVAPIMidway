@@ -41,7 +41,7 @@ public class VerizonRestoreDevicePreProcessor implements Processor {
 	//As the payload is broken into indivisual devices so only one Device
 			
 	//Need to send the complete payload	with id and Kind as device parameters	
-	RestoreDevices[] proxyDevicesArray=	proxyRequest.getDataArea().getDevices();
+	Devices[] proxyDevicesArray=	proxyRequest.getDataArea().getDevices();
 	Devices[] businessDevicesArray= new Devices[proxyDevicesArray.length];
 	
 	
@@ -49,7 +49,7 @@ public class VerizonRestoreDevicePreProcessor implements Processor {
 	{
 	
 	DeviceId[] businessDeviceIdArray = new DeviceId[proxyDevicesArray[j].getDeviceIds().length];
-	RestoreDevices proxyDevices= proxyDevicesArray[j];
+	Devices proxyDevices= proxyDevicesArray[j];
 	Devices businessDevice= new Devices();
 	
 	
