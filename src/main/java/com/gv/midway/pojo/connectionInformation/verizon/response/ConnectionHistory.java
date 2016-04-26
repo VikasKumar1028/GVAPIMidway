@@ -1,4 +1,4 @@
-package com.gv.midway.pojo.connectionInformation.response;
+package com.gv.midway.pojo.connectionInformation.verizon.response;
 
 import java.util.Arrays;
 

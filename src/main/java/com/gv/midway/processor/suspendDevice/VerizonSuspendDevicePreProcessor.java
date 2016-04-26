@@ -103,8 +103,7 @@ public class VerizonSuspendDevicePreProcessor implements Processor {
 		  "Bearer 89ba225e1438e95bd05c3cc288d3591");
 		
 		
-	;
-
+	
 	
 /*	message.setHeader("VZ-M2M-Token", sessionToken);
 	message.setHeader("Authorization", "Bearer " + authorizationToken);*/

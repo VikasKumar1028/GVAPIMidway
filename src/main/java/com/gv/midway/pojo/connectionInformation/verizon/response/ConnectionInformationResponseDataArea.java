@@ -1,4 +1,4 @@
-package com.gv.midway.pojo.connectionInformation.response;
+package com.gv.midway.pojo.connectionInformation.verizon.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.wordnik.swagger.annotations.ApiModelProperty;

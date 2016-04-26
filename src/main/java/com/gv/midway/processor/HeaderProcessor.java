@@ -26,7 +26,7 @@ public class HeaderProcessor implements Processor {
 		
 		String derivedCarrierName =CommonUtil.getDerivedCarrierName(exchange.getProperty(IConstant.BSCARRIER).toString());
 		
-		if (derivedCarrierName == null){
+		if (derivedCarrierName == null || (exchange.getFromEndpoint().toString().matches("(.*)deviceConnectionStatus(.*)") && derivedCarrierName.equalsIgnoreCase("KORE"))){
 			exchange.setProperty(IConstant.RESPONSE_CODE, "402");
 			exchange.setProperty(IConstant.RESPONSE_STATUS, "Invalid Parameter");
 			exchange.setProperty(IConstant.RESPONSE_DESCRIPTION, "Invalid bsCarrier field value"); 
