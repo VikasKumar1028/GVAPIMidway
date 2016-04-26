@@ -1,12 +1,16 @@
 package com.gv.midway.pojo.callback.request;
+
 import com.wordnik.swagger.annotations.ApiModelProperty;
+
 import java.util.Arrays;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gv.midway.pojo.callback.CallbackDeviceResponse;
 import com.gv.midway.pojo.callback.CallbackFaultResponse;
 import com.gv.midway.pojo.callback.CallbackSummary;
 import com.gv.midway.pojo.verizon.DeviceId;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CallBackVerizonRequest {
 	@ApiModelProperty(value = "Summary of requested device callback")
 	private CallbackSummary summary;
@@ -117,7 +121,9 @@ public class CallBackVerizonRequest {
 				+ password + "]";
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -142,7 +148,9 @@ public class CallBackVerizonRequest {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -198,6 +206,5 @@ public class CallBackVerizonRequest {
 			return false;
 		return true;
 	}
-	
-	
+
 }
