@@ -749,7 +749,7 @@ public class CamelRoute extends RouteBuilder {
 
 		// SubFlow: Device Kore Restore
 		from("direct:processRestoreKoreTransaction")
-				.log("Wire Tap Thread activation")
+				.log("Wire Tap Thread restore")
 				.bean(iTransactionalService, "populateRestoreDBPayload")
 				.split().method("deviceSplitter").recipientList()
 				.method("koreDeviceServiceRouter");
