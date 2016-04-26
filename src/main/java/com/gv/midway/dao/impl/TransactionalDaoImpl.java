@@ -678,16 +678,16 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		RestoreDeviceRequestDataArea restoreDeviceRequestDataArea = (RestoreDeviceRequestDataArea) req.getDataArea();
 
-		RestoreDevices[] restoreDevices = restoreDeviceRequestDataArea.getDevices();
+		Devices[] restoreDevices = restoreDeviceRequestDataArea.getDevices();
 
 		Kryo kryo = new Kryo();
-		for (RestoreDevices restoreDevice : restoreDevices) {
+		for (Devices restoreDevice : restoreDevices) {
 
 			RestoreDeviceRequest dbPayload = new RestoreDeviceRequest();
 			dbPayload.setHeader(req.getHeader());
 
-			RestoreDevices[] businessPayLoadDevicesArray = new RestoreDevices[1];
-			RestoreDevices businessPayLoadRestoreDevices = new RestoreDevices();
+			Devices[] businessPayLoadDevicesArray = new Devices[1];
+			Devices businessPayLoadRestoreDevices = new Devices();
 			DeviceId[] businessPayloadDeviceId = new DeviceId[restoreDevice.getDeviceIds().length];
 
 			for (int i = 0; i < restoreDevice.getDeviceIds().length; i++) {

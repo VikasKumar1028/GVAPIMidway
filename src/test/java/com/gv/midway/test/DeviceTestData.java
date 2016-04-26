@@ -18,7 +18,13 @@ import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
 import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequestDataArea;
 import com.gv.midway.pojo.deviceInformation.response.Cell;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
+import com.gv.midway.pojo.restoreDevice.request.RestoreDeviceRequest;
+import com.gv.midway.pojo.restoreDevice.request.RestoreDeviceRequestDataArea;
+import com.gv.midway.pojo.restoreDevice.request.RestoreDevices;
+import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequest;
+import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequestDataArea;
 import com.gv.midway.pojo.verizon.DeviceId;
+import com.gv.midway.pojo.verizon.Devices;
 
 public class DeviceTestData extends Header {
     protected ActivateDeviceRequest expectHeader;
@@ -27,6 +33,8 @@ public class DeviceTestData extends Header {
     protected DeactivateDeviceRequest expectDeactiveDevice;
     protected ActivateDeviceResponse  expectedActivateDeviceResponse;
     protected CallBackVerizonRequest expectedActivateCallback;
+    protected RestoreDeviceRequest expectRestoreDevice;
+    protected SuspendDeviceRequest expectSuspendDevice; 
     Exchange exchange;
     Header header =new Header();    	
     public void setExpectedHeader(ActivateDeviceRequest activateDeviceRequest) {
@@ -238,8 +246,8 @@ public class DeviceTestData extends Header {
 	     System.out.println("Delivered Order Number----------------" +response.getDataArea().getOrderNumber()); 
 	      
 	     //null pointer check for EAP Code if Source is 'KORE'
-	    if(expectedActivateDeviceResponse.getDataArea().getOrderNumber().equals(response.getDataArea().getOrderNumber())){
-	    	throw new AssertionError("Order Number is not correct");
+	    if(!expectedActivateDeviceResponse.getDataArea().getOrderNumber().equals(response.getDataArea().getOrderNumber())){
+	    	throw new AssertionError("Requested Order Number is not correct");
 	    }
 	    
   		 
@@ -313,6 +321,95 @@ public class DeviceTestData extends Header {
 		if( cell.getSim()==null || cell.getSim().isEmpty()){
 			throw new AssertionError("Cell SIM No. can not be null");
 		}
+	}
+	
+	public void setExpectedRestoreDevice(RestoreDeviceRequest req) {
+		// TODO Auto-generated method stub
+		this.expectRestoreDevice=req;
+	}
+
+	public void verifyDeviceRestoreData() {
+		// TODO Auto-generated method stub
+		RestoreDeviceRequest req=new RestoreDeviceRequest();
+		RestoreDeviceRequestDataArea dataArea=new RestoreDeviceRequestDataArea();
+	
+		Devices [] deDevices=new Devices[1];
+        Devices ddevices = new Devices();
+
+        DeviceId[] DeActivateDeviceIdArray = new DeviceId[1];
+ 		 
+ 		DeviceId restoreDeviceId= new DeviceId();
+ 		
+ 		restoreDeviceId.setId("89014103277405946190");
+ 		restoreDeviceId.setKind("ghgjg");
+ 		
+ 		DeActivateDeviceIdArray[0] = restoreDeviceId;
+ 		
+ 		ddevices.setDeviceIds(DeActivateDeviceIdArray);
+ 		deDevices[0] = ddevices;
+ 		dataArea.setDevices(deDevices);
+ 		req.setDataArea(dataArea);
+         
+  		 header.setSourceName("KORE");
+  		 req.setHeader(header);
+  		 
+  				
+	     System.out.println("Delivered Source Name----------------" +req.getHeader().getSourceName()); 
+	   
+	   	   //null pointer check for device Id
+	     if(req.getDataArea().getDevices()[0].getDeviceIds()[0].getId()==null || req.getDataArea().getDevices()[0].getDeviceIds()[0].getId().isEmpty()){
+	    	 throw new AssertionError("Device Id is Mandatory");
+	     }
+	     
+	     if(!expectRestoreDevice.getDataArea().getDevices()[0].getDeviceIds()[0].getId().equals(req.getDataArea().getDevices()[0].getDeviceIds()[0].getId()))
+	     {	
+	    	 throw new AssertionError("Device Id is Different");
+	     }
+
+	}
+
+	public void setExpectedSuspendDevice(SuspendDeviceRequest req) {
+		this.expectSuspendDevice=req;
+	}
+	
+	public void verifyDeviceSuspendData() {
+		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub
+				SuspendDeviceRequest req=new SuspendDeviceRequest();
+				SuspendDeviceRequestDataArea dataArea=new SuspendDeviceRequestDataArea();
+			
+				Devices [] deDevices=new Devices[1];
+				Devices ddevices = new Devices();
+
+		        DeviceId[] suspendDeviceIdArray = new DeviceId[1];
+		 		 
+		 		DeviceId suspendDeviceId= new DeviceId();
+		 		
+		 		suspendDeviceId.setId("89014103277405946190");
+		 		suspendDeviceId.setKind("ghgjg");
+		 		
+		 		suspendDeviceIdArray[0] = suspendDeviceId;
+		 		
+		 		ddevices.setDeviceIds(suspendDeviceIdArray);
+		 		deDevices[0] = ddevices;
+		 		dataArea.setDevices(deDevices);
+		 		req.setDataArea(dataArea);
+		         
+		  		 header.setSourceName("KORE");
+		  		 req.setHeader(header);
+		  		 
+		  				
+			     System.out.println("Delivered Source Name----------------" +req.getHeader().getSourceName()); 
+			   
+			  //null pointer check for device Id
+			     if(req.getDataArea().getDevices()[0].getDeviceIds()[0].getId()==null || req.getDataArea().getDevices()[0].getDeviceIds()[0].getId().isEmpty()){
+			    	 throw new AssertionError("Device Id is Mandatory");
+			     }
+			     
+			     if(!expectSuspendDevice.getDataArea().getDevices()[0].getDeviceIds()[0].getId().equals(req.getDataArea().getDevices()[0].getDeviceIds()[0].getId()))
+			     {	
+			    	 throw new AssertionError("Device Id is Different");
+			     }
 	}
 	
 }

@@ -4,6 +4,7 @@ import java.util.Arrays;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gv.midway.pojo.activateDevice.request.ActivateDevices;
 import com.gv.midway.pojo.verizon.CustomFields;
+import com.gv.midway.pojo.verizon.Devices;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -19,7 +20,7 @@ public class RestoreDeviceRequestDataArea{
 	private CustomFields[] customFields;
 	
 	@ApiModelProperty(value = "All identifiers for the device.")
-	private RestoreDevices[] devices;
+	private Devices[] devices;
 	
 	@ApiModelProperty(value = "Service Plan that that device belongs to.", required=true)
 	private String servicePlan;
@@ -48,11 +49,13 @@ public class RestoreDeviceRequestDataArea{
 		this.customFields = customFields;
 	}
 
-	public RestoreDevices[] getDevices() {
+	
+
+	public Devices[] getDevices() {
 		return devices;
 	}
 
-	public void setDevices(RestoreDevices[] devices) {
+	public void setDevices(Devices[] devices) {
 		this.devices = devices;
 	}
 
