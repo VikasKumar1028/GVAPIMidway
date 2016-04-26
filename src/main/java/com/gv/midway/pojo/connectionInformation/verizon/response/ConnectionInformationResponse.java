@@ -1,34 +1,45 @@
 package com.gv.midway.pojo.connectionInformation.verizon.response;
 
+import java.util.Arrays;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.gv.midway.pojo.BaseRequest;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ConnectionInformationResponse extends BaseRequest{
-
-	private ConnectionInformationResponseDataArea dataArea;
+public class ConnectionInformationResponse {
 
 	
+	@ApiModelProperty(value = "Device connection evnents.")
+	private ConnectionHistory[] connectionHistory;
 
-	public ConnectionInformationResponseDataArea getDataArea() {
-		return dataArea;
-	}
-
-	public void setDataArea(ConnectionInformationResponseDataArea dataArea) {
-		this.dataArea = dataArea;
-	}
+	@ApiModelProperty(value = "Indicates that there is more data to be retrieved.")
+	private String hasMoreData;
 	
-	@Override
-	public String toString() {
-		return "ConnectionInformationResponse [dataArea=" + dataArea + "]";
+	
+
+	public ConnectionHistory[] getConnectionHistory() {
+		return connectionHistory;
+	}
+
+	public void setConnectionHistory(ConnectionHistory[] connectionHistory) {
+		this.connectionHistory = connectionHistory;
+	}
+
+	public String getHasMoreData() {
+		return hasMoreData;
+	}
+
+	public void setHasMoreData(String hasMoreData) {
+		this.hasMoreData = hasMoreData;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = super.hashCode();
+		int result = 1;
+		result = prime * result + Arrays.hashCode(connectionHistory);
 		result = prime * result
-				+ ((dataArea == null) ? 0 : dataArea.hashCode());
+				+ ((hasMoreData == null) ? 0 : hasMoreData.hashCode());
 		return result;
 	}
 
@@ -36,16 +47,32 @@ public class ConnectionInformationResponse extends BaseRequest{
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (!super.equals(obj))
+		if (obj == null)
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
 		ConnectionInformationResponse other = (ConnectionInformationResponse) obj;
-		if (dataArea == null) {
-			if (other.dataArea != null)
+		if (!Arrays.equals(connectionHistory, other.connectionHistory))
+			return false;
+		if (hasMoreData == null) {
+			if (other.hasMoreData != null)
 				return false;
-		} else if (!dataArea.equals(other.dataArea))
+		} else if (!hasMoreData.equals(other.hasMoreData))
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "ConnectionInformationResponse [connectionHistory="
+				+ Arrays.toString(connectionHistory) + ", hasMoreData="
+				+ hasMoreData + "]";
+	}
+	
+	
+
+
+	
+	
+	
 }
