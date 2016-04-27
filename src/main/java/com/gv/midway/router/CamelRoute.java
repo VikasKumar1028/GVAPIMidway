@@ -37,6 +37,8 @@ import com.gv.midway.processor.callbacks.CallbackPostProcessor;
 import com.gv.midway.processor.callbacks.CallbackPreProcessor;
 import com.gv.midway.processor.cell.StubCellBulkUploadProcessor;
 import com.gv.midway.processor.cell.StubCellUploadProcessor;
+import com.gv.midway.processor.changeDeviceServicePlans.StubKoreChangeDeviceServicePlansProcessor;
+import com.gv.midway.processor.changeDeviceServicePlans.StubVerizonChangeDeviceServicePlansProcessor;
 import com.gv.midway.processor.customFieldsUpdateDevice.KoreCustomFieldsUpdatePostProcessor;
 import com.gv.midway.processor.customFieldsUpdateDevice.KoreCustomFieldsUpdatePreProcessor;
 import com.gv.midway.processor.customFieldsUpdateDevice.StubKoreCustomFieldsUpdateProcessor;
@@ -800,6 +802,24 @@ public class CamelRoute extends RouteBuilder {
 				.json(JsonLibrary.Jackson)
 				.bean(iAuditService, "auditExternalResponseCall")
 				.process(new VerizonDeviceConnectionStatusPostProcessor(env));
+		
+		
+		/** Change Device ServicePlans **/
+		
+		from("direct:changeDeviceServicePlans").process(new HeaderProcessor()).choice()
+		.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
+		.choice().when(header("derivedCarrierName").isEqualTo("KORE"))
+		.process(new StubKoreChangeDeviceServicePlansProcessor())
+		.to("log:input")
+		.when(header("derivedCarrierName").isEqualTo("VERIZON"))
+		.process(new StubVerizonChangeDeviceServicePlansProcessor())
+		.to("log:input").endChoice().otherwise().choice()
+
+		.when(header("derivedCarrierName").isEqualTo("KORE"))
+		.wireTap("direct:processcustomeFieldsKoreTransaction")
+		.process(new KoreCustomFieldsUpdatePostProcessor(env))
+
+		.endChoice();
 	}
 
 }

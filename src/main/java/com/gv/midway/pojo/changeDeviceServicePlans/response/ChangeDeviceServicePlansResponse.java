@@ -1,29 +1,24 @@
-package com.gv.midway.pojo.customFieldsUpdateDevice.response;
+package com.gv.midway.pojo.changeDeviceServicePlans.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.gv.midway.pojo.BaseResponse;
 import com.wordnik.swagger.annotations.ApiModelProperty;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_EMPTY)
-public class CustomFieldsUpdateDeviceResponse extends BaseResponse {
+public class ChangeDeviceServicePlansResponse extends BaseResponse {
 
+	@ApiModelProperty(value = "Data area for Change Device Service Plans response")
+	private ChangeDeviceServicePlansResponseDataArea dataArea;
 
-	@ApiModelProperty(value = "Data area for CustomFields device response")
-	private CustomFieldsUpdateDeviceResponseDataArea dataArea;
-
-	public CustomFieldsUpdateDeviceResponseDataArea getDataArea() {
+	public ChangeDeviceServicePlansResponseDataArea getDataArea() {
 		return dataArea;
 	}
 
-	public void setDataArea(CustomFieldsUpdateDeviceResponseDataArea dataArea) {
+	public void setDataArea(ChangeDeviceServicePlansResponseDataArea dataArea) {
 		this.dataArea = dataArea;
-	}
-
-	@Override
-	public String toString() {
-		return "CustomFieldsUpdateDeviceResponse [dataArea=" + dataArea + "]";
 	}
 
 	@Override
@@ -43,12 +38,17 @@ public class CustomFieldsUpdateDeviceResponse extends BaseResponse {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		CustomFieldsUpdateDeviceResponse other = (CustomFieldsUpdateDeviceResponse) obj;
+		ChangeDeviceServicePlansResponse other = (ChangeDeviceServicePlansResponse) obj;
 		if (dataArea == null) {
 			if (other.dataArea != null)
 				return false;
 		} else if (!dataArea.equals(other.dataArea))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "ChangeDeviceServicePlansResponse [dataArea=" + dataArea + "]";
 	}
 }
