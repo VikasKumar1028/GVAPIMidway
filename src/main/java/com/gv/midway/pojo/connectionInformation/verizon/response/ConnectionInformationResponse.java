@@ -1,25 +1,27 @@
-package com.gv.midway.pojo.connectionInformation.response;
+package com.gv.midway.pojo.connectionInformation.verizon.response;
+
+import java.util.Arrays;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ConnectionInformationResponseDataArea {
+public class ConnectionInformationResponse {
 
 	
 	@ApiModelProperty(value = "Device connection evnents.")
-	private ConnectionHistory connectionHistory;
+	private ConnectionHistory[] connectionHistory;
 
 	@ApiModelProperty(value = "Indicates that there is more data to be retrieved.")
 	private String hasMoreData;
 	
 	
-	
-	public ConnectionHistory getConnectionHistory() {
+
+	public ConnectionHistory[] getConnectionHistory() {
 		return connectionHistory;
 	}
 
-	public void setConnectionHistory(ConnectionHistory connectionHistory) {
+	public void setConnectionHistory(ConnectionHistory[] connectionHistory) {
 		this.connectionHistory = connectionHistory;
 	}
 
@@ -35,10 +37,7 @@ public class ConnectionInformationResponseDataArea {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime
-				* result
-				+ ((connectionHistory == null) ? 0 : connectionHistory
-						.hashCode());
+		result = prime * result + Arrays.hashCode(connectionHistory);
 		result = prime * result
 				+ ((hasMoreData == null) ? 0 : hasMoreData.hashCode());
 		return result;
@@ -52,11 +51,8 @@ public class ConnectionInformationResponseDataArea {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ConnectionInformationResponseDataArea other = (ConnectionInformationResponseDataArea) obj;
-		if (connectionHistory == null) {
-			if (other.connectionHistory != null)
-				return false;
-		} else if (!connectionHistory.equals(other.connectionHistory))
+		ConnectionInformationResponse other = (ConnectionInformationResponse) obj;
+		if (!Arrays.equals(connectionHistory, other.connectionHistory))
 			return false;
 		if (hasMoreData == null) {
 			if (other.hasMoreData != null)
@@ -68,9 +64,12 @@ public class ConnectionInformationResponseDataArea {
 
 	@Override
 	public String toString() {
-		return "ConnectionInformationResponseDataArea [connectionHistory="
-				+ connectionHistory + ", hasMoreData=" + hasMoreData + "]";
+		return "ConnectionInformationResponse [connectionHistory="
+				+ Arrays.toString(connectionHistory) + ", hasMoreData="
+				+ hasMoreData + "]";
 	}
+	
+	
 
 
 	

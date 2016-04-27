@@ -1,15 +1,18 @@
 package com.gv.midway.pojo.connectionInformation.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.gv.midway.pojo.verizon.Devices;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.gv.midway.pojo.verizon.DeviceId;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(Include.NON_EMPTY)
 public class ConnectionInformationRequestDataArea {
 	
 
 	@ApiModelProperty(value = "All identifiers for the device.")
-	private Devices devices;
+	private DeviceId deviceId;
 	
 	@ApiModelProperty(value = "Start Date")
 	private String earliest;
@@ -19,12 +22,12 @@ public class ConnectionInformationRequestDataArea {
 	
 	
 
-	public Devices getDevices() {
-		return devices;
+	public DeviceId getDeviceId() {
+		return deviceId;
 	}
 
-	public void setDevices(Devices devices) {
-		this.devices = devices;
+	public void setDeviceId(DeviceId deviceId) {
+		this.deviceId = deviceId;
 	}
 
 	public String getEarliest() {
@@ -47,7 +50,7 @@ public class ConnectionInformationRequestDataArea {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((devices == null) ? 0 : devices.hashCode());
+		result = prime * result + ((deviceId == null) ? 0 : deviceId.hashCode());
 		result = prime * result
 				+ ((earliest == null) ? 0 : earliest.hashCode());
 		result = prime * result + ((latest == null) ? 0 : latest.hashCode());
@@ -63,10 +66,10 @@ public class ConnectionInformationRequestDataArea {
 		if (getClass() != obj.getClass())
 			return false;
 		ConnectionInformationRequestDataArea other = (ConnectionInformationRequestDataArea) obj;
-		if (devices == null) {
-			if (other.devices != null)
+		if (deviceId == null) {
+			if (other.deviceId != null)
 				return false;
-		} else if (!devices.equals(other.devices))
+		} else if (!deviceId.equals(other.deviceId))
 			return false;
 		if (earliest == null) {
 			if (other.earliest != null)
@@ -83,7 +86,7 @@ public class ConnectionInformationRequestDataArea {
 
 	@Override
 	public String toString() {
-		return "ConnectionInformationRequestDataArea [devices=" + devices
+		return "ConnectionInformationRequestDataArea [deviceId=" + deviceId
 				+ ", earliest=" + earliest + ", latest=" + latest + "]";
 	}
 	

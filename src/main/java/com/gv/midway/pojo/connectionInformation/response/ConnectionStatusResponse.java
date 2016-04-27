@@ -1,28 +1,27 @@
 package com.gv.midway.pojo.connectionInformation.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.gv.midway.pojo.BaseRequest;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.gv.midway.pojo.BaseResponse;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ConnectionInformationResponse extends BaseRequest{
-
-	private ConnectionInformationResponseDataArea dataArea;
+@JsonInclude(Include.NON_EMPTY)
+public class ConnectionStatusResponse extends BaseResponse{
+	
+	@ApiModelProperty(value = "Data area for device's connection status response")
+	private ConnectionStatusResponseDataArea dataArea;
 
 	
-
-	public ConnectionInformationResponseDataArea getDataArea() {
+	public ConnectionStatusResponseDataArea getDataArea() {
 		return dataArea;
 	}
 
-	public void setDataArea(ConnectionInformationResponseDataArea dataArea) {
+	public void setDataArea(ConnectionStatusResponseDataArea dataArea) {
 		this.dataArea = dataArea;
 	}
 	
-	@Override
-	public String toString() {
-		return "ConnectionInformationResponse [dataArea=" + dataArea + "]";
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -40,7 +39,7 @@ public class ConnectionInformationResponse extends BaseRequest{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ConnectionInformationResponse other = (ConnectionInformationResponse) obj;
+		ConnectionStatusResponse other = (ConnectionStatusResponse) obj;
 		if (dataArea == null) {
 			if (other.dataArea != null)
 				return false;
@@ -48,4 +47,10 @@ public class ConnectionInformationResponse extends BaseRequest{
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "ConnectionStatusResponse [dataArea=" + dataArea + "]";
+	}
+
 }

@@ -13,7 +13,7 @@ import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
 import com.gv.midway.pojo.callback.TargetResponse;
 import com.gv.midway.pojo.callback.request.CallBackVerizonRequest;
 import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationRequest;
-import com.gv.midway.pojo.connectionInformation.response.ConnectionInformationResponse;
+import com.gv.midway.pojo.connectionInformation.response.ConnectionStatusResponse;
 import com.gv.midway.pojo.customFieldsUpdateDevice.request.CustomFieldsUpdateDeviceRequest;
 import com.gv.midway.pojo.customFieldsUpdateDevice.response.CustomFieldsUpdateDeviceResponse;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
@@ -95,7 +95,7 @@ public interface IAdaptaionLayerService {
 	@ApiOperation(value = "ActivateDeviceService")
 	ActivateDeviceResponse activateDevice(
 			ActivateDeviceRequest activateDeviceRequest);
-	
+
 	@POST
 	@Path("/device/reactivate")
 	@Produces("application/json")
@@ -128,13 +128,13 @@ public interface IAdaptaionLayerService {
 	TargetResponse callbacks(CallBackVerizonRequest activateDeviceRequest);
 
 	@POST
-	@Path("/devices/connections/actions/listHistory")
+	@Path("/devices/connections/actions/getStatus")
 	@Produces("application/json")
 	@Consumes("application/json")
 	@ApiOperation(value = "CallbackService")
-	ConnectionInformationResponse connectionInformation(
+	ConnectionStatusResponse deviceConnectionStatusRequest(
 			ConnectionInformationRequest connectionInformationRequest);
-	
+
 	@POST
 	@Path("/device/restore")
 	@Produces("application/json")
