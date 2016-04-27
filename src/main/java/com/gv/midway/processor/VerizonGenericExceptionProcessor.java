@@ -13,6 +13,7 @@ import com.gv.midway.exception.VerizonSessionTokenExpirationException;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
+import com.gv.midway.pojo.connectionInformation.deviceSessionBeginEndInfo.response.SessionBeginEndResponse;
 import com.gv.midway.pojo.connectionInformation.deviceStatus.response.ConnectionStatusResponse;
 import com.gv.midway.pojo.customFieldsUpdateDevice.response.CustomFieldsUpdateDeviceResponse;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
@@ -151,6 +152,16 @@ public class VerizonGenericExceptionProcessor implements Processor {
 			responseObject.setHeader(responseHeader);
 			responseObject.setResponse(response);
 			exchange.getIn().setBody(responseObject);
+		}
+		
+		if ("Endpoint[direct://deviceSessionBeginEndInfo]".equals(exchange
+				.getFromEndpoint().toString())) {
+
+			SessionBeginEndResponse sessionBeginEndResponse = new SessionBeginEndResponse();
+			sessionBeginEndResponse.setHeader(responseHeader);
+			sessionBeginEndResponse.setResponse(response);
+			exchange.getIn().setBody(sessionBeginEndResponse);
+
 		}
 	}
 }

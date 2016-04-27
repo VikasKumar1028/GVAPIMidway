@@ -1,4 +1,4 @@
-package com.gv.midway.processor.deviceConnectionStatus;
+package com.gv.midway.processor.connectionInformation.deviceConnectionStatus;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;

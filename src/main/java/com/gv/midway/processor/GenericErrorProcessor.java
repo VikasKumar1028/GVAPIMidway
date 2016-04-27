@@ -9,6 +9,7 @@ import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
+import com.gv.midway.pojo.connectionInformation.deviceSessionBeginEndInfo.response.SessionBeginEndResponse;
 import com.gv.midway.pojo.connectionInformation.deviceStatus.response.ConnectionStatusResponse;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
@@ -112,6 +113,16 @@ public class GenericErrorProcessor implements Processor {
 			connectionStatusResponse.setHeader(responseHeader);
 			connectionStatusResponse.setResponse(response);
 			exchange.getIn().setBody(connectionStatusResponse);
+
+		}
+		
+		if ("Endpoint[direct://deviceSessionBeginEndInfo]".equals(exchange
+				.getFromEndpoint().toString())) {
+
+			SessionBeginEndResponse sessionBeginEndResponse = new SessionBeginEndResponse();
+			sessionBeginEndResponse.setHeader(responseHeader);
+			sessionBeginEndResponse.setResponse(response);
+			exchange.getIn().setBody(sessionBeginEndResponse);
 
 		}
 		

@@ -1,4 +1,4 @@
-package com.gv.midway.processor.deviceConnectionStatus;
+package com.gv.midway.processor.connectionInformation.deviceConnectionStatus;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

@@ -39,6 +39,11 @@ import com.gv.midway.processor.cell.StubCellBulkUploadProcessor;
 import com.gv.midway.processor.cell.StubCellUploadProcessor;
 import com.gv.midway.processor.changeDeviceServicePlans.StubKoreChangeDeviceServicePlansProcessor;
 import com.gv.midway.processor.changeDeviceServicePlans.StubVerizonChangeDeviceServicePlansProcessor;
+import com.gv.midway.processor.connectionInformation.VerizonDeviceConnectionInformationPreProcessor;
+import com.gv.midway.processor.connectionInformation.deviceConnectionStatus.StubVerizonDeviceConnectionStatusProcessor;
+import com.gv.midway.processor.connectionInformation.deviceConnectionStatus.VerizonDeviceConnectionStatusPostProcessor;
+import com.gv.midway.processor.connectionInformation.deviceSessionBeginEndInfo.StubVerizonDeviceSessionBeginEndInfoProcessor;
+import com.gv.midway.processor.connectionInformation.deviceSessionBeginEndInfo.VerizonDeviceSessionBeginEndInfoPostProcessor;
 import com.gv.midway.processor.customFieldsUpdateDevice.KoreCustomFieldsUpdatePostProcessor;
 import com.gv.midway.processor.customFieldsUpdateDevice.KoreCustomFieldsUpdatePreProcessor;
 import com.gv.midway.processor.customFieldsUpdateDevice.StubKoreCustomFieldsUpdateProcessor;
@@ -51,9 +56,6 @@ import com.gv.midway.processor.deactivateDevice.StubKoreDeactivateDeviceProcesso
 import com.gv.midway.processor.deactivateDevice.StubVerizonDeactivateDeviceProcessor;
 import com.gv.midway.processor.deactivateDevice.VerizonDeactivateDevicePostProcessor;
 import com.gv.midway.processor.deactivateDevice.VerizonDeactivateDevicePreProcessor;
-import com.gv.midway.processor.deviceConnectionStatus.StubVerizonDeviceConnectionStatusProcessor;
-import com.gv.midway.processor.deviceConnectionStatus.VerizonDeviceConnectionStatusPostProcessor;
-import com.gv.midway.processor.deviceConnectionStatus.VerizonDeviceConnectionStatusPreProcessor;
 import com.gv.midway.processor.deviceInformation.KoreDeviceInformationPostProcessor;
 import com.gv.midway.processor.deviceInformation.KoreDeviceInformationPreProcessor;
 import com.gv.midway.processor.deviceInformation.StubKoreDeviceInformationProcessor;
@@ -769,7 +771,7 @@ public class CamelRoute extends RouteBuilder {
 
 		// ***** DEVICE Restore END
 
-		// Device in Session or Not
+		// **** Device in Session or not End *****//
 
 		from("direct:deviceConnectionStatus").process(new HeaderProcessor())
 				.choice()
@@ -794,7 +796,7 @@ public class CamelRoute extends RouteBuilder {
 				// (see onException for connection.class above)
 				// .bean(iAuditService, "auditExternalRequestCall")
 				.bean(iSessionService, "setContextTokenInExchange")
-				.process(new VerizonDeviceConnectionStatusPreProcessor())
+				.process(new VerizonDeviceConnectionInformationPreProcessor())
 				// Audit will store record 3 times in case of failure (see
 				// onException for connection.class above)
 				// .bean(iAuditService, "auditExternalRequestCall")
@@ -802,24 +804,63 @@ public class CamelRoute extends RouteBuilder {
 				.json(JsonLibrary.Jackson)
 				.bean(iAuditService, "auditExternalResponseCall")
 				.process(new VerizonDeviceConnectionStatusPostProcessor(env));
-		
-		
+
+		// **** Device in Session or not End *****//
+
+		// **** Device Session Begin End Info Start *****//
+
+		from("direct:deviceSessionBeginEndInfo").process(new HeaderProcessor())
+				.choice()
+				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
+				.process(new StubVerizonDeviceSessionBeginEndInfoProcessor())
+				.to("log:input").endChoice().otherwise().choice()
+				.when(header("derivedCarrierName").isEqualTo("VERIZON"))
+				.bean(iSessionService, "setContextTokenInExchange")
+				.bean(iAuditService, "auditExternalRequestCall")
+				.to("direct:DeviceSessionBeginEndInfoFlow1").endChoice().end();
+
+		from("direct:DeviceSessionBeginEndInfoFlow1").doTry()
+				.to("direct:DeviceSessionBeginEndInfoFlow2")
+				.doCatch(CxfOperationException.class)
+				.bean(iAuditService, "auditExternalExceptionResponseCall")
+				.process(new VerizonGenericExceptionProcessor(env)).endDoTry()
+				.end();
+
+		from("direct:DeviceSessionBeginEndInfoFlow2")
+				.errorHandler(noErrorHandler())
+				// REMOVED Audit will store record 3 times in case of failure
+				// (see onException for connection.class above)
+				// .bean(iAuditService, "auditExternalRequestCall")
+				.bean(iSessionService, "setContextTokenInExchange")
+				.process(new VerizonDeviceConnectionInformationPreProcessor())
+				// Audit will store record 3 times in case of failure (see
+				// onException for connection.class above)
+				// .bean(iAuditService, "auditExternalRequestCall")
+				.to(uriRestVerizonEndPoint)
+				.unmarshal()
+				.json(JsonLibrary.Jackson)
+				.bean(iAuditService, "auditExternalResponseCall")
+				.process(new VerizonDeviceSessionBeginEndInfoPostProcessor(env));
+
+		// **** Device Session Begin End Info End *****//
+
 		/** Change Device ServicePlans **/
-		
-		from("direct:changeDeviceServicePlans").process(new HeaderProcessor()).choice()
-		.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
-		.choice().when(header("derivedCarrierName").isEqualTo("KORE"))
-		.process(new StubKoreChangeDeviceServicePlansProcessor())
-		.to("log:input")
-		.when(header("derivedCarrierName").isEqualTo("VERIZON"))
-		.process(new StubVerizonChangeDeviceServicePlansProcessor())
-		.to("log:input").endChoice().otherwise().choice()
 
-		.when(header("derivedCarrierName").isEqualTo("KORE"))
-		.wireTap("direct:processcustomeFieldsKoreTransaction")
-		.process(new KoreCustomFieldsUpdatePostProcessor(env))
+		from("direct:changeDeviceServicePlans").process(new HeaderProcessor())
+				.choice()
+				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
+				.choice().when(header("derivedCarrierName").isEqualTo("KORE"))
+				.process(new StubKoreChangeDeviceServicePlansProcessor())
+				.to("log:input")
+				.when(header("derivedCarrierName").isEqualTo("VERIZON"))
+				.process(new StubVerizonChangeDeviceServicePlansProcessor())
+				.to("log:input").endChoice().otherwise().choice()
 
-		.endChoice();
+				.when(header("derivedCarrierName").isEqualTo("KORE"))
+				.wireTap("direct:processcustomeFieldsKoreTransaction")
+				.process(new KoreCustomFieldsUpdatePostProcessor(env))
+
+				.endChoice();
 	}
 
 }
