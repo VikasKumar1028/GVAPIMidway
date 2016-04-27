@@ -19,6 +19,7 @@ public class IResponse {
 	public static final String SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY="Data Submitted Successfully";
 
 	public static final String SUCCESS_DESCRIPTION_SUSPEND_MIDWAY="Data Submitted Successfully";
+	public static final String SUCCESS_DESCRIPTION_CONNECTION_STATUS = "Data Processed Successfully";
 	
 	public static final String SUCCESS_DESCRIPTION_DEVCIEINFO_CARRIER="Data Succesfully Found from Carrier";
 	

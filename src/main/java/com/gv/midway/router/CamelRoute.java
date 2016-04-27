@@ -50,8 +50,8 @@ import com.gv.midway.processor.deactivateDevice.StubVerizonDeactivateDeviceProce
 import com.gv.midway.processor.deactivateDevice.VerizonDeactivateDevicePostProcessor;
 import com.gv.midway.processor.deactivateDevice.VerizonDeactivateDevicePreProcessor;
 import com.gv.midway.processor.deviceConnectionStatus.StubVerizonDeviceConnectionStatusProcessor;
+import com.gv.midway.processor.deviceConnectionStatus.VerizonDeviceConnectionStatusPostProcessor;
 import com.gv.midway.processor.deviceConnectionStatus.VerizonDeviceConnectionStatusPreProcessor;
-import com.gv.midway.processor.deviceConnectionStatus.VerizonDeviceConnectionStatusProcessor;
 import com.gv.midway.processor.deviceInformation.KoreDeviceInformationPostProcessor;
 import com.gv.midway.processor.deviceInformation.KoreDeviceInformationPreProcessor;
 import com.gv.midway.processor.deviceInformation.StubKoreDeviceInformationProcessor;
@@ -799,7 +799,7 @@ public class CamelRoute extends RouteBuilder {
 				.to(uriRestVerizonEndPoint).unmarshal()
 				.json(JsonLibrary.Jackson)
 				.bean(iAuditService, "auditExternalResponseCall")
-				.process(new VerizonDeviceConnectionStatusProcessor(env));
+				.process(new VerizonDeviceConnectionStatusPostProcessor(env));
 	}
 
 }

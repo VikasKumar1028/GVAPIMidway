@@ -53,6 +53,12 @@ public interface IConstant {
 	static String CARRIER_TRANSACTION_STATUS_ERROR="Error";
 	static String CARRIER_TRANSACTION_STATUS_SUCCESS="Success";
 	
+	static String DEVICE_IN_SESSION = "Device In Session";
+	static String DEVICE_NOT_IN_SESSION = "Device Not In Session";
+	static String NO_RECORD = "No Record Found";
+	static String EVENT_START = "Start";
+	static String EVENT_STOP = "Stop";
+	
 	
 			
 }
