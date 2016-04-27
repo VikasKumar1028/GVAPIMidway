@@ -7,8 +7,8 @@ import org.apache.log4j.Logger;
 import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
-import com.gv.midway.pojo.connectionInformation.response.ConnectionStatusResponse;
-import com.gv.midway.pojo.connectionInformation.response.ConnectionStatusResponseDataArea;
+import com.gv.midway.pojo.connectionInformation.deviceStatus.response.ConnectionStatusResponse;
+import com.gv.midway.pojo.connectionInformation.deviceStatus.response.ConnectionStatusResponseDataArea;
 import com.gv.midway.processor.suspendDevice.StubVerizonSuspendDeviceProcessor;
 
 public class StubVerizonDeviceConnectionStatusProcessor implements Processor {

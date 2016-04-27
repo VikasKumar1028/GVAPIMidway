@@ -15,8 +15,8 @@ import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
-import com.gv.midway.pojo.connectionInformation.response.ConnectionStatusResponse;
-import com.gv.midway.pojo.connectionInformation.response.ConnectionStatusResponseDataArea;
+import com.gv.midway.pojo.connectionInformation.deviceStatus.response.ConnectionStatusResponse;
+import com.gv.midway.pojo.connectionInformation.deviceStatus.response.ConnectionStatusResponseDataArea;
 import com.gv.midway.pojo.connectionInformation.verizon.response.ConnectionInformationResponse;
 
 public class VerizonDeviceConnectionStatusPostProcessor implements Processor {
