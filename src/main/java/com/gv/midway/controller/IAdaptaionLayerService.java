@@ -12,6 +12,7 @@ import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
 import com.gv.midway.pojo.callback.TargetResponse;
 import com.gv.midway.pojo.callback.request.CallBackVerizonRequest;
+import com.gv.midway.pojo.connectionInformation.deviceSessionBeginEndInfo.response.SessionBeginEndResponse;
 import com.gv.midway.pojo.connectionInformation.deviceStatus.response.ConnectionStatusResponse;
 import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationRequest;
 import com.gv.midway.pojo.customFieldsUpdateDevice.request.CustomFieldsUpdateDeviceRequest;
@@ -128,7 +129,7 @@ public interface IAdaptaionLayerService {
 	TargetResponse callbacks(CallBackVerizonRequest activateDeviceRequest);
 
 	@POST
-	@Path("/devices/connections/actions/getStatus")
+	@Path("/devices/connections/getStatus")
 	@Produces("application/json")
 	@Consumes("application/json")
 	@ApiOperation(value = "CallbackService")
@@ -142,4 +143,12 @@ public interface IAdaptaionLayerService {
 	@ApiOperation(value = "RestoreDeviceService")
 	RestoreDeviceResponse restoreDevice(
 			RestoreDeviceRequest restoreDeviceRequest);
+	
+	@POST
+	@Path("/devices/connections/session/info")
+	@Produces("application/json")
+	@Consumes("application/json")
+	@ApiOperation(value = "CallbackService")
+	SessionBeginEndResponse deviceSessionBeginEndResponse(
+			ConnectionInformationRequest connectionInformationRequest);
 }

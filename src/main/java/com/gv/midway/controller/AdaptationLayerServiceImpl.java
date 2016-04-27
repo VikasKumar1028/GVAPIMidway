@@ -8,6 +8,7 @@ import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
 import com.gv.midway.pojo.callback.TargetResponse;
 import com.gv.midway.pojo.callback.request.CallBackVerizonRequest;
+import com.gv.midway.pojo.connectionInformation.deviceSessionBeginEndInfo.response.SessionBeginEndResponse;
 import com.gv.midway.pojo.connectionInformation.deviceStatus.response.ConnectionStatusResponse;
 import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationRequest;
 import com.gv.midway.pojo.customFieldsUpdateDevice.request.CustomFieldsUpdateDeviceRequest;
@@ -188,5 +189,11 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 			RestoreDeviceRequest restoreDeviceRequest) {
 		return (RestoreDeviceResponse) producer.requestBody(
 				"direct:restoreDevice", restoreDeviceRequest);
+	}
+
+	public SessionBeginEndResponse deviceSessionBeginEndResponse(
+			ConnectionInformationRequest connectionInformationRequest) {
+		return (SessionBeginEndResponse) producer.requestBody(
+				"direct:deviceSessionBeginEndInfo", connectionInformationRequest);
 	}
 }
