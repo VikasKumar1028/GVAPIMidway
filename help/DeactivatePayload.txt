@@ -1,0 +1,72 @@
+ *************************MidWay Payload
+ 
+ {  
+   "dataArea":{  
+   "accountName":"0442090022-00001",
+     
+      "devices":[  
+         {  
+            "deviceIds":[  
+               {  
+                  "id":"353238063362759",
+                  "kind":"IMEI",
+				   "flagScrap":"false"
+               }
+            ]
+         },
+         {  
+            "deviceIds":[  
+               {  
+                  "id":"89148000002377519373",
+                  "kind":"ICCID",
+				  "flagScrap":"false"
+               }
+            ]
+         }
+      ]
+   },
+   "header":{  
+      "region":"USA",
+      "timestamp":"string",
+      "organization":"Grant Victor",
+      "transactionId":"gv123666",
+      "sourceName":"NetSuit",
+      "applicationName":"WEB",
+      "bsCarrier":"VERIZON"
+   }
+}
+
+ 
+ 
+  *************************Carrier Payload
+ 
+ {"accountName":"0442090022-00001","devices":[{"deviceIds":[{"id":"353238063362759","kind":"IMEI"}]},{"deviceIds":[{"id":"89148000002377519373","kind":"ICCID"}]}]}
+ 
+  
+ *************************Carrier Response
+ 
+ {"requestId":"9f2cf86c-601a-4549-b8e5-5ab0a230a1e4"}
+ 
+ *************************MidWay Response
+ 
+ {
+  "header": {
+    "region": "USA",
+    "timestamp": "2016/04/28 05:38:58",
+    "organization": "Grant Victor",
+    "transactionId": "gv123666",
+    "sourceName": "NetSuit",
+    "applicationName": "WEB",
+    "bsCarrier": "VERIZON"
+  },
+  "response": {
+    "responseCode": 2000,
+    "responseStatus": "Success",
+    "responseDescription": "Data Submitted Successfully"
+  },
+  "dataArea": {
+    "orderNumber": "1461821938305"
+  }
+}
+ 
+ 
