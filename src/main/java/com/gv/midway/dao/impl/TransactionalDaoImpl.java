@@ -1,6 +1,7 @@
 package com.gv.midway.dao.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -43,7 +44,6 @@ import com.gv.midway.pojo.reActivateDevice.request.ReactivateDeviceRequest;
 import com.gv.midway.pojo.reActivateDevice.request.ReactivateDeviceRequestDataArea;
 import com.gv.midway.pojo.restoreDevice.request.RestoreDeviceRequest;
 import com.gv.midway.pojo.restoreDevice.request.RestoreDeviceRequestDataArea;
-import com.gv.midway.pojo.restoreDevice.request.RestoreDevices;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequest;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequestDataArea;
 import com.gv.midway.pojo.transaction.Transaction;
@@ -113,6 +113,10 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				Transaction transaction = new Transaction();
 
 				transaction.setMidwayTransactionId(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID).toString());
+				
+				//Sorting the device id by kind and inserting into deviceNumber
+				Arrays.sort(businessPayloadDeviceId,  (ActivateDeviceId a,ActivateDeviceId b) -> a.getKind().compareTo(b.getKind()));
+				
 				// TODO if number of devices are more
 				ObjectMapper obj = new ObjectMapper();
 				String strDeviceNumber = obj.writeValueAsString(businessPayloadDeviceId);
@@ -189,6 +193,10 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 				Transaction transaction = new Transaction();
 				transaction.setMidwayTransactionId(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID).toString());
+				
+				//Sorting the device id by kind and inserting into deviceNumber
+				Arrays.sort(businessPayloadDeviceId,  (DeactivateDeviceId a,DeactivateDeviceId b) -> a.getKind().compareTo(b.getKind()));
+				
 				ObjectMapper obj = new ObjectMapper();
 				String strDeviceNumber = obj.writeValueAsString(businessPayloadDeviceId);
 				transaction.setDeviceNumber(strDeviceNumber);
@@ -259,7 +267,10 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 				Transaction transaction = new Transaction();
 				transaction.setMidwayTransactionId(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID).toString());
-				;
+
+				//Sorting the device id by kind and inserting into deviceNumber
+				Arrays.sort(businessPayloadDeviceId,  (DeviceId a,DeviceId b) -> a.getKind().compareTo(b.getKind()));
+				
 				ObjectMapper obj = new ObjectMapper();
 				String strDeviceNumber = obj.writeValueAsString(businessPayloadDeviceId);
 				transaction.setDeviceNumber(strDeviceNumber);
@@ -668,6 +679,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 	}
 	
+	//method to store payload in database for Restore Operation
 	public void populateRestoreDBPayload(Exchange exchange) {
 		log.info("Inside populateRestoreDBPayload");
 		ArrayList<Transaction> list = new ArrayList<Transaction>();
@@ -716,6 +728,10 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				Transaction transaction = new Transaction();
 
 				transaction.setMidwayTransactionId(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID).toString());
+				
+				//Sorting the device id by kind and inserting into deviceNumber
+				Arrays.sort(businessPayloadDeviceId,  (DeviceId a,DeviceId b) -> a.getKind().compareTo(b.getKind()));
+				
 				// TODO if number of devices are more
 				ObjectMapper obj = new ObjectMapper();
 				String strDeviceNumber = obj.writeValueAsString(businessPayloadDeviceId);
@@ -801,6 +817,10 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				Transaction transaction = new Transaction();
 
 				transaction.setMidwayTransactionId(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID).toString());
+				
+				//Sorting the device id by kind and inserting into deviceNumber
+				Arrays.sort(businessPayloadDeviceId,  (CustomFieldsUpdateDeviceId a,CustomFieldsUpdateDeviceId b) -> a.getKind().compareTo(b.getKind()));
+				
 				// TODO if number of devices are more
 				ObjectMapper obj = new ObjectMapper();
 				String strDeviceNumber = obj.writeValueAsString(businessPayloadDeviceId);
