@@ -18,6 +18,7 @@ public class StubKoreRestoreDeviceProcessor implements Processor {
 	Logger log = Logger.getLogger(StubKoreRestoreDeviceProcessor.class
 			.getName());
 
+	//method for processing the message exchange for KORE Stub
 	public void process(Exchange exchange) throws Exception {
 
 		log.info("Start:StubKoreRestoreDeviceProcessor");
@@ -50,7 +51,7 @@ public class StubKoreRestoreDeviceProcessor implements Processor {
 
 		exchange.getIn().setBody(restoreDeviceResponse);
 
-		log.info("EndStubKoreRestoreDeviceProcessor");
+		log.info("End:StubKoreRestoreDeviceProcessor");
 	}
 }
 

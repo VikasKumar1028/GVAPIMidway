@@ -2,7 +2,6 @@ package com.gv.midway.pojo.restoreDevice.verizon.request;
 
 import java.util.Arrays;
 
-import com.gv.midway.pojo.restoreDevice.request.RestoreDevices;
 import com.gv.midway.pojo.verizon.CustomFields;
 import com.gv.midway.pojo.verizon.Devices;
 import com.wordnik.swagger.annotations.ApiModelProperty;

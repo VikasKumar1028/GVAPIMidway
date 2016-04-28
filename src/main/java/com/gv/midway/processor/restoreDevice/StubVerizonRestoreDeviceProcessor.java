@@ -15,9 +15,10 @@ public class StubVerizonRestoreDeviceProcessor implements Processor {
 	Logger log = Logger.getLogger(StubVerizonRestoreDeviceProcessor.class
 			.getName());
 
+	//method for processing the message exchange for Verizon Stub
 	public void process(Exchange exchange) throws Exception {
 
-		log.info("Start::StubVerizonRestoreDeviceProcessor");
+		log.info("Start:StubVerizonRestoreDeviceProcessor");
 		RestoreDeviceResponse restoreDeviceResponse = new RestoreDeviceResponse();
 
 		RestoreDeviceResponseDataArea restoreDeviceResponseDataArea = new RestoreDeviceResponseDataArea();
@@ -45,6 +46,6 @@ public class StubVerizonRestoreDeviceProcessor implements Processor {
 		restoreDeviceResponse.setDataArea(restoreDeviceResponseDataArea);
 
 		exchange.getIn().setBody(restoreDeviceResponse);
-		log.info("End::StubVerizonRestoreDeviceProcessor");
+		log.info("End:StubVerizonRestoreDeviceProcessor");
 	}
 }

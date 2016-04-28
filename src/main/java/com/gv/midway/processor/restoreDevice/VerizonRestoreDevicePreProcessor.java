@@ -8,9 +8,7 @@ import org.apache.log4j.Logger;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
 
-import com.gv.midway.pojo.restoreDevice.request.RestoreDeviceId;
 import com.gv.midway.pojo.restoreDevice.request.RestoreDeviceRequest;
-import com.gv.midway.pojo.restoreDevice.request.RestoreDevices;
 import com.gv.midway.pojo.restoreDevice.verizon.request.RestoreDeviceRequestVerizon;
 import com.gv.midway.pojo.verizon.DeviceId;
 import com.gv.midway.pojo.verizon.Devices;
@@ -20,6 +18,7 @@ public class VerizonRestoreDevicePreProcessor implements Processor {
 	Logger log = Logger.getLogger(VerizonRestoreDevicePreProcessor.class
 			.getName());
 
+	//method for processing the message exchange for Verizon
 	public void process(Exchange exchange) throws Exception {
 
 		log.info("Start:VerizonRestoreDevicePreProcessor");

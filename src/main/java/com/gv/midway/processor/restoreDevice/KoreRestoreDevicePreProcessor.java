@@ -19,15 +19,18 @@ public class KoreRestoreDevicePreProcessor implements Processor {
 
 	Environment newEnv;
 
+	//Default/no-arg constructor
 	public KoreRestoreDevicePreProcessor() {
 
 	}
 
+	//constructor with one parameter
 	public KoreRestoreDevicePreProcessor(Environment env) {
 		super();
 		this.newEnv = env;
 	}
 
+	//method for Processing the message exchange for Kore
 	public void process(Exchange exchange) throws Exception {
 		log.info("Start:KoreRestoreDevicePreProcessor.."
 				+ exchange.getIn().getBody());

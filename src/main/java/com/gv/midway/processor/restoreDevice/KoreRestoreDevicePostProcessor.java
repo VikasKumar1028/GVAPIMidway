@@ -16,19 +16,21 @@ import com.gv.midway.processor.activateDevice.KoreActivateDevicePostProcessor;
 public class KoreRestoreDevicePostProcessor implements Processor {
 
 	Logger log = Logger.getLogger(KoreActivateDevicePostProcessor.class.getName());
+	Environment newEnv;
 
+	//default constructor
 	public KoreRestoreDevicePostProcessor() {
 
 	}
 
-	Environment newEnv;
-
+	//constructor with one parameter
 	public KoreRestoreDevicePostProcessor(Environment env) {
 		super();
 		this.newEnv = env;
 
 	}
 
+	//method for Processing the message exchange for Kore
 	public void process(Exchange exchange) throws Exception {
 
 		log.info("Start::KoreRestoreDevicePostProcessor");
@@ -58,8 +60,7 @@ public class KoreRestoreDevicePostProcessor implements Processor {
 		restoreDeviceResponse.setHeader(responseheader);
 		restoreDeviceResponse.setResponse(response);
      	restoreDeviceResponseDataArea.setRequestId(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID).toString());
-		//restoreDeviceResponseDataArea.setRequestId("kore response");
-
+	
 		restoreDeviceResponse.setDataArea(restoreDeviceResponseDataArea);
 
 		exchange.getIn().setBody(restoreDeviceResponse);

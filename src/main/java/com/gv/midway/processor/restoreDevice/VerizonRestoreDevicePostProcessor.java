@@ -24,6 +24,7 @@ public class VerizonRestoreDevicePostProcessor implements Processor {
 
 	Environment newEnv;
 
+	//constructor with one argument
 	public VerizonRestoreDevicePostProcessor(Environment env) {
 		super();
 		this.newEnv = env;
@@ -35,6 +36,7 @@ public class VerizonRestoreDevicePostProcessor implements Processor {
 	 * 
 	 * @see org.apache.camel.Processor#process(org.apache.camel.Exchange)
 	 */
+	//method for processing the message exchange for Verizon
 	public void process(Exchange exchange) throws Exception {
 
 		log.info("Start:VerizonRestoreDevicePostProcessor");
