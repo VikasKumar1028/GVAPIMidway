@@ -15,7 +15,7 @@ public class ConnectionHistory {
 	private String extendedAttributes;
 	
 	@ApiModelProperty(value = "The date and time when the connection event occured.")
-	private String occuredAt;
+	private String occurredAt;
 
 
 
@@ -36,12 +36,12 @@ public class ConnectionHistory {
 		this.extendedAttributes = extendedAttributes;
 	}
 
-	public String getOccuredAt() {
-		return occuredAt;
+	public String getOccurredAt() {
+		return occurredAt;
 	}
 
-	public void setOccuredAt(String occuredAt) {
-		this.occuredAt = occuredAt;
+	public void setOccurredAt(String occurredAt) {
+		this.occurredAt = occurredAt;
 	}
 	
 	@Override
@@ -49,7 +49,7 @@ public class ConnectionHistory {
 		return "ConnectionHistory [connectionEventAttributes="
 				+ Arrays.toString(connectionEventAttributes)
 				+ ", extendedAttributes=" + extendedAttributes + ", occuredAt="
-				+ occuredAt + "]";
+				+ occurredAt + "]";
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class ConnectionHistory {
 				+ ((extendedAttributes == null) ? 0 : extendedAttributes
 						.hashCode());
 		result = prime * result
-				+ ((occuredAt == null) ? 0 : occuredAt.hashCode());
+				+ ((occurredAt == null) ? 0 : occurredAt.hashCode());
 		return result;
 	}
 
@@ -83,10 +83,10 @@ public class ConnectionHistory {
 				return false;
 		} else if (!extendedAttributes.equals(other.extendedAttributes))
 			return false;
-		if (occuredAt == null) {
-			if (other.occuredAt != null)
+		if (occurredAt == null) {
+			if (other.occurredAt != null)
 				return false;
-		} else if (!occuredAt.equals(other.occuredAt))
+		} else if (!occurredAt.equals(other.occurredAt))
 			return false;
 		return true;
 	}

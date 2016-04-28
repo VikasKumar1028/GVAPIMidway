@@ -4,11 +4,14 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 
 public class DeviceSession {
 	
+	@ApiModelProperty(value = "Device's session end information" )
+	private String End;
+	
+	
 	@ApiModelProperty(value = "Device's session begin information" )
 	private String Begin;
 	
-	@ApiModelProperty(value = "Device's session end information" )
-	private String End;
+
 
 
 
