@@ -30,6 +30,8 @@ import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequestDataArea;
 import com.gv.midway.pojo.activateDevice.request.ActivateDevices;
 import com.gv.midway.pojo.callback.TargetResponse;
 import com.gv.midway.pojo.callback.request.CallBackVerizonRequest;
+import com.gv.midway.pojo.changeDeviceServicePlans.request.ChangeDeviceServicePlansRequest;
+import com.gv.midway.pojo.changeDeviceServicePlans.request.ChangeDeviceServicePlansRequestDataArea;
 import com.gv.midway.pojo.customFieldsUpdateDevice.request.CustomFieldsUpdateDeviceId;
 import com.gv.midway.pojo.customFieldsUpdateDevice.request.CustomFieldsUpdateDeviceRequest;
 import com.gv.midway.pojo.customFieldsUpdateDevice.request.CustomFieldsUpdateDeviceRequestDataArea;
@@ -853,5 +855,83 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		}
 
 	}
+	
+	public void populateChangeDeviceServicePlansDBPayload(Exchange exchange) {
+		// TODO Auto-generated method stub
+		
+		log.info("Inside populateChangeDeviceServicePlansDBPayload");
+		ArrayList<Transaction> list = new ArrayList<Transaction>();
+
+		String currentDataTime = CommonUtil.getCurrentTimeStamp();
+
+		ChangeDeviceServicePlansRequest req = (ChangeDeviceServicePlansRequest) exchange.getIn().getBody();
+		ChangeDeviceServicePlansRequestDataArea changeDeviceServicePlansRequestDataArea = (ChangeDeviceServicePlansRequestDataArea) req.getDataArea();
+		Devices[] changeServicePlansDevices = changeDeviceServicePlansRequestDataArea.getDevices();
+
+		Kryo kryo = new Kryo();
+
+		for (Devices changeServicePlansDevice : changeServicePlansDevices) {
+			ChangeDeviceServicePlansRequest dbPayload = new ChangeDeviceServicePlansRequest();
+			dbPayload.setHeader(req.getHeader());
+
+			Devices[] businessPayloadDeviceArray = new Devices[1];
+			Devices businessPayLoadChangeServicePlansDevices = new Devices();
+			DeviceId[] businessPayloadDeviceId = new DeviceId[changeServicePlansDevice.getDeviceIds().length];
+
+			for (int i = 0; i < changeServicePlansDevice.getDeviceIds().length; i++) {
+				DeviceId changeServicePlansDeviceId = changeServicePlansDevice.getDeviceIds()[i];
+				DeviceId businesspayLoadChangeServicePlansDeviceId = new DeviceId();
+				businesspayLoadChangeServicePlansDeviceId.setId(changeServicePlansDeviceId.getId());
+				businesspayLoadChangeServicePlansDeviceId.setKind(changeServicePlansDeviceId.getKind());
+				businessPayloadDeviceId[i] = businesspayLoadChangeServicePlansDeviceId;
+			}
+
+			businessPayLoadChangeServicePlansDevices.setDeviceIds(businessPayloadDeviceId);
+			businessPayloadDeviceArray[0] = businessPayLoadChangeServicePlansDevices;
+			ChangeDeviceServicePlansRequestDataArea copyDataArea = kryo.copy(req.getDataArea());
+
+			copyDataArea.setDevices(businessPayloadDeviceArray);
+			dbPayload.setDataArea(copyDataArea);
+
+			try {
+
+				Transaction transaction = new Transaction();
+				transaction.setMidwayTransactionId(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID).toString());
+
+				//Sorting the device id by kind and inserting into deviceNumber
+				Arrays.sort(businessPayloadDeviceId,  (DeviceId a,DeviceId b) -> a.getKind().compareTo(b.getKind()));
+				
+				ObjectMapper obj = new ObjectMapper();
+				String strDeviceNumber = obj.writeValueAsString(businessPayloadDeviceId);
+				transaction.setDeviceNumber(strDeviceNumber);
+				transaction.setDevicePayload(dbPayload);
+				transaction.setMidwayStatus(IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
+				transaction.setCarrierName(exchange.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString());
+				transaction.setTimeStampReceived(currentDataTime);
+				transaction.setAuditTransactionId(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
+				transaction.setRequestType(exchange.getFromEndpoint().toString());
+
+				list.add(transaction);
+
+			} catch (Exception ex) {
+				log.error("Inside Exception populateChangeDeviceServicePlansDBPayload");
+
+			}
+
+		}
+		mongoTemplate.insertAll(list);
+		// For Kore We Need Wire Tap and SEDA component So the body should
+		// be set with arraylist of transaction for Verizon we simply add
+		// into database and do not change the exchange body
+
+		if (exchange.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString().equals("KORE")) {
+
+			exchange.getIn().setBody(list);
+		}
+
+
+
+	}
+
 
 }

@@ -54,7 +54,8 @@ public class TransactionalServiceImpl implements ITransactionalService {
 		transactionalDao.populatePendingKoreCheckStatus(exchange);
 	}
 
-	public void populateConnectionErrorResponse(Exchange exchange, String errorType) {
+	public void populateConnectionErrorResponse(Exchange exchange,
+			String errorType) {
 		transactionalDao.populateConnectionErrorResponse(exchange, errorType);
 	}
 
@@ -73,11 +74,17 @@ public class TransactionalServiceImpl implements ITransactionalService {
 		transactionalDao.populateReactivateDBPayload(exchange);
 
 	}
+
 	public void populateRestoreDBPayload(Exchange exchange) {
-		  transactionalDao.populateRestoreDBPayload(exchange);
+		transactionalDao.populateRestoreDBPayload(exchange);
 	}
+
 	public void populateCustomeFieldsDBPayload(Exchange exchange) {
-		  transactionalDao.populateCustomeFieldsDBPayload(exchange);
+		transactionalDao.populateCustomeFieldsDBPayload(exchange);
+	}
+
+	public void populateChangeDeviceServicePlansDBPayload(Exchange exchange) {
+		transactionalDao.populateChangeDeviceServicePlansDBPayload(exchange);
 	}
 
 }
