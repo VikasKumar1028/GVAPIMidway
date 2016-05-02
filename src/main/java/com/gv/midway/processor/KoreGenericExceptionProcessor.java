@@ -1,6 +1,5 @@
 package com.gv.midway.processor;
 
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.component.cxf.CxfOperationException;
@@ -13,6 +12,7 @@ import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
+import com.gv.midway.pojo.changeDeviceServicePlans.response.ChangeDeviceServicePlansResponse;
 import com.gv.midway.pojo.customFieldsUpdateDevice.response.CustomFieldsUpdateDeviceResponse;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
@@ -43,35 +43,41 @@ public class KoreGenericExceptionProcessor implements Processor {
 
 		log.info("----KoreGenericExceptionProcessor----------"
 				+ exception.getResponseBody());
-		log.info("----.getStatusCode()----------"
-				+ exception.getStatusCode());
+		log.info("----.getStatusCode()----------" + exception.getStatusCode());
 
 		Header responseHeader = new Header();
-		responseHeader.setApplicationName(exchange.getProperty(IConstant.APPLICATION_NAME).toString());
-		responseHeader.setRegion(exchange.getProperty(IConstant.REGION).toString());
-		
-		responseHeader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT).toString());
-		responseHeader.setOrganization(exchange.getProperty(IConstant.ORGANIZATION).toString());
-		responseHeader.setSourceName(exchange.getProperty(IConstant.SOURCE_NAME).toString());
-	
-		responseHeader.setTransactionId(exchange.getProperty(IConstant.GV_TRANSACTION_ID).toString());
-		responseHeader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER).toString());
-		
-		
-		ObjectMapper mapper= new ObjectMapper();
-		
-		KoreErrorResponse responsePayload = mapper.readValue(exception.getResponseBody(),
-				KoreErrorResponse.class);
+		responseHeader.setApplicationName(exchange.getProperty(
+				IConstant.APPLICATION_NAME).toString());
+		responseHeader.setRegion(exchange.getProperty(IConstant.REGION)
+				.toString());
+
+		responseHeader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT)
+				.toString());
+		responseHeader.setOrganization(exchange.getProperty(
+				IConstant.ORGANIZATION).toString());
+		responseHeader.setSourceName(exchange
+				.getProperty(IConstant.SOURCE_NAME).toString());
+
+		responseHeader.setTransactionId(exchange.getProperty(
+				IConstant.GV_TRANSACTION_ID).toString());
+		responseHeader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
+				.toString());
+
+		ObjectMapper mapper = new ObjectMapper();
+
+		KoreErrorResponse responsePayload = mapper.readValue(
+				exception.getResponseBody(), KoreErrorResponse.class);
 
 		log.info("----response payload is----------"
 				+ responsePayload.toString());
 
 		Response response = new Response();
-	
-		/*int statusCodeInt = exception.getStatusCode();
-*/	
+
+		/*
+		 * int statusCodeInt = exception.getStatusCode();
+		 */
 		response.setResponseCode(IResponse.INVALID_PAYLOAD);
-		
+
 		response.setResponseStatus(IResponse.ERROR_MESSAGE);
 		response.setResponseDescription(responsePayload.getErrorMessage());
 
@@ -101,7 +107,7 @@ public class KoreGenericExceptionProcessor implements Processor {
 			responseObject.setResponse(response);
 			exchange.getIn().setBody(responseObject);
 		}
-		
+
 		if ("Endpoint[direct://suspendDevice]".equals(exchange
 				.getFromEndpoint().toString())) {
 
@@ -110,8 +116,7 @@ public class KoreGenericExceptionProcessor implements Processor {
 			responseObject.setResponse(response);
 			exchange.getIn().setBody(responseObject);
 		}
-		
-		
+
 		if ("Endpoint[direct://reactivateDevice]".equals(exchange
 				.getFromEndpoint().toString())) {
 
@@ -120,7 +125,7 @@ public class KoreGenericExceptionProcessor implements Processor {
 			responseObject.setResponse(response);
 			exchange.getIn().setBody(responseObject);
 		}
-		
+
 		if ("Endpoint[direct://customeFields]".equals(exchange
 				.getFromEndpoint().toString())) {
 
@@ -130,5 +135,13 @@ public class KoreGenericExceptionProcessor implements Processor {
 			exchange.getIn().setBody(responseObject);
 		}
 
+		if ("Endpoint[direct://changeDeviceServicePlans]".equals(exchange
+				.getFromEndpoint().toString())) {
+			ChangeDeviceServicePlansResponse responseObject = new ChangeDeviceServicePlansResponse();
+			responseObject.setHeader(responseHeader);
+			responseObject.setResponse(response);
+			exchange.getIn().setBody(responseObject);
+
+		}
 	}
 }

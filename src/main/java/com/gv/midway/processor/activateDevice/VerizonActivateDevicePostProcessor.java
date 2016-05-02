@@ -21,7 +21,7 @@ public class VerizonActivateDevicePostProcessor implements Processor {
 
 	static int i = 0;
 
-	Logger log = Logger.getLogger(VerizonDeviceInformationPostProcessor.class
+	Logger log = Logger.getLogger(VerizonActivateDevicePostProcessor.class
 			.getName());
 
 	Environment newEnv;

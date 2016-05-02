@@ -1,13 +1,12 @@
-package com.gv.midway.pojo.changeDeviceServicePlans.request;
+package com.gv.midway.pojo.changeDeviceServicePlans.verizon.request;
 
 import java.util.Arrays;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gv.midway.pojo.verizon.CustomFields;
 import com.gv.midway.pojo.verizon.Devices;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
-public class ChangeDeviceServicePlansRequestDataArea {
+public class ChangeDeviceServicePlansRequestVerizon {
 
 	@ApiModelProperty(value = "Name of the billing account.")
 	private String accountName;
@@ -27,9 +26,6 @@ public class ChangeDeviceServicePlansRequestDataArea {
 	@ApiModelProperty(value = "The device group that the requested device belongs to.")
 	private String currentServicePlan;
 
-	@ApiModelProperty(value = "The plan code of the plan to change a plan for a single active device for the next period.")
-	private String planCode;
-	
 	public String getAccountName() {
 		return accountName;
 	}
@@ -93,8 +89,6 @@ public class ChangeDeviceServicePlansRequestDataArea {
 		result = prime * result
 				+ ((groupName == null) ? 0 : groupName.hashCode());
 		result = prime * result
-				+ ((planCode == null) ? 0 : planCode.hashCode());
-		result = prime * result
 				+ ((servicePlan == null) ? 0 : servicePlan.hashCode());
 		return result;
 	}
@@ -107,7 +101,7 @@ public class ChangeDeviceServicePlansRequestDataArea {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ChangeDeviceServicePlansRequestDataArea other = (ChangeDeviceServicePlansRequestDataArea) obj;
+		ChangeDeviceServicePlansRequestVerizon other = (ChangeDeviceServicePlansRequestVerizon) obj;
 		if (accountName == null) {
 			if (other.accountName != null)
 				return false;
@@ -127,11 +121,6 @@ public class ChangeDeviceServicePlansRequestDataArea {
 				return false;
 		} else if (!groupName.equals(other.groupName))
 			return false;
-		if (planCode == null) {
-			if (other.planCode != null)
-				return false;
-		} else if (!planCode.equals(other.planCode))
-			return false;
 		if (servicePlan == null) {
 			if (other.servicePlan != null)
 				return false;
@@ -142,19 +131,11 @@ public class ChangeDeviceServicePlansRequestDataArea {
 
 	@Override
 	public String toString() {
-		return "ChangeDeviceServicePlansRequestDataArea [accountName="
+		return "ChangeDeviceServicePlansRequestVerizon [accountName="
 				+ accountName + ", customFields="
 				+ Arrays.toString(customFields) + ", devices="
 				+ Arrays.toString(devices) + ", servicePlan=" + servicePlan
 				+ ", groupName=" + groupName + ", currentServicePlan="
-				+ currentServicePlan + ", planCode=" + planCode + "]";
-	}
-
-	public String getPlanCode() {
-		return planCode;
-	}
-
-	public void setPlanCode(String planCode) {
-		this.planCode = planCode;
+				+ currentServicePlan + "]";
 	}
 }
