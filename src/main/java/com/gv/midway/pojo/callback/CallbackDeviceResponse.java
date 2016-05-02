@@ -1,8 +1,8 @@
 package com.gv.midway.pojo.callback;
-import com.wordnik.swagger.annotations.ApiModelProperty;
+
 import com.gv.midway.pojo.callback.response.activate.CallbackActivateResponse;
 import com.gv.midway.pojo.callback.response.deactivate.CallbackDeactivateResponse;
-
+import com.wordnik.swagger.annotations.ApiModelProperty;
 
 public class CallbackDeviceResponse {
 	@ApiModelProperty(value = "Device Suspend Response from callback")
@@ -23,75 +23,70 @@ public class CallbackDeviceResponse {
 	@ApiModelProperty(value = "Deactivate Response from Callback")
 	private CallbackDeactivateResponse deactivateResponse;
 
-    public CallbackSuspendResponse getSuspendResponse ()
-    {
-        return suspendResponse;
-    }
+	@ApiModelProperty(value = "DeviceResponse Response from Callback")
+	private DeviceResponse deviceResponse;
 
-    public void setSuspendResponse (CallbackSuspendResponse suspendResponse)
-    {
-        this.suspendResponse = suspendResponse;
-    }
+	public CallbackSuspendResponse getSuspendResponse() {
+		return suspendResponse;
+	}
 
-    public CallbackPrlInformationResponse getPrlInformationResponse ()
-    {
-        return prlInformationResponse;
-    }
+	public void setSuspendResponse(CallbackSuspendResponse suspendResponse) {
+		this.suspendResponse = suspendResponse;
+	}
 
-    public void setPrlInformationResponse (CallbackPrlInformationResponse prlInformationResponse)
-    {
-        this.prlInformationResponse = prlInformationResponse;
-    }
+	public CallbackPrlInformationResponse getPrlInformationResponse() {
+		return prlInformationResponse;
+	}
 
-    public CallbackActivateResponse getActivateResponse ()
-    {
-        return activateResponse;
-    }
+	public void setPrlInformationResponse(
+			CallbackPrlInformationResponse prlInformationResponse) {
+		this.prlInformationResponse = prlInformationResponse;
+	}
 
-    public void setActivateResponse (CallbackActivateResponse activateResponse)
-    {
-        this.activateResponse = activateResponse;
-    }
+	public CallbackActivateResponse getActivateResponse() {
+		return activateResponse;
+	}
 
-    public CallbackRestoreResponse getRestoreResponse ()
-    {
-        return restoreResponse;
-    }
+	public void setActivateResponse(CallbackActivateResponse activateResponse) {
+		this.activateResponse = activateResponse;
+	}
 
-    public void setRestoreResponse (CallbackRestoreResponse restoreResponse)
-    {
-        this.restoreResponse = restoreResponse;
-    }
+	public CallbackRestoreResponse getRestoreResponse() {
+		return restoreResponse;
+	}
 
-    public CallbackSmsDeliveryResponse getSmsDeliveryResponse ()
-    {
-        return smsDeliveryResponse;
-    }
+	public void setRestoreResponse(CallbackRestoreResponse restoreResponse) {
+		this.restoreResponse = restoreResponse;
+	}
 
-    public void setSmsDeliveryResponse (CallbackSmsDeliveryResponse smsDeliveryResponse)
-    {
-        this.smsDeliveryResponse = smsDeliveryResponse;
-    }
+	public CallbackSmsDeliveryResponse getSmsDeliveryResponse() {
+		return smsDeliveryResponse;
+	}
 
-    public CallbackDeactivateResponse getDeactivateResponse ()
-    {
-        return deactivateResponse;
-    }
+	public void setSmsDeliveryResponse(
+			CallbackSmsDeliveryResponse smsDeliveryResponse) {
+		this.smsDeliveryResponse = smsDeliveryResponse;
+	}
 
-    public void setDeactivateResponse (CallbackDeactivateResponse deactivateResponse)
-    {
-        this.deactivateResponse = deactivateResponse;
-    }
+	public CallbackDeactivateResponse getDeactivateResponse() {
+		return deactivateResponse;
+	}
 
-    @Override
-    public String toString()
-    {
-        return "ClassPojo [suspendResponse = "+suspendResponse+", prlInformationResponse = "+prlInformationResponse+", activateResponse = "+activateResponse+", restoreResponse = "+restoreResponse+", smsDeliveryResponse = "+smsDeliveryResponse+", deactivateResponse = "+deactivateResponse+"]";
-    }
+	public void setDeactivateResponse(
+			CallbackDeactivateResponse deactivateResponse) {
+		this.deactivateResponse = deactivateResponse;
+	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
+	@Override
+	public String toString() {
+		return "ClassPojo [suspendResponse = " + suspendResponse
+				+ ", prlInformationResponse = " + prlInformationResponse
+				+ ", activateResponse = " + activateResponse
+				+ ", restoreResponse = " + restoreResponse
+				+ ", smsDeliveryResponse = " + smsDeliveryResponse
+				+ ", deactivateResponse = " + deactivateResponse + "]";
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -103,6 +98,8 @@ public class CallbackDeviceResponse {
 				* result
 				+ ((deactivateResponse == null) ? 0 : deactivateResponse
 						.hashCode());
+		result = prime * result
+				+ ((deviceResponse == null) ? 0 : deviceResponse.hashCode());
 		result = prime
 				* result
 				+ ((prlInformationResponse == null) ? 0
@@ -118,16 +115,13 @@ public class CallbackDeviceResponse {
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof CallbackDeviceResponse))
+		if (getClass() != obj.getClass())
 			return false;
 		CallbackDeviceResponse other = (CallbackDeviceResponse) obj;
 		if (activateResponse == null) {
@@ -139,6 +133,11 @@ public class CallbackDeviceResponse {
 			if (other.deactivateResponse != null)
 				return false;
 		} else if (!deactivateResponse.equals(other.deactivateResponse))
+			return false;
+		if (deviceResponse == null) {
+			if (other.deviceResponse != null)
+				return false;
+		} else if (!deviceResponse.equals(other.deviceResponse))
 			return false;
 		if (prlInformationResponse == null) {
 			if (other.prlInformationResponse != null)
@@ -162,5 +161,13 @@ public class CallbackDeviceResponse {
 			return false;
 		return true;
 	}
-    
+
+	public DeviceResponse getDeviceResponse() {
+		return deviceResponse;
+	}
+
+	public void setDeviceResponse(DeviceResponse deviceResponse) {
+		this.deviceResponse = deviceResponse;
+	}
+
 }
