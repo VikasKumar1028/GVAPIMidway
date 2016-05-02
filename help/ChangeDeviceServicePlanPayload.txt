@@ -1,8 +1,34 @@
 *************************MidWay Payload
+{
+  "accountName": "0442090022-00001",
+  "currentServicePlan": "M2MPERMB",
+ 
+   "devices":[  
+         {  
+            "deviceIds":[  
+               {  
+                  
+                  "kind":"IMEI",
+				  "id":"353238063289994"
+               }
+            ]
+         },
+		
+         {  
+            "deviceIds":[  
+               {  
+                  "kind":"ICCID",
+				  "id":"89148000002377648495"
 
+               }
+            ]
+         }
+      ],
+  "servicePlan": "M2M5MBASH"
+}
 
 *************************Carrier Payload
-
+Payload: {"accountName":"0442090022-00001","customFields":null,"devices":[{"deviceIds":[{"id":"353238063289994","kind":"IMEI"}]},{"deviceIds":[{"id":"89148000002377648495","kind":"ICCID"}]}],"servicePlan":"89665","groupName":null,"currentServicePlan":"M2MPERMB"}
 
 *************************Carrier Response
 
