@@ -1,0 +1,54 @@
+************************MidWay Payload
+{  
+   "dataArea":{  
+      "accountName":"0442090022-00001",
+      "servicePlan":"M2MPERMB",
+      "mdnZipCode":"38523",
+	  "eAPCode": "EAP02500797",
+      "devices":[  
+         {  
+            "deviceIds":[  
+               {  
+                  "id":"89014103277405947099",
+                  "kind":""
+               }
+            ]
+         }
+      ]
+   },
+   "header":{  
+      "region":"USA",
+      "timestamp":"string",
+      "organization":"Grant Victor",
+      "transactionId":"gv123666",
+      "sourceName":"VERIZON",
+      "applicationName":"WEB",
+      "bsCarrier":"KORE"
+   }
+}
+
+************************Carrier Payload
+Payload: {"deviceNumber":"89014103277405947099","EAPCode":"EAP02500797"}
+
+************************Carrier Response
+Payload: {"d":{"__type":"ProvisioningRequestTracking:https:\/\/PRiSMProAPI.koretelematics.com\/types","requestStatus":0,"trackingNumber":"2862469070"}}
+
+
+************************MidWay Response
+{
+   "header":    {
+      "region": "USA",
+      "timestamp": "string",
+      "organization": "Grant Victor",
+      "transactionId": "gv123666",
+      "sourceName": "VERIZON",
+      "applicationName": "WEB",
+      "bsCarrier": "KORE"
+   },
+   "response":    {
+      "responseCode": 2000,
+      "responseStatus": "Success",
+      "responseDescription": "Data Submitted Successfully"
+   },
+   "dataArea": {"orderNumber": "1462262106660"}
+}
