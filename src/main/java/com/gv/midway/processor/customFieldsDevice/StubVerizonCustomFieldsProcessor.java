@@ -1,4 +1,4 @@
-package com.gv.midway.processor.customFieldsUpdateDevice;
+package com.gv.midway.processor.customFieldsDevice;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -7,11 +7,11 @@ import org.apache.log4j.Logger;
 import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
-import com.gv.midway.pojo.customFieldsUpdateDevice.response.CustomFieldsUpdateDeviceResponse;
-import com.gv.midway.pojo.customFieldsUpdateDevice.response.CustomFieldsUpdateDeviceResponseDataArea;
+import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponse;
+import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponseDataArea;
 import com.gv.midway.processor.activateDevice.KoreActivateDevicePostProcessor;
 
-public class StubVerizonCustomFieldsUpdateProcessor implements Processor {
+public class StubVerizonCustomFieldsProcessor implements Processor {
 
 	Logger log = Logger.getLogger(KoreActivateDevicePostProcessor.class
 			.getName());
@@ -21,9 +21,9 @@ public class StubVerizonCustomFieldsUpdateProcessor implements Processor {
 
 		log.info("Start::StubVerizonCustomFieldsUpdateProcessor");
 
-		CustomFieldsUpdateDeviceResponse updateCustomeFieldDeviceResponse = new CustomFieldsUpdateDeviceResponse();
+		CustomFieldsDeviceResponse updateCustomeFieldDeviceResponse = new CustomFieldsDeviceResponse();
 
-		CustomFieldsUpdateDeviceResponseDataArea updateCustomeFieldDeviceResponseDataArea = new CustomFieldsUpdateDeviceResponseDataArea();
+		CustomFieldsDeviceResponseDataArea updateCustomeFieldDeviceResponseDataArea = new CustomFieldsDeviceResponseDataArea();
 		Header responseheader = new Header();
 
 		Response response = new Response();

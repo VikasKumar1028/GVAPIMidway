@@ -1,4 +1,4 @@
-package com.gv.midway.processor.customFieldsUpdateDevice;
+package com.gv.midway.processor.customFieldsDevice;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -9,22 +9,22 @@ import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
-import com.gv.midway.pojo.customFieldsUpdateDevice.response.CustomFieldsUpdateDeviceResponse;
-import com.gv.midway.pojo.customFieldsUpdateDevice.response.CustomFieldsUpdateDeviceResponseDataArea;
+import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponse;
+import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponseDataArea;
 
-public class KoreCustomFieldsUpdatePostProcessor implements Processor {
+public class KoreCustomFieldsPostProcessor implements Processor {
 
-	Logger log = Logger.getLogger(KoreCustomFieldsUpdatePostProcessor.class
+	Logger log = Logger.getLogger(KoreCustomFieldsPostProcessor.class
 			.getName());
 
 	
 	Environment newEnv;
 
-	public KoreCustomFieldsUpdatePostProcessor() {
+	public KoreCustomFieldsPostProcessor() {
 
 	}
 
-	public KoreCustomFieldsUpdatePostProcessor(Environment env) {
+	public KoreCustomFieldsPostProcessor(Environment env) {
 		super();
 		this.newEnv = env;
 	}
@@ -34,9 +34,9 @@ public class KoreCustomFieldsUpdatePostProcessor implements Processor {
 		// TODO Auto-generated method stub
 		log.info("Start::KoreUpdateCustomeFieldDevicePostProcessor");
 
-		CustomFieldsUpdateDeviceResponse customFieldsUpdateDeviceResponse = new CustomFieldsUpdateDeviceResponse();
+		CustomFieldsDeviceResponse customFieldsUpdateDeviceResponse = new CustomFieldsDeviceResponse();
 
-		CustomFieldsUpdateDeviceResponseDataArea customFieldsUpdateDeviceResponseDataArea = new CustomFieldsUpdateDeviceResponseDataArea();
+		CustomFieldsDeviceResponseDataArea customFieldsUpdateDeviceResponseDataArea = new CustomFieldsDeviceResponseDataArea();
 
 		Header responseheader = new Header();
 

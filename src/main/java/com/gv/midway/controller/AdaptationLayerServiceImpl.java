@@ -13,8 +13,8 @@ import com.gv.midway.pojo.changeDeviceServicePlans.response.ChangeDeviceServiceP
 import com.gv.midway.pojo.connectionInformation.deviceSessionBeginEndInfo.response.SessionBeginEndResponse;
 import com.gv.midway.pojo.connectionInformation.deviceStatus.response.ConnectionStatusResponse;
 import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationRequest;
-import com.gv.midway.pojo.customFieldsUpdateDevice.request.CustomFieldsUpdateDeviceRequest;
-import com.gv.midway.pojo.customFieldsUpdateDevice.response.CustomFieldsUpdateDeviceResponse;
+import com.gv.midway.pojo.customFieldsDevice.request.CustomFieldsDeviceRequest;
+import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponse;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.pojo.device.request.BulkDevices;
@@ -168,10 +168,10 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 				"direct:suspendDevice", suspendDeviceRequest);
 	}
 
-	public CustomFieldsUpdateDeviceResponse customFieldsUpdateRequest(
-			CustomFieldsUpdateDeviceRequest customeFieldDeviceRequest) {
+	public CustomFieldsDeviceResponse customFieldsUpdateRequest(
+			CustomFieldsDeviceRequest customeFieldDeviceRequest) {
 
-		return (CustomFieldsUpdateDeviceResponse) producer.requestBody(
+		return (CustomFieldsDeviceResponse) producer.requestBody(
 				"direct:customeFields", customeFieldDeviceRequest);
 	}
 

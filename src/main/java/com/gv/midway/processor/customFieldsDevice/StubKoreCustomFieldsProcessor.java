@@ -1,4 +1,4 @@
-package com.gv.midway.processor.customFieldsUpdateDevice;
+package com.gv.midway.processor.customFieldsDevice;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -9,22 +9,22 @@ import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponseDataArea;
-import com.gv.midway.pojo.customFieldsUpdateDevice.response.CustomFieldsUpdateDeviceResponse;
-import com.gv.midway.pojo.customFieldsUpdateDevice.response.CustomFieldsUpdateDeviceResponseDataArea;
+import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponse;
+import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponseDataArea;
 import com.gv.midway.processor.activateDevice.KoreActivateDevicePostProcessor;
 
-public class StubKoreCustomFieldsUpdateProcessor implements Processor {
+public class StubKoreCustomFieldsProcessor implements Processor {
 
-	Logger log = Logger.getLogger(StubKoreCustomFieldsUpdateProcessor.class
+	Logger log = Logger.getLogger(StubKoreCustomFieldsProcessor.class
 			.getName());
 
 	public void process(Exchange exchange) throws Exception {
 		// TODO Auto-generated method stub
 		log.info("Start::StubKoreUpdateCustomeFieldDeviceProcessor");
 
-		CustomFieldsUpdateDeviceResponse updateCustomeFieldDeviceResponse = new CustomFieldsUpdateDeviceResponse();
+		CustomFieldsDeviceResponse updateCustomeFieldDeviceResponse = new CustomFieldsDeviceResponse();
 
-		CustomFieldsUpdateDeviceResponseDataArea updateCustomeFieldDeviceResponseDataArea = new CustomFieldsUpdateDeviceResponseDataArea();
+		CustomFieldsDeviceResponseDataArea updateCustomeFieldDeviceResponseDataArea = new CustomFieldsDeviceResponseDataArea();
 		Header responseheader = new Header();
 
 		Response response = new Response();

@@ -1,9 +1,9 @@
-package com.gv.midway.pojo.customFieldsUpdateDevice.request;
+package com.gv.midway.pojo.customFieldsDevice.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CustomFieldsUpdateDeviceId {
+public class CustomFieldsDeviceId {
 	@ApiModelProperty(value = "Value of device identifier.", required = true)
 	private String id;
 	
@@ -43,7 +43,7 @@ public class CustomFieldsUpdateDeviceId {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		CustomFieldsUpdateDeviceId other = (CustomFieldsUpdateDeviceId) obj;
+		CustomFieldsDeviceId other = (CustomFieldsDeviceId) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;

@@ -48,12 +48,12 @@ import com.gv.midway.processor.connectionInformation.deviceConnectionStatus.Stub
 import com.gv.midway.processor.connectionInformation.deviceConnectionStatus.VerizonDeviceConnectionStatusPostProcessor;
 import com.gv.midway.processor.connectionInformation.deviceSessionBeginEndInfo.StubVerizonDeviceSessionBeginEndInfoProcessor;
 import com.gv.midway.processor.connectionInformation.deviceSessionBeginEndInfo.VerizonDeviceSessionBeginEndInfoPostProcessor;
-import com.gv.midway.processor.customFieldsUpdateDevice.KoreCustomFieldsUpdatePostProcessor;
-import com.gv.midway.processor.customFieldsUpdateDevice.KoreCustomFieldsUpdatePreProcessor;
-import com.gv.midway.processor.customFieldsUpdateDevice.StubKoreCustomFieldsUpdateProcessor;
-import com.gv.midway.processor.customFieldsUpdateDevice.StubVerizonCustomFieldsUpdateProcessor;
-import com.gv.midway.processor.customFieldsUpdateDevice.VerizonCustomFieldsUpdatePostProcessor;
-import com.gv.midway.processor.customFieldsUpdateDevice.VerizonCustomFieldsUpdatePreProcessor;
+import com.gv.midway.processor.customFieldsDevice.KoreCustomFieldsPostProcessor;
+import com.gv.midway.processor.customFieldsDevice.KoreCustomFieldsPreProcessor;
+import com.gv.midway.processor.customFieldsDevice.StubKoreCustomFieldsProcessor;
+import com.gv.midway.processor.customFieldsDevice.StubVerizonCustomFieldsProcessor;
+import com.gv.midway.processor.customFieldsDevice.VerizonCustomFieldsPostProcessor;
+import com.gv.midway.processor.customFieldsDevice.VerizonCustomFieldsPreProcessor;
 import com.gv.midway.processor.deactivateDevice.KoreDeactivateDevicePostProcessor;
 import com.gv.midway.processor.deactivateDevice.KoreDeactivateDevicePreProcessor;
 import com.gv.midway.processor.deactivateDevice.StubKoreDeactivateDeviceProcessor;
@@ -341,78 +341,8 @@ public class CamelRoute extends RouteBuilder {
 
 			
 
-		// **** Device in Session or not End *****//
+		
 
-		from("direct:deviceConnectionStatus").process(new HeaderProcessor())
-				.choice()
-				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
-				.process(new StubVerizonDeviceConnectionStatusProcessor())
-				.to("log:input").endChoice().otherwise().choice()
-				.when(header("derivedCarrierName").isEqualTo("VERIZON"))
-				.bean(iSessionService, "setContextTokenInExchange")
-				.bean(iAuditService, "auditExternalRequestCall")
-				.to("direct:DeviceConnectionStatusFlow1").endChoice().end();
-
-		from("direct:DeviceConnectionStatusFlow1").doTry()
-				.to("direct:DeviceConnectionStatusFlow2")
-				.doCatch(CxfOperationException.class)
-				.bean(iAuditService, "auditExternalExceptionResponseCall")
-				.process(new VerizonGenericExceptionProcessor(env)).endDoTry()
-				.end();
-
-		from("direct:DeviceConnectionStatusFlow2")
-				.errorHandler(noErrorHandler())
-				// REMOVED Audit will store record 3 times in case of failure
-				// (see onException for connection.class above)
-				// .bean(iAuditService, "auditExternalRequestCall")
-				.bean(iSessionService, "setContextTokenInExchange")
-				.process(new VerizonDeviceConnectionInformationPreProcessor())
-				// Audit will store record 3 times in case of failure (see
-				// onException for connection.class above)
-				// .bean(iAuditService, "auditExternalRequestCall")
-				.to(uriRestVerizonEndPoint).unmarshal()
-				.json(JsonLibrary.Jackson)
-				.bean(iAuditService, "auditExternalResponseCall")
-				.process(new VerizonDeviceConnectionStatusPostProcessor(env));
-
-		// **** Device in Session or not End *****//
-
-		// **** Device Session Begin End Info Start *****//
-
-		from("direct:deviceSessionBeginEndInfo").process(new HeaderProcessor())
-				.choice()
-				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
-				.process(new StubVerizonDeviceSessionBeginEndInfoProcessor())
-				.to("log:input").endChoice().otherwise().choice()
-				.when(header("derivedCarrierName").isEqualTo("VERIZON"))
-				.bean(iSessionService, "setContextTokenInExchange")
-				.bean(iAuditService, "auditExternalRequestCall")
-				.to("direct:DeviceSessionBeginEndInfoFlow1").endChoice().end();
-
-		from("direct:DeviceSessionBeginEndInfoFlow1").doTry()
-				.to("direct:DeviceSessionBeginEndInfoFlow2")
-				.doCatch(CxfOperationException.class)
-				.bean(iAuditService, "auditExternalExceptionResponseCall")
-				.process(new VerizonGenericExceptionProcessor(env)).endDoTry()
-				.end();
-
-		from("direct:DeviceSessionBeginEndInfoFlow2")
-				.errorHandler(noErrorHandler())
-				// REMOVED Audit will store record 3 times in case of failure
-				// (see onException for connection.class above)
-				// .bean(iAuditService, "auditExternalRequestCall")
-				.bean(iSessionService, "setContextTokenInExchange")
-				.process(new VerizonDeviceConnectionInformationPreProcessor())
-				// Audit will store record 3 times in case of failure (see
-				// onException for connection.class above)
-				// .bean(iAuditService, "auditExternalRequestCall")
-				.to(uriRestVerizonEndPoint)
-				.unmarshal()
-				.json(JsonLibrary.Jackson)
-				.bean(iAuditService, "auditExternalResponseCall")
-				.process(new VerizonDeviceSessionBeginEndInfoPostProcessor(env));
-
-		// **** Device Session Begin End Info End *****//
 
 		/**Main Change Device Service Plans Flow **/
 
@@ -438,7 +368,12 @@ public class CamelRoute extends RouteBuilder {
 			//Calling the change Device ServicePlans Flow
 			changeDeviceServicePlans();
 			
-			
+			//Calling the change Device ServicePlans Flow
+			deviceConnectionStatus();
+
+			//Calling the change Device ServicePlans Flow
+			deviceSessionBeginEndInfo();
+		
 			
 	}
 	
@@ -832,15 +767,15 @@ public class CamelRoute extends RouteBuilder {
 		from("direct:customeFields").process(new HeaderProcessor()).choice()
 				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
 				.choice().when(header("derivedCarrierName").isEqualTo("KORE"))
-				.process(new StubKoreCustomFieldsUpdateProcessor())
+				.process(new StubKoreCustomFieldsProcessor())
 				.to("log:input")
 				.when(header("derivedCarrierName").isEqualTo("VERIZON"))
-				.process(new StubVerizonCustomFieldsUpdateProcessor())
+				.process(new StubVerizonCustomFieldsProcessor())
 				.to("log:input").endChoice().otherwise().choice()
 
 				.when(header("derivedCarrierName").isEqualTo("KORE"))
 				.wireTap("direct:processcustomeFieldsKoreTransaction")
-				.process(new KoreCustomFieldsUpdatePostProcessor(env))
+				.process(new KoreCustomFieldsPostProcessor(env))
 
 				.endChoice()
 
@@ -868,14 +803,14 @@ public class CamelRoute extends RouteBuilder {
 				.errorHandler(noErrorHandler())
 
 				.bean(iSessionService, "setContextTokenInExchange")
-				.process(new VerizonCustomFieldsUpdatePreProcessor())
+				.process(new VerizonCustomFieldsPreProcessor())
 				.to(uriRestVerizonEndPoint)
 				.unmarshal()
 				.json(JsonLibrary.Jackson)
 				.bean(iTransactionalService,
 						"populateVerizonTransactionalResponse")
 				.bean(iAuditService, "auditExternalResponseCall")
-				.process(new VerizonCustomFieldsUpdatePostProcessor(env));
+				.process(new VerizonCustomFieldsPostProcessor(env));
 
 		// SubFlow: ChangeCustomeFileds
 
@@ -895,7 +830,7 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iAuditService, "auditExternalExceptionResponseCall")
 				.end()
 
-				.process(new KoreCustomFieldsUpdatePreProcessor(env))
+				.process(new KoreCustomFieldsPreProcessor(env))
 				.log("KoreCustomFieldsUpdatePreProcessor-----------")
 				.bean(iAuditService, "auditExternalRequestCall")
 				.to(uriRestKoreEndPoint)
@@ -1000,4 +935,85 @@ public class CamelRoute extends RouteBuilder {
 
 
 	}
+
+	public void deviceConnectionStatus() {
+		
+		// **** Device in Session or not End *****//
+
+		from("direct:deviceConnectionStatus").process(new HeaderProcessor())
+				.choice()
+				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
+				.process(new StubVerizonDeviceConnectionStatusProcessor())
+				.to("log:input").endChoice().otherwise().choice()
+				.when(header("derivedCarrierName").isEqualTo("VERIZON"))
+				.bean(iSessionService, "setContextTokenInExchange")
+				.bean(iAuditService, "auditExternalRequestCall")
+				.to("direct:DeviceConnectionStatusFlow1").endChoice().end();
+
+		from("direct:DeviceConnectionStatusFlow1").doTry()
+				.to("direct:DeviceConnectionStatusFlow2")
+				.doCatch(CxfOperationException.class)
+				.bean(iAuditService, "auditExternalExceptionResponseCall")
+				.process(new VerizonGenericExceptionProcessor(env)).endDoTry()
+				.end();
+
+		from("direct:DeviceConnectionStatusFlow2")
+				.errorHandler(noErrorHandler())
+				// REMOVED Audit will store record 3 times in case of failure
+				// (see onException for connection.class above)
+				// .bean(iAuditService, "auditExternalRequestCall")
+				.bean(iSessionService, "setContextTokenInExchange")
+				.process(new VerizonDeviceConnectionInformationPreProcessor())
+				// Audit will store record 3 times in case of failure (see
+				// onException for connection.class above)
+				// .bean(iAuditService, "auditExternalRequestCall")
+				.to(uriRestVerizonEndPoint).unmarshal()
+				.json(JsonLibrary.Jackson)
+				.bean(iAuditService, "auditExternalResponseCall")
+				.process(new VerizonDeviceConnectionStatusPostProcessor(env));
+
+		// **** Device in Session or not End *****//
+
+	}
+	
+	public void deviceSessionBeginEndInfo() {
+
+		// **** Device Session Begin End Info Start *****//
+
+		from("direct:deviceSessionBeginEndInfo").process(new HeaderProcessor())
+				.choice()
+				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
+				.process(new StubVerizonDeviceSessionBeginEndInfoProcessor())
+				.to("log:input").endChoice().otherwise().choice()
+				.when(header("derivedCarrierName").isEqualTo("VERIZON"))
+				.bean(iSessionService, "setContextTokenInExchange")
+				.bean(iAuditService, "auditExternalRequestCall")
+				.to("direct:DeviceSessionBeginEndInfoFlow1").endChoice().end();
+
+		from("direct:DeviceSessionBeginEndInfoFlow1").doTry()
+				.to("direct:DeviceSessionBeginEndInfoFlow2")
+				.doCatch(CxfOperationException.class)
+				.bean(iAuditService, "auditExternalExceptionResponseCall")
+				.process(new VerizonGenericExceptionProcessor(env)).endDoTry()
+				.end();
+
+		from("direct:DeviceSessionBeginEndInfoFlow2")
+				.errorHandler(noErrorHandler())
+				// REMOVED Audit will store record 3 times in case of failure
+				// (see onException for connection.class above)
+				// .bean(iAuditService, "auditExternalRequestCall")
+				.bean(iSessionService, "setContextTokenInExchange")
+				.process(new VerizonDeviceConnectionInformationPreProcessor())
+				// Audit will store record 3 times in case of failure (see
+				// onException for connection.class above)
+				// .bean(iAuditService, "auditExternalRequestCall")
+				.to(uriRestVerizonEndPoint)
+				.unmarshal()
+				.json(JsonLibrary.Jackson)
+				.bean(iAuditService, "auditExternalResponseCall")
+				.process(new VerizonDeviceSessionBeginEndInfoPostProcessor(env));
+
+		// **** Device Session Begin End Info End *****//
+	}
+
 }

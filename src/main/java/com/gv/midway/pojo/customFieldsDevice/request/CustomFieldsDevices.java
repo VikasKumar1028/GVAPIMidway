@@ -1,4 +1,4 @@
-package com.gv.midway.pojo.customFieldsUpdateDevice.request;
+package com.gv.midway.pojo.customFieldsDevice.request;
 
 import java.util.Arrays;
 
@@ -6,16 +6,16 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CustomFieldsUpdateDevices {
+public class CustomFieldsDevices {
 
 	@ApiModelProperty(value = "Having type and value of device identifier")
-	private CustomFieldsUpdateDeviceId[] deviceIds;
+	private CustomFieldsDeviceId[] deviceIds;
 
-	public CustomFieldsUpdateDeviceId[] getDeviceIds() {
+	public CustomFieldsDeviceId[] getDeviceIds() {
 		return deviceIds;
 	}
 
-	public void setDeviceIds(CustomFieldsUpdateDeviceId[] deviceIds) {
+	public void setDeviceIds(CustomFieldsDeviceId[] deviceIds) {
 		this.deviceIds = deviceIds;
 	}
 
@@ -35,7 +35,7 @@ public class CustomFieldsUpdateDevices {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		CustomFieldsUpdateDevices other = (CustomFieldsUpdateDevices) obj;
+		CustomFieldsDevices other = (CustomFieldsDevices) obj;
 		if (!Arrays.equals(deviceIds, other.deviceIds))
 			return false;
 		return true;

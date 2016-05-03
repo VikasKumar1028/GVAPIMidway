@@ -3,6 +3,7 @@
 {  
    "dataArea":{  
      
+     "accountName":"0442090022-00001",
       "servicePlan":"M2MPERMB",
       "mdnZipCode":"84037",
       "devices":[  

@@ -1,4 +1,4 @@
-package com.gv.midway.pojo.customFieldsUpdateDevice.response;
+package com.gv.midway.pojo.customFieldsDevice.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -7,17 +7,17 @@ import com.gv.midway.pojo.BaseResponse;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_EMPTY)
-public class CustomFieldsUpdateDeviceResponse extends BaseResponse {
+public class CustomFieldsDeviceResponse extends BaseResponse {
 
 
 	@ApiModelProperty(value = "Data area for CustomFields device response")
-	private CustomFieldsUpdateDeviceResponseDataArea dataArea;
+	private CustomFieldsDeviceResponseDataArea dataArea;
 
-	public CustomFieldsUpdateDeviceResponseDataArea getDataArea() {
+	public CustomFieldsDeviceResponseDataArea getDataArea() {
 		return dataArea;
 	}
 
-	public void setDataArea(CustomFieldsUpdateDeviceResponseDataArea dataArea) {
+	public void setDataArea(CustomFieldsDeviceResponseDataArea dataArea) {
 		this.dataArea = dataArea;
 	}
 
@@ -43,7 +43,7 @@ public class CustomFieldsUpdateDeviceResponse extends BaseResponse {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		CustomFieldsUpdateDeviceResponse other = (CustomFieldsUpdateDeviceResponse) obj;
+		CustomFieldsDeviceResponse other = (CustomFieldsDeviceResponse) obj;
 		if (dataArea == null) {
 			if (other.dataArea != null)
 				return false;

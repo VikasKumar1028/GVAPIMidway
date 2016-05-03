@@ -1,4 +1,4 @@
-package com.gv.midway.pojo.changeDeviceServicePlans.verizon.request;
+package com.gv.midway.pojo.customFieldsDevice.verizon.request;
 
 import java.util.Arrays;
 
@@ -6,13 +6,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.gv.midway.pojo.verizon.CustomFields;
+import com.gv.midway.pojo.verizon.CustomFieldsToUpdate;
 import com.gv.midway.pojo.verizon.Devices;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_EMPTY)
-public class ChangeDeviceServicePlansRequestVerizon {
-
+public class CustomFieldsDeviceRequestVerizon {
 	@ApiModelProperty(value = "Name of the billing account.")
 	private String accountName;
 
@@ -28,8 +28,8 @@ public class ChangeDeviceServicePlansRequestVerizon {
 	@ApiModelProperty(value = "The device group that the requested device belongs to.")
 	private String groupName;
 
-	@ApiModelProperty(value = "The device group that the requested device belongs to.")
-	private String currentServicePlan;
+	@ApiModelProperty(value = "Update custom fields and values that have been set for the device.")
+	private CustomFieldsToUpdate[] customFieldsToUpdate;
 
 	public String getAccountName() {
 		return accountName;
@@ -71,12 +71,13 @@ public class ChangeDeviceServicePlansRequestVerizon {
 		this.groupName = groupName;
 	}
 
-	public String getCurrentServicePlan() {
-		return currentServicePlan;
+	public CustomFieldsToUpdate[] getCustomFieldsToUpdate() {
+		return customFieldsToUpdate;
 	}
 
-	public void setCurrentServicePlan(String currentServicePlan) {
-		this.currentServicePlan = currentServicePlan;
+	public void setCustomFieldsToUpdate(
+			CustomFieldsToUpdate[] customFieldsToUpdate) {
+		this.customFieldsToUpdate = customFieldsToUpdate;
 	}
 
 	@Override
@@ -85,11 +86,8 @@ public class ChangeDeviceServicePlansRequestVerizon {
 		int result = 1;
 		result = prime * result
 				+ ((accountName == null) ? 0 : accountName.hashCode());
-		result = prime
-				* result
-				+ ((currentServicePlan == null) ? 0 : currentServicePlan
-						.hashCode());
 		result = prime * result + Arrays.hashCode(customFields);
+		result = prime * result + Arrays.hashCode(customFieldsToUpdate);
 		result = prime * result + Arrays.hashCode(devices);
 		result = prime * result
 				+ ((groupName == null) ? 0 : groupName.hashCode());
@@ -106,18 +104,15 @@ public class ChangeDeviceServicePlansRequestVerizon {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ChangeDeviceServicePlansRequestVerizon other = (ChangeDeviceServicePlansRequestVerizon) obj;
+		CustomFieldsDeviceRequestVerizon other = (CustomFieldsDeviceRequestVerizon) obj;
 		if (accountName == null) {
 			if (other.accountName != null)
 				return false;
 		} else if (!accountName.equals(other.accountName))
 			return false;
-		if (currentServicePlan == null) {
-			if (other.currentServicePlan != null)
-				return false;
-		} else if (!currentServicePlan.equals(other.currentServicePlan))
-			return false;
 		if (!Arrays.equals(customFields, other.customFields))
+			return false;
+		if (!Arrays.equals(customFieldsToUpdate, other.customFieldsToUpdate))
 			return false;
 		if (!Arrays.equals(devices, other.devices))
 			return false;
@@ -136,11 +131,11 @@ public class ChangeDeviceServicePlansRequestVerizon {
 
 	@Override
 	public String toString() {
-		return "ChangeDeviceServicePlansRequestVerizon [accountName="
-				+ accountName + ", customFields="
-				+ Arrays.toString(customFields) + ", devices="
-				+ Arrays.toString(devices) + ", servicePlan=" + servicePlan
-				+ ", groupName=" + groupName + ", currentServicePlan="
-				+ currentServicePlan + "]";
+		return "CustomFieldsDeviceRequestVerizon [accountName=" + accountName
+				+ ", customFields=" + Arrays.toString(customFields)
+				+ ", devices=" + Arrays.toString(devices) + ", servicePlan="
+				+ servicePlan + ", groupName=" + groupName
+				+ ", customFieldsToUpdate="
+				+ Arrays.toString(customFieldsToUpdate) + "]";
 	}
 }

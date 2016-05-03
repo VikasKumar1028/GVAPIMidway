@@ -1,4 +1,4 @@
-package com.gv.midway.processor.customFieldsUpdateDevice;
+package com.gv.midway.processor.customFieldsDevice;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -9,18 +9,18 @@ import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
-import com.gv.midway.pojo.customFieldsUpdateDevice.response.CustomFieldsUpdateDeviceResponse;
-import com.gv.midway.pojo.customFieldsUpdateDevice.response.CustomFieldsUpdateDeviceResponseDataArea;
+import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponse;
+import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponseDataArea;
 import com.gv.midway.processor.activateDevice.KoreActivateDevicePostProcessor;
 
-public class VerizonCustomFieldsUpdatePostProcessor implements Processor{
+public class VerizonCustomFieldsPostProcessor implements Processor{
 
-	Logger log = Logger.getLogger(VerizonCustomFieldsUpdatePostProcessor.class.getName());
+	Logger log = Logger.getLogger(VerizonCustomFieldsPostProcessor.class.getName());
 	
 	
 	Environment newEnv;
 
-	public VerizonCustomFieldsUpdatePostProcessor(Environment env) {
+	public VerizonCustomFieldsPostProcessor(Environment env) {
 		super();
 
 		this.newEnv = env;
@@ -33,9 +33,9 @@ public class VerizonCustomFieldsUpdatePostProcessor implements Processor{
 		log.info("Start::VerizonCustomFieldsUpdatePostProcessor");
 		
 
-		CustomFieldsUpdateDeviceResponse customFieldsUpdateDeviceResponse = new CustomFieldsUpdateDeviceResponse();
+		CustomFieldsDeviceResponse customFieldsUpdateDeviceResponse = new CustomFieldsDeviceResponse();
 
-		CustomFieldsUpdateDeviceResponseDataArea customFieldsUpdateDeviceResponseDataArea = new CustomFieldsUpdateDeviceResponseDataArea();
+		CustomFieldsDeviceResponseDataArea customFieldsUpdateDeviceResponseDataArea = new CustomFieldsDeviceResponseDataArea();
 
 		Header responseheader = new Header();
 

@@ -32,10 +32,8 @@ import com.gv.midway.pojo.callback.TargetResponse;
 import com.gv.midway.pojo.callback.request.CallBackVerizonRequest;
 import com.gv.midway.pojo.changeDeviceServicePlans.request.ChangeDeviceServicePlansRequest;
 import com.gv.midway.pojo.changeDeviceServicePlans.request.ChangeDeviceServicePlansRequestDataArea;
-import com.gv.midway.pojo.customFieldsUpdateDevice.request.CustomFieldsUpdateDeviceId;
-import com.gv.midway.pojo.customFieldsUpdateDevice.request.CustomFieldsUpdateDeviceRequest;
-import com.gv.midway.pojo.customFieldsUpdateDevice.request.CustomFieldsUpdateDeviceRequestDataArea;
-import com.gv.midway.pojo.customFieldsUpdateDevice.request.CustomFieldsUpdateDevices;
+import com.gv.midway.pojo.customFieldsDevice.request.CustomFieldsDeviceRequest;
+import com.gv.midway.pojo.customFieldsDevice.request.CustomFieldsDeviceRequestDataArea;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceId;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequestDataArea;
@@ -783,33 +781,33 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		String currentDataTime = CommonUtil.getCurrentTimeStamp();
 
-		CustomFieldsUpdateDeviceRequest req = (CustomFieldsUpdateDeviceRequest) exchange.getIn().getBody();
+		CustomFieldsDeviceRequest req = (CustomFieldsDeviceRequest) exchange.getIn().getBody();
 
-		CustomFieldsUpdateDeviceRequestDataArea activateDeviceRequestDataArea = (CustomFieldsUpdateDeviceRequestDataArea) req.getDataArea();
+		CustomFieldsDeviceRequestDataArea customFieldsDeviceRequestDataArea = (CustomFieldsDeviceRequestDataArea) req.getDataArea();
 
-		CustomFieldsUpdateDevices[] activateDevices = activateDeviceRequestDataArea.getDevices();
+		Devices[] customFieldsDevices = customFieldsDeviceRequestDataArea.getDevices();
 
 		Kryo kryo = new Kryo();
-		for (CustomFieldsUpdateDevices activateDevice : activateDevices) {
+		for (Devices customFieldsDevice : customFieldsDevices) {
 
-			CustomFieldsUpdateDeviceRequest dbPayload = new CustomFieldsUpdateDeviceRequest();
+			CustomFieldsDeviceRequest dbPayload = new CustomFieldsDeviceRequest();
 			dbPayload.setHeader(req.getHeader());
 
-			CustomFieldsUpdateDevices[] businessPayLoadDevicesArray = new CustomFieldsUpdateDevices[1];
-			CustomFieldsUpdateDevices businessPayLoadActivateDevices = new CustomFieldsUpdateDevices();
-			CustomFieldsUpdateDeviceId[] businessPayloadDeviceId = new CustomFieldsUpdateDeviceId[activateDevice.getDeviceIds().length];
+			Devices[] businessPayLoadDevicesArray = new Devices[1];
+			Devices businessPayLoadActivateDevices = new Devices();
+			DeviceId[] businessPayloadDeviceId = new DeviceId[customFieldsDevice.getDeviceIds().length];
 
-			for (int i = 0; i < activateDevice.getDeviceIds().length; i++) {
-				CustomFieldsUpdateDeviceId activateDeviceId = activateDevice.getDeviceIds()[i];
+			for (int i = 0; i < customFieldsDevice.getDeviceIds().length; i++) {
+				DeviceId customFieldsDeviceId = customFieldsDevice.getDeviceIds()[i];
 
-				CustomFieldsUpdateDeviceId businessPayLoadActivateDeviceId = new CustomFieldsUpdateDeviceId();
+				DeviceId businessPayLoadActivateDeviceId = new DeviceId();
 
 				/*
 				 * businessPayLoadActivateDeviceId.seteAPCode(activateDeviceId
 				 * .geteAPCode());
 				 */
-				businessPayLoadActivateDeviceId.setId(activateDeviceId.getId());
-				businessPayLoadActivateDeviceId.setKind(activateDeviceId.getKind());
+				businessPayLoadActivateDeviceId.setId(customFieldsDeviceId.getId());
+				businessPayLoadActivateDeviceId.setKind(customFieldsDeviceId.getKind());
 
 				businessPayloadDeviceId[i] = businessPayLoadActivateDeviceId;
 
@@ -817,7 +815,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			businessPayLoadActivateDevices.setDeviceIds(businessPayloadDeviceId);
 			businessPayLoadDevicesArray[0] = businessPayLoadActivateDevices;
 
-			CustomFieldsUpdateDeviceRequestDataArea copyDataArea = kryo.copy(req.getDataArea());
+			CustomFieldsDeviceRequestDataArea copyDataArea = kryo.copy(req.getDataArea());
 
 			copyDataArea.setDevices(businessPayLoadDevicesArray);
 			dbPayload.setDataArea(copyDataArea);
@@ -831,7 +829,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				transaction.setMidwayTransactionId(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID).toString());
 				
 				//Sorting the device id by kind and inserting into deviceNumber
-				Arrays.sort(businessPayloadDeviceId,  (CustomFieldsUpdateDeviceId a,CustomFieldsUpdateDeviceId b) -> a.getKind().compareTo(b.getKind()));
+				Arrays.sort(businessPayloadDeviceId,  (DeviceId a,DeviceId b) -> a.getKind().compareTo(b.getKind()));
 				
 				// TODO if number of devices are more
 				ObjectMapper obj = new ObjectMapper();

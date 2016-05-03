@@ -1,18 +1,18 @@
-package com.gv.midway.pojo.customFieldsUpdateDevice.request;
+package com.gv.midway.pojo.customFieldsDevice.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gv.midway.pojo.BaseRequest;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CustomFieldsUpdateDeviceRequest extends BaseRequest {
+public class CustomFieldsDeviceRequest extends BaseRequest {
 
-	private CustomFieldsUpdateDeviceRequestDataArea dataArea;
+	private CustomFieldsDeviceRequestDataArea dataArea;
 
-	public CustomFieldsUpdateDeviceRequestDataArea getDataArea() {
+	public CustomFieldsDeviceRequestDataArea getDataArea() {
 		return dataArea;
 	}
 
-	public void setDataArea(CustomFieldsUpdateDeviceRequestDataArea dataArea) {
+	public void setDataArea(CustomFieldsDeviceRequestDataArea dataArea) {
 		this.dataArea = dataArea;
 	}
 
@@ -33,7 +33,7 @@ public class CustomFieldsUpdateDeviceRequest extends BaseRequest {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		CustomFieldsUpdateDeviceRequest other = (CustomFieldsUpdateDeviceRequest) obj;
+		CustomFieldsDeviceRequest other = (CustomFieldsDeviceRequest) obj;
 		if (dataArea == null) {
 			if (other.dataArea != null)
 				return false;

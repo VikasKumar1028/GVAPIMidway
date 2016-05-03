@@ -16,7 +16,7 @@ import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
 import com.gv.midway.pojo.changeDeviceServicePlans.response.ChangeDeviceServicePlansResponse;
 import com.gv.midway.pojo.connectionInformation.deviceSessionBeginEndInfo.response.SessionBeginEndResponse;
 import com.gv.midway.pojo.connectionInformation.deviceStatus.response.ConnectionStatusResponse;
-import com.gv.midway.pojo.customFieldsUpdateDevice.response.CustomFieldsUpdateDeviceResponse;
+import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponse;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
@@ -140,7 +140,7 @@ public class VerizonGenericExceptionProcessor implements Processor {
 		
 		if ("Endpoint[direct://customeFields]".equals(exchange
 				.getFromEndpoint().toString())) {
-			CustomFieldsUpdateDeviceResponse responseObject = new CustomFieldsUpdateDeviceResponse();
+			CustomFieldsDeviceResponse responseObject = new CustomFieldsDeviceResponse();
 			responseObject.setHeader(responseHeader);
 			responseObject.setResponse(response);
 			exchange.getIn().setBody(responseObject);

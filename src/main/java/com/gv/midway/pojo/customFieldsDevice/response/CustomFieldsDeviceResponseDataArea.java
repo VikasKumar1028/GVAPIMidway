@@ -1,4 +1,4 @@
-package com.gv.midway.pojo.customFieldsUpdateDevice.response;
+package com.gv.midway.pojo.customFieldsDevice.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -7,7 +7,7 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_EMPTY)
-public class CustomFieldsUpdateDeviceResponseDataArea {
+public class CustomFieldsDeviceResponseDataArea {
 	@ApiModelProperty(value = "Order number is an unique Id of the request submitted from the source. Can be Numeric or Alphanumeric")
 	private String orderNumber;
 
@@ -36,7 +36,7 @@ public class CustomFieldsUpdateDeviceResponseDataArea {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		CustomFieldsUpdateDeviceResponseDataArea other = (CustomFieldsUpdateDeviceResponseDataArea) obj;
+		CustomFieldsDeviceResponseDataArea other = (CustomFieldsDeviceResponseDataArea) obj;
 		if (orderNumber == null) {
 			if (other.orderNumber != null)
 				return false;

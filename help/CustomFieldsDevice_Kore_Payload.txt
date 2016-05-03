@@ -1,5 +1,0 @@
-************************MidWay Request Payload
-************************Carrier Request Payload
-  
-************************Carrier Response Payload
-************************MidWay Response Payload

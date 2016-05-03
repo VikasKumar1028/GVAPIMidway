@@ -31,7 +31,7 @@ public class ChangeDeviceServicePlansRequestKore {
 
 	@SuppressWarnings("unchecked")
 	@JsonDeserialize
-	@JsonProperty("EAPCode")
+	@JsonProperty("planCode")
 	public void setPlanCode(String planCode) {
 		this.planCode = planCode;
 	}
