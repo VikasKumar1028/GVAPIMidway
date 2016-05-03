@@ -172,10 +172,20 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			DeactivateDevices[] businessPayloadDeviceArray = new DeactivateDevices[1];
 			DeactivateDevices businessPayLoadDeactivateDevices = new DeactivateDevices();
 			DeactivateDeviceId[] businessPayloadDeviceId = new DeactivateDeviceId[deactivateDevice.getDeviceIds().length];
+			DeviceId[] transactionPayloadDeviceId = new DeviceId[deactivateDevice.getDeviceIds().length];
+			
 
 			for (int i = 0; i < deactivateDevice.getDeviceIds().length; i++) {
+				
 				DeactivateDeviceId deactivateDeviceId = deactivateDevice.getDeviceIds()[i];
 				DeactivateDeviceId businesspayLoadDeactivateDeviceId = new DeactivateDeviceId();
+				
+				//Removing the falseScrap from Deactivate Device (only kind and id inserted in deviceNumber)
+				DeviceId transactionDeviceId=new DeviceId();
+				transactionDeviceId.setId(deactivateDeviceId.getId());
+				transactionDeviceId.setKind(deactivateDeviceId.getKind());
+				transactionPayloadDeviceId[i]=transactionDeviceId;
+				
 				businesspayLoadDeactivateDeviceId.setFlagScrap(deactivateDeviceId.getFlagScrap());
 				businesspayLoadDeactivateDeviceId.setId(deactivateDeviceId.getId());
 				businesspayLoadDeactivateDeviceId.setKind(deactivateDeviceId.getKind());
@@ -197,10 +207,10 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				transaction.setMidwayTransactionId(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID).toString());
 				
 				//Sorting the device id by kind and inserting into deviceNumber
-				Arrays.sort(businessPayloadDeviceId,  (DeactivateDeviceId a,DeactivateDeviceId b) -> a.getKind().compareTo(b.getKind()));
+				Arrays.sort(transactionPayloadDeviceId,  (DeviceId a,DeviceId b) -> a.getKind().compareTo(b.getKind()));
 				
 				ObjectMapper obj = new ObjectMapper();
-				String strDeviceNumber = obj.writeValueAsString(businessPayloadDeviceId);
+				String strDeviceNumber = obj.writeValueAsString(transactionPayloadDeviceId);
 				transaction.setDeviceNumber(strDeviceNumber);
 				transaction.setDevicePayload(dbPayload);
 				transaction.setMidwayStatus(IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
