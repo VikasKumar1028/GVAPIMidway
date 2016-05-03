@@ -58,7 +58,7 @@ public class KoreChangeDeviceServicePlansPreProcessor implements Processor {
 				newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
 		message.setHeader(Exchange.HTTP_PATH,
 				"/json/modifyDevicePlanForNextPeriod");
-		message.setBody(changeDeviceServicePlansRequest);
+		message.setBody(changeDeviceServicePlansRequestKore);
 
 		log.info("End::KoreChangeDeviceServicePlansPreProcessor");
 	}
