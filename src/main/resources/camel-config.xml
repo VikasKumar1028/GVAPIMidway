@@ -133,6 +133,7 @@
 		<property name="resourcePackage" value="com.gv.midway" />
 		<property name="version" value="2.0" />
 		<property name="basePath" value="http://localhost:8080/MidWay/api" />
+		<!-- <property name="basePath" value="http://mid2.gv.systems:8080/MidWay/api" />  -->
 		<property name="title" value="Swagger UI MidWay Integration" />
 		<property name="description" value="Swagger UI Integration for MidWay" />
 		<property name="contact" value="vs00419238@techmahindra.com" />
