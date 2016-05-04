@@ -960,6 +960,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		
 		Update update = new Update();
 		
+		log.info("koreCheckStatusResponse is ............"+provisioningRequestStatus);
+		
 		if(provisioningRequestStatus.equals(IConstant.KORE_CHECKSTATUS_COMPLETED))
 		{
 			
@@ -971,7 +973,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		
 		else
 		{
-			log.info("koreCheckStatusResponse is ............"+provisioningRequestStatus);
+			log.info("koreCheckStatusResponse other then completed is ............"+provisioningRequestStatus);
 			
 		}
 		

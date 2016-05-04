@@ -64,7 +64,7 @@ public class KoreCheckStatusPreProcessor implements Processor {
 			log.info("carrier status not error is........."+carrierStatus);
 		message.setHeader("callBack", "forward");
 		String carrierTransationID=transaction.getCarrierTransactionId();
-		message.setHeader(IConstant.CARRIER_TRANSACTION_ID, carrierTransationID);
+		exchange.setProperty(IConstant.CARRIER_TRANSACTION_ID, carrierTransationID);
 		net.sf.json.JSONObject obj = new net.sf.json.JSONObject();
 		obj.put("trackingNumber", carrierTransationID);
 	
@@ -78,6 +78,8 @@ public class KoreCheckStatusPreProcessor implements Processor {
 		message.setHeader(Exchange.HTTP_PATH, "/json/queryProvisioningRequestStatus");
 
 		message.setBody(obj);
+		
+		exchange.setPattern(ExchangePattern.InOut);
 		
 		}
 		

@@ -4,7 +4,7 @@ public class DKoreCheckStatus {
 	
     private String __type;
 	
-    private String trackingNumber;
+    private String requestStatus;
 	
 	private String provisioningRequestStatus;
 	
@@ -18,12 +18,12 @@ public class DKoreCheckStatus {
 		this.__type = __type;
 	}
 
-	public String getTrackingNumber() {
-		return trackingNumber;
+	public String getRequestStatus() {
+		return requestStatus;
 	}
 
-	public void setTrackingNumber(String trackingNumber) {
-		this.trackingNumber = trackingNumber;
+	public void setRequestStatus(String requestStatus) {
+		this.requestStatus = requestStatus;
 	}
 
 	public String getProvisioningRequestStatus() {
@@ -41,8 +41,8 @@ public class DKoreCheckStatus {
 		StringBuilder builder = new StringBuilder();
 		builder.append("DKoreCheckStatus [__type=");
 		builder.append(__type);
-		builder.append(", trackingNumber=");
-		builder.append(trackingNumber);
+		builder.append(", requestStatus=");
+		builder.append(requestStatus);
 		builder.append(", provisioningRequestStatus=");
 		builder.append(provisioningRequestStatus);
 		builder.append("]");
@@ -59,7 +59,7 @@ public class DKoreCheckStatus {
 				+ ((provisioningRequestStatus == null) ? 0
 						: provisioningRequestStatus.hashCode());
 		result = prime * result
-				+ ((trackingNumber == null) ? 0 : trackingNumber.hashCode());
+				+ ((requestStatus == null) ? 0 : requestStatus.hashCode());
 		return result;
 	}
 
@@ -83,10 +83,10 @@ public class DKoreCheckStatus {
 		} else if (!provisioningRequestStatus
 				.equals(other.provisioningRequestStatus))
 			return false;
-		if (trackingNumber == null) {
-			if (other.trackingNumber != null)
+		if (requestStatus == null) {
+			if (other.requestStatus != null)
 				return false;
-		} else if (!trackingNumber.equals(other.trackingNumber))
+		} else if (!requestStatus.equals(other.requestStatus))
 			return false;
 		return true;
 	}
