@@ -52,3 +52,26 @@ Payload: {"d":{"__type":"ProvisioningRequestTracking:https:\/\/PRiSMProAPI.koret
    },
    "dataArea": {"orderNumber": "1462262106660"}
 }
+
+***************////// End of End testing payload given by Surya
+
+{
+"dataArea": {
+  "mdnZipCode": "84037",
+  "eAPCode": "EAP02500797",
+  "devices": [{
+   "deviceIds": [{
+    "id": "89014103277405947081",
+    "kind": ""
+   }]
+  }]
+},
+"header": {
+  "region": "USA",
+  "timestamp": "string",
+  "organization": "GV",
+  "transactionId": "1234",
+  "sourceName": "NetSuite",
+  "applicationName": "WEB",
+  "bsCarrier": "KORE"
+}
