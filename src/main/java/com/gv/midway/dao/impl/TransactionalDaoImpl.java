@@ -1026,6 +1026,9 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 	@Override
 	public void updateNetSuiteCallBack(Exchange exchange){
+		log.info("is netsuite callback error......."+exchange.getProperty("isNetSuiteCallBackError"));
+		if(exchange.getProperty("isNetSuiteCallBackError")!=null)
+		{
 		Query searchQuery = new Query(Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)).andOperator(Criteria.where(ITransaction.DEVICE_NUMBER).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));	
 	
 		
@@ -1034,11 +1037,21 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		update.set(ITransaction.CALL_BACK_DELIVERED ,true);
 		update.set(ITransaction.LAST_TIME_STAMP_UPDATED, CommonUtil.getCurrentTimeStamp());
 		mongoTemplate.updateFirst(searchQuery, update, Transaction.class);
+		
+		}
+		
+		else
+		{
+			log.info("error while sending callback to Netsuite");
+			
+		}
 	
 	}
 	
 	@Override
 	public void updateNetSuiteCallBackError(Exchange exchange){
+		
+		log.info("net suite call back error.............");
 	
 		Query searchQuery = new Query(Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)).andOperator(Criteria.where(ITransaction.DEVICE_NUMBER).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
 		
@@ -1053,6 +1066,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		update.set(ITransaction.CALL_BACK_DELIVERED ,false);
 		update.set(ITransaction.LAST_TIME_STAMP_UPDATED, CommonUtil.getCurrentTimeStamp());
 		mongoTemplate.updateFirst(searchQuery, update, Transaction.class);
+		
+		exchange.setProperty("isNetSuiteCallBackError", true);
 	
 	}
 

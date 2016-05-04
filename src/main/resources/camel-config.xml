@@ -66,7 +66,7 @@
 
 	<!-- Defined the client endpoint to create the cxf-rs consumer -->
 	<cxf:rsClient id="rsVerizonClient"
-		address="https://thingspace.verizon.com/api/m2m/v1/" serviceClass="com.gv.midway.service.impl.VerizonService"
+		address="https://thingspace.verizon.com/api/m2m/v1/" 
 		loggingFeatureEnabled="true">
 		<cxf:providers>
 			<bean class="com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider" />
@@ -76,7 +76,6 @@
 
 
 	<cxf:rsClient id="rsVerizonTokenClient" address="https://thingspace.verizon.com/api/"
-		serviceClass="com.gv.midway.service.impl.VerizonService"
 		loggingFeatureEnabled="true">
 		<cxf:providers>
 			<bean class="com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider" />

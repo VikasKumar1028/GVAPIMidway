@@ -6,8 +6,6 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.transaction.Transaction;
 

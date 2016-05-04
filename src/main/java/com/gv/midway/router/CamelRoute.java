@@ -245,17 +245,17 @@ public class CamelRoute extends RouteBuilder {
 		
 		 from("direct:koreCheckStatusErrorSubProcess").bean(iTransactionalService,
 					"populateKoreCheckStatusErrorResponse").doTry().
-			process(new KoreCheckStatusPostProcessor()).bean(iTransactionalService,"updateNetSuiteCallBack").
+			process(new KoreCheckStatusPostProcessor()).
 			doCatch(Exception.class).
 			bean(iTransactionalService,"updateNetSuiteCallBackError").
-			 endDoTry().end();
+			doFinally().bean(iTransactionalService,"updateNetSuiteCallBack").end();
 		 
 		 from("direct:koreCheckStatusSubProcess").bean(iTransactionalService,
 					"populateKoreCheckStatusResponse").doTry().
-			process(new KoreCheckStatusPostProcessor()).bean(iTransactionalService,"updateNetSuiteCallBack").
+			process(new KoreCheckStatusPostProcessor()).
 			doCatch(Exception.class).
 			bean(iTransactionalService,"updateNetSuiteCallBackError").
-			 endDoTry().end();
+			doFinally().bean(iTransactionalService,"updateNetSuiteCallBack").end();
 		 
 
 		/**Main Change Device Service Plans Flow **/
