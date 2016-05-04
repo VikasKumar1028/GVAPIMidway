@@ -227,26 +227,36 @@ public class CamelRoute extends RouteBuilder {
 		 /**If any exception comes while calling the Kore check status then send it back to netsuite endpoint and write in Kafka Queue.**/
 		 .onException(CxfOperationException.class)
 			.handled(true)
-			.bean(iTransactionalService,
-					"populateKoreTransactionalErrorResponse")
-			.bean(iAuditService, "auditExternalExceptionResponseCall")
-			.end()
+			.to("direct:koreCheckStatusErrorSubProcess").end()
+					
 		 .process(new KoreCheckStatusPreProcessor(env)).choice().
 		 /**
 		  * Now call the netsuite end point for error and write in Kafka Queue.
 		  */
-		 when(header("callBack").isEqualTo("end")).process(new KoreCheckStatusPostProcessor()). 
+		 when(header("callBack").isEqualTo("end")).to("direct:koreCheckStatusErrorSubProcess").
 		 /**
 		  *  Call the Kore API to check the status of device
 		  */
 		 when(header("callBack").isEqualTo("forward"))
 		  .to(uriRestKoreEndPoint).unmarshal() .json(JsonLibrary.Jackson,
-		  KoreCheckStatusResponse.class).bean(iAuditService, "auditExternalResponseCall")
-			.bean(iTransactionalService,
-					"populateKoreCheckStatusResponse").
-					process(new KoreCheckStatusPostProcessor()).endChoice();
+		  KoreCheckStatusResponse.class).
+		  to("direct:koreCheckStatusSubProcess").endChoice();
 
 		
+		 from("direct:koreCheckStatusErrorSubProcess").bean(iTransactionalService,
+					"populateKoreCheckStatusErrorResponse").doTry().
+			process(new KoreCheckStatusPostProcessor()).bean(iTransactionalService,"updateNetSuiteCallBack").
+			doCatch(Exception.class).
+			bean(iTransactionalService,"updateNetSuiteCallBackError").
+			 endDoTry().end();
+		 
+		 from("direct:koreCheckStatusSubProcess").bean(iTransactionalService,
+					"populateKoreCheckStatusResponse").doTry().
+			process(new KoreCheckStatusPostProcessor()).bean(iTransactionalService,"updateNetSuiteCallBack").
+			doCatch(Exception.class).
+			bean(iTransactionalService,"updateNetSuiteCallBackError").
+			 endDoTry().end();
+		 
 
 		/**Main Change Device Service Plans Flow **/
 

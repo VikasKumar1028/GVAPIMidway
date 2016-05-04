@@ -340,16 +340,17 @@ public class DeviceDaoImpl implements IDeviceDao
 	  				
 	  			}
 	    		  
+	    	     List<BatchDeviceId> batchDeviceList = (List<BatchDeviceId>) exchange
+							.getProperty(IConstant.BULK_SUCCESS_LIST);
+					BatchDeviceId successBatchDeviceId = new BatchDeviceId();
+					successBatchDeviceId.setNetSuiteId(netSuiteId);
+					batchDeviceList.add(successBatchDeviceId);
+					
+					exchange.setProperty(IConstant.BULK_SUCCESS_LIST, batchDeviceList);
 	    	  }
 			
 
-	    	   List<BatchDeviceId> batchDeviceList = (List<BatchDeviceId>) exchange
-						.getProperty(IConstant.BULK_SUCCESS_LIST);
-				BatchDeviceId successBatchDeviceId = new BatchDeviceId();
-				successBatchDeviceId.setNetSuiteId(netSuiteId);
-				batchDeviceList.add(successBatchDeviceId);
-				
-				exchange.setProperty(IConstant.BULK_SUCCESS_LIST, batchDeviceList);
+	    	   
 		}
 
 		catch (Exception e) {

@@ -6,6 +6,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -24,7 +25,14 @@ public class CommonUtil {
 		
 		endPointList.add(IEndPoints.ACTIVATION_ENDPOINT);
 		endPointList.add(IEndPoints.DEACTIVATION_ENDPOINT);
+		endPointList.add(IEndPoints.RESTORE_ENDPOINT);
+		endPointList.add(IEndPoints.SUSPENSION_ENDPOINT);
+		
 		endPointList.add(IEndPoints.ACTIVATION_SEDA_KORE_ENDPOINT);
+		endPointList.add(IEndPoints.DEACTIVATION_SEDA_KORE_ENDPOINT);
+		endPointList.add(IEndPoints.RESTORE_SEDA_KORE_ENDPOINT);
+		endPointList.add(IEndPoints.SUSPENSION_SEDA_KORE_ENDPOINT);
+		endPointList.add(IEndPoints.REACTIVATION_SEDA_KORE_ENDPOINT);
 	}
 
 	public static String getCurrentTimeStamp() {
@@ -77,19 +85,25 @@ public class CommonUtil {
 		
 		log.info("endpoint is......."+endPoint);
 		
-		/*if(endPointList.contains(endPoint)){
+		for (Iterator<String> iterator = endPointList.iterator(); iterator.hasNext();) {
+			String element = (String) iterator.next();
 			
-			return true;
+			if (endPoint.contains(element)) {
+				
+				return true;
+			}
+			
 		}
-
-		return false;*/
-		if (endPoint.contains(IEndPoints.ACTIVATION_ENDPOINT) || endPoint.contains(IEndPoints.ACTIVATION_ENDPOINT)|| 
+		
+		return false;
+		
+		/*if (endPoint.contains(IEndPoints.ACTIVATION_ENDPOINT) || endPoint.contains(IEndPoints.DEACTIVATION_ENDPOINT)|| 
 				endPoint.contains(IEndPoints.ACTIVATION_SEDA_KORE_ENDPOINT) || endPoint.contains(IEndPoints.DEACTIVATION_SEDA_KORE_ENDPOINT) || endPoint.contains(IEndPoints.REACTIVATION_SEDA_KORE_ENDPOINT)) {
 
 			return true;
 
 		} else
 
-			return false;
+			return false;*/
 	}
 }

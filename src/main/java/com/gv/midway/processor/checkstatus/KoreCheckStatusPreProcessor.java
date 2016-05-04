@@ -40,6 +40,10 @@ public class KoreCheckStatusPreProcessor implements Processor {
 		
 		String carrierStatus=transaction.getCarrierStatus();
 		
+		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,transaction.getDeviceNumber());
+
+		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_ID,transaction.getMidwayTransactionId());
+		
 		/***
 		 * carrier status as Error . CallBack the Netsuite end point here and write it in Kafka Queue.
 		 */
@@ -64,9 +68,7 @@ public class KoreCheckStatusPreProcessor implements Processor {
 		net.sf.json.JSONObject obj = new net.sf.json.JSONObject();
 		obj.put("trackingNumber", carrierTransationID);
 	
-		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,transaction.getDeviceNumber());
-
-		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_ID,transaction.getMidwayTransactionId());
+		
 		message.setHeader("callBack", "forward");
 		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");

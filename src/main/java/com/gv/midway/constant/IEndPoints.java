@@ -6,11 +6,18 @@ public interface IEndPoints {
 	
 	public final String DEACTIVATION_ENDPOINT="deactivateDevice";
 	
+	public final String RESTORE_ENDPOINT = "restoreDevice";
+	
 	public final String SUSPENSION_ENDPOINT = "suspendDevice";
 	
 	public final String ACTIVATION_SEDA_KORE_ENDPOINT="koreSedaActivation";
 	
 	public final String DEACTIVATION_SEDA_KORE_ENDPOINT="koreSedaDeactivation";
-	public final String REACTIVATION_SEDA_KORE_ENDPOINT="koreSedaReActivation";
+	
+	public final String REACTIVATION_SEDA_KORE_ENDPOINT="koreSedaReactivation";
+	
+	public final String RESTORE_SEDA_KORE_ENDPOINT = "koreSedaRestore";
+	
+	public final String SUSPENSION_SEDA_KORE_ENDPOINT = "koreSedaSuspend";
 
 }

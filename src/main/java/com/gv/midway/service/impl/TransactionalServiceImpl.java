@@ -92,5 +92,22 @@ public class TransactionalServiceImpl implements ITransactionalService {
 		// TODO Auto-generated method stub
 		transactionalDao.populateKoreCheckStatusResponse(exchange);
 	}
+	
+	@Override
+	public void populateKoreCheckStatusErrorResponse(Exchange exchange){
+		transactionalDao.populateKoreCheckStatusErrorResponse(exchange);
+	}
+	
+	
+	@Override
+	public void updateNetSuiteCallBack(Exchange exchange) {
+		// TODO Auto-generated method stub
+		transactionalDao.updateNetSuiteCallBack(exchange);
+	}
+	
+	@Override
+	public void updateNetSuiteCallBackError(Exchange exchange){
+		transactionalDao.updateNetSuiteCallBackError(exchange);
+	}
 
 }

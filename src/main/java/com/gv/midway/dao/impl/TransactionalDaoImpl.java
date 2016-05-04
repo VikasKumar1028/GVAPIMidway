@@ -386,7 +386,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		Update update = new Update();
 
-		update.set(ITransaction.CARRIER_ERROR_DESCRIPTION, errorResponseBody);
+		update.set(ITransaction.CARRIER_ERROR_DESCRIPTION, errorResponsePayload.getErrorMessage());
 
 		update.set(ITransaction.MIDWAY_STATUS, IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
 		update.set(ITransaction.CARRIER_STATUS, IConstant.CARRIER_TRANSACTION_STATUS_ERROR);
@@ -964,6 +964,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		{
 			
 			update.set(ITransaction.CARRIER_STATUS, IConstant.CARRIER_TRANSACTION_STATUS_SUCCESS);
+			update.set(ITransaction.MIDWAY_STATUS, IConstant.MIDWAY_TRANSACTION_STATUS_SUCCESS);
 			update.set(ITransaction.CALL_BACK_PAYLOAD, koreCheckStatusResponse);
 			update.set(ITransaction.CALL_BACK_RECEIVED, true);
 		}
@@ -979,6 +980,78 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		mongoTemplate.updateFirst(searchQuery, update, Transaction.class);
 		
 	}
+	
+	
+	@Override
+	public void populateKoreCheckStatusErrorResponse(Exchange exchange) {
+		// TODO Auto-generated method stub
+		
+		
+		Query searchQuery = new Query(Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)).andOperator(Criteria.where(ITransaction.DEVICE_NUMBER).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
 
+		Update update = new Update();
+		
+		CxfOperationException exception = (CxfOperationException) exchange.getProperty(Exchange.EXCEPTION_CAUGHT);
+
+		/**
+		 * To check whether exception comes while calling the getcheckStatus for KORE or it was already error when sent for the device provisioning request.
+		 */
+		if(exception!=null){
+			String errorResponseBody = exception.getResponseBody();
+			ObjectMapper mapper = new ObjectMapper();
+			KoreErrorResponse errorResponsePayload = null;
+			try {
+				errorResponsePayload = mapper.readValue(errorResponseBody, KoreErrorResponse.class);
+			} 
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			update.set(ITransaction.CARRIER_ERROR_DESCRIPTION, errorResponsePayload.getErrorMessage());
+			update.set(ITransaction.CALL_BACK_PAYLOAD, errorResponsePayload);
+		}
+		
+
+		update.set(ITransaction.MIDWAY_STATUS, IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
+		update.set(ITransaction.CARRIER_STATUS, IConstant.CARRIER_TRANSACTION_STATUS_ERROR);
+		
+		update.set(ITransaction.LAST_TIME_STAMP_UPDATED, CommonUtil.getCurrentTimeStamp());
+		mongoTemplate.updateFirst(searchQuery, update, Transaction.class);
+
+		
+		
+	}
+
+	@Override
+	public void updateNetSuiteCallBack(Exchange exchange){
+		Query searchQuery = new Query(Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)).andOperator(Criteria.where(ITransaction.DEVICE_NUMBER).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));	
+	
+		
+		Update update = new Update();
+
+		update.set(ITransaction.CALL_BACK_DELIVERED ,true);
+		update.set(ITransaction.LAST_TIME_STAMP_UPDATED, CommonUtil.getCurrentTimeStamp());
+		mongoTemplate.updateFirst(searchQuery, update, Transaction.class);
+	
+	}
+	
+	@Override
+	public void updateNetSuiteCallBackError(Exchange exchange){
+	
+		Query searchQuery = new Query(Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)).andOperator(Criteria.where(ITransaction.DEVICE_NUMBER).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
+		
+		CxfOperationException exception = (CxfOperationException) exchange.getProperty(Exchange.EXCEPTION_CAUGHT);
+
+		String errorResponseBody = exception.getResponseBody();
+		
+		Update update = new Update();
+
+		
+		update.set(ITransaction.CALL_BACK_FAILURE_TO_NETSUITE_REASON ,errorResponseBody);
+		update.set(ITransaction.CALL_BACK_DELIVERED ,false);
+		update.set(ITransaction.LAST_TIME_STAMP_UPDATED, CommonUtil.getCurrentTimeStamp());
+		mongoTemplate.updateFirst(searchQuery, update, Transaction.class);
+	
+	}
 
 }
