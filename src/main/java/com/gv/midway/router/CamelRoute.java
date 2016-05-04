@@ -272,10 +272,10 @@ public class CamelRoute extends RouteBuilder {
 			//Calling the change Device ServicePlans Flow
 			changeDeviceServicePlans();
 			
-			//Calling the change Device ServicePlans Flow
+			//Calling the Device Connection Status Flow
 			deviceConnectionStatus();
 
-			//Calling the change Device ServicePlans Flow
+			//Calling the Device in Session Flow
 			deviceSessionBeginEndInfo();
 			
 			//Calling the getDeviceInfomrationFromCarrier
@@ -299,9 +299,8 @@ public class CamelRoute extends RouteBuilder {
 	 * 
 	 */
 	public void activateDevice() {
-		// ***** DEVICE ACTIVATION BEGIN
 
-		// Main: Device Activation Flow
+		// Begin:Activate Devices
 
 		from("direct:activateDevice").process(new HeaderProcessor()).choice()
 				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
@@ -323,6 +322,7 @@ public class CamelRoute extends RouteBuilder {
 				.to("direct:VerizonActivationFlow1").endChoice().end()
 				.to("log:input").endChoice().end();
 
+		// Verizon Flow-1
 		from("direct:VerizonActivationFlow1")
 				.doTry()
 				.to("direct:VerizonActivationFlow2")
@@ -333,7 +333,7 @@ public class CamelRoute extends RouteBuilder {
 				.process(new VerizonGenericExceptionProcessor(env)).endDoTry()
 				.end();
 
-		// SubFlow: Device Verizon Activation
+		// Verizon Flow-2
 		from("direct:VerizonActivationFlow2")
 				.errorHandler(noErrorHandler())
 				// REMOVED Audit will store record 3 times in case of failure
@@ -349,14 +349,14 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iAuditService, "auditExternalResponseCall")
 				.process(new VerizonActivateDevicePostProcessor(env));
 
-		// SubFlow: Device Kore Activation
+		// Kore Flow-1
 		from("direct:processActivateKoreTransaction")
 				.log("Wire Tap Thread activation")
 				.bean(iTransactionalService, "populateActivateDBPayload")
 				.split().method("deviceSplitter").recipientList()
 				.method("koreDeviceServiceRouter");
 
-		// SubFlow: Device Kore Acitvation- SEDA CALL
+		// Kore SEDA FLOW
 		from("seda:koreSedaActivation?concurrentConsumers=5")
 				.onException(CxfOperationException.class)
 				.handled(true)
@@ -373,9 +373,9 @@ public class CamelRoute extends RouteBuilder {
 						"populateKoreTransactionalResponse")
 				.bean(iAuditService, "auditExternalResponseCall");
 
-		// ***** DEVICE ACTIVATION END
+		// End:Activate Devices
 	}
-	
+
 	/**
 	 * Deactivate  Flow for Verizon and Kore
 	 * 
@@ -383,21 +383,16 @@ public class CamelRoute extends RouteBuilder {
 
 	public void deactivateDevice() {
 
-		// Main: Device Deactivate Flow
-		
-		from("direct:deactivateDevice").process(new HeaderProcessor())
-				.choice()
+		// Begin:Deactivate Devices
+
+		from("direct:deactivateDevice").process(new HeaderProcessor()).choice()
 				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
-				.choice()
-				.when(header("derivedCarrierName").isEqualTo("KORE"))
+				.choice().when(header("derivedCarrierName").isEqualTo("KORE"))
 				.process(new StubKoreDeactivateDeviceProcessor())
 				.to("log:input")
 				.when(header("derivedCarrierName").isEqualTo("VERIZON"))
 				.process(new StubVerizonDeactivateDeviceProcessor())
-				.to("log:input")
-				.endChoice()
-				.otherwise()
-				.choice()
+				.to("log:input").endChoice().otherwise().choice()
 				.when(header("derivedCarrierName").isEqualTo("KORE"))
 				.wireTap("direct:processDeactivateKoreTransaction")
 				.process(new KoreDeactivateDevicePostProcessor(env))
@@ -407,10 +402,10 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iSessionService, "setContextTokenInExchange")
 				.bean(iTransactionalService, "populateDeactivateDBPayload")
 				.bean(iAuditService, "auditExternalRequestCall")
-				.to("direct:VerizonDeactivationFlow1")
-				.endChoice().end().to("log:input").endChoice().end();
+				.to("direct:VerizonDeactivationFlow1").endChoice().end()
+				.to("log:input").endChoice().end();
 
-		// SubFlow: Device Verizon DeActivation
+		// Verizon Flow-1
 
 		from("direct:VerizonDeactivationFlow1")
 				.doTry()
@@ -422,7 +417,7 @@ public class CamelRoute extends RouteBuilder {
 				.process(new VerizonGenericExceptionProcessor(env)).endDoTry()
 				.end();
 
-		// SubFlow: Device Verizon DeActivation
+		// Verizon Flow-2
 
 		from("direct:VerizonDeactivationFlow2")
 				.errorHandler(noErrorHandler())
@@ -442,7 +437,7 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iAuditService, "auditExternalResponseCall")
 				.process(new VerizonDeactivateDevicePostProcessor(env));
 
-		// SubFlow: Device Kore DeActivation
+		// Kore Flow-1
 
 		from("direct:processDeactivateKoreTransaction")
 				.log("Wire Tap Thread deactivation")
@@ -450,7 +445,8 @@ public class CamelRoute extends RouteBuilder {
 				.split().method("deviceSplitter").recipientList()
 				.method("koreDeviceServiceRouter");
 
-		// SubFlow: Device Kore DeAcitvation- SEDA CALL
+		// Kore SEDA FLOW
+
 		from("seda:koreSedaDeactivation?concurrentConsumers=5")
 				.onException(CxfOperationException.class)
 				.handled(true)
@@ -467,12 +463,12 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iTransactionalService,
 						"populateKoreTransactionalResponse");
 
-		// End: Device Deactivate Flow
+		// End:Deactivate Devices
 	}
 	
 	public void restoreDevice() {
 		
-		// Main: Restore Device Flow
+		 //Begin:Restore Devices 
 
 		from("direct:restoreDevice").process(new HeaderProcessor()).choice()
 				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
@@ -494,6 +490,8 @@ public class CamelRoute extends RouteBuilder {
 				.to("direct:VerizonRestoreFlow1").endChoice().end()
 				.to("log:input").endChoice().end();
 
+		 //Verizon Flow-1
+		
 		from("direct:VerizonRestoreFlow1")
 				.doTry()
 				.to("direct:VerizonRestoreFlow2")
@@ -504,7 +502,8 @@ public class CamelRoute extends RouteBuilder {
 				.process(new VerizonGenericExceptionProcessor(env)).endDoTry()
 				.end();
 
-		// SubFlow: Device Verizon Restore
+		 //Verizon Flow-2
+		
 		from("direct:VerizonRestoreFlow2")
 				.errorHandler(noErrorHandler())
 				// REMOVED Audit will store record 3 times in case of failure
@@ -520,14 +519,16 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iAuditService, "auditExternalResponseCall")
 				.process(new VerizonRestoreDevicePostProcessor(env));
 
-		// SubFlow: Device Kore Restore
+		 //Kore Flow-1
+		
 		from("direct:processRestoreKoreTransaction")
 				.log("Wire Tap Thread restore")
 				.bean(iTransactionalService, "populateRestoreDBPayload")
 				.split().method("deviceSplitter").recipientList()
 				.method("koreDeviceServiceRouter");
 
-		// SubFlow: Device Kore Restore- SEDA CALL
+		 //Kore SEDA FLOW
+		
 		from("seda:koreSedaRestore?concurrentConsumers=5")
 				.onException(CxfOperationException.class)
 				.handled(true)
@@ -544,13 +545,13 @@ public class CamelRoute extends RouteBuilder {
 						"populateKoreTransactionalResponse")
 				.bean(iAuditService, "auditExternalResponseCall");
 
-		// ***** DEVICE Restore END
-
+		 //End:Restore Devices 
 	}
 
 	public void suspendDevice() {
-		
-		// Main: Device Suspension Flow
+
+		// Begin:Suspend Devices
+
 		from("direct:suspendDevice").process(new HeaderProcessor()).choice()
 				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
 				.choice().when(header("derivedCarrierName").isEqualTo("KORE"))
@@ -571,7 +572,7 @@ public class CamelRoute extends RouteBuilder {
 
 				.endChoice().end().to("log:input").endChoice().end();
 
-		// SubFlow: Device Verizon Suspension
+		// Verizon Flow-1
 
 		from("direct:VerizonSuspendFlow1")
 				.doTry()
@@ -583,7 +584,7 @@ public class CamelRoute extends RouteBuilder {
 				.process(new VerizonGenericExceptionProcessor(env)).endDoTry()
 				.end();
 
-		// SubFlow: Device Verizon Suspension
+		// Verizon Flow-2
 
 		from("direct:VerizonSuspendFlow2")
 				.errorHandler(noErrorHandler())
@@ -603,7 +604,7 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iAuditService, "auditExternalResponseCall")
 				.process(new VerizonSuspendDevicePostProcessor(env));
 
-		// SubFlow: Device Kore Suspension
+		// Kore Flow-1
 
 		from("direct:processSuspendKoreTransaction")
 				.log("Wire Tap Thread suspension")
@@ -611,7 +612,8 @@ public class CamelRoute extends RouteBuilder {
 				.split().method("deviceSplitter").recipientList()
 				.method("koreDeviceServiceRouter");
 
-		// SubFlow: Device Kore Suspension- SEDA CALL
+		// Kore SEDA FLOW
+		
 		from("seda:koreSedaSuspend?concurrentConsumers=5")
 				.onException(CxfOperationException.class)
 				.handled(true)
@@ -629,11 +631,13 @@ public class CamelRoute extends RouteBuilder {
 						"populateKoreTransactionalResponse")
 				.process(new KoreSuspendDevicePostProcessor());
 
-		// ***** DEVICE Suspension END
+		// End:Suspend Devices
 
 	}
 
-	public void reactivateDevice() {// Main: Device ReActivation Flow
+	public void reactivateDevice() {
+
+		// Begin:Reactivate Devices
 
 		from("direct:reactivateDevice").process(new HeaderProcessor()).choice()
 				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
@@ -646,7 +650,7 @@ public class CamelRoute extends RouteBuilder {
 				.process(new KoreReactivateDevicePostProcessor(env))
 				.endChoice().end().to("log:input").endChoice().end();
 
-		// SubFlow: Device Kore Reactivation
+		// Kore Flow-1
 
 		from("direct:processReactivateKoreTransaction")
 				.log("Wire Tap Thread reactivation")
@@ -654,7 +658,7 @@ public class CamelRoute extends RouteBuilder {
 				.split().method("deviceSplitter").recipientList()
 				.method("koreDeviceServiceRouter");
 
-		// SubFlow: Device Kore Reactivation- SEDA CALL
+		// Kore SEDA FLOW
 
 		from("seda:koreSedaReactivation?concurrentConsumers=5")
 				.onException(CxfOperationException.class)
@@ -672,13 +676,13 @@ public class CamelRoute extends RouteBuilder {
 						"populateKoreTransactionalResponse")
 				.bean(iAuditService, "auditExternalResponseCall");
 
-		// ***** DEVICE REACTIVATION END
+		// End:Reactivate Devices
 
 	}
 
 	public void customeFields() {
 
-		// Main:CustomeFields Devices
+		// Begin:CustomeFields Devices
 
 		from("direct:customeFields").process(new HeaderProcessor()).choice()
 				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
@@ -700,10 +704,9 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iTransactionalService, "populateCustomeFieldsDBPayload")
 				.bean(iAuditService, "auditExternalRequestCall")
 				.to("direct:VerizoncustomeFieldsFlow1")
-
 				.endChoice().end().to("log:input").endChoice().end();
 
-		// Flow-1
+		// Verizon Flow-1		
 		from("direct:VerizoncustomeFieldsFlow1")
 				.doTry()
 				.to("direct:VerizoncustomeFieldsFlow2")
@@ -714,7 +717,7 @@ public class CamelRoute extends RouteBuilder {
 				.process(new VerizonGenericExceptionProcessor(env)).endDoTry()
 				.end();
 
-		// Flow-2
+		// Verizon Flow-2
 		from("direct:VerizoncustomeFieldsFlow2")
 				.errorHandler(noErrorHandler())
 
@@ -728,7 +731,7 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iAuditService, "auditExternalResponseCall")
 				.process(new VerizonCustomFieldsPostProcessor(env));
 
-		// SubFlow: ChangeCustomeFileds
+		// Kore Flow-1
 
 		from("direct:processcustomeFieldsKoreTransaction")
 				.log("Wire Tap Thread customeField")
@@ -736,7 +739,7 @@ public class CamelRoute extends RouteBuilder {
 				.split().method("deviceSplitter").recipientList()
 				.method("koreDeviceServiceRouter");
 
-		// SubFlow: ChangeCustomeFileds SEDA CALL
+		// Kore SEDA FLOW
 
 		from("seda:koreSedacustomeFields?concurrentConsumers=5")
 				.onException(CxfOperationException.class)
@@ -761,8 +764,8 @@ public class CamelRoute extends RouteBuilder {
 	}
 
 	public void changeDeviceServicePlans() {
-		
-		// Main: Change Device ServicePlans
+
+		// Change Device ServicePlans
 
 		from("direct:changeDeviceServicePlans")
 				.process(new HeaderProcessor())
@@ -795,7 +798,8 @@ public class CamelRoute extends RouteBuilder {
 				.to("direct:VerizonchangeDeviceServicePlansFlow1").endChoice()
 				.end().to("log:input").endChoice().end();
 
-		// Flow-1
+		// Verizon Flow-1
+
 		from("direct:VerizonchangeDeviceServicePlansFlow1")
 				.doTry()
 				.to("direct:VerizonchangeDeviceServicePlansFlow2")
@@ -806,7 +810,8 @@ public class CamelRoute extends RouteBuilder {
 				.process(new VerizonGenericExceptionProcessor(env)).endDoTry()
 				.end();
 
-		// Flow-2
+		// Verizon Flow-2
+
 		from("direct:VerizonchangeDeviceServicePlansFlow2")
 				.errorHandler(noErrorHandler())
 				.bean(iSessionService, "setContextTokenInExchange")
@@ -819,7 +824,7 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iAuditService, "auditExternalResponseCall")
 				.process(new VerizonChangeDeviceServicePlansPostProcessor(env));
 
-		// SubFlow: ChangeDeviceServicePlan
+		// Kore Flow-1
 
 		from("direct:processchangeDeviceServicePlansKoreTransaction")
 				.log("Wire Tap Thread ChangeDeviceServicePlans")
@@ -828,7 +833,8 @@ public class CamelRoute extends RouteBuilder {
 				.method("deviceSplitter").recipientList()
 				.method("koreDeviceServiceRouter");
 
-		// SubFlow:ChangeDeviceServicePlan- SEDA CALL
+		// Kore SEDA FLOW
+
 		from("seda:koreSedachangeDeviceServicePlans?concurrentConsumers=5")
 				.onException(CxfOperationException.class)
 				.handled(true)
@@ -846,15 +852,15 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iAuditService, "auditExternalResponseCall")
 				.bean(iTransactionalService,
 						"populateKoreTransactionalResponse");
-		
+
 		// End: Change Device ServicePlans
 
 
 	}
 
 	public void deviceConnectionStatus() {
-		
-		// **** Device in Session or not End *****//
+
+		// Begin:Device Connection Status
 
 		from("direct:deviceConnectionStatus").process(new HeaderProcessor())
 				.choice()
@@ -866,12 +872,16 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iAuditService, "auditExternalRequestCall")
 				.to("direct:DeviceConnectionStatusFlow1").endChoice().end();
 
+		// Verizon Flow-1
+
 		from("direct:DeviceConnectionStatusFlow1").doTry()
 				.to("direct:DeviceConnectionStatusFlow2")
 				.doCatch(CxfOperationException.class)
 				.bean(iAuditService, "auditExternalExceptionResponseCall")
 				.process(new VerizonGenericExceptionProcessor(env)).endDoTry()
 				.end();
+
+		// Verizon Flow-2
 
 		from("direct:DeviceConnectionStatusFlow2")
 				.errorHandler(noErrorHandler())
@@ -888,13 +898,13 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iAuditService, "auditExternalResponseCall")
 				.process(new VerizonDeviceConnectionStatusPostProcessor(env));
 
-		// **** Device in Session or not End *****//
+		// End:Device Connection Status
 
 	}
-	
+
 	public void deviceSessionBeginEndInfo() {
 
-		// **** Device Session Begin End Info Start *****//
+		// Begin: Device Session Begin End
 
 		from("direct:deviceSessionBeginEndInfo").process(new HeaderProcessor())
 				.choice()
@@ -906,13 +916,14 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iAuditService, "auditExternalRequestCall")
 				.to("direct:DeviceSessionBeginEndInfoFlow1").endChoice().end();
 
+		// Verizon Flow-1
 		from("direct:DeviceSessionBeginEndInfoFlow1").doTry()
 				.to("direct:DeviceSessionBeginEndInfoFlow2")
 				.doCatch(CxfOperationException.class)
 				.bean(iAuditService, "auditExternalExceptionResponseCall")
 				.process(new VerizonGenericExceptionProcessor(env)).endDoTry()
 				.end();
-
+		// Verizon Flow-2
 		from("direct:DeviceSessionBeginEndInfoFlow2")
 				.errorHandler(noErrorHandler())
 				// REMOVED Audit will store record 3 times in case of failure
@@ -929,13 +940,12 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iAuditService, "auditExternalResponseCall")
 				.process(new VerizonDeviceSessionBeginEndInfoPostProcessor(env));
 
-		// **** Device Session Begin End Info End *****//
+		// End: Device Session Begin End
 	}
-	
-	
+
 	/**
-	 * Get DeviceInformation from Carrier and update in MasterDB and return
-	 * back to Calling System.
+	 * Get DeviceInformation from Carrier and update in MasterDB and return back
+	 * to Calling System.
 	 **/
 	public void deviceInformationCarrier()
 	{
