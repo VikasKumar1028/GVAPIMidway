@@ -26,7 +26,11 @@ import com.gv.midway.pojo.verizon.DeviceId;
 import com.gv.midway.pojo.verizon.Devices;
 
 public class DeviceTestData extends Header {
-    protected ActivateDeviceRequest expectHeader;
+	//for header Testing
+    protected Header expectedHeaderBsCarrier;
+    protected Header expectedHeaderParameters;
+    protected Header expectedHeaderSource;
+    
     protected ActivateDeviceRequest expectedActivateDeviceRequest;
     protected DeviceInformationRequest expectDeviceInfo;
     protected DeactivateDeviceRequest expectDeactiveDevice;
@@ -36,55 +40,89 @@ public class DeviceTestData extends Header {
     protected SuspendDeviceRequest expectSuspendDevice; 
     Exchange exchange;
     Header header =new Header();    	
-    public void setExpectedHeader(ActivateDeviceRequest activateDeviceRequest) {
-        this.expectHeader = activateDeviceRequest;
+    
+    public void setExpectedHeaderBsCarrier(Header header) {
+        this.expectedHeaderBsCarrier = header;
+    }
+    
+    public void setExpectedHeaderParameters(Header header) {
+        this.expectedHeaderParameters = header;
+    }
+    
+    public void setExpectedHeaderSource(Header header) {
+        this.expectedHeaderSource = header;
     }
  
-    public void verifyHeaderData() {
-    	ActivateDeviceRequest req= new ActivateDeviceRequest(); 
-    	  
-    	   header.setApplicationName("WEB");
-           header.setTimestamp("2016-03-08T21:49:45");
-   	       header.setOrganization("Grant Victor");
-   		   header.setSourceName("KORE");
-   		   header.setTransactionId("cde2131ksjd");
-   		   header.setBsCarrier("KORE"); 
-    	   header.setRegion("USA");
-    	   req.setHeader(header);   
-    	  
-    	    /*ActivateDeviceRequest request = (ActivateDeviceRequest) exchange
-    				.getIn().getBody(ActivateDeviceRequest.class);*/
-    	   
-    	    
-    	     System.out.println("Expected Header----------------" +expectHeader.getHeader()); 
-    	     System.out.println("Delivered Request is----------------" +req.getHeader()); 
-    	     
-    	    //check for different no. of and value of parameters
-    	     if(!expectHeader.getHeader().equals(req.getHeader())){
-    	    throw new AssertionError("Header Parameters are Different");
+   //check for header Parameters-it can not be blank
+    public  void verifyHeaderParameters(){
+    	
+    	 //null pointer check
+    	System.out.println("Header parameter Values are:"+expectedHeaderParameters);
+	    
+    	//check for Reason
+    	if(expectedHeaderParameters.getRegion()==null  || expectedHeaderParameters.getRegion().equals(""))
+	     	{
+     		 throw new AssertionError("Region can not be Blank.");
+     	
+     }
+	     
+	    //check for Application name 
+    	if(expectedHeaderParameters.getApplicationName()==null  || expectedHeaderParameters.getApplicationName().equals(""))
+	     	{
+	     		 throw new AssertionError("Application Name can not be Blank.");
+	     	
+	       }
+	     
+    	//check for Organization
+	     if(expectedHeaderParameters.getOrganization()==null  || expectedHeaderParameters.getOrganization().equals(""))
+	     	{
+	     		 throw new AssertionError("Organisation Name can not be Blank.");
+	     	
+	     }
+	    	
+	    /* //check for Time stamp
+	     if(expectedHeaderParameters.getTimestamp()==null  ||expectedHeaderParameters.getTimestamp().equals(""))
+	     	{
+	     		 throw new AssertionError("Time Stamp is not defind");
+	     	
+	     }*/
+	    	  
+	     //check for Transaction Id
+	     if(expectedHeaderParameters.getTransactionId()==null  || expectedHeaderParameters.getTransactionId().equals(""))
+		     	{
+		     		 throw new AssertionError("Transaction Id  can not be Blank.");
+		     	
+		     }
+    }
+    public void verifyHeaderSource() {
+    	
+    	    //check for Header Source Name-it can not be blank
+    	if(expectedHeaderSource.getSourceName()==null || expectedHeaderSource.getSourceName().equals(""))
+    	{
+    		 throw new AssertionError("Source Name can not be Blank.");
+    	}
+    	//check source name for Verizon and Kore
+    	     if(!expectedHeaderSource.getSourceName().equals("NetSuit")){
+    	    		 throw new AssertionError("Invalid Source Name");
         }
-             
-    	     //null pointer check
-    	     if(req.getHeader().getApplicationName()==null || req.getHeader().getBsCarrier()==null ||
-    	    	req.getHeader().getOrganization()==null || req.getHeader().getRegion()==null ||
-    	    	req.getHeader().getSourceName()==null || req.getHeader().getTimestamp()==null ||
-    	    	req.getHeader().getTransactionId()==null ){
-    	    	 throw new AssertionError("Header Parameters can not be Blank");
-    	     }
-    	    
-    	    //check for  source name
-    	     if(!expectHeader.getHeader().getSourceName().equals(req.getHeader().getSourceName())){
-    	    	    // if (req == null || expectHeader.getHeader() != req.getHeader()) {
-    	            throw new AssertionError("Source Name is Different");
-    	        }
-    	     
-    	     //check for organization
-    	     if(!expectHeader.getHeader().getOrganization().equals(req.getHeader().getOrganization())){
-    	    	    // if (req == null || expectHeader.getHeader() != req.getHeader()) {
-    	            throw new AssertionError("Organization is Different");
-    	        }
-       }
-
+             }
+    
+    
+    public void verifyHeaderBsCarrier() {
+    	
+	    //check for Header Carrier-it can not be blank
+	if(expectedHeaderBsCarrier.getBsCarrier()==null || expectedHeaderBsCarrier.getBsCarrier().equals(""))
+	{
+		 throw new AssertionError("Bs Carrier can not be Blank.");
+	}
+	//check Bs Carrier for Verizon and Kore
+	     if(!expectedHeaderBsCarrier.getBsCarrier().equals("VERIZON") && !expectedHeaderBsCarrier.getBsCarrier().equals("KORE")){
+	    throw new AssertionError("Invalid Bs Carrier.");
+    }
+    }
+    
+    
+    
    //set expected dummy data to Device Information request
     public void setExpectedDeviceInformation(DeviceInformationRequest deviceInformationRequest) {
 		// TODO Auto-generated method stub
@@ -197,7 +235,7 @@ public class DeviceTestData extends Header {
 		 		 
 		 		DeactivateDeviceId deactivateDeviceId= new DeactivateDeviceId();
 		 		
-		 		    deactivateDeviceId.setId("89014103277405946190");
+		 		deactivateDeviceId.setId("89014103277405946190");
 		 		deactivateDeviceId.setKind("ghgjg");
 		 		
 		 		DeActivateDeviceIdArray[0] = deactivateDeviceId;
@@ -228,6 +266,7 @@ public class DeviceTestData extends Header {
 			     {	
 			    	 throw new AssertionError("Device Id is Different");
 			     }
+			     
 	}
 
 	public void setExpectedActivateDeviceResponse(ActivateDeviceResponse activateDeviceResponse) {
@@ -410,5 +449,6 @@ public class DeviceTestData extends Header {
 			    	 throw new AssertionError("Device Id is Different");
 			     }
 	}
+
 	
 }
