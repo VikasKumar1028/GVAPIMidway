@@ -28,6 +28,7 @@ public interface IConstant {
 	static String BSCARRIER="bsCarrier";
 	static String AUDIT_TRANSACTION_ID="com.gv.midway.audit.TransactionID";
 	static String MIDWAY_TRANSACTION_ID="MidwayTransactionId";
+	static String CARRIER_TRANSACTION_ID="CarrierTransactionId";
 	
 	static String MIDWAY_CALLBACK_CARRIER_STATUS_SUCCESS="Success";
 	static String MIDWAY_CALLBACK_DELIVERED_FAILED="Fail";
@@ -58,6 +59,12 @@ public interface IConstant {
 	static String NO_RECORD = "No Record Found";
 	static String EVENT_START = "Start";
 	static String EVENT_STOP = "Stop";
+	
+	
+	static String KORE_CHECKSTATUS_PENDING="Pending";
+	static String KORE_CHECKSTATUS_COMPLETED="Completed";
+	
+	
 	
 	
 			

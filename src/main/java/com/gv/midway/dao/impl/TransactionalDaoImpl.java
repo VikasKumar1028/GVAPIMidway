@@ -14,7 +14,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
-
 import com.esotericsoftware.kryo.Kryo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,6 +33,7 @@ import com.gv.midway.pojo.changeDeviceServicePlans.request.ChangeDeviceServicePl
 import com.gv.midway.pojo.changeDeviceServicePlans.request.ChangeDeviceServicePlansRequestDataArea;
 import com.gv.midway.pojo.customFieldsDevice.request.CustomFieldsDeviceRequest;
 import com.gv.midway.pojo.customFieldsDevice.request.CustomFieldsDeviceRequestDataArea;
+import com.gv.midway.pojo.checkstatus.kore.KoreCheckStatusResponse;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceId;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequestDataArea;
@@ -338,6 +338,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 				update.set(ITransaction.CALL_BACK_PAYLOAD, responsePayload);
 				update.set(ITransaction.CARRIER_ERROR_DESCRIPTION, responsePayload.getErrorMessage());
+				update.set(ITransaction.MIDWAY_STATUS, IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
 				update.set(ITransaction.CARRIER_STATUS, IConstant.CARRIER_TRANSACTION_STATUS_ERROR);
 				update.set(ITransaction.LAST_TIME_STAMP_UPDATED, CommonUtil.getCurrentTimeStamp());
 
@@ -411,7 +412,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			Query searchQuery = new Query(Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)));
 
 			Update update = new Update();
-			update.set(ITransaction.CALL_BACK_PAYLOAD, responsePayload);
+			//update.set(ITransaction.CALL_BACK_PAYLOAD, responsePayload);
 			update.set(ITransaction.CARRIER_ERROR_DESCRIPTION, responsePayload.getErrorMessage());
 			update.set(ITransaction.CALL_BACK_PAYLOAD, responsePayload);
 			update.set(ITransaction.MIDWAY_STATUS, IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
@@ -455,7 +456,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 				log.info("device number in Kore is.........." + exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER));
 				Update update = new Update();
-				update.set(ITransaction.MIDWAY_STATUS, IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
+				update.set(ITransaction.MIDWAY_STATUS, IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
 				update.set(ITransaction.CALL_BACK_PAYLOAD, IConstant.MIDWAY_CONNECTION_ERROR);
 				update.set(ITransaction.CARRIER_ERROR_DESCRIPTION, IConstant.MIDWAY_CONNECTION_ERROR);
 
@@ -488,19 +489,23 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 	public void populatePendingKoreCheckStatus(Exchange exchange) {
 		// TODO Auto-generated method stub
-		/*
-		 * Query searchPendingCheckStatusQuery = new Query(Criteria
-		 * .where(ITransaction.CARRIER_STATUS)
-		 * .is(IConstant.CARRIER_TRANSACTION_STATUS_PENDING
-		 * ).andOperator(Criteria
-		 * .where(ITransaction.MIDWAY_STATUS).is(IConstant.
-		 * MIDWAY_TRANSACTION_STATUS_PENDING)) .andOperator(
-		 * Criteria.where(ITransaction.CARRIER_NAME).is("KORE")));
-		 */
-
-		Query searchPendingCheckStatusQuery = new Query(Criteria.where(ITransaction.CARRIER_NAME).is("KORE").andOperator(Criteria.where(ITransaction.CARRIER_STATUS).is(IConstant.CARRIER_TRANSACTION_STATUS_PENDING).orOperator(Criteria.where(ITransaction.CARRIER_STATUS).is(IConstant.CARRIER_TRANSACTION_STATUS_ERROR))).andOperator(Criteria.where(ITransaction.MIDWAY_STATUS).is(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR)));
-
+		
+		
+		/*Query searchPendingCheckStatusQuery =  new Query(Criteria.where(ITransaction.CARRIER_NAME).is("KORE").
+				andOperator(Criteria.where(ITransaction.MIDWAY_STATUS).is(IConstant.MIDWAY_TRANSACTION_STATUS_PENDING).
+				andOperator(Criteria.where(ITransaction.CARRIER_STATUS).is(IConstant.CARRIER_TRANSACTION_STATUS_PENDING).
+						orOperator(Criteria.where(ITransaction.CARRIER_STATUS).is(IConstant.CARRIER_TRANSACTION_STATUS_ERROR)))		
+						));*/
+		
+		
+		Query searchPendingCheckStatusQuery =  new Query(Criteria.where(ITransaction.CARRIER_NAME).is("KORE").andOperator
+				(Criteria.where(ITransaction.MIDWAY_STATUS).is(IConstant.MIDWAY_TRANSACTION_STATUS_PENDING)));
+				
+		
+		
 		List<Transaction> transactionListPendingStatus = mongoTemplate.find(searchPendingCheckStatusQuery, Transaction.class);
+		
+		log.info("size of pending device list for Kore............."+transactionListPendingStatus.size());
 		exchange.getIn().setBody(transactionListPendingStatus);
 	}
 
@@ -939,6 +944,40 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 
 
+	}
+
+	@Override
+	public void populateKoreCheckStatusResponse(Exchange exchange) {
+		// TODO Auto-generated method stub
+		
+		KoreCheckStatusResponse koreCheckStatusResponse=(KoreCheckStatusResponse)exchange.getIn().getBody();
+		
+		
+		Query searchQuery = new Query(Criteria.where(ITransaction.CARRIER_TRANSACTION_ID).is(exchange.getProperty(IConstant.CARRIER_TRANSACTION_ID)));
+
+		
+		String provisioningRequestStatus=koreCheckStatusResponse.getD().getProvisioningRequestStatus();
+		
+		Update update = new Update();
+		
+		if(provisioningRequestStatus.equals(IConstant.KORE_CHECKSTATUS_COMPLETED))
+		{
+			
+			update.set(ITransaction.CARRIER_STATUS, IConstant.CARRIER_TRANSACTION_STATUS_SUCCESS);
+			update.set(ITransaction.CALL_BACK_PAYLOAD, koreCheckStatusResponse);
+			update.set(ITransaction.CALL_BACK_RECEIVED, true);
+		}
+		
+		else
+		{
+			log.info("koreCheckStatusResponse is ............"+provisioningRequestStatus);
+			
+		}
+		
+		update.set(ITransaction.LAST_TIME_STAMP_UPDATED, CommonUtil.getCurrentTimeStamp());
+		
+		mongoTemplate.updateFirst(searchQuery, update, Transaction.class);
+		
 	}
 
 

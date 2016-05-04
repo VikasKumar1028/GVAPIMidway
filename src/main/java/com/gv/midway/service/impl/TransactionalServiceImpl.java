@@ -87,4 +87,10 @@ public class TransactionalServiceImpl implements ITransactionalService {
 		transactionalDao.populateChangeDeviceServicePlansDBPayload(exchange);
 	}
 
+	@Override
+	public void populateKoreCheckStatusResponse(Exchange exchange) {
+		// TODO Auto-generated method stub
+		transactionalDao.populateKoreCheckStatusResponse(exchange);
+	}
+
 }

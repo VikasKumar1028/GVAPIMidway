@@ -18,4 +18,5 @@ public interface ITransactionalDao {
 	public void populateRestoreDBPayload(Exchange exchange);
 	public void populateCustomeFieldsDBPayload(Exchange exchange);
 	public void populateChangeDeviceServicePlansDBPayload(Exchange exchange);
+	public void populateKoreCheckStatusResponse(Exchange exchange);
 }

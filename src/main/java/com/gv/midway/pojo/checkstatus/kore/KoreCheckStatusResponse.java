@@ -1,37 +1,24 @@
 package com.gv.midway.pojo.checkstatus.kore;
 
+
+
 public class KoreCheckStatusResponse {
 	
-	private ResponseCode responseCode;
-	
-	private String provisioningRequestStatus;
+	private DKoreCheckStatus d;
 
-	public ResponseCode getResponseCode() {
-		return responseCode;
+	public DKoreCheckStatus getD() {
+		return d;
 	}
 
-	public void setResponseCode(ResponseCode responseCode) {
-		this.responseCode = responseCode;
-	}
-
-	public String getProvisioningRequestStatus() {
-		return provisioningRequestStatus;
-	}
-
-	public void setProvisioningRequestStatus(String provisioningRequestStatus) {
-		this.provisioningRequestStatus = provisioningRequestStatus;
+	public void setD(DKoreCheckStatus d) {
+		this.d = d;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime
-				* result
-				+ ((provisioningRequestStatus == null) ? 0
-						: provisioningRequestStatus.hashCode());
-		result = prime * result
-				+ ((responseCode == null) ? 0 : responseCode.hashCode());
+		result = prime * result + ((d == null) ? 0 : d.hashCode());
 		return result;
 	}
 
@@ -44,16 +31,10 @@ public class KoreCheckStatusResponse {
 		if (getClass() != obj.getClass())
 			return false;
 		KoreCheckStatusResponse other = (KoreCheckStatusResponse) obj;
-		if (provisioningRequestStatus == null) {
-			if (other.provisioningRequestStatus != null)
+		if (d == null) {
+			if (other.d != null)
 				return false;
-		} else if (!provisioningRequestStatus
-				.equals(other.provisioningRequestStatus))
-			return false;
-		if (responseCode == null) {
-			if (other.responseCode != null)
-				return false;
-		} else if (!responseCode.equals(other.responseCode))
+		} else if (!d.equals(other.d))
 			return false;
 		return true;
 	}
@@ -61,13 +42,12 @@ public class KoreCheckStatusResponse {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("KoreCheckStatusResponse [responseCode=");
-		builder.append(responseCode);
-		builder.append(", provisioningRequestStatus=");
-		builder.append(provisioningRequestStatus);
+		builder.append("KoreCheckStatusResponse [d=");
+		builder.append(d);
 		builder.append("]");
 		return builder.toString();
 	}
 
+	
 	
 }
