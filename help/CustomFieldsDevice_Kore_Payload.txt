@@ -1,0 +1,61 @@
+************************MidWay Request Payload
+
+{  
+   "dataArea":{  
+
+        "customField1":"testing12",
+        "servicePlan":"M2MPERMB",
+        "customFieldsToUpdate":[  
+         {  
+            "key":"string",
+            "value":"string"
+         }
+      ],
+  
+      "devices":[  
+            {  
+            "deviceIds":[  
+               {  
+                  "kind":"",
+                  "id":"89014103277405947099"
+               }
+            ]
+         }
+      ]
+   },
+   "header":{  
+      "region":"USA",
+      "timestamp":"string",
+      "organization":"Grant Victor",
+      "transactionId":"gv123666",
+      "sourceName":"NetSuit",
+      "applicationName":"WEB",
+      "bsCarrier":"KORE"
+   }
+}
+************************Carrier Request Payload
+
+Payload: {"deviceNumber":"89014103277405947099","customField1":"testing12","customField2":null,"customField3":null,"customField4":null,"customField5":null}
+  
+************************Carrier Response Payload
+
+Payload: {"d":0}
+************************MidWay Response Payload
+
+{
+   "header":    {
+      "region": "USA",
+      "timestamp": "string",
+      "organization": "Grant Victor",
+      "transactionId": "gv123666",
+      "sourceName": "NetSuit",
+      "applicationName": "WEB",
+      "bsCarrier": "KORE"
+   },
+   "response":    {
+      "responseCode": 2000,
+      "responseStatus": "Success",
+      "responseDescription": "Data Submitted Successfully"
+   },
+   "dataArea": {"orderNumber": "1462436866388"}
+}

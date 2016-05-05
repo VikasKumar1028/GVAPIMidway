@@ -19,6 +19,7 @@ import com.gv.midway.exception.VerizonSessionTokenExpirationException;
 import com.gv.midway.pojo.checkstatus.kore.KoreCheckStatusResponse;
 import com.gv.midway.pojo.deviceInformation.kore.response.DeviceInformationResponseKore;
 import com.gv.midway.pojo.deviceInformation.verizon.response.DeviceInformationResponseVerizon;
+import com.gv.midway.pojo.kore.DKoreResponseCode;
 import com.gv.midway.pojo.kore.KoreProvisoningResponse;
 import com.gv.midway.pojo.token.VerizonAuthorizationResponse;
 import com.gv.midway.pojo.token.VerizonSessionLoginResponse;
@@ -776,7 +777,7 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iAuditService, "auditExternalRequestCall")
 				.to(uriRestKoreEndPoint)
 				.unmarshal()
-				.json(JsonLibrary.Jackson, KoreProvisoningResponse.class)
+				.json(JsonLibrary.Jackson, DKoreResponseCode.class)
 				.bean(iAuditService, "auditExternalResponseCall")
 				.bean(iTransactionalService,
 						"populateKoreTransactionalResponse");
@@ -870,7 +871,7 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iAuditService, "auditExternalRequestCall")
 				.to(uriRestKoreEndPoint)
 				.unmarshal()
-				.json(JsonLibrary.Jackson, KoreProvisoningResponse.class)
+				.json(JsonLibrary.Jackson, DKoreResponseCode.class)
 				.bean(iAuditService, "auditExternalResponseCall")
 				.bean(iTransactionalService,
 						"populateKoreTransactionalResponse");

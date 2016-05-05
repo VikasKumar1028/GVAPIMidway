@@ -8,7 +8,6 @@ import java.util.TimeZone;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.management.event.ExchangeCreatedEvent;
-//ExchangeSentEvent;
 import org.apache.camel.support.EventNotifierSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
