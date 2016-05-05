@@ -30,16 +30,12 @@ public class AuditDaoImpl implements IAuditDao {
 
 	public void auditExternalRequestCall(Exchange exchange) {
 		// TODO Auto-generated method stub
-		log.info("Start-AuditDaoImpl :auditExternalRequestCall"
+		log.info("Begin-AuditDaoImpl :auditExternalRequestCall"
 				+ exchange.getIn().getBody());
 
 		try {
 
-			/*
-			 * ObjectMapper mapper = new ObjectMapper(); String msgBody =
-			 * mapper.writeValueAsString(exchange.getIn() .getBody());
-			 */
-
+			
 			log.info("auditExternalRequestCall-jsonInString::"
 					+ exchange.getIn().getBody().toString());
 
@@ -98,11 +94,7 @@ public class AuditDaoImpl implements IAuditDao {
 
 		try {
 
-			/*
-			 * ObjectMapper mapper = new ObjectMapper(); String msgBody =
-			 * mapper.writeValueAsString(exchange.getIn() .getBody());
-			 */
-
+			
 			String responseEndpint = exchange.getFromEndpoint().toString();
 			String responseEndpintSpilt[] = responseEndpint.split("//");
 
@@ -139,21 +131,14 @@ public class AuditDaoImpl implements IAuditDao {
 					IConstant.GV_TRANSACTION_ID).toString());
 			audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME)
 					.toString());
-			/*
-			 * audit.setErrorDetais(exchange.getProperty(IConstant.
-			 * RESPONSE_DESCRIPTION).toString());
-			 * audit.setErrorProblem(exchange.
-			 * getProperty(IConstant.ERROR_MESSAGE).toString());
-			 * audit.setErrorCode
-			 * (exchange.getProperty(IConstant.RESPONSE_CODE).toString());
-			 */
+			
 			log.info("business resposne is.........."
 					+ exchange.getIn().getBody());
 
 			audit.setPayload(exchange.getIn().getBody());
 			mongoTemplate.insert(audit);
 
-			// }
+			
 		} catch (Exception e) {
 			log.info("auditExternalResponseCall-Exception" + e);
 		}
@@ -219,18 +204,7 @@ public class AuditDaoImpl implements IAuditDao {
 					IConstant.GV_TRANSACTION_ID).toString());
 			audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME)
 					.toString());
-			/*
-			 * audit.setErrorDetais(exchange.getProperty(
-			 * IConstant.RESPONSE_DESCRIPTION).toString());
-			 * audit.setErrorProblem(exchange.getProperty(
-			 * IConstant.RESPONSE_STATUS).toString());
-			 * 
-			 * audit.setErrorCode(exchange.getProperty(IConstant.RESPONSE_CODE)
-			 * .toString());
-			 */
-			// TODO
-
-			
+					
 			ObjectMapper mapper = new ObjectMapper();
 			
 			

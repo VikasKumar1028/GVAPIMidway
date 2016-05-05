@@ -30,13 +30,13 @@ public class SessionDaoImpl implements ISessionDao {
 		Query searchUserQuery = new Query(Criteria.where("isValid").is("0"));
 		SessionBean previousSessionBean = mongoTemplate.findOne(
 				searchUserQuery, SessionBean.class);
-		
+
 		if (previousSessionBean != null) {
 			previousSessionBean.setIsValid("1");
 			mongoTemplate.save(previousSessionBean);
 		}
 		mongoTemplate.save(sessionBean);
 		return sessionBean;
-		// return ";
+
 	}
 }
