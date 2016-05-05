@@ -233,11 +233,15 @@ public class CamelRoute extends RouteBuilder {
 		 /**
 		  * Now call the netsuite end point for error and write in Kafka Queue.
 		  */
-		 when(header("callBack").isEqualTo("end")).to("direct:koreCheckStatusErrorSubProcess").
+		 when(header("KoreCheckStatusFlow").isEqualTo("end")).to("direct:koreCheckStatusErrorSubProcess").
+		 
+		 // now call the netsuite end point for changeServicePlan and changeCustomeFields.
+		 
+		 when(header("KoreCheckStatusFlow").isEqualTo("change")).to("direct:koreCustomChangeSubProcess").
 		 /**
 		  *  Call the Kore API to check the status of device
 		  */
-		 when(header("callBack").isEqualTo("forward"))
+		 when(header("KoreCheckStatusFlow").isEqualTo("forward"))
 		  .to(uriRestKoreEndPoint).unmarshal() .json(JsonLibrary.Jackson,
 		  KoreCheckStatusResponse.class).
 		  to("direct:koreCheckStatusSubProcess").endChoice();
@@ -245,6 +249,14 @@ public class CamelRoute extends RouteBuilder {
 		
 		 from("direct:koreCheckStatusErrorSubProcess").bean(iTransactionalService,
 					"populateKoreCheckStatusErrorResponse").doTry().
+			process(new KoreCheckStatusPostProcessor()).
+			doCatch(Exception.class).
+			bean(iTransactionalService,"updateNetSuiteCallBackError").
+			doFinally().bean(iTransactionalService,"updateNetSuiteCallBack").end();
+		 
+		 
+		 from("direct:koreCustomChangeSubProcess").bean(iTransactionalService,
+					"populateKoreCustomChangeResponse").doTry().
 			process(new KoreCheckStatusPostProcessor()).
 			doCatch(Exception.class).
 			bean(iTransactionalService,"updateNetSuiteCallBackError").

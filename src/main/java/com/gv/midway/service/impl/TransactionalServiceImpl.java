@@ -109,5 +109,10 @@ public class TransactionalServiceImpl implements ITransactionalService {
 	public void updateNetSuiteCallBackError(Exchange exchange){
 		transactionalDao.updateNetSuiteCallBackError(exchange);
 	}
+	
+	@Override
+	public void populateKoreCustomChangeResponse(Exchange exchange){
+		transactionalDao.populateKoreCustomChangeResponse(exchange);
+	}
 
 }

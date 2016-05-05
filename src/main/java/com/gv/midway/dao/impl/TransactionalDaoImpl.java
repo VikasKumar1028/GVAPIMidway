@@ -14,12 +14,14 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+
 import com.esotericsoftware.kryo.Kryo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IResponse;
 import com.gv.midway.constant.ITransaction;
+import com.gv.midway.constant.RequestType;
 import com.gv.midway.dao.ITransactionalDao;
 import com.gv.midway.pojo.BaseRequest;
 import com.gv.midway.pojo.Header;
@@ -126,7 +128,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				transaction.setCarrierName(exchange.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString());
 				transaction.setTimeStampReceived(currentDataTime);
 				transaction.setAuditTransactionId(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
-				transaction.setRequestType(exchange.getFromEndpoint().toString());
+				transaction.setRequestType(RequestType.ACTIVATION);
 				transaction.setCallBackReceived(false);
 
 				list.add(transaction);
@@ -215,7 +217,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				transaction.setCarrierName(exchange.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString());
 				transaction.setTimeStampReceived(currentDataTime);
 				transaction.setAuditTransactionId(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
-				transaction.setRequestType(exchange.getFromEndpoint().toString());
+				transaction.setRequestType(RequestType.DEACTIVATION);
 				transaction.setCallBackReceived(false);
 				list.add(transaction);
 
@@ -289,7 +291,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				transaction.setCarrierName(exchange.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString());
 				transaction.setTimeStampReceived(currentDataTime);
 				transaction.setAuditTransactionId(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
-				transaction.setRequestType(exchange.getFromEndpoint().toString());
+				transaction.setRequestType(RequestType.SUSPEND);
 
 				list.add(transaction);
 
@@ -431,13 +433,32 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		Query searchQuery = new Query(Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)).andOperator(Criteria.where(ITransaction.DEVICE_NUMBER).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
 
-		KoreProvisoningResponse koreProvisoningResponse = (KoreProvisoningResponse) exchange.getIn().getBody();
 		Update update = new Update();
-
-		update.set(ITransaction.CARRIER_STATUS, IConstant.CARRIER_TRANSACTION_STATUS_PENDING);
-		update.set(ITransaction.CARRIER_TRANSACTION_ID, koreProvisoningResponse.getD().getTrackingNumber());
+		
+		Object object=exchange.getIn().getBody();
+		
+		if(object instanceof KoreProvisoningResponse) 
+		{
+			KoreProvisoningResponse koreProvisoningResponse = (KoreProvisoningResponse) object;
+			update.set(ITransaction.CARRIER_TRANSACTION_ID, koreProvisoningResponse.getD().getTrackingNumber());
+			update.set(ITransaction.CALL_BACK_PAYLOAD, koreProvisoningResponse);
+			update.set(ITransaction.CARRIER_STATUS, IConstant.CARRIER_TRANSACTION_STATUS_PENDING);
+		}
+		
+		// For change custom field and change service plan
+		else
+		{
+			log.info("the object type for ........"+object.toString());
+			update.set(ITransaction.CALL_BACK_PAYLOAD, object);
+			update.set(ITransaction.CALL_BACK_RECEIVED, true);
+			update.set(ITransaction.CARRIER_STATUS, IConstant.CARRIER_TRANSACTION_STATUS_SUCCESS);
+			
+		}
+		
+		/*KoreProvisoningResponse koreProvisoningResponse = (KoreProvisoningResponse) exchange.getIn().getBody();*/
+	
 		update.set(ITransaction.LAST_TIME_STAMP_UPDATED, CommonUtil.getCurrentTimeStamp());
-		update.set(ITransaction.CALL_BACK_PAYLOAD, koreProvisoningResponse);
+		
 
 		mongoTemplate.updateFirst(searchQuery, update, Transaction.class);
 
@@ -672,7 +693,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				transaction.setCarrierName(exchange.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString());
 				transaction.setTimeStampReceived(currentDataTime);
 				transaction.setAuditTransactionId(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
-				transaction.setRequestType(exchange.getFromEndpoint().toString());
+				transaction.setRequestType(RequestType.RESTORE);
 				transaction.setCallBackReceived(false);
 
 				list.add(transaction);
@@ -756,7 +777,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				transaction.setCarrierName(exchange.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString());
 				transaction.setTimeStampReceived(currentDataTime);
 				transaction.setAuditTransactionId(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
-				transaction.setRequestType(exchange.getFromEndpoint().toString());
+				transaction.setRequestType(RequestType.RESTORE);
 				transaction.setCallBackReceived(false);
 
 				list.add(transaction);
@@ -845,7 +866,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				transaction.setCarrierName(exchange.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString());
 				transaction.setTimeStampReceived(currentDataTime);
 				transaction.setAuditTransactionId(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
-				transaction.setRequestType(exchange.getFromEndpoint().toString());
+				transaction.setRequestType(RequestType.CHANGECUSTOMFIELDS);
 				transaction.setCallBackReceived(false);
 
 				list.add(transaction);
@@ -922,7 +943,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				transaction.setCarrierName(exchange.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString());
 				transaction.setTimeStampReceived(currentDataTime);
 				transaction.setAuditTransactionId(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
-				transaction.setRequestType(exchange.getFromEndpoint().toString());
+				transaction.setRequestType(RequestType.CHNAGESERVICEPLAN);
 
 				list.add(transaction);
 
@@ -1023,6 +1044,24 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		
 		
 	}
+	
+	@Override
+	public void populateKoreCustomChangeResponse(Exchange exchange) {
+		// TODO Auto-generated method stub
+		
+		
+		Query searchQuery = new Query(Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)).andOperator(Criteria.where(ITransaction.DEVICE_NUMBER).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
+
+		Update update = new Update();
+
+		update.set(ITransaction.MIDWAY_STATUS, IConstant.MIDWAY_TRANSACTION_STATUS_SUCCESS);
+		
+		update.set(ITransaction.LAST_TIME_STAMP_UPDATED, CommonUtil.getCurrentTimeStamp());
+		mongoTemplate.updateFirst(searchQuery, update, Transaction.class);
+
+		
+		
+	}
 
 	@Override
 	public void updateNetSuiteCallBack(Exchange exchange){
@@ -1055,14 +1094,24 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 	
 		Query searchQuery = new Query(Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)).andOperator(Criteria.where(ITransaction.DEVICE_NUMBER).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
 		
+		Update update = new Update();
+		
 		CxfOperationException exception = (CxfOperationException) exchange.getProperty(Exchange.EXCEPTION_CAUGHT);
 
-		String errorResponseBody = exception.getResponseBody();
+		if(exception!=null)
+		{
+			String errorResponseBody = exception.getResponseBody();
+			update.set(ITransaction.CALL_BACK_FAILURE_TO_NETSUITE_REASON ,errorResponseBody);
+		}
 		
-		Update update = new Update();
-
+		else
+		{
+			update.set(ITransaction.CALL_BACK_FAILURE_TO_NETSUITE_REASON ,exchange.getProperty(Exchange.EXCEPTION_CAUGHT));
+			
+		}
 		
-		update.set(ITransaction.CALL_BACK_FAILURE_TO_NETSUITE_REASON ,errorResponseBody);
+		
+		
 		update.set(ITransaction.CALL_BACK_DELIVERED ,false);
 		update.set(ITransaction.LAST_TIME_STAMP_UPDATED, CommonUtil.getCurrentTimeStamp());
 		mongoTemplate.updateFirst(searchQuery, update, Transaction.class);

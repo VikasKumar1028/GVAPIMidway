@@ -6,7 +6,9 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
+
 import com.gv.midway.constant.IConstant;
+import com.gv.midway.constant.RequestType;
 import com.gv.midway.pojo.transaction.Transaction;
 
 public class KoreCheckStatusPreProcessor implements Processor {
@@ -38,6 +40,8 @@ public class KoreCheckStatusPreProcessor implements Processor {
 		
 		String carrierStatus=transaction.getCarrierStatus();
 		
+		RequestType requestType=transaction.getRequestType();
+		
 		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,transaction.getDeviceNumber());
 
 		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_ID,transaction.getMidwayTransactionId());
@@ -49,25 +53,31 @@ public class KoreCheckStatusPreProcessor implements Processor {
 		if(carrierStatus.equals(IConstant.CARRIER_TRANSACTION_STATUS_ERROR))
 		{
 			log.info("carrier status error is........."+carrierStatus);
-			message.setHeader("callBack", "end");
+			message.setHeader("KoreCheckStatusFlow", "end");
+			
+		}
+		
+		//carrier status as Pending and request Type is Change CustomFileds or Change Service Plans
+		else if (carrierStatus.equals(IConstant.CARRIER_TRANSACTION_STATUS_SUCCESS))
+		{
+			
+			message.setHeader("KoreCheckStatusFlow", "change");
 			
 		}
 		
 		/**
 		 * 
-		 * Check the status of Kore Device with tracking number.
+		 * Check the status of Kore Device with tracking number for Activation ,DeActivation , Suspend , Restore, ReActivation
 		 */
 		else
 		{
 			log.info("carrier status not error is........."+carrierStatus);
-		message.setHeader("callBack", "forward");
+		message.setHeader("KoreCheckStatusFlow", "forward");
 		String carrierTransationID=transaction.getCarrierTransactionId();
 		exchange.setProperty(IConstant.CARRIER_TRANSACTION_ID, carrierTransationID);
 		net.sf.json.JSONObject obj = new net.sf.json.JSONObject();
 		obj.put("trackingNumber", carrierTransationID);
 	
-		
-		message.setHeader("callBack", "forward");
 		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.HTTP_METHOD, "POST");

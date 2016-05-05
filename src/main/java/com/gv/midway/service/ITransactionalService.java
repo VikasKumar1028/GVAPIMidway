@@ -24,4 +24,5 @@ public interface ITransactionalService {
 	public void populateKoreCheckStatusErrorResponse(Exchange exchange);
 	public void updateNetSuiteCallBack(Exchange exchange);
 	public void updateNetSuiteCallBackError(Exchange exchange);
+	public void populateKoreCustomChangeResponse(Exchange exchange);
 }

@@ -2,6 +2,8 @@ package com.gv.midway.pojo.transaction;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.gv.midway.constant.RequestType;
+
 @Document(collection = "transactionalDetail")
 public class Transaction {
 
@@ -15,7 +17,7 @@ public class Transaction {
 	private String timeStampReceived;
 	private String lastTimeStampUpdated;
 	private String carrierErrorDescription;
-	private String requestType;
+	private RequestType requestType;
 	private Object callBackPayload;
 	private Boolean callBackDelivered;
 	private String auditTransactionId;
@@ -76,11 +78,11 @@ public class Transaction {
 		this.carrierErrorDescription = carrierErrorDescription;
 	}
 
-	public String getRequestType() {
+	public RequestType getRequestType() {
 		return requestType;
 	}
 
-	public void setRequestType(String requestType) {
+	public void setRequestType(RequestType requestType) {
 		this.requestType = requestType;
 	}
 
@@ -317,10 +319,7 @@ public class Transaction {
 				return false;
 		} else if (!midwayTransactionId.equals(other.midwayTransactionId))
 			return false;
-		if (requestType == null) {
-			if (other.requestType != null)
-				return false;
-		} else if (!requestType.equals(other.requestType))
+		if (requestType != other.requestType)
 			return false;
 		if (timeStampReceived == null) {
 			if (other.timeStampReceived != null)
@@ -370,5 +369,7 @@ public class Transaction {
 		builder.append("]");
 		return builder.toString();
 	}
+
+
 
 }

@@ -16,14 +16,53 @@
  */
 package com.gv.midway.router;
 
+import com.gv.midway.constant.RequestType;
 import com.gv.midway.pojo.transaction.Transaction;
 
 public class KoreDeviceServiceRouter {
 
 	public String resolveOrderItemChannel(Transaction transaction) {
+		
+		
+		RequestType requestType=transaction.getRequestType();
+		
 		System.out.println("************KORE ROUTER****************************" + transaction.getRequestType());
+		
+		switch (requestType) {
+		case ACTIVATION:
+			
+			return "seda:koreSedaActivation";
+			
+			
+         case DEACTIVATION:
+			
+        	 return "seda:koreSedaDeactivation";
+			
+         case SUSPEND:
+ 			
+        	 return "seda:koreSedaSuspend";
+ 			
+         case RESTORE:
+ 			
+        	 return "seda:koreSedaRestore";
+ 			
+         case REACTIVATION:
+ 			
+        	 return "seda:koreSedaReactivation";
+ 			
+         case CHANGECUSTOMFIELDS:
+ 			
+        	 return "seda:koreSedacustomeFields";
+ 			
+         case CHNAGESERVICEPLAN:
+ 			
+        	 return "seda:koreSedachangeDeviceServicePlans";
 
-		if (transaction.getRequestType().contains("direct://activateDevice"))
+		default:
+			return null;
+		}
+
+		/*if (transaction.getRequestType().contains("direct://activateDevice"))
 			return "seda:koreSedaActivation";
 		else if (transaction.getRequestType().contains("direct://deactivateDevice"))
 			return "seda:koreSedaDeactivation";
@@ -38,6 +77,9 @@ public class KoreDeviceServiceRouter {
 		 else if (transaction.getRequestType().contains("direct://changeDeviceServicePlans"))
 				return "seda:koreSedachangeDeviceServicePlans";
 		else
-			return null;
+			return null;*/
+		
+		
+		
 	}
 }
