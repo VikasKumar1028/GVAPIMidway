@@ -537,7 +537,19 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		CallBackVerizonRequest callBackVerizonRequest = (CallBackVerizonRequest) exchange.getIn().getBody(CallBackVerizonRequest.class);
 		String requestId = callBackVerizonRequest.getRequestId();
-
+		DeviceId[] businesscallbackDevices = new DeviceId[callBackVerizonRequest.getDeviceIds().length];
+		
+		for(int i = 0; i<callBackVerizonRequest.getDeviceIds().length; i++){
+			DeviceId callbackDevices = new DeviceId();
+			callbackDevices.setId(callBackVerizonRequest.getDeviceIds()[i].getId());
+			callbackDevices.setKind(callBackVerizonRequest.getDeviceIds()[i].getKind());
+			businesscallbackDevices[i] = callbackDevices;
+		}
+		
+		
+		Arrays.sort(businesscallbackDevices,  (DeviceId a, DeviceId b) -> a.getKind().compareTo(b.getKind()));
+		
+		
 		ObjectMapper objectMapper = new ObjectMapper();
 		String strDeviceNumber = "";
 		try {
@@ -597,8 +609,23 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		String strDeviceNumber = "";
+		
+		DeviceId[] targetCallbackDevices = new DeviceId[targetResponse.getDataArea().getDeviceIds().length];
+		
+		for(int i = 0; i<targetResponse.getDataArea().getDeviceIds().length; i++){
+			DeviceId callbackDevices = new DeviceId();
+			callbackDevices.setId(targetResponse.getDataArea().getDeviceIds()[i].getId());
+			callbackDevices.setKind(targetResponse.getDataArea().getDeviceIds()[i].getKind());
+			targetCallbackDevices[i] = callbackDevices;
+		}
+		
+		
+		Arrays.sort(targetCallbackDevices,  (DeviceId a, DeviceId b) -> a.getKind().compareTo(b.getKind()));
+		
+		
+		
 		try {
-			strDeviceNumber = objectMapper.writeValueAsString(targetResponse.getDataArea().getDeviceIds());
+			strDeviceNumber = objectMapper.writeValueAsString(targetCallbackDevices);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
