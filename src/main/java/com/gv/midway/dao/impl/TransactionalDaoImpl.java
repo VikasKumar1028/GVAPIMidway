@@ -1027,7 +1027,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 	@Override
 	public void updateNetSuiteCallBack(Exchange exchange){
 		log.info("is netsuite callback error......."+exchange.getProperty("isNetSuiteCallBackError"));
-		if(exchange.getProperty("isNetSuiteCallBackError")!=null)
+		if(exchange.getProperty("isNetSuiteCallBackError")==null)
 		{
 		Query searchQuery = new Query(Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)).andOperator(Criteria.where(ITransaction.DEVICE_NUMBER).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));	
 	
