@@ -229,6 +229,9 @@ public class CamelRoute extends RouteBuilder {
 		 .onException(CxfOperationException.class)
 			.handled(true)
 			.to("direct:koreCheckStatusErrorSubProcess").end()
+			
+		 .onException(UnknownHostException.class, ConnectException.class)
+		 .handled(true).bean(iTransactionalService,"populateKoreCheckStatusConnectionResponse").end()
 					
 		 .process(new KoreCheckStatusPreProcessor(env)).choice().
 		 /**

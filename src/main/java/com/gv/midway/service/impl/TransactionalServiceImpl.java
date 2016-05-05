@@ -94,6 +94,11 @@ public class TransactionalServiceImpl implements ITransactionalService {
 	}
 	
 	@Override
+	public void populateKoreCheckStatusConnectionResponse(Exchange exchange){
+		transactionalDao.populateKoreCheckStatusConnectionResponse(exchange);
+	}
+	
+	@Override
 	public void populateKoreCheckStatusErrorResponse(Exchange exchange){
 		transactionalDao.populateKoreCheckStatusErrorResponse(exchange);
 	}

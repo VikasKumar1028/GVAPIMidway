@@ -1004,6 +1004,27 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		
 	}
 	
+	@Override
+	public void populateKoreCheckStatusConnectionResponse(Exchange exchange) {
+		// TODO Auto-generated method stub
+		
+		
+		
+		Query searchQuery = new Query(Criteria.where(ITransaction.CARRIER_TRANSACTION_ID).is(exchange.getProperty(IConstant.CARRIER_TRANSACTION_ID)));
+
+		
+		Update update = new Update();
+		
+	
+		
+		update.set(ITransaction.CARRIER_ERROR_DESCRIPTION,IConstant.KORE_CHECKSTATUS_CONNECTION_ERROR);
+		
+		
+		update.set(ITransaction.LAST_TIME_STAMP_UPDATED, CommonUtil.getCurrentTimeStamp());
+		
+		mongoTemplate.updateFirst(searchQuery, update, Transaction.class);
+		
+	}
 	
 	@Override
 	public void populateKoreCheckStatusErrorResponse(Exchange exchange) {

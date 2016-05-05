@@ -21,6 +21,7 @@ public interface ITransactionalService {
 	public void populateCustomeFieldsDBPayload(Exchange exchange);
 	public void populateChangeDeviceServicePlansDBPayload(Exchange exchange);
 	public void populateKoreCheckStatusResponse(Exchange exchange);
+	public void populateKoreCheckStatusConnectionResponse(Exchange exchange);
 	public void populateKoreCheckStatusErrorResponse(Exchange exchange);
 	public void updateNetSuiteCallBack(Exchange exchange);
 	public void updateNetSuiteCallBackError(Exchange exchange);

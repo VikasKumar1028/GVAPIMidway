@@ -62,6 +62,7 @@ public interface IConstant {
 	
 	static String KORE_CHECKSTATUS_PENDING="Pending";
 	static String KORE_CHECKSTATUS_COMPLETED="Completed";
+	static String KORE_CHECKSTATUS_CONNECTION_ERROR="KoreCheckStausConnection Error";
 	
 	
 	
