@@ -37,6 +37,12 @@ import com.gv.midway.pojo.activateDevice.request.ActivateDevices;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponseDataArea;
 import com.gv.midway.pojo.callback.request.CallBackVerizonRequest;
+import com.gv.midway.pojo.changeDeviceServicePlans.request.ChangeDeviceServicePlansRequest;
+import com.gv.midway.pojo.changeDeviceServicePlans.request.ChangeDeviceServicePlansRequestDataArea;
+import com.gv.midway.pojo.changeDeviceServicePlans.response.ChangeDeviceServicePlansResponse;
+import com.gv.midway.pojo.customFieldsDevice.request.CustomFieldsDeviceRequest;
+import com.gv.midway.pojo.customFieldsDevice.request.CustomFieldsDeviceRequestDataArea;
+import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponse;
 import com.gv.midway.pojo.deactivateDevice.kore.request.DeactivateDeviceRequestKore;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceId;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
@@ -55,10 +61,15 @@ import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequestData
 import com.gv.midway.pojo.deviceInformation.response.Cell;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
+import com.gv.midway.pojo.reActivateDevice.request.ReactivateDeviceRequest;
+import com.gv.midway.pojo.reActivateDevice.request.ReactivateDeviceRequestDataArea;
+import com.gv.midway.pojo.reActivateDevice.response.ReactivateDeviceResponse;
 import com.gv.midway.pojo.restoreDevice.request.RestoreDeviceRequest;
 import com.gv.midway.pojo.restoreDevice.request.RestoreDeviceRequestDataArea;
+import com.gv.midway.pojo.restoreDevice.response.RestoreDeviceResponse;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequest;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequestDataArea;
+import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
 import com.gv.midway.pojo.verizon.DeviceId;
 import com.gv.midway.pojo.verizon.Devices;
 
@@ -78,7 +89,7 @@ public class MidwayJunitTest extends Assert {
 
 	/*..................test cases for Header starts here ..............*/
 	
-	// test case for header Information-common for all API
+	//1.test case for header Information-common for all API
 	@Test
 	public void testValidHeaderParameters() throws Exception {
 
@@ -100,7 +111,7 @@ public class MidwayJunitTest extends Assert {
 		
 	}
 
-	//Test case for invalid Source Name
+	//2.Test case for invalid Source Name
 	@Test
 	public void testInvalidHeaderSourceName() throws Exception {
 
@@ -109,7 +120,7 @@ public class MidwayJunitTest extends Assert {
 		assertEquals(header.getSourceName(),"gfg");
 	}
 	
-	//test case for Invalid Bs Carrier
+	//3.test case for Invalid Bs Carrier
 	@Test
 	public void testInvalidHeaderBsCarrier() throws Exception {
 
@@ -123,7 +134,7 @@ public class MidwayJunitTest extends Assert {
 	
 	/*..................test cases for Activate Device starts here ..............*/	
 	
-	// test case for Activate Device Kore with valid data
+	//4. test case for Activate Device Kore with valid data
 	@Test
 		public void testValidActivateDeviceRequestKore() throws Exception {
 
@@ -173,9 +184,9 @@ public class MidwayJunitTest extends Assert {
 				
 		}
 		
-		//test case  for Activate Device Kore with Invalid Data
+		//5.test case  for Activate Device Kore with Invalid Data
 	    @Test
-		public void testInvalidActivateDeviceRequestKore() throws Exception {
+		public void testInvalidActivateDeviceRequest() throws Exception {
 
 			ActivateDeviceRequest req = new ActivateDeviceRequest();
 			Header header = new Header();
@@ -217,8 +228,8 @@ public class MidwayJunitTest extends Assert {
 		}
 		
 		
-		// test case for Activate Device Verizon with valid data
-				//@Test
+		// 6.test case for Activate Device Verizon with valid data
+			//@Test
 				public void testValidActivateDeviceRequestVerizon() throws Exception {
 
 					ActivateDeviceRequest req = new ActivateDeviceRequest();
@@ -272,7 +283,7 @@ public class MidwayJunitTest extends Assert {
 		
 		
 /*..................test cases for Deactivate Device starts here ..............*/
-	// Test Case for Deactivate Device for Kore with Valid data
+	//7. Test Case for Deactivate Device for Kore with Valid data
 	@Test
 	public void testValidDeactivateDeviceRequestKore() throws Exception {
 
@@ -319,9 +330,9 @@ public class MidwayJunitTest extends Assert {
 		
 		}
 	
-	// Test Case for Deactivate Device for Kore with Invalid Data 
+	// 8.Test Case for Deactivate Device for Kore with Invalid Data 
 	@Test
-		public void testInvalidDeactivateDeviceRequestKore() throws Exception {
+		public void testInvalidDeactivateDeviceRequest() throws Exception {
 
 			DeactivateDeviceRequestKore req = new DeactivateDeviceRequestKore();
 			Header header = new Header();
@@ -363,7 +374,7 @@ public class MidwayJunitTest extends Assert {
 			assertEquals(deactivateRequest.getHeader().getBsCarrier(),"");
 			}
 		
-		//Test Case for Deactivate Device for Verizon with Valid data
+		//9.Test Case for Deactivate Device for Verizon with Valid data
 		//@Test
 		public void testValidDeactivateDeviceRequestVerizon() throws Exception {
 
@@ -424,7 +435,7 @@ public class MidwayJunitTest extends Assert {
 
 	/*..................test cases for Device Upload  starts here ..............*/
 		
-	//Test case for Insert Device details with valid data .. 
+	//10.Test case for Insert Device details with valid data .. 
 	@Test
 	public void testDeviceUploadWithValidData() throws Exception{
 		
@@ -456,7 +467,7 @@ public class MidwayJunitTest extends Assert {
 	}
 
 	
-	//Test case for  insert device detail with invalid data
+	//11.Test case for  insert device detail with invalid data
 	@Test
 	public void testDeviceUploadWithInvalidData() throws Exception{
 		
@@ -486,7 +497,7 @@ public class MidwayJunitTest extends Assert {
 		assertEquals(response.getResponse().getResponseCode().toString(),"1905");
 	}
 	
-	//Test case to update device detail with valid netsuit Id
+	//12.Test case to update device detail with valid netsuit Id
 		@Test
 		public void testDeviceUpdateWithValidData() throws Exception{
 			
@@ -519,7 +530,7 @@ public class MidwayJunitTest extends Assert {
 		
 		/*..................test cases for Bulk Upload Device starts here ..............*/
 		
-		//Insert multiple/Bulk Device details with valid data .. 
+		//13.Insert multiple/Bulk Device details with valid data .. 
 		@Test
 		public void testBulkDeviceUploadWithValidData() throws Exception{
 			
@@ -563,7 +574,7 @@ public class MidwayJunitTest extends Assert {
 		}
 		
 		
-		 //Insert multiple/Bulk Device details with Invalid data .. 
+		 //14.Insert multiple/Bulk Device details with Invalid data .. 
 				@Test
 				public void testBulkDeviceUploadWithInvalidData() throws Exception{
 					
@@ -607,7 +618,7 @@ public class MidwayJunitTest extends Assert {
 					assertEquals(response.getDataArea().getFailedCount().toString(),"1");
 				}
 				
-				//Test case to update Multiple/Bulk Device details with valid data .. 
+				//15.Test case to update Multiple/Bulk Device details with valid data .. 
 				@Test
 				public void testBulkDeviceUpdateWithValidData() throws Exception{
 					
@@ -654,10 +665,10 @@ public class MidwayJunitTest extends Assert {
 
 		/*..................test cases for Bulk Upload Device ends here ..............*/
 	
-	
-	// Test Case for Restore Device
-		//@Test
-		public void testRestoreDevice() throws Exception {
+	/*..................test cases for Restore Device starts here ..............*/
+	// 16.Test Case for Restore Device Kore with valid data
+		@Test
+		public void testRestoreDeviceRequestKoreWithValidData() throws Exception {
 
 			RestoreDeviceRequest req = new RestoreDeviceRequest();
 			Header header = new Header();
@@ -672,31 +683,131 @@ public class MidwayJunitTest extends Assert {
 	 		DeviceId restoreDeviceId= new DeviceId();
 	 		
 	 		restoreDeviceId.setId("89014103277405946190");
-	 		restoreDeviceId.setKind("ghgjg");
 	 		
 	 		restoreDeviceIdArray[0] = restoreDeviceId;
 	 		
 	 		ddevices.setDeviceIds(restoreDeviceIdArray);
 	 		deDevices[0] = ddevices;
 	 		dataArea.setDevices(deDevices);
+	 		dataArea.setAccountName("0442090022-00001");
 	 		req.setDataArea(dataArea);
-	         
-	  		 header.setSourceName("NetSuit");
-	  		 header.setTransactionId("cde2131ksjd");
-	  		 header.setBsCarrier("VERIZON");
-	  		 req.setHeader(header);
-	  		 
-
+	 		
+	 		header.setSourceName("NetSuit");
+			header.setTransactionId("gv123666");
+	 		header.setBsCarrier("KORE");
+	 		header.setApplicationName("WEB");
+	 		header.setOrganization("Grant Victor");
+	        header.setRegion("USA");
+	        header.setTimestamp("string");
+	  		req.setHeader(header);
+	  		
 			System.out.println("Request in Junit Test:" + req);
-			testData.setExpectedRestoreDevice(req);
-			template.sendBody("direct:restoreDevice", req);
-			testData.verifyDeviceRestoreData();
-
+			
+			RestoreDeviceResponse response1 = (RestoreDeviceResponse) template.requestBody("direct:restoreDevice", req);
+			response1.getResponse().getResponseCode();
+			System.out.println("Response in Junit Test for Restore....... :" + response1.getResponse().getResponseCode());
+			assertEquals(response1.getResponse().getResponseCode().toString(),"2000");
 		}
 
-		// Test Case for Suspended Device
-			//	@Test
-				public void testSuspendDevice() throws Exception {
+		
+		// 17.Test Case for Restore Device with Invalid data
+				@Test
+				public void testRestoreDeviceRequestWithInvalidData() throws Exception {
+
+					RestoreDeviceRequest req = new RestoreDeviceRequest();
+					Header header = new Header();
+
+					RestoreDeviceRequestDataArea dataArea = new RestoreDeviceRequestDataArea();
+
+					Devices [] deDevices=new Devices[1];
+					Devices ddevices = new Devices();
+
+			        DeviceId[] restoreDeviceIdArray = new DeviceId[1];
+			 		 
+			 		DeviceId restoreDeviceId= new DeviceId();
+			 		
+			 		restoreDeviceId.setId("89014103277405946190");
+			 		restoreDeviceId.setKind("");
+			 		
+			 		restoreDeviceIdArray[0] = restoreDeviceId;
+			 		
+			 		ddevices.setDeviceIds(restoreDeviceIdArray);
+			 		deDevices[0] = ddevices;
+			 		dataArea.setDevices(deDevices);
+			 		dataArea.setAccountName("0442090022-00001");
+			 		req.setDataArea(dataArea);
+			 		
+			 		header.setSourceName("NetSuit");
+					header.setTransactionId("gv123666");
+			 		header.setBsCarrier("");  //Invalid Input
+			 		header.setApplicationName("WEB");
+			 		header.setOrganization("Grant Victor");
+			        header.setRegion("USA");
+			        header.setTimestamp("string");
+			  		req.setHeader(header);
+			  		
+					System.out.println("Request in Junit Test:" + req);
+					
+				//	RestoreDeviceResponse response1 = (RestoreDeviceResponse) template.requestBody("direct:restoreDevice", req);
+					assertEquals(req.getHeader().getBsCarrier().toString(),"");
+				}
+				
+				//18. Test Case for Restore Device Verizon with Valid data
+				//@Test
+				public void testRestoreDeviceRequestVerizonWithValidData() throws Exception {
+
+					RestoreDeviceRequest req = new RestoreDeviceRequest();
+					Header header = new Header();
+
+					RestoreDeviceRequestDataArea dataArea = new RestoreDeviceRequestDataArea();
+
+					Devices [] deDevices=new Devices[1];
+					Devices ddevices = new Devices();
+
+			        DeviceId[] restoreDeviceIdArray = new DeviceId[2];
+			 		 
+			 		DeviceId restoreDeviceId1= new DeviceId();
+			 		DeviceId restoreDeviceId2= new DeviceId();
+			 	
+			 		restoreDeviceId1.setId("353238063362759");
+			 		restoreDeviceId1.setKind("IMEI");
+			 		
+			 		restoreDeviceId2.setId("89148000002377519373");
+			 		restoreDeviceId2.setKind("ICCID");
+			 		
+			 		restoreDeviceIdArray[0] = restoreDeviceId1;
+			 		restoreDeviceIdArray[1] = restoreDeviceId2;
+			 		
+			 		ddevices.setDeviceIds(restoreDeviceIdArray);
+			 		deDevices[0] = ddevices;
+			 		dataArea.setDevices(deDevices);
+			 		dataArea.setAccountName("0442090022-00001");
+			 		req.setDataArea(dataArea);
+			 		
+			 		header.setSourceName("NetSuit");
+					header.setTransactionId("gv123666");
+			 		header.setBsCarrier("VERIZON");
+			 		header.setApplicationName("WEB");
+			 		header.setOrganization("Grant Victor");
+			        header.setRegion("USA");
+			        header.setTimestamp("string");
+			  		req.setHeader(header);
+			  		
+					System.out.println("Request in Junit Test:" + req);
+					
+					RestoreDeviceResponse response1 = (RestoreDeviceResponse) template.requestBody("direct:restoreDevice", req);
+					response1.getResponse().getResponseCode();
+					System.out.println("Response in Junit Test for Rerstore....... :" + response1.getResponse().getResponseCode());
+					assertEquals(response1.getResponse().getResponseCode().toString(),"2000");
+				}
+				
+			/*..................test cases for Restore Device ends here ..............*/
+				
+		/*..................test cases for Suspend Device starts here ..............*/
+		
+		//19. Test Case for Suspended Device Kore with valid data
+				@Test
+				public void testSuspendDeviceRequestKoreWithValidData() throws Exception {
 
 					SuspendDeviceRequest req = new SuspendDeviceRequest();
 					Header header = new Header();
@@ -711,27 +822,539 @@ public class MidwayJunitTest extends Assert {
 			 		DeviceId suspendDeviceId= new DeviceId();
 			 		
 			 		suspendDeviceId.setId("89014103277405946190");
-			 		suspendDeviceId.setKind("ghgjg");
 			 		
 			 		suspendDeviceIdArray[0] = suspendDeviceId;
 			 		
 			 		ddevices.setDeviceIds(suspendDeviceIdArray);
 			 		deDevices[0] = ddevices;
 			 		dataArea.setDevices(deDevices);
+			 		dataArea.setAccountName("0442090022-00001");
 			 		req.setDataArea(dataArea);
 			         
-			  		 header.setSourceName("NetSuit");
-			  		 header.setTransactionId("cde2131ksjd");
-			  		 header.setBsCarrier("VERIZON");
-			  		 req.setHeader(header);
-			  		 
-
-					System.out.println("Request in Junit Test:" + req);
-					testData.setExpectedSuspendDevice(req);
-					template.sendBody("direct:restoreDevice", req);
-					testData.verifyDeviceSuspendData();
+			 		header.setSourceName("NetSuit");
+					header.setTransactionId("gv123666");
+			 		header.setBsCarrier("KORE");
+			 		header.setApplicationName("WEB");
+			 		header.setOrganization("Grant Victor");
+			        header.setRegion("USA");
+			        header.setTimestamp("string");
+			  		req.setHeader(header);		  		
+					
+			  		SuspendDeviceResponse response1 = (SuspendDeviceResponse) template.requestBody("direct:suspendDevice", req);
+					response1.getResponse().getResponseCode();
+					System.out.println("Response in Junit Test for Suspend....... :" + response1.getResponse().getResponseCode());
+					assertEquals(response1.getResponse().getResponseCode().toString(),"2000");
 
 				}
+				
+				//20.test case for suspend device  with Invalid data
+				@Test
+				public void testSuspendDeviceRequestWithInvalidData() throws Exception {
+
+					SuspendDeviceRequest req = new SuspendDeviceRequest();
+					Header header = new Header();
+
+					SuspendDeviceRequestDataArea dataArea = new SuspendDeviceRequestDataArea();
+
+					Devices [] deDevices=new Devices[1];
+					Devices ddevices = new Devices();
+
+			        DeviceId[] suspendDeviceIdArray = new DeviceId[1];
+			 		 
+			 		DeviceId suspendDeviceId= new DeviceId();
+			 		
+			 		suspendDeviceId.setId("89014103277405946190");
+			 		suspendDeviceId.setKind("");
+			 		
+			 		suspendDeviceIdArray[0] = suspendDeviceId;
+			 		
+			 		ddevices.setDeviceIds(suspendDeviceIdArray);
+			 		deDevices[0] = ddevices;
+			 		dataArea.setDevices(deDevices);
+			 		dataArea.setAccountName("0442090022-00001");
+			 		req.setDataArea(dataArea);
+			         
+			 		header.setSourceName("NetSuit");
+					header.setTransactionId("gv123666");
+			 		header.setBsCarrier("");   //Invalid Input
+			 		header.setApplicationName("WEB");
+			 		header.setOrganization("Grant Victor");
+			        header.setRegion("USA");
+			        header.setTimestamp("string");
+			  		req.setHeader(header);		  		
+					
+			        assertEquals(req.getHeader().getBsCarrier(),"");
+
+				}
+				
+				//21. Test Case for Suspended Device Verizon with valid data
+				//@Test
+				public void testSuspendDeviceRequestVerizonWithValidData() throws Exception {
+
+					SuspendDeviceRequest req = new SuspendDeviceRequest();
+					Header header = new Header();
+
+					SuspendDeviceRequestDataArea dataArea = new SuspendDeviceRequestDataArea();
+
+					Devices [] deDevices=new Devices[1];
+					Devices ddevices = new Devices();
+
+			        DeviceId[] suspendDeviceIdArray = new DeviceId[2];
+			 		 
+			 		DeviceId suspendDeviceId1= new DeviceId();
+			 		DeviceId suspendDeviceId2= new DeviceId();
+			 		
+			 		
+			 		suspendDeviceId1.setId("353238063362759");
+			 		suspendDeviceId1.setKind("IMEI");
+			 		
+			 		suspendDeviceId2.setId("89148000002377519373");
+			 		suspendDeviceId2.setKind("ICCID");
+			 		
+			 		suspendDeviceIdArray[0] = suspendDeviceId1;
+			 		suspendDeviceIdArray[1] = suspendDeviceId2;
+			 		
+			 		ddevices.setDeviceIds(suspendDeviceIdArray);
+			 		deDevices[0] = ddevices;
+			 		dataArea.setDevices(deDevices);
+			 		dataArea.setAccountName("0442090022-00001");
+			 		req.setDataArea(dataArea);
+			         
+			 		header.setSourceName("NetSuit");
+					header.setTransactionId("gv123666");
+			 		header.setBsCarrier("VERIZON");
+			 		header.setApplicationName("WEB");
+			 		header.setOrganization("Grant Victor");
+			        header.setRegion("USA");
+			        header.setTimestamp("string");
+			  		req.setHeader(header);		  		
+					
+			  		SuspendDeviceResponse response1 = (SuspendDeviceResponse) template.requestBody("direct:suspendDevice", req);
+					response1.getResponse().getResponseCode();
+					System.out.println("Response in Junit Test for Suspend....... :" + response1.getResponse().getResponseCode());
+					assertEquals(response1.getResponse().getResponseCode().toString(),"2000");
+
+				}
+	/*..................test cases for Suspend Device ends here ..............*/
+				
+	/*..................test cases for Reactivate Device starts here ..............*/
+	
+				//22.test case for Reactivate Device for Kore with valid data
+				@Test
+				public void testReactivateDeviceRequestKoreWithValidData() throws Exception {
+
+					ReactivateDeviceRequest req = new ReactivateDeviceRequest();
+					Header header = new Header();
+
+					ReactivateDeviceRequestDataArea dataArea = new ReactivateDeviceRequestDataArea();
+
+					Devices [] deDevices=new Devices[1];
+					Devices ddevices = new Devices();
+
+			        DeviceId[] reactivateDeviceIdArray = new DeviceId[1];
+			 		 
+			 		DeviceId reactivateDeviceId= new DeviceId();
+			 		
+			 		reactivateDeviceId.setId("89014103277405946190");
+			 		reactivateDeviceId.setKind("");
+			 		
+			 		reactivateDeviceIdArray[0] = reactivateDeviceId;
+			 		
+			 		ddevices.setDeviceIds(reactivateDeviceIdArray);
+			 		deDevices[0] = ddevices;
+			 		dataArea.setDevices(deDevices);
+			 		req.setDataArea(dataArea);
+			 		
+			 		header.setSourceName("NetSuit");
+					header.setTransactionId("gv123666");
+			 		header.setBsCarrier("KORE");
+			 		header.setApplicationName("WEB");
+			 		header.setOrganization("Grant Victor");
+			        header.setRegion("USA");
+			        header.setTimestamp("string");
+			  		req.setHeader(header);
+			  		
+					System.out.println("Request in Junit Test:" + req);
+					
+					ReactivateDeviceResponse response1 = (ReactivateDeviceResponse) template.requestBody("direct:reactivateDevice", req);
+					response1.getResponse().getResponseCode();
+					System.out.println("Response in Junit Test for Reactive....... :" + response1.getResponse().getResponseCode());
+					assertEquals(response1.getResponse().getResponseCode().toString(),"2000");
+				}
+				
+				
+				//23.test case for Reactivate Device for Verizon with valid data
+				//@Test
+				public void testReactivateDeviceRequestVerizonWithValidData() throws Exception {
+
+					ReactivateDeviceRequest req = new ReactivateDeviceRequest();
+					Header header = new Header();
+
+					ReactivateDeviceRequestDataArea dataArea = new ReactivateDeviceRequestDataArea();
+
+					Devices [] deDevices=new Devices[1];
+					Devices ddevices = new Devices();
+
+			        DeviceId[] reactivateDeviceIdArray = new DeviceId[2];
+			 		 
+			 		DeviceId reactivateDeviceId1= new DeviceId();
+			 		DeviceId reactivateDeviceId2= new DeviceId();
+			 		
+			 		reactivateDeviceId1.setId("353238063362759");
+			 		reactivateDeviceId1.setKind("IMEI");
+			 		
+			 		reactivateDeviceId1.setId("89148000002377519373");
+			 		reactivateDeviceId1.setKind("ICCID");
+			 		
+			 		reactivateDeviceIdArray[0] = reactivateDeviceId1;
+			 		reactivateDeviceIdArray[1] = reactivateDeviceId2;
+			 		
+			 		ddevices.setDeviceIds(reactivateDeviceIdArray);
+			 		deDevices[0] = ddevices;
+			 		dataArea.setDevices(deDevices);
+			 		req.setDataArea(dataArea);
+			 		
+			 		header.setSourceName("NetSuit");
+					header.setTransactionId("gv123666");
+			 		header.setBsCarrier("VERIZON");
+			 		header.setApplicationName("WEB");
+			 		header.setOrganization("Grant Victor");
+			        header.setRegion("USA");
+			        header.setTimestamp("string");
+			  		req.setHeader(header);
+			  		
+					System.out.println("Request in Junit Test:" + req);
+					
+					ReactivateDeviceResponse response1 = (ReactivateDeviceResponse) template.requestBody("direct:reactivateDevice", req);
+					response1.getResponse().getResponseCode();
+					System.out.println("Response in Junit Test for Reactive....... :" + response1.getResponse().getResponseCode());
+					assertEquals(response1.getResponse().getResponseCode().toString(),"2000");
+				}
+				
+				//24.test case for Reactivate Device with Invalid data
+				@Test
+				public void testReactivateDeviceRequestWithInvalidData() throws Exception {
+
+					ReactivateDeviceRequest req = new ReactivateDeviceRequest();
+					Header header = new Header();
+
+					ReactivateDeviceRequestDataArea dataArea = new ReactivateDeviceRequestDataArea();
+
+					Devices [] deDevices=new Devices[1];
+					Devices ddevices = new Devices();
+
+			        DeviceId[] reactivateDeviceIdArray = new DeviceId[1];
+			 		 
+			 		DeviceId reactivateDeviceId= new DeviceId();
+			 		
+			 		reactivateDeviceId.setId("89014103277405946190");
+			 		reactivateDeviceId.setKind("ICCID");
+			 		
+			 		reactivateDeviceIdArray[0] = reactivateDeviceId;
+			 		
+			 		ddevices.setDeviceIds(reactivateDeviceIdArray);
+			 		deDevices[0] = ddevices;
+			 		dataArea.setDevices(deDevices);
+			 		req.setDataArea(dataArea);
+			 		
+			 		header.setSourceName("NetSuit");
+					header.setTransactionId("gv123666");
+			 		header.setBsCarrier("");  //Invalid Input
+			 		header.setApplicationName("WEB");
+			 		header.setOrganization("Grant Victor");
+			        header.setRegion("USA");
+			        header.setTimestamp("string");
+			  		req.setHeader(header);
+			  		
+					System.out.println("Request in Junit Test:" + req);
+					assertEquals(req.getHeader().getBsCarrier(),"");
+				}
+	/*..................test cases for Reactivate Device ends here ..............*/
+				
+				
+/*..................test cases for Device Custom Fields starts here ..............*/
+				
+				//25.test case for Device Custom Fields for Kore with valid data
+				@Test
+				public void testCustomFieldsDeviceRequestKoreWithValidData() throws Exception {
+
+					CustomFieldsDeviceRequest req = new CustomFieldsDeviceRequest();
+					Header header = new Header();
+
+					CustomFieldsDeviceRequestDataArea dataArea = new CustomFieldsDeviceRequestDataArea();
+
+					Devices [] deDevices=new Devices[1];
+					Devices ddevices = new Devices();
+
+			        DeviceId[] customFiledsDeviceIdArray = new DeviceId[1];
+			 		 
+			 		DeviceId customFieldsDeviceId= new DeviceId();
+			 		
+			 		customFieldsDeviceId.setId("89014103277405946190");
+			 	
+			 		customFiledsDeviceIdArray[0] = customFieldsDeviceId;
+			 		
+			 		ddevices.setDeviceIds(customFiledsDeviceIdArray);
+			 		deDevices[0] = ddevices;
+			 		dataArea.setDevices(deDevices);
+			 		req.setDataArea(dataArea);
+			 		
+			 		header.setSourceName("NetSuit");
+					header.setTransactionId("gv123666");
+			 		header.setBsCarrier("KORE");
+			 		header.setApplicationName("WEB");
+			 		header.setOrganization("Grant Victor");
+			        header.setRegion("USA");
+			        header.setTimestamp("string");
+			  		req.setHeader(header);
+			  		
+					System.out.println("Request in Junit Test:" + req);
+					
+					CustomFieldsDeviceResponse response1 = (CustomFieldsDeviceResponse) template.requestBody("direct:customeFields", req);
+					response1.getResponse().getResponseCode();
+					System.out.println("Response in Junit Test for Device Custom Fileds....... :" + response1.getResponse().getResponseCode());
+					assertEquals(response1.getResponse().getResponseCode().toString(),"2000");
+				}
+			
+				//26.test case for Device Custom Fields for Verizon with valid data
+				//@Test
+				public void testCustomFieldsDeviceRequestVerizonWithValidData() throws Exception {
+
+					CustomFieldsDeviceRequest req = new CustomFieldsDeviceRequest();
+					Header header = new Header();
+
+					CustomFieldsDeviceRequestDataArea dataArea = new CustomFieldsDeviceRequestDataArea();
+
+					Devices [] deDevices=new Devices[1];
+					Devices ddevices = new Devices();
+
+			        DeviceId[] customFiledsDeviceIdArray = new DeviceId[2];
+			 		 
+			 		DeviceId customFieldsDeviceId1= new DeviceId();
+			 		DeviceId customFieldsDeviceId2= new DeviceId();
+			 		
+			 		
+			 		customFieldsDeviceId1.setId("353238063362759");
+			 		customFieldsDeviceId1.setKind("IMEI");
+			 		
+			 		customFieldsDeviceId1.setId("89148000002377519373");
+			 		customFieldsDeviceId1.setKind("ICCID");
+			 		
+			 		customFiledsDeviceIdArray[0] = customFieldsDeviceId1;
+			 		customFiledsDeviceIdArray[1] = customFieldsDeviceId2;
+			 		
+			 		ddevices.setDeviceIds(customFiledsDeviceIdArray);
+			 		deDevices[0] = ddevices;
+			 		dataArea.setDevices(deDevices);
+			 		req.setDataArea(dataArea);
+			 		
+			 		header.setSourceName("NetSuit");
+					header.setTransactionId("gv123666");
+			 		header.setBsCarrier("VERIZON");
+			 		header.setApplicationName("WEB");
+			 		header.setOrganization("Grant Victor");
+			        header.setRegion("USA");
+			        header.setTimestamp("string");
+			  		req.setHeader(header);
+			  		
+					System.out.println("Request in Junit Test:" + req);
+					
+					CustomFieldsDeviceResponse response1 = (CustomFieldsDeviceResponse) template.requestBody("direct:customeFields", req);
+					response1.getResponse().getResponseCode();
+					System.out.println("Response in Junit Test for Reactive....... :" + response1.getResponse().getResponseCode());
+					assertEquals(response1.getResponse().getResponseCode().toString(),"2000");
+				}
+			
+				//27.Test case for Device Custom Fields with Invalid Data
+				@Test
+				public void testCustomFieldsDeviceRequestWithInvalidData() throws Exception {
+
+					CustomFieldsDeviceRequest req = new CustomFieldsDeviceRequest();
+					Header header = new Header();
+
+					CustomFieldsDeviceRequestDataArea dataArea = new CustomFieldsDeviceRequestDataArea();
+
+					Devices [] deDevices=new Devices[1];
+					Devices ddevices = new Devices();
+
+			        DeviceId[] customFiledsDeviceIdArray = new DeviceId[1];
+			 		 
+			 		DeviceId customFieldsDeviceId= new DeviceId();
+			 		
+			 		customFieldsDeviceId.setId("89014103277405946190");
+			 		
+			 		customFiledsDeviceIdArray[0] = customFieldsDeviceId;
+			 		
+			 		ddevices.setDeviceIds(customFiledsDeviceIdArray);
+			 		deDevices[0] = ddevices;
+			 		dataArea.setDevices(deDevices);
+			 		dataArea.setCustomField1("testing12");
+			 		dataArea.setServicePlan("M2MPERMB");
+			 		req.setDataArea(dataArea);
+			 		
+			 		header.setSourceName("NetSuit");
+					header.setTransactionId("gv123666");
+			 		header.setBsCarrier("");  //Invalid Input
+			 		header.setApplicationName("WEB");
+			 		header.setOrganization("Grant Victor");
+			        header.setRegion("USA");
+			        header.setTimestamp("string");
+			  		req.setHeader(header);
+			  		
+					System.out.println("Request in Junit Test:" + req);
+					assertEquals(req.getHeader().getBsCarrier(),"");}
+			
+				/*..................test cases for Device Custom Fields ends here ..............*/	
+				
+				
+				
+             /*..................test cases for change Device Service Plan starts here ..............*/
+				
+				//28.test case for change Device Service Plan for Kore with valid data
+				@Test
+				public void testChangeDeviceServicePlanRequestKoreWithValidData() throws Exception {
+
+					ChangeDeviceServicePlansRequest req = new ChangeDeviceServicePlansRequest();
+					Header header = new Header();
+
+					ChangeDeviceServicePlansRequestDataArea dataArea = new ChangeDeviceServicePlansRequestDataArea();
+
+					Devices [] deDevices=new Devices[1];
+					Devices ddevices = new Devices();
+
+			        DeviceId[] changeServicePlanDeviceIdArray = new DeviceId[1];
+			 		 
+			 		DeviceId changeServicePlanDeviceId= new DeviceId();
+			 		
+			 		changeServicePlanDeviceId.setId("8901260761246107398");
+			 		changeServicePlanDeviceId.setKind("");
+			 		
+			 		changeServicePlanDeviceIdArray[0] = changeServicePlanDeviceId;
+			 		
+			 		ddevices.setDeviceIds(changeServicePlanDeviceIdArray);
+			 		deDevices[0] = ddevices;
+			 		dataArea.setDevices(deDevices);
+			 		dataArea.setAccountName("0442090022-00001");
+			 		dataArea.setServicePlan("M2M5MBASH");
+			 		dataArea.setCurrentServicePlan("M2M5MBASH");
+			 		dataArea.setPlanCode("121093");
+			 		req.setDataArea(dataArea);
+			 		
+			 		header.setSourceName("NetSuit");
+					header.setTransactionId("gv123666");
+			 		header.setBsCarrier("KORE");
+			 		header.setApplicationName("WEB");
+			 		header.setOrganization("Grant Victor");
+			        header.setRegion("USA");
+			        header.setTimestamp("string");
+			  		req.setHeader(header);
+			  		
+					System.out.println("Request in Junit Test:" + req);
+					
+					ChangeDeviceServicePlansResponse response1 = (ChangeDeviceServicePlansResponse) template.requestBody("direct:changeDeviceServicePlans", req);
+					response1.getResponse().getResponseCode();
+					System.out.println("Response in Junit Test for Device Change Service Plan....... :" + response1.getResponse().getResponseCode());
+					assertEquals(response1.getResponse().getResponseCode().toString(),"2000");
+				}
+				
+				//29.test case for change Device Service Plan for Verizon with valid data
+				//@Test
+				public void testChangeDeviceServicePlanRequestVeriZonWithValidData() throws Exception {
+
+					ChangeDeviceServicePlansRequest req = new ChangeDeviceServicePlansRequest();
+					Header header = new Header();
+
+					ChangeDeviceServicePlansRequestDataArea dataArea = new ChangeDeviceServicePlansRequestDataArea();
+
+					Devices [] deDevices=new Devices[1];
+					Devices ddevices = new Devices();
+
+			        DeviceId[] changeServicePlanDeviceIdArray = new DeviceId[2];
+			 		 
+			 		DeviceId changeServicePlanDeviceId1= new DeviceId();
+			 		DeviceId changeServicePlanDeviceId2= new DeviceId();
+			 		
+			 		changeServicePlanDeviceId1.setId("353238063289994");
+			 		changeServicePlanDeviceId1.setKind("IMEI");
+			 		
+			 		changeServicePlanDeviceId2.setId("89148000002377648495");
+			 		changeServicePlanDeviceId2.setKind("ICCID");
+			 		
+			 		
+			 		changeServicePlanDeviceIdArray[0] = changeServicePlanDeviceId1;
+			 		changeServicePlanDeviceIdArray[1] = changeServicePlanDeviceId2;
+			 		
+			 		ddevices.setDeviceIds(changeServicePlanDeviceIdArray);
+			 		deDevices[0] = ddevices;
+			 		dataArea.setDevices(deDevices);
+			 		dataArea.setAccountName("0442090022-00001");
+			 		dataArea.setServicePlan("M2M5MBASH");
+			 		dataArea.setCurrentServicePlan("M2M5MBASH");
+			 		dataArea.setPlanCode("121093");
+			 		req.setDataArea(dataArea);
+			 		
+			 		header.setSourceName("NetSuit");
+					header.setTransactionId("gv123666");
+			 		header.setBsCarrier("VERIZON");
+			 		header.setApplicationName("WEB");
+			 		header.setOrganization("Grant Victor");
+			        header.setRegion("USA");
+			        header.setTimestamp("string");
+			  		req.setHeader(header);
+			  		
+					System.out.println("Request in Junit Test:" + req);
+					
+					ChangeDeviceServicePlansResponse response1 = (ChangeDeviceServicePlansResponse) template.requestBody("direct:changeDeviceServicePlans", req);
+					response1.getResponse().getResponseCode();
+					System.out.println("Response in Junit Test for Device Change Service Plan....... :" + response1.getResponse().getResponseCode());
+					assertEquals(response1.getResponse().getResponseCode().toString(),"2000");
+				}
+				
+
+				//30.test case for change Device Service Plan with Invalid data
+				@Test
+				public void testChangeDeviceServicePlanRequestWithInValidData() throws Exception {
+
+					ChangeDeviceServicePlansRequest req = new ChangeDeviceServicePlansRequest();
+					Header header = new Header();
+
+					ChangeDeviceServicePlansRequestDataArea dataArea = new ChangeDeviceServicePlansRequestDataArea();
+
+					Devices [] deDevices=new Devices[1];
+					Devices ddevices = new Devices();
+
+			        DeviceId[] changeServicePlanDeviceIdArray = new DeviceId[1];
+			 		 
+			 		DeviceId changeServicePlanDeviceId= new DeviceId();
+			 		
+			 		changeServicePlanDeviceId.setId("353238061040837");
+			 		changeServicePlanDeviceId.setKind("IMEI");
+			 		
+			 		changeServicePlanDeviceIdArray[0] = changeServicePlanDeviceId;
+			 		
+			 		ddevices.setDeviceIds(changeServicePlanDeviceIdArray);
+			 		deDevices[0] = ddevices;
+			 		dataArea.setDevices(deDevices);
+			 		dataArea.setAccountName("0442090022-00001");
+			 		dataArea.setServicePlan("M2M5MBASH");
+			 		dataArea.setCurrentServicePlan("M2M5MBASH");
+			 		dataArea.setPlanCode("121093");
+			 		req.setDataArea(dataArea);
+			 		
+			 		header.setSourceName("NetSuit");
+					header.setTransactionId("gv123666");
+			 		header.setBsCarrier("");  //Invalid input
+			 		header.setApplicationName("WEB");
+			 		header.setOrganization("Grant Victor");
+			        header.setRegion("USA");
+			        header.setTimestamp("string");
+			  		req.setHeader(header);
+			  		
+			  		System.out.println("Request in Junit Test:" + req);
+					assertEquals(req.getHeader().getBsCarrier(),"");
+			
+				}
+				 /*..................test cases for Device Change Service Plan ends here ..............*/
 				// test case for device information
 				//@Test
 				public void testDeviceInformation() throws Exception {
