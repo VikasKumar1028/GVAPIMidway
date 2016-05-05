@@ -1,6 +1,7 @@
 package com.gv.midway.processor.customFieldsDevice;
 
 import org.apache.camel.Exchange;
+import org.apache.camel.ExchangePattern;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
@@ -29,7 +30,7 @@ public class KoreCustomFieldsPreProcessor implements Processor {
 	public void process(Exchange exchange) throws Exception {
 		// TODO Auto-generated method stub
 
-		log.info("Start::KoreCustomFieldsPreProcessor");
+		log.info("Begin::KoreCustomFieldsPreProcessor");
 
 		Message message = exchange.getIn();
 
@@ -75,6 +76,7 @@ public class KoreCustomFieldsPreProcessor implements Processor {
 		message.setHeader(Exchange.HTTP_PATH, "/json/modifyDeviceCustomInfo");
 		
 		message.setBody(customFieldsDeviceRequestKore);
+		exchange.setPattern(ExchangePattern.InOut);
 
 		log.info("End::KoreCustomFieldsPreProcessor");
 	}
