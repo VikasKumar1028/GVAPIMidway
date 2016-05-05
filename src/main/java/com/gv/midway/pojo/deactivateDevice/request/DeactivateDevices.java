@@ -1,6 +1,4 @@
 package com.gv.midway.pojo.deactivateDevice.request;
-import com.wordnik.swagger.annotations.ApiModelProperty;
-
 import java.util.Arrays;
 
 import com.wordnik.swagger.annotations.ApiModelProperty;

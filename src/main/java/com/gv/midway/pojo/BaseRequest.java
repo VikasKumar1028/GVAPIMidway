@@ -1,7 +1,5 @@
 package com.gv.midway.pojo;
 
-
-
 public class BaseRequest {
 	private Header header;
 
@@ -46,6 +44,5 @@ public class BaseRequest {
 		builder.append("]");
 		return builder.toString();
 	}
-
 
 }

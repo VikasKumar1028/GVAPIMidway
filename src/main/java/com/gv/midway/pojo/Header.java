@@ -1,24 +1,26 @@
 package com.gv.midway.pojo;
+
 import com.wordnik.swagger.annotations.ApiModelProperty;
+
 public class Header {
 	@ApiModelProperty(value = "Region for the request.")
 	private String region;
-	
+
 	@ApiModelProperty(value = "Date and time of the request.")
 	private String timestamp;
-	
+
 	@ApiModelProperty(value = "Organization name of the request.")
 	private String organization;
-	
+
 	@ApiModelProperty(value = "Unique id of the entire flow for the request.")
 	private String transactionId;
-	
+
 	@ApiModelProperty(value = "Name of the source from where the request is triggered.")
 	private String sourceName;
-	
+
 	@ApiModelProperty(value = "Mode of the request triggered.")
 	private String applicationName;
-	
+
 	@ApiModelProperty(value = "Target System of the request.")
 	private String bsCarrier;
 
@@ -165,7 +167,5 @@ public class Header {
 		builder.append("]");
 		return builder.toString();
 	}
-
-	
 
 }

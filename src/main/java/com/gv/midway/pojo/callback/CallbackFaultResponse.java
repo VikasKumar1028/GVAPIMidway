@@ -1,6 +1,5 @@
 package com.gv.midway.pojo.callback;
 import com.wordnik.swagger.annotations.ApiModelProperty;
-import java.util.Arrays;
 public class CallbackFaultResponse {
 	@ApiModelProperty(value = "Fault code in Response")
 	private String faultcode;

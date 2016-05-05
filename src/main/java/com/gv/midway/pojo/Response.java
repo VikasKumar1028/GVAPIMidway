@@ -36,8 +36,6 @@ public class Response {
 	public void setResponseCode(Integer responseCode) {
 		this.responseCode = responseCode;
 	}
-	
-	
 
 	@Override
 	public int hashCode() {
@@ -87,6 +85,5 @@ public class Response {
 				+ responseStatus + ", responseDescription="
 				+ responseDescription + "]";
 	}
-
 
 }

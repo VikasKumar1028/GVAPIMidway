@@ -1,7 +1,6 @@
 package com.gv.midway.pojo.activateDevice.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -9,13 +8,13 @@ public class ActivateDeviceId {
 	// @JsonProperty("id")
 	@ApiModelProperty(value = "Value of device identifier.", required = true)
 	private String id;
-	
+
 	// @JsonProperty("kind")
 	@ApiModelProperty(value = "Type of device identifier.", required = true)
 	private String kind;
-	
+
 	// activation KORE field
-	
+
 	public String getId() {
 		return id;
 	}
@@ -31,9 +30,6 @@ public class ActivateDeviceId {
 	public void setKind(String kind) {
 		this.kind = kind;
 	}
-
-
-
 
 	@Override
 	public String toString() {
@@ -70,7 +66,5 @@ public class ActivateDeviceId {
 			return false;
 		return true;
 	}
-
-	
 
 }

@@ -16,70 +16,72 @@
  */
 package com.gv.midway.router;
 
+import org.apache.log4j.Logger;
+
 import com.gv.midway.constant.RequestType;
 import com.gv.midway.pojo.transaction.Transaction;
 
 public class KoreDeviceServiceRouter {
 
+	private Logger log = Logger.getLogger(KoreDeviceServiceRouter.class);
+
 	public String resolveOrderItemChannel(Transaction transaction) {
-		
-		
-		RequestType requestType=transaction.getRequestType();
-		
-		System.out.println("************KORE ROUTER****************************" + transaction.getRequestType());
-		
+
+		RequestType requestType = transaction.getRequestType();
+
+		log.info("************KORE ROUTER****************************"
+				+ transaction.getRequestType());
+
 		switch (requestType) {
 		case ACTIVATION:
-			
+
 			return "seda:koreSedaActivation";
-			
-			
-         case DEACTIVATION:
-			
-        	 return "seda:koreSedaDeactivation";
-			
-         case SUSPEND:
- 			
-        	 return "seda:koreSedaSuspend";
- 			
-         case RESTORE:
- 			
-        	 return "seda:koreSedaRestore";
- 			
-         case REACTIVATION:
- 			
-        	 return "seda:koreSedaReactivation";
- 			
-         case CHANGECUSTOMFIELDS:
- 			
-        	 return "seda:koreSedacustomeFields";
- 			
-         case CHNAGESERVICEPLAN:
- 			
-        	 return "seda:koreSedachangeDeviceServicePlans";
+
+		case DEACTIVATION:
+
+			return "seda:koreSedaDeactivation";
+
+		case SUSPEND:
+
+			return "seda:koreSedaSuspend";
+
+		case RESTORE:
+
+			return "seda:koreSedaRestore";
+
+		case REACTIVATION:
+
+			return "seda:koreSedaReactivation";
+
+		case CHANGECUSTOMFIELDS:
+
+			return "seda:koreSedacustomeFields";
+
+		case CHNAGESERVICEPLAN:
+
+			return "seda:koreSedachangeDeviceServicePlans";
 
 		default:
 			return null;
 		}
 
-		/*if (transaction.getRequestType().contains("direct://activateDevice"))
-			return "seda:koreSedaActivation";
-		else if (transaction.getRequestType().contains("direct://deactivateDevice"))
-			return "seda:koreSedaDeactivation";
-		else if (transaction.getRequestType().contains("direct://suspendDevice"))
-			return "seda:koreSedaSuspend";
-		else if (transaction.getRequestType().contains("direct://reactivateDevice"))
-			return "seda:koreSedaReactivation";
-		 if (transaction.getRequestType().contains("direct://restoreDevice"))
-			return "seda:koreSedaRestore";
-		 else if (transaction.getRequestType().contains("direct://customeFields"))
-				return "seda:koreSedacustomeFields";
-		 else if (transaction.getRequestType().contains("direct://changeDeviceServicePlans"))
-				return "seda:koreSedachangeDeviceServicePlans";
-		else
-			return null;*/
-		
-		
-		
+		/*
+		 * if (transaction.getRequestType().contains("direct://activateDevice"))
+		 * return "seda:koreSedaActivation"; else if
+		 * (transaction.getRequestType().contains("direct://deactivateDevice"))
+		 * return "seda:koreSedaDeactivation"; else if
+		 * (transaction.getRequestType().contains("direct://suspendDevice"))
+		 * return "seda:koreSedaSuspend"; else if
+		 * (transaction.getRequestType().contains("direct://reactivateDevice"))
+		 * return "seda:koreSedaReactivation"; if
+		 * (transaction.getRequestType().contains("direct://restoreDevice"))
+		 * return "seda:koreSedaRestore"; else if
+		 * (transaction.getRequestType().contains("direct://customeFields"))
+		 * return "seda:koreSedacustomeFields"; else if
+		 * (transaction.getRequestType
+		 * ().contains("direct://changeDeviceServicePlans")) return
+		 * "seda:koreSedachangeDeviceServicePlans"; else return null;
+		 */
+
 	}
 }

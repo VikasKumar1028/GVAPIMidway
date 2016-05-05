@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 public class BaseResponse {
-	
 
 	private Header header;
 	private Response response;
@@ -14,7 +13,8 @@ public class BaseResponse {
 	}
 
 	public void setResponse(Response response) {
-		System.out.println("set response invoked..........."+response.toString());
+		System.out.println("set response invoked..........."
+				+ response.toString());
 		this.response = response;
 	}
 
@@ -23,7 +23,7 @@ public class BaseResponse {
 	}
 
 	public void setHeader(Header header) {
-		System.out.println("set header invoked..........."+header.toString());
+		System.out.println("set header invoked..........." + header.toString());
 		this.header = header;
 	}
 
@@ -69,6 +69,5 @@ public class BaseResponse {
 		builder.append("]");
 		return builder.toString();
 	}
-	
-	
+
 }

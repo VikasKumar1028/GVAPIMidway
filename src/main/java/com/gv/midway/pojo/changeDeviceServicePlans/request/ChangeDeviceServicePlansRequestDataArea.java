@@ -2,7 +2,6 @@ package com.gv.midway.pojo.changeDeviceServicePlans.request;
 
 import java.util.Arrays;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gv.midway.pojo.verizon.CustomFields;
 import com.gv.midway.pojo.verizon.Devices;
 import com.wordnik.swagger.annotations.ApiModelProperty;
@@ -29,7 +28,7 @@ public class ChangeDeviceServicePlansRequestDataArea {
 
 	@ApiModelProperty(value = "The plan code of the plan to change a plan for a single active device for the next period.")
 	private String planCode;
-	
+
 	public String getAccountName() {
 		return accountName;
 	}
