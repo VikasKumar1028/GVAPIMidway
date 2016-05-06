@@ -196,9 +196,9 @@ public class CamelRoute extends RouteBuilder {
 				.process(new CallbackPreProcessor(env))
 				.bean(iTransactionalService, "findMidwayTransactionId")
 				.process(new CallbackPostProcessor())
-				.to("kafka:localhost:9092?topic=topic")
+				//.to("kafka:localhost:9092?topic=topic")
 				// .to("kafka:10.10.2.190:9092,10.10.2.190:9093,10.10.2.190:9094?topic=my-replicated-topic")
-				.process(new CallbackKafkaPostProcessor())
+				//.process(new CallbackKafkaPostProcessor())
 				// ******************DONOT REMOVE THIS COMMENTED CODE
 				// **********************
 				// .doTry()

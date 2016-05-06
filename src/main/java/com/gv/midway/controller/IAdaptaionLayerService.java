@@ -135,14 +135,14 @@ public interface IAdaptaionLayerService {
 	@Path("/device/callback")
 	@Produces("application/json")
 	@Consumes("application/json")
-	@ApiOperation(value = "CallbackService")
+	@ApiOperation(value = "Service for Receiving Callback from Verizon")
 	TargetResponse callbacks(CallBackVerizonRequest activateDeviceRequest);
 
 	@POST
 	@Path("/devices/connections/getStatus")
 	@Produces("application/json")
 	@Consumes("application/json")
-	@ApiOperation(value = "CallbackService")
+	@ApiOperation(value = "Service to check Device in Session for Verizon")
 	ConnectionStatusResponse deviceConnectionStatusRequest(
 			ConnectionInformationRequest connectionInformationRequest);
 
@@ -158,7 +158,7 @@ public interface IAdaptaionLayerService {
 	@Path("/devices/connections/session/info")
 	@Produces("application/json")
 	@Consumes("application/json")
-	@ApiOperation(value = "CallbackService")
+	@ApiOperation(value = "Service to check Device Session Begin and End infomration for Verizon")
 	SessionBeginEndResponse deviceSessionBeginEndResponse(
 			ConnectionInformationRequest connectionInformationRequest);
 }
