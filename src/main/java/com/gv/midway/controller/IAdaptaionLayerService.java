@@ -119,7 +119,7 @@ public interface IAdaptaionLayerService {
 	@Path("/device/customFields")
 	@Produces("application/json")
 	@Consumes("application/json")
-	@ApiOperation(value = "CustomFieldsUpdateRequest")
+	@ApiOperation(value = "CustomFieldsUpdateService")
 	CustomFieldsDeviceResponse customFieldsUpdateRequest(
 			CustomFieldsDeviceRequest customeFieldDeviceRequest);
 
