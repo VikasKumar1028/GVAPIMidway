@@ -2,10 +2,14 @@ package com.gv.midway.pojo.callback.common.response;
 
 import java.util.Arrays;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gv.midway.pojo.verizon.DeviceId;
 import com.wordnik.swagger.annotations.ApiModelProperty;
+import com.gv.midway.constant.RequestType;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CallbackCommonResponseDataArea {
+
 
 	@ApiModelProperty(value = "Having type and value of device identifier.")
 	private DeviceId[] deviceIds;
@@ -14,13 +18,21 @@ public class CallbackCommonResponseDataArea {
 	private String transactionId;
 	
 	@ApiModelProperty(value = "Midway Transaction Id.")
-	private String midwayTransactionId;
+	private String requestId;
 	
 	@ApiModelProperty(value = "Type of Request - Activation, Deactivation etc.")
-	private String RequestType;
+	private RequestType requestType;
 	
+	public RequestType getRequestType() {
+		return requestType;
+	}
+
+	public void setRequestType(RequestType requestType) {
+		this.requestType = requestType;
+	}
+
 	@ApiModelProperty(value = "Explains whether transaction is processed successfully or not.")
-	private String RequestStatus;
+	private Boolean RequestStatus;
 	
 	
 	public DeviceId[] getDeviceIds() {
@@ -39,28 +51,29 @@ public class CallbackCommonResponseDataArea {
 		this.transactionId = transactionId;
 	}
 
-	public String getMidwayTransactionId() {
-		return midwayTransactionId;
+	public String getRequestId() {
+		return requestId;
 	}
 
-	public void setMidwayTransactionId(String midwayTransactionId) {
-		this.midwayTransactionId = midwayTransactionId;
+	public void setRequestId(String requestId) {
+		this.requestId = requestId;
 	}
 
-	public String getRequestType() {
-		return RequestType;
-	}
 
-	public void setRequestType(String requestType) {
-		RequestType = requestType;
-	}
-
-	public String getRequestStatus() {
+	public Boolean getRequestStatus() {
 		return RequestStatus;
 	}
 
-	public void setRequestStatus(String requestStatus) {
+	public void setRequestStatus(Boolean requestStatus) {
 		RequestStatus = requestStatus;
+	}
+
+	@Override
+	public String toString() {
+		return "CallbackCommonResponseDataArea [deviceIds="
+				+ Arrays.toString(deviceIds) + ", transactionId="
+				+ transactionId + ", requestId=" + requestId + ", requestType="
+				+ requestType + ", RequestStatus=" + RequestStatus + "]";
 	}
 
 	@Override
@@ -69,13 +82,11 @@ public class CallbackCommonResponseDataArea {
 		int result = 1;
 		result = prime * result
 				+ ((RequestStatus == null) ? 0 : RequestStatus.hashCode());
-		result = prime * result
-				+ ((RequestType == null) ? 0 : RequestType.hashCode());
 		result = prime * result + Arrays.hashCode(deviceIds);
-		result = prime
-				* result
-				+ ((midwayTransactionId == null) ? 0 : midwayTransactionId
-						.hashCode());
+		result = prime * result
+				+ ((requestId == null) ? 0 : requestId.hashCode());
+		result = prime * result
+				+ ((requestType == null) ? 0 : requestType.hashCode());
 		result = prime * result
 				+ ((transactionId == null) ? 0 : transactionId.hashCode());
 		return result;
@@ -95,17 +106,14 @@ public class CallbackCommonResponseDataArea {
 				return false;
 		} else if (!RequestStatus.equals(other.RequestStatus))
 			return false;
-		if (RequestType == null) {
-			if (other.RequestType != null)
-				return false;
-		} else if (!RequestType.equals(other.RequestType))
-			return false;
 		if (!Arrays.equals(deviceIds, other.deviceIds))
 			return false;
-		if (midwayTransactionId == null) {
-			if (other.midwayTransactionId != null)
+		if (requestId == null) {
+			if (other.requestId != null)
 				return false;
-		} else if (!midwayTransactionId.equals(other.midwayTransactionId))
+		} else if (!requestId.equals(other.requestId))
+			return false;
+		if (requestType != other.requestType)
 			return false;
 		if (transactionId == null) {
 			if (other.transactionId != null)
@@ -114,15 +122,5 @@ public class CallbackCommonResponseDataArea {
 			return false;
 		return true;
 	}
-
-	@Override
-	public String toString() {
-		return "CallbackCommonResponseDataArea [deviceIds="
-				+ Arrays.toString(deviceIds) + ", transactionId="
-				+ transactionId + ", midwayTransactionId="
-				+ midwayTransactionId + ", RequestType=" + RequestType
-				+ ", RequestStatus=" + RequestStatus + "]";
-	}
-
 	
 }

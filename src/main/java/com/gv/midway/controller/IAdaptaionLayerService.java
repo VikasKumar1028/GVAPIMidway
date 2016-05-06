@@ -11,6 +11,7 @@ import javax.ws.rs.QueryParam;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
 import com.gv.midway.pojo.callback.TargetResponse;
+import com.gv.midway.pojo.callback.common.response.CallbackCommonResponse;
 import com.gv.midway.pojo.callback.request.CallBackVerizonRequest;
 import com.gv.midway.pojo.changeDeviceServicePlans.request.ChangeDeviceServicePlansRequest;
 import com.gv.midway.pojo.changeDeviceServicePlans.response.ChangeDeviceServicePlansResponse;
@@ -136,7 +137,7 @@ public interface IAdaptaionLayerService {
 	@Produces("application/json")
 	@Consumes("application/json")
 	@ApiOperation(value = "Service for Receiving Callback from Verizon")
-	TargetResponse callbacks(CallBackVerizonRequest activateDeviceRequest);
+	CallbackCommonResponse callbacks(CallBackVerizonRequest activateDeviceRequest);
 
 	@POST
 	@Path("/devices/connections/getStatus")

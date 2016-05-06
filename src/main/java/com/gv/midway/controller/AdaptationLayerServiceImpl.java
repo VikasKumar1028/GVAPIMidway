@@ -7,6 +7,7 @@ import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
 import com.gv.midway.pojo.callback.TargetResponse;
+import com.gv.midway.pojo.callback.common.response.CallbackCommonResponse;
 import com.gv.midway.pojo.callback.request.CallBackVerizonRequest;
 import com.gv.midway.pojo.changeDeviceServicePlans.request.ChangeDeviceServicePlansRequest;
 import com.gv.midway.pojo.changeDeviceServicePlans.response.ChangeDeviceServicePlansResponse;
@@ -175,8 +176,8 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 				"direct:customeFields", customeFieldDeviceRequest);
 	}
 
-	public TargetResponse callbacks(CallBackVerizonRequest callbackRequest) {
-		return (TargetResponse) producer.requestBody("direct:callbacks",
+	public CallbackCommonResponse callbacks(CallBackVerizonRequest callbackRequest) {
+		return (CallbackCommonResponse) producer.requestBody("direct:callbacks",
 				callbackRequest);
 	}
 

@@ -1,7 +1,8 @@
 package com.gv.midway.pojo.callback.common.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gv.midway.pojo.BaseResponse;
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CallbackCommonResponse extends BaseResponse{
 	
 

@@ -30,6 +30,7 @@ import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequestDataArea;
 import com.gv.midway.pojo.activateDevice.request.ActivateDevices;
 import com.gv.midway.pojo.callback.TargetResponse;
+import com.gv.midway.pojo.callback.common.response.CallbackCommonResponse;
 import com.gv.midway.pojo.callback.request.CallBackVerizonRequest;
 import com.gv.midway.pojo.changeDeviceServicePlans.request.ChangeDeviceServicePlansRequest;
 import com.gv.midway.pojo.changeDeviceServicePlans.request.ChangeDeviceServicePlansRequestDataArea;
@@ -553,7 +554,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		ObjectMapper objectMapper = new ObjectMapper();
 		String strDeviceNumber = "";
 		try {
-			strDeviceNumber = objectMapper.writeValueAsString(callBackVerizonRequest.getDeviceIds());
+			strDeviceNumber = objectMapper.writeValueAsString(businesscallbackDevices);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
@@ -592,6 +593,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 	public void findMidwayTransactionId(Exchange exchange) {
 
+
 		/**
 		 * fetching midwayTransactionID from MongoDB as per requestID and device
 		 * number and setting it to target response
@@ -603,19 +605,19 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		log.info("CallbackTransactionDaoImpl-getCallbackMidwayTransactionID");
 		log.info("Exchange inside" + exchange.getIn().getBody());
 
-		TargetResponse targetResponse = (TargetResponse) exchange.getIn().getBody(TargetResponse.class);
+		CallbackCommonResponse callbackResponse = (CallbackCommonResponse) exchange.getIn().getBody(CallbackCommonResponse.class);
 
-		String requestId = targetResponse.getDataArea().getRequestId();
+		String requestId = callbackResponse.getDataArea().getRequestId();
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		String strDeviceNumber = "";
 		
-		DeviceId[] targetCallbackDevices = new DeviceId[targetResponse.getDataArea().getDeviceIds().length];
+		DeviceId[] targetCallbackDevices = new DeviceId[callbackResponse.getDataArea().getDeviceIds().length];
 		
-		for(int i = 0; i<targetResponse.getDataArea().getDeviceIds().length; i++){
+		for(int i = 0; i<callbackResponse.getDataArea().getDeviceIds().length; i++){
 			DeviceId callbackDevices = new DeviceId();
-			callbackDevices.setId(targetResponse.getDataArea().getDeviceIds()[i].getId());
-			callbackDevices.setKind(targetResponse.getDataArea().getDeviceIds()[i].getKind());
+			callbackDevices.setId(callbackResponse.getDataArea().getDeviceIds()[i].getId());
+			callbackDevices.setKind(callbackResponse.getDataArea().getDeviceIds()[i].getKind());
 			targetCallbackDevices[i] = callbackDevices;
 		}
 		
@@ -645,7 +647,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		Transaction findOne = mongoTemplate.findOne(searchUserQuery, Transaction.class);
 		String midwayTransationID = findOne.getMidwayTransactionId() != null ? findOne.getMidwayTransactionId() : "";
-		String carrierTransationID = findOne.getCarrierTransactionId() != null ? findOne.getCarrierTransactionId() : "";
+		String carrierTransationID = findOne.getCarrierTransactionId() != null ? findOne.getCarrierTransactionId() : ""; 
 		BaseRequest devicePayload = (BaseRequest) findOne.getDevicePayload();
 		Header header = devicePayload.getHeader();
 
@@ -654,8 +656,10 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		// TODO
 		exchange.setProperty(IConstant.GV_HOSTNAME, carrierTransationID);
 
-		targetResponse.getDataArea().setMidwayTransactionId(midwayTransationID);
-		targetResponse.setHeader(header);
+		callbackResponse.getDataArea().setRequestId(midwayTransationID);
+		callbackResponse.getDataArea().setTransactionId(carrierTransationID);
+		callbackResponse.getDataArea().setRequestType(findOne.getRequestType());
+		callbackResponse.setHeader(header);
 	}
 
 	public void populateReactivateDBPayload(Exchange exchange) {
