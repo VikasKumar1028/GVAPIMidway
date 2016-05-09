@@ -13,8 +13,8 @@ import com.gv.midway.pojo.transaction.Transaction;
 
 public class KoreSuspendDevicePreProcessor implements Processor {
 
-	Logger log = Logger.getLogger(KoreSuspendDevicePreProcessor.class
-			.getName());
+	Logger log = Logger
+			.getLogger(KoreSuspendDevicePreProcessor.class.getName());
 
 	Environment newEnv;
 
@@ -31,20 +31,17 @@ public class KoreSuspendDevicePreProcessor implements Processor {
 		log.info("*************Testing**************************************"
 				+ exchange.getIn().getBody());
 
-		log.info("Start:KoreSuspendDevicePreProcessor");
+		log.info("Begin:KoreSuspendDevicePreProcessor");
 		Message message = exchange.getIn();
 
-	
 		Transaction transaction = exchange.getIn().getBody(Transaction.class);
-	
-		SuspendDeviceRequest suspendDeviceRequest = (SuspendDeviceRequest)
-				transaction.getDevicePayload();
-	
-				
+
+		SuspendDeviceRequest suspendDeviceRequest = (SuspendDeviceRequest) transaction
+				.getDevicePayload();
+
 		String deviceId = suspendDeviceRequest.getDataArea().getDevices()[0]
 				.getDeviceIds()[0].getId();
-		
-		
+
 		SuspendDeviceRequestKore suspendDeviceRequestKore = new SuspendDeviceRequestKore();
 		suspendDeviceRequestKore.setDeviceNumber(deviceId);
 

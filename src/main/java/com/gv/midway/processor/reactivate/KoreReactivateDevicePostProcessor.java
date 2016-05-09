@@ -23,7 +23,7 @@ public class KoreReactivateDevicePostProcessor implements Processor {
 
 	public void process(Exchange exchange) throws Exception {
 
-		log.info("Start::KoreReactivateDevicePostProcessor");
+		log.info("Begin::KoreReactivateDevicePostProcessor");
 
 		ReactivateDeviceResponse reActivateDeviceResponse = new ReactivateDeviceResponse();
 

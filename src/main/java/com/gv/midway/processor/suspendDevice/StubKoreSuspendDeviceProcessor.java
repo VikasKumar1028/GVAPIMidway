@@ -17,12 +17,12 @@ public class StubKoreSuspendDeviceProcessor implements Processor {
 
 	public void process(Exchange exchange) throws Exception {
 
-		log.info("Start:StubKoreSuspendDeviceProcessor");
+		log.info("Begin:StubKoreSuspendDeviceProcessor");
 
 		SuspendDeviceResponse suspendDeviceResponse = new SuspendDeviceResponse();
 
 		SuspendDeviceResponseDataArea suspendDeviceResponseDataArea = new SuspendDeviceResponseDataArea();
-	    Header responseheader = new Header();
+		Header responseheader = new Header();
 
 		Response response = new Response();
 
@@ -42,7 +42,7 @@ public class StubKoreSuspendDeviceProcessor implements Processor {
 		suspendDeviceResponse.setHeader(responseheader);
 		suspendDeviceResponse.setResponse(response);
 		suspendDeviceResponseDataArea.setOrderNumber("KR0123312313");
-		
+
 		suspendDeviceResponse.setDataArea(suspendDeviceResponseDataArea);
 
 		exchange.getIn().setBody(suspendDeviceResponse);

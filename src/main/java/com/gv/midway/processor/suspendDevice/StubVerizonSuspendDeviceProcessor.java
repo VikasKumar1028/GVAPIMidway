@@ -17,7 +17,7 @@ public class StubVerizonSuspendDeviceProcessor implements Processor {
 
 	public void process(Exchange exchange) throws Exception {
 
-		log.info("Start::StubVerizonSuspendDeviceProcessor");
+		log.info("Begin::StubVerizonSuspendDeviceProcessor");
 		SuspendDeviceResponse suspendDeviceResponse = new SuspendDeviceResponse();
 
 		SuspendDeviceResponseDataArea suspendDeviceResponseDataArea = new SuspendDeviceResponseDataArea();

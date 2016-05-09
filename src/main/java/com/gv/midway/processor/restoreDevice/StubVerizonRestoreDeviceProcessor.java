@@ -15,7 +15,7 @@ public class StubVerizonRestoreDeviceProcessor implements Processor {
 	Logger log = Logger.getLogger(StubVerizonRestoreDeviceProcessor.class
 			.getName());
 
-	//method for processing the message exchange for Verizon Stub
+	// method for processing the message exchange for Verizon Stub
 	public void process(Exchange exchange) throws Exception {
 
 		log.info("Begin:StubVerizonRestoreDeviceProcessor");
