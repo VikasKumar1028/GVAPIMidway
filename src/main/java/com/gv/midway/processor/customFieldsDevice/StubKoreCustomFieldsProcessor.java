@@ -20,7 +20,7 @@ public class StubKoreCustomFieldsProcessor implements Processor {
 
 	public void process(Exchange exchange) throws Exception {
 		// TODO Auto-generated method stub
-		log.info("Start::StubKoreUpdateCustomeFieldDeviceProcessor");
+		log.info("Begin::StubKoreCustomFieldsProcessor");
 
 		CustomFieldsDeviceResponse updateCustomeFieldDeviceResponse = new CustomFieldsDeviceResponse();
 
@@ -44,13 +44,13 @@ public class StubKoreCustomFieldsProcessor implements Processor {
 
 		updateCustomeFieldDeviceResponse.setHeader(responseheader);
 		updateCustomeFieldDeviceResponse.setResponse(response);
-		updateCustomeFieldDeviceResponseDataArea.setOrderNumber("StubKoreUpdateCustomeFieldDeviceProcessor");
+		updateCustomeFieldDeviceResponseDataArea.setOrderNumber("StubKoreCustomFieldsProcessor");
 
 		updateCustomeFieldDeviceResponse
 				.setDataArea(updateCustomeFieldDeviceResponseDataArea);
 
 		exchange.getIn().setBody(updateCustomeFieldDeviceResponse);
-		log.info("End::StubKoreUpdateCustomeFieldDeviceProcessor");
+		log.info("End::StubKoreCustomFieldsProcessor");
 
 	}
 

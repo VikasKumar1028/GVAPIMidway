@@ -19,7 +19,7 @@ public class StubVerizonCustomFieldsProcessor implements Processor {
 	public void process(Exchange exchange) throws Exception {
 		// TODO Auto-generated method stub
 
-		log.info("Start::StubVerizonCustomFieldsUpdateProcessor");
+		log.info("Begin::StubVerizonCustomFieldsProcessor");
 
 		CustomFieldsDeviceResponse updateCustomeFieldDeviceResponse = new CustomFieldsDeviceResponse();
 
@@ -43,14 +43,15 @@ public class StubVerizonCustomFieldsProcessor implements Processor {
 
 		updateCustomeFieldDeviceResponse.setHeader(responseheader);
 		updateCustomeFieldDeviceResponse.setResponse(response);
-		updateCustomeFieldDeviceResponseDataArea.setOrderNumber("StubVerizonUpdateCustomeFieldDeviceProcessor");
+		updateCustomeFieldDeviceResponseDataArea
+				.setOrderNumber("StubVerizonUpdateCustomeFieldDeviceProcessor");
 
 		updateCustomeFieldDeviceResponse
 				.setDataArea(updateCustomeFieldDeviceResponseDataArea);
 
 		exchange.getIn().setBody(updateCustomeFieldDeviceResponse);
 
-		log.info("End::StubVerizonUpdateCustomeFieldDeviceProcessor");
+		log.info("End::StubVerizonCustomFieldsProcessor");
 
 	}
 

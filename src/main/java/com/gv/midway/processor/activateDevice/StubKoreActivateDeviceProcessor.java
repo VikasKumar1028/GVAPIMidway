@@ -18,12 +18,12 @@ public class StubKoreActivateDeviceProcessor implements Processor {
 
 	public void process(Exchange exchange) throws Exception {
 
-		log.info("Start:StubKoreDeviceActivateProcessor");
+		log.info("Begin:StubKoreDeviceActivateProcessor");
 
 		ActivateDeviceResponse activateDeviceResponse = new ActivateDeviceResponse();
 
 		ActivateDeviceResponseDataArea activateDeviceResponseDataArea = new ActivateDeviceResponseDataArea();
-	    Header responseheader = new Header();
+		Header responseheader = new Header();
 
 		Response response = new Response();
 
@@ -43,7 +43,7 @@ public class StubKoreActivateDeviceProcessor implements Processor {
 		activateDeviceResponse.setHeader(responseheader);
 		activateDeviceResponse.setResponse(response);
 		activateDeviceResponseDataArea.setOrderNumber("KR0123312313");
-		
+
 		activateDeviceResponse.setDataArea(activateDeviceResponseDataArea);
 
 		exchange.getIn().setBody(activateDeviceResponse);

@@ -14,10 +14,9 @@ import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponse
 
 public class KoreCustomFieldsPostProcessor implements Processor {
 
-	Logger log = Logger.getLogger(KoreCustomFieldsPostProcessor.class
-			.getName());
+	Logger log = Logger
+			.getLogger(KoreCustomFieldsPostProcessor.class.getName());
 
-	
 	Environment newEnv;
 
 	public KoreCustomFieldsPostProcessor() {
@@ -29,10 +28,9 @@ public class KoreCustomFieldsPostProcessor implements Processor {
 		this.newEnv = env;
 	}
 
-	
 	public void process(Exchange exchange) throws Exception {
 		// TODO Auto-generated method stub
-		log.info("Start::KoreUpdateCustomeFieldDevicePostProcessor");
+		log.info("Begin::KoreCustomFieldsPostProcessor");
 
 		CustomFieldsDeviceResponse customFieldsUpdateDeviceResponse = new CustomFieldsDeviceResponse();
 
@@ -73,7 +71,7 @@ public class KoreCustomFieldsPostProcessor implements Processor {
 
 		exchange.getIn().setBody(customFieldsUpdateDeviceResponse);
 
-		log.info("End::KoreUpdateCustomeFieldDevicePostProcessor");
+		log.info("End::KoreCustomFieldsPostProcessor");
 
 	}
 

@@ -22,7 +22,7 @@ public class VerizonCustomFieldsPreProcessor implements Processor {
 	public void process(Exchange exchange) throws Exception {
 		// TODO Auto-generated method stub
 
-		log.info("Start::VerizonCustomeFieldDevicePreProcessor");
+		log.info("Begin::VerizonCustomFieldsPreProcessor");
 
 		CustomFieldsDeviceRequestVerizon businessRequest = new CustomFieldsDeviceRequestVerizon();
 		CustomFieldsDeviceRequest proxyRequest = (CustomFieldsDeviceRequest) exchange				.getIn().getBody();
@@ -102,7 +102,7 @@ public class VerizonCustomFieldsPreProcessor implements Processor {
 		message.setHeader(Exchange.HTTP_METHOD, "PUT");
 		message.setHeader(Exchange.HTTP_PATH, "/devices/actions/customFields");
 
-		log.info("End::VerizonCustomeFieldDevicePreProcessor");
+		log.info("End::VerizonCustomFieldsPreProcessor");
 	}
 
 }

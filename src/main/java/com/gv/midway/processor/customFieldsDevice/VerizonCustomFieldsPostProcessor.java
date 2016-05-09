@@ -30,7 +30,7 @@ public class VerizonCustomFieldsPostProcessor implements Processor{
 	public void process(Exchange exchange) throws Exception {
 		// TODO Auto-generated method stub
 		
-		log.info("Start::VerizonCustomFieldsUpdatePostProcessor");
+		log.info("Begin::VerizonCustomFieldsPostProcessor");
 		
 
 		CustomFieldsDeviceResponse customFieldsUpdateDeviceResponse = new CustomFieldsDeviceResponse();
@@ -96,7 +96,7 @@ public class VerizonCustomFieldsPostProcessor implements Processor{
 
 		exchange.getIn().setBody(customFieldsUpdateDeviceResponse);
 
-		log.info("End::VerizonCustomFieldsUpdatePostProcessor");
+		log.info("End::VerizonCustomFieldsPostProcessor");
 	}
 
 }
