@@ -39,7 +39,7 @@ public class VerizonRestoreDevicePostProcessor implements Processor {
 	//method for processing the message exchange for Verizon
 	public void process(Exchange exchange) throws Exception {
 
-		log.info("Start:VerizonRestoreDevicePostProcessor");
+		log.info("Begin:VerizonRestoreDevicePostProcessor");
 
 		RestoreDeviceResponse restoreDeviceResponse = new RestoreDeviceResponse();
 		RestoreDeviceResponseDataArea restoreDeviceResponseDataArea = new RestoreDeviceResponseDataArea();

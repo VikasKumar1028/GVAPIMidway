@@ -7,26 +7,23 @@ import org.apache.log4j.Logger;
 import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
-import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
-import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponseDataArea;
 import com.gv.midway.pojo.restoreDevice.response.RestoreDeviceResponse;
 import com.gv.midway.pojo.restoreDevice.response.RestoreDeviceResponseDataArea;
-import com.gv.midway.processor.activateDevice.StubKoreActivateDeviceProcessor;
 
 public class StubKoreRestoreDeviceProcessor implements Processor {
 
 	Logger log = Logger.getLogger(StubKoreRestoreDeviceProcessor.class
 			.getName());
 
-	//method for processing the message exchange for KORE Stub
+	// method for processing the message exchange for KORE Stub
 	public void process(Exchange exchange) throws Exception {
 
-		log.info("Start:StubKoreRestoreDeviceProcessor");
+		log.info("Begin:StubKoreRestoreDeviceProcessor");
 
 		RestoreDeviceResponse restoreDeviceResponse = new RestoreDeviceResponse();
 
 		RestoreDeviceResponseDataArea restoreDeviceResponseDataArea = new RestoreDeviceResponseDataArea();
-	    Header responseheader = new Header();
+		Header responseheader = new Header();
 
 		Response response = new Response();
 
@@ -46,7 +43,7 @@ public class StubKoreRestoreDeviceProcessor implements Processor {
 		restoreDeviceResponse.setHeader(responseheader);
 		restoreDeviceResponse.setResponse(response);
 		restoreDeviceResponseDataArea.setRequestId("KR001");
-		
+
 		restoreDeviceResponse.setDataArea(restoreDeviceResponseDataArea);
 
 		exchange.getIn().setBody(restoreDeviceResponse);
@@ -54,4 +51,3 @@ public class StubKoreRestoreDeviceProcessor implements Processor {
 		log.info("End:StubKoreRestoreDeviceProcessor");
 	}
 }
-

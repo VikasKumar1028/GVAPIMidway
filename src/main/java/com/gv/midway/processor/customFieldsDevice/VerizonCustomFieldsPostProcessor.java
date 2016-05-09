@@ -11,7 +11,6 @@ import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponse;
 import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponseDataArea;
-import com.gv.midway.processor.activateDevice.KoreActivateDevicePostProcessor;
 
 public class VerizonCustomFieldsPostProcessor implements Processor{
 

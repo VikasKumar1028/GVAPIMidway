@@ -18,7 +18,7 @@ public class StubVerizonRestoreDeviceProcessor implements Processor {
 	//method for processing the message exchange for Verizon Stub
 	public void process(Exchange exchange) throws Exception {
 
-		log.info("Start:StubVerizonRestoreDeviceProcessor");
+		log.info("Begin:StubVerizonRestoreDeviceProcessor");
 		RestoreDeviceResponse restoreDeviceResponse = new RestoreDeviceResponse();
 
 		RestoreDeviceResponseDataArea restoreDeviceResponseDataArea = new RestoreDeviceResponseDataArea();

@@ -7,8 +7,6 @@ import org.apache.log4j.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
-import com.gv.midway.pojo.activateDevice.request.ActivateDeviceId;
-import com.gv.midway.pojo.activateDevice.request.ActivateDevices;
 import com.gv.midway.pojo.customFieldsDevice.request.CustomFieldsDeviceRequest;
 import com.gv.midway.pojo.customFieldsDevice.verizon.request.CustomFieldsDeviceRequestVerizon;
 import com.gv.midway.pojo.verizon.DeviceId;

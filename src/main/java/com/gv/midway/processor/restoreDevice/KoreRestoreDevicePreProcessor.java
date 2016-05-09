@@ -10,7 +10,6 @@ import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.restoreDevice.kore.request.RestoreDeviceRequestKore;
 import com.gv.midway.pojo.restoreDevice.request.RestoreDeviceRequest;
 import com.gv.midway.pojo.transaction.Transaction;
-import com.gv.midway.processor.activateDevice.KoreActivateDevicePreProcessor;
 
 public class KoreRestoreDevicePreProcessor implements Processor {
 
@@ -32,7 +31,7 @@ public class KoreRestoreDevicePreProcessor implements Processor {
 
 	//method for Processing the message exchange for Kore
 	public void process(Exchange exchange) throws Exception {
-		log.info("Start:KoreRestoreDevicePreProcessor.."
+		log.info("Begin:KoreRestoreDevicePreProcessor.."
 				+ exchange.getIn().getBody());
 
 		Message message = exchange.getIn();
