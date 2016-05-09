@@ -657,7 +657,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		exchange.setProperty(IConstant.GV_HOSTNAME, carrierTransationID);
 
 		callbackResponse.getDataArea().setRequestId(midwayTransationID);
-		callbackResponse.getDataArea().setTransactionId(carrierTransationID);
+		/*callbackResponse.getDataArea().setTransactionId(carrierTransationID);*/
 		callbackResponse.getDataArea().setRequestType(findOne.getRequestType());
 		callbackResponse.setHeader(header);
 	}

@@ -14,8 +14,8 @@ public class CallbackCommonResponseDataArea {
 	@ApiModelProperty(value = "Having type and value of device identifier.")
 	private DeviceId[] deviceIds;
 	
-	@ApiModelProperty(value = "Transaction Id.")
-	private String transactionId;
+/*	@ApiModelProperty(value = "Transaction Id.")
+	private String transactionId;*/
 	
 	@ApiModelProperty(value = "Midway Transaction Id.")
 	private String requestId;
@@ -43,13 +43,13 @@ public class CallbackCommonResponseDataArea {
 		this.deviceIds = deviceIds;
 	}
 
-	public String getTransactionId() {
+/*	public String getTransactionId() {
 		return transactionId;
 	}
 
 	public void setTransactionId(String transactionId) {
 		this.transactionId = transactionId;
-	}
+	}*/
 
 	public String getRequestId() {
 		return requestId;
@@ -71,8 +71,8 @@ public class CallbackCommonResponseDataArea {
 	@Override
 	public String toString() {
 		return "CallbackCommonResponseDataArea [deviceIds="
-				+ Arrays.toString(deviceIds) + ", transactionId="
-				+ transactionId + ", requestId=" + requestId + ", requestType="
+				+ Arrays.toString(deviceIds) /*+ ", transactionId="
+				+ transactionId*/ + ", requestId=" + requestId + ", requestType="
 				+ requestType + ", RequestStatus=" + RequestStatus + "]";
 	}
 
@@ -87,8 +87,8 @@ public class CallbackCommonResponseDataArea {
 				+ ((requestId == null) ? 0 : requestId.hashCode());
 		result = prime * result
 				+ ((requestType == null) ? 0 : requestType.hashCode());
-		result = prime * result
-				+ ((transactionId == null) ? 0 : transactionId.hashCode());
+		/*result = prime * result
+				+ ((transactionId == null) ? 0 : transactionId.hashCode());*/
 		return result;
 	}
 
@@ -115,11 +115,11 @@ public class CallbackCommonResponseDataArea {
 			return false;
 		if (requestType != other.requestType)
 			return false;
-		if (transactionId == null) {
+		/*if (transactionId == null) {
 			if (other.transactionId != null)
 				return false;
 		} else if (!transactionId.equals(other.transactionId))
-			return false;
+			return false;*/
 		return true;
 	}
 	
