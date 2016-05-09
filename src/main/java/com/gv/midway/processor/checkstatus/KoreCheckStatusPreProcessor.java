@@ -8,7 +8,9 @@ import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
 
 import com.gv.midway.constant.IConstant;
+import com.gv.midway.constant.ITransaction;
 import com.gv.midway.constant.RequestType;
+import com.gv.midway.pojo.BaseRequest;
 import com.gv.midway.pojo.transaction.Transaction;
 
 public class KoreCheckStatusPreProcessor implements Processor {
@@ -42,9 +44,23 @@ public class KoreCheckStatusPreProcessor implements Processor {
 		
 		RequestType requestType=transaction.getRequestType();
 		
+		Object payload=transaction.getDevicePayload();
+		
+		BaseRequest baseRequest=(BaseRequest) payload;
+		
+		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_REQUEST_HEADER, baseRequest.getHeader());
+		
 		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,transaction.getDeviceNumber());
 
 		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_ID,transaction.getMidwayTransactionId());
+		
+		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_REQUEST_TYPE,requestType);
+		
+		exchange.setProperty(ITransaction.CARRIER_STATUS,carrierStatus);
+		
+		exchange.setProperty(IConstant.MIDWAY_CARRIER_ERROR_DESC,transaction.getCarrierErrorDescription());
+		
+		
 		
 		/***
 		 * carrier status as Error . CallBack the Netsuite end point here and write it in Kafka Queue.
@@ -54,6 +70,7 @@ public class KoreCheckStatusPreProcessor implements Processor {
 		{
 			log.info("carrier status error is........."+carrierStatus);
 			message.setHeader("KoreCheckStatusFlow", "end");
+			
 			
 		}
 		

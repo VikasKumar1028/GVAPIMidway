@@ -95,7 +95,7 @@
 <!-- START : Defining client endpoint to create cxf-rs URL -->
 
 	<cxf:rsClient id="rsNetsuitClient"
-		address="" serviceClass=""
+		address="http://localhost:8080/NetSuiteCallBackClient/rest/" 
 		loggingFeatureEnabled="true">
 		<cxf:providers>
 			<bean class="com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider" />

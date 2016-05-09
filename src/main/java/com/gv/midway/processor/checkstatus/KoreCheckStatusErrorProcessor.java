@@ -1,9 +1,11 @@
 package com.gv.midway.processor.checkstatus;
 
 import java.util.List;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
+import org.apache.camel.component.cxf.CxfOperationException;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,36 +17,38 @@ import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.callback.common.response.CallbackCommonResponse;
 import com.gv.midway.pojo.callback.common.response.CallbackCommonResponseDataArea;
+import com.gv.midway.pojo.kore.KoreErrorResponse;
 import com.gv.midway.pojo.verizon.DeviceId;
 
-public class KoreCheckStatusPostProcessor implements Processor {
+public class KoreCheckStatusErrorProcessor implements Processor {
 
 	/**
 	 * Call back the Netsuite endPoint
 	 */
 	
-	Logger log = Logger.getLogger(KoreCheckStatusPostProcessor.class
+	Logger log = Logger.getLogger(KoreCheckStatusErrorProcessor.class
 			.getName());
 	
 	private Environment newEnv;
 	
-	public KoreCheckStatusPostProcessor() {
+	public KoreCheckStatusErrorProcessor() {
 
 	}
 
 	
-	public KoreCheckStatusPostProcessor(Environment env) {
+	public KoreCheckStatusErrorProcessor(Environment env) {
 		super();
 		this.newEnv = env;
 	}
-	
+
+
 	@Override
 	public void process(Exchange exchange) throws Exception {
 		// TODO Auto-generated method stub
 		
-		log.info("kore check status post processor");
-		
-		Message message = exchange.getIn();
+        log.info("kore check status error processor");
+        
+        Message message = exchange.getIn();
 		
 		String midWayTransactionDeviceNumber=(String)exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER);
 		
@@ -52,67 +56,49 @@ public class KoreCheckStatusPostProcessor implements Processor {
 		
 		RequestType requestType=(RequestType)exchange.getProperty(IConstant.MIDWAY_TRANSACTION_REQUEST_TYPE);
 		
+		String errorDescription=(String)exchange.getProperty(IConstant.MIDWAY_CARRIER_ERROR_DESC);
+		
+		
+		CxfOperationException exception = (CxfOperationException) exchange.getProperty(Exchange.EXCEPTION_CAUGHT);
+		
 	
-        CallbackCommonResponse callbackCommonResponse= new CallbackCommonResponse();
+		
+		if(exception!=null)
+		{
+			
+			 log.info("cxf exception while checking the status of Kore Provisoning request");
+			String errorResponseBody = exception.getResponseBody();
+			ObjectMapper mapper = new ObjectMapper();
+			
+			try {
+				KoreErrorResponse errorResponsePayload = mapper.readValue(errorResponseBody, KoreErrorResponse.class);
+				errorDescription=errorResponsePayload.getErrorMessage();
+			} 
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			
+		}
+		
+		
+		CallbackCommonResponse callbackCommonResponse= new CallbackCommonResponse();
 		
 		Header header=(Header)exchange.getProperty(IConstant.MIDWAY_TRANSACTION_REQUEST_HEADER);
 		
+		
+		
 		Response response=new Response();
 		
-		response.setResponseCode(IResponse.SUCCESS_CODE);
-		response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
-		switch (requestType) {
-		case ACTIVATION:
-
-			response.setResponseDescription("Device Activated Successfully");
-			break;
-
-		case DEACTIVATION:
-			
-			response.setResponseDescription("Device DeActivated Successfully");
-
-			break;
-
-		case REACTIVATION:
-			
-			response.setResponseDescription("Device ReActivated Successfully");
-
-			break;
-
-		case RESTORE:
-			
-			response.setResponseDescription("Device ReStored Successfully");
-
-			break;
-
-		case SUSPEND:
-			
-			response.setResponseDescription("Device Suspend Successfully");
-
-			break;
-			
-		case CHNAGESERVICEPLAN:
-			
-			response.setResponseDescription("Device Service Plan Changed Successfully.");
-
-			break;
-			
-		case CHANGECUSTOMFIELDS:
-			
-			response.setResponseDescription("Device Custom Fields Changed Successfully.");
-
-			break;
-			
-		default:
-			break;
-		}
-		
+		response.setResponseCode(IResponse.NETSUITE_CALLBACK_ERRORCODE);
+		response.setResponseStatus(IResponse.ERROR_MESSAGE);
+		response.setResponseDescription(errorDescription);
 		
 		CallbackCommonResponseDataArea callbackCommonResponseDataArea=new CallbackCommonResponseDataArea();
 		
 		callbackCommonResponseDataArea.setRequestId(midWayTransactionId);
 		callbackCommonResponseDataArea.setRequestType(requestType);
-		callbackCommonResponseDataArea.setRequestStatus(true);
+		callbackCommonResponseDataArea.setRequestStatus(false);
 		
 		List<DeviceId> deviceIdlist = new ObjectMapper().readValue(midWayTransactionDeviceNumber,
 				TypeFactory.defaultInstance().constructCollectionType(List.class,  
@@ -128,18 +114,15 @@ public class KoreCheckStatusPostProcessor implements Processor {
 		
 	    callbackCommonResponse.setDataArea(callbackCommonResponseDataArea);
 		
-	   /* message.setHeader(Exchange.CONTENT_TYPE, "application/json");
-		
+	  /*  message.setHeader(Exchange.CONTENT_TYPE, "application/json");
+	
 		message.setHeader(Exchange.HTTP_METHOD, "POST");
 		
 		message.setHeader(Exchange.HTTP_PATH, "/netSuite/EndPoint");
 
 		message.setBody(callbackCommonResponse);*/
 		
-	   
-		
-		
-		
+	  
 	}
 
 }

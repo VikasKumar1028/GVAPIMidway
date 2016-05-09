@@ -9,6 +9,8 @@ public class IResponse {
 	public static final Integer DEVICEINFO_ERROR_CODE_CARRIER=1904;
 	public static final Integer INVALID_PAYLOAD=1905;
 	
+	public static final Integer NETSUITE_CALLBACK_ERRORCODE=1906;
+	
 	
 	
 	public static final String SUCCESS_MESSAGE="Success";

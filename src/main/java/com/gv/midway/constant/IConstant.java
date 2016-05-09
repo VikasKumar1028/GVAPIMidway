@@ -28,6 +28,9 @@ public interface IConstant {
 	static String AUDIT_TRANSACTION_ID="com.gv.midway.audit.TransactionID";
 	static String MIDWAY_TRANSACTION_ID="MidwayTransactionId";
 	static String CARRIER_TRANSACTION_ID="CarrierTransactionId";
+	static String MIDWAY_TRANSACTION_REQUEST_TYPE="midWayTransactionRequestType";
+	static String MIDWAY_TRANSACTION_REQUEST_HEADER="midWayTransactionRequestHeader";
+	static String MIDWAY_CARRIER_ERROR_DESC="midWayCarrierErrorDescription";
 	
 	static String MIDWAY_CALLBACK_CARRIER_STATUS_SUCCESS="Success";
 	static String MIDWAY_CALLBACK_DELIVERED_FAILED="Fail";

@@ -1148,19 +1148,10 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		
 		Update update = new Update();
 		
-		CxfOperationException exception = (CxfOperationException) exchange.getProperty(Exchange.EXCEPTION_CAUGHT);
+		Exception exception =  (Exception)exchange.getProperty(Exchange.EXCEPTION_CAUGHT);
 
-		if(exception!=null)
-		{
-			String errorResponseBody = exception.getResponseBody();
-			update.set(ITransaction.CALL_BACK_FAILURE_TO_NETSUITE_REASON ,errorResponseBody);
-		}
 		
-		else
-		{
-			update.set(ITransaction.CALL_BACK_FAILURE_TO_NETSUITE_REASON ,exchange.getProperty(Exchange.EXCEPTION_CAUGHT));
-			
-		}
+	    update.set(ITransaction.CALL_BACK_FAILURE_TO_NETSUITE_REASON ,exception.getMessage());
 		
 		
 		

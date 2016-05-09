@@ -45,6 +45,7 @@ import com.gv.midway.processor.changeDeviceServicePlans.StubKoreChangeDeviceServ
 import com.gv.midway.processor.changeDeviceServicePlans.StubVerizonChangeDeviceServicePlansProcessor;
 import com.gv.midway.processor.changeDeviceServicePlans.VerizonChangeDeviceServicePlansPostProcessor;
 import com.gv.midway.processor.changeDeviceServicePlans.VerizonChangeDeviceServicePlansPreProcessor;
+import com.gv.midway.processor.checkstatus.KoreCheckStatusErrorProcessor;
 import com.gv.midway.processor.checkstatus.KoreCheckStatusPostProcessor;
 import com.gv.midway.processor.checkstatus.KoreCheckStatusPreProcessor;
 import com.gv.midway.processor.connectionInformation.VerizonDeviceConnectionInformationPreProcessor;
@@ -253,7 +254,7 @@ public class CamelRoute extends RouteBuilder {
 		
 		 from("direct:koreCheckStatusErrorSubProcess").bean(iTransactionalService,
 					"populateKoreCheckStatusErrorResponse").doTry().
-			process(new KoreCheckStatusPostProcessor()).
+			process(new KoreCheckStatusErrorProcessor())./*to(uriRestNetsuitEndPoint).*/
 			doCatch(Exception.class).
 			bean(iTransactionalService,"updateNetSuiteCallBackError").
 			doFinally().bean(iTransactionalService,"updateNetSuiteCallBack").end();
@@ -261,14 +262,14 @@ public class CamelRoute extends RouteBuilder {
 		 
 		 from("direct:koreCustomChangeSubProcess").bean(iTransactionalService,
 					"populateKoreCustomChangeResponse").doTry().
-			process(new KoreCheckStatusPostProcessor()).
+			process(new KoreCheckStatusPostProcessor())./*to(uriRestNetsuitEndPoint).*/
 			doCatch(Exception.class).
 			bean(iTransactionalService,"updateNetSuiteCallBackError").
 			doFinally().bean(iTransactionalService,"updateNetSuiteCallBack").end();
 		 
 		 from("direct:koreCheckStatusSubProcess").bean(iTransactionalService,
 					"populateKoreCheckStatusResponse").doTry().
-			process(new KoreCheckStatusPostProcessor()).
+			process(new KoreCheckStatusPostProcessor())./*to(uriRestNetsuitEndPoint).*/
 			doCatch(Exception.class).
 			bean(iTransactionalService,"updateNetSuiteCallBackError").
 			doFinally().bean(iTransactionalService,"updateNetSuiteCallBack").end();
