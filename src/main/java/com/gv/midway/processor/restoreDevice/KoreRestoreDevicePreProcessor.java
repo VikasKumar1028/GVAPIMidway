@@ -14,7 +14,7 @@ import com.gv.midway.processor.activateDevice.KoreActivateDevicePreProcessor;
 
 public class KoreRestoreDevicePreProcessor implements Processor {
 
-	Logger log = Logger.getLogger(KoreActivateDevicePreProcessor.class
+	Logger log = Logger.getLogger(KoreRestoreDevicePreProcessor.class
 			.getName());
 
 	Environment newEnv;

@@ -39,7 +39,7 @@ public class VerizonActivateDevicePostProcessor implements Processor {
 	 */
 	public void process(Exchange exchange) throws Exception {
 
-		log.info("Start:VerizonActivateDevicePostProcessor");
+		log.info("Begin:VerizonActivateDevicePostProcessor");
 
 		ActivateDeviceResponse activateDeviceResponse = new ActivateDeviceResponse();
 		ActivateDeviceResponseDataArea activateDeviceResponseDataArea = new ActivateDeviceResponseDataArea();
@@ -50,13 +50,12 @@ public class VerizonActivateDevicePostProcessor implements Processor {
 				newEnv.getProperty(IConstant.DATE_FORMAT));
 
 		Date date = new Date();
-		
 
-		System.out.println("exchange.getIn().getBody().toString()***************************************"+ exchange.getIn().getBody().toString());
+		System.out
+				.println("exchange.getIn().getBody().toString()***************************************"
+						+ exchange.getIn().getBody().toString());
 
-		
 		if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
-
 
 			log.info("RequestID::" + exchange.getIn().getBody().toString());
 			response.setResponseCode(IResponse.SUCCESS_CODE);
@@ -72,8 +71,7 @@ public class VerizonActivateDevicePostProcessor implements Processor {
 			response.setResponseDescription(exchange.getIn().getBody()
 					.toString());
 
-
-		} 
+		}
 
 		responseheader.setApplicationName(exchange.getProperty(
 				IConstant.APPLICATION_NAME).toString());
@@ -82,8 +80,10 @@ public class VerizonActivateDevicePostProcessor implements Processor {
 		responseheader.setOrganization(exchange.getProperty(
 				IConstant.ORGANIZATION).toString());
 
-		/*responseheader.setTimestamp(exchange.getProperty(
-				IConstant.DATE_FORMAT).toString());*/
+		/*
+		 * responseheader.setTimestamp(exchange.getProperty(
+		 * IConstant.DATE_FORMAT).toString());
+		 */
 
 		responseheader.setTimestamp(dateFormat.format(date));
 		responseheader.setSourceName(exchange

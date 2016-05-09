@@ -41,11 +41,14 @@ public class KoreReactivateDevicePreProcessor implements Processor {
 		reActicationDeviceRequestKore.setDeviceNumber(deviceId);
 
 		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER, transaction.getDeviceNumber());
+		
 		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.HTTP_METHOD, "POST");
 		message.setHeader("Authorization", newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
 		message.setHeader(Exchange.HTTP_PATH, "/json/reactivateDevice");
+		exchange.setPattern(ExchangePattern.InOut);
+
 
 		message.setBody(reActicationDeviceRequestKore);
 

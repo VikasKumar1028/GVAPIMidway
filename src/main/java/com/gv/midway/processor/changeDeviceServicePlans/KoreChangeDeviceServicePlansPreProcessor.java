@@ -30,7 +30,7 @@ public class KoreChangeDeviceServicePlansPreProcessor implements Processor {
 	public void process(Exchange exchange) throws Exception {
 		// TODO Auto-generated method stub
 
-		log.info("Start::KoreChangeDeviceServicePlansPreProcessor");
+		log.info("Begin::KoreChangeDeviceServicePlansPreProcessor");
 
 		Message message = exchange.getIn();
 

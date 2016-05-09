@@ -11,10 +11,9 @@ import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.reActivateDevice.response.ReactivateDeviceResponse;
 import com.gv.midway.pojo.reActivateDevice.response.ReactivateDeviceResponseDataArea;
-import com.gv.midway.processor.activateDevice.KoreActivateDevicePostProcessor;
 
 public class KoreReactivateDevicePostProcessor implements Processor {
-	Logger log = Logger.getLogger(KoreActivateDevicePostProcessor.class.getName());
+	Logger log = Logger.getLogger(KoreReactivateDevicePostProcessor.class.getName());
 
 	public KoreReactivateDevicePostProcessor() {
 

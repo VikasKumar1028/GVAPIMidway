@@ -14,7 +14,8 @@ import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponseDataArea
 
 public class KoreActivateDevicePostProcessor implements Processor {
 
-	Logger log = Logger.getLogger(KoreActivateDevicePostProcessor.class.getName());
+	Logger log = Logger.getLogger(KoreActivateDevicePostProcessor.class
+			.getName());
 
 	public KoreActivateDevicePostProcessor() {
 
@@ -30,7 +31,7 @@ public class KoreActivateDevicePostProcessor implements Processor {
 
 	public void process(Exchange exchange) throws Exception {
 
-		log.info("Start::KoreActivateDevicePostProcessor");
+		log.info("Begin::KoreActivateDevicePostProcessor");
 
 		ActivateDeviceResponse activateDeviceResponse = new ActivateDeviceResponse();
 
@@ -44,19 +45,27 @@ public class KoreActivateDevicePostProcessor implements Processor {
 		response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
 		response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
 
-		responseheader.setApplicationName(exchange.getProperty(IConstant.APPLICATION_NAME).toString());
-		responseheader.setRegion(exchange.getProperty(IConstant.REGION).toString());
+		responseheader.setApplicationName(exchange.getProperty(
+				IConstant.APPLICATION_NAME).toString());
+		responseheader.setRegion(exchange.getProperty(IConstant.REGION)
+				.toString());
 
-		responseheader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT).toString());
-		responseheader.setOrganization(exchange.getProperty(IConstant.ORGANIZATION).toString());
+		responseheader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT)
+				.toString());
+		responseheader.setOrganization(exchange.getProperty(
+				IConstant.ORGANIZATION).toString());
 
-		responseheader.setSourceName(exchange.getProperty(IConstant.SOURCE_NAME).toString());
-		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER).toString());
-		responseheader.setTransactionId(exchange.getProperty(IConstant.GV_TRANSACTION_ID).toString());
+		responseheader.setSourceName(exchange
+				.getProperty(IConstant.SOURCE_NAME).toString());
+		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
+				.toString());
+		responseheader.setTransactionId(exchange.getProperty(
+				IConstant.GV_TRANSACTION_ID).toString());
 
 		activateDeviceResponse.setHeader(responseheader);
 		activateDeviceResponse.setResponse(response);
-		activateDeviceResponseDataArea.setOrderNumber(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID).toString());
+		activateDeviceResponseDataArea.setOrderNumber(exchange.getProperty(
+				IConstant.MIDWAY_TRANSACTION_ID).toString());
 
 		activateDeviceResponse.setDataArea(activateDeviceResponseDataArea);
 

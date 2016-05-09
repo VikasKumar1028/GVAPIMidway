@@ -34,23 +34,19 @@ public class KoreActivateDevicePreProcessor implements Processor {
 		log.info("*************Testing**************************************"
 				+ exchange.getIn().getBody());
 
-		log.info("Start:KoreActivateDevicePreProcessor");
+		log.info("Begin:KoreActivateDevicePreProcessor");
 		Message message = exchange.getIn();
 
-	
 		Transaction transaction = exchange.getIn().getBody(Transaction.class);
-	
-		ActivateDeviceRequest activateDeviceRequest = (ActivateDeviceRequest)
-				transaction.getDevicePayload();
-	
-				
+
+		ActivateDeviceRequest activateDeviceRequest = (ActivateDeviceRequest) transaction
+				.getDevicePayload();
+
 		String deviceId = activateDeviceRequest.getDataArea().getDevices()[0]
 				.getDeviceIds()[0].getId();
-/*		String eAPCode = activateDeviceRequest.getDataArea().getDevices()[0]
-				.getDeviceIds()[0].geteAPCode();*/
+
 		String EAPCode = activateDeviceRequest.getDataArea().geteAPCode();
-		
-		
+
 		ActivateDeviceRequestKore acticationDeviceRequestKore = new ActivateDeviceRequestKore();
 		acticationDeviceRequestKore.setDeviceNumber(deviceId);
 		acticationDeviceRequestKore.setEAPCode(EAPCode);
@@ -67,10 +63,9 @@ public class KoreActivateDevicePreProcessor implements Processor {
 		message.setBody(acticationDeviceRequestKore);
 
 		exchange.setPattern(ExchangePattern.InOut);
-		
+
 		log.info("End:KoreActivateDevicePreProcessor");
-		
-		
+
 	}
 
 }

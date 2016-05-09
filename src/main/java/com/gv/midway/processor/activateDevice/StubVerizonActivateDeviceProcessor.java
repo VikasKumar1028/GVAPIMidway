@@ -17,7 +17,7 @@ public class StubVerizonActivateDeviceProcessor implements Processor {
 
 	public void process(Exchange exchange) throws Exception {
 
-		log.info("Start::StubVerizonActivateDeviceProcessor");
+		log.info("Begin::StubVerizonActivateDeviceProcessor");
 		ActivateDeviceResponse activateDeviceResponse = new ActivateDeviceResponse();
 
 		ActivateDeviceResponseDataArea activateDeviceResponseDataArea = new ActivateDeviceResponseDataArea();
