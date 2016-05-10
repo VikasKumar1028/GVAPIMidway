@@ -1,10 +1,80 @@
 *************************MidWay Payload
+{  
+   "dataArea":{  
+     "accountName":"0442090022-00001",
+   
+       "devices":[  
+         {  
+            "deviceIds":[  
+               {  
+                  
+                  "kind":"IMEI",
+                   "id":"353238063289994"
+               }
+                                       ,
+            {  
+               "kind":"ICCID",
+               "id":"89148000002377648495"
+            }
+            ]
+         }
+                        
+       
+      ]
+   },
+   "header":{  
+      "region":"USA",
+      "timestamp":"string",
+      "organization":"Grant Victor",
+      "transactionId":"gv123666",
+      "sourceName":"NetSuit",
+      "applicationName":"WEB",
+      "bsCarrier":"VERIZON"
+   }
+}
+
 
 
 *************************Carrier Payload
-
+Payload: {"groupName":null,"accountName":"0442090022-00001","customFields":null,"devices":[{"deviceIds":[{"id":"353238063289994","kind":"IMEI"},
+{"id":"89148000002377648495","kind":"ICCID"}]}],"servicePlan":null}
 
 *************************Carrier Response
-
+Payload: {"requestId":"595f5c44-c31c-4552-8670-020a1545a84d"}
 
 *************************MidWay Response
+
+{
+   "header":    {
+      "region": "USA",
+      "timestamp": "2016/05/10 14:26:16",
+      "organization": "Grant Victor",
+      "transactionId": "gv123666",
+      "sourceName": "NetSuit",
+      "applicationName": "WEB",
+      "bsCarrier": "VERIZON"
+   },
+   "response":    {
+      "responseCode": 2000,
+      "responseStatus": "Success",
+      "responseDescription": "Data Submitted Successfully"
+   },
+   "dataArea": {"requestId": "1462870575228"}
+}
+{
+   "header":    {
+      "region": "USA",
+      "timestamp": "2016/05/10 14:26:16",
+      "organization": "Grant Victor",
+      "transactionId": "gv123666",
+      "sourceName": "NetSuit",
+      "applicationName": "WEB",
+      "bsCarrier": "VERIZON"
+   },
+   "response":    {
+      "responseCode": 2000,
+      "responseStatus": "Success",
+      "responseDescription": "Data Submitted Successfully"
+   },
+   "dataArea": {"requestId": "1462870575228"}
+}

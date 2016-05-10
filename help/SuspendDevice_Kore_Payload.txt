@@ -1,5 +1,45 @@
 ************************MidWay Request Payload
+{
+  "dataArea": {
+    "devices": [
+      {
+        "deviceIds": [
+          {
+            "id": "8901260761246107349",
+            "kind": ""
+          }
+        ]
+      }
+    ]
+  },
+"header":{  
+      "region":"USA",
+      "timestamp":"string",
+      "organization":"Grant Victor",
+      "transactionId":"gv123666",
+      "sourceName":"NetSuit",
+      "applicationName":"WEB",
+      "bsCarrier":"KORE"
+   }
+}
 ************************Carrier Request Payload
   
 ************************Carrier Response Payload
 ************************MidWay Response Payload
+{
+   "header":    {
+      "region": "USA",
+      "timestamp": "string",
+      "organization": "Grant Victor",
+      "transactionId": "gv123666",
+      "sourceName": "NetSuit",
+      "applicationName": "WEB",
+      "bsCarrier": "KORE"
+   },
+   "response":    {
+      "responseCode": 2000,
+      "responseStatus": "Success",
+      "responseDescription": "Data Submitted Successfully"
+   },
+   "dataArea": {"orderNumber": "1462865698112"}
+}
