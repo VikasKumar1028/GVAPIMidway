@@ -37,7 +37,7 @@ public class VerizonDeviceSessionBeginEndInfoPostProcessor implements Processor 
 
 	public void process(Exchange exchange) throws Exception {
 
-		log.info("Start:VerizonDeviceSessionBeginEndInfoPostProcessor");
+		log.info("Begin:VerizonDeviceSessionBeginEndInfoPostProcessor");
 
 		SessionBeginEndResponse businessResponse = new SessionBeginEndResponse();
 		SessionBeginEndResponseDataArea sessionBeginEndResponseDataArea = new SessionBeginEndResponseDataArea();
@@ -49,9 +49,8 @@ public class VerizonDeviceSessionBeginEndInfoPostProcessor implements Processor 
 
 		Date date = new Date();
 
-		System.out
-				.println("exchange.getIn().getBody().toString()***************************************"
-						+ exchange.getIn().getBody().toString());
+		log.info("exchange.getIn().getBody().toString()***************************************"
+				+ exchange.getIn().getBody().toString());
 
 		if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
 
@@ -66,12 +65,13 @@ public class VerizonDeviceSessionBeginEndInfoPostProcessor implements Processor 
 			int deviceArraySize = ((totalConnectionHistory % 2) == 0) ? (totalConnectionHistory / 2)
 					: ((totalConnectionHistory / 2) + 1);
 			ArrayList<DeviceSession> deviceSessions = new ArrayList<DeviceSession>();
-			//DeviceSession[] deviceSession = new DeviceSession[deviceArraySize];
+			// DeviceSession[] deviceSession = new
+			// DeviceSession[deviceArraySize];
 			if (totalConnectionHistory > 0) {
 
 				int newSession = 0;
 				DeviceSession deviceSession = new DeviceSession();
-				//deviceSession[newSession] = new DeviceSession();
+				// deviceSession[newSession] = new DeviceSession();
 				int eventStatus = 0;
 				for (int i = 0; i < totalConnectionHistory; i++) {
 
@@ -106,10 +106,8 @@ public class VerizonDeviceSessionBeginEndInfoPostProcessor implements Processor 
 								&& i == (totalConnectionHistory - 1)) {
 
 							deviceSession.setEnd(null);
-							deviceSession
-									.setBegin(connectionResponse
-											.getConnectionHistory()[i]
-											.getOccurredAt());
+							deviceSession.setBegin(connectionResponse
+									.getConnectionHistory()[i].getOccurredAt());
 							deviceSessions.add(deviceSession);
 							break;
 
@@ -124,10 +122,9 @@ public class VerizonDeviceSessionBeginEndInfoPostProcessor implements Processor 
 							System.out.println("Exception on " + i);
 							if (eventStatus == 0) {
 								eventStatus = 1;
-								deviceSession
-										.setBegin(connectionResponse
-												.getConnectionHistory()[i]
-												.getOccurredAt());
+								deviceSession.setBegin(connectionResponse
+										.getConnectionHistory()[i]
+										.getOccurredAt());
 								break;
 							} else {
 								break;
@@ -142,10 +139,9 @@ public class VerizonDeviceSessionBeginEndInfoPostProcessor implements Processor 
 
 							if (eventStatus == 1) {
 								eventStatus = 0;
-								deviceSession
-										.setEnd(connectionResponse
-												.getConnectionHistory()[i]
-												.getOccurredAt());
+								deviceSession.setEnd(connectionResponse
+										.getConnectionHistory()[i]
+										.getOccurredAt());
 								deviceSessions.add(deviceSession);
 								if (i != (totalConnectionHistory - 1))
 									deviceSession = new DeviceSession();
@@ -163,8 +159,9 @@ public class VerizonDeviceSessionBeginEndInfoPostProcessor implements Processor 
 				response.setResponseCode(IResponse.SUCCESS_CODE);
 				response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
 				response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_CONNECTION_STATUS);
-				
-				sessionBeginEndResponseDataArea.setDeviceSession(deviceSessions.toArray(new DeviceSession[deviceSessions.size()]));
+
+				sessionBeginEndResponseDataArea.setDeviceSession(deviceSessions
+						.toArray(new DeviceSession[deviceSessions.size()]));
 
 			}
 		} else {
@@ -182,11 +179,6 @@ public class VerizonDeviceSessionBeginEndInfoPostProcessor implements Processor 
 				.toString());
 		responseheader.setOrganization(exchange.getProperty(
 				IConstant.ORGANIZATION).toString());
-
-		/*
-		 * responseheader.setTimestamp(exchange.getProperty(
-		 * IConstant.DATE_FORMAT).toString());
-		 */
 
 		responseheader.setTimestamp(dateFormat.format(date));
 		responseheader.setSourceName(exchange

@@ -18,7 +18,7 @@ public class StubVerizonDeviceConnectionStatusProcessor implements Processor {
 	
 	public void process(Exchange exchange) throws Exception {
 
-		log.info("Start::StubVerizonDeviceConnectionStatusProcessor");
+		log.info("Begin::StubVerizonDeviceConnectionStatusProcessor");
 		
 		ConnectionStatusResponse connectionStatusReponse = new ConnectionStatusResponse();
 		

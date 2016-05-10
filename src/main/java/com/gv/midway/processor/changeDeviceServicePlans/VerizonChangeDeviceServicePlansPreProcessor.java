@@ -21,13 +21,13 @@ public class VerizonChangeDeviceServicePlansPreProcessor implements Processor {
 	public void process(Exchange exchange) throws Exception {
 		// TODO Auto-generated method stub
 
-		log.info("Start::VerizonChangeDeviceServicePlansPreProcessor");
+		log.info("Begin::VerizonChangeDeviceServicePlansPreProcessor");
 		ChangeDeviceServicePlansRequest changeDeviceServicePlansRequest = exchange
 				.getIn().getBody(ChangeDeviceServicePlansRequest.class);
 
-		System.out.println("Session Parameters  VZSessionToken"
+		log.info("Session Parameters  VZSessionToken"
 				+ exchange.getProperty(IConstant.VZ_SEESION_TOKEN));
-		System.out.println("Session Parameters  VZAuthorization"
+		log.info("Session Parameters  VZAuthorization"
 				+ exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN));
 
 		ChangeDeviceServicePlansRequestVerizon businessRequest = new ChangeDeviceServicePlansRequestVerizon();
@@ -101,9 +101,9 @@ public class VerizonChangeDeviceServicePlansPreProcessor implements Processor {
 		 * "Bearer 89ba225e1438e95bd05c3cc288d3591");
 		 */
 
-		/*
-		 * exchange.getIn().setBody(changeDeviceServicePlansRequest);
-		 */
+		
+		 exchange.getIn().setBody(changeDeviceServicePlansRequest);
+		 
 		message.setHeader("VZ-M2M-Token", sessionToken);
 		message.setHeader("Authorization", "Bearer " + authorizationToken);
 		message.setHeader(Exchange.CONTENT_TYPE, "application/json");

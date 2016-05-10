@@ -23,19 +23,18 @@ public class VerizonCustomFieldsPreProcessor implements Processor {
 		log.info("Begin::VerizonCustomFieldsPreProcessor");
 
 		CustomFieldsDeviceRequestVerizon businessRequest = new CustomFieldsDeviceRequestVerizon();
-		CustomFieldsDeviceRequest proxyRequest = (CustomFieldsDeviceRequest) exchange				.getIn().getBody();
+		CustomFieldsDeviceRequest proxyRequest = (CustomFieldsDeviceRequest) exchange
+				.getIn().getBody();
 		businessRequest.setAccountName(proxyRequest.getDataArea()
 				.getAccountName());
-		businessRequest.setCustomFields(proxyRequest.getDataArea()				.getCustomFields());
+		businessRequest.setCustomFields(proxyRequest.getDataArea()
+				.getCustomFields());
 		businessRequest.setGroupName(proxyRequest.getDataArea().getGroupName());
-		businessRequest.setServicePlan(proxyRequest.getDataArea()				.getServicePlan());
-		businessRequest.setCustomFieldsToUpdate(proxyRequest.getDataArea()				.getCustomFieldsToUpdate());
+		businessRequest.setServicePlan(proxyRequest.getDataArea()
+				.getServicePlan());
+		businessRequest.setCustomFieldsToUpdate(proxyRequest.getDataArea()
+				.getCustomFieldsToUpdate());
 
-		// copy of the device to businessRequest
-		// As the payload is broken into indivisual devices so only one Device
-
-		// Need to send the complete payload with id and Kind as device
-		// parameters
 		Devices[] proxyDevicesArray = proxyRequest.getDataArea().getDevices();
 		Devices[] businessDevicesArray = new Devices[proxyDevicesArray.length];
 
@@ -65,7 +64,6 @@ public class VerizonCustomFieldsPreProcessor implements Processor {
 		businessRequest.setDevices(businessDevicesArray);
 
 		ObjectMapper objectMapper = new ObjectMapper();
-		// objectMapper.getSerializationConfig().withSerializationInclusion(Include.NON_EMPTY);
 
 		String strRequestBody = objectMapper
 				.writeValueAsString(businessRequest);

@@ -11,7 +11,8 @@ import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationReq
 import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationRequestDataArea;
 import com.gv.midway.pojo.verizon.DeviceId;
 
-public class VerizonDeviceConnectionInformationPreProcessor implements Processor {
+public class VerizonDeviceConnectionInformationPreProcessor implements
+		Processor {
 
 	Logger log = Logger
 			.getLogger(VerizonDeviceConnectionInformationPreProcessor.class
@@ -19,10 +20,10 @@ public class VerizonDeviceConnectionInformationPreProcessor implements Processor
 
 	public void process(Exchange exchange) throws Exception {
 
-		log.info("Start:VerizonDeviceConnectionStatusPreProcessor");
-		System.out.println("Session Parameters  VZSessionToken"
+		log.info("Start:VerizonDeviceConnectionInformationPreProcessor");
+		log.info("Session Parameters  VZSessionToken"
 				+ exchange.getProperty(IConstant.VZ_SEESION_TOKEN));
-		System.out.println("Session Parameters  VZAuthorization"
+		log.info("Session Parameters  VZAuthorization"
 				+ exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN));
 
 		ConnectionInformationRequestDataArea businessRequest = new ConnectionInformationRequestDataArea();

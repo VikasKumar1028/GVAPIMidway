@@ -19,7 +19,7 @@ public class StubVerizonDeviceSessionBeginEndInfoProcessor implements Processor{
 			.getName());
 
 	public void process(Exchange exchange) throws Exception {
-		log.info("Start::StubVerizonDeviceConnectionStatusProcessor");
+		log.info("Begin::StubVerizonDeviceSessionBeginEndInfoProcessor");
 		
 		SessionBeginEndResponse sessionBeginEndResponse = new SessionBeginEndResponse();
 		
@@ -58,7 +58,7 @@ public class StubVerizonDeviceSessionBeginEndInfoProcessor implements Processor{
 
 		exchange.getIn().setBody(sessionBeginEndResponse);
 		
-		log.info("End::StubVerizonDeviceConnectionStatusProcessor");
+		log.info("End::StubVerizonDeviceSessionBeginEndInfoProcessor");
 		
 	}
 

@@ -83,7 +83,6 @@ public class VerizonActivateDevicePreProcessor implements Processor {
 		businessRequest.setDevices(businessDevicesArray);
 
 		ObjectMapper objectMapper = new ObjectMapper();
-		// objectMapper.getSerializationConfig().withSerializationInclusion(Include.NON_EMPTY);
 
 		String strRequestBody = objectMapper
 				.writeValueAsString(businessRequest);

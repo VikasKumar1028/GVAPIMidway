@@ -19,7 +19,7 @@ public class StubKoreChangeDeviceServicePlansProcessor implements Processor {
 	public void process(Exchange exchange) throws Exception {
 		// TODO Auto-generated method stub
 
-		log.info("Start::StubKoreChangeDeviceServicePlans");
+		log.info("Begin::StubKoreChangeDeviceServicePlans");
 
 		ChangeDeviceServicePlansResponse changeDeviceServicePlansResponse = new ChangeDeviceServicePlansResponse();
 

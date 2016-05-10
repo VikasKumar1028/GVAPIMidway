@@ -36,7 +36,7 @@ public class VerizonDeviceConnectionStatusPostProcessor implements Processor {
 	public void process(Exchange exchange) throws Exception {
 
 		log.info("Start:VerizonDeviceConnectionStatusPostProcessor");
-		
+
 		ConnectionStatusResponse businessResponse = new ConnectionStatusResponse();
 		ConnectionStatusResponseDataArea connectionStatusResponseDataArea = new ConnectionStatusResponseDataArea();
 		Header responseheader = new Header();
@@ -47,9 +47,8 @@ public class VerizonDeviceConnectionStatusPostProcessor implements Processor {
 
 		Date date = new Date();
 
-		System.out
-				.println("exchange.getIn().getBody().toString()***************************************"
-						+ exchange.getIn().getBody().toString());
+		log.info("exchange.getIn().getBody().toString()***************************************"
+				+ exchange.getIn().getBody().toString());
 
 		if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
 
@@ -79,34 +78,31 @@ public class VerizonDeviceConnectionStatusPostProcessor implements Processor {
 
 				}
 			}
-				
-				String status = null;
-				if(deviceStatus == null){
-					status = IConstant.NO_RECORD;
-				}else if (deviceStatus.equalsIgnoreCase(IConstant.EVENT_START)) {
-					status = IConstant.DEVICE_IN_SESSION;
-				} else if (deviceStatus.equalsIgnoreCase(IConstant.EVENT_STOP)) {
-					status = IConstant.DEVICE_NOT_IN_SESSION;
-				} 
-				
-				log.info("RequestID::" + exchange.getIn().getBody().toString());
-				response.setResponseCode(IResponse.SUCCESS_CODE);
-				response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
-				response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_CONNECTION_STATUS);
-				connectionStatusResponseDataArea.setConnectionStatus(status);
 
-			} else {
-
-				response.setResponseCode(400);
-				response.setResponseStatus(IResponse.ERROR_MESSAGE);
-				response.setResponseDescription(exchange.getIn().getBody()
-						.toString());
-
+			String status = null;
+			if (deviceStatus == null) {
+				status = IConstant.NO_RECORD;
+			} else if (deviceStatus.equalsIgnoreCase(IConstant.EVENT_START)) {
+				status = IConstant.DEVICE_IN_SESSION;
+			} else if (deviceStatus.equalsIgnoreCase(IConstant.EVENT_STOP)) {
+				status = IConstant.DEVICE_NOT_IN_SESSION;
 			}
 
-		
-		
-		
+			log.info("RequestID::" + exchange.getIn().getBody().toString());
+			response.setResponseCode(IResponse.SUCCESS_CODE);
+			response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+			response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_CONNECTION_STATUS);
+			connectionStatusResponseDataArea.setConnectionStatus(status);
+
+		} else {
+
+			response.setResponseCode(400);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
+			response.setResponseDescription(exchange.getIn().getBody()
+					.toString());
+
+		}
+
 		responseheader.setApplicationName(exchange.getProperty(
 				IConstant.APPLICATION_NAME).toString());
 		responseheader.setRegion(exchange.getProperty(IConstant.REGION)
@@ -114,8 +110,10 @@ public class VerizonDeviceConnectionStatusPostProcessor implements Processor {
 		responseheader.setOrganization(exchange.getProperty(
 				IConstant.ORGANIZATION).toString());
 
-		/*responseheader.setTimestamp(exchange.getProperty(
-				IConstant.DATE_FORMAT).toString());*/
+		/*
+		 * responseheader.setTimestamp(exchange.getProperty(
+		 * IConstant.DATE_FORMAT).toString());
+		 */
 
 		responseheader.setTimestamp(dateFormat.format(date));
 		responseheader.setSourceName(exchange
@@ -124,7 +122,7 @@ public class VerizonDeviceConnectionStatusPostProcessor implements Processor {
 				.toString());
 		responseheader.setTransactionId(exchange.getProperty(
 				IConstant.GV_TRANSACTION_ID).toString());
-		
+
 		businessResponse.setHeader(responseheader);
 		businessResponse.setResponse(response);
 

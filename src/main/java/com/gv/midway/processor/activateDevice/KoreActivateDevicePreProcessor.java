@@ -10,8 +10,6 @@ import org.springframework.core.env.Environment;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.activateDevice.kore.request.ActivateDeviceRequestKore;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
-import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequestDataArea;
-import com.gv.midway.pojo.activateDevice.verizon.request.ActivateDeviceRequestVerizon;
 import com.gv.midway.pojo.transaction.Transaction;
 
 public class KoreActivateDevicePreProcessor implements Processor {

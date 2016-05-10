@@ -149,7 +149,7 @@ public class AuditDaoImpl implements IAuditDao {
 
 	public void auditExternalExceptionResponseCall(Exchange exchange) {
 
-		log.info("Start-AuditDaoImpl:auditExternalExceptionResponseCall");
+		log.info("Begin-AuditDaoImpl:auditExternalExceptionResponseCall");
 		String responseBody = "";
 		// TODO populate into below object
 		// KoreErrorResponse errorBody

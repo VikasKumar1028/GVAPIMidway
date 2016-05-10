@@ -2,7 +2,10 @@ package com.gv.midway.controller;
 
 import org.apache.camel.EndpointInject;
 import org.apache.camel.ProducerTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.gv.midway.audit.AuditLogRequestEventNotifer;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
@@ -36,25 +39,21 @@ import com.gv.midway.pojo.verizon.DeviceId;
 @SuppressWarnings("all")
 public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 
+	private static final Logger logger = LoggerFactory
+			.getLogger(AdaptationLayerServiceImpl.class);
+
 	@EndpointInject(uri = "")
 	ProducerTemplate producer;
 
 	public UpdateDeviceResponse updateDeviceDetails(SingleDevice device) {
 		// TODO Auto-generated method stub
 
-		System.out.println("device info to update is...." + device.toString());
-
-		/*
-		 * UpdateDeviceResponse response =(UpdateDeviceResponse)
-		 * producer.requestBodyAndHeader( "direct:updateDeviceDetails", device,
-		 * "id", id);
-		 */
+		logger.info("device info to update is...." + device.toString());
 
 		UpdateDeviceResponse response = (UpdateDeviceResponse) producer
 				.requestBody("direct:updateDeviceDetails", device);
 
-		System.out.println("updateDeviceDetails respsone is ........"
-				+ response);
+		logger.info("updateDeviceDetails respsone is ........" + response);
 
 		return response;
 	}
@@ -125,19 +124,17 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 
 	public BatchDeviceResponse updateDevicesDetailsBulk(BulkDevices devices) {
 		// TODO Auto-generated method stub
-		System.out.println("devices info is...." + devices.toString());
+		logger.info("devices info is...." + devices.toString());
 
 		Object responseActual = producer.requestBody(
 				"direct:updateDevicesDetailsBulk", devices);
 
-		System.out.println("resposne actual is........"
-				+ responseActual.toString());
+		logger.info("resposne actual is........" + responseActual.toString());
 
 		BatchDeviceResponse response = (BatchDeviceResponse) responseActual;
 
-		System.out
-				.println(" direct:updateDevicesDetails in Batch respsone is ........"
-						+ response);
+		logger.info(" direct:updateDevicesDetails in Batch respsone is ........"
+				+ response);
 
 		return response;
 	}
@@ -176,9 +173,10 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 				"direct:customeFields", customeFieldDeviceRequest);
 	}
 
-	public CallbackCommonResponse callbacks(CallBackVerizonRequest callbackRequest) {
-		return (CallbackCommonResponse) producer.requestBody("direct:callbacks",
-				callbackRequest);
+	public CallbackCommonResponse callbacks(
+			CallBackVerizonRequest callbackRequest) {
+		return (CallbackCommonResponse) producer.requestBody(
+				"direct:callbacks", callbackRequest);
 	}
 
 	public ConnectionStatusResponse deviceConnectionStatusRequest(

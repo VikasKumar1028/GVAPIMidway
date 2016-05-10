@@ -14,7 +14,7 @@ public class CallbackPostProcessor implements Processor {
 		 * converting target response to byte because we need to send it to
 		 * kafka
 		 */
-		System.out.println("Callback Post Processor >>> " + exchange.getIn().getBody());
+		log.info("Callback Post Processor >>> " + exchange.getIn().getBody());
 		/*TargetResponse req = (TargetResponse) exchange.getIn().getBody(TargetResponse.class);
 		ObjectMapper objectMapper = new ObjectMapper();
 		byte[] bytes = null;

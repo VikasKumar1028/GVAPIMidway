@@ -31,7 +31,7 @@ public class VerizonChangeDeviceServicePlansPostProcessor implements Processor {
 
 	public void process(Exchange exchange) throws Exception {
 		// TODO Auto-generated method stub
-		log.info("Start::VerizonCustomFieldsPostProcessor");
+		log.info("Begin::VerizonChangeDeviceServicePlansPostProcessor");
 
 		ChangeDeviceServicePlansResponse changeDeviceServicePlansResponse = new ChangeDeviceServicePlansResponse();
 
@@ -92,7 +92,7 @@ public class VerizonChangeDeviceServicePlansPostProcessor implements Processor {
 
 		exchange.getIn().setBody(changeDeviceServicePlansResponse);
 
-		log.info("End::VerizonCustomFieldsPostProcessor");
+		log.info("End::VerizonChangeDeviceServicePlansPostProcessor");
 
 	}
 
