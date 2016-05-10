@@ -11,23 +11,21 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import com.esotericsoftware.minlog.Log;
 import com.gv.midway.constant.IEndPoints;
-import com.gv.midway.dao.impl.TransactionalDaoImpl;
 
 public class CommonUtil {
-	
+
 	private static Logger log = Logger.getLogger(CommonUtil.class);
-	
-	public static List<String> endPointList=new ArrayList<String>();
-	
-	static{
-		
+
+	public static List<String> endPointList = new ArrayList<String>();
+
+	static {
+
 		endPointList.add(IEndPoints.ACTIVATION_ENDPOINT);
 		endPointList.add(IEndPoints.DEACTIVATION_ENDPOINT);
 		endPointList.add(IEndPoints.RESTORE_ENDPOINT);
 		endPointList.add(IEndPoints.SUSPENSION_ENDPOINT);
-		
+
 		endPointList.add(IEndPoints.ACTIVATION_SEDA_KORE_ENDPOINT);
 		endPointList.add(IEndPoints.DEACTIVATION_SEDA_KORE_ENDPOINT);
 		endPointList.add(IEndPoints.RESTORE_SEDA_KORE_ENDPOINT);
@@ -82,28 +80,21 @@ public class CommonUtil {
 	}
 
 	public static boolean isProvisioningMethod(String endPoint) {
-		
-		log.info("endpoint is......."+endPoint);
-		
-		for (Iterator<String> iterator = endPointList.iterator(); iterator.hasNext();) {
+
+		log.info("endpoint is......." + endPoint);
+
+		for (Iterator<String> iterator = endPointList.iterator(); iterator
+				.hasNext();) {
 			String element = (String) iterator.next();
-			
+
 			if (endPoint.contains(element)) {
-				
+
 				return true;
 			}
-			
+
 		}
-		
+
 		return false;
-		
-		/*if (endPoint.contains(IEndPoints.ACTIVATION_ENDPOINT) || endPoint.contains(IEndPoints.DEACTIVATION_ENDPOINT)|| 
-				endPoint.contains(IEndPoints.ACTIVATION_SEDA_KORE_ENDPOINT) || endPoint.contains(IEndPoints.DEACTIVATION_SEDA_KORE_ENDPOINT) || endPoint.contains(IEndPoints.REACTIVATION_SEDA_KORE_ENDPOINT)) {
 
-			return true;
-
-		} else
-
-			return false;*/
 	}
 }
