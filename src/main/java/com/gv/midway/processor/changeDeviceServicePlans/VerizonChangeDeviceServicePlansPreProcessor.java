@@ -101,9 +101,9 @@ public class VerizonChangeDeviceServicePlansPreProcessor implements Processor {
 		 * "Bearer 89ba225e1438e95bd05c3cc288d3591");
 		 */
 
-		
-		 exchange.getIn().setBody(changeDeviceServicePlansRequest);
-		 
+		/*
+		 * exchange.getIn().setBody(changeDeviceServicePlansRequest);
+		 */
 		message.setHeader("VZ-M2M-Token", sessionToken);
 		message.setHeader("Authorization", "Bearer " + authorizationToken);
 		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
