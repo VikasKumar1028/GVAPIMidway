@@ -9,8 +9,10 @@ import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
+import com.gv.midway.pojo.changeDeviceServicePlans.response.ChangeDeviceServicePlansResponse;
 import com.gv.midway.pojo.connectionInformation.deviceSessionBeginEndInfo.response.SessionBeginEndResponse;
 import com.gv.midway.pojo.connectionInformation.deviceStatus.response.ConnectionStatusResponse;
+import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponse;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
@@ -33,18 +35,24 @@ public class GenericErrorProcessor implements Processor {
 
 		Header responseHeader = new Header();
 		Response response = new Response();
-		
-		
-		responseHeader.setApplicationName(exchange.getProperty(IConstant.APPLICATION_NAME).toString());
-		responseHeader.setRegion(exchange.getProperty(IConstant.REGION).toString());
-		
-		responseHeader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT).toString());
-		responseHeader.setOrganization(exchange.getProperty(IConstant.ORGANIZATION).toString());
-		responseHeader.setSourceName(exchange.getProperty(IConstant.SOURCE_NAME).toString());
-		//String TransactionId = (String) exchange.getProperty(newEnv.getProperty(IConstant.EXCHANEGE_PROPERTY));
-		responseHeader.setTransactionId(exchange.getProperty(IConstant.GV_TRANSACTION_ID).toString());
-		responseHeader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER).toString());
-		
+
+		responseHeader.setApplicationName(exchange.getProperty(
+				IConstant.APPLICATION_NAME).toString());
+		responseHeader.setRegion(exchange.getProperty(IConstant.REGION)
+				.toString());
+
+		responseHeader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT)
+				.toString());
+		responseHeader.setOrganization(exchange.getProperty(
+				IConstant.ORGANIZATION).toString());
+		responseHeader.setSourceName(exchange
+				.getProperty(IConstant.SOURCE_NAME).toString());
+
+		responseHeader.setTransactionId(exchange.getProperty(
+				IConstant.GV_TRANSACTION_ID).toString());
+		responseHeader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
+				.toString());
+
 		if (exchange.getProperty(IConstant.RESPONSE_CODE) != null) {
 
 			response.setResponseCode(Integer.parseInt(exchange.getProperty(
@@ -61,10 +69,6 @@ public class GenericErrorProcessor implements Processor {
 			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_CONNECTION_MIDWAYDB);
 
 		}
-
-		/*String TransactionId = (String) exchange.getProperty(newEnv
-				.getProperty(IConstant.EXCHANEGE_PROPERTY));
-		responseheader.setTransactionId(TransactionId);*/
 
 		if ("Endpoint[direct://deviceInformationCarrier]".equals(exchange
 				.getFromEndpoint().toString())) {
@@ -105,7 +109,7 @@ public class GenericErrorProcessor implements Processor {
 			exchange.getIn().setBody(suspendDeviceResponse);
 
 		}
-		
+
 		if ("Endpoint[direct://deviceConnectionStatus]".equals(exchange
 				.getFromEndpoint().toString())) {
 
@@ -115,7 +119,7 @@ public class GenericErrorProcessor implements Processor {
 			exchange.getIn().setBody(connectionStatusResponse);
 
 		}
-		
+
 		if ("Endpoint[direct://deviceSessionBeginEndInfo]".equals(exchange
 				.getFromEndpoint().toString())) {
 
@@ -126,6 +130,25 @@ public class GenericErrorProcessor implements Processor {
 
 		}
 		
+		if ("Endpoint[direct://customeFields]".equals(exchange
+				.getFromEndpoint().toString())) {
+			CustomFieldsDeviceResponse responseObject = new CustomFieldsDeviceResponse();
+			responseObject.setHeader(responseHeader);
+			responseObject.setResponse(response);
+			exchange.getIn().setBody(responseObject);
+			
+		}
+		
+		if ("Endpoint[direct://changeDeviceServicePlans]".equals(exchange
+				.getFromEndpoint().toString())) {
+			ChangeDeviceServicePlansResponse responseObject = new ChangeDeviceServicePlansResponse();
+			responseObject.setHeader(responseHeader);
+			responseObject.setResponse(response);
+			exchange.getIn().setBody(responseObject);
+			
+		}
+		
+
 	}
 
 }

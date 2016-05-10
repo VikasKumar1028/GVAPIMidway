@@ -15,7 +15,7 @@ public class VerizonDeviceInformationPreProcessor implements Processor {
 
 	public void process(Exchange exchange) throws Exception {
 
-		log.info("Start:VerizonDeviceInformationPreProcessor");
+		log.info("Begin:VerizonDeviceInformationPreProcessor");
 
 		log.info("Session Parameters  VZSessionToken"
 				+ exchange.getProperty(IConstant.VZ_SEESION_TOKEN));
@@ -24,12 +24,12 @@ public class VerizonDeviceInformationPreProcessor implements Processor {
 
 		DeviceInformationRequest req = (DeviceInformationRequest) exchange
 				.getIn().getBody();
-		exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID, req.getDataArea().getNetSuiteId());
-		DeviceId deviceId=req.getDataArea().getDeviceId();
-		
+		exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID, req.getDataArea()
+				.getNetSuiteId());
+		DeviceId deviceId = req.getDataArea().getDeviceId();
+
 		net.sf.json.JSONObject obj = new net.sf.json.JSONObject();
 		obj.put("deviceId", deviceId);
-
 
 		exchange.getIn().setBody(obj);
 		Message message = exchange.getIn();
@@ -52,9 +52,6 @@ public class VerizonDeviceInformationPreProcessor implements Processor {
 		message.setHeader(Exchange.HTTP_METHOD, "POST");
 		message.setHeader(Exchange.HTTP_PATH, "/devices/actions/list");
 
-		
-		
-		
 	}
 
 }

@@ -5,15 +5,15 @@ import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 
 import com.gv.midway.constant.IResponse;
-import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.Header;
+import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponseDataArea;
-import com.gv.midway.pojo.verizon.CustomFields;
-import com.gv.midway.pojo.verizon.DeviceId;
 import com.gv.midway.pojo.deviceInformation.verizon.response.CarrierInformations;
 import com.gv.midway.pojo.deviceInformation.verizon.response.ExtendedAttributes;
+import com.gv.midway.pojo.verizon.CustomFields;
+import com.gv.midway.pojo.verizon.DeviceId;
 
 public class StubVerizonDeviceInformationProcessor implements Processor {
 
@@ -28,13 +28,11 @@ public class StubVerizonDeviceInformationProcessor implements Processor {
 		DeviceInformationResponseDataArea deviceInformationResponseDataArea = new DeviceInformationResponseDataArea();
 
 		DeviceInformation deviceInformation = new DeviceInformation();
-		//DeviceInformation[] deviceInformationArray = new DeviceInformation[1];
 
 		Header responseheader = new Header();
 
 		Response response = new Response();
 
-	
 		response.setResponseCode(IResponse.SUCCESS_CODE);
 
 		response.setResponseDescription("Device Information is fetched successfully");
@@ -47,12 +45,10 @@ public class StubVerizonDeviceInformationProcessor implements Processor {
 		responseheader.setSourceName("VERIZON");
 		responseheader.setTransactionId("cde2131ksjd");
 		responseheader.setBsCarrier("VERIZON");
-		// baseResponse.setHeader(header);
 
 		deviceInformationResponse.setHeader(responseheader);
 		deviceInformationResponse.setResponse(response);
 
-		// deviceInformationResponse.setResponse(response);
 		deviceInformation.setNetSuiteId("NS001");
 		deviceInformation.setMidwayMasterDeviceId("MMD001");
 		deviceInformation.setAccountName("TestAccount-1");
@@ -60,7 +56,6 @@ public class StubVerizonDeviceInformationProcessor implements Processor {
 		deviceInformation.setConnected(false);
 		deviceInformation.setCreatedAt("2014-09-10T14:32:09Z");
 		deviceInformation.setIpAddress("0.0.0.0");
-		//deviceInformation.setStaticIP("null");
 		deviceInformation.setLastActivationBy("admingca43hpn");
 
 		deviceInformation.setLastActivationDate("2014-09-18T13:01:02Z");
@@ -69,44 +64,26 @@ public class StubVerizonDeviceInformationProcessor implements Processor {
 		deviceInformation.setFutureDataPlan("null");
 		deviceInformation.setFutureSMSPlan("null");
 
-		/*deviceInformation.setDailyDataThreshold("null");
-		deviceInformation.setDailySMSThreshold("null");
-		deviceInformation.setMonthlyDataThreshold("null");
-		deviceInformation.setMonthlySMSThreshold("null");*/
-
 		CarrierInformations carrierInformations = new CarrierInformations();
 		carrierInformations.setCarrierName("Verizon Wireless");
-		//carrierInformations.setCurrentDataPlan("null");
-		carrierInformations.setState("null");
-		//carrierInformations.setStatus("Active");
-		carrierInformations.setServicePlan("FakeServicePlan-1");
-		//deviceInformation.setCarrierInformations(carrierInformations);
 
-		/*
-		 * DeviceIds deviceIds = new DeviceIds(); deviceIds.setId("7010137536");
-		 * deviceIds.setIMSIOrMIN("null"); deviceIds.setKind("mdn");
-		 * deviceIds.setMSISDNOrMDN("null");
-		 * 
-		 * deviceInformation.setDeviceIds(deviceIds);
-		 */
+		carrierInformations.setState("null");
+
+		carrierInformations.setServicePlan("FakeServicePlan-1");
 
 		DeviceId deviceIds = new DeviceId();
 		DeviceId deviceIds1 = new DeviceId();
 		DeviceId deviceIds2 = new DeviceId();
 		deviceIds.setId("2827264285");
-		//deviceIds.setImsiOrMIN("null");
+
 		deviceIds.setKind("mdn");
-		//deviceIds.setMsisdnOrMDN("null");
 
 		deviceIds1.setId("DAD20141201400");
-		//deviceIds1.setImsiOrMIN("null");
 		deviceIds1.setKind("meid");
-		//deviceIds1.setMsisdnOrMDN("null");
 
 		deviceIds2.setId("7725783367");
-		//deviceIds2.setImsiOrMIN("null");
+
 		deviceIds2.setKind("min");
-		//deviceIds2.setMsisdnOrMDN("null");
 
 		DeviceId[] deviceIdsArray = { deviceIds, deviceIds1, deviceIds2 };
 		deviceInformation.setDeviceIds(deviceIdsArray);
@@ -120,19 +97,10 @@ public class StubVerizonDeviceInformationProcessor implements Processor {
 
 		deviceInformation.setExtendedAttributes(extendedAttributes);
 
-		/*
-		 * LstFeatures lstFeatures = new LstFeatures();
-		 * lstFeatures.setFEAT000601("null"); lstFeatures.setFEAT000602("null");
-		 * lstFeatures.setFEAT000603("null");
-		 */
-
 		String[] lstFeatures = { "null" };
 
 		deviceInformation.setLstFeatures(lstFeatures);
 
-		/*
-		 * deviceInformation.setLstFeatures(lstFeatures);
-		 */
 		CustomFields customFields = new CustomFields();
 		CustomFields customFields1 = new CustomFields();
 		CustomFields customFields2 = new CustomFields();
@@ -162,17 +130,8 @@ public class StubVerizonDeviceInformationProcessor implements Processor {
 		deviceInformation.setCustomFields(arr);
 
 		String[] groupNames = { "BED20141" };
-		//deviceInformation.setGroupNames(groupNames);
+
 		deviceInformation.setVoiceDispatchNumber("null");
-	/*	deviceInformation.setMostRecentLocateId("null");
-		deviceInformation.setPreviousLocateId("null");
-		deviceInformation.setMostRecentLocateDate("null");
-		deviceInformation.setMostRecentLatitude("null");
-		deviceInformation.setMostRecentLongitude("null");
-		deviceInformation.setMostRecentAddress("null");
-		deviceInformation.setPreviousLocateDate("null");
-		deviceInformation.setPreviousLatitude("null");
-		deviceInformation.setPreviousLongitude("0000");*/
 
 		String[] lstExtFeatures = { null };
 		deviceInformation.setLstExtFeatures(lstExtFeatures);
@@ -180,9 +139,6 @@ public class StubVerizonDeviceInformationProcessor implements Processor {
 		String[] lstHistoryOverLastYear = { null };
 		deviceInformation.setLstHistoryOverLastYear(lstHistoryOverLastYear);
 
-		//deviceInformation.setPreviousAddress("null");
-
-		//deviceInformationArray[0] = deviceInformation;
 		deviceInformationResponseDataArea.setDevices(deviceInformation);
 
 		deviceInformationResponse

@@ -9,7 +9,7 @@ public interface IAuditService {
 	public void auditExternalResponseCall(Exchange exchange);
 
 	public void auditExternalExceptionResponseCall(Exchange exchange);
-	
+
 	public void auditExternalConnectionExceptionResponseCall(Exchange exchange);
-	
+
 }

@@ -2,8 +2,6 @@ package com.gv.midway.service;
 
 import org.apache.camel.Exchange;
 
-import com.gv.midway.pojo.session.SessionBean;
-
 public interface ISessionService {
 
 	public String getContextVzSessionToken();

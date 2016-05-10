@@ -84,8 +84,7 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 
 		responseheader.setApplicationName(exchange.getProperty(IConstant.APPLICATION_NAME).toString());
 		responseheader.setRegion(exchange.getProperty(IConstant.REGION).toString());
-		/*DateFormat dateFormat = new SimpleDateFormat(newEnv.getProperty(IConstant.DATE_FORMAT));
-		Date date = new Date();*/
+		
 
 		responseheader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT).toString());
 		responseheader.setOrganization(exchange.getProperty(IConstant.ORGANIZATION).toString());

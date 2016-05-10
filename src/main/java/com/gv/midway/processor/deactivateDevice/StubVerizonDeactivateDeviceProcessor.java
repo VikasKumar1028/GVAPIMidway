@@ -21,7 +21,7 @@ public class StubVerizonDeactivateDeviceProcessor implements Processor {
 
 	public void process(Exchange exchange) throws Exception {
 		// TODO Auto-generated method stub
-		log.info("Start::StubVerizonDeactivateDeviceProcessor");
+		log.info("Begin::StubVerizonDeactivateDeviceProcessor");
 		DeactivateDeviceResponse deactivateDeviceResponse = new DeactivateDeviceResponse();
 		DeactivateDeviceResponseDataArea deactivateDeviceResponseDataArea = new DeactivateDeviceResponseDataArea();
 

@@ -38,11 +38,7 @@ public class VerizonRestoreDevicePreProcessor implements Processor {
 		businessRequest.setServicePlan(proxyRequest.getDataArea()
 				.getServicePlan());
 
-		// copy of the device to businessRequest
-		// As the payload is broken into indivisual devices so only one Device
-
-		// Need to send the complete payload with id and Kind as device
-		// parameters
+		
 		Devices[] proxyDevicesArray = proxyRequest.getDataArea().getDevices();
 		Devices[] businessDevicesArray = new Devices[proxyDevicesArray.length];
 

@@ -15,7 +15,7 @@ public class KoreDeviceInformationPreProcessor implements Processor {
 
 	public void process(Exchange exchange) throws Exception {
 
-		log.info("Start:KoreDeviceInformationPreProcessor");
+		log.info("Begin:KoreDeviceInformationPreProcessor");
 		
 		
 		// wrap it in a Subject

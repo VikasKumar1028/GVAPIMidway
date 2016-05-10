@@ -22,7 +22,7 @@ public class StubKoreDeactivateDeviceProcessor implements Processor {
 	public void process(Exchange exchange) throws Exception {
 		// TODO Auto-generated method stub
 
-		log.info("Start::StubKoreDeactivateDeviceProcessor");
+		log.info("Begin::StubKoreDeactivateDeviceProcessor");
 		DeactivateDeviceResponse deactivateDeviceResponse = new DeactivateDeviceResponse();
 		Header responseheader = new Header();
 		DeactivateDeviceResponseDataArea deactivateDeviceResponseDataArea = new DeactivateDeviceResponseDataArea();

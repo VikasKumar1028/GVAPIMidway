@@ -15,7 +15,8 @@ import com.gv.midway.pojo.transaction.Transaction;
 
 public class KoreDeactivateDevicePreProcessor implements Processor {
 
-	Logger log = Logger.getLogger(KoreDeactivateDevicePreProcessor.class.getName());
+	Logger log = Logger.getLogger(KoreDeactivateDevicePreProcessor.class
+			.getName());
 
 	Environment newEnv;
 
@@ -30,43 +31,40 @@ public class KoreDeactivateDevicePreProcessor implements Processor {
 
 	public void process(Exchange exchange) throws Exception {
 
-		log.info("Start:KoreDeactivateDevicePreProcessor");
-		log.info("Authorization::" + newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
+		log.info("Begin:KoreDeactivateDevicePreProcessor");
+		log.info("Authorization::"
+				+ newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
 
 		Message message = exchange.getIn();
-		Transaction transaction= exchange.getIn().getBody(Transaction.class);
-//		DeactivateDeviceRequest deactivateDeviceRequest = exchange.getIn().getBody(DeactivateDeviceRequest.class);
-//		String deviceId = deactivateDeviceRequest.getDataArea().getDeviceIds()[0].getId();
-//		Boolean flagScravalue = deactivateDeviceRequest.getDataArea().getFlagScrap();
-//		net.sf.json.JSONObject obj = new net.sf.json.JSONObject();
-//		obj.put("deviceNumber", deviceId);
-//		obj.put("flagScrap", flagScravalue);
-		
-		
-		
-		DeactivateDeviceRequest deactivateDeviceRequest=(DeactivateDeviceRequest)transaction.getDevicePayload();
-		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,transaction.getDeviceNumber());
-		
-		
-		String deviceId = deactivateDeviceRequest.getDataArea().getDevices()[0].getDeviceIds()[0].getId();
-		
-		
+		Transaction transaction = exchange.getIn().getBody(Transaction.class);
+
+		DeactivateDeviceRequest deactivateDeviceRequest = (DeactivateDeviceRequest) transaction
+				.getDevicePayload();
+		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,
+				transaction.getDeviceNumber());
+
+		String deviceId = deactivateDeviceRequest.getDataArea().getDevices()[0]
+				.getDeviceIds()[0].getId();
 
 		DeactivateDeviceRequestKore deactivationDeviceRequestKore = new DeactivateDeviceRequestKore();
 		deactivationDeviceRequestKore.setDeviceNumber(deviceId);
-		//boolean flagScrap = deactivateDeviceRequest.getDataArea().getDevices()[0].getDeviceIds()[0].getFlagScrap();
-		if( deactivateDeviceRequest.getDataArea().getDevices()[0].getDeviceIds()[0].getFlagScrap()!=null)
-		{
-		deactivationDeviceRequestKore.setFlagScrap( deactivateDeviceRequest.getDataArea().getDevices()[0].getDeviceIds()[0].getFlagScrap());
+		// boolean flagScrap =
+		// deactivateDeviceRequest.getDataArea().getDevices()[0].getDeviceIds()[0].getFlagScrap();
+		if (deactivateDeviceRequest.getDataArea().getDevices()[0]
+				.getDeviceIds()[0].getFlagScrap() != null) {
+			deactivationDeviceRequestKore.setFlagScrap(deactivateDeviceRequest
+					.getDataArea().getDevices()[0].getDeviceIds()[0]
+					.getFlagScrap());
 		}
-		
+
 		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.HTTP_METHOD, "POST");
-		message.setHeader("Authorization", newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
+		message.setHeader("Authorization",
+				newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
 		message.setHeader(Exchange.HTTP_PATH, "/json/deactivateDevice");
 		message.setBody(deactivationDeviceRequestKore);
-		
+
 		exchange.setPattern(ExchangePattern.InOut);
 
 		log.info("End:KoreDeactivateDevicePreProcessor");
