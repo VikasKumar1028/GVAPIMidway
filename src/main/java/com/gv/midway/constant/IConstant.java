@@ -67,6 +67,8 @@ public interface IConstant {
 	static String KORE_CHECKSTATUS_COMPLETED="Completed";
 	static String KORE_CHECKSTATUS_CONNECTION_ERROR="KoreCheckStausConnection Error";
 	
+	static String JOB_TIME_CONFIGURATION = "0+0+18+*+*+?";
+	
 	
 	
 	

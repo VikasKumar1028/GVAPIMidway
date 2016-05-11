@@ -92,6 +92,7 @@ import com.gv.midway.processor.token.VerizonSessionAttributeProcessor;
 import com.gv.midway.processor.token.VerizonSessionTokenProcessor;
 import com.gv.midway.service.IAuditService;
 import com.gv.midway.service.IDeviceService;
+import com.gv.midway.service.ISchedulerService;
 // this static import is needed for older versions of Camel than 2.5
 // import static org.apache.camel.language.simple.SimpleLanguage.simple;
 import com.gv.midway.service.ISessionService;
@@ -124,6 +125,8 @@ public class CamelRoute extends RouteBuilder {
 	@Autowired
 	private ITransactionalService iTransactionalService;
 
+	@Autowired
+	private ISchedulerService iSchedulerService;
 	/*
 	 * @Autowired private SessionBean sessionBean;
 	 */
@@ -317,6 +320,8 @@ public class CamelRoute extends RouteBuilder {
 			//Insert or Update  Device Details in Bulk
 			updateDevicesDetailsBulk();
 		
+			//Execution of schduled jobs scheduledJobs
+			scheduledJobs();
 			
 	}
 	
@@ -1084,4 +1089,21 @@ public class CamelRoute extends RouteBuilder {
 				iDeviceService, "bulkOperationDeviceSyncInDB");
 	}
 
+	
+	/** Testing Quartz **/
+	public void scheduledJobs() {
+
+		from("quartz2://job/deviceDetailsTimer?cron="
+						+ IConstant.JOB_TIME_CONFIGURATION)
+				.multicast()
+				.to("direct:retrieveDeviceConnectionHistory",
+						"direct:retrieveDeviceUsageHistory").end();
+
+		from("direct:retrieveDeviceConnectionHistory").bean(iSchedulerService,
+				"retrieveDeviceConnectionHistory").end();
+
+		from("direct:retrieveDeviceUsageHistory").bean(iSchedulerService,
+				"retrieveDeviceUsageHistory").end();
+
+	}
 }
