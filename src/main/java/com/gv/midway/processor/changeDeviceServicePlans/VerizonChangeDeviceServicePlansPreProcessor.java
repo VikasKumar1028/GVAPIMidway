@@ -22,8 +22,6 @@ public class VerizonChangeDeviceServicePlansPreProcessor implements Processor {
 		// TODO Auto-generated method stub
 
 		log.info("Begin::VerizonChangeDeviceServicePlansPreProcessor");
-		ChangeDeviceServicePlansRequest changeDeviceServicePlansRequest = exchange
-				.getIn().getBody(ChangeDeviceServicePlansRequest.class);
 
 		log.info("Session Parameters  VZSessionToken"
 				+ exchange.getProperty(IConstant.VZ_SEESION_TOKEN));
@@ -43,11 +41,6 @@ public class VerizonChangeDeviceServicePlansPreProcessor implements Processor {
 		businessRequest.setServicePlan(proxyRequest.getDataArea()
 				.getServicePlan());
 
-		// copy of the device to businessRequest
-		// As the payload is broken into indivisual devices so only one Device
-
-		// Need to send the complete payload with id and Kind as device
-		// parameters
 		Devices[] proxyDevicesArray = proxyRequest.getDataArea().getDevices();
 		Devices[] businessDevicesArray = new Devices[proxyDevicesArray.length];
 
@@ -65,7 +58,7 @@ public class VerizonChangeDeviceServicePlansPreProcessor implements Processor {
 				businessDeviceId.setId(proxyDeviceId.getId());
 				businessDeviceId.setKind(proxyDeviceId.getKind());
 
-				System.out.println(proxyDeviceId.getId());
+				log.info(proxyDeviceId.getId());
 
 				businessDeviceIdArray[i] = businessDeviceId;
 
@@ -77,7 +70,6 @@ public class VerizonChangeDeviceServicePlansPreProcessor implements Processor {
 		businessRequest.setDevices(businessDevicesArray);
 
 		ObjectMapper objectMapper = new ObjectMapper();
-		// objectMapper.getSerializationConfig().withSerializationInclusion(Include.NON_EMPTY);
 
 		String strRequestBody = objectMapper
 				.writeValueAsString(businessRequest);
@@ -101,9 +93,8 @@ public class VerizonChangeDeviceServicePlansPreProcessor implements Processor {
 		 * "Bearer 89ba225e1438e95bd05c3cc288d3591");
 		 */
 
-		/*
-		 * exchange.getIn().setBody(changeDeviceServicePlansRequest);
-		 */
+		exchange.getIn().setBody(strRequestBody);
+
 		message.setHeader("VZ-M2M-Token", sessionToken);
 		message.setHeader("Authorization", "Bearer " + authorizationToken);
 		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
