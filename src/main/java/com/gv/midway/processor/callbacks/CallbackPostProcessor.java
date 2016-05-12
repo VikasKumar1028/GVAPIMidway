@@ -24,6 +24,7 @@ public class CallbackPostProcessor implements Processor {
 		byte[] bytes = null;
 		try {
 			bytes = objectMapper.writeValueAsString(req).getBytes();
+			System.out.println(" converted to bytes");
 		} catch (JsonProcessingException e) {
 		}
 
