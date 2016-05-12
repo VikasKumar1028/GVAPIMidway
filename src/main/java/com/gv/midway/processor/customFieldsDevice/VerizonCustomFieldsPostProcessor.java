@@ -88,7 +88,7 @@ public class VerizonCustomFieldsPostProcessor implements Processor{
 		customFieldsUpdateDeviceResponseDataArea.setOrderNumber(exchange
 				.getProperty(IConstant.MIDWAY_TRANSACTION_ID).toString());
 		
-		customFieldsUpdateDeviceResponseDataArea.setOrderNumber("testing");
+		
 
 		customFieldsUpdateDeviceResponse
 				.setDataArea(customFieldsUpdateDeviceResponseDataArea);

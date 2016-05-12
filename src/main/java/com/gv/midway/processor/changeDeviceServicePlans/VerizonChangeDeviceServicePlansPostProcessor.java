@@ -85,8 +85,7 @@ public class VerizonChangeDeviceServicePlansPostProcessor implements Processor {
 		changeDeviceServicePlansResponseDataArea.setOrderNumber(exchange
 				.getProperty(IConstant.MIDWAY_TRANSACTION_ID).toString());
 
-		changeDeviceServicePlansResponseDataArea.setOrderNumber("testing");
-
+		
 		changeDeviceServicePlansResponse
 				.setDataArea(changeDeviceServicePlansResponseDataArea);
 
