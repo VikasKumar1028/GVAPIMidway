@@ -4,6 +4,10 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gv.midway.pojo.callback.common.response.CallbackCommonResponse;
+
 public class CallbackPostProcessor implements Processor {
 	Logger log = Logger.getLogger(CallbackPostProcessor.class);
 
@@ -15,7 +19,7 @@ public class CallbackPostProcessor implements Processor {
 		 * kafka
 		 */
 		log.info("Callback Post Processor >>> " + exchange.getIn().getBody());
-		/*TargetResponse req = (TargetResponse) exchange.getIn().getBody(TargetResponse.class);
+		CallbackCommonResponse req = (CallbackCommonResponse) exchange.getIn().getBody(CallbackCommonResponse.class);
 		ObjectMapper objectMapper = new ObjectMapper();
 		byte[] bytes = null;
 		try {
@@ -23,7 +27,7 @@ public class CallbackPostProcessor implements Processor {
 		} catch (JsonProcessingException e) {
 		}
 
-		exchange.getIn().setBody(bytes);*/
+		exchange.getIn().setBody(bytes);
 	}
 
 }
