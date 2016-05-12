@@ -200,6 +200,7 @@ public class CamelRoute extends RouteBuilder {
 				.process(new CallbackPreProcessor(env))
 				.bean(iTransactionalService, "findMidwayTransactionId")
 				.process(new CallbackPostProcessor())
+				.to("kafka:mid2.gv.local:9092,?topic=misc-verify-staging")
 				//.to("kafka:localhost:9092?topic=topic")
 				// .to("kafka:10.10.2.190:9092,10.10.2.190:9093,10.10.2.190:9094?topic=my-replicated-topic")
 				//.process(new CallbackKafkaPostProcessor())
