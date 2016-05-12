@@ -1,5 +1,7 @@
 package com.gv.midway.pojo.callback;
 
+import java.util.Arrays;
+
 import com.gv.midway.pojo.callback.response.activate.CallbackActivateResponse;
 import com.gv.midway.pojo.callback.response.deactivate.CallbackDeactivateResponse;
 import com.wordnik.swagger.annotations.ApiModelProperty;
@@ -23,8 +25,9 @@ public class CallbackDeviceResponse {
 	@ApiModelProperty(value = "Deactivate Response from Callback")
 	private CallbackDeactivateResponse deactivateResponse;
 
-	@ApiModelProperty(value = "DeviceResponse Response from Callback")
-	private DeviceResponse deviceResponse;
+	@ApiModelProperty(value = "usageResponse Response from Callback")
+	private String[] usageResponse;
+
 
 	public CallbackSuspendResponse getSuspendResponse() {
 		return suspendResponse;
@@ -79,12 +82,21 @@ public class CallbackDeviceResponse {
 
 	@Override
 	public String toString() {
-		return "ClassPojo [suspendResponse = " + suspendResponse
-				+ ", prlInformationResponse = " + prlInformationResponse
-				+ ", activateResponse = " + activateResponse
-				+ ", restoreResponse = " + restoreResponse
-				+ ", smsDeliveryResponse = " + smsDeliveryResponse
-				+ ", deactivateResponse = " + deactivateResponse + "]";
+		return "CallbackDeviceResponse [suspendResponse=" + suspendResponse
+				+ ", prlInformationResponse=" + prlInformationResponse
+				+ ", activateResponse=" + activateResponse
+				+ ", restoreResponse=" + restoreResponse
+				+ ", smsDeliveryResponse=" + smsDeliveryResponse
+				+ ", deactivateResponse=" + deactivateResponse
+				+ ", usageResponse=" + Arrays.toString(usageResponse) + "]";
+	}
+
+	public String[] getUsageResponse() {
+		return usageResponse;
+	}
+
+	public void setUsageResponse(String[] usageResponse) {
+		this.usageResponse = usageResponse;
 	}
 
 	@Override
@@ -98,8 +110,6 @@ public class CallbackDeviceResponse {
 				* result
 				+ ((deactivateResponse == null) ? 0 : deactivateResponse
 						.hashCode());
-		result = prime * result
-				+ ((deviceResponse == null) ? 0 : deviceResponse.hashCode());
 		result = prime
 				* result
 				+ ((prlInformationResponse == null) ? 0
@@ -112,6 +122,7 @@ public class CallbackDeviceResponse {
 						.hashCode());
 		result = prime * result
 				+ ((suspendResponse == null) ? 0 : suspendResponse.hashCode());
+		result = prime * result + Arrays.hashCode(usageResponse);
 		return result;
 	}
 
@@ -134,11 +145,6 @@ public class CallbackDeviceResponse {
 				return false;
 		} else if (!deactivateResponse.equals(other.deactivateResponse))
 			return false;
-		if (deviceResponse == null) {
-			if (other.deviceResponse != null)
-				return false;
-		} else if (!deviceResponse.equals(other.deviceResponse))
-			return false;
 		if (prlInformationResponse == null) {
 			if (other.prlInformationResponse != null)
 				return false;
@@ -159,15 +165,11 @@ public class CallbackDeviceResponse {
 				return false;
 		} else if (!suspendResponse.equals(other.suspendResponse))
 			return false;
+		if (!Arrays.equals(usageResponse, other.usageResponse))
+			return false;
 		return true;
 	}
 
-	public DeviceResponse getDeviceResponse() {
-		return deviceResponse;
-	}
-
-	public void setDeviceResponse(DeviceResponse deviceResponse) {
-		this.deviceResponse = deviceResponse;
-	}
+	
 
 }
