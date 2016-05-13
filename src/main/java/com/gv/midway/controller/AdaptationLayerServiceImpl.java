@@ -175,7 +175,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 
 	public void callbacks(
 			CallBackVerizonRequest callbackRequest) {
-		return (CallbackCommonResponse) producer.requestBody(
+		producer.requestBody(
 				"direct:callbacks", callbackRequest);
 	}
 
