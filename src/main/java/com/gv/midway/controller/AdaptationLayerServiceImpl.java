@@ -173,7 +173,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 				"direct:customeFields", customeFieldDeviceRequest);
 	}
 
-	public CallbackCommonResponse callbacks(
+	public void callbacks(
 			CallBackVerizonRequest callbackRequest) {
 		return (CallbackCommonResponse) producer.requestBody(
 				"direct:callbacks", callbackRequest);

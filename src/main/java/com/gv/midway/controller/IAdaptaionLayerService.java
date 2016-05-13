@@ -137,7 +137,7 @@ public interface IAdaptaionLayerService {
 	@Produces("application/json")
 	@Consumes("application/json")
 	@ApiOperation(value = "Service for Receiving Callback from Verizon")
-	CallbackCommonResponse callbacks(CallBackVerizonRequest activateDeviceRequest);
+	void callbacks(CallBackVerizonRequest activateDeviceRequest);
 
 	@POST
 	@Path("/devices/connections/getStatus")
