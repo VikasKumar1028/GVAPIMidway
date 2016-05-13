@@ -1,0 +1,33 @@
+{ 
+   "dataArea":{ 
+     
+        
+        "customFieldsToUpdate":[ 
+         { 
+            "key":"CustomField1",
+            "value":"string"
+         }
+      ],
+    
+      "devices":[ 
+         { 
+            "deviceIds":[ 
+               { 
+                  "kind":"IMEI",
+                  "id":"353238063289994"
+               }
+            ]
+         }
+     
+      ]
+   },
+   "header":{ 
+      "region":"USA",
+      "timestamp":"string",
+      "organization":"Grant Victor",
+      "transactionId":"gv123666",
+      "sourceName":"NetSuit",
+      "applicationName":"WEB",
+      "bsCarrier":"VERIZON"
+   }
+}

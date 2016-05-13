@@ -1,4 +1,35 @@
 *************************MidWay Payload
+{ 
+   "dataArea":{ 
+   
+      "servicePlan":"M2MPERMB",
+    
+         "devices":[ 
+         { 
+            "deviceIds":[ 
+               { 
+                  
+                  "kind":"IMEI",
+					"id":"353238063289994"
+               }
+            ]
+         }
+      ]
+   },
+   "header":{ 
+      "region":"USA",
+      "timestamp":"string",
+      "organization":"Grant Victor",
+      "transactionId":"gv123666",
+      "sourceName":"NetSuit",
+      "applicationName":"WEB",
+      "bsCarrier":"VERIZON"
+   }
+}
+
+*************************Carrier Payload
+Payload: {"accountName":"0442090022-00001","customFields":null,"devices":[{"deviceIds":[{"id":"353238063289994","kind":"IMEI"}]},{"deviceIds":[{"id":"89148000002377648495","kind":"ICCID"}]}],"servicePlan":"89665","groupName":null,"currentServicePlan":"M2MPERMB"}
+
 {
   "accountName": "0442090022-00001",
   "currentServicePlan": "M2MPERMB",
@@ -27,10 +58,29 @@
   "servicePlan": "M2M5MBASH"
 }
 
-*************************Carrier Payload
-Payload: {"accountName":"0442090022-00001","customFields":null,"devices":[{"deviceIds":[{"id":"353238063289994","kind":"IMEI"}]},{"deviceIds":[{"id":"89148000002377648495","kind":"ICCID"}]}],"servicePlan":"89665","groupName":null,"currentServicePlan":"M2MPERMB"}
+
 
 *************************Carrier Response
 
 
 *************************MidWay Response
+
+{
+  "header": {
+    "region": "USA",
+    "timestamp": "string",
+    "organization": "Grant Victor",
+    "transactionId": "gv123666",
+    "sourceName": "NetSuit",
+    "applicationName": "WEB",
+    "bsCarrier": "VERIZON"
+  },
+  "response": {
+    "responseCode": 2000,
+    "responseStatus": "Success",
+    "responseDescription": "Data Submitted Successfully"
+  },
+  "dataArea": {
+    "orderNumber": "1463116814264"
+  }
+}
