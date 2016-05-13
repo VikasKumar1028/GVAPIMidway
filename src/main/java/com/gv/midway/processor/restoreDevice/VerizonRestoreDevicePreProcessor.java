@@ -38,7 +38,6 @@ public class VerizonRestoreDevicePreProcessor implements Processor {
 		businessRequest.setServicePlan(proxyRequest.getDataArea()
 				.getServicePlan());
 
-		
 		Devices[] proxyDevicesArray = proxyRequest.getDataArea().getDevices();
 		Devices[] businessDevicesArray = new Devices[proxyDevicesArray.length];
 
@@ -87,17 +86,9 @@ public class VerizonRestoreDevicePreProcessor implements Processor {
 					IConstant.VZ_AUTHORIZATION_TOKEN).toString();
 		}
 
-		message.setHeader("VZ-M2M-Token",
-				"1d1f8e7a-c8bb-4f3c-a924-cf612b562425");
-		message.setHeader("Authorization",
-				"Bearer 89ba225e1438e95bd05c3cc288d3591");
+		message.setHeader("VZ-M2M-Token", sessionToken);
+		message.setHeader("Authorization", "Bearer " + authorizationToken);
 
-		;
-
-		/*
-		 * message.setHeader("VZ-M2M-Token", sessionToken);
-		 * message.setHeader("Authorization", "Bearer " + authorizationToken);
-		 */
 		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.HTTP_METHOD, "POST");
