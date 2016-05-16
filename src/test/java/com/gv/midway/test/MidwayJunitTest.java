@@ -649,7 +649,7 @@ import com.gv.midway.service.ISessionService;
 							System.out.println("Response in Junit Test for Restore....... :" + response.getResponse().getResponseCode());
 							assertEquals(response.getResponse().getResponseCode().toString(),"2000");
 							assertEquals(response.getResponse().getResponseStatus(),"Success");
-							assertNotNull(response.getDataArea().getRequestId());
+							assertNotNull(response.getDataArea().getOrderNumber());
 							
 						}
 
@@ -702,7 +702,7 @@ import com.gv.midway.service.ISessionService;
 							System.out.println("Response in Junit Test for Rerstore....... :" + response.getResponse().getResponseCode());
 							assertEquals(response.getResponse().getResponseCode().toString(),"2000");
 							assertEquals(response.getResponse().getResponseStatus(),"Success");
-							assertNotNull(response.getDataArea().getRequestId());
+							assertNotNull(response.getDataArea().getOrderNumber());
 							
 						}
 						// 13.Test Case for Restore Device Verizon with Invalid data by setting accountname as null and blank kind value in device.
@@ -754,7 +754,7 @@ import com.gv.midway.service.ISessionService;
 								System.out.println("Response in Junit Test for Rerstore....... :" + response.getResponse().getResponseCode());
 								assertEquals(response.getResponse().getResponseCode().toString(),"400");
 								assertEquals(response.getResponse().getResponseStatus(),"Error");
-								assertEquals(response.getDataArea().getRequestId(),null);
+								assertEquals(response.getDataArea().getOrderNumber(),null);
 								
 							}
 							
