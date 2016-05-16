@@ -35,13 +35,13 @@ public class StubKoreReactivateDeviceProcessor implements Processor {
 		responseheader.setRegion("USA");
 		responseheader.setTimestamp("2016-03-08T21:49:45");
 		responseheader.setOrganization("Grant Victor");
-		responseheader.setSourceName("VERIZON");
+		responseheader.setSourceName("KORE");
 		responseheader.setTransactionId("cde2131ksjd");
-		responseheader.setBsCarrier("VERIZON");
+		responseheader.setBsCarrier("KORE");
 
 		reactivateDeviceResponse.setHeader(responseheader);
 		reactivateDeviceResponse.setResponse(response);
-		reactivateDeviceResponseDataArea.setOrderNumber("StubKoreReactivateDeviceProcessor");
+		reactivateDeviceResponseDataArea.setOrderNumber("KR0123312313");
 		reactivateDeviceResponse.setDataArea(reactivateDeviceResponseDataArea);
 
 		exchange.getIn().setBody(reactivateDeviceResponse);

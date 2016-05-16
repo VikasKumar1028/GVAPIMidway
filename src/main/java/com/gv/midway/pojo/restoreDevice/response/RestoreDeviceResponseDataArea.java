@@ -2,22 +2,15 @@ package com.gv.midway.pojo.restoreDevice.response;
 
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
-public class RestoreDeviceResponseDataArea{
-	
-	@ApiModelProperty(value = "Request Id is an unique Id of the request submitted from the source. Can be Numeric or Alphanumeric" )
-	private String requestId;
+public class RestoreDeviceResponseDataArea {
 
-	public String getRequestId() {
-		return requestId;
-	}
-
-	public void setRequestId(String requestId) {
-		this.requestId = requestId;
-	}
+	@ApiModelProperty(value = "Order number is an unique Id of the request submitted from the source. Can be Numeric or Alphanumeric")
+	private String orderNumber;
 
 	@Override
 	public String toString() {
-		return "RestoreDeviceResponseDataArea [requestId=" + requestId + "]";
+		return "RestoreDeviceResponseDataArea [orderNumber=" + orderNumber
+				+ "]";
 	}
 
 	@Override
@@ -25,7 +18,7 @@ public class RestoreDeviceResponseDataArea{
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((requestId == null) ? 0 : requestId.hashCode());
+				+ ((orderNumber == null) ? 0 : orderNumber.hashCode());
 		return result;
 	}
 
@@ -38,14 +31,20 @@ public class RestoreDeviceResponseDataArea{
 		if (getClass() != obj.getClass())
 			return false;
 		RestoreDeviceResponseDataArea other = (RestoreDeviceResponseDataArea) obj;
-		if (requestId == null) {
-			if (other.requestId != null)
+		if (orderNumber == null) {
+			if (other.orderNumber != null)
 				return false;
-		} else if (!requestId.equals(other.requestId))
+		} else if (!orderNumber.equals(other.orderNumber))
 			return false;
 		return true;
 	}
-	
-	
-	
+
+	public String getOrderNumber() {
+		return orderNumber;
+	}
+
+	public void setOrderNumber(String orderNumber) {
+		this.orderNumber = orderNumber;
+	}
+
 }

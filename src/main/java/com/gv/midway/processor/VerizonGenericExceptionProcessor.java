@@ -19,6 +19,8 @@ import com.gv.midway.pojo.connectionInformation.deviceStatus.response.Connection
 import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponse;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
+import com.gv.midway.pojo.reActivateDevice.response.ReactivateDeviceResponse;
+import com.gv.midway.pojo.restoreDevice.response.RestoreDeviceResponse;
 import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
 import com.gv.midway.pojo.verizon.VerizonErrorResponse;
 
@@ -27,15 +29,13 @@ public class VerizonGenericExceptionProcessor implements Processor {
 	Logger log = Logger.getLogger(VerizonGenericExceptionProcessor.class
 			.getName());
 
+	Environment newEnv;
 
-	 Environment newEnv;
-
-	
 	public VerizonGenericExceptionProcessor(Environment env) {
 		super();
 
-		this.newEnv=env;
-		
+		this.newEnv = env;
+
 	}
 
 	public VerizonGenericExceptionProcessor() {
@@ -49,23 +49,26 @@ public class VerizonGenericExceptionProcessor implements Processor {
 
 		log.info("----VerizonGenericExceptionProcessor----------"
 				+ exception.getResponseBody());
-		log.info("----.getStatusCode()----------"
-				+ exception.getStatusCode());
+		log.info("----.getStatusCode()----------" + exception.getStatusCode());
 
-		
-	
 		Header responseHeader = new Header();
-		
-		
-		responseHeader.setApplicationName(exchange.getProperty(IConstant.APPLICATION_NAME).toString());
-		responseHeader.setRegion(exchange.getProperty(IConstant.REGION).toString());
-		
-		responseHeader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT).toString());
-		responseHeader.setOrganization(exchange.getProperty(IConstant.ORGANIZATION).toString());
-		responseHeader.setSourceName(exchange.getProperty(IConstant.SOURCE_NAME).toString());
-	
-		responseHeader.setTransactionId(exchange.getProperty(IConstant.GV_TRANSACTION_ID).toString());
-		responseHeader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER).toString());
+
+		responseHeader.setApplicationName(exchange.getProperty(
+				IConstant.APPLICATION_NAME).toString());
+		responseHeader.setRegion(exchange.getProperty(IConstant.REGION)
+				.toString());
+
+		responseHeader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT)
+				.toString());
+		responseHeader.setOrganization(exchange.getProperty(
+				IConstant.ORGANIZATION).toString());
+		responseHeader.setSourceName(exchange
+				.getProperty(IConstant.SOURCE_NAME).toString());
+
+		responseHeader.setTransactionId(exchange.getProperty(
+				IConstant.GV_TRANSACTION_ID).toString());
+		responseHeader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
+				.toString());
 
 		Response response = new Response();
 		// TODO SAME Functionality
@@ -80,47 +83,47 @@ public class VerizonGenericExceptionProcessor implements Processor {
 					"Not able to retrieve  valid authentication token");
 			throw new VerizonSessionTokenExpirationException("401", "401");
 		}
-		//TODO SAME Functionality
-		else{
-		
-			ObjectMapper mapper= new ObjectMapper();
-			
-			VerizonErrorResponse responsePayload = mapper.readValue(exception.getResponseBody(),
-				VerizonErrorResponse.class);
+		// TODO SAME Functionality
+		else {
+
+			ObjectMapper mapper = new ObjectMapper();
+
+			VerizonErrorResponse responsePayload = mapper.readValue(
+					exception.getResponseBody(), VerizonErrorResponse.class);
 
 			log.info("----response payload is----------"
 					+ responsePayload.toString());
-			
+
 			response.setResponseCode(IResponse.INVALID_PAYLOAD);
 			response.setResponseStatus(IResponse.ERROR_MESSAGE);
 			response.setResponseDescription(responsePayload.getErrorMessage());
-			
-		
+
 		}
 
-		log.info("exchange endpoint of error........."+exchange.getFromEndpoint().toString());
-		
+		log.info("exchange endpoint of error........."
+				+ exchange.getFromEndpoint().toString());
+
 		if ("Endpoint[direct://deviceInformationCarrier]".equals(exchange
 				.getFromEndpoint().toString())) {
-            
+
 			log.info("----log info inside deviceInfo ----------");
-			
+
 			DeviceInformationResponse responseObject = new DeviceInformationResponse();
 			responseObject.setHeader(responseHeader);
 			responseObject.setResponse(response);
-			
+
 			exchange.getIn().setBody(responseObject);
 		}
-		
+
 		if ("Endpoint[direct://deactivateDevice]".equals(exchange
 				.getFromEndpoint().toString())) {
-			System.out.println("getFromEndpoint---------------"+exchange.getFromEndpoint().toString());
+			System.out.println("getFromEndpoint---------------"
+					+ exchange.getFromEndpoint().toString());
 			DeactivateDeviceResponse responseObject = new DeactivateDeviceResponse();
 			responseObject.setHeader(responseHeader);
 			responseObject.setResponse(response);
 			exchange.getIn().setBody(responseObject);
 		}
-		
 
 		if ("Endpoint[direct://activateDevice]".equals(exchange
 				.getFromEndpoint().toString())) {
@@ -129,7 +132,7 @@ public class VerizonGenericExceptionProcessor implements Processor {
 			responseObject.setResponse(response);
 			exchange.getIn().setBody(responseObject);
 		}
-		
+
 		if ("Endpoint[direct://suspendDevice]".equals(exchange
 				.getFromEndpoint().toString())) {
 			SuspendDeviceResponse responseObject = new SuspendDeviceResponse();
@@ -137,25 +140,25 @@ public class VerizonGenericExceptionProcessor implements Processor {
 			responseObject.setResponse(response);
 			exchange.getIn().setBody(responseObject);
 		}
-		
+
 		if ("Endpoint[direct://customeFields]".equals(exchange
 				.getFromEndpoint().toString())) {
 			CustomFieldsDeviceResponse responseObject = new CustomFieldsDeviceResponse();
 			responseObject.setHeader(responseHeader);
 			responseObject.setResponse(response);
 			exchange.getIn().setBody(responseObject);
-			
+
 		}
-		
+
 		if ("Endpoint[direct://changeDeviceServicePlans]".equals(exchange
 				.getFromEndpoint().toString())) {
 			ChangeDeviceServicePlansResponse responseObject = new ChangeDeviceServicePlansResponse();
 			responseObject.setHeader(responseHeader);
 			responseObject.setResponse(response);
 			exchange.getIn().setBody(responseObject);
-			
+
 		}
-		
+
 		if ("Endpoint[direct://deviceConnectionStatus]".equals(exchange
 				.getFromEndpoint().toString())) {
 			ConnectionStatusResponse responseObject = new ConnectionStatusResponse();
@@ -163,7 +166,7 @@ public class VerizonGenericExceptionProcessor implements Processor {
 			responseObject.setResponse(response);
 			exchange.getIn().setBody(responseObject);
 		}
-		
+
 		if ("Endpoint[direct://deviceSessionBeginEndInfo]".equals(exchange
 				.getFromEndpoint().toString())) {
 
@@ -171,6 +174,23 @@ public class VerizonGenericExceptionProcessor implements Processor {
 			sessionBeginEndResponse.setHeader(responseHeader);
 			sessionBeginEndResponse.setResponse(response);
 			exchange.getIn().setBody(sessionBeginEndResponse);
+
+		}
+		if ("Endpoint[direct://restoreDevice]".equals(exchange
+				.getFromEndpoint().toString())) {
+			RestoreDeviceResponse responseObject = new RestoreDeviceResponse();
+			responseObject.setHeader(responseHeader);
+			responseObject.setResponse(response);
+			exchange.getIn().setBody(responseObject);
+
+		}
+
+		if ("Endpoint[direct://reactivateDevice]".equals(exchange
+				.getFromEndpoint().toString())) {
+			ReactivateDeviceResponse responseObject = new ReactivateDeviceResponse();
+			responseObject.setHeader(responseHeader);
+			responseObject.setResponse(response);
+			exchange.getIn().setBody(responseObject);
 
 		}
 	}

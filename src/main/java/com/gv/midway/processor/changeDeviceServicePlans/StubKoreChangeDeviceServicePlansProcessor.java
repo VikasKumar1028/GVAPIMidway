@@ -40,7 +40,7 @@ public class StubKoreChangeDeviceServicePlansProcessor implements Processor {
 		responseheader.setSourceName("KORE");
 		responseheader.setTransactionId("cde2131ksjd");
 		responseheader.setBsCarrier("KORE");
-
+ 
 		changeDeviceServicePlansResponse.setHeader(responseheader);
 		changeDeviceServicePlansResponse.setResponse(response);
 		changeDeviceServicePlansResponseDataArea

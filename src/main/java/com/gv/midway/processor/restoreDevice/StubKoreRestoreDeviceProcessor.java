@@ -42,7 +42,7 @@ public class StubKoreRestoreDeviceProcessor implements Processor {
 
 		restoreDeviceResponse.setHeader(responseheader);
 		restoreDeviceResponse.setResponse(response);
-		restoreDeviceResponseDataArea.setRequestId("KR001");
+		restoreDeviceResponseDataArea.setOrderNumber("KR0123312313");
 
 		restoreDeviceResponse.setDataArea(restoreDeviceResponseDataArea);
 

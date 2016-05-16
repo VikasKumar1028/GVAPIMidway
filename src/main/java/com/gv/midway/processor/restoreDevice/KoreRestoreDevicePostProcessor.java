@@ -66,7 +66,7 @@ public class KoreRestoreDevicePostProcessor implements Processor {
 
 		restoreDeviceResponse.setHeader(responseheader);
 		restoreDeviceResponse.setResponse(response);
-		restoreDeviceResponseDataArea.setRequestId(exchange.getProperty(
+		restoreDeviceResponseDataArea.setOrderNumber(exchange.getProperty(
 				IConstant.MIDWAY_TRANSACTION_ID).toString());
 
 		restoreDeviceResponse.setDataArea(restoreDeviceResponseDataArea);

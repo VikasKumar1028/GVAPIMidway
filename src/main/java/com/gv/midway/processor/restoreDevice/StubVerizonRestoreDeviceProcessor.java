@@ -42,7 +42,7 @@ public class StubVerizonRestoreDeviceProcessor implements Processor {
 
 		restoreDeviceResponse.setHeader(responseheader);
 		restoreDeviceResponse.setResponse(response);
-		restoreDeviceResponseDataArea.setRequestId("REQ01");
+		restoreDeviceResponseDataArea.setOrderNumber("VZ0123312313");
 		restoreDeviceResponse.setDataArea(restoreDeviceResponseDataArea);
 
 		exchange.getIn().setBody(restoreDeviceResponse);

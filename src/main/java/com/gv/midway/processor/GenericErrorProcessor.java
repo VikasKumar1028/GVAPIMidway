@@ -15,6 +15,8 @@ import com.gv.midway.pojo.connectionInformation.deviceStatus.response.Connection
 import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponse;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
+import com.gv.midway.pojo.reActivateDevice.response.ReactivateDeviceResponse;
+import com.gv.midway.pojo.restoreDevice.response.RestoreDeviceResponse;
 import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
 
 public class GenericErrorProcessor implements Processor {
@@ -129,26 +131,42 @@ public class GenericErrorProcessor implements Processor {
 			exchange.getIn().setBody(sessionBeginEndResponse);
 
 		}
-		
+
 		if ("Endpoint[direct://customeFields]".equals(exchange
 				.getFromEndpoint().toString())) {
 			CustomFieldsDeviceResponse responseObject = new CustomFieldsDeviceResponse();
 			responseObject.setHeader(responseHeader);
 			responseObject.setResponse(response);
 			exchange.getIn().setBody(responseObject);
-			
+
 		}
-		
+
 		if ("Endpoint[direct://changeDeviceServicePlans]".equals(exchange
 				.getFromEndpoint().toString())) {
 			ChangeDeviceServicePlansResponse responseObject = new ChangeDeviceServicePlansResponse();
 			responseObject.setHeader(responseHeader);
 			responseObject.setResponse(response);
 			exchange.getIn().setBody(responseObject);
-			
-		}
-		
 
+		}
+
+		if ("Endpoint[direct://reactivateDevice]".equals(exchange
+				.getFromEndpoint().toString())) {
+			ReactivateDeviceResponse responseObject = new ReactivateDeviceResponse();
+			responseObject.setHeader(responseHeader);
+			responseObject.setResponse(response);
+			exchange.getIn().setBody(responseObject);
+
+		}
+
+		if ("Endpoint[direct://restoreDevice]".equals(exchange
+				.getFromEndpoint().toString())) {
+			RestoreDeviceResponse responseObject = new RestoreDeviceResponse();
+			responseObject.setHeader(responseHeader);
+			responseObject.setResponse(response);
+			exchange.getIn().setBody(responseObject);
+
+		}
 	}
 
 }

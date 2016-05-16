@@ -62,7 +62,7 @@ public class VerizonRestoreDevicePostProcessor implements Processor {
 			response.setResponseCode(IResponse.SUCCESS_CODE);
 			response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
 			response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
-			restoreDeviceResponseDataArea.setRequestId(exchange.getProperty(
+			restoreDeviceResponseDataArea.setOrderNumber(exchange.getProperty(
 					IConstant.MIDWAY_TRANSACTION_ID).toString());
 
 		} else {
