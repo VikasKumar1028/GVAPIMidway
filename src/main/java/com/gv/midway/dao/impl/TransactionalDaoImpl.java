@@ -1028,6 +1028,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			
 		}
 		
+		update.set(ITransaction.CARRIER_ERROR_DESCRIPTION, "");
 		update.set(ITransaction.LAST_TIME_STAMP_UPDATED, CommonUtil.getCurrentTimeStamp());
 		
 		mongoTemplate.updateFirst(searchQuery, update, Transaction.class);
