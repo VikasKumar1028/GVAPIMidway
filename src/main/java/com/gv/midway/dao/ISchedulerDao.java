@@ -1,11 +1,11 @@
-package com.gv.midway.service;
+package com.gv.midway.dao;
 
 import org.apache.camel.Exchange;
 
-public interface ISchedulerService {
+public interface ISchedulerDao {
+
 	
 	public void saveDeviceConnectionHistory(Exchange exchange);
 	
 	public void saveDeviceUsageHistory(Exchange exchange);
-
 }

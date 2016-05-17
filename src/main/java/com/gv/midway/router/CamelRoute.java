@@ -322,7 +322,7 @@ public class CamelRoute extends RouteBuilder {
 			updateDevicesDetailsBulk();
 		
 			//Execution of schduled jobs scheduledJobs
-			scheduledJobs();
+			/*scheduledJobs();*/
 			
 	}
 	
@@ -1090,21 +1090,22 @@ public class CamelRoute extends RouteBuilder {
 				iDeviceService, "bulkOperationDeviceSyncInDB");
 	}
 
-	
+
 	/** Testing Quartz **/
 	public void scheduledJobs() {
 
-		from("quartz2://job/deviceDetailsTimer?cron="
+		from(
+				"quartz2://job/deviceDetailsTimer?cron="
 						+ IConstant.JOB_TIME_CONFIGURATION)
 				.multicast()
-				.to("direct:retrieveDeviceConnectionHistory",
-						"direct:retrieveDeviceUsageHistory").end();
+				.to("direct:saveDeviceConnectionHistory",
+						"direct:saveDeviceUsageHistory").end();
 
-		from("direct:retrieveDeviceConnectionHistory").bean(iSchedulerService,
-				"retrieveDeviceConnectionHistory").end();
+		from("direct:saveDeviceConnectionHistory").bean(iSchedulerService,
+				"saveDeviceConnectionHistory").end();
 
-		from("direct:retrieveDeviceUsageHistory").bean(iSchedulerService,
-				"retrieveDeviceUsageHistory").end();
+		from("direct:saveDeviceUsageHistory").bean(iSchedulerService,
+				"saveDeviceUsageHistory").end();
 
 	}
 }
