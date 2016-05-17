@@ -3,7 +3,7 @@ package com.gv.midway.pojo.history;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "deviceUsage")
-public class deviceUsage {
+public class DeviceUsage {
 
 	private Object devicePayload;
 	private String carrierName;
@@ -53,7 +53,7 @@ public class deviceUsage {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		deviceUsage other = (deviceUsage) obj;
+		DeviceUsage other = (DeviceUsage) obj;
 		if (carrierName == null) {
 			if (other.carrierName != null)
 				return false;

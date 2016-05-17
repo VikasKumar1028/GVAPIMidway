@@ -3,7 +3,7 @@ package com.gv.midway.pojo.history;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "deviceConnection")
-public class deviceConnection {
+public class DeviceConnection {
 	
 
 	private Object devicePayload;
@@ -56,7 +56,7 @@ public class deviceConnection {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		deviceConnection other = (deviceConnection) obj;
+		DeviceConnection other = (DeviceConnection) obj;
 		if (carrierName == null) {
 			if (other.carrierName != null)
 				return false;
