@@ -22,9 +22,9 @@ public class VerizonRestoreDevicePreProcessor implements Processor {
 
 		log.info("Begin:VerizonRestoreDevicePreProcessor");
 
-		System.out.println("Session Parameters  VZSessionToken"
+		log.info("Session Parameters  VZSessionToken"
 				+ exchange.getProperty(IConstant.VZ_SEESION_TOKEN));
-		System.out.println("Session Parameters  VZAuthorization"
+		log.info("Session Parameters  VZAuthorization"
 				+ exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN));
 
 		RestoreDeviceRequestVerizon businessRequest = new RestoreDeviceRequestVerizon();
@@ -55,7 +55,7 @@ public class VerizonRestoreDevicePreProcessor implements Processor {
 				businessDeviceId.setId(proxyDeviceId.getId());
 				businessDeviceId.setKind(proxyDeviceId.getKind());
 
-				System.out.println(proxyDeviceId.getId());
+				log.info(proxyDeviceId.getId());
 
 				businessDeviceIdArray[i] = businessDeviceId;
 
