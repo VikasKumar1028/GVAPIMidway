@@ -4,6 +4,7 @@ import org.apache.camel.Exchange;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.stereotype.Service;
 
 import com.gv.midway.dao.ISchedulerDao;
 import com.gv.midway.pojo.connectionInformation.verizon.response.ConnectionHistory;
@@ -11,6 +12,7 @@ import com.gv.midway.pojo.history.DeviceConnection;
 import com.gv.midway.pojo.history.DeviceUsage;
 import com.gv.midway.utility.CommonUtil;
 
+@Service
 public class SchedulerDaoImpl implements ISchedulerDao {
 	
 	Logger log = Logger.getLogger(SchedulerDaoImpl.class);

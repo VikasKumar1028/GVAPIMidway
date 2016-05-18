@@ -56,7 +56,7 @@
 
 	<bean id="iSessionService" class="com.gv.midway.service.impl.SessionServiceImpl"/>
 	
-	<bean id="iSchedulerService" class="com.gv.midway.service.impl.SchedulerDaoImpl"/>
+	<bean id="iSchedulerService" class="com.gv.midway.service.impl.SchedulerServiceImpl"/>
 
 
 	<jaxrs:server id="GVJax" address="/">

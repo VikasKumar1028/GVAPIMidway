@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.gv.midway.dao.ISchedulerDao;
-import com.gv.midway.dao.impl.SchedulerDaoImpl;
 import com.gv.midway.service.ISchedulerService;
 
 @Service
