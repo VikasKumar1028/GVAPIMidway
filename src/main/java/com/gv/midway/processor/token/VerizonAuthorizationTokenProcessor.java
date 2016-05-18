@@ -15,38 +15,39 @@ public class VerizonAuthorizationTokenProcessor implements Processor {
 			.getName());
 
 	Environment newEnv;
-	
+
 	public VerizonAuthorizationTokenProcessor(Environment env) {
 		super();
 		this.newEnv = env;
 
 	}
-	
+
 	public VerizonAuthorizationTokenProcessor() {
 
 	}
 
-	
 	public void process(Exchange exchange) throws Exception {
 
-		log.info("Start:VerizonAuthorizationTokenProcessor----------" +exchange.getPattern());
-		log.info("Authorization:::"+newEnv.getProperty(IConstant.VERIZON_AUTHENTICATION));
-		//exchange.getIn().setBody("grant_type=client_credentials");
-		
+		log.info("Begin:VerizonAuthorizationTokenProcessor----------"
+				+ exchange.getPattern());
+		log.info("Authorization:::"
+				+ newEnv.getProperty(IConstant.VERIZON_AUTHENTICATION));
 		Message message = exchange.getIn();
-		message.setHeader("Authorization",newEnv.getProperty(IConstant.VERIZON_AUTHENTICATION));
-		message.setHeader(Exchange.CONTENT_TYPE, "application/x-www-form-urlencoded");
+		message.setHeader("Authorization",
+				newEnv.getProperty(IConstant.VERIZON_AUTHENTICATION));
+		message.setHeader(Exchange.CONTENT_TYPE,
+				"application/x-www-form-urlencoded");
 		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.HTTP_METHOD, "POST");
 		message.setHeader(Exchange.HTTP_PATH, "/ts/v1/oauth2/token");
-		//exchange.setPattern(Exchange.);
-		exchange.getIn().setHeader(Exchange.HTTP_QUERY, "grant_type=client_credentials"); 
-		//exchange.getIn().setHeader("exchangePattern", "InOut");
+
+		exchange.getIn().setHeader(Exchange.HTTP_QUERY,
+				"grant_type=client_credentials");
+
 		exchange.setPattern(ExchangePattern.InOut);
-		
+
 		log.info("End:VerizonAuthorizationTokenProcessor");
 
-		
 	}
 
 }

@@ -73,7 +73,7 @@ public class DeviceServiceImpl implements IDeviceService {
 		
 		DeviceInformationRequest deviceInformationRequest = (DeviceInformationRequest) exchange.getIn().getBody();
 		
-		System.out.println("device information is.........."+deviceInformationRequest.toString());
+		log.info("device information is.........."+deviceInformationRequest.toString());
 		
 		String netSuiteId=deviceInformationRequest.getDataArea().getNetSuiteId();
 		

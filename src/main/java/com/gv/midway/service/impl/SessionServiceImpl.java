@@ -3,6 +3,7 @@ package com.gv.midway.service.impl;
 import javax.servlet.ServletContext;
 
 import org.apache.camel.Exchange;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.ServletContextAware;
@@ -14,7 +15,9 @@ import com.gv.midway.service.ISessionService;
 
 @Service
 public class SessionServiceImpl implements ISessionService,ServletContextAware {
-
+	
+	Logger log = Logger.getLogger(SessionServiceImpl.class
+			.getName());
 //	@Autowired
 	private ServletContext servletContext;
 
@@ -42,7 +45,7 @@ public class SessionServiceImpl implements ISessionService,ServletContextAware {
 
 	public void setVzToken(Exchange exchange) {
 
-		System.out.println(exchange
+		log.info(exchange
 				.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN)
 				+ "Inside Session Set Attributes ***********************************"
 				+ exchange.getProperty(IConstant.VZ_SEESION_TOKEN));
@@ -58,7 +61,7 @@ public class SessionServiceImpl implements ISessionService,ServletContextAware {
 
 	public void synchronizeDBContextToken() {
 		
-		System.out.println("**************synchronizeDBContextToken*****************************");
+		log.info("**************synchronizeDBContextToken*****************************");
 
 		SessionBean sessionBean = sessionDao.getSessionBean();
 
@@ -78,9 +81,9 @@ public class SessionServiceImpl implements ISessionService,ServletContextAware {
 		if (sessionBean == null)
 			return "true";
 
-		System.out.println(sessionBean.getVzSessionToken()
+		log.info(sessionBean.getVzSessionToken()
 				+ "*******check Token*******" + getContextVzSessionToken());
-		System.out.println(sessionBean.getVzAuthorizationToken()
+		log.info(sessionBean.getVzAuthorizationToken()
 				+ "*******check Token*******"
 				+ getContextVzAuthorizationToken());
 

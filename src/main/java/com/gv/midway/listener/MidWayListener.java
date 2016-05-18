@@ -28,7 +28,7 @@ public class MidWayListener extends ContextLoaderListener {
 	 */
 	@Override
 	public void contextDestroyed(ServletContextEvent event) {
-		System.out.println("context destroyed...");
+		logger.info("context destroyed...");
 		super.contextDestroyed(event);
 		batchExecutor.shutDown();
 	}

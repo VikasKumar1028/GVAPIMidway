@@ -56,7 +56,7 @@ public class VerizonDeactivateDevicePreProcessor implements Processor {
 				businessDeviceId.setId(proxyDeviceId.getId());
 				businessDeviceId.setKind(proxyDeviceId.getKind());
 
-				System.out.println(proxyDeviceId.getId());
+				log.info(proxyDeviceId.getId());
 
 				businessDeviceIdArray[i] = businessDeviceId;
 

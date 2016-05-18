@@ -119,7 +119,7 @@ public class VerizonDeviceSessionBeginEndInfoPostProcessor implements Processor 
 										.getValue().equalsIgnoreCase(
 												IConstant.EVENT_START)) {
 
-							System.out.println("Exception on " + i);
+							log.info("Exception on " + i);
 							if (eventStatus == 0) {
 								eventStatus = 1;
 								deviceSession.setBegin(connectionResponse

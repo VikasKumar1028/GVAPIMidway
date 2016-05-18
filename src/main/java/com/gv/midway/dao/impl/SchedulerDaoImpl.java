@@ -5,7 +5,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.dao.ISchedulerDao;
 import com.gv.midway.pojo.connectionInformation.verizon.response.ConnectionHistory;
 import com.gv.midway.pojo.history.DeviceConnection;

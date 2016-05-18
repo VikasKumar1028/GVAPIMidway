@@ -117,7 +117,7 @@ public class VerizonGenericExceptionProcessor implements Processor {
 
 		if ("Endpoint[direct://deactivateDevice]".equals(exchange
 				.getFromEndpoint().toString())) {
-			System.out.println("getFromEndpoint---------------"
+			log.info("getFromEndpoint---------------"
 					+ exchange.getFromEndpoint().toString());
 			DeactivateDeviceResponse responseObject = new DeactivateDeviceResponse();
 			responseObject.setHeader(responseHeader);

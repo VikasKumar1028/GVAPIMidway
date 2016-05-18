@@ -52,7 +52,7 @@ public class VerizonRestoreDevicePostProcessor implements Processor {
 		Date date = new Date();
 		
 
-		System.out.println("exchange.getIn().getBody().toString()***************************************"+ exchange.getIn().getBody().toString());
+		log.info("exchange.getIn().getBody().toString()***************************************"+ exchange.getIn().getBody().toString());
 
 		
 		if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {

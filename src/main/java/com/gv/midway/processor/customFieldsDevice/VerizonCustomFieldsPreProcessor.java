@@ -52,7 +52,7 @@ public class VerizonCustomFieldsPreProcessor implements Processor {
 				businessDeviceId.setId(proxyDeviceId.getId());
 				businessDeviceId.setKind(proxyDeviceId.getKind());
 
-				System.out.println(proxyDeviceId.getId());
+				log.info(proxyDeviceId.getId());
 
 				businessDeviceIdArray[i] = businessDeviceId;
 
@@ -70,7 +70,7 @@ public class VerizonCustomFieldsPreProcessor implements Processor {
 
 		exchange.getIn().setBody(strRequestBody);
 
-		System.out.println("strRequestBody***ChangeService" + strRequestBody);
+		log.info("strRequestBody***ChangeService" + strRequestBody);
 
 		Message message = exchange.getIn();
 		String sessionToken = "";

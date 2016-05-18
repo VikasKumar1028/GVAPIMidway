@@ -138,7 +138,7 @@ public class DeviceDaoImpl implements IDeviceDao
 		// TODO Auto-generated method stub
 		
 		String netSuiteId=deviceInformationRequest.getDataArea().getNetSuiteId();
-		System.out.println("device dao netsuite id is..."+netSuiteId);
+		log.info("device dao netsuite id is..."+netSuiteId);
 		
         DeviceInformationResponse deviceInformationResponse=new DeviceInformationResponse();
 		

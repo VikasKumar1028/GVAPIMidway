@@ -5,14 +5,21 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Logger;
+
+import com.gv.midway.processor.restoreDevice.VerizonRestoreDevicePreProcessor;
+
 public class BatchExecutor {
+	
+	Logger log = Logger.getLogger(BatchExecutor.class
+			.getName());
 
 	private volatile static BatchExecutor batchExecutor;
 
 	public ExecutorService executorService;
 
 	private BatchExecutor() {
-		System.out.println("singelton created");
+		log.info("singelton created");
 		setExecutor();
 	};
 
@@ -44,9 +51,9 @@ public class BatchExecutor {
 	   executorService.shutdown();
 		try {
             if (!executorService.awaitTermination(10, TimeUnit.SECONDS)) {
-                System.out.println("Executor not able to finish task in specified time.");
+            	log.info("Executor not able to finish task in specified time.");
                 List<Runnable> droppedTasks = executorService.shutdownNow();
-                System.out.println("Executor was abruptly shut down. " + droppedTasks.size() + " tasks will not be executed.");
+                log.info("Executor was abruptly shut down. " + droppedTasks.size() + " tasks will not be executed.");
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
