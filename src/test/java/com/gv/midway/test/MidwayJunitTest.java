@@ -18,6 +18,7 @@ package com.gv.midway.test;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
+import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -65,7 +66,9 @@ import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponseDataArea;
 import com.gv.midway.pojo.verizon.CustomFieldsToUpdate;
 import com.gv.midway.pojo.verizon.DeviceId;
 import com.gv.midway.pojo.verizon.Devices;
+import com.gv.midway.processor.activateDevice.KoreActivateDevicePostProcessor;
 import com.gv.midway.service.ISessionService;
+
 
 
     public class MidwayJunitTest extends Assert {
@@ -74,6 +77,8 @@ import com.gv.midway.service.ISessionService;
     private MockServletContext sc;
 	
 	
+	Logger log = Logger.getLogger(MidwayJunitTest.class
+			.getName());
 
 	@Before
 	public void setUp() throws Exception {
@@ -133,7 +138,7 @@ import com.gv.midway.service.ISessionService;
 				
 				ActivateDeviceResponse response = (ActivateDeviceResponse) template.requestBody("direct:activateDevice", req);
 				
-				System.out.println("Activate Device response is...................:"+response.getResponse().getResponseCode()+"---Response Data area is..:"+response.getDataArea().getOrderNumber());
+				log.info("Activate Device response is...................:"+response.getResponse().getResponseCode()+"---Response Data area is..:"+response.getDataArea().getOrderNumber());
 				
 				 assertEquals(response.getResponse().getResponseCode().toString(),"2000");
 				 assertEquals(response.getResponse().getResponseStatus().toString(),"Success");
@@ -185,7 +190,7 @@ import com.gv.midway.service.ISessionService;
 			        req.setHeader(header);
 					ActivateDeviceResponse response = (ActivateDeviceResponse) template.requestBody("direct:activateDevice", req);
 					
-					System.out.println("Activate Device response is...................:"+(response.getResponse().getResponseCode()));
+					log.info("Activate Device response is...................:"+(response.getResponse().getResponseCode()));
 					
 					 assertEquals(response.getResponse().getResponseCode().toString(),"2000");
 					 assertEquals(response.getResponse().getResponseStatus().toString(),"Success");
@@ -241,7 +246,7 @@ import com.gv.midway.service.ISessionService;
 						        req.setHeader(header);
 								ActivateDeviceResponse response = (ActivateDeviceResponse) template.requestBody("direct:activateDevice", req);
 								
-								System.out.println("Activate Device response Order No. is...................:"+(response.getDataArea().getOrderNumber()));
+								log.info("Activate Device response Order No. is...................:"+(response.getDataArea().getOrderNumber()));
 								
 								assertEquals(response.getResponse().getResponseCode().toString(),"400");
 								assertEquals(response.getResponse().getResponseStatus(),"Error");
@@ -295,7 +300,7 @@ import com.gv.midway.service.ISessionService;
 		deactivateRequest.setDataArea(dataArea);
 		DeactivateDeviceResponse response = (DeactivateDeviceResponse) template.requestBody("direct:deactivateDevice", deactivateRequest);
 		
-		System.out.println("Response in Junit Test for Deactivate....... :" + response.getResponse().getResponseCode());
+		log.info("Response in Junit Test for Deactivate....... :" + response.getResponse().getResponseCode());
 		 assertEquals(response.getResponse().getResponseCode().toString(),"2000");
 		 assertEquals(response.getResponse().getResponseStatus(),"Success");
 		 assertNotNull(response.getDataArea().getOrderNumber());
@@ -351,7 +356,7 @@ import com.gv.midway.service.ISessionService;
 				deactivateRequest.setDataArea(dataArea);
 				DeactivateDeviceResponse response = (DeactivateDeviceResponse) template.requestBody("direct:deactivateDevice", deactivateRequest);
 				
-				System.out.println("Response in Junit Test for Deactivate :" + response);
+				log.info("Response in Junit Test for Deactivate :" + response);
 				assertEquals(response.getResponse().getResponseCode().toString(),"2000");
 				assertEquals(response.getResponse().getResponseStatus(),"Success");
 				assertNotNull(response.getDataArea().getOrderNumber());
@@ -406,7 +411,7 @@ import com.gv.midway.service.ISessionService;
 				deactivateRequest.setDataArea(dataArea);
 				DeactivateDeviceResponse response = (DeactivateDeviceResponse) template.requestBody("direct:deactivateDevice", deactivateRequest);
 			
-				System.out.println("Response in Junit Test for Deactivate :" + response.getDataArea());
+				log.info("Response in Junit Test for Deactivate :" + response.getDataArea());
 				assertEquals(response.getResponse().getResponseCode().toString(),"400");
 				assertEquals(response.getResponse().getResponseStatus(),"Error");
 				assertNull(response.getDataArea());
@@ -450,11 +455,11 @@ import com.gv.midway.service.ISessionService;
 		        header.setTimestamp("string");
 		  		req.setHeader(header);
 		  		
-				System.out.println("Request in Junit Test:" + req);
+		  		log.info("Request in Junit Test:" + req);
 				
 				ReactivateDeviceResponse response = (ReactivateDeviceResponse) template.requestBody("direct:reactivateDevice", req);
 				
-				System.out.println("Response in Junit Test for Reactive....... :" + response.getResponse().getResponseCode());
+				log.info("Response in Junit Test for Reactive....... :" + response.getResponse().getResponseCode());
 				assertEquals(response.getResponse().getResponseCode().toString(),"2000");
 				assertEquals(response.getResponse().getResponseStatus(),"Success");
 				assertNotNull(response.getDataArea().getOrderNumber());
@@ -502,7 +507,7 @@ import com.gv.midway.service.ISessionService;
 						
 				  		SuspendDeviceResponse response = (SuspendDeviceResponse) template.requestBody("direct:suspendDevice", req);
 						
-						System.out.println("Response in Junit Test for Suspend....... :" + response.getResponse().getResponseCode());
+				  		log.info("Response in Junit Test for Suspend....... :" + response.getResponse().getResponseCode());
 						assertEquals(response.getResponse().getResponseCode().toString(),"2000");
 						assertEquals(response.getResponse().getResponseStatus(),"Success");
 						assertNotNull(response.getDataArea().getOrderNumber());
@@ -552,7 +557,7 @@ import com.gv.midway.service.ISessionService;
 						
 				  		SuspendDeviceResponse response = (SuspendDeviceResponse) template.requestBody("direct:suspendDevice", req);
 						response.getResponse().getResponseCode();
-						System.out.println("Response in Junit Test for Suspend....... :" + response.getResponse().getResponseCode());
+						log.info("Response in Junit Test for Suspend....... :" + response.getResponse().getResponseCode());
 						assertEquals(response.getResponse().getResponseCode().toString(),"2000");
 						assertEquals(response.getResponse().getResponseStatus(),"Success");
 						assertNotNull(response.getDataArea().getOrderNumber());
@@ -601,7 +606,7 @@ import com.gv.midway.service.ISessionService;
 						
 				  		SuspendDeviceResponse response = (SuspendDeviceResponse) template.requestBody("direct:suspendDevice", req);
 						response.getResponse().getResponseCode();
-						System.out.println("Response in Junit Test for Suspend....... :" + response.getResponse().getResponseCode());
+						log.info("Response in Junit Test for Suspend....... :" + response.getResponse().getResponseCode());
 						assertEquals(response.getResponse().getResponseCode().toString(),"400");
 						assertEquals(response.getResponse().getResponseStatus(),"Error");
 						assertNull(response.getDataArea().getOrderNumber());
@@ -646,7 +651,7 @@ import com.gv.midway.service.ISessionService;
 					  		
 							RestoreDeviceResponse response = (RestoreDeviceResponse) template.requestBody("direct:restoreDevice", req);
 							response.getResponse().getResponseCode();
-							System.out.println("Response in Junit Test for Restore....... :" + response.getResponse().getResponseCode());
+							log.info("Response in Junit Test for Restore....... :" + response.getResponse().getResponseCode());
 							assertEquals(response.getResponse().getResponseCode().toString(),"2000");
 							assertEquals(response.getResponse().getResponseStatus(),"Success");
 							assertNotNull(response.getDataArea().getOrderNumber());
@@ -695,11 +700,11 @@ import com.gv.midway.service.ISessionService;
 					        header.setTimestamp("string");
 					  		req.setHeader(header);
 					  		
-							System.out.println("Request in Junit Test:" + req);
+					  		log.info("Request in Junit Test:" + req);
 							
 							RestoreDeviceResponse response = (RestoreDeviceResponse) template.requestBody("direct:restoreDevice", req);
 							response.getResponse().getResponseCode();
-							System.out.println("Response in Junit Test for Rerstore....... :" + response.getResponse().getResponseCode());
+							log.info("Response in Junit Test for Rerstore....... :" + response.getResponse().getResponseCode());
 							assertEquals(response.getResponse().getResponseCode().toString(),"2000");
 							assertEquals(response.getResponse().getResponseStatus(),"Success");
 							assertNotNull(response.getDataArea().getOrderNumber());
@@ -747,11 +752,11 @@ import com.gv.midway.service.ISessionService;
 						        header.setTimestamp("string");
 						  		req.setHeader(header);
 						  		
-								System.out.println("Request in Junit Test:" + req);
+						  		log.info("Request in Junit Test:" + req);
 								
 								RestoreDeviceResponse response = (RestoreDeviceResponse) template.requestBody("direct:restoreDevice", req);
 								response.getResponse().getResponseCode();
-								System.out.println("Response in Junit Test for Rerstore....... :" + response.getResponse().getResponseCode());
+								log.info("Response in Junit Test for Rerstore....... :" + response.getResponse().getResponseCode());
 								assertEquals(response.getResponse().getResponseCode().toString(),"400");
 								assertEquals(response.getResponse().getResponseStatus(),"Error");
 								assertEquals(response.getDataArea().getOrderNumber(),null);
@@ -795,11 +800,11 @@ import com.gv.midway.service.ISessionService;
 						        header.setTimestamp("string");
 						  		req.setHeader(header);
 						  		
-								System.out.println("Request in Junit Test:" + req);
+						  		log.info("Request in Junit Test:" + req);
 								
 								CustomFieldsDeviceResponse response = (CustomFieldsDeviceResponse) template.requestBody("direct:customeFields", req);
 								
-								System.out.println("Response in Junit Test for Device Custom Fileds....... :" + response.getResponse().getResponseCode());
+								log.info("Response in Junit Test for Device Custom Fileds....... :" + response.getResponse().getResponseCode());
 								assertEquals(response.getResponse().getResponseCode().toString(),"2000");
 								assertEquals(response.getResponse().getResponseStatus(),"Success");
 								assertNotNull(response.getDataArea().getOrderNumber());
@@ -849,10 +854,10 @@ import com.gv.midway.service.ISessionService;
 						        header.setTimestamp("string");
 						  		req.setHeader(header);
 						  		
-								System.out.println("Request in Junit Test:" + req);
+						  		log.info("Request in Junit Test:" + req);
 								
 								CustomFieldsDeviceResponse response = (CustomFieldsDeviceResponse) template.requestBody("direct:customeFields", req);
-								System.out.println("Response in Junit Test for Custom Field....... :" + response.getResponse().getResponseCode());
+								log.info("Response in Junit Test for Custom Field....... :" + response.getResponse().getResponseCode());
 								assertEquals(response.getResponse().getResponseCode().toString(),"2000");
 								assertEquals(response.getResponse().getResponseStatus(),"Success");
 								assertNotNull(response.getDataArea().getOrderNumber());
@@ -902,10 +907,10 @@ import com.gv.midway.service.ISessionService;
 						        header.setRegion("USA");
 						        header.setTimestamp("string");
 						  		req.setHeader(header);
-								System.out.println("Request in Junit Test:" + req);
+						  		log.info("Request in Junit Test:" + req);
 								
 								CustomFieldsDeviceResponse response = (CustomFieldsDeviceResponse) template.requestBody("direct:customeFields", req);
-								System.out.println("Response in Junit Test for Custom Fields....... :" + response);
+								log.info("Response in Junit Test for Custom Fields....... :" + response);
 								assertEquals(response.getResponse().getResponseCode().toString(),"1905");
 								assertEquals(response.getResponse().getResponseStatus(),"Error");
 								assertEquals(response.getDataArea(),null);
@@ -954,11 +959,11 @@ import com.gv.midway.service.ISessionService;
 						        header.setTimestamp("string");
 						  		req.setHeader(header);
 						  		
-								System.out.println("Request in Junit Test:" + req);
+						  		log.info("Request in Junit Test:" + req);
 								
 								ChangeDeviceServicePlansResponse response = (ChangeDeviceServicePlansResponse) template.requestBody("direct:changeDeviceServicePlans", req);
 								
-								System.out.println("Response in Junit Test for Device Change Service Plan....... :" + response.getResponse().getResponseCode());
+								log.info("Response in Junit Test for Device Change Service Plan....... :" + response.getResponse().getResponseCode());
 								assertEquals(response.getResponse().getResponseCode().toString(),"2000");
 								assertEquals(response.getResponse().getResponseStatus(),"Success");
 								assertNotNull(response.getDataArea().getOrderNumber());
@@ -1009,11 +1014,11 @@ import com.gv.midway.service.ISessionService;
 						        header.setTimestamp("string");
 						  		req.setHeader(header);
 						  		
-								System.out.println("Request in Junit Test:" + req);
+						  		log.info("Request in Junit Test:" + req);
 								
 								ChangeDeviceServicePlansResponse response = (ChangeDeviceServicePlansResponse) template.requestBody("direct:changeDeviceServicePlans", req);
 								
-								System.out.println("Response in Junit Test for Device Change Service Plan....... :" + response.getResponse().getResponseCode());
+								log.info("Response in Junit Test for Device Change Service Plan....... :" + response.getResponse().getResponseCode());
 								assertEquals(response.getResponse().getResponseCode().toString(),"2000");
 								assertEquals(response.getResponse().getResponseStatus(),"Success");
 								assertNotNull(response.getDataArea().getOrderNumber());
@@ -1064,7 +1069,7 @@ import com.gv.midway.service.ISessionService;
 						  		
 								ChangeDeviceServicePlansResponse response = (ChangeDeviceServicePlansResponse) template.requestBody("direct:changeDeviceServicePlans", req);
 								
-								System.out.println("Response in Junit Test for Device Change Service Plan....... :" + response.getResponse().getResponseCode());
+								log.info("Response in Junit Test for Device Change Service Plan....... :" + response.getResponse().getResponseCode());
 								assertEquals(response.getResponse().getResponseCode().toString(),"1905");
 								assertEquals(response.getResponse().getResponseStatus(),"Error");
 								assertEquals(response.getDataArea(),null);
