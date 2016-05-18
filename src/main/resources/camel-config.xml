@@ -55,6 +55,8 @@
 	<bean id="auditLogResponseEventNotifer" class="com.gv.midway.audit.AuditLogResponseEventNotifer" />
 
 	<bean id="iSessionService" class="com.gv.midway.service.impl.SessionServiceImpl"/>
+	
+	<bean id="iSchedulerService" class="com.gv.midway.service.impl.SchedulerDaoImpl"/>
 
 
 	<jaxrs:server id="GVJax" address="/">
