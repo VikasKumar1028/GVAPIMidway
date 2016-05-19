@@ -11,6 +11,7 @@ import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.customFieldsDevice.kore.request.CustomFieldsDeviceRequestKore;
 import com.gv.midway.pojo.customFieldsDevice.request.CustomFieldsDeviceRequest;
 import com.gv.midway.pojo.transaction.Transaction;
+import com.gv.midway.pojo.verizon.CustomFields;
 
 public class KoreCustomFieldsPreProcessor implements Processor {
 
@@ -41,24 +42,50 @@ public class KoreCustomFieldsPreProcessor implements Processor {
 
 		String deviceId = changeDeviceServicePlansRequest.getDataArea()
 				.getDevices()[0].getDeviceIds()[0].getId();
-		String customField1 = changeDeviceServicePlansRequest.getDataArea()
-				.getCustomField1();
-		String customField2 = changeDeviceServicePlansRequest.getDataArea()
-				.getCustomField2();
-		String customField3 = changeDeviceServicePlansRequest.getDataArea()
-				.getCustomField3();
-		String customField4 = changeDeviceServicePlansRequest.getDataArea()
-				.getCustomField4();
-		String customField5 = changeDeviceServicePlansRequest.getDataArea()
-				.getCustomField5();
 
 		CustomFieldsDeviceRequestKore customFieldsDeviceRequestKore = new CustomFieldsDeviceRequestKore();
 		customFieldsDeviceRequestKore.setDeviceNumber(deviceId);
-		customFieldsDeviceRequestKore.setCustomField1(customField1);
-		customFieldsDeviceRequestKore.setCustomField2(customField2);
-		customFieldsDeviceRequestKore.setCustomField3(customField3);
-		customFieldsDeviceRequestKore.setCustomField4(customField4);
-		customFieldsDeviceRequestKore.setCustomField5(customField5);
+
+		CustomFields[] customFieldsArr = changeDeviceServicePlansRequest
+				.getDataArea().getCustomFields();
+		for (int i = 0; i < customFieldsArr.length; i++) {
+			CustomFields customField = customFieldsArr[i];
+
+			String key = customField.getKey();
+
+			switch (key) {
+			case "customField1":
+				customFieldsDeviceRequestKore.setCustomField1(customField
+						.getValue());
+				break;
+
+			case "customField2":
+				customFieldsDeviceRequestKore.setCustomField2(customField
+						.getValue());
+				break;
+
+			case "customField3":
+				customFieldsDeviceRequestKore.setCustomField3(customField
+						.getValue());
+				break;
+
+			case "customField4":
+				customFieldsDeviceRequestKore.setCustomField4(customField
+						.getValue());
+				break;
+
+			case "customField5":
+				customFieldsDeviceRequestKore.setCustomField5(customField
+						.getValue());
+				break;
+			case "customField6":
+				customFieldsDeviceRequestKore.setCustomField6(customField
+						.getValue());
+				break;
+			default:
+				break;
+			}
+		}
 
 		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,
 				transaction.getDeviceNumber());
@@ -74,7 +101,7 @@ public class KoreCustomFieldsPreProcessor implements Processor {
 		message.setHeader("Authorization",
 				newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
 		message.setHeader(Exchange.HTTP_PATH, "/json/modifyDeviceCustomInfo");
-		
+
 		message.setBody(customFieldsDeviceRequestKore);
 		exchange.setPattern(ExchangePattern.InOut);
 

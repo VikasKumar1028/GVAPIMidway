@@ -1,8 +1,6 @@
 package com.gv.midway.pojo.customFieldsDevice.kore.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 public class CustomFieldsDeviceRequestKore {
@@ -14,7 +12,7 @@ public class CustomFieldsDeviceRequestKore {
 	@JsonProperty("customField1")
 	private String customField1;
 
-	@ApiModelProperty(value = "Update the Custom field 2 (up to 20 characters) for a single device.")
+	@ApiModelProperty(value = "Update the Custom field 2 (up to 20 characters) for a single device. ")
 	@JsonProperty("customField2")
 	private String customField2;
 
@@ -22,13 +20,17 @@ public class CustomFieldsDeviceRequestKore {
 	@JsonProperty("customField3")
 	private String customField3;
 
-	@ApiModelProperty(value = "Update the Custom field 4 (up to 20 characters) for a single device.")
+	@ApiModelProperty(value = "Update the Custom field 4 (up to 20 characters) for a single device. ")
 	@JsonProperty("customField4")
 	private String customField4;
 
-	@ApiModelProperty(value = "Update theCustom field 5 (up to 20 characters) for a single device.")
+	@ApiModelProperty(value = "Update the Custom field 5 (up to 20 characters) for a single device. ")
 	@JsonProperty("customField5")
 	private String customField5;
+
+	@ApiModelProperty(value = "Update the Custom field 6 (up to 20 characters) for a single device. ")
+	@JsonProperty("customField6")
+	private String customField6;
 
 	@Override
 	public int hashCode() {
@@ -44,6 +46,8 @@ public class CustomFieldsDeviceRequestKore {
 				+ ((customField4 == null) ? 0 : customField4.hashCode());
 		result = prime * result
 				+ ((customField5 == null) ? 0 : customField5.hashCode());
+		result = prime * result
+				+ ((customField6 == null) ? 0 : customField6.hashCode());
 		result = prime * result
 				+ ((deviceNumber == null) ? 0 : deviceNumber.hashCode());
 		return result;
@@ -83,6 +87,11 @@ public class CustomFieldsDeviceRequestKore {
 				return false;
 		} else if (!customField5.equals(other.customField5))
 			return false;
+		if (customField6 == null) {
+			if (other.customField6 != null)
+				return false;
+		} else if (!customField6.equals(other.customField6))
+			return false;
 		if (deviceNumber == null) {
 			if (other.deviceNumber != null)
 				return false;
@@ -99,83 +108,61 @@ public class CustomFieldsDeviceRequestKore {
 		this.deviceNumber = deviceNumber;
 	}
 
-	@SuppressWarnings("unchecked")
-	@JsonSerialize
-	@JsonProperty("customField1")
-	public String getCustomField1() {
-		return customField1;
-	}
-
-	@SuppressWarnings("unchecked")
-	@JsonDeserialize
-	@JsonProperty("customField1")
-	public void setCustomField1(String customField1) {
-		this.customField1 = customField1;
-	}
-
-	@SuppressWarnings("unchecked")
-	@JsonSerialize
-	@JsonProperty("customField2")
-	public String getCustomField2() {
-		return customField2;
-	}
-
-	@SuppressWarnings("unchecked")
-	@JsonDeserialize
-	@JsonProperty("customField2")
-	public void setCustomField2(String customField2) {
-		this.customField2 = customField2;
-	}
-
-	@SuppressWarnings("unchecked")
-	@JsonSerialize
-	@JsonProperty("customField3")
-	public String getCustomField3() {
-		return customField3;
-	}
-
-	@SuppressWarnings("unchecked")
-	@JsonDeserialize
-	@JsonProperty("customField3")
-	public void setCustomField3(String customField3) {
-		this.customField3 = customField3;
-	}
-
-	@SuppressWarnings("unchecked")
-	@JsonSerialize
-	@JsonProperty("customField4")
-	public String getCustomField4() {
-		return customField4;
-	}
-
-	@SuppressWarnings("unchecked")
-	@JsonDeserialize
-	@JsonProperty("customField4")
-	public void setCustomField4(String customField4) {
-		this.customField4 = customField4;
-	}
-
-	@SuppressWarnings("unchecked")
-	@JsonSerialize
-	@JsonProperty("customField5")
-	public String getCustomField5() {
-		return customField5;
-	}
-
-	@SuppressWarnings("unchecked")
-	@JsonDeserialize
-	@JsonProperty("customField5")
-	public void setCustomField5(String customField5) {
-		this.customField5 = customField5;
-	}
-
 	@Override
 	public String toString() {
 		return "CustomFieldsDeviceRequestKore [deviceNumber=" + deviceNumber
 				+ ", customField1=" + customField1 + ", customField2="
 				+ customField2 + ", customField3=" + customField3
 				+ ", customField4=" + customField4 + ", customField5="
-				+ customField5 + "]";
+				+ customField5 + ", customField6=" + customField6 + "]";
+	}
+
+	public String getCustomField1() {
+		return customField1;
+	}
+
+	public void setCustomField1(String customField1) {
+		this.customField1 = customField1;
+	}
+
+	public String getCustomField2() {
+		return customField2;
+	}
+
+	public void setCustomField2(String customField2) {
+		this.customField2 = customField2;
+	}
+
+	public String getCustomField3() {
+		return customField3;
+	}
+
+	public void setCustomField3(String customField3) {
+		this.customField3 = customField3;
+	}
+
+	public String getCustomField4() {
+		return customField4;
+	}
+
+	public void setCustomField4(String customField4) {
+		this.customField4 = customField4;
+	}
+
+	public String getCustomField5() {
+		return customField5;
+	}
+
+	public void setCustomField5(String customField5) {
+		this.customField5 = customField5;
+	}
+
+	public String getCustomField6() {
+		return customField6;
+	}
+
+	public void setCustomField6(String customField6) {
+		this.customField6 = customField6;
 	}
 
 }

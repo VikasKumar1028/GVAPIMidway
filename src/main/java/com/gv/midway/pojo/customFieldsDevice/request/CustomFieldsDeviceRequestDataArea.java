@@ -33,42 +33,12 @@ public class CustomFieldsDeviceRequestDataArea {
 	@ApiModelProperty(value = "Update custom fields and values that have been set for the device.")
 	private CustomFieldsToUpdate[] customFieldsToUpdate;
 
-	@ApiModelProperty(value = "Update the Custom field 1 (up to 20 characters) for a single device. ")
-	@JsonProperty("customField1")
-	private String customField1;
-
-	@ApiModelProperty(value = "Update the Custom field 2 (up to 20 characters) for a single device.")
-	@JsonProperty("customField2")
-	private String customField2;
-
-	@ApiModelProperty(value = "Update the Custom field 3 (up to 20 characters) for a single device. ")
-	@JsonProperty("customField3")
-	private String customField3;
-
-	@ApiModelProperty(value = "Update the Custom field 4 (up to 20 characters) for a single device.")
-	@JsonProperty("customField4")
-	private String customField4;
-
-	@ApiModelProperty(value = "Update theCustom field 5 (up to 20 characters) for a single device.")
-	@JsonProperty("customField5")
-	private String customField5;
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
 				+ ((accountName == null) ? 0 : accountName.hashCode());
-		result = prime * result
-				+ ((customField1 == null) ? 0 : customField1.hashCode());
-		result = prime * result
-				+ ((customField2 == null) ? 0 : customField2.hashCode());
-		result = prime * result
-				+ ((customField3 == null) ? 0 : customField3.hashCode());
-		result = prime * result
-				+ ((customField4 == null) ? 0 : customField4.hashCode());
-		result = prime * result
-				+ ((customField5 == null) ? 0 : customField5.hashCode());
 		result = prime * result + Arrays.hashCode(customFields);
 		result = prime * result + Arrays.hashCode(customFieldsToUpdate);
 		result = prime * result + Arrays.hashCode(devices);
@@ -92,31 +62,6 @@ public class CustomFieldsDeviceRequestDataArea {
 			if (other.accountName != null)
 				return false;
 		} else if (!accountName.equals(other.accountName))
-			return false;
-		if (customField1 == null) {
-			if (other.customField1 != null)
-				return false;
-		} else if (!customField1.equals(other.customField1))
-			return false;
-		if (customField2 == null) {
-			if (other.customField2 != null)
-				return false;
-		} else if (!customField2.equals(other.customField2))
-			return false;
-		if (customField3 == null) {
-			if (other.customField3 != null)
-				return false;
-		} else if (!customField3.equals(other.customField3))
-			return false;
-		if (customField4 == null) {
-			if (other.customField4 != null)
-				return false;
-		} else if (!customField4.equals(other.customField4))
-			return false;
-		if (customField5 == null) {
-			if (other.customField5 != null)
-				return false;
-		} else if (!customField5.equals(other.customField5))
 			return false;
 		if (!Arrays.equals(customFields, other.customFields))
 			return false;
@@ -161,14 +106,6 @@ public class CustomFieldsDeviceRequestDataArea {
 		this.servicePlan = servicePlan;
 	}
 
-	public CustomFields[] getCustomFields() {
-		return customFields;
-	}
-
-	public void setCustomFields(CustomFields[] customFields) {
-		this.customFields = customFields;
-	}
-
 	public CustomFieldsToUpdate[] getCustomFieldsToUpdate() {
 		return customFieldsToUpdate;
 	}
@@ -185,10 +122,7 @@ public class CustomFieldsDeviceRequestDataArea {
 				+ ", groupName=" + groupName + ", servicePlan=" + servicePlan
 				+ ", customFields=" + Arrays.toString(customFields)
 				+ ", customFieldsToUpdate="
-				+ Arrays.toString(customFieldsToUpdate) + ", customField1="
-				+ customField1 + ", customField2=" + customField2
-				+ ", customField3=" + customField3 + ", customField4="
-				+ customField4 + ", customField5=" + customField5 + "]";
+				+ Arrays.toString(customFieldsToUpdate) + "]";
 	}
 
 	public Devices[] getDevices() {
@@ -199,44 +133,12 @@ public class CustomFieldsDeviceRequestDataArea {
 		this.devices = devices;
 	}
 
-	public String getCustomField1() {
-		return customField1;
+	public CustomFields[] getCustomFields() {
+		return customFields;
 	}
 
-	public void setCustomField1(String customField1) {
-		this.customField1 = customField1;
-	}
-
-	public String getCustomField2() {
-		return customField2;
-	}
-
-	public void setCustomField2(String customField2) {
-		this.customField2 = customField2;
-	}
-
-	public String getCustomField3() {
-		return customField3;
-	}
-
-	public void setCustomField3(String customField3) {
-		this.customField3 = customField3;
-	}
-
-	public String getCustomField4() {
-		return customField4;
-	}
-
-	public void setCustomField4(String customField4) {
-		this.customField4 = customField4;
-	}
-
-	public String getCustomField5() {
-		return customField5;
-	}
-
-	public void setCustomField5(String customField5) {
-		this.customField5 = customField5;
+	public void setCustomFields(CustomFields[] customFields) {
+		this.customFields = customFields;
 	}
 
 }

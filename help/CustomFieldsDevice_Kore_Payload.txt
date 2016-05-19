@@ -1,9 +1,38 @@
 ************************MidWay Request Payload
-
 {  
    "dataArea":{  
 
-        "customField1":"testing12",
+         
+        "customFields":[
+		{
+		  "key":"customField1",
+            "value":"customField-1"
+            }
+            
+            ,{
+		  "key":"customField2",
+            "value":"customField-2"
+            }
+             ,{
+		  "key":"customField3",
+            "value":"customField-3"
+            }
+             ,{
+		  "key":"customField4",
+            "value":"customField-4"
+            }
+             ,{
+		  "key":"customField5",
+            "value":"customField-5"
+            }
+             ,{
+		  "key":"customField6",
+            "value":"customField-6"
+            }
+
+            
+            
+		],
         "servicePlan":"M2MPERMB",
         "customFieldsToUpdate":[  
          {  
@@ -33,6 +62,7 @@
       "bsCarrier":"KORE"
    }
 }
+
 ************************Carrier Request Payload
 
 Payload: {"deviceNumber":"89014103277405947099","customField1":"testing12","customField2":null,"customField3":null,"customField4":null,"customField5":null}
