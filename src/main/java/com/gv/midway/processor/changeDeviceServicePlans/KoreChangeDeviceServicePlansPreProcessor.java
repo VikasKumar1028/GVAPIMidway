@@ -42,7 +42,7 @@ public class KoreChangeDeviceServicePlansPreProcessor implements Processor {
 		String deviceId = changeDeviceServicePlansRequest.getDataArea()
 				.getDevices()[0].getDeviceIds()[0].getId();
 		String planCode = changeDeviceServicePlansRequest.getDataArea()
-				.getPlanCode();
+				.getServicePlan();
 
 		ChangeDeviceServicePlansRequestKore changeDeviceServicePlansRequestKore = new ChangeDeviceServicePlansRequestKore();
 		changeDeviceServicePlansRequestKore.setDeviceNumber(deviceId);

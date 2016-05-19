@@ -17,7 +17,7 @@ public class ChangeDeviceServicePlansRequestDataArea {
 	@ApiModelProperty(value = "All identifiers for the device.")
 	private Devices[] devices;
 
-	@ApiModelProperty(value = "Service Plan that that device belongs to.", required = true)
+	@ApiModelProperty(value = "New Service Plan.", required = true)
 	private String servicePlan;
 
 	@ApiModelProperty(value = "The device group that the requested device belongs to.")
@@ -26,8 +26,6 @@ public class ChangeDeviceServicePlansRequestDataArea {
 	@ApiModelProperty(value = "The device group that the requested device belongs to.")
 	private String currentServicePlan;
 
-	@ApiModelProperty(value = "The plan code of the plan to change a plan for a single active device for the next period.")
-	private String planCode;
 
 	public String getAccountName() {
 		return accountName;
@@ -92,8 +90,6 @@ public class ChangeDeviceServicePlansRequestDataArea {
 		result = prime * result
 				+ ((groupName == null) ? 0 : groupName.hashCode());
 		result = prime * result
-				+ ((planCode == null) ? 0 : planCode.hashCode());
-		result = prime * result
 				+ ((servicePlan == null) ? 0 : servicePlan.hashCode());
 		return result;
 	}
@@ -126,11 +122,6 @@ public class ChangeDeviceServicePlansRequestDataArea {
 				return false;
 		} else if (!groupName.equals(other.groupName))
 			return false;
-		if (planCode == null) {
-			if (other.planCode != null)
-				return false;
-		} else if (!planCode.equals(other.planCode))
-			return false;
 		if (servicePlan == null) {
 			if (other.servicePlan != null)
 				return false;
@@ -141,19 +132,23 @@ public class ChangeDeviceServicePlansRequestDataArea {
 
 	@Override
 	public String toString() {
-		return "ChangeDeviceServicePlansRequestDataArea [accountName="
-				+ accountName + ", customFields="
-				+ Arrays.toString(customFields) + ", devices="
-				+ Arrays.toString(devices) + ", servicePlan=" + servicePlan
-				+ ", groupName=" + groupName + ", currentServicePlan="
-				+ currentServicePlan + ", planCode=" + planCode + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("ChangeDeviceServicePlansRequestDataArea [accountName=");
+		builder.append(accountName);
+		builder.append(", customFields=");
+		builder.append(Arrays.toString(customFields));
+		builder.append(", devices=");
+		builder.append(Arrays.toString(devices));
+		builder.append(", servicePlan=");
+		builder.append(servicePlan);
+		builder.append(", groupName=");
+		builder.append(groupName);
+		builder.append(", currentServicePlan=");
+		builder.append(currentServicePlan);
+		builder.append("]");
+		return builder.toString();
 	}
 
-	public String getPlanCode() {
-		return planCode;
-	}
 
-	public void setPlanCode(String planCode) {
-		this.planCode = planCode;
-	}
+	
 }
