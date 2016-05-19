@@ -12,6 +12,7 @@ import com.gv.midway.pojo.customFieldsDevice.kore.request.CustomFieldsDeviceRequ
 import com.gv.midway.pojo.customFieldsDevice.request.CustomFieldsDeviceRequest;
 import com.gv.midway.pojo.transaction.Transaction;
 import com.gv.midway.pojo.verizon.CustomFields;
+import com.gv.midway.pojo.verizon.CustomFieldsToUpdate;
 
 public class KoreCustomFieldsPreProcessor implements Processor {
 
@@ -46,10 +47,13 @@ public class KoreCustomFieldsPreProcessor implements Processor {
 		CustomFieldsDeviceRequestKore customFieldsDeviceRequestKore = new CustomFieldsDeviceRequestKore();
 		customFieldsDeviceRequestKore.setDeviceNumber(deviceId);
 
-		CustomFields[] customFieldsArr = changeDeviceServicePlansRequest
-				.getDataArea().getCustomFields();
+		CustomFieldsToUpdate[] customFieldsArr = changeDeviceServicePlansRequest
+				.getDataArea().getCustomFieldsToUpdate();
+		
+		if(customFieldsArr!=null)
+		{
 		for (int i = 0; i < customFieldsArr.length; i++) {
-			CustomFields customField = customFieldsArr[i];
+			CustomFieldsToUpdate customField = customFieldsArr[i];
 
 			String key = customField.getKey();
 
@@ -85,6 +89,8 @@ public class KoreCustomFieldsPreProcessor implements Processor {
 			default:
 				break;
 			}
+		}
+		
 		}
 
 		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,

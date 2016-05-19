@@ -2,10 +2,12 @@ package com.gv.midway.pojo.changeDeviceServicePlans.request;
 
 import java.util.Arrays;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gv.midway.pojo.verizon.CustomFields;
 import com.gv.midway.pojo.verizon.Devices;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ChangeDeviceServicePlansRequestDataArea {
 
 	@ApiModelProperty(value = "Name of the billing account.")
