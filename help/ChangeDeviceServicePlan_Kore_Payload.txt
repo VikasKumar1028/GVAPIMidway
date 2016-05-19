@@ -5,8 +5,7 @@
      "accountName":"0442090022-00001",
      "currentServicePlan": "M2MPERMB",
       "servicePlan":"M2M5MBASH",
-      "planCode":"121093",
-      
+            
          "devices":[  
          {  
             "deviceIds":[  
