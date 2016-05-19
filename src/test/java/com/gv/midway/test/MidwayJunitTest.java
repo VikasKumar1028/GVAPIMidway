@@ -945,9 +945,9 @@ import com.gv.midway.service.ISessionService;
 						 		deDevices[0] = ddevices;
 						 		dataArea.setDevices(deDevices);
 						 		dataArea.setAccountName("0442090022-00001");
-						 		dataArea.setServicePlan("M2M5MBASH");
+						 		dataArea.setServicePlan("121093");
 						 		dataArea.setCurrentServicePlan("M2M5MBASH");
-						 		dataArea.setPlanCode("121093");
+						 		//dataArea.setPlanCode("121093");
 						 		req.setDataArea(dataArea);
 						 		
 						 		header.setSourceName("NetSuit");
@@ -1000,9 +1000,9 @@ import com.gv.midway.service.ISessionService;
 						 		deDevices[0] = ddevices;
 						 		dataArea.setDevices(deDevices);
 						 		//dataArea.setAccountName("0442090022-00001");
-						 		dataArea.setServicePlan("M2MPERMB");
+						 		dataArea.setServicePlan("121093");
 						 		//dataArea.setCurrentServicePlan("M2M5MBASH");
-						 		dataArea.setPlanCode("121093");
+						 		//dataArea.setPlanCode("121093");
 						 		req.setDataArea(dataArea);
 						 		
 						 		header.setSourceName("NetSuit");
@@ -1053,9 +1053,9 @@ import com.gv.midway.service.ISessionService;
 						 		deDevices[0] = ddevices;
 						 		dataArea.setDevices(deDevices);
 						 		//dataArea.setAccountName("0442090022-00001");
-						 		dataArea.setServicePlan("M2M5MBASH");
+						 		dataArea.setServicePlan("121093");
 						 		dataArea.setCurrentServicePlan("M2M5MBASH");
-						 		dataArea.setPlanCode("121093");
+						 		//dataArea.setPlanCode("121093");
 						 		req.setDataArea(dataArea);
 						 		
 						 		header.setSourceName("NetSuit");
