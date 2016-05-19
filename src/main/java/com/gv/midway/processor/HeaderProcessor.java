@@ -29,7 +29,9 @@ public class HeaderProcessor implements Processor {
 						.matches("(.*)deviceConnectionStatus(.*)") || exchange
 						.getFromEndpoint().toString()
 						.matches("(.*)deviceSessionBeginEndInfo(.*)")) && derivedCarrierName
-						.equalsIgnoreCase("KORE"))) {
+						.equalsIgnoreCase("KORE"))||(exchange.getFromEndpoint().toString()
+								.matches("(.*)reactivateDevice(.*)") && derivedCarrierName
+								.equalsIgnoreCase("VERIZON"))) {
 			exchange.setProperty(IConstant.RESPONSE_CODE, "402");
 			exchange.setProperty(IConstant.RESPONSE_STATUS, "Invalid Parameter");
 			exchange.setProperty(IConstant.RESPONSE_DESCRIPTION,
