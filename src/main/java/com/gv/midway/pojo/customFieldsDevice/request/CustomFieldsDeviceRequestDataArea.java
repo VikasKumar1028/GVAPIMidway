@@ -27,10 +27,10 @@ public class CustomFieldsDeviceRequestDataArea {
 	@ApiModelProperty(value = "Service Plan that that device belongs to.", required = true)
 	private String servicePlan;
 
-	@ApiModelProperty(value = "The custom fields and values that have been set for the device.")
+	@ApiModelProperty(value = "Custom field names and values, if you want to only include devices that have matching values.")
 	private CustomFields[] customFields;
 
-	@ApiModelProperty(value = "Update custom fields and values that have been set for the device.")
+	@ApiModelProperty(value = "The names and new values of any custom fields that you want to change.")
 	private CustomFieldsToUpdate[] customFieldsToUpdate;
 
 	@Override
