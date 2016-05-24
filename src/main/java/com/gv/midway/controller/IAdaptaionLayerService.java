@@ -8,6 +8,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
+import com.gv.midway.job.JobParameter;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
 import com.gv.midway.pojo.callback.TargetResponse;
@@ -162,4 +163,12 @@ public interface IAdaptaionLayerService {
 	@ApiOperation(value = "Service to check Device Session Begin and End infomration for Verizon")
 	SessionBeginEndResponse deviceSessionBeginEndResponse(
 			ConnectionInformationRequest connectionInformationRequest);
+	
+	@POST
+	@Path("/devices/job")
+	@Produces("application/json")
+	@Consumes("application/json")
+	@ApiOperation(value = "Star Job for Verizon")
+	void startJob(
+			JobParameter jobParameterRequest);
 }

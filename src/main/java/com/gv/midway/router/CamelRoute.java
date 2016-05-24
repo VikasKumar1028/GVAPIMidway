@@ -34,7 +34,6 @@ import com.gv.midway.processor.activateDevice.StubKoreActivateDeviceProcessor;
 import com.gv.midway.processor.activateDevice.StubVerizonActivateDeviceProcessor;
 import com.gv.midway.processor.activateDevice.VerizonActivateDevicePostProcessor;
 import com.gv.midway.processor.activateDevice.VerizonActivateDevicePreProcessor;
-import com.gv.midway.processor.callbacks.CallbackKafkaPostProcessor;
 import com.gv.midway.processor.callbacks.CallbackPostProcessor;
 import com.gv.midway.processor.callbacks.CallbackPreProcessor;
 import com.gv.midway.processor.cell.StubCellBulkUploadProcessor;
@@ -92,6 +91,7 @@ import com.gv.midway.processor.token.VerizonSessionAttributeProcessor;
 import com.gv.midway.processor.token.VerizonSessionTokenProcessor;
 import com.gv.midway.service.IAuditService;
 import com.gv.midway.service.IDeviceService;
+import com.gv.midway.service.IJobService;
 import com.gv.midway.service.ISchedulerService;
 // this static import is needed for older versions of Camel than 2.5
 // import static org.apache.camel.language.simple.SimpleLanguage.simple;
@@ -127,6 +127,10 @@ public class CamelRoute extends RouteBuilder {
 
 	@Autowired
 	private ISchedulerService iSchedulerService;
+	
+	
+	@Autowired
+	private IJobService iJobService;
 	/*
 	 * @Autowired private SessionBean sessionBean;
 	 */
@@ -186,10 +190,6 @@ public class CamelRoute extends RouteBuilder {
 				// sync DB and session token in the ServletContext
 				.bean(iSessionService, "synchronizeDBContextToken");
 
-		
-
-		
-
 		/**
 		 * saving callbacks from verizon into MongoDB and and sending it to
 		 * target the target system
@@ -201,132 +201,156 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iTransactionalService, "findMidwayTransactionId")
 				.process(new CallbackPostProcessor())
 				.to("kafka:mid2.gv.local:9092,?topic=misc-verify-staging")
-				//.to("kafka:localhost:9092?topic=topic")
+				// .to("kafka:localhost:9092?topic=topic")
 				// .to("kafka:10.10.2.190:9092,10.10.2.190:9093,10.10.2.190:9094?topic=my-replicated-topic")
-				//.process(new CallbackKafkaPostProcessor())
+				// .process(new CallbackKafkaPostProcessor())
 				// ******************DONOT REMOVE THIS COMMENTED CODE
 				// **********************
 				// .doTry()
 				// .to(uriRestNetsuitEndPoint)
 				// .doCatch(CxfOperationException.class)
 				.end();
-		
-		
-		/**
-		 * Get all the Kore devices with carrier status pending or error and Midway status as Pending from
-		 * TransactionDB
-		 */
-		
-		 from("timer://koreCheckStatusTimer?period=5m").bean(iTransactionalService
-		 ,"populatePendingKoreCheckStatus")
-		  .split().method("checkStatusSplitter"
-		 ).recipientList().method("koreCheckStatusServiceRouter");
-		
 
 		/**
-		 * Check status of all the Kore devices with carrier status pending or error and
-		 * updated it in TransactionDB if it is completed or error from Kore and call the
-		 * netsuiteEndpoint for them.
+		 * Get all the Kore devices with carrier status pending or error and
+		 * Midway status as Pending from TransactionDB
 		 */
-		
-		 from("seda:koreSedaCheckStatus?concurrentConsumers=5")
-		 /**If any exception comes while calling the Kore check status then send it back to netsuite endpoint and write in Kafka Queue.**/
-		 .onException(CxfOperationException.class)
-			.handled(true)
-			.to("direct:koreCheckStatusErrorSubProcess").end()
-			
-		 .onException(UnknownHostException.class, ConnectException.class)
-		 .handled(true).bean(iTransactionalService,"populateKoreCheckStatusConnectionResponse").end()
-					
-		 .process(new KoreCheckStatusPreProcessor(env)).choice().
-		 /**
-		  * Now call the netsuite end point for error and write in Kafka Queue.
-		  */
-		 when(header("KoreCheckStatusFlow").isEqualTo("end")).to("direct:koreCheckStatusErrorSubProcess").
-		 
-		 // now call the netsuite end point for changeServicePlan and changeCustomeFields.
-		 
-		 when(header("KoreCheckStatusFlow").isEqualTo("change")).to("direct:koreCustomChangeSubProcess").
-		 /**
-		  *  Call the Kore API to check the status of device
-		  */
-		 when(header("KoreCheckStatusFlow").isEqualTo("forward"))
-		  .to(uriRestKoreEndPoint).unmarshal() .json(JsonLibrary.Jackson,
-		  KoreCheckStatusResponse.class).
-		  to("direct:koreCheckStatusSubProcess").endChoice();
 
-		
-		 from("direct:koreCheckStatusErrorSubProcess").bean(iTransactionalService,
-					"populateKoreCheckStatusErrorResponse").doTry().
-			process(new KoreCheckStatusErrorProcessor())./*to(uriRestNetsuitEndPoint).*/
-			doCatch(Exception.class).
-			bean(iTransactionalService,"updateNetSuiteCallBackError").
-			doFinally().bean(iTransactionalService,"updateNetSuiteCallBack").end();
-		 
-		 
-		 from("direct:koreCustomChangeSubProcess").bean(iTransactionalService,
-					"populateKoreCustomChangeResponse").doTry().
-			process(new KoreCheckStatusPostProcessor())./*to(uriRestNetsuitEndPoint).*/
-			doCatch(Exception.class).
-			bean(iTransactionalService,"updateNetSuiteCallBackError").
-			doFinally().bean(iTransactionalService,"updateNetSuiteCallBack").end();
-		 
-		 from("direct:koreCheckStatusSubProcess").bean(iTransactionalService,
-					"populateKoreCheckStatusResponse").doTry().
-			process(new KoreCheckStatusPostProcessor())./*to(uriRestNetsuitEndPoint).*/
-			doCatch(Exception.class).
-			bean(iTransactionalService,"updateNetSuiteCallBackError").
-			doFinally().bean(iTransactionalService,"updateNetSuiteCallBack").end();
-		 
+		from("timer://koreCheckStatusTimer?period=5m")
+				.bean(iTransactionalService, "populatePendingKoreCheckStatus")
+				.split().method("checkStatusSplitter").recipientList()
+				.method("koreCheckStatusServiceRouter");
 
-		/**Main Change Device Service Plans Flow **/
+		/**
+		 * Check status of all the Kore devices with carrier status pending or
+		 * error and updated it in TransactionDB if it is completed or error
+		 * from Kore and call the netsuiteEndpoint for them.
+		 */
 
-		
-			//Calling the Activate Device Flow
-			activateDevice();
-			
-			//Calling the Deactivate Device Flow
-			deactivateDevice();
+		from("seda:koreSedaCheckStatus?concurrentConsumers=5")
+				/**
+				 * If any exception comes while calling the Kore check status
+				 * then send it back to netsuite endpoint and write in Kafka
+				 * Queue.
+				 **/
+				.onException(CxfOperationException.class)
+				.handled(true)
+				.to("direct:koreCheckStatusErrorSubProcess")
+				.end()
 
-			//Calling the Restore Device Flow
-			restoreDevice();
-			
-			//Calling the Suspend Device Flow
-			suspendDevice();
-			
-			//Calling the Reactivate Device Flow
-			reactivateDevice();
-			
-			//Calling the CustomeFields Device Flow
-			customeFields();
-			
-			//Calling the change Device ServicePlans Flow
-			changeDeviceServicePlans();
-			
-			//Calling the Device Connection Status Flow
-			deviceConnectionStatus();
+				.onException(UnknownHostException.class, ConnectException.class)
+				.handled(true)
+				.bean(iTransactionalService,
+						"populateKoreCheckStatusConnectionResponse").end()
 
-			//Calling the Device in Session Flow
-			deviceSessionBeginEndInfo();
-			
-			//Calling the getDeviceInfomrationFromCarrier
-			deviceInformationCarrier();
-			
-			//Calling the getDeviceInformationDB
-			getDeviceInformationDB();
-			
-			//Insert or Update Single Device Detail
-			updateDeviceDetails();
-			
-			//Insert or Update  Device Details in Bulk
-			updateDevicesDetailsBulk();
-		
-			//Execution of schduled jobs scheduledJobs
-			/*scheduledJobs();*/
-			
+				.process(new KoreCheckStatusPreProcessor(env))
+				.choice()
+				.
+				/**
+				 * Now call the netsuite end point for error and write in Kafka
+				 * Queue.
+				 */
+				when(header("KoreCheckStatusFlow").isEqualTo("end"))
+				.to("direct:koreCheckStatusErrorSubProcess")
+				.
+
+				// now call the netsuite end point for changeServicePlan and
+				// changeCustomeFields.
+
+				when(header("KoreCheckStatusFlow").isEqualTo("change"))
+				.to("direct:koreCustomChangeSubProcess").
+				/**
+				 * Call the Kore API to check the status of device
+				 */
+				when(header("KoreCheckStatusFlow").isEqualTo("forward"))
+				.to(uriRestKoreEndPoint).unmarshal()
+				.json(JsonLibrary.Jackson, KoreCheckStatusResponse.class)
+				.to("direct:koreCheckStatusSubProcess").endChoice();
+
+		from("direct:koreCheckStatusErrorSubProcess")
+				.bean(iTransactionalService,
+						"populateKoreCheckStatusErrorResponse").doTry()
+				.process(new KoreCheckStatusErrorProcessor())./*
+															 * to(
+															 * uriRestNetsuitEndPoint
+															 * ).
+															 */
+				doCatch(Exception.class)
+				.bean(iTransactionalService, "updateNetSuiteCallBackError")
+				.doFinally()
+				.bean(iTransactionalService, "updateNetSuiteCallBack").end();
+
+		from("direct:koreCustomChangeSubProcess")
+				.bean(iTransactionalService, "populateKoreCustomChangeResponse")
+				.doTry().process(new KoreCheckStatusPostProcessor())./*
+																	 * to(
+																	 * uriRestNetsuitEndPoint
+																	 * ).
+																	 */
+				doCatch(Exception.class)
+				.bean(iTransactionalService, "updateNetSuiteCallBackError")
+				.doFinally()
+				.bean(iTransactionalService, "updateNetSuiteCallBack").end();
+
+		from("direct:koreCheckStatusSubProcess")
+				.bean(iTransactionalService, "populateKoreCheckStatusResponse")
+				.doTry().process(new KoreCheckStatusPostProcessor())./*
+																	 * to(
+																	 * uriRestNetsuitEndPoint
+																	 * ).
+																	 */
+				doCatch(Exception.class)
+				.bean(iTransactionalService, "updateNetSuiteCallBackError")
+				.doFinally()
+				.bean(iTransactionalService, "updateNetSuiteCallBack").end();
+
+		/** Main Change Device Service Plans Flow **/
+
+		// Calling the Activate Device Flow
+		activateDevice();
+
+		// Calling the Deactivate Device Flow
+		deactivateDevice();
+
+		// Calling the Restore Device Flow
+		restoreDevice();
+
+		// Calling the Suspend Device Flow
+		suspendDevice();
+
+		// Calling the Reactivate Device Flow
+		reactivateDevice();
+
+		// Calling the CustomeFields Device Flow
+		customeFields();
+
+		// Calling the change Device ServicePlans Flow
+		changeDeviceServicePlans();
+
+		// Calling the Device Connection Status Flow
+		deviceConnectionStatus();
+
+		// Calling the Device in Session Flow
+		deviceSessionBeginEndInfo();
+
+		// Calling the getDeviceInfomrationFromCarrier
+		deviceInformationCarrier();
+
+		// Calling the getDeviceInformationDB
+		getDeviceInformationDB();
+
+		// Insert or Update Single Device Detail
+		updateDeviceDetails();
+
+		// Insert or Update Device Details in Bulk
+		updateDevicesDetailsBulk();
+
+		// Execution of schduled jobs scheduledJobs
+		/* scheduledJobs(); */
+
+		startJob();
 	}
-	
-	
+
 	/**
 	 * Activation Flow for Verizon and Kore
 	 * 
@@ -410,7 +434,7 @@ public class CamelRoute extends RouteBuilder {
 	}
 
 	/**
-	 * Deactivate  Flow for Verizon and Kore
+	 * Deactivate Flow for Verizon and Kore
 	 * 
 	 */
 
@@ -498,10 +522,10 @@ public class CamelRoute extends RouteBuilder {
 
 		// End:Deactivate Devices
 	}
-	
+
 	public void restoreDevice() {
-		
-		 //Begin:Restore Devices 
+
+		// Begin:Restore Devices
 
 		from("direct:restoreDevice").process(new HeaderProcessor()).choice()
 				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
@@ -523,8 +547,8 @@ public class CamelRoute extends RouteBuilder {
 				.to("direct:VerizonRestoreFlow1").endChoice().end()
 				.to("log:input").endChoice().end();
 
-		 //Verizon Flow-1
-		
+		// Verizon Flow-1
+
 		from("direct:VerizonRestoreFlow1")
 				.doTry()
 				.to("direct:VerizonRestoreFlow2")
@@ -535,8 +559,8 @@ public class CamelRoute extends RouteBuilder {
 				.process(new VerizonGenericExceptionProcessor(env)).endDoTry()
 				.end();
 
-		 //Verizon Flow-2
-		
+		// Verizon Flow-2
+
 		from("direct:VerizonRestoreFlow2")
 				.errorHandler(noErrorHandler())
 				// REMOVED Audit will store record 3 times in case of failure
@@ -552,16 +576,16 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iAuditService, "auditExternalResponseCall")
 				.process(new VerizonRestoreDevicePostProcessor(env));
 
-		 //Kore Flow-1
-		
+		// Kore Flow-1
+
 		from("direct:processRestoreKoreTransaction")
 				.log("Wire Tap Thread restore")
 				.bean(iTransactionalService, "populateRestoreDBPayload")
 				.split().method("deviceSplitter").recipientList()
 				.method("koreDeviceServiceRouter");
 
-		 //Kore SEDA FLOW
-		
+		// Kore SEDA FLOW
+
 		from("seda:koreSedaRestore?concurrentConsumers=5")
 				.onException(CxfOperationException.class)
 				.handled(true)
@@ -578,7 +602,7 @@ public class CamelRoute extends RouteBuilder {
 						"populateKoreTransactionalResponse")
 				.bean(iAuditService, "auditExternalResponseCall");
 
-		 //End:Restore Devices 
+		// End:Restore Devices
 	}
 
 	public void suspendDevice() {
@@ -646,7 +670,7 @@ public class CamelRoute extends RouteBuilder {
 				.method("koreDeviceServiceRouter");
 
 		// Kore SEDA FLOW
-		
+
 		from("seda:koreSedaSuspend?concurrentConsumers=5")
 				.onException(CxfOperationException.class)
 				.handled(true)
@@ -720,8 +744,7 @@ public class CamelRoute extends RouteBuilder {
 		from("direct:customeFields").process(new HeaderProcessor()).choice()
 				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
 				.choice().when(header("derivedCarrierName").isEqualTo("KORE"))
-				.process(new StubKoreCustomFieldsProcessor())
-				.to("log:input")
+				.process(new StubKoreCustomFieldsProcessor()).to("log:input")
 				.when(header("derivedCarrierName").isEqualTo("VERIZON"))
 				.process(new StubVerizonCustomFieldsProcessor())
 				.to("log:input").endChoice().otherwise().choice()
@@ -736,10 +759,10 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iSessionService, "setContextTokenInExchange")
 				.bean(iTransactionalService, "populateCustomeFieldsDBPayload")
 				.bean(iAuditService, "auditExternalRequestCall")
-				.to("direct:VerizoncustomeFieldsFlow1")
-				.endChoice().end().to("log:input").endChoice().end();
+				.to("direct:VerizoncustomeFieldsFlow1").endChoice().end()
+				.to("log:input").endChoice().end();
 
-		// Verizon Flow-1		
+		// Verizon Flow-1
 		from("direct:VerizoncustomeFieldsFlow1")
 				.doTry()
 				.to("direct:VerizoncustomeFieldsFlow2")
@@ -791,7 +814,7 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iAuditService, "auditExternalResponseCall")
 				.bean(iTransactionalService,
 						"populateKoreTransactionalResponse");
-		
+
 		// End:CustomeFields Devices
 
 	}
@@ -888,7 +911,6 @@ public class CamelRoute extends RouteBuilder {
 
 		// End: Change Device ServicePlans
 
-
 	}
 
 	public void deviceConnectionStatus() {
@@ -980,10 +1002,8 @@ public class CamelRoute extends RouteBuilder {
 	 * Get DeviceInformation from Carrier and update in MasterDB and return back
 	 * to Calling System.
 	 **/
-	public void deviceInformationCarrier()
-	{
-		
-		
+	public void deviceInformationCarrier() {
+
 		from("direct:deviceInformationCarrier").process(new HeaderProcessor())
 				.choice()
 				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
@@ -1042,39 +1062,34 @@ public class CamelRoute extends RouteBuilder {
 				.process(new VerizonDeviceInformationPostProcessor(env))
 				.bean(iDeviceService, "updateDeviceInformationDB");
 	}
-	
+
 	/**
-	 * Get DeviceInformation from MasterDB and return back to Calling
-	 * System.
+	 * Get DeviceInformation from MasterDB and return back to Calling System.
 	 **/
-	public void getDeviceInformationDB()
-	{
-	   from("direct:getDeviceInformationDB")
+	public void getDeviceInformationDB() {
+		from("direct:getDeviceInformationDB")
 				.bean(iDeviceService, "getDeviceInformationDB").to("log:input")
 				.end();
-		
+
 	}
-	
+
 	/** Insert or Update Single Device details in MasterDB **/
-	
-	public void updateDeviceDetails()
-	{
+
+	public void updateDeviceDetails() {
 		from("direct:updateDeviceDetails").choice()
 				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
 				.process(new StubCellUploadProcessor()).endChoice().otherwise()
 				.bean(iDeviceService, "updateDeviceDetails").end();
 	}
-	
+
 	/** Insert or Upload Batch Device details in MasterDB. **/
-	public void updateDevicesDetailsBulk()
-	{
-		
+	public void updateDevicesDetailsBulk() {
+
 		from("direct:updateDevicesDetailsBulk").choice()
-		.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
-		.process(new StubCellBulkUploadProcessor()).endChoice()
-		.otherwise().to("direct:updateDevicesDetailsBulkActual").end();
-		
-		
+				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
+				.process(new StubCellBulkUploadProcessor()).endChoice()
+				.otherwise().to("direct:updateDevicesDetailsBulkActual").end();
+
 		from("direct:updateDevicesDetailsBulkActual").onCompletion()
 				.modeBeforeConsumer().setBody().body()
 				.process(new BulkDeviceProcessor()).end()
@@ -1082,14 +1097,12 @@ public class CamelRoute extends RouteBuilder {
 				.method("bulkOperationSplitter").recipientList()
 				.method("bulkOperationServiceRouter");
 
-
 		/**
 		 * Bulk Insert or Update the device in MasterDB using Seda
 		 */
 		from("seda:bulkOperationDeviceSyncInDB?concurrentConsumers=5").bean(
 				iDeviceService, "bulkOperationDeviceSyncInDB");
 	}
-
 
 	/** Testing Quartz **/
 	public void scheduledJobs() {
@@ -1107,5 +1120,56 @@ public class CamelRoute extends RouteBuilder {
 		from("direct:saveDeviceUsageHistory").bean(iSchedulerService,
 				"saveDeviceUsageHistory").end();
 
+	}
+
+	public void startJob() {
+
+		from("direct:startJob").log("direct:startJob");
+		
+		
+		// Job  Flow-1
+
+			/*	from("direct:processJob")						
+						.bean(iJobService, "fetchDevices")
+						.split().method("deviceSplitter").recipientList()
+						.method("jobCarrierRouter");
+
+				//KORE Job SEDA  FLOW
+
+				from("seda:processKoreJob?concurrentConsumers=5")
+						.onException(CxfOperationException.class)
+						.handled(true)
+						.bean(iTransactionalService,
+								"populateKoreTransactionalErrorResponse")
+						.bean(iAuditService, "auditExternalExceptionResponseCall")
+						.end()
+						.process(new KoreDeactivateDevicePreProcessor(env))
+						.bean(iAuditService, "auditExternalRequestCall")
+						.to(uriRestKoreEndPoint)
+						.unmarshal()
+						.json(JsonLibrary.Jackson, KoreProvisoningResponse.class)
+						.bean(iAuditService, "auditExternalResponseCall")
+						.bean(iTransactionalService,
+								"populateKoreTransactionalResponse");
+		
+		*/
+		//If Verizon Job
+		
+				//if complete Job
+				
+				//if rerun Job
+				
+				//if TransactionFailure Job
+				
+		//If Kore Job
+		
+				//if complete Job
+				
+				//if rerun Job
+				
+				//if TransactionFailure Job
+				
+		
+		
 	}
 }

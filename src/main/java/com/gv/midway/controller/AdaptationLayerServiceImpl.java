@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gv.midway.audit.AuditLogRequestEventNotifer;
+import com.gv.midway.job.JobParameter;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
@@ -205,5 +206,14 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 		return (ChangeDeviceServicePlansResponse) producer.requestBody(
 				"direct:changeDeviceServicePlans",
 				changeDeviceServicePlansRequest);
+	}
+
+	@Override
+	public void startJob(JobParameter jobParameterRequest) {
+		
+		  producer.requestBody("direct:startJob",
+				jobParameterRequest);
+		
+		
 	}
 }
