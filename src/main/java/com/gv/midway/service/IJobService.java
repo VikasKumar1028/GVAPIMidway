@@ -5,7 +5,7 @@ import java.util.List;
 import org.apache.camel.Exchange;
 
 public interface IJobService {
-
+	
 	public List fetchDevices(Exchange exchange);
 
 	public void insertJobDetails(Exchange exchange);

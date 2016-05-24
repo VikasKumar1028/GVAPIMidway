@@ -17,7 +17,7 @@ public class JobServiceImpl implements IJobService {
 	@Override
 	public List fetchDevices(Exchange exchange) {
 		// TODO Auto-generated method stub
-		return null;
+		return iJobDao.fetchDevices(exchange);
 	}
 
 	@Override

@@ -54,10 +54,14 @@
 
 	<bean id="auditLogResponseEventNotifer" class="com.gv.midway.audit.AuditLogResponseEventNotifer" />
 
-	<bean id="iSessionService" class="com.gv.midway.service.impl.SessionServiceImpl"/>
-	
-	<bean id="iSchedulerService" class="com.gv.midway.service.impl.SchedulerServiceImpl"/>
+	<bean id="iSessionService" class="com.gv.midway.service.impl.SessionServiceImpl" />
 
+	<bean id="iSchedulerService" class="com.gv.midway.service.impl.SchedulerServiceImpl" />
+
+
+	<bean id="jobSplitter" class="com.gv.midway.splitter.JobSplitter" />
+
+	<bean id="jobCarrierRouter" class="com.gv.midway.router.JobCarrierRouter" />
 
 	<jaxrs:server id="GVJax" address="/">
 		<jaxrs:serviceBeans>
