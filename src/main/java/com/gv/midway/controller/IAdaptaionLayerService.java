@@ -168,7 +168,6 @@ public interface IAdaptaionLayerService {
 	@Path("/devices/job")
 	@Produces("application/json")
 	@Consumes("application/json")
-	@ApiOperation(value = "Star Job for Verizon")
-	void startJob(
-			JobParameter jobParameterRequest);
+	@ApiOperation(value = "Star Batch Job")
+	void startJob(JobParameter jobParameterRequest);
 }

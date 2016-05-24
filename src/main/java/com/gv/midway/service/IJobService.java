@@ -8,9 +8,9 @@ public interface IJobService {
 
 	public List fetchDevices(Exchange exchange);
 
-	public List insertJobDetails(Exchange exchange);
+	public void insertJobDetails(Exchange exchange);
 
-	public List updateJobDetails(Exchange exchange);
+	public void updateJobDetails(Exchange exchange);
 
 }
 	

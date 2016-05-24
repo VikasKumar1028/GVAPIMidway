@@ -6,12 +6,10 @@ import org.apache.camel.Exchange;
 
 public interface IJobDao {
 
+	public List fetchDevices(Exchange exchange);
 
-	public List fetchDevices(Exchange exchange) ;
+	public void insertJobDetails(Exchange exchange);
 
+	public void updateJobDetails(Exchange exchange);
 
-	public List insertJobDetails(Exchange exchange) ;
-	
-	public List updateJobDetails(Exchange exchange) ;
-		
 }

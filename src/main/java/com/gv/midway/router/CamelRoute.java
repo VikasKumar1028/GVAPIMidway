@@ -1124,19 +1124,20 @@ public class CamelRoute extends RouteBuilder {
 
 	public void startJob() {
 
-		from("direct:startJob").log("direct:startJob");
+		from("direct:startJob").log("*********************************direct:startJob").to("direct:processJob");
 		
 		
 		// Job  Flow-1
 
-			/*	from("direct:processJob")						
-						.bean(iJobService, "fetchDevices")
+				from("direct:processJob").bean(iJobService, "insertJobDetails");
+				
+					/*	//.bean(iJobService, "fetchDevices")
 						.split().method("deviceSplitter").recipientList()
-						.method("jobCarrierRouter");
+						.method("jobCarrierRouter");*/
 
 				//KORE Job SEDA  FLOW
 
-				from("seda:processKoreJob?concurrentConsumers=5")
+				/*from("seda:processKoreJob?concurrentConsumers=5")
 						.onException(CxfOperationException.class)
 						.handled(true)
 						.bean(iTransactionalService,

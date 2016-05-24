@@ -1,9 +1,12 @@
 package com.gv.midway.job;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 /**
  * @author SG00421138
  *
  */
+@Document(collection = "jobDetail")
 public class JobDetail {
 
 	private String name;

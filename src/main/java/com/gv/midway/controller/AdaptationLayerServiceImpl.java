@@ -210,8 +210,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 
 	@Override
 	public void startJob(JobParameter jobParameterRequest) {
-		
-		  producer.requestBody("direct:startJob",
+		   producer.requestBody("direct:startJob",
 				jobParameterRequest);
 		
 		

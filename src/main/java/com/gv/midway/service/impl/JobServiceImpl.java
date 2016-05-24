@@ -4,34 +4,42 @@ import java.util.List;
 
 import org.apache.camel.Exchange;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.gv.midway.dao.IJobDao;
 import com.gv.midway.service.IJobService;
-
+@Service
 public class JobServiceImpl implements IJobService {
 
 	@Autowired
 	private IJobDao iJobDao;
-	
-	
+
 	@Override
 	public List fetchDevices(Exchange exchange) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-
 	@Override
-	public List insertJobDetails(Exchange exchange) {
+	public void insertJobDetails(Exchange exchange) {
 		// TODO Auto-generated method stub
-		return null;
+
+		iJobDao.insertJobDetails(exchange);
+
 	}
 
-
 	@Override
-	public List updateJobDetails(Exchange exchange) {
+	public void updateJobDetails(Exchange exchange) {
 		// TODO Auto-generated method stub
-		return null;
+		iJobDao.updateJobDetails(exchange);
+	}
+
+	public IJobDao getiJobDao() {
+		return iJobDao;
+	}
+
+	public void setiJobDao(IJobDao iJobDao) {
+		this.iJobDao = iJobDao;
 	}
 
 }
