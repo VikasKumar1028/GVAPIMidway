@@ -155,14 +155,15 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 
 			deviceInformation.setLastConnectionDate(verizonResponse
 					.getDevices()[i].getLastConnectionDate());
-
-			DeviceId deviceIds = new DeviceId();
+			
 
 			if (verizonResponse.getDevices()[i].getDeviceIds() != null) {
 				DeviceId[] deviceIdsArray = new DeviceId[verizonResponse
 						.getDevices()[i].getDeviceIds().length];
 
 				for (int l = 0; l < deviceIdsArray.length; l++) {
+					
+					DeviceId deviceIds = new DeviceId();
 					deviceIds.setId(verizonResponse.getDevices()[i]
 							.getDeviceIds()[l].getId());
 					deviceIds.setKind(verizonResponse.getDevices()[i]
