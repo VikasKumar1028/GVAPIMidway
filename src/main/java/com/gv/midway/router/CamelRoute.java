@@ -47,6 +47,7 @@ import com.gv.midway.processor.changeDeviceServicePlans.VerizonChangeDeviceServi
 import com.gv.midway.processor.checkstatus.KoreCheckStatusErrorProcessor;
 import com.gv.midway.processor.checkstatus.KoreCheckStatusPostProcessor;
 import com.gv.midway.processor.checkstatus.KoreCheckStatusPreProcessor;
+import com.gv.midway.processor.connectionInformation.CreateDeviceHistoryPayloadProcessor;
 import com.gv.midway.processor.connectionInformation.VerizonDeviceConnectionInformationPreProcessor;
 import com.gv.midway.processor.connectionInformation.deviceConnectionStatus.StubVerizonDeviceConnectionStatusProcessor;
 import com.gv.midway.processor.connectionInformation.deviceConnectionStatus.VerizonDeviceConnectionStatusPostProcessor;
@@ -1104,21 +1105,41 @@ public class CamelRoute extends RouteBuilder {
 				iDeviceService, "bulkOperationDeviceSyncInDB");
 	}
 
-	/** Testing Quartz **/
-	public void scheduledJobs() {
-
+	
+	public void deviceConnectionHistoryJob() {
 		from(
 				"quartz2://job/deviceDetailsTimer?cron="
 						+ IConstant.JOB_TIME_CONFIGURATION)
-				.multicast()
-				.to("direct:saveDeviceConnectionHistory",
-						"direct:saveDeviceUsageHistory").end();
+				.to("direct:tokenGeneration")
+				.bean(iSessionService, "setContextTokenInExchange")
+				.bean(iDeviceService, "getAllDevices").split()
+				.method("splitDeviceInformation").recipientList()
+				.method("getDeviceConnectionRouter");
 
-		from("direct:saveDeviceConnectionHistory").bean(iSchedulerService,
-				"saveDeviceConnectionHistory").end();
+		from("seda:getDeviceConnectionInformation?concurrentConsumers=5")
+				.process(new CreateDeviceHistoryPayloadProcessor())
+				.to(uriRestVerizonEndPoint).unmarshal()
+				.json(JsonLibrary.Jackson)
+				.bean(iSchedulerService, "saveDeviceConnectionHistory").end();
 
-		from("direct:saveDeviceUsageHistory").bean(iSchedulerService,
-				"saveDeviceUsageHistory").end();
+	}
+
+
+	public void deviceUsageHistoryJob() {
+		from(
+				"quartz2://job/deviceDetailsTimer?cron="
+						+ IConstant.JOB_TIME_CONFIGURATION)
+				.to("direct:tokenGeneration")
+				.bean(iSessionService, "setContextTokenInExchange")
+				.bean(iDeviceService, "getAllDevices").split()
+				.method("splitDeviceInformation").recipientList()
+				.method("getDeviceUsageRouter");
+
+		from("seda:getDeviceUsageInformation?concurrentConsumers=5")
+				.process(new CreateDeviceHistoryPayloadProcessor())
+				.to(uriRestVerizonEndPoint).unmarshal()
+				.json(JsonLibrary.Jackson)
+				.bean(iSchedulerService, "saveDeviceUsageHistory").end();
 
 	}
 
