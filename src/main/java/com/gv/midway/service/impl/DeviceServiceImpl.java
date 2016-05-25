@@ -138,6 +138,12 @@ public class DeviceServiceImpl implements IDeviceService {
 		iDeviceDao.bulkOperationDeviceUpload(exchange);	
 	}
 
+	@Override
+	public ArrayList<DeviceInformation> getAllDevices() {
+		
+		return iDeviceDao.getAllDevices();
+	}
+
 	
 
 	/**public String insertDevicesDetailsInBatch(Exchange exchange) {

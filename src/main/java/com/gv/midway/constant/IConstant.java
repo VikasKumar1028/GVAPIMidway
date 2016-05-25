@@ -69,6 +69,8 @@ public interface IConstant {
 	
 	static String JOB_TIME_CONFIGURATION = "0+0+02+*+*+?";
 	
+	/*static String JOB_TIME_CONFIGURATION = "0/15+*+*+*+*+?";*/
+	
 	
 	
 	

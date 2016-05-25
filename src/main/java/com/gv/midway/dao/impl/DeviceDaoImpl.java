@@ -1,7 +1,7 @@
 package com.gv.midway.dao.impl;
 
-
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -26,352 +26,327 @@ import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponseDataArea;
 
-
-
-
 @Service
-public class DeviceDaoImpl implements IDeviceDao 
-{
+public class DeviceDaoImpl implements IDeviceDao {
 	/*
 	 * @Autowired MongoDb grandVictorDB;
 	 */
 	@Autowired
 	MongoTemplate mongoTemplate;
-	
+
 	private Logger log = Logger.getLogger(DeviceDaoImpl.class.getName());
-	
-	
-	
+
 	public UpdateDeviceResponse updateDeviceDetails(SingleDevice device) {
 		// TODO Auto-generated method stub
-		
-		DeviceInformation deviceInfomation=null;
-      try{
-		
-    	  DeviceInformation deviceInformationToUpdate=device.getDataArea().getDevice();
-    	  String netSuiteId=device.getDataArea().getDevice().getNetSuiteId();
-    	  
-    	  if(netSuiteId==null||netSuiteId.trim().equals("")){
-    		  
 
-				 Header header= device.getHeader();
-		    	  
-		    	  Response response=new Response();
-		    	  response.setResponseCode(IResponse.INVALID_PAYLOAD);
-		    	  response.setResponseDescription(IResponse.ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB);
-		    	  response.setResponseStatus(IResponse.ERROR_MESSAGE);
-				
-				  UpdateDeviceResponse updateDeviceResponse=new UpdateDeviceResponse();
-				  updateDeviceResponse.setHeader(header);
-				  updateDeviceResponse.setResponse(response);
-				  
-				  return updateDeviceResponse;
-    	  }
-			
-    	  Query searchDeviceQuery = new Query(Criteria
-  				.where("netSuiteId")
-  				.is(device.getDataArea().getDevice().getNetSuiteId())
-  				);
-  		
-    	  deviceInfomation=(DeviceInformation) mongoTemplate.findOne(searchDeviceQuery,DeviceInformation.class);
-    	  
-    	  SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-    	  
-    	  deviceInformationToUpdate.setLastUpdated(sdf.format(new Date()));
-    	  
-    	  Header header= device.getHeader();
-    	  Response response=new Response();
-    	  
-    	  response.setResponseCode(IResponse.SUCCESS_CODE);
-    	  response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_UPDATE_MIDWAYDB);
-    	  response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
-		
-		  UpdateDeviceResponse updateDeviceResponse=new UpdateDeviceResponse();
-		  updateDeviceResponse.setHeader(header);
-		  updateDeviceResponse.setResponse(response);
-			
-			if(deviceInfomation==null){
-				
-				  mongoTemplate.insert(deviceInformationToUpdate);
-				  
-				  
-			}
-			
-			else
-			{
-				deviceInformationToUpdate.setMidwayMasterDeviceId(deviceInfomation.getMidwayMasterDeviceId());
-				
-				 mongoTemplate.save(deviceInformationToUpdate);
-				
-				
-			}
-			
-			return updateDeviceResponse;
-		    
-	       }
-	       
-	       catch(Exception e)
-	       {
-	    	   
-	    	Header header = device.getHeader();
-
-	   		Response response = new Response();
-	   		response.setResponseCode(IResponse.DB_ERROR_CODE);
-	   		response.setResponseDescription(IResponse.ERROR_DESCRIPTION_UPDATE_MIDWAYDB);
-	   		response.setResponseStatus(IResponse.ERROR_MESSAGE);
-
-	   		UpdateDeviceResponse updateDeviceResponse = new UpdateDeviceResponse();
-	   		updateDeviceResponse.setHeader(header);
-	   		updateDeviceResponse.setResponse(response);
-	    	
-	   		return updateDeviceResponse;
-	    	 
-	       }
-      
-		
-			
-	}
-
-	
-
-	public DeviceInformationResponse getDeviceInformationDB(DeviceInformationRequest deviceInformationRequest) {
-		// TODO Auto-generated method stub
-		
-		String netSuiteId=deviceInformationRequest.getDataArea().getNetSuiteId();
-		log.info("device dao netsuite id is..."+netSuiteId);
-		
-        DeviceInformationResponse deviceInformationResponse=new DeviceInformationResponse();
-		
-		deviceInformationResponse.setHeader(deviceInformationRequest.getHeader());
-		  Response response=new Response();
-		try{
-		
-		
-		
-		
-		Query searchDeviceQuery = new Query(Criteria
-				.where("netSuiteId")
-				.is(netSuiteId)
-				);
-		
-		DeviceInformation deviceInformation=(DeviceInformation) mongoTemplate.findOne(searchDeviceQuery,DeviceInformation.class);
-		
-	  
-	    
-	    if(deviceInformation==null)
-	    		
-	   {
-
-	    	response.setResponseCode(IResponse.NO_DATA_FOUND_CODE);
-	    	response.setResponseDescription(IResponse.ERROR_DESCRIPTION_NODATA_DEVCIEINFO_MIDWAYDB);
-	    	response.setResponseStatus(IResponse.ERROR_MESSAGE);
-
-	    	
-	    }
-	    
-	    else
-	    {
-
-	    	response.setResponseCode(IResponse.SUCCESS_CODE);
-	    	response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_MIDWAYDB);
-	    	response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
-
-	    	
-	    }
-	    
-	    deviceInformationResponse.setResponse(response);
-	    
-        DeviceInformationResponseDataArea deviceInformationResponseDataArea=new DeviceInformationResponseDataArea();
-		
-	    deviceInformationResponseDataArea.setDevices(deviceInformation);
-	    
-	    deviceInformationResponse.setDataArea(deviceInformationResponseDataArea);
-	    
-	    return deviceInformationResponse;
-		}
-		catch(Exception e){
-			
-
-			response.setResponseCode(IResponse.DB_ERROR_CODE);
-	    	response.setResponseDescription(IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB);
-	    	response.setResponseStatus(IResponse.ERROR_MESSAGE);
-
-	    	
-	    	 deviceInformationResponse.setResponse(response);
-	 	    
-	         DeviceInformationResponseDataArea deviceInformationResponseDataArea=new DeviceInformationResponseDataArea();
-	 		
-	 	     deviceInformationResponseDataArea.setDevices(null);
-	 	    
-	 	     deviceInformationResponse.setDataArea(deviceInformationResponseDataArea);
-			
-			return deviceInformationResponse;
-		}
-	    
-		
-	}
-
-
-	
-
-	public void setDeviceInformationDB(Exchange exchange) {
-		// TODO Auto-generated method stub
-		
-		String netSuiteId=(String) exchange.getProperty(IConstant.MIDWAY_NETSUITE_ID);
-		DeviceInformation deviceInformation=null;
-		try{
-		
-		
-		Query searchDeviceQuery = new Query(Criteria
-				.where("netSuiteId")
-				.is(netSuiteId)
-				);
-		
-		deviceInformation=(DeviceInformation) mongoTemplate.findOne(searchDeviceQuery,DeviceInformation.class);
-		
-		exchange.setProperty(IConstant.MIDWAY_DEVICEINFO_DB,deviceInformation);
-	    
-		}
-		
-		catch(Exception e)
-		{
-			
-			log.info("Not able to fetch the data from DB....."+e.getMessage());
-		}
-	    
-	}
-
-	public void updateDeviceInformationDB(Exchange exchange) {
-		// TODO Auto-generated method stub
-		DeviceInformationResponse deviceInformationResponse=(DeviceInformationResponse)exchange.getIn().getBody();
-		
-		DeviceInformation deviceInformation=deviceInformationResponse.getDataArea().getDevices();
-		
-		if(exchange.getProperty(IConstant.MIDWAY_DEVICEINFO_DB)!=null)
-		{
-			
-			log.info("device info was already in master DB");
-			
-			log.info("device info carrier is........."+deviceInformation.toString());
-			
-			deviceInformation.setMidwayMasterDeviceId(deviceInformation.getMidwayMasterDeviceId());
-			
-			mongoTemplate.save(deviceInformation);
-		}
-		
-		else
-		{
-			log.info("device info was not already in master DB");
-			
-			String netSuiteId=(String) exchange.getProperty(IConstant.MIDWAY_NETSUITE_ID);
-			
-			log.info("device info to insert for netsuideId "+netSuiteId);
-			
-			deviceInformation.setNetSuiteId(netSuiteId);
-			
-			mongoTemplate.insert(deviceInformation);
-			
-		}
-		DeviceInformationResponseDataArea deviceInformationResponseDataArea=deviceInformationResponse.getDataArea();
-		deviceInformationResponseDataArea.setDevices(deviceInformation);
-		deviceInformationResponse.setDataArea(deviceInformationResponseDataArea);
-		exchange.getIn().setBody(deviceInformationResponse);
-	}
-
-	public void bulkOperationDeviceUpload(Exchange exchange)
-	{
-		// TODO Auto-generated method stub
-
-		DeviceInformation deviceInformationToUpdate = (DeviceInformation) exchange
-				.getIn().getBody();
-		
-		String netSuiteId=deviceInformationToUpdate.getNetSuiteId();
-
+		DeviceInformation deviceInfomation = null;
 		try {
 
-	    	  if(netSuiteId==null||netSuiteId.trim().equals("")){
-	    		  
+			DeviceInformation deviceInformationToUpdate = device.getDataArea()
+					.getDevice();
+			String netSuiteId = device.getDataArea().getDevice()
+					.getNetSuiteId();
 
-	    	   List<BatchDeviceId> batchDeviceList = (List<BatchDeviceId>) exchange
-	  					.getProperty(IConstant.BULK_ERROR_LIST);
-	  			BatchDeviceId errorBatchDeviceId = new BatchDeviceId();
-	  			errorBatchDeviceId.setErrorMessage(IResponse.ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB);
-	  			batchDeviceList.add(errorBatchDeviceId);
+			if (netSuiteId == null || netSuiteId.trim().equals("")) {
 
-	  		
-	  			exchange.setProperty(IConstant.BULK_ERROR_LIST, batchDeviceList);	
-					
-					 
-	    	  }
-	    	  
-	    	  else
-	    	  {
-	    		Query searchDeviceQuery = new Query(Criteria
-	    					.where("netSuiteId")
-	    					.is(netSuiteId)
-	    					);
-	    			
-	    		DeviceInformation deviceInformation=(DeviceInformation) mongoTemplate.findOne(searchDeviceQuery,DeviceInformation.class); 
-	    		
-	    		SimpleDateFormat sdf = new SimpleDateFormat(
-						"yyyy-MM-dd'T'HH:mm:ssZ");
-				deviceInformationToUpdate.setLastUpdated(sdf.format(new Date()));
-	    			
-	    	     if(deviceInformation==null)
-	    	     
-	    	     {
-	    				
-	  				mongoTemplate.insert(deviceInformationToUpdate);
-	  				  
-	  				
-	  				  
-	  				  
-	  			}
-	  			
-	  			else
-	  			{
-	  				deviceInformationToUpdate.setMidwayMasterDeviceId(deviceInformation.getMidwayMasterDeviceId());
-	  				
-	  				 mongoTemplate.save(deviceInformationToUpdate);
-	  				
-	  				
-	  			}
-	    		  
-	    	     List<BatchDeviceId> batchDeviceList = (List<BatchDeviceId>) exchange
-							.getProperty(IConstant.BULK_SUCCESS_LIST);
-					BatchDeviceId successBatchDeviceId = new BatchDeviceId();
-					successBatchDeviceId.setNetSuiteId(netSuiteId);
-					batchDeviceList.add(successBatchDeviceId);
-					
-					exchange.setProperty(IConstant.BULK_SUCCESS_LIST, batchDeviceList);
-	    	  }
-			
+				Header header = device.getHeader();
 
-	    	   
+				Response response = new Response();
+				response.setResponseCode(IResponse.INVALID_PAYLOAD);
+				response.setResponseDescription(IResponse.ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB);
+				response.setResponseStatus(IResponse.ERROR_MESSAGE);
+
+				UpdateDeviceResponse updateDeviceResponse = new UpdateDeviceResponse();
+				updateDeviceResponse.setHeader(header);
+				updateDeviceResponse.setResponse(response);
+
+				return updateDeviceResponse;
+			}
+
+			Query searchDeviceQuery = new Query(Criteria.where("netSuiteId")
+					.is(device.getDataArea().getDevice().getNetSuiteId()));
+
+			deviceInfomation = (DeviceInformation) mongoTemplate.findOne(
+					searchDeviceQuery, DeviceInformation.class);
+
+			SimpleDateFormat sdf = new SimpleDateFormat(
+					"yyyy-MM-dd'T'HH:mm:ssZ");
+
+			deviceInformationToUpdate.setLastUpdated(sdf.format(new Date()));
+
+			Header header = device.getHeader();
+			Response response = new Response();
+
+			response.setResponseCode(IResponse.SUCCESS_CODE);
+			response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_UPDATE_MIDWAYDB);
+			response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+
+			UpdateDeviceResponse updateDeviceResponse = new UpdateDeviceResponse();
+			updateDeviceResponse.setHeader(header);
+			updateDeviceResponse.setResponse(response);
+
+			if (deviceInfomation == null) {
+
+				mongoTemplate.insert(deviceInformationToUpdate);
+
+			}
+
+			else {
+				deviceInformationToUpdate
+						.setMidwayMasterDeviceId(deviceInfomation
+								.getMidwayMasterDeviceId());
+
+				mongoTemplate.save(deviceInformationToUpdate);
+
+			}
+
+			return updateDeviceResponse;
+
 		}
 
 		catch (Exception e) {
 
-			
+			Header header = device.getHeader();
+
+			Response response = new Response();
+			response.setResponseCode(IResponse.DB_ERROR_CODE);
+			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_UPDATE_MIDWAYDB);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
+
+			UpdateDeviceResponse updateDeviceResponse = new UpdateDeviceResponse();
+			updateDeviceResponse.setHeader(header);
+			updateDeviceResponse.setResponse(response);
+
+			return updateDeviceResponse;
+
+		}
+
+	}
+
+	public DeviceInformationResponse getDeviceInformationDB(
+			DeviceInformationRequest deviceInformationRequest) {
+		// TODO Auto-generated method stub
+
+		String netSuiteId = deviceInformationRequest.getDataArea()
+				.getNetSuiteId();
+		log.info("device dao netsuite id is..." + netSuiteId);
+
+		DeviceInformationResponse deviceInformationResponse = new DeviceInformationResponse();
+
+		deviceInformationResponse.setHeader(deviceInformationRequest
+				.getHeader());
+		Response response = new Response();
+		try {
+
+			Query searchDeviceQuery = new Query(Criteria.where("netSuiteId")
+					.is(netSuiteId));
+
+			DeviceInformation deviceInformation = (DeviceInformation) mongoTemplate
+					.findOne(searchDeviceQuery, DeviceInformation.class);
+
+			if (deviceInformation == null)
+
+			{
+
+				response.setResponseCode(IResponse.NO_DATA_FOUND_CODE);
+				response.setResponseDescription(IResponse.ERROR_DESCRIPTION_NODATA_DEVCIEINFO_MIDWAYDB);
+				response.setResponseStatus(IResponse.ERROR_MESSAGE);
+
+			}
+
+			else {
+
+				response.setResponseCode(IResponse.SUCCESS_CODE);
+				response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_MIDWAYDB);
+				response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+
+			}
+
+			deviceInformationResponse.setResponse(response);
+
+			DeviceInformationResponseDataArea deviceInformationResponseDataArea = new DeviceInformationResponseDataArea();
+
+			deviceInformationResponseDataArea.setDevices(deviceInformation);
+
+			deviceInformationResponse
+					.setDataArea(deviceInformationResponseDataArea);
+
+			return deviceInformationResponse;
+		} catch (Exception e) {
+
+			response.setResponseCode(IResponse.DB_ERROR_CODE);
+			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
+
+			deviceInformationResponse.setResponse(response);
+
+			DeviceInformationResponseDataArea deviceInformationResponseDataArea = new DeviceInformationResponseDataArea();
+
+			deviceInformationResponseDataArea.setDevices(null);
+
+			deviceInformationResponse
+					.setDataArea(deviceInformationResponseDataArea);
+
+			return deviceInformationResponse;
+		}
+
+	}
+
+	public void setDeviceInformationDB(Exchange exchange) {
+		// TODO Auto-generated method stub
+
+		String netSuiteId = (String) exchange
+				.getProperty(IConstant.MIDWAY_NETSUITE_ID);
+		DeviceInformation deviceInformation = null;
+		try {
+
+			Query searchDeviceQuery = new Query(Criteria.where("netSuiteId")
+					.is(netSuiteId));
+
+			deviceInformation = (DeviceInformation) mongoTemplate.findOne(
+					searchDeviceQuery, DeviceInformation.class);
+
+			exchange.setProperty(IConstant.MIDWAY_DEVICEINFO_DB,
+					deviceInformation);
+
+		}
+
+		catch (Exception e) {
+
+			log.info("Not able to fetch the data from DB....." + e.getMessage());
+		}
+
+	}
+
+	public void updateDeviceInformationDB(Exchange exchange) {
+		// TODO Auto-generated method stub
+		DeviceInformationResponse deviceInformationResponse = (DeviceInformationResponse) exchange
+				.getIn().getBody();
+
+		DeviceInformation deviceInformation = deviceInformationResponse
+				.getDataArea().getDevices();
+
+		if (exchange.getProperty(IConstant.MIDWAY_DEVICEINFO_DB) != null) {
+
+			log.info("device info was already in master DB");
+
+			log.info("device info carrier is........."
+					+ deviceInformation.toString());
+
+			deviceInformation.setMidwayMasterDeviceId(deviceInformation
+					.getMidwayMasterDeviceId());
+
+			mongoTemplate.save(deviceInformation);
+		}
+
+		else {
+			log.info("device info was not already in master DB");
+
+			String netSuiteId = (String) exchange
+					.getProperty(IConstant.MIDWAY_NETSUITE_ID);
+
+			log.info("device info to insert for netsuideId " + netSuiteId);
+
+			deviceInformation.setNetSuiteId(netSuiteId);
+
+			mongoTemplate.insert(deviceInformation);
+
+		}
+		DeviceInformationResponseDataArea deviceInformationResponseDataArea = deviceInformationResponse
+				.getDataArea();
+		deviceInformationResponseDataArea.setDevices(deviceInformation);
+		deviceInformationResponse
+				.setDataArea(deviceInformationResponseDataArea);
+		exchange.getIn().setBody(deviceInformationResponse);
+	}
+
+	public void bulkOperationDeviceUpload(Exchange exchange) {
+		// TODO Auto-generated method stub
+
+		DeviceInformation deviceInformationToUpdate = (DeviceInformation) exchange
+				.getIn().getBody();
+
+		String netSuiteId = deviceInformationToUpdate.getNetSuiteId();
+
+		try {
+
+			if (netSuiteId == null || netSuiteId.trim().equals("")) {
+
+				List<BatchDeviceId> batchDeviceList = (List<BatchDeviceId>) exchange
+						.getProperty(IConstant.BULK_ERROR_LIST);
+				BatchDeviceId errorBatchDeviceId = new BatchDeviceId();
+				errorBatchDeviceId
+						.setErrorMessage(IResponse.ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB);
+				batchDeviceList.add(errorBatchDeviceId);
+
+				exchange.setProperty(IConstant.BULK_ERROR_LIST, batchDeviceList);
+
+			}
+
+			else {
+				Query searchDeviceQuery = new Query(Criteria
+						.where("netSuiteId").is(netSuiteId));
+
+				DeviceInformation deviceInformation = (DeviceInformation) mongoTemplate
+						.findOne(searchDeviceQuery, DeviceInformation.class);
+
+				SimpleDateFormat sdf = new SimpleDateFormat(
+						"yyyy-MM-dd'T'HH:mm:ssZ");
+				deviceInformationToUpdate
+						.setLastUpdated(sdf.format(new Date()));
+
+				if (deviceInformation == null)
+
+				{
+
+					mongoTemplate.insert(deviceInformationToUpdate);
+
+				}
+
+				else {
+					deviceInformationToUpdate
+							.setMidwayMasterDeviceId(deviceInformation
+									.getMidwayMasterDeviceId());
+
+					mongoTemplate.save(deviceInformationToUpdate);
+
+				}
+
+				List<BatchDeviceId> batchDeviceList = (List<BatchDeviceId>) exchange
+						.getProperty(IConstant.BULK_SUCCESS_LIST);
+				BatchDeviceId successBatchDeviceId = new BatchDeviceId();
+				successBatchDeviceId.setNetSuiteId(netSuiteId);
+				batchDeviceList.add(successBatchDeviceId);
+
+				exchange.setProperty(IConstant.BULK_SUCCESS_LIST,
+						batchDeviceList);
+			}
+
+		}
+
+		catch (Exception e) {
+
 			List<BatchDeviceId> batchDeviceList = (List<BatchDeviceId>) exchange
 					.getProperty(IConstant.BULK_ERROR_LIST);
 			BatchDeviceId errorBatchDeviceId = new BatchDeviceId();
 			errorBatchDeviceId.setNetSuiteId(netSuiteId);
-			errorBatchDeviceId.setErrorMessage(IResponse.ERROR_DESCRIPTION_UPDATE_MIDWAYDB);
+			errorBatchDeviceId
+					.setErrorMessage(IResponse.ERROR_DESCRIPTION_UPDATE_MIDWAYDB);
 			batchDeviceList.add(errorBatchDeviceId);
 
-		
 			exchange.setProperty(IConstant.BULK_ERROR_LIST, batchDeviceList);
-			
-			
+
 		}
 
-		
-		
-		
-				
 	}
-	
-	
+
+	@Override
+	public ArrayList<DeviceInformation> getAllDevices() {
+
+		ArrayList<DeviceInformation> deviceInfo = new ArrayList<DeviceInformation>();
+		return (ArrayList<DeviceInformation>) mongoTemplate
+				.findAll(DeviceInformation.class);
+
+	}
 
 }

@@ -1,11 +1,12 @@
 package com.gv.midway.dao;
 
-import org.apache.camel.Exchange;
+import com.gv.midway.pojo.deviceHistory.DeviceConnection;
+import com.gv.midway.pojo.deviceHistory.DeviceUsage;
 
 public interface ISchedulerDao {
 
 	
-	public void saveDeviceConnectionHistory(Exchange exchange);
+	public void saveDeviceConnectionHistory(DeviceConnection deviceConnection);
 	
-	public void saveDeviceUsageHistory(Exchange exchange);
+	public void saveDeviceUsageHistory(DeviceUsage deviceUsage);
 }

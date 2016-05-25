@@ -1,8 +1,11 @@
 package com.gv.midway.service;
 
+import java.util.ArrayList;
+
 import org.apache.camel.Exchange;
 
 import com.gv.midway.pojo.device.response.UpdateDeviceResponse;
+import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 
 public interface IDeviceService {
@@ -18,5 +21,7 @@ public interface IDeviceService {
 	public void updateDeviceInformationDB(Exchange exchange);
 
 	public void bulkOperationDeviceSyncInDB(Exchange exchange);
+	
+	public ArrayList<DeviceInformation> getAllDevices();
 
 }
