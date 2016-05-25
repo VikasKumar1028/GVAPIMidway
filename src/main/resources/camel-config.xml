@@ -58,6 +58,11 @@
 
 	<bean id="iSchedulerService" class="com.gv.midway.service.impl.SchedulerServiceImpl" />
 
+	<bean id="getDeviceConnectionRouter" class="com.gv.midway.router.GetDeviceConnectionRouter" />
+	
+	<bean id="getDeviceUsageRouter" class="com.gv.midway.router.GetDeviceUsageRouter" />
+	
+	<bean id="splitDeviceInformation" class="com.gv.midway.splitter.DeviceInformationSplitter" />
 
 	<bean id="jobSplitter" class="com.gv.midway.splitter.JobSplitter" />
 
