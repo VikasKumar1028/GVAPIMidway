@@ -1,56 +1,40 @@
 package com.gv.midway.job;
 
+import com.gv.midway.constant.JobName;
+import com.gv.midway.constant.JobType;
+
 public class JobParameter {
 
 	private String date;
-	private String carrierName;
-	private boolean reRunComplete;
-	private boolean renRunTransactinFailure;
-
+	private JobName jobName;
+	private JobType jobType;
 	public String getDate() {
 		return date;
 	}
-
 	public void setDate(String date) {
 		this.date = date;
 	}
-
-	public String getCarrierName() {
-		return carrierName;
+	public JobName getJobName() {
+		return jobName;
 	}
-
-	public void setCarrierName(String carrierName) {
-		this.carrierName = carrierName;
+	public void setJobName(JobName jobName) {
+		this.jobName = jobName;
 	}
-
-	public boolean isReRunComplete() {
-		return reRunComplete;
+	public JobType getJobType() {
+		return jobType;
 	}
-
-	public void setReRunComplete(boolean reRunComplete) {
-		this.reRunComplete = reRunComplete;
+	public void setJobType(JobType jobType) {
+		this.jobType = jobType;
 	}
-
-	public boolean isRenRunTransactinFailure() {
-		return renRunTransactinFailure;
-	}
-
-	public void setRenRunTransactinFailure(boolean renRunTransactinFailure) {
-		this.renRunTransactinFailure = renRunTransactinFailure;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((carrierName == null) ? 0 : carrierName.hashCode());
 		result = prime * result + ((date == null) ? 0 : date.hashCode());
-		result = prime * result + (reRunComplete ? 1231 : 1237);
-		result = prime * result + (renRunTransactinFailure ? 1231 : 1237);
+		result = prime * result + ((jobName == null) ? 0 : jobName.hashCode());
+		result = prime * result + ((jobType == null) ? 0 : jobType.hashCode());
 		return result;
 	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -60,27 +44,22 @@ public class JobParameter {
 		if (getClass() != obj.getClass())
 			return false;
 		JobParameter other = (JobParameter) obj;
-		if (carrierName == null) {
-			if (other.carrierName != null)
-				return false;
-		} else if (!carrierName.equals(other.carrierName))
-			return false;
 		if (date == null) {
 			if (other.date != null)
 				return false;
 		} else if (!date.equals(other.date))
 			return false;
-		if (reRunComplete != other.reRunComplete)
+		if (jobName != other.jobName)
 			return false;
-		if (renRunTransactinFailure != other.renRunTransactinFailure)
+		if (jobType != other.jobType)
 			return false;
 		return true;
 	}
-
 	@Override
 	public String toString() {
-		return "JobParameter [date=" + date + ", carrierName=" + carrierName
-				+ ", reRunComplete=" + reRunComplete
-				+ ", renRunTransactinFailure=" + renRunTransactinFailure + "]";
+		return "JobParameter [date=" + date + ", jobName=" + jobName
+				+ ", jobType=" + jobType + "]";
 	}
+	
+
 }

@@ -30,9 +30,21 @@ public class JobDaoImpl implements IJobDao {
 		List<DeviceInformation> deviceInformationList = null;
 
 		try {
-
+			
+			String carrierName="";
+			
+			if (jobParameter.getJobName().toString().contains("KORE"))
+			{
+				carrierName="KORE";
+			}
+			
+			if(jobParameter.getJobName().toString().contains("VERIZON"))
+			{
+				carrierName="VERIZON";
+			}
+			//We have to check number of bs_carrier
 			Query searchDeviceQuery = new Query(Criteria.where("bs_carrier")
-					.is(jobParameter.getCarrierName()));
+					.is(carrierName));
 			
 			deviceInformationList = mongoTemplate.find(searchDeviceQuery,
 					DeviceInformation.class);
@@ -52,11 +64,21 @@ public class JobDaoImpl implements IJobDao {
 		// TODO Auto-generated method stub
 
 		JobParameter jobParameter = (JobParameter) exchange.getIn().getBody();
+		
+		
+		
+		//Iconstant check job Name
+		//Connection History
+		//DEvice Usage
+		
+		
+		
 		Date localTime = new Date();
 
 		JobDetail jobDetail = new JobDetail();
 
-		jobDetail.setName("insertJobDetails");
+		jobDetail.setName(jobParameter.getJobName());
+		jobDetail.setType(jobParameter.getJobType());
 		jobDetail.setStartTime(localTime.toString());
 
 		mongoTemplate.insert(jobDetail);

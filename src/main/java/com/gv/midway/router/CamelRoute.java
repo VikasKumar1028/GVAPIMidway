@@ -1158,27 +1158,20 @@ public class CamelRoute extends RouteBuilder {
 
 				//KORE Job SEDA  FLOW
 
-			from("seda:processKoreJob?concurrentConsumers=5").log("KOREJob");
+			from("seda:processKoreJob?concurrentConsumers=5").
+			//PreProcessor 
+			//Calling 
+			//Post Processor			
+			log("KOREJob");
 	
-			from("seda:processVerizonJob?concurrentConsumers=5").log("VERIZONJob");
-					/*from("seda:processKoreJob?concurrentConsumers=5")
-					 * 
-						.onException(CxfOperationException.class)
-						.handled(true)
-						.bean(iTransactionalService,
-								"populateKoreTransactionalErrorResponse")
-						.bean(iAuditService, "auditExternalExceptionResponseCall")
-						.end()
-						.process(new KoreDeactivateDevicePreProcessor(env))
-						.bean(iAuditService, "auditExternalRequestCall")
-						.to(uriRestKoreEndPoint)
-						.unmarshal()
-						.json(JsonLibrary.Jackson, KoreProvisoningResponse.class)
-						.bean(iAuditService, "auditExternalResponseCall")
-						.bean(iTransactionalService,
-								"populateKoreTransactionalResponse");
+			from("seda:processVerizonJob?concurrentConsumers=5").
+			//PreProcessor 
+			//Calling 
+			//Post Processor
+			log("VERIZONJob");
+					
 		
-		*/
+		
 		//If Verizon Job
 		
 				//if complete Job
