@@ -1153,24 +1153,37 @@ public class CamelRoute extends RouteBuilder {
 				from("direct:processJob").bean(iJobService, "insertJobDetails")
 				
 					.bean(iJobService, "fetchDevices")
-						.split().method("jobSplitter").recipientList()
-						.method("jobCarrierRouter");
-
+						.split().method("jobSplitter")
+						//.recipientList()
+						//.method("jobCarrierRouter");
+						.choice()
+						.when(simple("${exchangeProperty[jobName]} == 'VERIZON_CONNECTION_HISTORY'"))
+						.to("seda:processVerizonConnectionHistoryJob")
+						.when(simple("${exchangeProperty[jobName]} == 'KORE_DEVICE_USAGE'"))
+						.to("seda:processKoreDeviceUsageJob")
+						.when(simple("${exchangeProperty[jobName]} == 'VERIZON_DEVICE_USAGE'"))
+						.to("seda:processVerizonDeviceUsageJob").endChoice();
+		
+				
 				//KORE Job SEDA  FLOW
 
-			from("seda:processKoreJob?concurrentConsumers=5").
+			from("seda:processKoreDeviceUsageJob?concurrentConsumers=5").
 			//PreProcessor 
 			//Calling 
 			//Post Processor			
-			log("KOREJob");
+			log("KOREJob-DEVICE USAGE");
 	
-			from("seda:processVerizonJob?concurrentConsumers=5").
+			from("seda:processVerizonDeviceUsageJob?concurrentConsumers=5").
 			//PreProcessor 
 			//Calling 
 			//Post Processor
-			log("VERIZONJob");
+			log("VERIZONJob-DEVICE USAGE");
 					
-		
+			from("seda:processVerizonConnectionHistoryJob?concurrentConsumers=5").
+			//PreProcessor 
+			//Calling 
+			//Post Processor
+			log("VERIZONJob CONNECTION HISTORY");
 		
 		//If Verizon Job
 		

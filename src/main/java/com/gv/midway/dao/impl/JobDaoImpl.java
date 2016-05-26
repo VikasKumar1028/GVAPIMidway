@@ -24,9 +24,8 @@ public class JobDaoImpl implements IJobDao {
 	@Override
 	public List fetchDevices(Exchange exchange) {
 		
-		//System.out.println("*******************************************");
 		JobParameter jobParameter = (JobParameter) exchange.getIn().getBody();
-		
+		exchange.setProperty("jobName", jobParameter.getJobName());
 		List<DeviceInformation> deviceInformationList = null;
 
 		try {
