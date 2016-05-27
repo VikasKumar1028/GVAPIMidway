@@ -71,6 +71,12 @@ import com.gv.midway.processor.deviceInformation.StubKoreDeviceInformationProces
 import com.gv.midway.processor.deviceInformation.StubVerizonDeviceInformationProcessor;
 import com.gv.midway.processor.deviceInformation.VerizonDeviceInformationPostProcessor;
 import com.gv.midway.processor.deviceInformation.VerizonDeviceInformationPreProcessor;
+import com.gv.midway.processor.jobScheduler.CreateKoreDeviceUsageHistoryPayloadProcessor;
+import com.gv.midway.processor.jobScheduler.CreateVerizonDeviceConnectionHistoryPayloadProcessor;
+import com.gv.midway.processor.jobScheduler.CreateVerizonDeviceUsageHistoryPayloadProcessor;
+import com.gv.midway.processor.jobScheduler.KoreUsageHistoryPreProcessor;
+import com.gv.midway.processor.jobScheduler.VerizonConnectionHistoryPreProcessor;
+import com.gv.midway.processor.jobScheduler.VerizonUsageHistoryPreProcessor;
 import com.gv.midway.processor.reactivate.KoreReactivateDevicePostProcessor;
 import com.gv.midway.processor.reactivate.KoreReactivateDevicePreProcessor;
 import com.gv.midway.processor.reactivate.StubKoreReactivateDeviceProcessor;
@@ -1117,13 +1123,14 @@ public class CamelRoute extends RouteBuilder {
 				.method("getDeviceConnectionRouter");
 
 		from("seda:getDeviceConnectionInformation?concurrentConsumers=5")
-				.process(new CreateDeviceHistoryPayloadProcessor())
+				.process(
+						new CreateVerizonDeviceConnectionHistoryPayloadProcessor())
 				.to(uriRestVerizonEndPoint).unmarshal()
 				.json(JsonLibrary.Jackson)
+				.process(new VerizonConnectionHistoryPreProcessor())
 				.bean(iSchedulerService, "saveDeviceConnectionHistory").end();
 
 	}
-
 
 	public void deviceUsageHistoryJob() {
 		from(
@@ -1135,14 +1142,21 @@ public class CamelRoute extends RouteBuilder {
 				.method("splitDeviceInformation").recipientList()
 				.method("getDeviceUsageRouter");
 
-		from("seda:getDeviceUsageInformation?concurrentConsumers=5")
-				.process(new CreateDeviceHistoryPayloadProcessor())
+		from("seda:getDeviceUsageInformationForVerizon?concurrentConsumers=5")
+				.process(new CreateVerizonDeviceUsageHistoryPayloadProcessor())
 				.to(uriRestVerizonEndPoint).unmarshal()
 				.json(JsonLibrary.Jackson)
+				.process(new VerizonUsageHistoryPreProcessor())
+				.bean(iSchedulerService, "saveDeviceUsageHistory").end();
+
+		from("seda:getDeviceUsageInformationForKore?concurrentConsumers=5")
+				.process(
+						new CreateKoreDeviceUsageHistoryPayloadProcessor())
+				.to(uriRestKoreEndPoint).unmarshal().json(JsonLibrary.Jackson)
+				.process(new KoreUsageHistoryPreProcessor())
 				.bean(iSchedulerService, "saveDeviceUsageHistory").end();
 
 	}
-
 	public void startJob() {
 
 		from("direct:startJob").log("*********************************direct:startJob").to("direct:processJob");

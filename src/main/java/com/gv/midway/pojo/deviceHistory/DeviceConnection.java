@@ -19,6 +19,7 @@ public class DeviceConnection {
 	private Boolean isValid;
 	private DeviceEvent[] event;
 	
+	
 	public DeviceId getDeviceId() {
 		return deviceId;
 	}

@@ -14,8 +14,16 @@ public class DeviceUsage {
 	private String transactionStatus;
 	private String transactionErrorReason;
 	private Boolean isValid;
+	private String carrierName;
+	private Boolean billCycleComplete;
 
 
+	public Boolean getBillCycleComplete() {
+		return billCycleComplete;
+	}
+	public void setBillCycleComplete(Boolean billCycleComplete) {
+		this.billCycleComplete = billCycleComplete;
+	}
 	public DeviceId getDeviceId() {
 		return deviceId;
 	}
@@ -59,18 +67,31 @@ public class DeviceUsage {
 		this.isValid = isValid;
 	}
 	
+	public String getCarrierName() {
+		return carrierName;
+	}
+	public void setCarrierName(String carrierName) {
+		this.carrierName = carrierName;
+	}
 	@Override
 	public String toString() {
 		return "DeviceUsage [deviceId=" + deviceId + ", netSuiteId="
 				+ netSuiteId + ", timestamp=" + timestamp + ", dataUsed="
 				+ dataUsed + ", transactionStatus=" + transactionStatus
 				+ ", transactionErrorReason=" + transactionErrorReason
-				+ ", isValid=" + isValid + "]";
+				+ ", isValid=" + isValid + ", carrierName=" + carrierName
+				+ ", billCycleComplete=" + billCycleComplete + "]";
 	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime
+				* result
+				+ ((billCycleComplete == null) ? 0 : billCycleComplete
+						.hashCode());
+		result = prime * result
+				+ ((carrierName == null) ? 0 : carrierName.hashCode());
 		result = prime * result + Float.floatToIntBits(dataUsed);
 		result = prime * result
 				+ ((deviceId == null) ? 0 : deviceId.hashCode());
@@ -98,6 +119,16 @@ public class DeviceUsage {
 		if (getClass() != obj.getClass())
 			return false;
 		DeviceUsage other = (DeviceUsage) obj;
+		if (billCycleComplete == null) {
+			if (other.billCycleComplete != null)
+				return false;
+		} else if (!billCycleComplete.equals(other.billCycleComplete))
+			return false;
+		if (carrierName == null) {
+			if (other.carrierName != null)
+				return false;
+		} else if (!carrierName.equals(other.carrierName))
+			return false;
 		if (Float.floatToIntBits(dataUsed) != Float
 				.floatToIntBits(other.dataUsed))
 			return false;

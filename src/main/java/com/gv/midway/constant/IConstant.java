@@ -68,6 +68,7 @@ public interface IConstant {
 	static String KORE_CHECKSTATUS_CONNECTION_ERROR="KoreCheckStausConnection Error";
 	
 	static String JOB_TIME_CONFIGURATION = "0+0+02+*+*+?";
+	static int DURATION = -24;
 	
 	/*static String JOB_TIME_CONFIGURATION = "0/15+*+*+*+*+?";*/
 	
