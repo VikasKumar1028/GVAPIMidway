@@ -1187,11 +1187,17 @@ public class CamelRoute extends RouteBuilder {
 			//Post Processor			
 			log("KOREJob-DEVICE USAGE");
 	
-			from("seda:processVerizonDeviceUsageJob?concurrentConsumers=5").
-			//PreProcessor 
-			//Calling 
-			//Post Processor
-			log("VERIZONJob-DEVICE USAGE");
+			from("seda:processVerizonDeviceUsageJob?concurrentConsumers=5")
+			.log("VERIZONJob-DEVICE USAGE")
+			.bean(iSessionService, "setContextTokenInExchange")
+			.process(new CreateDeviceHistoryPayloadProcessor())
+			.to(uriRestVerizonEndPoint).unmarshal()
+			.json(JsonLibrary.Jackson)
+			.end();
+			//.bean(iSchedulerService, "saveDeviceUsageHistory").end();
+			
+		
+		
 					
 			from("seda:processVerizonConnectionHistoryJob?concurrentConsumers=5").
 			//PreProcessor 

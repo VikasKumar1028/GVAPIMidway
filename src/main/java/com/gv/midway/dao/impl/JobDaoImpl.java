@@ -1,6 +1,7 @@
 package com.gv.midway.dao.impl;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.camel.Exchange;
@@ -23,63 +24,45 @@ public class JobDaoImpl implements IJobDao {
 
 	@Override
 	public List fetchDevices(Exchange exchange) {
+
+		JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
 		
-		JobParameter jobParameter = (JobParameter) exchange.getIn().getBody();
-		exchange.setProperty("jobName", jobParameter.getJobName());
+		exchange.setProperty("jobName", jobDetail.getName().toString());
+
 		List<DeviceInformation> deviceInformationList = null;
+		List<DeviceInformation> list = null;
 
 		try {
+
+			String carrierName = jobDetail.getCarrierName();
+
 			
-			String carrierName="";
-			
-			if (jobParameter.getJobName().toString().contains("KORE"))
-			{
-				carrierName="KORE";
-			}
-			
-			if(jobParameter.getJobName().toString().contains("VERIZON"))
-			{
-				carrierName="VERIZON";
-			}
-			//We have to check number of bs_carrier
+			System.out.println("Carrier Name -----------------"+carrierName );
+			// We have to check number of bs_carrier
 			Query searchDeviceQuery = new Query(Criteria.where("bs_carrier")
 					.is(carrierName));
-			
+
 			deviceInformationList = mongoTemplate.find(searchDeviceQuery,
 					DeviceInformation.class);
 
-			System.out.println("deviceInformationList"+deviceInformationList);
+			list = new ArrayList<DeviceInformation>(Collections.nCopies(2,
+					deviceInformationList.get(0)));
+
+			System.out.println("deviceInformationList" + deviceInformationList);
 		}
 
 		catch (Exception e) {
 			System.out.println("e");
 		}
 
-		return deviceInformationList;
+		// return deviceInformationList;
+		return list;
 	}
 
 	@Override
 	public void insertJobDetails(Exchange exchange) {
-		// TODO Auto-generated method stub
-
-		JobParameter jobParameter = (JobParameter) exchange.getIn().getBody();
+		JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
 		
-		
-		
-		//Iconstant check job Name
-		//Connection History
-		//DEvice Usage
-		
-		
-		
-		Date localTime = new Date();
-
-		JobDetail jobDetail = new JobDetail();
-
-		jobDetail.setName(jobParameter.getJobName());
-		jobDetail.setType(jobParameter.getJobType());
-		jobDetail.setStartTime(localTime.toString());
-
 		mongoTemplate.insert(jobDetail);
 
 	}
