@@ -1,5 +1,7 @@
 package com.gv.midway.dao.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -25,28 +27,22 @@ public class JobDaoImpl implements IJobDao {
 	public List fetchDevices(Exchange exchange) {
 		
 		JobParameter jobParameter = (JobParameter) exchange.getIn().getBody();
-		exchange.setProperty("jobName", jobParameter.getJobName());
+	
 		List<DeviceInformation> deviceInformationList = null;
+		List<DeviceInformation> list=null;
 
 		try {
 			
-			String carrierName="";
-			
-			if (jobParameter.getJobName().toString().contains("KORE"))
-			{
-				carrierName="KORE";
-			}
-			
-			if(jobParameter.getJobName().toString().contains("VERIZON"))
-			{
-				carrierName="VERIZON";
-			}
+			String carrierName=jobParameter.getCarrierName().toString();
+		
 			//We have to check number of bs_carrier
 			Query searchDeviceQuery = new Query(Criteria.where("bs_carrier")
 					.is(carrierName));
 			
 			deviceInformationList = mongoTemplate.find(searchDeviceQuery,
 					DeviceInformation.class);
+			
+			list = new ArrayList<DeviceInformation>(Collections.nCopies(10000,deviceInformationList.get(0) ));
 
 			System.out.println("deviceInformationList"+deviceInformationList);
 		}
@@ -55,31 +51,16 @@ public class JobDaoImpl implements IJobDao {
 			System.out.println("e");
 		}
 
-		return deviceInformationList;
+		//return deviceInformationList;
+		return list;
 	}
 
 	@Override
 	public void insertJobDetails(Exchange exchange) {
 		// TODO Auto-generated method stub
 
-		JobParameter jobParameter = (JobParameter) exchange.getIn().getBody();
+		JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
 		
-		
-		
-		//Iconstant check job Name
-		//Connection History
-		//DEvice Usage
-		
-		
-		
-		Date localTime = new Date();
-
-		JobDetail jobDetail = new JobDetail();
-
-		jobDetail.setName(jobParameter.getJobName());
-		jobDetail.setType(jobParameter.getJobType());
-		jobDetail.setStartTime(localTime.toString());
-
 		mongoTemplate.insert(jobDetail);
 
 	}

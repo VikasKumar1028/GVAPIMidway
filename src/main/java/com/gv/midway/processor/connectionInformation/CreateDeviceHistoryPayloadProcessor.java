@@ -82,13 +82,14 @@ public class CreateDeviceHistoryPayloadProcessor implements Processor {
 		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.HTTP_METHOD, "POST");
-		if(exchange.getFromEndpoint().toString()
+	/*	if(exchange.getFromEndpoint().toString()
 		.matches("(.*)DeviceConnectionInformation(.*)")) {
 		message.setHeader(Exchange.HTTP_PATH, "/devices/connections/actions/listHistory");
 		} else if(exchange.getFromEndpoint().toString()
 				.matches("(.*)DeviceUsage	Information(.*)")){
-			message.setHeader(Exchange.HTTP_PATH, "/devices/actions/list");
-		}
+			message.setHeader(Exchange.HTTP_PATH, "/devices/actions/list"); 	}*/
+		message.setHeader(Exchange.HTTP_PATH, "/devices/connections/actions/listHistory");
+	
 		
 	}
 

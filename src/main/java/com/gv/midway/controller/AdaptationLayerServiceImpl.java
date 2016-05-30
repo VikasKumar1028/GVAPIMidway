@@ -5,13 +5,14 @@ import org.apache.camel.ProducerTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gv.midway.audit.AuditLogRequestEventNotifer;
+import com.gv.midway.constant.CarrierType;
+import com.gv.midway.constant.JobName;
+import com.gv.midway.constant.JobType;
+import com.gv.midway.job.JobDetail;
 import com.gv.midway.job.JobParameter;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
-import com.gv.midway.pojo.callback.TargetResponse;
-import com.gv.midway.pojo.callback.common.response.CallbackCommonResponse;
 import com.gv.midway.pojo.callback.request.CallBackVerizonRequest;
 import com.gv.midway.pojo.changeDeviceServicePlans.request.ChangeDeviceServicePlansRequest;
 import com.gv.midway.pojo.changeDeviceServicePlans.response.ChangeDeviceServicePlansResponse;
@@ -174,10 +175,8 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 				"direct:customeFields", customeFieldDeviceRequest);
 	}
 
-	public void callbacks(
-			CallBackVerizonRequest callbackRequest) {
-		producer.requestBody(
-				"direct:callbacks", callbackRequest);
+	public void callbacks(CallBackVerizonRequest callbackRequest) {
+		producer.requestBody("direct:callbacks", callbackRequest);
 	}
 
 	public ConnectionStatusResponse deviceConnectionStatusRequest(
@@ -210,9 +209,73 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 
 	@Override
 	public void startJob(JobParameter jobParameterRequest) {
-		   producer.requestBody("direct:startJob",
-				jobParameterRequest);
-		
-		
+		producer.requestBody("direct:startJob", jobParameterRequest);
+
+	}
+
+	@Override
+	public void transactionFailureDeviceUsageJob(JobParameter jobParameter) {
+
+		JobDetail jobDetail = new JobDetail();
+		jobDetail.setType(JobType.TRANSACTION_FAILURE);
+		jobDetail.setDate(jobParameter.getDate());
+		if ("KORE".equals(jobParameter.getCarrierName())) {
+			jobDetail.setName(JobName.KORE_DEVICE_USAGE);
+			jobDetail.setCarrierName(CarrierType.KORE.toString());
+		} else if ("VERIZON".equals(jobParameter.getCarrierName())) {
+			jobDetail.setName(JobName.VERIZON_DEVICE_USAGE);
+			jobDetail.setCarrierName(CarrierType.VERIZON.toString());
+		}
+
+		producer.requestBody("direct:startJob", jobDetail);
+
+	}
+
+	@Override
+	public void transactionFailureConnectionHistoryJob(JobParameter jobParameter) {
+
+		JobDetail jobDetail = new JobDetail();
+		jobDetail.setType(JobType.TRANSACTION_FAILURE);
+		jobDetail.setDate(jobParameter.getDate());
+		if ("VERIZON".equals(jobParameter.getCarrierName())) {
+			jobDetail.setName(JobName.VERIZON_CONNECTION_HISTORY);
+			jobDetail.setCarrierName(CarrierType.VERIZON.toString());
+		}
+
+		producer.requestBody("direct:startJob", jobDetail);
+
+	}
+
+	@Override
+	public void reRunDeviceUsageJob(JobParameter jobParameter) {
+
+		JobDetail jobDetail = new JobDetail();
+		jobDetail.setType(JobType.RERUN);
+		jobDetail.setDate(jobParameter.getDate());
+		if ("KORE".equals(jobParameter.getCarrierName())) {
+			jobDetail.setName(JobName.KORE_DEVICE_USAGE);
+			jobDetail.setCarrierName(CarrierType.KORE.toString());
+		} else if ("VERIZON".equals(jobParameter.getCarrierName())) {
+			jobDetail.setName(JobName.VERIZON_DEVICE_USAGE);
+			jobDetail.setCarrierName(CarrierType.VERIZON.toString());
+		}
+
+		producer.requestBody("direct:startJob", jobDetail);
+
+	}
+
+	@Override
+	public void reRunConnectionHistoryJob(JobParameter jobParameter) {
+
+		JobDetail jobDetail = new JobDetail();
+		jobDetail.setType(JobType.RERUN);
+		jobDetail.setDate(jobParameter.getDate());
+		if ("VERIZON".equals(jobParameter.getCarrierName())) {
+			jobDetail.setCarrierName(CarrierType.VERIZON.toString());
+			jobDetail.setName(JobName.VERIZON_CONNECTION_HISTORY);
+		}
+
+		producer.requestBody("direct:startJob", jobDetail);
+
 	}
 }
