@@ -47,14 +47,16 @@ public class VerizonConnectionHistoryPreProcessor implements Processor {
 					if (events.getKey().toString()
 							.equalsIgnoreCase("BytesUsed")) {
 						event.setBytesUsed(events.getValue());
+						deviceEventList.add(event);
 						count++;
 					} else if (events.getKey().toString()
 							.equalsIgnoreCase("Event")) {
 						event.setEventType(events.getValue());
+						deviceEventList.add(event);
 						count++;
 					}
 					if (count == 2) {
-						deviceEventList.add(event);
+						
 						break;
 					}
 
@@ -73,6 +75,7 @@ public class VerizonConnectionHistoryPreProcessor implements Processor {
 		deviceConnection.setNetSuiteId((String) exchange
 				.getProperty("NetSuiteId"));
 		deviceConnection.setIsValid(true);
+		deviceConnection.setOccurredAt(connectionResponse.getConnectionHistory()[0].getOccurredAt());
 
 		exchange.getIn().setBody(deviceConnection);
 

@@ -1,6 +1,7 @@
 package com.gv.midway.processor.suspendDevice;
 
 import org.apache.camel.Exchange;
+import org.apache.camel.ExchangePattern;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
@@ -56,6 +57,7 @@ public class KoreSuspendDevicePreProcessor implements Processor {
 
 		message.setBody(suspendDeviceRequestKore);
 
+		exchange.setPattern(ExchangePattern.InOut);
 		log.info("End:KoreSuspendDevicePreProcessor");
 	}
 

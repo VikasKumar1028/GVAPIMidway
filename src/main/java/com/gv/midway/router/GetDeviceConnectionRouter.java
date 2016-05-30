@@ -12,7 +12,7 @@ public class GetDeviceConnectionRouter {
 		log.info("************Device Connection Information ROUTER*************"
 				+ deviceInfo.toString());
 
-		return "seda:getDeviceHistoryInformation";
+		return "seda:getDeviceConnectionInformation";
 
 	}
 }

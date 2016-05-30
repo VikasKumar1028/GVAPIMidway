@@ -18,8 +18,15 @@ public class DeviceConnection {
 	private String transactionErrorReason;
 	private Boolean isValid;
 	private DeviceEvent[] event;
+	private String occurredAt;
 	
 	
+	public String getOccurredAt() {
+		return occurredAt;
+	}
+	public void setOccurredAt(String occurredAt) {
+		this.occurredAt = occurredAt;
+	}
 	public DeviceId getDeviceId() {
 		return deviceId;
 	}
@@ -81,6 +88,8 @@ public class DeviceConnection {
 		result = prime * result
 				+ ((netSuiteId == null) ? 0 : netSuiteId.hashCode());
 		result = prime * result
+				+ ((occurredAt == null) ? 0 : occurredAt.hashCode());
+		result = prime * result
 				+ ((timestamp == null) ? 0 : timestamp.hashCode());
 		result = prime
 				* result
@@ -123,6 +132,11 @@ public class DeviceConnection {
 				return false;
 		} else if (!netSuiteId.equals(other.netSuiteId))
 			return false;
+		if (occurredAt == null) {
+			if (other.occurredAt != null)
+				return false;
+		} else if (!occurredAt.equals(other.occurredAt))
+			return false;
 		if (timestamp == null) {
 			if (other.timestamp != null)
 				return false;
@@ -147,7 +161,7 @@ public class DeviceConnection {
 				+ carrierName + ", transactionStatus=" + transactionStatus
 				+ ", transactionErrorReason=" + transactionErrorReason
 				+ ", isValid=" + isValid + ", event=" + Arrays.toString(event)
-				+ "]";
+				+ ", occurredAt=" + occurredAt + "]";
 	}
 
 	

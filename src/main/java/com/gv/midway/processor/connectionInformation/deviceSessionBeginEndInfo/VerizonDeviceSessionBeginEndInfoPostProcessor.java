@@ -163,6 +163,10 @@ public class VerizonDeviceSessionBeginEndInfoPostProcessor implements Processor 
 				sessionBeginEndResponseDataArea.setDeviceSession(deviceSessions
 						.toArray(new DeviceSession[deviceSessions.size()]));
 
+			} else {
+				response.setResponseCode(IResponse.SUCCESS_CODE);
+				response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+				response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_CONNECTION_STATUS);
 			}
 		} else {
 

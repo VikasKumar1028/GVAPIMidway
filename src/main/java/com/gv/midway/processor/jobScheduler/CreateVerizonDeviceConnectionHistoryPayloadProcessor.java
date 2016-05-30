@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import org.apache.camel.Exchange;
+import org.apache.camel.ExchangePattern;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
@@ -64,8 +65,6 @@ public class CreateVerizonDeviceConnectionHistoryPayloadProcessor implements
 
 		exchange.getIn().setBody(strRequestBody);
 
-		exchange.getIn().setBody(strRequestBody);
-
 		Message message = exchange.getIn();
 		String sessionToken = "";
 		String authorizationToken = "";
@@ -77,14 +76,21 @@ public class CreateVerizonDeviceConnectionHistoryPayloadProcessor implements
 			authorizationToken = exchange.getProperty(
 					IConstant.VZ_AUTHORIZATION_TOKEN).toString();
 		}
+		
+		message.setHeader("VZ-M2M-Token",
+	              "1d1f8e7a-c8bb-4f3c-a924-cf612b562425");
+	              message.setHeader("Authorization",
+	              "Bearer 89ba225e1438e95bd05c3cc288d3591");
 
-		message.setHeader("VZ-M2M-Token", sessionToken);
-		message.setHeader("Authorization", "Bearer " + authorizationToken);
+		/*message.setHeader("VZ-M2M-Token", sessionToken);
+		message.setHeader("Authorization", "Bearer " + authorizationToken);*/
 		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.HTTP_METHOD, "POST");
 		message.setHeader(Exchange.HTTP_PATH,
 				"/devices/connections/actions/listHistory");
+		
+		exchange.setPattern(ExchangePattern.InOut);
 
 	}
 

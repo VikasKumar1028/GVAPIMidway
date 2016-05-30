@@ -12,7 +12,11 @@ public class GetDeviceUsageRouter {
 		log.info("************Device Usage Information ROUTER*************"
 				+ deviceInfo.toString());
 
-		return "seda:getDeviceUsageInformation";
+		if (deviceInfo.getBs_carrier().equalsIgnoreCase("Verizon"))
+			return "seda:getDeviceUsageInformationForVerizon";
+		else if (deviceInfo.getBs_carrier().equalsIgnoreCase("Kore"))
+			return "seda:getDeviceUsageInformationForKore";
 
+		return null;
 	}
 }
