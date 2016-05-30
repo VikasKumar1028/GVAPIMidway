@@ -164,13 +164,6 @@ public interface IAdaptaionLayerService {
 	SessionBeginEndResponse deviceSessionBeginEndResponse(
 			ConnectionInformationRequest connectionInformationRequest);
 	
-	@POST
-	@Path("/devices/job")
-	@Produces("application/json")
-	@Consumes("application/json")
-	@ApiOperation(value = "Start Batch Job")
-	void startJob(JobParameter jobParameterRequest);
-	
 	
 	@POST
 	@Path("/devices/job/usage/transactionFailure")
@@ -187,7 +180,7 @@ public interface IAdaptaionLayerService {
 	void transactionFailureConnectionHistoryJob(JobParameter jobParameter);
 	
 	@POST
-	@Path("/devices/job/connectionHistory/reRun")
+	@Path("/devices/job/usage/reRun")
 	@Produces("application/json")
 	@Consumes("application/json")
 	@ApiOperation(value = "Rerun Device Usage Job")
@@ -197,6 +190,6 @@ public interface IAdaptaionLayerService {
 	@Path("/devices/job/connectionHistory/reRun")
 	@Produces("application/json")
 	@Consumes("application/json")
-	@ApiOperation(value = "reRun Device Connection History Job")
+	@ApiOperation(value = "Rerun Device Connection History Job")
 	void reRunConnectionHistoryJob(JobParameter jobParameter);
 }

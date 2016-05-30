@@ -207,11 +207,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 				changeDeviceServicePlansRequest);
 	}
 
-	@Override
-	public void startJob(JobParameter jobParameterRequest) {
-		producer.requestBody("direct:startJob", jobParameterRequest);
 
-	}
 
 	@Override
 	public void transactionFailureDeviceUsageJob(JobParameter jobParameter) {
@@ -219,10 +215,10 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 		JobDetail jobDetail = new JobDetail();
 		jobDetail.setType(JobType.TRANSACTION_FAILURE);
 		jobDetail.setDate(jobParameter.getDate());
-		if ("KORE".equals(jobParameter.getCarrierName())) {
+		if ("KORE".equals(jobParameter.getCarrierName().toString())) {
 			jobDetail.setName(JobName.KORE_DEVICE_USAGE);
 			jobDetail.setCarrierName(CarrierType.KORE.toString());
-		} else if ("VERIZON".equals(jobParameter.getCarrierName())) {
+		} else if ("VERIZON".equals(jobParameter.getCarrierName().toString())) {
 			jobDetail.setName(JobName.VERIZON_DEVICE_USAGE);
 			jobDetail.setCarrierName(CarrierType.VERIZON.toString());
 		}
@@ -237,7 +233,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 		JobDetail jobDetail = new JobDetail();
 		jobDetail.setType(JobType.TRANSACTION_FAILURE);
 		jobDetail.setDate(jobParameter.getDate());
-		if ("VERIZON".equals(jobParameter.getCarrierName())) {
+		if ("VERIZON".equals(jobParameter.getCarrierName().toString())) {
 			jobDetail.setName(JobName.VERIZON_CONNECTION_HISTORY);
 			jobDetail.setCarrierName(CarrierType.VERIZON.toString());
 		}
@@ -248,18 +244,19 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 
 	@Override
 	public void reRunDeviceUsageJob(JobParameter jobParameter) {
+		
 
 		JobDetail jobDetail = new JobDetail();
 		jobDetail.setType(JobType.RERUN);
 		jobDetail.setDate(jobParameter.getDate());
-		if ("KORE".equals(jobParameter.getCarrierName())) {
+		if ("KORE".equals(jobParameter.getCarrierName().toString())) {
 			jobDetail.setName(JobName.KORE_DEVICE_USAGE);
 			jobDetail.setCarrierName(CarrierType.KORE.toString());
-		} else if ("VERIZON".equals(jobParameter.getCarrierName())) {
+		} else if ("VERIZON".equals(jobParameter.getCarrierName().toString())) {
 			jobDetail.setName(JobName.VERIZON_DEVICE_USAGE);
 			jobDetail.setCarrierName(CarrierType.VERIZON.toString());
+			
 		}
-
 		producer.requestBody("direct:startJob", jobDetail);
 
 	}
@@ -270,7 +267,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 		JobDetail jobDetail = new JobDetail();
 		jobDetail.setType(JobType.RERUN);
 		jobDetail.setDate(jobParameter.getDate());
-		if ("VERIZON".equals(jobParameter.getCarrierName())) {
+		if ("VERIZON".equals(jobParameter.getCarrierName().toString())) {
 			jobDetail.setCarrierName(CarrierType.VERIZON.toString());
 			jobDetail.setName(JobName.VERIZON_CONNECTION_HISTORY);
 		}

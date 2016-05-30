@@ -2,7 +2,6 @@ package com.gv.midway.dao.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.camel.Exchange;
@@ -25,40 +24,43 @@ public class JobDaoImpl implements IJobDao {
 
 	@Override
 	public List fetchDevices(Exchange exchange) {
+
+		JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
 		
-		JobParameter jobParameter = (JobParameter) exchange.getIn().getBody();
-	
+		exchange.setProperty("jobName", jobDetail.getName().toString());
+
 		List<DeviceInformation> deviceInformationList = null;
-		List<DeviceInformation> list=null;
+		List<DeviceInformation> list = null;
 
 		try {
+
+			String carrierName = jobDetail.getCarrierName();
+
 			
-			String carrierName=jobParameter.getCarrierName().toString();
-		
-			//We have to check number of bs_carrier
+			System.out.println("Carrier Name -----------------"+carrierName );
+			// We have to check number of bs_carrier
 			Query searchDeviceQuery = new Query(Criteria.where("bs_carrier")
 					.is(carrierName));
-			
+
 			deviceInformationList = mongoTemplate.find(searchDeviceQuery,
 					DeviceInformation.class);
-			
-			list = new ArrayList<DeviceInformation>(Collections.nCopies(10000,deviceInformationList.get(0) ));
 
-			System.out.println("deviceInformationList"+deviceInformationList);
+			list = new ArrayList<DeviceInformation>(Collections.nCopies(2,
+					deviceInformationList.get(0)));
+
+			System.out.println("deviceInformationList" + deviceInformationList);
 		}
 
 		catch (Exception e) {
 			System.out.println("e");
 		}
 
-		//return deviceInformationList;
+		// return deviceInformationList;
 		return list;
 	}
 
 	@Override
 	public void insertJobDetails(Exchange exchange) {
-		// TODO Auto-generated method stub
-
 		JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
 		
 		mongoTemplate.insert(jobDetail);
