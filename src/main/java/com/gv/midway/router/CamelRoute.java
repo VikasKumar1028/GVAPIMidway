@@ -355,6 +355,9 @@ public class CamelRoute extends RouteBuilder {
 		// Execution of schduled jobs scheduledJobs
 		/* scheduledJobs(); */
 
+		deviceConnectionHistoryJob();
+		deviceUsageHistoryJob();
+		
 		startJob();
 	}
 
@@ -1114,7 +1117,7 @@ public class CamelRoute extends RouteBuilder {
 	
 	public void deviceConnectionHistoryJob() {
 		from(
-				"quartz2://job/deviceDetailsTimer?cron="
+				"quartz2://job/deviceDetailsConnectionTimer?cron="
 						+ IConstant.JOB_TIME_CONFIGURATION)
 				.to("direct:tokenGeneration")
 				.bean(iSessionService, "setContextTokenInExchange")
@@ -1123,18 +1126,20 @@ public class CamelRoute extends RouteBuilder {
 				.method("getDeviceConnectionRouter");
 
 		from("seda:getDeviceConnectionInformation?concurrentConsumers=5")
+				.doTry()
 				.process(
 						new CreateVerizonDeviceConnectionHistoryPayloadProcessor())
 				.to(uriRestVerizonEndPoint).unmarshal()
 				.json(JsonLibrary.Jackson)
 				.process(new VerizonConnectionHistoryPreProcessor())
-				.bean(iSchedulerService, "saveDeviceConnectionHistory").end();
+				.bean(iSchedulerService, "saveDeviceConnectionHistory")
+				.doCatch(Exception.class).end();
 
 	}
 
 	public void deviceUsageHistoryJob() {
 		from(
-				"quartz2://job/deviceDetailsTimer?cron="
+				"quartz2://job/deviceDetailsUsageTimer?cron="
 						+ IConstant.JOB_TIME_CONFIGURATION)
 				.to("direct:tokenGeneration")
 				.bean(iSessionService, "setContextTokenInExchange")
@@ -1143,20 +1148,24 @@ public class CamelRoute extends RouteBuilder {
 				.method("getDeviceUsageRouter");
 
 		from("seda:getDeviceUsageInformationForVerizon?concurrentConsumers=5")
+				.doTry()
 				.process(new CreateVerizonDeviceUsageHistoryPayloadProcessor())
 				.to(uriRestVerizonEndPoint).unmarshal()
 				.json(JsonLibrary.Jackson)
 				.process(new VerizonUsageHistoryPreProcessor())
-				.bean(iSchedulerService, "saveDeviceUsageHistory").end();
+				.bean(iSchedulerService, "saveDeviceUsageHistory")
+				.doCatch(Exception.class).end();
 
 		from("seda:getDeviceUsageInformationForKore?concurrentConsumers=5")
-				.process(
-						new CreateKoreDeviceUsageHistoryPayloadProcessor())
+				.doTry()
+				.process(new CreateKoreDeviceUsageHistoryPayloadProcessor())
 				.to(uriRestKoreEndPoint).unmarshal().json(JsonLibrary.Jackson)
 				.process(new KoreUsageHistoryPreProcessor())
-				.bean(iSchedulerService, "saveDeviceUsageHistory").end();
+				.bean(iSchedulerService, "saveDeviceUsageHistory")
+				.doCatch(Exception.class).end();
 
 	}
+	
 	public void startJob() {
 
 		from("direct:startJob").log("*********************************direct:startJob").to("direct:processJob");
