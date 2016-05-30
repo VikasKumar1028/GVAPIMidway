@@ -67,6 +67,9 @@ public interface IConstant {
 	static String KORE_CHECKSTATUS_COMPLETED="Completed";
 	static String KORE_CHECKSTATUS_CONNECTION_ERROR="KoreCheckStausConnection Error";
 	
+	static String BSCARRIER_SERVICE_VERIZON = "VERIZON";
+	static String BSCARRIER_SERVICE_KORE = "KORE";
+	
 	// Job is scheduled to run every day at 2 in the morning.
 	/*static String JOB_TIME_CONFIGURATION = "0+0+02+*+*+?";*/
 	

@@ -13,9 +13,9 @@ public class GetDeviceUsageRouter {
 		log.info("************Device Usage Information ROUTER*************"
 				+ deviceInfo.toString());
 
-		if (deviceInfo.getBs_carrier().equalsIgnoreCase(IConstant.BSCARRIER_VERIZON))
+		if (deviceInfo.getBs_carrier().equalsIgnoreCase(IConstant.BSCARRIER_SERVICE_VERIZON))
 			return "seda:getDeviceUsageInformationForVerizon";
-		else if (deviceInfo.getBs_carrier().equalsIgnoreCase(IConstant.BSCARRIER_KORE))
+		else if (deviceInfo.getBs_carrier().equalsIgnoreCase(IConstant.BSCARRIER_SERVICE_KORE))
 			return "seda:getDeviceUsageInformationForKore";
 
 		return null;

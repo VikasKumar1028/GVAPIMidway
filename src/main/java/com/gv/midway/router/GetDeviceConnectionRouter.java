@@ -13,7 +13,7 @@ public class GetDeviceConnectionRouter {
 		log.info("************Device Connection Information ROUTER*************"
 				+ deviceInfo.toString());
 
-		if(deviceInfo.getBs_carrier().equalsIgnoreCase(IConstant.BSCARRIER_VERIZON))
+		if(deviceInfo.getBs_carrier().equalsIgnoreCase(IConstant.BSCARRIER_SERVICE_VERIZON))
 			return "seda:getDeviceConnectionInformation";
 		else return null;
 
