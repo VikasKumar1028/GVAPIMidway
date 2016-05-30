@@ -71,11 +71,10 @@ public interface IConstant {
 	static String BSCARRIER_SERVICE_KORE = "KORE";
 	
 	// Job is scheduled to run every day at 2 in the morning.
-	/*static String JOB_TIME_CONFIGURATION = "0+0+02+*+*+?";*/
+	static String JOB_TIME_CONFIGURATION = "0+0+02+*+*+?";
 	
 	static int DURATION = -24;
 	
-	static String JOB_TIME_CONFIGURATION = "0/15+*+*+*+*+?";
 	
 	
 	
