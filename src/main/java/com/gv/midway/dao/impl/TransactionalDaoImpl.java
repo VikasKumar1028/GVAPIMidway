@@ -974,7 +974,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				transaction.setTimeStampReceived(currentDataTime);
 				transaction.setAuditTransactionId(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
 				transaction.setRequestType(RequestType.CHNAGESERVICEPLAN);
-
+				transaction.setCallBackReceived(false);
 				list.add(transaction);
 
 			} catch (Exception ex) {

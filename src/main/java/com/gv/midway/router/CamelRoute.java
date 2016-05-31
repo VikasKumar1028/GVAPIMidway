@@ -111,8 +111,7 @@ import com.gv.midway.service.ITransactionalService;
  * @version
  */
 @PropertySource({ "classpath:stub.properties", "classpath:midway.properties",
-		"classpath:koreAuthentication.properties",
-		"classpath:verizonAuthentication.properties" })
+		"classpath:env.properties" })
 @Component
 public class CamelRoute extends RouteBuilder {
 

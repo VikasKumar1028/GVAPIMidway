@@ -19,5 +19,13 @@ public interface IEndPoints {
 	public final String RESTORE_SEDA_KORE_ENDPOINT = "koreSedaRestore";
 	
 	public final String SUSPENSION_SEDA_KORE_ENDPOINT = "koreSedaSuspend";
+	
+	public final String CHANGE_CUSTOMFIELD_ENDPOINT = "customeFields";
+	
+	public final String CHANGE_SERVICEPLAN_ENDPOINT = "changeDeviceServicePlans";
+	
+	public final String CHANGE_SERVICEPLAN_SEDA_KORE_ENDPOINT = "koreSedachangeDeviceServicePlans";
+	
+	public final String CHANGE_CUSTOMFIELD_SEDA_KORE_ENDPOINT = "koreSedacustomeFields";
 
 }
