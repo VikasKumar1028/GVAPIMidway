@@ -81,6 +81,51 @@
                </execution>
             </executions>
          </plugin>
+         
+          <plugin>
+            <groupId>com.google.code.maven-replacer-plugin</groupId>
+            <artifactId>replacer</artifactId>
+            <version>1.5.3</version>
+            
+            <executions>                
+                <execution>
+                <id>1</id>
+                    <phase>initialize</phase>
+                    <goals>
+                        <goal>replace</goal>
+                    </goals>    
+       <configuration>
+                <file>${project.build.outputDirectory}/../../src/main/webapp/dist/index.html</file>
+                <replacements>
+                    <replacement>
+                        <token>localhost:8080</token>
+                        <value>mid2.gv.systems:8080</value>
+                    </replacement>
+                </replacements>
+                    
+            </configuration>
+                 </execution>
+                 
+                  <execution>
+                <id>2</id>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>replace</goal>
+                    </goals>    
+       <configuration>
+                <file>${project.build.outputDirectory}/../../src/main/webapp/dist/index.html</file>
+                <replacements>
+                    <replacement>
+                        <token>mid2.gv.systems:8080</token>
+                        <value>localhost:8080</value>
+                    </replacement>
+                </replacements>
+                    
+            </configuration>
+                 </execution>
+                 
+                 </executions>
+            </plugin>
 			
       </plugins>
     
@@ -111,6 +156,52 @@
                </execution>
             </executions>
          </plugin>
+         
+          <plugin>
+            <groupId>com.google.code.maven-replacer-plugin</groupId>
+            <artifactId>replacer</artifactId>
+            <version>1.5.3</version>
+            
+            <executions>                
+                <execution>
+                <id>1</id>
+                    <phase>initialize</phase>
+                    <goals>
+                        <goal>replace</goal>
+                    </goals>    
+       <configuration>
+                <file>${project.build.outputDirectory}/../../src/main/webapp/dist/index.html</file>
+                <replacements>
+                    <replacement>
+                        <token>localhost:8080</token>
+                        <value>mid1.gv.systems:8080</value>
+                    </replacement>
+                </replacements>
+                    
+            </configuration>
+                 </execution>
+                 
+                  <execution>
+                <id>2</id>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>replace</goal>
+                    </goals>    
+       <configuration>
+                <file>${project.build.outputDirectory}/../../src/main/webapp/dist/index.html</file>
+                <replacements>
+                    <replacement>
+                        <token>mid1.gv.systems:8080</token>
+                        <value>localhost:8080</value>
+                    </replacement>
+                </replacements>
+                    
+            </configuration>
+                 </execution>
+                 
+                 </executions>
+            </plugin>
+            
       </plugins>
       </build>
       
