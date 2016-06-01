@@ -88,7 +88,8 @@ public class CreateDeviceHistoryPayloadProcessor implements Processor {
 		} else if(exchange.getFromEndpoint().toString()
 				.matches("(.*)DeviceUsage	Information(.*)")){
 			message.setHeader(Exchange.HTTP_PATH, "/devices/actions/list"); 	}*/
-		message.setHeader(Exchange.HTTP_PATH, "/devices/connections/actions/listHistory");
+		//message.setHeader(Exchange.HTTP_PATH, "/devices/connections/actions/listHistory");
+		message.setHeader(Exchange.HTTP_PATH, "/devices/usage/actions/list");
 	
 		
 	}

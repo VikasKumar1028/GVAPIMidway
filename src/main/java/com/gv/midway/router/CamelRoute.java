@@ -1164,7 +1164,6 @@ public class CamelRoute extends RouteBuilder {
 				.doCatch(Exception.class).end();
 
 	}
-	
 	public void startJob() {
 
 		from("direct:startJob").log("*********************************direct:startJob").to("direct:processJob");
@@ -1197,13 +1196,23 @@ public class CamelRoute extends RouteBuilder {
 	
 			from("seda:processVerizonDeviceUsageJob?concurrentConsumers=5")
 			.log("VERIZONJob-DEVICE USAGE")
+			.doTry()
 			.bean(iSessionService, "setContextTokenInExchange")
-			.process(new CreateDeviceHistoryPayloadProcessor())
+			.process(new CreateVerizonDeviceUsageHistoryPayloadProcessor())
+				.to(uriRestVerizonEndPoint).unmarshal()
+				.json(JsonLibrary.Jackson)
+				.process(new VerizonUsageHistoryPreProcessor())
+				.bean(iSchedulerService, "saveDeviceUsageHistory")
+			
+			
+/*			.process(new CreateDeviceHistoryPayloadProcessor())
 			.to(uriRestVerizonEndPoint).unmarshal()
 			.json(JsonLibrary.Jackson)
-			.end();
-			//.bean(iSchedulerService, "saveDeviceUsageHistory").end();
 			
+			.bean(iSchedulerService, "saveDeviceUsageHistory")*/
+			.doCatch(CxfOperationException.class)
+			.log("TOKEN ERROR *********************************")
+			.process(new VerizonGenericExceptionProcessor(env)).endDoTry();
 		
 		
 					
@@ -1232,4 +1241,5 @@ public class CamelRoute extends RouteBuilder {
 		
 		
 	}
+
 }

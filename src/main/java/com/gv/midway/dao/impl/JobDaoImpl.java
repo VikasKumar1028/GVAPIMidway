@@ -45,7 +45,7 @@ public class JobDaoImpl implements IJobDao {
 			deviceInformationList = mongoTemplate.find(searchDeviceQuery,
 					DeviceInformation.class);
 
-			list = new ArrayList<DeviceInformation>(Collections.nCopies(2,
+			list = new ArrayList<DeviceInformation>(Collections.nCopies(10000,
 					deviceInformationList.get(0)));
 
 			System.out.println("deviceInformationList" + deviceInformationList);
@@ -55,8 +55,8 @@ public class JobDaoImpl implements IJobDao {
 			System.out.println("e");
 		}
 
-		// return deviceInformationList;
-		return list;
+		 return list;
+		//return deviceInformationList;
 	}
 
 	@Override

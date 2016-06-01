@@ -52,7 +52,13 @@ public class VerizonGenericExceptionProcessor implements Processor {
 		log.info("----.getStatusCode()----------" + exception.getStatusCode());
 
 		Header responseHeader = new Header();
+System.out.println(exchange
+		.getFromEndpoint().toString());
 
+//Ignoring Batch Jobs
+		if (!exchange
+				.getFromEndpoint().toString().contains("Endpoint[seda://processVerizonDeviceUsageJob")){
+			
 		responseHeader.setApplicationName(exchange.getProperty(
 				IConstant.APPLICATION_NAME).toString());
 		responseHeader.setRegion(exchange.getProperty(IConstant.REGION)
@@ -68,7 +74,7 @@ public class VerizonGenericExceptionProcessor implements Processor {
 		responseHeader.setTransactionId(exchange.getProperty(
 				IConstant.GV_TRANSACTION_ID).toString());
 		responseHeader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
-				.toString());
+				.toString());}
 
 		Response response = new Response();
 		// TODO SAME Functionality
