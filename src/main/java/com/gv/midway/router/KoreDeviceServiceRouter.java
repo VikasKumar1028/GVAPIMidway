@@ -57,7 +57,7 @@ public class KoreDeviceServiceRouter {
 
 			return "seda:koreSedacustomeFields";
 
-		case CHNAGESERVICEPLAN:
+		case CHANGESERVICEPLAN:
 
 			return "seda:koreSedachangeDeviceServicePlans";
 

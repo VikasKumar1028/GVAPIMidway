@@ -973,7 +973,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				transaction.setCarrierName(exchange.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString());
 				transaction.setTimeStampReceived(currentDataTime);
 				transaction.setAuditTransactionId(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
-				transaction.setRequestType(RequestType.CHNAGESERVICEPLAN);
+				transaction.setRequestType(RequestType.CHANGESERVICEPLAN);
 				transaction.setCallBackReceived(false);
 				list.add(transaction);
 

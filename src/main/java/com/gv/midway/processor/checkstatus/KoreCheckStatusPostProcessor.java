@@ -92,7 +92,7 @@ public class KoreCheckStatusPostProcessor implements Processor {
 
 			break;
 
-		case CHNAGESERVICEPLAN:
+		case CHANGESERVICEPLAN:
 
 			response.setResponseDescription("Device Service Plan Changed Successfully.");
 
