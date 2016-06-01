@@ -27,6 +27,7 @@ import com.gv.midway.processor.BulkDeviceProcessor;
 import com.gv.midway.processor.GenericErrorProcessor;
 import com.gv.midway.processor.HeaderProcessor;
 import com.gv.midway.processor.KoreGenericExceptionProcessor;
+import com.gv.midway.processor.VerizonBatchExceptionProcessor;
 import com.gv.midway.processor.VerizonGenericExceptionProcessor;
 import com.gv.midway.processor.activateDevice.KoreActivateDevicePostProcessor;
 import com.gv.midway.processor.activateDevice.KoreActivateDevicePreProcessor;
@@ -47,7 +48,6 @@ import com.gv.midway.processor.changeDeviceServicePlans.VerizonChangeDeviceServi
 import com.gv.midway.processor.checkstatus.KoreCheckStatusErrorProcessor;
 import com.gv.midway.processor.checkstatus.KoreCheckStatusPostProcessor;
 import com.gv.midway.processor.checkstatus.KoreCheckStatusPreProcessor;
-import com.gv.midway.processor.connectionInformation.CreateDeviceHistoryPayloadProcessor;
 import com.gv.midway.processor.connectionInformation.VerizonDeviceConnectionInformationPreProcessor;
 import com.gv.midway.processor.connectionInformation.deviceConnectionStatus.StubVerizonDeviceConnectionStatusProcessor;
 import com.gv.midway.processor.connectionInformation.deviceConnectionStatus.VerizonDeviceConnectionStatusPostProcessor;
@@ -1194,7 +1194,7 @@ public class CamelRoute extends RouteBuilder {
 			//Post Processor			
 			log("KOREJob-DEVICE USAGE");
 	
-			from("seda:processVerizonDeviceUsageJob?concurrentConsumers=5")
+			from("seda:processVerizonDeviceUsageJob?concurrentConsumers=10")
 			.log("VERIZONJob-DEVICE USAGE")
 			.doTry()
 			.bean(iSessionService, "setContextTokenInExchange")
@@ -1212,7 +1212,7 @@ public class CamelRoute extends RouteBuilder {
 			.bean(iSchedulerService, "saveDeviceUsageHistory")*/
 			.doCatch(CxfOperationException.class)
 			.log("TOKEN ERROR *********************************")
-			.process(new VerizonGenericExceptionProcessor(env)).endDoTry();
+			.process(new VerizonBatchExceptionProcessor(env)).endDoTry();
 		
 		
 					
