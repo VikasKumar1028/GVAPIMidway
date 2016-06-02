@@ -77,6 +77,7 @@ import com.gv.midway.processor.jobScheduler.CreateVerizonDeviceUsageHistoryPaylo
 import com.gv.midway.processor.jobScheduler.KoreUsageHistoryPreProcessor;
 import com.gv.midway.processor.jobScheduler.VerizonConnectionHistoryPreProcessor;
 import com.gv.midway.processor.jobScheduler.VerizonUsageHistoryPreProcessor;
+import com.gv.midway.processor.kafka.KafkaProcessor;
 import com.gv.midway.processor.reactivate.KoreReactivateDevicePostProcessor;
 import com.gv.midway.processor.reactivate.KoreReactivateDevicePreProcessor;
 import com.gv.midway.processor.reactivate.StubKoreReactivateDeviceProcessor;
@@ -283,8 +284,10 @@ public class CamelRoute extends RouteBuilder {
 															 */
 				doCatch(Exception.class)
 				.bean(iTransactionalService, "updateNetSuiteCallBackError")
-				.doFinally()
-				.bean(iTransactionalService, "updateNetSuiteCallBack").end();
+				.doFinally() 
+				.bean(iTransactionalService, "updateNetSuiteCallBack").process(new KafkaProcessor(env)).
+				to("kafka:"+env.getProperty("kafka.endpoint")+",?topic=midway-app-errors").
+				end();
 
 		from("direct:koreCustomChangeSubProcess")
 				.bean(iTransactionalService, "populateKoreCustomChangeResponse")
@@ -296,7 +299,9 @@ public class CamelRoute extends RouteBuilder {
 				doCatch(Exception.class)
 				.bean(iTransactionalService, "updateNetSuiteCallBackError")
 				.doFinally()
-				.bean(iTransactionalService, "updateNetSuiteCallBack").end();
+				.bean(iTransactionalService, "updateNetSuiteCallBack").process(new KafkaProcessor(env)).
+				to("kafka:"+env.getProperty("kafka.endpoint")+",?topic=midway-alerts").
+				end();
 
 		from("direct:koreCheckStatusSubProcess")
 				.bean(iTransactionalService, "populateKoreCheckStatusResponse")
@@ -308,7 +313,9 @@ public class CamelRoute extends RouteBuilder {
 				doCatch(Exception.class)
 				.bean(iTransactionalService, "updateNetSuiteCallBackError")
 				.doFinally()
-				.bean(iTransactionalService, "updateNetSuiteCallBack").end();
+				.bean(iTransactionalService, "updateNetSuiteCallBack").process(new KafkaProcessor(env)).
+				to("kafka:"+env.getProperty("kafka.endpoint")+",?topic=midway-alerts").
+				end();
 
 		/** Main Change Device Service Plans Flow **/
 

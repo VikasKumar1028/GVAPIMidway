@@ -6,11 +6,9 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
-
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.ITransaction;
 import com.gv.midway.constant.RequestType;
-import com.gv.midway.pojo.BaseRequest;
 import com.gv.midway.pojo.transaction.Transaction;
 
 public class KoreCheckStatusPreProcessor implements Processor {
@@ -43,10 +41,10 @@ public class KoreCheckStatusPreProcessor implements Processor {
 
 		Object payload = transaction.getDevicePayload();
 
-		BaseRequest baseRequest = (BaseRequest) payload;
+		//BaseRequest baseRequest = (BaseRequest) payload;
 
-		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_REQUEST_HEADER,
-				baseRequest.getHeader());
+		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_PAYLOAD,
+				payload);
 
 		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,
 				transaction.getDeviceNumber());
@@ -73,7 +71,7 @@ public class KoreCheckStatusPreProcessor implements Processor {
 
 		}
 
-		// carrier status as Pending and request Type is Change CustomFileds or
+		// carrier status as Success and request Type is Change CustomFileds or
 		// Change Service Plans
 		else if (carrierStatus
 				.equals(IConstant.CARRIER_TRANSACTION_STATUS_SUCCESS)) {

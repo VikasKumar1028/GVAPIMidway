@@ -1,21 +1,21 @@
 package com.gv.midway.processor.checkstatus;
 
-import java.util.List;
+import java.util.Date;
+
 import org.apache.camel.Exchange;
+import org.apache.camel.ExchangePattern;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.TypeFactory;
+
 import com.gv.midway.constant.IConstant;
-import com.gv.midway.constant.IResponse;
 import com.gv.midway.constant.RequestType;
+import com.gv.midway.pojo.BaseRequest;
 import com.gv.midway.pojo.Header;
-import com.gv.midway.pojo.Response;
-import com.gv.midway.pojo.callback.common.response.CallbackCommonResponse;
-import com.gv.midway.pojo.callback.common.response.CallbackCommonResponseDataArea;
-import com.gv.midway.pojo.verizon.DeviceId;
+import com.gv.midway.pojo.callback.Netsuite.KeyValues;
+import com.gv.midway.pojo.callback.Netsuite.NetSuiteCallBackEvent;
+
 
 public class KoreCheckStatusPostProcessor implements Processor {
 
@@ -53,7 +53,7 @@ public class KoreCheckStatusPostProcessor implements Processor {
 		RequestType requestType = (RequestType) exchange
 				.getProperty(IConstant.MIDWAY_TRANSACTION_REQUEST_TYPE);
 
-		CallbackCommonResponse callbackCommonResponse = new CallbackCommonResponse();
+		/*CallbackCommonResponse callbackCommonResponse = new CallbackCommonResponse();
 
 		Header header = (Header) exchange
 				.getProperty(IConstant.MIDWAY_TRANSACTION_REQUEST_HEADER);
@@ -126,7 +126,52 @@ public class KoreCheckStatusPostProcessor implements Processor {
 		callbackCommonResponse.setHeader(header);
 		callbackCommonResponse.setResponse(response);
 
-		callbackCommonResponse.setDataArea(callbackCommonResponseDataArea);
+		callbackCommonResponse.setDataArea(callbackCommonResponseDataArea);*/
+		
+	    NetSuiteCallBackEvent netSuiteCallBackEvent =new NetSuiteCallBackEvent();
+		
+	    netSuiteCallBackEvent.setApp("Midway");
+	    netSuiteCallBackEvent.setCategory("Kore Call Back Success");
+	    netSuiteCallBackEvent.setId(requestType.toString());
+	    netSuiteCallBackEvent.setLevel("Info");
+	    netSuiteCallBackEvent.setTimestamp(new Date().getTime());
+	    netSuiteCallBackEvent.setVersion("1");
+		
+	    netSuiteCallBackEvent.setMsg("Succesfull Call Back from Kore.");
+		
+        String desc="Succesfull callBack from Kore For "+midWayTransactionDeviceNumber +", transactionId "+midWayTransactionId +"and request Type is "+requestType;
+		
+        netSuiteCallBackEvent.setDesc(desc);
+		
+		Object body = exchange
+				.getProperty(IConstant.MIDWAY_TRANSACTION_PAYLOAD);
+		
+		netSuiteCallBackEvent.setBody(body);
+		
+		BaseRequest baseRequest=(BaseRequest) body;
+		
+		Header header= baseRequest.getHeader();
+		
+		KeyValues keyValues1=new KeyValues();
+		
+		keyValues1.setK("transactionId");
+		keyValues1.setV(header.getTransactionId());
+		
+        KeyValues keyValues2=new KeyValues();
+		
+		keyValues2.setK("midwayTransactionId");
+		keyValues2.setV(midWayTransactionId);
+		
+		KeyValues[] keyValuesArr=new KeyValues[2];
+		
+		keyValuesArr[0]=keyValues1;
+		keyValuesArr[1]=keyValues2;
+		
+		netSuiteCallBackEvent.setKeyValues(keyValuesArr);
+		
+		message.setBody(netSuiteCallBackEvent);
+		
+		
 
 	}
 

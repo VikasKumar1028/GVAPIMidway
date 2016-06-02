@@ -30,6 +30,7 @@ public interface IConstant {
 	static String CARRIER_TRANSACTION_ID="CarrierTransactionId";
 	static String MIDWAY_TRANSACTION_REQUEST_TYPE="midWayTransactionRequestType";
 	static String MIDWAY_TRANSACTION_REQUEST_HEADER="midWayTransactionRequestHeader";
+	static String MIDWAY_TRANSACTION_PAYLOAD="midWayTransactionPayload";
 	static String MIDWAY_CARRIER_ERROR_DESC="midWayCarrierErrorDescription";
 	
 	static String MIDWAY_CALLBACK_CARRIER_STATUS_SUCCESS="Success";
