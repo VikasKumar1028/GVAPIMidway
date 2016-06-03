@@ -6,6 +6,9 @@ import org.apache.log4j.Logger;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gv.midway.constant.IConstant;
+import com.gv.midway.pojo.callback.Netsuite.NetSuiteCallBackError;
+import com.gv.midway.pojo.callback.Netsuite.NetSuiteCallBackEvent;
 import com.gv.midway.pojo.callback.common.response.CallbackCommonResponse;
 
 public class CallbackPostProcessor implements Processor {
@@ -19,7 +22,7 @@ public class CallbackPostProcessor implements Processor {
 		 * kafka
 		 */
 		log.info("Callback Post Processor >>> " + exchange.getIn().getBody());
-		CallbackCommonResponse req = (CallbackCommonResponse) exchange.getIn().getBody(CallbackCommonResponse.class);
+		/*CallbackCommonResponse req = (CallbackCommonResponse) exchange.getIn().getBody(CallbackCommonResponse.class);
 		ObjectMapper objectMapper = new ObjectMapper();
 		byte[] bytes = null;
 		try {
@@ -28,7 +31,27 @@ public class CallbackPostProcessor implements Processor {
 		} catch (JsonProcessingException e) {
 		}
 
-		exchange.getIn().setBody(bytes);
+		exchange.getIn().setBody(bytes);*/
+		
+		Object obj= exchange.getIn().getBody();
+		
+		// Send the error Payload to NetSuite in callback.
+		if(obj instanceof NetSuiteCallBackError){
+			
+			NetSuiteCallBackError netSuiteCallBackError=(NetSuiteCallBackError) obj;
+			
+			exchange.setProperty("topicName", "midway-app-errors");
+			
+			
+		}
+		
+		// Send the Successful CallBack Payload to NetSuite in callback.
+		else{
+			
+			NetSuiteCallBackEvent netSuiteCallBackEvent=(NetSuiteCallBackEvent) obj;
+			
+			exchange.setProperty("topicName", "midway-alerts");
+		}
 	}
 
 }

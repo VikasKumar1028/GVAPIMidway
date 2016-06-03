@@ -35,16 +35,19 @@ public class KafkaProcessor implements Processor {
 		
 		Object object=exchange.getIn().getBody();
 		
-		log.debug(object.getClass().getName());
+		log.info(object.getClass().getName());
 		
-		log.debug("Date to write in Kafka Queue is......."+object.toString());
+		log.info("Data to write in Kafka Queue is......."+object.toString());
+		
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		byte[] bytes = null;
 		try {
 			bytes = objectMapper.writeValueAsString(object).getBytes();
-			log.debug(" data converted to bytes...");
+			log.info(" data converted to bytes...");
 		} catch (JsonProcessingException e) {
+			
+			log.info("Exception in wrting the Kafka Queue is......."+e.getMessage()+ "for the paylaod.."+object.toString());
 		}
 
 		exchange.getIn().setBody(bytes);

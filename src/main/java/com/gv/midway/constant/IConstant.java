@@ -33,6 +33,8 @@ public interface IConstant {
 	static String MIDWAY_TRANSACTION_PAYLOAD="midWayTransactionPayload";
 	static String MIDWAY_CARRIER_ERROR_DESC="midWayCarrierErrorDescription";
 	
+	
+	
 	static String MIDWAY_CALLBACK_CARRIER_STATUS_SUCCESS="Success";
 	static String MIDWAY_CALLBACK_DELIVERED_FAILED="Fail";
 
@@ -67,6 +69,8 @@ public interface IConstant {
 	static String KORE_CHECKSTATUS_PENDING="Pending";
 	static String KORE_CHECKSTATUS_COMPLETED="Completed";
 	static String KORE_CHECKSTATUS_CONNECTION_ERROR="KoreCheckStausConnection Error";
+	
+	static String VERIZON_CALLBACK_RESPONE="VerizonCallBackResponse";
 	
 	static String BSCARRIER_SERVICE_VERIZON = "VERIZON";
 	static String BSCARRIER_SERVICE_KORE = "KORE";

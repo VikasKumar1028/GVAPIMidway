@@ -205,9 +205,27 @@ public class CamelRoute extends RouteBuilder {
 		from("direct:callbacks")
 				.bean(iTransactionalService, "populateCallbackDBPayload")
 				.process(new CallbackPreProcessor(env))
-				.bean(iTransactionalService, "findMidwayTransactionId")
-				.process(new CallbackPostProcessor())
-				.to("kafka:mid2.gv.local:9092,?topic=misc-verify-staging")
+				.bean(iTransactionalService, "findMidwayTransactionId").doTry()
+				.process(new CallbackPostProcessor())./*
+				 * to(
+				 * uriRestNetsuitEndPoint
+				 * ).
+				 */
+				doCatch(Exception.class)
+				.bean(iTransactionalService, "updateNetSuiteCallBackError")
+				.doFinally()
+				.bean(iTransactionalService, "updateNetSuiteCallBack")
+				.process(new KafkaProcessor(env)).log("kafka topic message" + 
+						simple("${exchangeProperty[topicName]}").getText()
+						).
+						onWhen(simple("${exchangeProperty[topicName]} == 'midway-alerts'"))
+						.to("kafka:" + env.getProperty("kafka.endpoint")
+								+ ",?topic=midway-alerts")
+						.onWhen(simple("${exchangeProperty[topicName]} == 'midway-app-errors'"))
+						.to("kafka:" + env.getProperty("kafka.endpoint")
+								+ ",?topic=midway-app-errors")
+				
+				
 				// .to("kafka:localhost:9092?topic=topic")
 				// .to("kafka:10.10.2.190:9092,10.10.2.190:9093,10.10.2.190:9094?topic=my-replicated-topic")
 				// .process(new CallbackKafkaPostProcessor())

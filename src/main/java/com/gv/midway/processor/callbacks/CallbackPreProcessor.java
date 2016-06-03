@@ -1,13 +1,18 @@
 package com.gv.midway.processor.callbacks;
 
 
+import java.util.Date;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
 
+import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.Response;
+import com.gv.midway.pojo.callback.Netsuite.NetSuiteCallBackError;
+import com.gv.midway.pojo.callback.Netsuite.NetSuiteCallBackEvent;
 import com.gv.midway.pojo.callback.common.response.CallbackCommonResponse;
 import com.gv.midway.pojo.callback.common.response.CallbackCommonResponseDataArea;
 import com.gv.midway.pojo.callback.request.CallBackVerizonRequest;
@@ -32,7 +37,7 @@ public class CallbackPreProcessor implements Processor {
 		CallBackVerizonRequest req = (CallBackVerizonRequest) exchange.getIn()
 				.getBody(CallBackVerizonRequest.class);
 
-		CallbackCommonResponse callbackResponse = new CallbackCommonResponse();
+	/*	CallbackCommonResponse callbackResponse = new CallbackCommonResponse();
 		CallbackCommonResponseDataArea callbackResponseDataArea = new CallbackCommonResponseDataArea();
 
 		callbackResponseDataArea.setRequestId(req.getRequestId());
@@ -57,7 +62,42 @@ public class CallbackPreProcessor implements Processor {
 		callbackResponse.setResponse(res);
 		callbackResponse.setDataArea(callbackResponseDataArea);
 
-		exchange.getIn().setBody(callbackResponse);
+		exchange.getIn().setBody(callbackResponse);*/
+		
+		exchange.setProperty(IConstant.VERIZON_CALLBACK_RESPONE,
+				req);
+		
+		if(req.getFaultResponse() != null) {
+
+			NetSuiteCallBackError netSuiteCallBackError =new NetSuiteCallBackError();
+			
+			netSuiteCallBackError.setApp("Midway");
+			netSuiteCallBackError.setCategory("Verizon Call Back Error");
+			//netSuiteCallBackError.setId(requestType.toString());
+			netSuiteCallBackError.setLevel("Error");
+			netSuiteCallBackError.setTimestamp(new Date().getTime());
+			netSuiteCallBackError.setVersion("1");
+			netSuiteCallBackError.setException(req.getFaultResponse().getFaultstring());
+			netSuiteCallBackError.setMsg("Error in Call Back from Verizon.");
+			exchange.getIn().setBody(netSuiteCallBackError);
+
+		} 
+		
+		else {
+			
+			   NetSuiteCallBackEvent netSuiteCallBackEvent =new NetSuiteCallBackEvent();
+				
+			    netSuiteCallBackEvent.setApp("Midway");
+			    netSuiteCallBackEvent.setCategory("Verizon Call Back Success");
+			   // netSuiteCallBackEvent.setId(requestType.toString());
+			    netSuiteCallBackEvent.setLevel("Info");
+			    netSuiteCallBackEvent.setTimestamp(new Date().getTime());
+			    netSuiteCallBackEvent.setVersion("1");
+				
+			    netSuiteCallBackEvent.setMsg("Succesfull Call Back from Verizon.");
+			    exchange.getIn().setBody(netSuiteCallBackEvent);
+
+		}
 	}
 
 }

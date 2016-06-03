@@ -29,6 +29,9 @@ import com.gv.midway.pojo.activateDevice.request.ActivateDeviceId;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequestDataArea;
 import com.gv.midway.pojo.activateDevice.request.ActivateDevices;
+import com.gv.midway.pojo.callback.Netsuite.KeyValues;
+import com.gv.midway.pojo.callback.Netsuite.NetSuiteCallBackError;
+import com.gv.midway.pojo.callback.Netsuite.NetSuiteCallBackEvent;
 import com.gv.midway.pojo.callback.common.response.CallbackCommonResponse;
 import com.gv.midway.pojo.callback.request.CallBackVerizonRequest;
 import com.gv.midway.pojo.changeDeviceServicePlans.request.ChangeDeviceServicePlansRequest;
@@ -577,6 +580,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			update.set(ITransaction.CARRIER_ERROR_DESCRIPTION, exchange.getIn().getBody().toString());
 			update.set(ITransaction.CARRIER_STATUS, IConstant.CARRIER_TRANSACTION_STATUS_ERROR);
 			update.set(ITransaction.LAST_TIME_STAMP_UPDATED, CommonUtil.getCurrentTimeStamp());
+			update.set(ITransaction.CALL_BACK_RECEIVED, true);
 
 		} else {
 
@@ -587,6 +591,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		}
 		mongoTemplate.upsert(searchUserQuery, update, Transaction.class);
+		
+		
 
 	}
 
@@ -604,7 +610,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		log.info("CallbackTransactionDaoImpl-getCallbackMidwayTransactionID");
 		log.info("Exchange inside" + exchange.getIn().getBody());
 
-		CallbackCommonResponse callbackResponse = (CallbackCommonResponse) exchange.getIn().getBody(CallbackCommonResponse.class);
+	/*	CallbackCommonResponse callbackResponse = (CallbackCommonResponse) exchange.getIn().getBody(CallbackCommonResponse.class);
 
 		String requestId = callbackResponse.getDataArea().getRequestId();
 
@@ -633,7 +639,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		Query searchUserQuery = new Query(Criteria.where(ITransaction.CARRIER_TRANSACTION_ID).is(requestId).andOperator(Criteria.where(ITransaction.DEVICE_NUMBER).is(strDeviceNumber)));
 
-		/*
+		
 		 * String carrierTransationID;//Call Back Thread String
 		 * carrierStatus;//Call Back Thread String
 		 * LastTimeStampUpdated;//CallBack Thread String
@@ -642,7 +648,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		 * callBackDelivered;//CallBack Thread Boolean
 		 * callBackReceived;//CallBack Thread String
 		 * callBackFailureToNetSuitReason;//CallBack Thread
-		 */
+		 
 
 		Transaction findOne = mongoTemplate.findOne(searchUserQuery, Transaction.class);
 		String midwayTransationID = findOne.getMidwayTransactionId() != null ? findOne.getMidwayTransactionId() : "";
@@ -656,9 +662,92 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		exchange.setProperty(IConstant.GV_HOSTNAME, carrierTransationID);
 
 		callbackResponse.getDataArea().setRequestId(midwayTransationID);
-		/*callbackResponse.getDataArea().setTransactionId(carrierTransationID);*/
+		callbackResponse.getDataArea().setTransactionId(carrierTransationID);
 		callbackResponse.getDataArea().setRequestType(findOne.getRequestType());
-		callbackResponse.setHeader(header);
+		callbackResponse.setHeader(header);*/
+		
+		CallBackVerizonRequest req = (CallBackVerizonRequest)exchange.getProperty(IConstant.VERIZON_CALLBACK_RESPONE);
+		
+		String requestId=req.getRequestId();
+		
+		DeviceId[] deviceIds=req.getDeviceIds();
+		
+        DeviceId[] targetCallbackDevices = new DeviceId[deviceIds.length];
+		
+		for(int i = 0; i<deviceIds.length; i++){
+			DeviceId callbackDevices = new DeviceId();
+			callbackDevices.setId(deviceIds[i].getId());
+			callbackDevices.setKind(deviceIds[i].getKind());
+			targetCallbackDevices[i] = callbackDevices;
+		}
+		
+		Arrays.sort(targetCallbackDevices,  (DeviceId a, DeviceId b) -> a.getKind().compareTo(b.getKind()));
+		
+		String strDeviceNumber = "";
+		ObjectMapper objectMapper = new ObjectMapper();
+		try {
+			strDeviceNumber = objectMapper.writeValueAsString(targetCallbackDevices);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+
+		Query searchUserQuery = new Query(Criteria.where(ITransaction.CARRIER_TRANSACTION_ID).is(requestId).andOperator(Criteria.where(ITransaction.DEVICE_NUMBER).is(strDeviceNumber)));
+		
+		Transaction findOne = mongoTemplate.findOne(searchUserQuery, Transaction.class);
+		String midWayTransactionID = findOne.getMidwayTransactionId() != null ? findOne.getMidwayTransactionId() : "";
+		
+		BaseRequest devicePayload = (BaseRequest) findOne.getDevicePayload();
+		Header header= devicePayload.getHeader();
+		
+		RequestType requestType=findOne.getRequestType();
+		
+        KeyValues keyValues1=new KeyValues();
+		
+		keyValues1.setK("transactionId");
+		keyValues1.setV(header.getTransactionId());
+		
+        KeyValues keyValues2=new KeyValues();
+		
+		keyValues2.setK("midwayTransactionId");
+		keyValues2.setV(midWayTransactionID);
+		
+		KeyValues[] keyValuesArr=new KeyValues[2];
+		
+		keyValuesArr[0]=keyValues1;
+		keyValuesArr[1]=keyValues2;
+		
+		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,
+				findOne.getDeviceNumber());
+
+		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_ID,
+				midWayTransactionID);
+		
+		Object obj=exchange.getIn().getBody();
+		
+		if(obj instanceof NetSuiteCallBackError){
+			
+			NetSuiteCallBackError netSuiteCallBackError=(NetSuiteCallBackError) obj;
+			
+			String desc="Error in callBack from Verizon For "+strDeviceNumber +", transactionId "+midWayTransactionID +"and request Type is "+requestType;
+			
+			netSuiteCallBackError.setDesc(desc);
+			netSuiteCallBackError.setId(requestType.toString());
+			netSuiteCallBackError.setBody(devicePayload);
+			netSuiteCallBackError.setKeyValues(keyValuesArr);
+			exchange.getIn().setBody(netSuiteCallBackError);
+		}
+		
+		else{
+			NetSuiteCallBackEvent netSuiteCallBackEvent=(NetSuiteCallBackEvent) obj;
+			
+			String desc="Succesfull callBack from Verizon For "+strDeviceNumber +", transactionId "+midWayTransactionID +"and request Type is "+requestType;
+				
+		    netSuiteCallBackEvent.setDesc(desc);
+		    netSuiteCallBackEvent.setId(requestType.toString());
+		    netSuiteCallBackEvent.setBody(devicePayload);
+		    netSuiteCallBackEvent.setKeyValues(keyValuesArr);
+		    exchange.getIn().setBody(netSuiteCallBackEvent);
+		}
 	}
 
 	public void populateReactivateDBPayload(Exchange exchange) {
