@@ -19,7 +19,7 @@ public class UsageInformationRequest extends BaseRequest{
 	
 	@Override
 	public String toString() {
-		return "ConnectionInformationRequest [dataArea=" + dataArea + "]";
+		return "UsageInformationRequest [dataArea=" + dataArea + "]";
 	}
 
 	@Override

@@ -99,6 +99,9 @@ import com.gv.midway.processor.token.TokenProcessor;
 import com.gv.midway.processor.token.VerizonAuthorizationTokenProcessor;
 import com.gv.midway.processor.token.VerizonSessionAttributeProcessor;
 import com.gv.midway.processor.token.VerizonSessionTokenProcessor;
+import com.gv.midway.processor.usageDevice.RetrieveDeviceUsageHistoryPostProcessor;
+import com.gv.midway.processor.usageDevice.RetrieveDeviceUsageHistoryPreProcessor;
+import com.gv.midway.processor.usageDevice.StubVerizonRetrieveDeviceUsageHistoryProcessor;
 import com.gv.midway.service.IAuditService;
 import com.gv.midway.service.IDeviceService;
 import com.gv.midway.service.IJobService;
@@ -380,6 +383,9 @@ public class CamelRoute extends RouteBuilder {
 		// Insert or Update Device Details in Bulk
 		updateDevicesDetailsBulk();
 
+		//Retrieve Device Usage History
+		retrieveDeviceUsageHistory();
+		
 		// Execution of schduled jobs scheduledJobs
 		/* scheduledJobs(); */
 
@@ -1230,7 +1236,58 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iSchedulerService, "saveDeviceConnectionHistory")
 				.doCatch(CxfOperationException.class)
 				.process(new VerizonBatchExceptionProcessor(env)).endDoTry();
-
+		
 	}
+		
+		public void retrieveDeviceUsageHistory()
+		{
+			from("direct:retrieveDeviceUsageHistory").process(new HeaderProcessor()).choice()
+			.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
+			.choice().when(header("derivedCarrierName").isEqualTo("VERIZON"))
+			.process(new StubVerizonRetrieveDeviceUsageHistoryProcessor())
+			.to("log:input").endChoice().otherwise().choice()
+			
+			
+			.when(header("derivedCarrierName").isEqualTo("VERIZON"))
+			.bean(iSessionService, "setContextTokenInExchange")
+			//.bean(iTransactionalService, "populateActivateDBPayload")
+			// will store only one time in Audit even on connection failure
+			.bean(iAuditService, "auditExternalRequestCall")
+			.to("direct:VerizonretrieveDeviceUsageHistoryFlow1").endChoice().end()
+			.to("log:input").endChoice().end();
+			
+			
+			// Verizon Flow-1
+			from("direct:VerizonretrieveDeviceUsageHistoryFlow1")
+					.doTry()
+					.to("direct:VerizonretrieveDeviceUsageHistoryFlow2")
+					.doCatch(CxfOperationException.class)
+					.bean(iTransactionalService,
+							"populateVerizonTransactionalErrorResponse")
+					.bean(iAuditService, "auditExternalExceptionResponseCall")
+					.process(new VerizonGenericExceptionProcessor(env)).endDoTry()
+					.end();
 
+			
+			
+			// Verizon Flow-2
+			from("direct:VerizonretrieveDeviceUsageHistoryFlow2")
+					.errorHandler(noErrorHandler())
+					// REMOVED Audit will store record 3 times in case of failure
+					// (see onException for connection.class above)
+					// .bean(iAuditService, "auditExternalRequestCall")
+					.bean(iSessionService, "setContextTokenInExchange")
+					.process(new RetrieveDeviceUsageHistoryPreProcessor())
+					.to(uriRestVerizonEndPoint)
+					.unmarshal()
+					.json(JsonLibrary.Jackson)
+					/*.bean(iTransactionalService,
+							"populateVerizonTransactionalResponse")*/
+					.bean(iAuditService, "auditExternalResponseCall")
+					.process(new RetrieveDeviceUsageHistoryPostProcessor(env));
+			
+		}
+
+
+	
 }

@@ -19,6 +19,8 @@ public class IResponse {
 	public static final String SUCCESS_DESCRIPTION_DEVCIEINFO_MIDWAYDB="Data Succesfully Found from Midway";
 
 	public static final String SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY="Data Submitted Successfully";
+	
+	public static final String SUCCESS_DESCRIPTION_DEVICE_USAGE_MIDWAY="Retrieved Device Usage Successfully";
 
 	public static final String SUCCESS_DESCRIPTION_SUSPEND_MIDWAY="Data Submitted Successfully";
 	public static final String SUCCESS_DESCRIPTION_CONNECTION_STATUS = "Data Processed Successfully";

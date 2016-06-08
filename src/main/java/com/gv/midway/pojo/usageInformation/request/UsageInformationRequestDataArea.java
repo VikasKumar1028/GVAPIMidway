@@ -1,16 +1,13 @@
 package com.gv.midway.pojo.usageInformation.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.gv.midway.pojo.verizon.DeviceId;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(Include.NON_EMPTY)
+
 public class UsageInformationRequestDataArea {
 	
-
 	@ApiModelProperty(value = "All identifiers for the device.")
 	private DeviceId deviceId;
 	
@@ -50,7 +47,8 @@ public class UsageInformationRequestDataArea {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((deviceId == null) ? 0 : deviceId.hashCode());
+		result = prime * result
+				+ ((deviceId == null) ? 0 : deviceId.hashCode());
 		result = prime * result
 				+ ((earliest == null) ? 0 : earliest.hashCode());
 		result = prime * result + ((latest == null) ? 0 : latest.hashCode());
@@ -86,7 +84,7 @@ public class UsageInformationRequestDataArea {
 
 	@Override
 	public String toString() {
-		return "ConnectionInformationRequestDataArea [deviceId=" + deviceId
+		return "UsageInformationRequestDataArea [deviceId=" + deviceId
 				+ ", earliest=" + earliest + ", latest=" + latest + "]";
 	}
 	

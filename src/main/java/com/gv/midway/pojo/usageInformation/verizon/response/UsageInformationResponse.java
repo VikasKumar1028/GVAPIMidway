@@ -3,11 +3,14 @@ package com.gv.midway.pojo.usageInformation.verizon.response;
 import java.util.Arrays;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.gv.midway.pojo.BaseResponse;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UsageInformationResponse {
+public class UsageInformationResponse extends BaseResponse {
 
+	@ApiModelProperty(value = "Data area for Retrieve Device Usage History response")
+	private UsageInformationResponseDataArea dataArea;
 	
 	@ApiModelProperty(value = "Device connection evnents.")
 	private UsageHistory[] usageHistory;
@@ -29,6 +32,15 @@ public class UsageInformationResponse {
 
 	public void setHasMoreData(String hasMoreData) {
 		this.hasMoreData = hasMoreData;
+	}
+	
+	
+	public UsageInformationResponseDataArea getDataArea() {
+		return dataArea;
+	}
+
+	public void setDataArea(UsageInformationResponseDataArea dataArea) {
+		this.dataArea = dataArea;
 	}
 
 	@Override

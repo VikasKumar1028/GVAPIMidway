@@ -11,8 +11,6 @@ import javax.ws.rs.QueryParam;
 import com.gv.midway.job.JobParameter;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
-import com.gv.midway.pojo.callback.TargetResponse;
-import com.gv.midway.pojo.callback.common.response.CallbackCommonResponse;
 import com.gv.midway.pojo.callback.request.CallBackVerizonRequest;
 import com.gv.midway.pojo.changeDeviceServicePlans.request.ChangeDeviceServicePlansRequest;
 import com.gv.midway.pojo.changeDeviceServicePlans.response.ChangeDeviceServicePlansResponse;
@@ -34,6 +32,8 @@ import com.gv.midway.pojo.restoreDevice.request.RestoreDeviceRequest;
 import com.gv.midway.pojo.restoreDevice.response.RestoreDeviceResponse;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequest;
 import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
+import com.gv.midway.pojo.usageInformation.request.UsageInformationRequest;
+import com.gv.midway.pojo.usageInformation.verizon.response.UsageInformationResponseDataArea;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 
@@ -157,13 +157,20 @@ public interface IAdaptaionLayerService {
 			RestoreDeviceRequest restoreDeviceRequest);
 
 	@POST
+	@Path("/device/usage/session")
+	@Produces("application/json")
+	@Consumes("application/json")
+	@ApiOperation(value = "Retrieve Device Usage History for Verizon")
+	UsageInformationResponseDataArea retrieveDeviceUsageHistory(
+			UsageInformationRequest usageInformationRequest);
+	
+	@POST
 	@Path("/devices/connections/session/info")
 	@Produces("application/json")
 	@Consumes("application/json")
 	@ApiOperation(value = "Service to check Device Session Begin and End infomration for Verizon")
 	SessionBeginEndResponse deviceSessionBeginEndResponse(
 			ConnectionInformationRequest connectionInformationRequest);
-	
 	
 	@POST
 	@Path("/devices/job/usage/transactionFailure")
@@ -177,7 +184,7 @@ public interface IAdaptaionLayerService {
 	@Produces("application/json")
 	@Consumes("application/json")
 	@ApiOperation(value = "Transactional Failure Device Connection History Job")
-	void transactionFailureConnectionHistoryJob(JobParameter jobParameter);
+	void transactionFailureConnectionHistoryJob(JobParameter jobParameter);	
 	
 	@POST
 	@Path("/devices/job/usage/reRun")

@@ -22,6 +22,7 @@ import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.reActivateDevice.response.ReactivateDeviceResponse;
 import com.gv.midway.pojo.restoreDevice.response.RestoreDeviceResponse;
 import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
+import com.gv.midway.pojo.usageInformation.verizon.response.UsageInformationResponseDataArea;
 import com.gv.midway.pojo.verizon.VerizonErrorResponse;
 
 public class VerizonGenericExceptionProcessor implements Processor {
@@ -52,11 +53,8 @@ public class VerizonGenericExceptionProcessor implements Processor {
 		log.info("----.getStatusCode()----------" + exception.getStatusCode());
 
 		Header responseHeader = new Header();
-        System.out.println(exchange
-		.getFromEndpoint().toString());
+		System.out.println(exchange.getFromEndpoint().toString());
 
-
-			
 		responseHeader.setApplicationName(exchange.getProperty(
 				IConstant.APPLICATION_NAME).toString());
 		responseHeader.setRegion(exchange.getProperty(IConstant.REGION)
@@ -192,6 +190,15 @@ public class VerizonGenericExceptionProcessor implements Processor {
 		if ("Endpoint[direct://reactivateDevice]".equals(exchange
 				.getFromEndpoint().toString())) {
 			ReactivateDeviceResponse responseObject = new ReactivateDeviceResponse();
+			responseObject.setHeader(responseHeader);
+			responseObject.setResponse(response);
+			exchange.getIn().setBody(responseObject);
+
+		}
+
+		if ("Endpoint[direct://retrieveDeviceUsageHistory]".equals(exchange
+				.getFromEndpoint().toString())) {
+			UsageInformationResponseDataArea responseObject = new UsageInformationResponseDataArea();
 			responseObject.setHeader(responseHeader);
 			responseObject.setResponse(response);
 			exchange.getIn().setBody(responseObject);
