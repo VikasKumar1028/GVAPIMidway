@@ -22,21 +22,17 @@ public class JobServiceImpl implements IJobService {
 
 	@Override
 	public List fetchDevices(Exchange exchange) {
-		// TODO Auto-generated method stub
 		return iJobDao.fetchDevices(exchange);
 	}
 
 	@Override
 	public void insertJobDetails(Exchange exchange) {
-		// TODO Auto-generated method stub
-
 		iJobDao.insertJobDetails(exchange);
 
 	}
 
 	@Override
 	public void updateJobDetails(Exchange exchange) {
-		// TODO Auto-generated method stub
 		iJobDao.updateJobDetails(exchange);
 	}
 
@@ -48,11 +44,9 @@ public class JobServiceImpl implements IJobService {
 		this.iJobDao = iJobDao;
 	}
 
-	public void setJobDetails(Exchange exchange,String carrierName,JobName jobName) {
-		
-		
-		System.out.println( "  carrierName    ---------------           " + carrierName);
-		System.out.println( "  jobName          --------------     " + jobName.toString());
+	public void setJobDetails(Exchange exchange, String carrierName,
+			JobName jobName) {
+
 		JobDetail jobDetail = new JobDetail();
 		jobDetail.setType(JobType.NEW);
 		jobDetail.setDate(new Date().toString());

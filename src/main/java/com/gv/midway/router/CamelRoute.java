@@ -1142,8 +1142,6 @@ public class CamelRoute extends RouteBuilder {
 				iDeviceService, "bulkOperationDeviceSyncInDB");
 	}
 
-	
-
 	public void deviceConnectionHistoryVerizonJob() {
 
 		from(
@@ -1170,16 +1168,18 @@ public class CamelRoute extends RouteBuilder {
 
 	}
 
-	//TODO Add  KORE DEVICE USAGE JOB
-	
+	// TODO Add KORE DEVICE USAGE JOB
+
 	public void startJob() {
 
-		from("direct:startJob").to(
-				"direct:processJob");
+		from("direct:startJob").to("direct:processJob");
 
 		// Job Flow-1
 
 		from("direct:processJob")
+				.onCompletion()
+				.bean(iJobService, "updateJobDetails")
+				.end()
 				.bean(iJobService, "insertJobDetails")
 				.bean(iJobService, "fetchDevices")
 				.split()
