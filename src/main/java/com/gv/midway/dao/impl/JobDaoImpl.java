@@ -65,7 +65,7 @@ public class JobDaoImpl implements IJobDao {
 	public void insertJobDetails(Exchange exchange) {
 		JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();		
 		jobDetail.setStartTime(new Date().toString());
-		jobDetail.setStatus(IConstant.JOB_IN_PROGRESS);
+		jobDetail.setStatus(IConstant.JOB_STARTED);
 		
 		//inserting in the exchange as property
 		exchange.setProperty("jobDetail", jobDetail);
