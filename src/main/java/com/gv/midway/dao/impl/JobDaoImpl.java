@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import com.gv.midway.constant.IConstant;
 import com.gv.midway.dao.IJobDao;
 import com.gv.midway.job.JobDetail;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
@@ -56,14 +57,15 @@ public class JobDaoImpl implements IJobDao {
 			System.out.println("e");
 		}
 
-		// return list;
-		return deviceInformationList;
+		 return list;
+		//return deviceInformationList;
 	}
 
 	@Override
 	public void insertJobDetails(Exchange exchange) {
 		JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();		
 		jobDetail.setStartTime(new Date().toString());
+		jobDetail.setStatus(IConstant.JOB_IN_PROGRESS);
 		
 		//inserting in the exchange as property
 		exchange.setProperty("jobDetail", jobDetail);
@@ -90,7 +92,7 @@ public class JobDaoImpl implements IJobDao {
 			Update update = new Update();
 
 			update.set("endTime", new Date().toString());
-			update.set("status", "Completed");
+			update.set("status", IConstant.JOB_COMPLETED);
 
 			mongoTemplate.updateFirst(searchJobQuery, update, JobDetail.class);
 

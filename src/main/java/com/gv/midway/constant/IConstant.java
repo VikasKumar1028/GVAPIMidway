@@ -78,6 +78,9 @@ public interface IConstant {
 	// Job is scheduled to run every day at 2 in the morning.
 	static String JOB_TIME_CONFIGURATION = "0+0+02+*+*+?";
 	
+	static String JOB_IN_PROGRESS="InProgress";
+	static String JOB_COMPLETED="Completed";
+	
 	static int DURATION = -24;
 	
 	

@@ -5,10 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.gv.midway.constant.JobName;
 import com.gv.midway.constant.JobType;
 
-/**
- * @author SG00421138
- *
- */
+
 @Document(collection = "jobDetail")
 public class JobDetail {
 
@@ -18,8 +15,8 @@ public class JobDetail {
 	private String startTime;
 	private String endTime;
 	private String status;
-	private String transationFailed;
-	private String transationPassed;
+	private String transactionFailed;
+	private String transactionPassed;
 	private String carrierName;
 	public JobName getName() {
 		return name;
@@ -57,23 +54,24 @@ public class JobDetail {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	public String getTransationFailed() {
-		return transationFailed;
-	}
-	public void setTransationFailed(String transationFailed) {
-		this.transationFailed = transationFailed;
-	}
-	public String getTransationPassed() {
-		return transationPassed;
-	}
-	public void setTransationPassed(String transationPassed) {
-		this.transationPassed = transationPassed;
-	}
+	
 	public String getCarrierName() {
 		return carrierName;
 	}
 	public void setCarrierName(String carrierName) {
 		this.carrierName = carrierName;
+	}
+	public String getTransactionFailed() {
+		return transactionFailed;
+	}
+	public void setTransactionFailed(String transactionFailed) {
+		this.transactionFailed = transactionFailed;
+	}
+	public String getTransactionPassed() {
+		return transactionPassed;
+	}
+	public void setTransactionPassed(String transactionPassed) {
+		this.transactionPassed = transactionPassed;
 	}
 	@Override
 	public int hashCode() {
@@ -89,10 +87,12 @@ public class JobDetail {
 		result = prime * result + ((status == null) ? 0 : status.hashCode());
 		result = prime
 				* result
-				+ ((transationFailed == null) ? 0 : transationFailed.hashCode());
+				+ ((transactionFailed == null) ? 0 : transactionFailed
+						.hashCode());
 		result = prime
 				* result
-				+ ((transationPassed == null) ? 0 : transationPassed.hashCode());
+				+ ((transactionPassed == null) ? 0 : transactionPassed
+						.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
@@ -132,15 +132,15 @@ public class JobDetail {
 				return false;
 		} else if (!status.equals(other.status))
 			return false;
-		if (transationFailed == null) {
-			if (other.transationFailed != null)
+		if (transactionFailed == null) {
+			if (other.transactionFailed != null)
 				return false;
-		} else if (!transationFailed.equals(other.transationFailed))
+		} else if (!transactionFailed.equals(other.transactionFailed))
 			return false;
-		if (transationPassed == null) {
-			if (other.transationPassed != null)
+		if (transactionPassed == null) {
+			if (other.transactionPassed != null)
 				return false;
-		} else if (!transationPassed.equals(other.transationPassed))
+		} else if (!transactionPassed.equals(other.transactionPassed))
 			return false;
 		if (type != other.type)
 			return false;
@@ -150,10 +150,9 @@ public class JobDetail {
 	public String toString() {
 		return "JobDetail [name=" + name + ", type=" + type + ", date=" + date
 				+ ", startTime=" + startTime + ", endTime=" + endTime
-				+ ", status=" + status + ", transationFailed="
-				+ transationFailed + ", transationPassed=" + transationPassed
-				+ ", carrierName=" + carrierName + "]";
+				+ ", status=" + status + ", transactionFailed="
+				+ transactionFailed + ", transactionPassed="
+				+ transactionPassed + ", carrierName=" + carrierName + "]";
 	}
 
-	
 }
