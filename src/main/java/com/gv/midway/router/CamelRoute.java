@@ -1053,7 +1053,7 @@ public class CamelRoute extends RouteBuilder {
 				.to("log:input").endChoice().otherwise().choice()
 
 				.when(header("derivedCarrierName").isEqualTo("KORE")).doTry()
-				.process(new KoreDeviceInformationPreProcessor())
+				.process(new KoreDeviceInformationPreProcessor(env))
 				.bean(iAuditService, "auditExternalRequestCall")
 				.to(uriRestKoreEndPoint).unmarshal()
 				.json(JsonLibrary.Jackson, DeviceInformationResponseKore.class)

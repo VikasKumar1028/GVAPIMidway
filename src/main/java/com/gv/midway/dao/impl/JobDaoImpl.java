@@ -38,7 +38,7 @@ public class JobDaoImpl implements IJobDao {
 
 			
 			System.out.println("Carrier Name -----------------"+carrierName );
-			// We have to check number of bs_carrier
+			// We have to check bs_carrier with possible reseller values for that carrier. 
 			Query searchDeviceQuery = new Query(Criteria.where("bs_carrier")
 					.is(carrierName));
 

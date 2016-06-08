@@ -13,7 +13,7 @@ public class JobSplitter {
 	public List<DeviceInformation> split(
 			List<DeviceInformation> deviceInformationList) {
 
-		System.out.println("JobSplitter&&&&&&&&&&&&&&&&&&&&&&");
+		log.info("JobSplitter&&&&&&&&&&&&&&&&&&&&&&");
 		
 		return deviceInformationList;
 	}
