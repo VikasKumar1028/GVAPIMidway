@@ -1212,7 +1212,7 @@ public class CamelRoute extends RouteBuilder {
 				.doCatch(Exception.class).end();
 
 		// VERIZON Job-DEVICE USAGE
-		from("seda:processVerizonDeviceUsageJob?concurrentConsumers=10")
+		from("seda:processVerizonDeviceUsageJob?concurrentConsumers=4")
 				.log("VERIZONJob-DEVICE USAGE").doTry()
 				.bean(iSessionService, "setContextTokenInExchange")
 				.process(new CreateVerizonDeviceUsageHistoryPayloadProcessor())
@@ -1220,8 +1220,10 @@ public class CamelRoute extends RouteBuilder {
 				.json(JsonLibrary.Jackson)
 				.process(new VerizonUsageHistoryPreProcessor())
 				.bean(iSchedulerService, "saveDeviceUsageHistory")
-				.doCatch(CxfOperationException.class)
-				.process(new VerizonBatchExceptionProcessor(env)).endDoTry();
+				.doCatch(CxfOperationException.class,UnknownHostException.class, ConnectException.class)
+				.process(new VerizonBatchExceptionProcessor(env))
+				.bean(iSchedulerService, "saveDeviceUsageHistory")
+				.endDoTry();
 
 		// VERIZON Job CONNECTION HISTORY
 		from("seda:processVerizonConnectionHistoryJob?concurrentConsumers=5")

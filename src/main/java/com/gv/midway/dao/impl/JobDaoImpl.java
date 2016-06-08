@@ -47,30 +47,37 @@ public class JobDaoImpl implements IJobDao {
 			deviceInformationList = mongoTemplate.find(searchDeviceQuery,
 					DeviceInformation.class);
 
-			list = new ArrayList<DeviceInformation>(Collections.nCopies(10000,
+			/*
+			 * list = new
+			 * ArrayList<DeviceInformation>(Collections.nCopies(10000,
+			 * deviceInformationList.get(0)));
+			 */
+
+			list = new ArrayList<DeviceInformation>(Collections.nCopies(10,
 					deviceInformationList.get(0)));
 
-			System.out.println("deviceInformationList" + deviceInformationList);
+			System.out.println("deviceInformationList ------------------"
+					+ deviceInformationList.size());
 		}
 
 		catch (Exception e) {
 			System.out.println("e");
 		}
 
-		 return list;
-		//return deviceInformationList;
+		//return list;
+		 return deviceInformationList;
 	}
 
 	@Override
 	public void insertJobDetails(Exchange exchange) {
-		JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();		
+		JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
 		jobDetail.setStartTime(new Date().toString());
 		jobDetail.setStatus(IConstant.JOB_STARTED);
-		
-		//inserting in the exchange as property
+
+		// inserting in the exchange as property
 		exchange.setProperty("jobDetail", jobDetail);
-		
-		//inserting in the database as property
+
+		// inserting in the database as property
 		mongoTemplate.insert(jobDetail);
 	}
 
