@@ -46,4 +46,7 @@ public interface ITransactionalService {
 	public void updateNetSuiteCallBackError(Exchange exchange);
 
 	public void populateKoreCustomChangeResponse(Exchange exchange);
+	
+	public void populateRetrieveDeviceUsageHistoryDBPayload(Exchange exchange);
+	
 }
