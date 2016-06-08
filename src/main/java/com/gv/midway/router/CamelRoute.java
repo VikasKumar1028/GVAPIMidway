@@ -13,7 +13,9 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+import com.gv.midway.constant.CarrierType;
 import com.gv.midway.constant.IConstant;
+import com.gv.midway.constant.JobName;
 import com.gv.midway.exception.InvalidParameterException;
 import com.gv.midway.exception.VerizonSessionTokenExpirationException;
 import com.gv.midway.pojo.checkstatus.kore.KoreCheckStatusResponse;
@@ -1139,7 +1141,7 @@ public class CamelRoute extends RouteBuilder {
 	}
 
 	
-	public void deviceConnectionHistoryJob() {
+/*	public void deviceConnectionHistoryJob() {
 		from(
 				"quartz2://job/deviceDetailsConnectionTimer?cron="
 						+ IConstant.JOB_TIME_CONFIGURATION)
@@ -1188,8 +1190,111 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iSchedulerService, "saveDeviceUsageHistory")
 				.doCatch(Exception.class).end();
 
+	}*/
+	
+	
+	public void deviceConnectionHistoryJob() {
+	/*	from(
+				"quartz2://job/deviceDetailsConnectionTimer?cron="
+						+ IConstant.JOB_TIME_CONFIGURATION)*/
+						
+							from("timer://deviceDetailsConnectionTimer?period=5m")
+						.bean(iJobService,
+						"setJobDetails(${exchange},"+CarrierType.VERIZON.toString()+", "+JobName.VERIZON_CONNECTION_HISTORY    +")")
+						.to("direct:startJob")
+						.end();
+	
+
 	}
+
+	public void deviceUsageHistoryJob() {
+	/*	from(
+				"quartz2://job/deviceDetailsUsageTimer?cron="
+						+ IConstant.JOB_TIME_CONFIGURATION)
+			.end();
+*/
+		
+		from("timer://deviceDetailsUsageTimer?period=5m")
+		.bean(iJobService,
+		"setJobDetails(${exchange},"+CarrierType.VERIZON.toString()+", "+JobName.VERIZON_DEVICE_USAGE    +")")
+		.to("direct:startJob")
+		.end();
+		
+		
+	}
+	
+	
 	public void startJob() {
+
+		from("direct:startJob").log("*********************************direct:startJob").to("direct:processJob");
+		
+		
+		// Job  Flow-1
+
+				from("direct:processJob").bean(iJobService, "insertJobDetails")
+				
+					.bean(iJobService, "fetchDevices")
+						.split().method("jobSplitter")
+						//.recipientList()
+						//.method("jobCarrierRouter");
+						.choice()
+						.when(simple("${exchangeProperty[jobName]} == 'VERIZON_CONNECTION_HISTORY'"))
+						.to("seda:processVerizonConnectionHistoryJob")
+						.when(simple("${exchangeProperty[jobName]} == 'KORE_DEVICE_USAGE'"))
+						.to("seda:processKoreDeviceUsageJob")
+						.when(simple("${exchangeProperty[jobName]} == 'VERIZON_DEVICE_USAGE'"))
+						.to("seda:processVerizonDeviceUsageJob").endChoice();
+		
+				
+				//KORE Job SEDA  FLOW
+
+			from("seda:processKoreDeviceUsageJob?concurrentConsumers=5").
+			log("KOREJob-DEVICE USAGE")
+			
+			.doTry()
+			.process(new CreateKoreDeviceUsageHistoryPayloadProcessor())
+			.to(uriRestKoreEndPoint).unmarshal().json(JsonLibrary.Jackson)
+			.process(new KoreUsageHistoryPreProcessor())
+			.bean(iSchedulerService, "saveDeviceUsageHistory")
+			.doCatch(Exception.class).end();
+
+	
+			from("seda:processVerizonDeviceUsageJob?concurrentConsumers=10")
+			.log("VERIZONJob-DEVICE USAGE")
+			.doTry()
+			.bean(iSessionService, "setContextTokenInExchange")
+			.process(new CreateVerizonDeviceUsageHistoryPayloadProcessor())
+				.to(uriRestVerizonEndPoint).unmarshal()
+				.json(JsonLibrary.Jackson)
+				.process(new VerizonUsageHistoryPreProcessor())
+				.bean(iSchedulerService, "saveDeviceUsageHistory")
+			.doCatch(CxfOperationException.class)
+			.log("TOKEN ERROR *********************************")
+			.process(new VerizonBatchExceptionProcessor(env)).endDoTry();
+		
+		
+					
+			from("seda:processVerizonConnectionHistoryJob?concurrentConsumers=5").			
+			log("VERIZONJob CONNECTION HISTORY")			
+			.doTry()
+			.bean(iSessionService, "setContextTokenInExchange")
+			.process(new CreateVerizonDeviceConnectionHistoryPayloadProcessor())
+			.to(uriRestVerizonEndPoint).unmarshal()
+			.json(JsonLibrary.Jackson)
+			.process(new VerizonConnectionHistoryPreProcessor())
+			.bean(iSchedulerService, "saveDeviceConnectionHistory")
+			.doCatch(CxfOperationException.class)
+			.log("TOKEN ERROR *********************************")
+			.process(new VerizonBatchExceptionProcessor(env)).endDoTry();
+	
+	}
+
+	
+	
+	
+	
+	
+	public void startJob1() {
 
 		from("direct:startJob").log("*********************************direct:startJob").to("direct:processJob");
 		

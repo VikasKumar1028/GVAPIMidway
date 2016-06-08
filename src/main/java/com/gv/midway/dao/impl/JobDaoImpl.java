@@ -55,8 +55,8 @@ public class JobDaoImpl implements IJobDao {
 			System.out.println("e");
 		}
 
-		 return list;
-		//return deviceInformationList;
+		// return list;
+		return deviceInformationList;
 	}
 
 	@Override

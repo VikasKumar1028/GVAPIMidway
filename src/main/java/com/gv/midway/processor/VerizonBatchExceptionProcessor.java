@@ -53,7 +53,9 @@ public class VerizonBatchExceptionProcessor implements Processor {
 		// TODO SAME Functionality
 		else {
 
-			//Insert a new Object in the batch
+			
+			
+			//Insert a new Object in the batch depending on device Usage and connection history
 			
 			
 
