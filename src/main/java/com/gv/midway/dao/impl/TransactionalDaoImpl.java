@@ -581,6 +581,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			update.set(ITransaction.CARRIER_STATUS, IConstant.CARRIER_TRANSACTION_STATUS_ERROR);
 			update.set(ITransaction.LAST_TIME_STAMP_UPDATED, CommonUtil.getCurrentTimeStamp());
 			update.set(ITransaction.CALL_BACK_RECEIVED, true);
+			update.set(ITransaction.MIDWAY_STATUS,IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
 
 		} else {
 
@@ -588,6 +589,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			update.set(ITransaction.CALL_BACK_RECEIVED, true);
 			update.set(ITransaction.CARRIER_STATUS, IConstant.CARRIER_TRANSACTION_STATUS_SUCCESS);
 			update.set(ITransaction.LAST_TIME_STAMP_UPDATED, CommonUtil.getCurrentTimeStamp());
+			update.set(ITransaction.MIDWAY_STATUS,IConstant.MIDWAY_TRANSACTION_STATUS_SUCCESS);
 
 		}
 		mongoTemplate.upsert(searchUserQuery, update, Transaction.class);
