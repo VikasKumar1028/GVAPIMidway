@@ -9,7 +9,7 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UsageInformationResponse extends BaseResponse {
 
-	@ApiModelProperty(value = "Data area for Retrieve Device Usage History response")
+	@ApiModelProperty(value = "Data area for Retrieve Device Usage Response")
 	private UsageInformationResponseDataArea dataArea;
 	
 	@ApiModelProperty(value = "Device connection evnents.")

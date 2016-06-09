@@ -6,10 +6,9 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.gv.midway.pojo.BaseResponse;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(Include.NON_EMPTY)
 public class UsageInformationResponseDataArea  extends BaseResponse{
 
-	@ApiModelProperty(value = "Total usages device session")
+	@ApiModelProperty(value = "Total Device Usages")
 	private long totalUsages;
 
 	public long getTotalUsages() {

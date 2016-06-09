@@ -85,11 +85,6 @@ public class RetrieveDeviceUsageHistoryPostProcessor implements Processor {
 		responseheader.setOrganization(exchange.getProperty(
 				IConstant.ORGANIZATION).toString());
 
-		/*
-		 * responseheader.setTimestamp(exchange.getProperty(
-		 * IConstant.DATE_FORMAT).toString());
-		 */
-
 		responseheader.setTimestamp(dateFormat.format(date));
 		responseheader.setSourceName(exchange
 				.getProperty(IConstant.SOURCE_NAME).toString());

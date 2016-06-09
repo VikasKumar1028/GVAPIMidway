@@ -32,37 +32,28 @@ public class RetrieveDeviceUsageHistoryPreProcessor implements Processor {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 		Calendar cal = Calendar.getInstance();
 
-
-	/*	UsageInformationRequest usageInformationRequest = new UsageInformationRequest();*/
-		
-		UsageInformationRequest usageInformationRequest=(UsageInformationRequest )exchange
+		UsageInformationRequest usageInformationRequest = (UsageInformationRequest) exchange
 				.getIn().getBody();
 
-		
-		UsageInformationRequestDataArea usageInformationRequestDataArea = usageInformationRequest.getDataArea();
+		UsageInformationRequestDataArea usageInformationRequestDataArea = usageInformationRequest
+				.getDataArea();
 
-		log.info("usageInformationRequestDataArea:::"+usageInformationRequest);
-		
-		
+		log.info("usageInformationRequestDataArea:::" + usageInformationRequest);
 
 		DeviceId device = new DeviceId();
 		device.setId(usageInformationRequestDataArea.getDeviceId().getId());
 		device.setKind(usageInformationRequestDataArea.getDeviceId().getKind());
-		 
 
-		/*device.setId("89148000002034195203");
-		device.setKind("ICCID");*/
 		usageInformationRequestDataArea.setDeviceId(device);
 
 		exchange.setProperty("DeviceId", device);
 
-		usageInformationRequestDataArea.setLatest("2016-06-06T02:24:01Z");
-		// usageInformationRequestDataArea.setLatest(dateFormat.format(cal.getTime()));
+		usageInformationRequestDataArea.setLatest(dateFormat.format(cal
+				.getTime()));
 
 		cal.add(Calendar.HOUR, IConstant.DURATION);
-		// usageInformationRequestDataArea.setEarliest(dateFormat.format(cal.getTime()));
-
-		usageInformationRequestDataArea.setEarliest("2016-05-05T03:00:00Z");
+		usageInformationRequestDataArea.setEarliest(dateFormat.format(cal
+				.getTime()));
 
 		ObjectMapper objectMapper = new ObjectMapper();
 

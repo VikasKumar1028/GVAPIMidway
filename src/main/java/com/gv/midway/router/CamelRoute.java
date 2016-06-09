@@ -1270,8 +1270,8 @@ public class CamelRoute extends RouteBuilder {
 					.doTry()
 					.to("direct:VerizonretrieveDeviceUsageHistoryFlow2")
 					.doCatch(CxfOperationException.class)
-					.bean(iTransactionalService,
-							"populateVerizonTransactionalErrorResponse")
+					/*.bean(iTransactionalService,
+							"populateVerizonTransactionalErrorResponse")*/
 					.bean(iAuditService, "auditExternalExceptionResponseCall")
 					.process(new VerizonGenericExceptionProcessor(env)).endDoTry()
 					.end();
@@ -1289,8 +1289,8 @@ public class CamelRoute extends RouteBuilder {
 					.to(uriRestVerizonEndPoint)
 					.unmarshal()
 					.json(JsonLibrary.Jackson)
-					.bean(iTransactionalService,
-							"populateRetrieveDeviceUsageHistoryDBPayload")
+					/*.bean(iTransactionalService,
+							"populateRetrieveDeviceUsageHistoryDBPayload")*/
 					.bean(iAuditService, "auditExternalResponseCall")
 					.process(new RetrieveDeviceUsageHistoryPostProcessor(env));
 			
