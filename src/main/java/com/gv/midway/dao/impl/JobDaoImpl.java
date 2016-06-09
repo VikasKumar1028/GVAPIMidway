@@ -19,6 +19,7 @@ import com.gv.midway.dao.IJobDao;
 import com.gv.midway.job.JobDetail;
 import com.gv.midway.pojo.deviceHistory.DeviceUsage;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
+import com.mongodb.WriteResult;
 
 @Service
 public class JobDaoImpl implements IJobDao {
@@ -131,10 +132,12 @@ public class JobDaoImpl implements IJobDao {
 
 			Update update = new Update();
 
-			update.set("isValid", "false");
+			update.set("isValid", false);
 
-			mongoTemplate
-					.updateFirst(searchJobQuery, update, DeviceUsage.class);
+			WriteResult result=mongoTemplate
+					.updateMulti(searchJobQuery, update, DeviceUsage.class);
+			
+			log.info("WriteResult *********************"+ result);
 
 		}
 
