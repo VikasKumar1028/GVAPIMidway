@@ -16,7 +16,7 @@ import com.gv.midway.pojo.deviceHistory.DeviceEvent;
 import com.gv.midway.pojo.verizon.DeviceId;
 import com.gv.midway.utility.CommonUtil;
 
-public class VerizonConnectionHistoryPostProcessor implements Processor {
+public class VerizonDeviceConnectionHistoryPostProcessor implements Processor {
 
 	@Override
 	public void process(Exchange exchange) throws Exception {

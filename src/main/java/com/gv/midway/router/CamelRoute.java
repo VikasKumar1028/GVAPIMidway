@@ -76,9 +76,9 @@ import com.gv.midway.processor.deviceInformation.VerizonDeviceInformationPreProc
 import com.gv.midway.processor.jobScheduler.KoreDeviceUsageHistoryPreProcessor;
 import com.gv.midway.processor.jobScheduler.VerizonDeviceConnectionHistoryPreProcessor;
 import com.gv.midway.processor.jobScheduler.VerizonDeviceUsageHistoryPreProcessor;
-import com.gv.midway.processor.jobScheduler.KoreUsageHistoryPostProcessor;
-import com.gv.midway.processor.jobScheduler.VerizonConnectionHistoryPostProcessor;
-import com.gv.midway.processor.jobScheduler.VerizonUsageHistoryPostProcessor;
+import com.gv.midway.processor.jobScheduler.KoreDeviceUsageHistoryPostProcessor;
+import com.gv.midway.processor.jobScheduler.VerizonDeviceConnectionHistoryPostProcessor;
+import com.gv.midway.processor.jobScheduler.VerizonDeviceUsageHistoryPostProcessor;
 import com.gv.midway.processor.kafka.KafkaProcessor;
 import com.gv.midway.processor.reactivate.KoreReactivateDevicePostProcessor;
 import com.gv.midway.processor.reactivate.KoreReactivateDevicePreProcessor;
@@ -1207,7 +1207,7 @@ public class CamelRoute extends RouteBuilder {
 				.doTry()
 				.process(new KoreDeviceUsageHistoryPreProcessor())
 				.to(uriRestKoreEndPoint).unmarshal().json(JsonLibrary.Jackson)
-				.process(new KoreUsageHistoryPostProcessor())
+				.process(new KoreDeviceUsageHistoryPostProcessor())
 				.bean(iSchedulerService, "saveDeviceUsageHistory")
 				.doCatch(Exception.class).end();
 
@@ -1218,7 +1218,7 @@ public class CamelRoute extends RouteBuilder {
 				.process(new VerizonDeviceUsageHistoryPreProcessor())
 				.to(uriRestVerizonEndPoint).unmarshal()
 				.json(JsonLibrary.Jackson)
-				.process(new VerizonUsageHistoryPostProcessor())
+				.process(new VerizonDeviceUsageHistoryPostProcessor())
 				.bean(iSchedulerService, "saveDeviceUsageHistory")
 				.doCatch(CxfOperationException.class,UnknownHostException.class, ConnectException.class)
 				.process(new VerizonBatchExceptionProcessor(env))
@@ -1234,7 +1234,7 @@ public class CamelRoute extends RouteBuilder {
 						new VerizonDeviceConnectionHistoryPreProcessor())
 				.to(uriRestVerizonEndPoint).unmarshal()
 				.json(JsonLibrary.Jackson)
-				.process(new VerizonConnectionHistoryPostProcessor())
+				.process(new VerizonDeviceConnectionHistoryPostProcessor())
 				.bean(iSchedulerService, "saveDeviceConnectionHistory")
 				.doCatch(CxfOperationException.class)
 				.process(new VerizonBatchExceptionProcessor(env)).endDoTry();
