@@ -1,7 +1,5 @@
 package com.gv.midway.processor.jobScheduler;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Map;
 
 import org.apache.camel.Exchange;
@@ -9,11 +7,11 @@ import org.apache.camel.Processor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
+import com.gv.midway.job.JobDetail;
 import com.gv.midway.pojo.deviceHistory.DeviceUsage;
 import com.gv.midway.pojo.usageInformation.verizon.response.UsageHistory;
 import com.gv.midway.pojo.usageInformation.verizon.response.UsageInformationResponse;
 import com.gv.midway.pojo.verizon.DeviceId;
-import com.gv.midway.utility.CommonUtil;
 
 public class VerizonDeviceUsageHistoryPostProcessor implements Processor {
 
@@ -25,6 +23,7 @@ public class VerizonDeviceUsageHistoryPostProcessor implements Processor {
 		UsageInformationResponse usageResponse = mapper.convertValue(map,
 				UsageInformationResponse.class);
 		DeviceUsage deviceUsage = new DeviceUsage();
+		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
 
 		long totalBytesUsed = 0L;
 		if (usageResponse.getUsageHistory() != null) {
@@ -36,7 +35,8 @@ public class VerizonDeviceUsageHistoryPostProcessor implements Processor {
 				.setCarrierName((String) exchange.getProperty("CarrierName"));
 		deviceUsage.setDeviceId((DeviceId) exchange.getProperty("DeviceId"));
 		deviceUsage.setDataUsed(totalBytesUsed);
-		deviceUsage.setTimestamp(CommonUtil.getCurrentTimeStamp());
+		
+		deviceUsage.setTimestamp(jobDetail.getDate());
 		deviceUsage.setTransactionErrorReason(null);
 		deviceUsage
 				.setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_SUCCESS);
