@@ -15,6 +15,7 @@ import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationRequestDataArea;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.verizon.DeviceId;
+import com.gv.midway.utility.CommonUtil;
 
 public class CreateVerizonDeviceUsageHistoryPayloadProcessor implements
 		Processor {
@@ -41,8 +42,12 @@ public class CreateVerizonDeviceUsageHistoryPayloadProcessor implements
 		 */
 		ConnectionInformationRequestDataArea dataArea = new ConnectionInformationRequestDataArea();
 		DeviceId device = new DeviceId();
-		device.setId(deviceInfo.getDeviceIds()[0].getId());
-		device.setKind(deviceInfo.getDeviceIds()[0].getKind());
+		
+		//Fetching Recommended device Identifiers
+		DeviceId recommendedDeviceId=CommonUtil.getRecommendedDeviceIdentifier(deviceInfo.getDeviceIds());
+				
+		device.setId(recommendedDeviceId.getId());
+		device.setKind(recommendedDeviceId.getKind());
 		dataArea.setDeviceId(device);
 
 		exchange.setProperty("DeviceId", device);
@@ -78,11 +83,6 @@ public class CreateVerizonDeviceUsageHistoryPayloadProcessor implements
 					IConstant.VZ_AUTHORIZATION_TOKEN).toString();
 		}
 
-	/*	message.setHeader("VZ-M2M-Token",
-	              "1d1f8e7a-c8bb-4f3c-a924-cf612b562425");
-	              message.setHeader("Authorization",
-	              "Bearer 89ba225e1438e95bd05c3cc288d3591");
-*/
 	              
 		message.setHeader("VZ-M2M-Token", sessionToken);
 		message.setHeader("Authorization", "Bearer " + authorizationToken);
