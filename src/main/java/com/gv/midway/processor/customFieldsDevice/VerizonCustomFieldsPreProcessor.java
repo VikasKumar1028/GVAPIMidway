@@ -7,6 +7,8 @@ import org.apache.log4j.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
+import com.gv.midway.pojo.MidWayDeviceId;
+import com.gv.midway.pojo.MidWayDevices;
 import com.gv.midway.pojo.customFieldsDevice.request.CustomFieldsDeviceRequest;
 import com.gv.midway.pojo.customFieldsDevice.verizon.request.CustomFieldsDeviceRequestVerizon;
 import com.gv.midway.pojo.verizon.DeviceId;
@@ -35,18 +37,18 @@ public class VerizonCustomFieldsPreProcessor implements Processor {
 		businessRequest.setCustomFieldsToUpdate(proxyRequest.getDataArea()
 				.getCustomFieldsToUpdate());
 
-		Devices[] proxyDevicesArray = proxyRequest.getDataArea().getDevices();
+		MidWayDevices[] proxyDevicesArray = proxyRequest.getDataArea().getDevices();
 		Devices[] businessDevicesArray = new Devices[proxyDevicesArray.length];
 
 		for (int j = 0; j < proxyDevicesArray.length; j++) {
 
 			DeviceId[] businessDeviceIdArray = new DeviceId[proxyDevicesArray[j]
 					.getDeviceIds().length];
-			Devices proxyDevices = proxyDevicesArray[j];
+			MidWayDevices proxyDevices = proxyDevicesArray[j];
 			Devices businessDevice = new Devices();
 
 			for (int i = 0; i < proxyDevices.getDeviceIds().length; i++) {
-				DeviceId proxyDeviceId = proxyDevices.getDeviceIds()[i];
+				MidWayDeviceId proxyDeviceId = proxyDevices.getDeviceIds()[i];
 
 				DeviceId businessDeviceId = new DeviceId();
 				businessDeviceId.setId(proxyDeviceId.getId());

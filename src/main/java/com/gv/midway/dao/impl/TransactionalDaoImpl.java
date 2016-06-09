@@ -25,14 +25,16 @@ import com.gv.midway.constant.RequestType;
 import com.gv.midway.dao.ITransactionalDao;
 import com.gv.midway.pojo.BaseRequest;
 import com.gv.midway.pojo.Header;
+import com.gv.midway.pojo.MidWayDeviceId;
+import com.gv.midway.pojo.MidWayDevices;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceId;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequestDataArea;
 import com.gv.midway.pojo.activateDevice.request.ActivateDevices;
 import com.gv.midway.pojo.callback.Netsuite.KeyValues;
-import com.gv.midway.pojo.callback.Netsuite.NetSuiteCallBackError;
-import com.gv.midway.pojo.callback.Netsuite.NetSuiteCallBackEvent;
-import com.gv.midway.pojo.callback.common.response.CallbackCommonResponse;
+import com.gv.midway.pojo.callback.Netsuite.KafkaNetSuiteCallBackError;
+import com.gv.midway.pojo.callback.Netsuite.KafkaNetSuiteCallBackEvent;
+import com.gv.midway.pojo.callback.Netsuite.NetSuiteCallBackProvisioningResponse;
 import com.gv.midway.pojo.callback.request.CallBackVerizonRequest;
 import com.gv.midway.pojo.changeDeviceServicePlans.request.ChangeDeviceServicePlansRequest;
 import com.gv.midway.pojo.changeDeviceServicePlans.request.ChangeDeviceServicePlansRequestDataArea;
@@ -83,7 +85,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 			ActivateDeviceRequest dbPayload = new ActivateDeviceRequest();
 			dbPayload.setHeader(req.getHeader());
-
+            String netSuiteId=activateDevice.getNetSuiteId();
 			ActivateDevices[] businessPayLoadDevicesArray = new ActivateDevices[1];
 			ActivateDevices businessPayLoadActivateDevices = new ActivateDevices();
 			ActivateDeviceId[] businessPayloadDeviceId = new ActivateDeviceId[activateDevice.getDeviceIds().length];
@@ -133,7 +135,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				transaction.setAuditTransactionId(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
 				transaction.setRequestType(RequestType.ACTIVATION);
 				transaction.setCallBackReceived(false);
-
+                transaction.setNetSuiteId(netSuiteId);
 				list.add(transaction);
 
 			} catch (Exception ex) {
@@ -171,7 +173,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		for (DeactivateDevices deactivateDevice : deactivateDevices) {
 			DeactivateDeviceRequest dbPayload = new DeactivateDeviceRequest();
 			dbPayload.setHeader(req.getHeader());
-
+			String netSuiteId=deactivateDevice.getNetSuiteId();
 			DeactivateDevices[] businessPayloadDeviceArray = new DeactivateDevices[1];
 			DeactivateDevices businessPayLoadDeactivateDevices = new DeactivateDevices();
 			DeactivateDeviceId[] businessPayloadDeviceId = new DeactivateDeviceId[deactivateDevice.getDeviceIds().length];
@@ -222,6 +224,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				transaction.setAuditTransactionId(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
 				transaction.setRequestType(RequestType.DEACTIVATION);
 				transaction.setCallBackReceived(false);
+				transaction.setNetSuiteId(netSuiteId);
 				list.add(transaction);
 
 			} catch (Exception ex) {
@@ -251,21 +254,21 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		SuspendDeviceRequest req = (SuspendDeviceRequest) exchange.getIn().getBody();
 		SuspendDeviceRequestDataArea suspendDeviceRequestDataArea = (SuspendDeviceRequestDataArea) req.getDataArea();
-		Devices[] suspendDevices = suspendDeviceRequestDataArea.getDevices();
+		MidWayDevices[] suspendDevices = suspendDeviceRequestDataArea.getDevices();
 
 		Kryo kryo = new Kryo();
 
-		for (Devices suspendDevice : suspendDevices) {
+		for (MidWayDevices suspendDevice : suspendDevices) {
 			SuspendDeviceRequest dbPayload = new SuspendDeviceRequest();
 			dbPayload.setHeader(req.getHeader());
-
-			Devices[] businessPayloadDeviceArray = new Devices[1];
-			Devices businessPayLoadSuspendDevices = new Devices();
-			DeviceId[] businessPayloadDeviceId = new DeviceId[suspendDevice.getDeviceIds().length];
+            String netSuiteId=suspendDevice.getNetSuiteId();
+			MidWayDevices[] businessPayloadDeviceArray = new MidWayDevices[1];
+			MidWayDevices businessPayLoadSuspendDevices = new MidWayDevices();
+			MidWayDeviceId[] businessPayloadDeviceId = new MidWayDeviceId[suspendDevice.getDeviceIds().length];
 
 			for (int i = 0; i < suspendDevice.getDeviceIds().length; i++) {
-				DeviceId suspendDeviceId = suspendDevice.getDeviceIds()[i];
-				DeviceId businesspayLoadSuspendDeviceId = new DeviceId();
+				MidWayDeviceId suspendDeviceId = suspendDevice.getDeviceIds()[i];
+				MidWayDeviceId businesspayLoadSuspendDeviceId = new MidWayDeviceId();
 				businesspayLoadSuspendDeviceId.setId(suspendDeviceId.getId());
 				businesspayLoadSuspendDeviceId.setKind(suspendDeviceId.getKind());
 				businessPayloadDeviceId[i] = businesspayLoadSuspendDeviceId;
@@ -284,7 +287,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				transaction.setMidwayTransactionId(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID).toString());
 
 				//Sorting the device id by kind and inserting into deviceNumber
-				Arrays.sort(businessPayloadDeviceId,  (DeviceId a,DeviceId b) -> a.getKind().compareTo(b.getKind()));
+				Arrays.sort(businessPayloadDeviceId,  (MidWayDeviceId a,MidWayDeviceId b) -> a.getKind().compareTo(b.getKind()));
 				
 				ObjectMapper obj = new ObjectMapper();
 				String strDeviceNumber = obj.writeValueAsString(businessPayloadDeviceId);
@@ -295,7 +298,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				transaction.setTimeStampReceived(currentDataTime);
 				transaction.setAuditTransactionId(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
 				transaction.setRequestType(RequestType.SUSPEND);
-
+				transaction.setNetSuiteId(netSuiteId);
 				list.add(transaction);
 
 			} catch (Exception ex) {
@@ -612,61 +615,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		log.info("CallbackTransactionDaoImpl-getCallbackMidwayTransactionID");
 		log.info("Exchange inside" + exchange.getIn().getBody());
 
-	/*	CallbackCommonResponse callbackResponse = (CallbackCommonResponse) exchange.getIn().getBody(CallbackCommonResponse.class);
-
-		String requestId = callbackResponse.getDataArea().getRequestId();
-
-		ObjectMapper objectMapper = new ObjectMapper();
-		String strDeviceNumber = "";
-		
-		DeviceId[] targetCallbackDevices = new DeviceId[callbackResponse.getDataArea().getDeviceIds().length];
-		
-		for(int i = 0; i<callbackResponse.getDataArea().getDeviceIds().length; i++){
-			DeviceId callbackDevices = new DeviceId();
-			callbackDevices.setId(callbackResponse.getDataArea().getDeviceIds()[i].getId());
-			callbackDevices.setKind(callbackResponse.getDataArea().getDeviceIds()[i].getKind());
-			targetCallbackDevices[i] = callbackDevices;
-		}
-		
-		
-		Arrays.sort(targetCallbackDevices,  (DeviceId a, DeviceId b) -> a.getKind().compareTo(b.getKind()));
-		
-		
-		
-		try {
-			strDeviceNumber = objectMapper.writeValueAsString(targetCallbackDevices);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-
-		Query searchUserQuery = new Query(Criteria.where(ITransaction.CARRIER_TRANSACTION_ID).is(requestId).andOperator(Criteria.where(ITransaction.DEVICE_NUMBER).is(strDeviceNumber)));
-
-		
-		 * String carrierTransationID;//Call Back Thread String
-		 * carrierStatus;//Call Back Thread String
-		 * LastTimeStampUpdated;//CallBack Thread String
-		 * carrierErrorDecription;//CallBack Thread String
-		 * callBackPayload;//CallBack Thread Boolean
-		 * callBackDelivered;//CallBack Thread Boolean
-		 * callBackReceived;//CallBack Thread String
-		 * callBackFailureToNetSuitReason;//CallBack Thread
-		 
-
-		Transaction findOne = mongoTemplate.findOne(searchUserQuery, Transaction.class);
-		String midwayTransationID = findOne.getMidwayTransactionId() != null ? findOne.getMidwayTransactionId() : "";
-		String carrierTransationID = findOne.getCarrierTransactionId() != null ? findOne.getCarrierTransactionId() : ""; 
-		BaseRequest devicePayload = (BaseRequest) findOne.getDevicePayload();
-		Header header = devicePayload.getHeader();
-
-		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_ID, midwayTransationID);
-		exchange.setProperty(IConstant.GV_TRANSACTION_ID, carrierTransationID);
-		// TODO
-		exchange.setProperty(IConstant.GV_HOSTNAME, carrierTransationID);
-
-		callbackResponse.getDataArea().setRequestId(midwayTransationID);
-		callbackResponse.getDataArea().setTransactionId(carrierTransationID);
-		callbackResponse.getDataArea().setRequestType(findOne.getRequestType());
-		callbackResponse.setHeader(header);*/
+	
 		
 		CallBackVerizonRequest req = (CallBackVerizonRequest)exchange.getProperty(IConstant.VERIZON_CALLBACK_RESPONE);
 		
@@ -710,13 +659,19 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		
         KeyValues keyValues2=new KeyValues();
 		
-		keyValues2.setK("midwayTransactionId");
+        keyValues2.setK("orderNumber");
 		keyValues2.setV(midWayTransactionID);
+		
+		KeyValues keyValues3=new KeyValues();
+		
+	    keyValues3.setK("deviceIds");
+	    keyValues3.setV(strDeviceNumber.replace("'\'", ""));
 		
 		KeyValues[] keyValuesArr=new KeyValues[2];
 		
 		keyValuesArr[0]=keyValues1;
 		keyValuesArr[1]=keyValues2;
+		keyValuesArr[2]=keyValues3;
 		
 		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,
 				findOne.getDeviceNumber());
@@ -724,11 +679,18 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_ID,
 				midWayTransactionID);
 		
-		Object obj=exchange.getIn().getBody();
+		NetSuiteCallBackProvisioningResponse netSuiteCallBackProvisioningResponse=(NetSuiteCallBackProvisioningResponse)exchange.getIn().getBody();
 		
-		if(obj instanceof NetSuiteCallBackError){
+		netSuiteCallBackProvisioningResponse.setNetSuiteID(findOne.getNetSuiteId());
+		netSuiteCallBackProvisioningResponse.setCarrierOrderNumber(findOne.getMidwayTransactionId());
+		
+		netSuiteCallBackProvisioningResponse.setRequestType(requestType);
+		
+		Object kafkaObject=exchange.getProperty(IConstant.KAFKA_OBJECT);
+		
+		if(kafkaObject instanceof KafkaNetSuiteCallBackError){
 			
-			NetSuiteCallBackError netSuiteCallBackError=(NetSuiteCallBackError) obj;
+			KafkaNetSuiteCallBackError netSuiteCallBackError=(KafkaNetSuiteCallBackError) kafkaObject;
 			
 			String desc="Error in callBack from Verizon For "+strDeviceNumber +", transactionId "+midWayTransactionID +"and request Type is "+requestType;
 			
@@ -736,11 +698,11 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			netSuiteCallBackError.setId(requestType.toString());
 			netSuiteCallBackError.setBody(devicePayload);
 			netSuiteCallBackError.setKeyValues(keyValuesArr);
-			exchange.getIn().setBody(netSuiteCallBackError);
+			exchange.setProperty(IConstant.KAFKA_OBJECT, netSuiteCallBackError);
 		}
 		
 		else{
-			NetSuiteCallBackEvent netSuiteCallBackEvent=(NetSuiteCallBackEvent) obj;
+			KafkaNetSuiteCallBackEvent netSuiteCallBackEvent=(KafkaNetSuiteCallBackEvent) kafkaObject;
 			
 			String desc="Succesfull callBack from Verizon For "+strDeviceNumber +", transactionId "+midWayTransactionID +"and request Type is "+requestType;
 				
@@ -748,8 +710,57 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		    netSuiteCallBackEvent.setId(requestType.toString());
 		    netSuiteCallBackEvent.setBody(devicePayload);
 		    netSuiteCallBackEvent.setKeyValues(keyValuesArr);
-		    exchange.getIn().setBody(netSuiteCallBackEvent);
+		    exchange.setProperty(IConstant.KAFKA_OBJECT, netSuiteCallBackEvent);
+		    
+		    switch (requestType) {
+			case ACTIVATION:
+
+				netSuiteCallBackProvisioningResponse.setResponse("Device successfully activated.");
+				break;
+
+			case DEACTIVATION:
+
+				netSuiteCallBackProvisioningResponse.setResponse("Device successfully DeActivated.");
+
+				break;
+
+			case REACTIVATION:
+
+				netSuiteCallBackProvisioningResponse.setResponse("Device successfully ReActivated.");
+
+				break;
+
+			case RESTORE:
+
+				netSuiteCallBackProvisioningResponse.setResponse("Device successfully ReStored.");
+
+				break;
+
+			case SUSPEND:
+
+				netSuiteCallBackProvisioningResponse.setResponse("Device successfully Suspended.");
+
+				break;
+
+			case CHANGESERVICEPLAN:
+
+				netSuiteCallBackProvisioningResponse.setResponse("Device Service Plan Changed successfully.");
+
+				break;
+
+			case CHANGECUSTOMFIELDS:
+
+				netSuiteCallBackProvisioningResponse.setResponse("Device Custom Fields Changed successfully.");
+
+				break;
+
+			default:
+				break;
+			}
 		}
+		
+		
+		exchange.getIn().setBody(netSuiteCallBackProvisioningResponse);
 	}
 
 	public void populateReactivateDBPayload(Exchange exchange) {
@@ -763,22 +774,22 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		ReactivateDeviceRequestDataArea reActivateDeviceRequestDataArea = (ReactivateDeviceRequestDataArea) req.getDataArea();
 
-		Devices[] reActivateDevices = reActivateDeviceRequestDataArea.getDevices();
+		MidWayDevices[] reActivateDevices = reActivateDeviceRequestDataArea.getDevices();
 
 		Kryo kryo = new Kryo();
-		for (Devices reActivateDevice : reActivateDevices) {
+		for (MidWayDevices reActivateDevice : reActivateDevices) {
 
 			ReactivateDeviceRequest dbPayload = new ReactivateDeviceRequest();
 			dbPayload.setHeader(req.getHeader());
-
-			Devices[] businessPayLoadDevicesArray = new Devices[1];
-			Devices businessPayLoadActivateDevices = new Devices();
-			DeviceId[] businessPayloadDeviceId = new DeviceId[reActivateDevice.getDeviceIds().length];
+            String netSuiteId=reActivateDevice.getNetSuiteId();
+			MidWayDevices[] businessPayLoadDevicesArray = new MidWayDevices[1];
+			MidWayDevices businessPayLoadActivateDevices = new MidWayDevices();
+			MidWayDeviceId[] businessPayloadDeviceId = new MidWayDeviceId[reActivateDevice.getDeviceIds().length];
 
 			for (int i = 0; i < reActivateDevice.getDeviceIds().length; i++) {
-				DeviceId reActivateDeviceId = reActivateDevice.getDeviceIds()[i];
+				MidWayDeviceId reActivateDeviceId = reActivateDevice.getDeviceIds()[i];
 
-				DeviceId businessPayLoadActivateDeviceId = new DeviceId();
+				MidWayDeviceId businessPayLoadActivateDeviceId = new MidWayDeviceId();
 
 				/*
 				 * businessPayLoadActivateDeviceId.seteAPCode(activateDeviceId
@@ -816,7 +827,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				transaction.setAuditTransactionId(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
 				transaction.setRequestType(RequestType.REACTIVATION);
 				transaction.setCallBackReceived(false);
-
+				transaction.setNetSuiteId(netSuiteId);
 				list.add(transaction);
 
 			} catch (Exception ex) {
@@ -847,22 +858,22 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		RestoreDeviceRequestDataArea restoreDeviceRequestDataArea = (RestoreDeviceRequestDataArea) req.getDataArea();
 
-		Devices[] restoreDevices = restoreDeviceRequestDataArea.getDevices();
+		MidWayDevices[] restoreDevices = restoreDeviceRequestDataArea.getDevices();
 
 		Kryo kryo = new Kryo();
-		for (Devices restoreDevice : restoreDevices) {
+		for (MidWayDevices restoreDevice : restoreDevices) {
 
 			RestoreDeviceRequest dbPayload = new RestoreDeviceRequest();
 			dbPayload.setHeader(req.getHeader());
-
-			Devices[] businessPayLoadDevicesArray = new Devices[1];
-			Devices businessPayLoadRestoreDevices = new Devices();
-			DeviceId[] businessPayloadDeviceId = new DeviceId[restoreDevice.getDeviceIds().length];
+            String netSuiteId=restoreDevice.getNetSuiteId();
+			MidWayDevices[] businessPayLoadDevicesArray = new MidWayDevices[1];
+			MidWayDevices businessPayLoadRestoreDevices = new MidWayDevices();
+			MidWayDeviceId[] businessPayloadDeviceId = new MidWayDeviceId[restoreDevice.getDeviceIds().length];
 
 			for (int i = 0; i < restoreDevice.getDeviceIds().length; i++) {
-				DeviceId deviceId = restoreDevice.getDeviceIds()[i];
+				MidWayDeviceId deviceId = restoreDevice.getDeviceIds()[i];
 
-				DeviceId businessPayLoadRestoreDeviceId = new DeviceId();
+				MidWayDeviceId businessPayLoadRestoreDeviceId = new MidWayDeviceId();
 
 				
 				businessPayLoadRestoreDeviceId.setId(deviceId.getId());
@@ -887,7 +898,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				transaction.setMidwayTransactionId(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID).toString());
 				
 				//Sorting the device id by kind and inserting into deviceNumber
-				Arrays.sort(businessPayloadDeviceId,  (DeviceId a,DeviceId b) -> a.getKind().compareTo(b.getKind()));
+				Arrays.sort(businessPayloadDeviceId,  (MidWayDeviceId a,MidWayDeviceId b) -> a.getKind().compareTo(b.getKind()));
 				
 				// TODO if number of devices are more
 				ObjectMapper obj = new ObjectMapper();
@@ -900,7 +911,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				transaction.setAuditTransactionId(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
 				transaction.setRequestType(RequestType.RESTORE);
 				transaction.setCallBackReceived(false);
-
+				transaction.setNetSuiteId(netSuiteId);
 				list.add(transaction);
 
 			} catch (Exception ex) {
@@ -932,22 +943,22 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		CustomFieldsDeviceRequestDataArea customFieldsDeviceRequestDataArea = (CustomFieldsDeviceRequestDataArea) req.getDataArea();
 
-		Devices[] customFieldsDevices = customFieldsDeviceRequestDataArea.getDevices();
+		MidWayDevices[] customFieldsDevices = customFieldsDeviceRequestDataArea.getDevices();
 
 		Kryo kryo = new Kryo();
-		for (Devices customFieldsDevice : customFieldsDevices) {
+		for (MidWayDevices customFieldsDevice : customFieldsDevices) {
 
 			CustomFieldsDeviceRequest dbPayload = new CustomFieldsDeviceRequest();
 			dbPayload.setHeader(req.getHeader());
-
-			Devices[] businessPayLoadDevicesArray = new Devices[1];
-			Devices businessPayLoadActivateDevices = new Devices();
-			DeviceId[] businessPayloadDeviceId = new DeviceId[customFieldsDevice.getDeviceIds().length];
+            String netSuiteId=customFieldsDevice.getNetSuiteId();
+			MidWayDevices[] businessPayLoadDevicesArray = new MidWayDevices[1];
+			MidWayDevices businessPayLoadActivateDevices = new MidWayDevices();
+			MidWayDeviceId[] businessPayloadDeviceId = new MidWayDeviceId[customFieldsDevice.getDeviceIds().length];
 
 			for (int i = 0; i < customFieldsDevice.getDeviceIds().length; i++) {
-				DeviceId customFieldsDeviceId = customFieldsDevice.getDeviceIds()[i];
+				MidWayDeviceId customFieldsDeviceId = customFieldsDevice.getDeviceIds()[i];
 
-				DeviceId businessPayLoadActivateDeviceId = new DeviceId();
+				MidWayDeviceId businessPayLoadActivateDeviceId = new MidWayDeviceId();
 
 				/*
 				 * businessPayLoadActivateDeviceId.seteAPCode(activateDeviceId
@@ -976,7 +987,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				transaction.setMidwayTransactionId(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID).toString());
 				
 				//Sorting the device id by kind and inserting into deviceNumber
-				Arrays.sort(businessPayloadDeviceId,  (DeviceId a,DeviceId b) -> a.getKind().compareTo(b.getKind()));
+				Arrays.sort(businessPayloadDeviceId,  (MidWayDeviceId a,MidWayDeviceId b) -> a.getKind().compareTo(b.getKind()));
 				
 				// TODO if number of devices are more
 				ObjectMapper obj = new ObjectMapper();
@@ -989,7 +1000,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				transaction.setAuditTransactionId(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
 				transaction.setRequestType(RequestType.CHANGECUSTOMFIELDS);
 				transaction.setCallBackReceived(false);
-
+				transaction.setNetSuiteId(netSuiteId);
 				list.add(transaction);
 
 			} catch (Exception ex) {
@@ -1021,21 +1032,21 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		ChangeDeviceServicePlansRequest req = (ChangeDeviceServicePlansRequest) exchange.getIn().getBody();
 		ChangeDeviceServicePlansRequestDataArea changeDeviceServicePlansRequestDataArea = (ChangeDeviceServicePlansRequestDataArea) req.getDataArea();
-		Devices[] changeServicePlansDevices = changeDeviceServicePlansRequestDataArea.getDevices();
+		MidWayDevices[] changeServicePlansDevices = changeDeviceServicePlansRequestDataArea.getDevices();
 
 		Kryo kryo = new Kryo();
 
-		for (Devices changeServicePlansDevice : changeServicePlansDevices) {
+		for (MidWayDevices changeServicePlansDevice : changeServicePlansDevices) {
 			ChangeDeviceServicePlansRequest dbPayload = new ChangeDeviceServicePlansRequest();
 			dbPayload.setHeader(req.getHeader());
-
-			Devices[] businessPayloadDeviceArray = new Devices[1];
-			Devices businessPayLoadChangeServicePlansDevices = new Devices();
-			DeviceId[] businessPayloadDeviceId = new DeviceId[changeServicePlansDevice.getDeviceIds().length];
+            String netSuiteId=changeServicePlansDevice.getNetSuiteId();
+			MidWayDevices[] businessPayloadDeviceArray = new MidWayDevices[1];
+			MidWayDevices businessPayLoadChangeServicePlansDevices = new MidWayDevices();
+			MidWayDeviceId[] businessPayloadDeviceId = new MidWayDeviceId[changeServicePlansDevice.getDeviceIds().length];
 
 			for (int i = 0; i < changeServicePlansDevice.getDeviceIds().length; i++) {
-				DeviceId changeServicePlansDeviceId = changeServicePlansDevice.getDeviceIds()[i];
-				DeviceId businesspayLoadChangeServicePlansDeviceId = new DeviceId();
+				MidWayDeviceId changeServicePlansDeviceId = changeServicePlansDevice.getDeviceIds()[i];
+				MidWayDeviceId businesspayLoadChangeServicePlansDeviceId = new MidWayDeviceId();
 				businesspayLoadChangeServicePlansDeviceId.setId(changeServicePlansDeviceId.getId());
 				businesspayLoadChangeServicePlansDeviceId.setKind(changeServicePlansDeviceId.getKind());
 				businessPayloadDeviceId[i] = businesspayLoadChangeServicePlansDeviceId;
@@ -1054,7 +1065,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				transaction.setMidwayTransactionId(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID).toString());
 
 				//Sorting the device id by kind and inserting into deviceNumber
-				Arrays.sort(businessPayloadDeviceId,  (DeviceId a,DeviceId b) -> a.getKind().compareTo(b.getKind()));
+				Arrays.sort(businessPayloadDeviceId,  (MidWayDeviceId a,MidWayDeviceId b) -> a.getKind().compareTo(b.getKind()));
 				
 				ObjectMapper obj = new ObjectMapper();
 				String strDeviceNumber = obj.writeValueAsString(businessPayloadDeviceId);
@@ -1066,6 +1077,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				transaction.setAuditTransactionId(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
 				transaction.setRequestType(RequestType.CHANGESERVICEPLAN);
 				transaction.setCallBackReceived(false);
+				transaction.setNetSuiteId(netSuiteId);
 				list.add(transaction);
 
 			} catch (Exception ex) {

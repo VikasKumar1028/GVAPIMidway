@@ -2,19 +2,20 @@ package com.gv.midway.pojo.callback.Netsuite;
 
 import java.util.Arrays;
 
-public class NetSuiteCallBackEvent {
+public class KafkaNetSuiteCallBackError {
+	private Long timestamp;
 
-	private long timestamp;
+	private String app;
 
 	private String id;
 
 	private Object body;
 
-	private String app;
-
 	private String desc;
 
 	private String level;
+
+	private String exception;
 
 	private String category;
 
@@ -23,14 +24,6 @@ public class NetSuiteCallBackEvent {
 	private String msg;
 
 	private String version;
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
 
 	public String getApp() {
 		return app;
@@ -54,6 +47,14 @@ public class NetSuiteCallBackEvent {
 
 	public void setLevel(String level) {
 		this.level = level;
+	}
+
+	public String getException() {
+		return exception;
+	}
+
+	public void setException(String exception) {
+		this.exception = exception;
 	}
 
 	public KeyValues[] getKeyValues() {
@@ -80,37 +81,14 @@ public class NetSuiteCallBackEvent {
 		this.version = version;
 	}
 
-	public String getCategory() {
-		return category;
-	}
-
-	public void setCategory(String category) {
-		this.category = category;
-	}
-
-	public void setTimestamp(long timestamp) {
-		this.timestamp = timestamp;
-	}
-
-	public void setBody(Object body) {
-		this.body = body;
-	}
-
-	public long getTimestamp() {
-		return timestamp;
-	}
-
-	public Object getBody() {
-		return body;
-	}
-
 	@Override
 	public String toString() {
-		return "NetSuiteCallBackEvent [timestamp=" + timestamp + ", id=" + id
-				+ ", body=" + body + ", app=" + app + ", desc=" + desc
-				+ ", level=" + level + ", category=" + category
-				+ ", keyValues=" + Arrays.toString(keyValues) + ", msg=" + msg
-				+ ", version=" + version + "]";
+		return "NetSuiteCallBackError [timestamp=" + timestamp + ", app=" + app
+				+ ", id=" + id + ", body=" + body + ", desc=" + desc
+				+ ", level=" + level + ", exception=" + exception
+				+ ", category=" + category + ", keyValues="
+				+ Arrays.toString(keyValues) + ", msg=" + msg + ", version="
+				+ version + "]";
 	}
 
 	@Override
@@ -122,11 +100,14 @@ public class NetSuiteCallBackEvent {
 		result = prime * result
 				+ ((category == null) ? 0 : category.hashCode());
 		result = prime * result + ((desc == null) ? 0 : desc.hashCode());
+		result = prime * result
+				+ ((exception == null) ? 0 : exception.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + Arrays.hashCode(keyValues);
 		result = prime * result + ((level == null) ? 0 : level.hashCode());
 		result = prime * result + ((msg == null) ? 0 : msg.hashCode());
-		result = prime * result + (int) (timestamp ^ (timestamp >>> 32));
+		result = prime * result
+				+ ((timestamp == null) ? 0 : timestamp.hashCode());
 		result = prime * result + ((version == null) ? 0 : version.hashCode());
 		return result;
 	}
@@ -139,7 +120,7 @@ public class NetSuiteCallBackEvent {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		NetSuiteCallBackEvent other = (NetSuiteCallBackEvent) obj;
+		KafkaNetSuiteCallBackError other = (KafkaNetSuiteCallBackError) obj;
 		if (app == null) {
 			if (other.app != null)
 				return false;
@@ -160,6 +141,11 @@ public class NetSuiteCallBackEvent {
 				return false;
 		} else if (!desc.equals(other.desc))
 			return false;
+		if (exception == null) {
+			if (other.exception != null)
+				return false;
+		} else if (!exception.equals(other.exception))
+			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -177,7 +163,10 @@ public class NetSuiteCallBackEvent {
 				return false;
 		} else if (!msg.equals(other.msg))
 			return false;
-		if (timestamp != other.timestamp)
+		if (timestamp == null) {
+			if (other.timestamp != null)
+				return false;
+		} else if (!timestamp.equals(other.timestamp))
 			return false;
 		if (version == null) {
 			if (other.version != null)
@@ -187,4 +176,35 @@ public class NetSuiteCallBackEvent {
 		return true;
 	}
 
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public Long getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(Long timestamp) {
+		this.timestamp = timestamp;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	public void setBody(Object body) {
+		this.body = body;
+	}
+
+	public Object getBody() {
+		return body;
+	}
 }

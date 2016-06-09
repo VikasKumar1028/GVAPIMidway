@@ -59,6 +59,9 @@ public class KoreCheckStatusPreProcessor implements Processor {
 
 		exchange.setProperty(IConstant.MIDWAY_CARRIER_ERROR_DESC,
 				transaction.getCarrierErrorDescription());
+		
+		exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID,
+				transaction.getNetSuiteId());
 
 		/***
 		 * carrier status as Error . CallBack the Netsuite end point here and

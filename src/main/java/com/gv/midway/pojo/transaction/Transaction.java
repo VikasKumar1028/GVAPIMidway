@@ -23,6 +23,11 @@ public class Transaction {
 	private String auditTransactionId;
 	private Boolean callBackReceived;
 	private String callBackFailureToNetSuiteReason;
+	private String netSuiteId;
+
+	
+
+
 
 	public Transaction() {
 		super();
@@ -178,6 +183,16 @@ public class Transaction {
 		this.callBackFailureToNetSuiteReason = callBackFailureToNetSuiteReason;
 	}
 
+	public String getNetSuiteId() {
+		return netSuiteId;
+	}
+
+
+
+	public void setNetSuiteId(String netSuiteId) {
+		this.netSuiteId = netSuiteId;
+	}
+
 
 
 	@Override
@@ -227,6 +242,8 @@ public class Transaction {
 				* result
 				+ ((midwayTransactionId == null) ? 0 : midwayTransactionId
 						.hashCode());
+		result = prime * result
+				+ ((netSuiteId == null) ? 0 : netSuiteId.hashCode());
 		result = prime * result
 				+ ((requestType == null) ? 0 : requestType.hashCode());
 		result = prime
@@ -319,6 +336,11 @@ public class Transaction {
 				return false;
 		} else if (!midwayTransactionId.equals(other.midwayTransactionId))
 			return false;
+		if (netSuiteId == null) {
+			if (other.netSuiteId != null)
+				return false;
+		} else if (!netSuiteId.equals(other.netSuiteId))
+			return false;
 		if (requestType != other.requestType)
 			return false;
 		if (timeStampReceived == null) {
@@ -366,9 +388,13 @@ public class Transaction {
 		builder.append(callBackReceived);
 		builder.append(", callBackFailureToNetSuiteReason=");
 		builder.append(callBackFailureToNetSuiteReason);
+		builder.append(", netSuiteId=");
+		builder.append(netSuiteId);
 		builder.append("]");
 		return builder.toString();
 	}
+
+	
 
 
 

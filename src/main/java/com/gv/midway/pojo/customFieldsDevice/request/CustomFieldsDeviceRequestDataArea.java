@@ -1,18 +1,17 @@
 package com.gv.midway.pojo.customFieldsDevice.request;
 
 import java.util.Arrays;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.gv.midway.pojo.MidWayDevices;
 import com.gv.midway.pojo.verizon.CustomFields;
 import com.gv.midway.pojo.verizon.CustomFieldsToUpdate;
-import com.gv.midway.pojo.verizon.Devices;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CustomFieldsDeviceRequestDataArea {
+	
 	@ApiModelProperty(value = "All identifiers for the device.")
-	private Devices[] devices;
+	private MidWayDevices[] devices;
 
 	@ApiModelProperty(value = "Name of the billing account.")
 	private String accountName;
@@ -32,6 +31,56 @@ public class CustomFieldsDeviceRequestDataArea {
 
 	@ApiModelProperty(value = "The names and new values of any custom fields that you want to change.")
 	private CustomFieldsToUpdate[] customFieldsToUpdate;
+
+
+	public String getAccountName() {
+		return accountName;
+	}
+
+	public void setAccountName(String accountName) {
+		this.accountName = accountName;
+	}
+
+	public String getGroupName() {
+		return groupName;
+	}
+
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
+	}
+
+	public String getServicePlan() {
+		return servicePlan;
+	}
+
+	public void setServicePlan(String servicePlan) {
+		this.servicePlan = servicePlan;
+	}
+
+	public CustomFieldsToUpdate[] getCustomFieldsToUpdate() {
+		return customFieldsToUpdate;
+	}
+
+	public void setCustomFieldsToUpdate(
+			CustomFieldsToUpdate[] customFieldsToUpdate) {
+		this.customFieldsToUpdate = customFieldsToUpdate;
+	}
+
+	public MidWayDevices[] getDevices() {
+		return devices;
+	}
+
+	public void setDevices(MidWayDevices[] devices) {
+		this.devices = devices;
+	}
+
+	public CustomFields[] getCustomFields() {
+		return customFields;
+	}
+
+	public void setCustomFields(CustomFields[] customFields) {
+		this.customFields = customFields;
+	}
 
 	@Override
 	public int hashCode() {
@@ -82,63 +131,23 @@ public class CustomFieldsDeviceRequestDataArea {
 		return true;
 	}
 
-	public String getAccountName() {
-		return accountName;
-	}
-
-	public void setAccountName(String accountName) {
-		this.accountName = accountName;
-	}
-
-	public String getGroupName() {
-		return groupName;
-	}
-
-	public void setGroupName(String groupName) {
-		this.groupName = groupName;
-	}
-
-	public String getServicePlan() {
-		return servicePlan;
-	}
-
-	public void setServicePlan(String servicePlan) {
-		this.servicePlan = servicePlan;
-	}
-
-	public CustomFieldsToUpdate[] getCustomFieldsToUpdate() {
-		return customFieldsToUpdate;
-	}
-
-	public void setCustomFieldsToUpdate(
-			CustomFieldsToUpdate[] customFieldsToUpdate) {
-		this.customFieldsToUpdate = customFieldsToUpdate;
-	}
-
 	@Override
 	public String toString() {
-		return "CustomFieldsDeviceRequestDataArea [devices="
-				+ Arrays.toString(devices) + ", accountName=" + accountName
-				+ ", groupName=" + groupName + ", servicePlan=" + servicePlan
-				+ ", customFields=" + Arrays.toString(customFields)
-				+ ", customFieldsToUpdate="
-				+ Arrays.toString(customFieldsToUpdate) + "]";
-	}
-
-	public Devices[] getDevices() {
-		return devices;
-	}
-
-	public void setDevices(Devices[] devices) {
-		this.devices = devices;
-	}
-
-	public CustomFields[] getCustomFields() {
-		return customFields;
-	}
-
-	public void setCustomFields(CustomFields[] customFields) {
-		this.customFields = customFields;
+		StringBuilder builder = new StringBuilder();
+		builder.append("CustomFieldsDeviceRequestDataArea [devices=");
+		builder.append(Arrays.toString(devices));
+		builder.append(", accountName=");
+		builder.append(accountName);
+		builder.append(", groupName=");
+		builder.append(groupName);
+		builder.append(", servicePlan=");
+		builder.append(servicePlan);
+		builder.append(", customFields=");
+		builder.append(Arrays.toString(customFields));
+		builder.append(", customFieldsToUpdate=");
+		builder.append(Arrays.toString(customFieldsToUpdate));
+		builder.append("]");
+		return builder.toString();
 	}
 
 }

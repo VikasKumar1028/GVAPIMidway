@@ -3,6 +3,8 @@ package com.gv.midway.test;
 import org.apache.camel.Exchange;
 
 import com.gv.midway.pojo.Header;
+import com.gv.midway.pojo.MidWayDeviceId;
+import com.gv.midway.pojo.MidWayDevices;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceId;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequestDataArea;
@@ -371,12 +373,12 @@ public class DeviceTestData extends Header {
 		RestoreDeviceRequest req=new RestoreDeviceRequest();
 		RestoreDeviceRequestDataArea dataArea=new RestoreDeviceRequestDataArea();
 	
-		Devices [] deDevices=new Devices[1];
-        Devices ddevices = new Devices();
+		MidWayDevices [] deDevices=new MidWayDevices[1];
+        MidWayDevices ddevices = new MidWayDevices();
 
-        DeviceId[] DeActivateDeviceIdArray = new DeviceId[1];
+        MidWayDeviceId[] DeActivateDeviceIdArray = new MidWayDeviceId[1];
  		 
- 		DeviceId restoreDeviceId= new DeviceId();
+        MidWayDeviceId restoreDeviceId= new MidWayDeviceId();
  		
  		restoreDeviceId.setId("89014103277405946190");
  		restoreDeviceId.setKind("ghgjg");
@@ -416,12 +418,12 @@ public class DeviceTestData extends Header {
 				SuspendDeviceRequest req=new SuspendDeviceRequest();
 				SuspendDeviceRequestDataArea dataArea=new SuspendDeviceRequestDataArea();
 			
-				Devices [] deDevices=new Devices[1];
-				Devices ddevices = new Devices();
+				MidWayDevices [] deDevices=new MidWayDevices[1];
+				MidWayDevices ddevices = new MidWayDevices();
 
-		        DeviceId[] suspendDeviceIdArray = new DeviceId[1];
+				MidWayDeviceId[] suspendDeviceIdArray = new MidWayDeviceId[1];
 		 		 
-		 		DeviceId suspendDeviceId= new DeviceId();
+				MidWayDeviceId suspendDeviceId= new MidWayDeviceId();
 		 		
 		 		suspendDeviceId.setId("89014103277405946190");
 		 		suspendDeviceId.setKind("ghgjg");
