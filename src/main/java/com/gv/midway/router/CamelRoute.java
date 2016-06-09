@@ -73,12 +73,12 @@ import com.gv.midway.processor.deviceInformation.StubKoreDeviceInformationProces
 import com.gv.midway.processor.deviceInformation.StubVerizonDeviceInformationProcessor;
 import com.gv.midway.processor.deviceInformation.VerizonDeviceInformationPostProcessor;
 import com.gv.midway.processor.deviceInformation.VerizonDeviceInformationPreProcessor;
-import com.gv.midway.processor.jobScheduler.CreateKoreDeviceUsageHistoryPayloadProcessor;
-import com.gv.midway.processor.jobScheduler.CreateVerizonDeviceConnectionHistoryPayloadProcessor;
-import com.gv.midway.processor.jobScheduler.CreateVerizonDeviceUsageHistoryPayloadProcessor;
-import com.gv.midway.processor.jobScheduler.KoreUsageHistoryPreProcessor;
-import com.gv.midway.processor.jobScheduler.VerizonConnectionHistoryPreProcessor;
-import com.gv.midway.processor.jobScheduler.VerizonUsageHistoryPreProcessor;
+import com.gv.midway.processor.jobScheduler.KoreDeviceUsageHistoryPreProcessor;
+import com.gv.midway.processor.jobScheduler.VerizonDeviceConnectionHistoryPreProcessor;
+import com.gv.midway.processor.jobScheduler.VerizonDeviceUsageHistoryPreProcessor;
+import com.gv.midway.processor.jobScheduler.KoreDeviceUsageHistoryPostProcessor;
+import com.gv.midway.processor.jobScheduler.VerizonDeviceConnectionHistoryPostProcessor;
+import com.gv.midway.processor.jobScheduler.VerizonDeviceUsageHistoryPostProcessor;
 import com.gv.midway.processor.kafka.KafkaProcessor;
 import com.gv.midway.processor.reactivate.KoreReactivateDevicePostProcessor;
 import com.gv.midway.processor.reactivate.KoreReactivateDevicePreProcessor;
@@ -1205,23 +1205,25 @@ public class CamelRoute extends RouteBuilder {
 				.log("KOREJob-DEVICE USAGE")
 
 				.doTry()
-				.process(new CreateKoreDeviceUsageHistoryPayloadProcessor())
+				.process(new KoreDeviceUsageHistoryPreProcessor())
 				.to(uriRestKoreEndPoint).unmarshal().json(JsonLibrary.Jackson)
-				.process(new KoreUsageHistoryPreProcessor())
+				.process(new KoreDeviceUsageHistoryPostProcessor())
 				.bean(iSchedulerService, "saveDeviceUsageHistory")
 				.doCatch(Exception.class).end();
 
 		// VERIZON Job-DEVICE USAGE
-		from("seda:processVerizonDeviceUsageJob?concurrentConsumers=10")
+		from("seda:processVerizonDeviceUsageJob?concurrentConsumers=4")
 				.log("VERIZONJob-DEVICE USAGE").doTry()
 				.bean(iSessionService, "setContextTokenInExchange")
-				.process(new CreateVerizonDeviceUsageHistoryPayloadProcessor())
+				.process(new VerizonDeviceUsageHistoryPreProcessor())
 				.to(uriRestVerizonEndPoint).unmarshal()
 				.json(JsonLibrary.Jackson)
-				.process(new VerizonUsageHistoryPreProcessor())
+				.process(new VerizonDeviceUsageHistoryPostProcessor())
 				.bean(iSchedulerService, "saveDeviceUsageHistory")
-				.doCatch(CxfOperationException.class)
-				.process(new VerizonBatchExceptionProcessor(env)).endDoTry();
+				.doCatch(CxfOperationException.class,UnknownHostException.class, ConnectException.class)
+				.process(new VerizonBatchExceptionProcessor(env))
+				.bean(iSchedulerService, "saveDeviceUsageHistory")
+				.endDoTry();
 
 		// VERIZON Job CONNECTION HISTORY
 		from("seda:processVerizonConnectionHistoryJob?concurrentConsumers=5")
@@ -1229,10 +1231,10 @@ public class CamelRoute extends RouteBuilder {
 				.doTry()
 				.bean(iSessionService, "setContextTokenInExchange")
 				.process(
-						new CreateVerizonDeviceConnectionHistoryPayloadProcessor())
+						new VerizonDeviceConnectionHistoryPreProcessor())
 				.to(uriRestVerizonEndPoint).unmarshal()
 				.json(JsonLibrary.Jackson)
-				.process(new VerizonConnectionHistoryPreProcessor())
+				.process(new VerizonDeviceConnectionHistoryPostProcessor())
 				.bean(iSchedulerService, "saveDeviceConnectionHistory")
 				.doCatch(CxfOperationException.class)
 				.process(new VerizonBatchExceptionProcessor(env)).endDoTry();

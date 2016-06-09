@@ -1,5 +1,8 @@
 package com.gv.midway.processor;
 
+import java.net.ConnectException;
+import java.net.UnknownHostException;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.component.cxf.CxfOperationException;
@@ -7,7 +10,13 @@ import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
 
 import com.gv.midway.constant.IConstant;
+import com.gv.midway.constant.JobName;
 import com.gv.midway.exception.VerizonSessionTokenExpirationException;
+import com.gv.midway.job.JobDetail;
+import com.gv.midway.pojo.deviceHistory.DeviceUsage;
+import com.gv.midway.pojo.usageInformation.verizon.response.UsageHistory;
+import com.gv.midway.pojo.verizon.DeviceId;
+import com.gv.midway.utility.CommonUtil;
 
 public class VerizonBatchExceptionProcessor implements Processor {
 
@@ -24,43 +33,74 @@ public class VerizonBatchExceptionProcessor implements Processor {
 	}
 
 	public VerizonBatchExceptionProcessor() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public void process(Exchange exchange) throws Exception {
 
-		CxfOperationException exception = (CxfOperationException) exchange
+		Exception ex = (Exception) exchange
 				.getProperty(Exchange.EXCEPTION_CAUGHT);
 
-		log.info("----VerizonGenericExceptionProcessor----------"
-				+ exception.getResponseBody());
-		log.info("----.getStatusCode()----------" + exception.getStatusCode());
-		log.info("--------------deviceId" + exchange.getIn().getBody());
-		log.info("--------------deviceId" + exchange.getProperty("DeviceId"));
-		
-		// TODO SAME Functionality
-		if (exception.getStatusCode() == 401
-				|| exception
-						.getResponseBody()
-						.contains(
-								"UnifiedWebService.REQUEST_FAILED.SessionToken.Expired")) {
-			exchange.setProperty(IConstant.RESPONSE_CODE, "401");
-			exchange.setProperty(IConstant.RESPONSE_STATUS, "Invalid Token");
-			exchange.setProperty(IConstant.RESPONSE_DESCRIPTION,
-					"Not able to retrieve  valid authentication token");
-			throw new VerizonSessionTokenExpirationException("401", "401");
+		String errorType = "";
+
+		// If Connection Exception
+		if (ex.getCause() instanceof UnknownHostException
+				|| ex.getCause() instanceof ConnectException) {
+			errorType = IConstant.MIDWAY_CONNECTION_ERROR;
+
 		}
-		// TODO SAME Functionality
+		// CXF Exception
 		else {
+			CxfOperationException exception = (CxfOperationException) exchange
+					.getProperty(Exchange.EXCEPTION_CAUGHT);
+			// Token Expiration Exception
+			if (exception.getStatusCode() == 401
+					|| exception
+							.getResponseBody()
+							.contains(
+									"UnifiedWebService.REQUEST_FAILED.SessionToken.Expired")) {
+				exchange.setProperty(IConstant.RESPONSE_CODE, "401");
+				exchange.setProperty(IConstant.RESPONSE_STATUS, "Invalid Token");
+				exchange.setProperty(IConstant.RESPONSE_DESCRIPTION,
+						"Not able to retrieve  valid authentication token");
+				throw new VerizonSessionTokenExpirationException("401", "401");
+			} // Other Cxf Exception
+			else {
+				errorType = exception.getResponseBody();
 
-			
-			
-			//Insert a new Object in the batch depending on device Usage and connection history
-			
-			
+			}
 
 		}
 
-		
+		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+
+		if (jobDetail.getName().equals(JobName.KORE_DEVICE_USAGE)
+				|| jobDetail.getName().equals(JobName.VERIZON_DEVICE_USAGE)) {
+
+			DeviceUsage deviceUsage = new DeviceUsage();
+
+			deviceUsage.setCarrierName((String) exchange
+					.getProperty("CarrierName"));
+			deviceUsage
+					.setDeviceId((DeviceId) exchange.getProperty("DeviceId"));
+			deviceUsage.setDataUsed(0);
+			deviceUsage.setTimestamp(jobDetail.getDate());
+			deviceUsage.setTransactionErrorReason(errorType);
+			deviceUsage
+					.setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
+			deviceUsage.setNetSuiteId((String) exchange
+					.getProperty("NetSuiteId"));
+			deviceUsage.setIsValid(true);
+
+			exchange.getIn().setBody(deviceUsage);
+
+		} else {
+			System.out
+					.println("**********************************CONNECTION HISTORY******************************************************************");
+
+		}
+
+		log.info("--------------jobDetail" + jobDetail);
+
 	}
 }

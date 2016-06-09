@@ -38,18 +38,20 @@ public class RetrieveDeviceUsageHistoryPreProcessor implements Processor {
 		UsageInformationRequest usageInformationRequest=(UsageInformationRequest )exchange
 				.getIn().getBody();
 
-
-		UsageInformationRequestDataArea usageInformationRequestDataArea = new UsageInformationRequestDataArea();
+		
+		UsageInformationRequestDataArea usageInformationRequestDataArea = usageInformationRequest.getDataArea();
 
 		log.info("usageInformationRequestDataArea:::"+usageInformationRequest);
+		
+		
 
 		DeviceId device = new DeviceId();
-		/*device.setId(usageInformationRequestDataArea.getDeviceId().getId());
-		device.setKind(usageInformationRequestDataArea.getDeviceId().getKind());*/
+		device.setId(usageInformationRequestDataArea.getDeviceId().getId());
+		device.setKind(usageInformationRequestDataArea.getDeviceId().getKind());
 		 
 
-		device.setId("89148000002034195203");
-		device.setKind("ICCID");
+		/*device.setId("89148000002034195203");
+		device.setKind("ICCID");*/
 		usageInformationRequestDataArea.setDeviceId(device);
 
 		exchange.setProperty("DeviceId", device);

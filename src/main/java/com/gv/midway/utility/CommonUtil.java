@@ -12,6 +12,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.gv.midway.constant.IEndPoints;
+import com.gv.midway.pojo.verizon.DeviceId;
 
 public class CommonUtil {
 
@@ -31,7 +32,7 @@ public class CommonUtil {
 		endPointList.add(IEndPoints.RESTORE_SEDA_KORE_ENDPOINT);
 		endPointList.add(IEndPoints.SUSPENSION_SEDA_KORE_ENDPOINT);
 		endPointList.add(IEndPoints.REACTIVATION_SEDA_KORE_ENDPOINT);
-		
+
 		endPointList.add(IEndPoints.CHANGE_CUSTOMFIELD_ENDPOINT);
 		endPointList.add(IEndPoints.CHANGE_SERVICEPLAN_ENDPOINT);
 		endPointList.add(IEndPoints.CHANGE_SERVICEPLAN_SEDA_KORE_ENDPOINT);
@@ -100,6 +101,27 @@ public class CommonUtil {
 		}
 
 		return false;
+
+	}
+
+	// Returning the recommended device Identifier such as ESN/MEID/ICCID for
+	// Device Connection and Device Usage Batch Jobs
+
+	public static DeviceId getRecommendedDeviceIdentifier(DeviceId[] devices) {
+
+		log.info("getRecommendedDeviceIdentifier........deviceId..is......." );
+
+		for (DeviceId device : devices) {
+			if (("ESN".equalsIgnoreCase(device.getKind()))
+					|| ("MEID".equalsIgnoreCase(device.getKind()))
+					|| ("ICCID".equalsIgnoreCase(device.getKind()))) {
+
+				return device;
+			}
+
+		}
+
+		return devices[0];
 
 	}
 }
