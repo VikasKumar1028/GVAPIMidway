@@ -5,7 +5,6 @@ import java.util.List;
 import org.apache.camel.Exchange;
 
 import com.gv.midway.constant.JobName;
-import com.gv.midway.job.JobDetail;
 
 public interface IJobService {
 	
@@ -14,6 +13,8 @@ public interface IJobService {
 	public void insertJobDetails(Exchange exchange);
 
 	public void updateJobDetails(Exchange exchange);
+	
+	public void deleteDeviceUsageRecords(Exchange exchange) ;
 	
 	public void setJobDetails(Exchange exchange,String carrierName,JobName jobName);
 

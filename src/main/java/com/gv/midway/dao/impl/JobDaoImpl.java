@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.camel.Exchange;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.dao.IJobDao;
 import com.gv.midway.job.JobDetail;
+import com.gv.midway.pojo.deviceHistory.DeviceUsage;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 
 @Service
@@ -23,6 +25,8 @@ public class JobDaoImpl implements IJobDao {
 
 	@Autowired
 	MongoTemplate mongoTemplate;
+
+	Logger log = Logger.getLogger(JobDaoImpl.class);
 
 	@Override
 	public List fetchDevices(Exchange exchange) {
@@ -38,7 +42,7 @@ public class JobDaoImpl implements IJobDao {
 
 			String carrierName = jobDetail.getCarrierName();
 
-			System.out.println("Carrier Name -----------------" + carrierName);
+			log.info("Carrier Name -----------------" + carrierName);
 			// We have to check bs_carrier with possible reseller values for
 			// that carrier.
 			Query searchDeviceQuery = new Query(Criteria.where("bs_carrier")
@@ -56,7 +60,7 @@ public class JobDaoImpl implements IJobDao {
 			list = new ArrayList<DeviceInformation>(Collections.nCopies(10,
 					deviceInformationList.get(0)));
 
-			System.out.println("deviceInformationList ------------------"
+			log.info("deviceInformationList ------------------"
 					+ deviceInformationList.size());
 		}
 
@@ -64,8 +68,8 @@ public class JobDaoImpl implements IJobDao {
 			System.out.println("e");
 		}
 
-		//return list;
-		 return deviceInformationList;
+		// return list;
+		return deviceInformationList;
 	}
 
 	@Override
@@ -83,6 +87,8 @@ public class JobDaoImpl implements IJobDao {
 
 	@Override
 	public void updateJobDetails(Exchange exchange) {
+
+		log.info("Inside updateJobDetails .....................");
 
 		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
 		try {
@@ -106,8 +112,34 @@ public class JobDaoImpl implements IJobDao {
 		}
 
 		catch (Exception e) {
-			System.out
-					.println("Error In Saving Job Detail-----------------------------");
+			log.info("Error In Saving Job Detail-----------------------------");
+		}
+
+	}
+
+	@Override
+	public void deleteDeviceUsageRecords(Exchange exchange) {
+
+		log.info("Inside deleteDeviceUsageRecords .....................");
+
+		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+		try {
+
+			Query searchJobQuery = new Query(Criteria.where("carrierName").is(
+					jobDetail.getCarrierName())).addCriteria(Criteria.where(
+					"timestamp").is(jobDetail.getDate()));
+
+			Update update = new Update();
+
+			update.set("isValid", "false");
+
+			mongoTemplate
+					.updateFirst(searchJobQuery, update, DeviceUsage.class);
+
+		}
+
+		catch (Exception e) {
+			log.info("Error In Saving Job Detail-----------------------------");
 		}
 
 	}

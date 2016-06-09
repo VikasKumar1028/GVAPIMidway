@@ -56,4 +56,7 @@ public class JobServiceImpl implements IJobService {
 
 	}
 
+	public void deleteDeviceUsageRecords(Exchange exchange) {
+		iJobDao.deleteDeviceUsageRecords(exchange);
+	}
 }

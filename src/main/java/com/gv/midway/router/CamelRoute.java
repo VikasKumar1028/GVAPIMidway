@@ -73,12 +73,12 @@ import com.gv.midway.processor.deviceInformation.StubKoreDeviceInformationProces
 import com.gv.midway.processor.deviceInformation.StubVerizonDeviceInformationProcessor;
 import com.gv.midway.processor.deviceInformation.VerizonDeviceInformationPostProcessor;
 import com.gv.midway.processor.deviceInformation.VerizonDeviceInformationPreProcessor;
-import com.gv.midway.processor.jobScheduler.KoreDeviceUsageHistoryPreProcessor;
-import com.gv.midway.processor.jobScheduler.VerizonDeviceConnectionHistoryPreProcessor;
-import com.gv.midway.processor.jobScheduler.VerizonDeviceUsageHistoryPreProcessor;
 import com.gv.midway.processor.jobScheduler.KoreDeviceUsageHistoryPostProcessor;
+import com.gv.midway.processor.jobScheduler.KoreDeviceUsageHistoryPreProcessor;
 import com.gv.midway.processor.jobScheduler.VerizonDeviceConnectionHistoryPostProcessor;
+import com.gv.midway.processor.jobScheduler.VerizonDeviceConnectionHistoryPreProcessor;
 import com.gv.midway.processor.jobScheduler.VerizonDeviceUsageHistoryPostProcessor;
+import com.gv.midway.processor.jobScheduler.VerizonDeviceUsageHistoryPreProcessor;
 import com.gv.midway.processor.kafka.KafkaProcessor;
 import com.gv.midway.processor.reactivate.KoreReactivateDevicePostProcessor;
 import com.gv.midway.processor.reactivate.KoreReactivateDevicePreProcessor;
@@ -1175,7 +1175,10 @@ public class CamelRoute extends RouteBuilder {
 	}
 
 	// TODO Add KORE DEVICE USAGE JOB
-
+	
+	
+	//BATCH JOB
+	
 	public void startJob() {
 
 		from("direct:startJob").to("direct:processJob");
@@ -1196,8 +1199,10 @@ public class CamelRoute extends RouteBuilder {
 				.when(simple("${exchangeProperty[jobName]} == 'VERIZON_CONNECTION_HISTORY'"))
 				.to("seda:processVerizonConnectionHistoryJob")
 				.when(simple("${exchangeProperty[jobName]} == 'KORE_DEVICE_USAGE'"))
+				.bean(iJobService,"deleteDeviceUsageRecords")
 				.to("seda:processKoreDeviceUsageJob")
 				.when(simple("${exchangeProperty[jobName]} == 'VERIZON_DEVICE_USAGE'"))
+				.bean(iJobService,"deleteDeviceUsageRecords")
 				.to("seda:processVerizonDeviceUsageJob").endChoice();
 
 		// KORE Job-DEVICE USAGE
@@ -1240,7 +1245,8 @@ public class CamelRoute extends RouteBuilder {
 				.process(new VerizonBatchExceptionProcessor(env)).endDoTry();
 		
 	}
-		
+
+
 		public void retrieveDeviceUsageHistory()
 		{
 			from("direct:retrieveDeviceUsageHistory").process(new HeaderProcessor()).choice()

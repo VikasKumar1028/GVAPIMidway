@@ -11,5 +11,7 @@ public interface IJobDao {
 	public void insertJobDetails(Exchange exchange);
 
 	public void updateJobDetails(Exchange exchange);
+	
+	public void deleteDeviceUsageRecords(Exchange exchange);
 
 }

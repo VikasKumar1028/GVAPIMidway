@@ -100,7 +100,7 @@ public class VerizonBatchExceptionProcessor implements Processor {
 
 		}
 
-		log.info("--------------jobDetail" + jobDetail);
+
 
 	}
 }
