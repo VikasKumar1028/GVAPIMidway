@@ -35,6 +35,7 @@
       ],
       "devices":[  
          {  
+         "netSuiteId": "1",
             "deviceIds":[  
                {  
                   "kind":"",
@@ -42,7 +43,8 @@
                }
             ]
          },
-         {  
+         { 
+         "netSuiteId": "1", 
             "deviceIds":[  
                {  
                   "kind":"",

@@ -8,6 +8,7 @@
             
          "devices":[  
          {  
+         "netSuiteId": "1",
             "deviceIds":[  
                {  
                   
@@ -18,6 +19,7 @@
          },
 		
          {  
+         "netSuiteId": "1",
             "deviceIds":[  
                {  
                   "kind":"",

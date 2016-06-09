@@ -8,6 +8,7 @@
       "mdnZipCode":"84037",
       "devices":[  
          {  
+          "netSuiteId": "1",
             "deviceIds":[  
                {  
                   "id":"353238061040837",
@@ -17,6 +18,7 @@
          },
 		
          {  
+         "netSuiteId": "1",
             "deviceIds":[  
                {  
                   "id":"89148000002034203015",

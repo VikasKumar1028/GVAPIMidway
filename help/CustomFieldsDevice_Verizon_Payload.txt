@@ -11,6 +11,7 @@
     
       "devices":[ 
          { 
+         "netSuiteId": "1",
             "deviceIds":[ 
                { 
                   "kind":"IMEI",

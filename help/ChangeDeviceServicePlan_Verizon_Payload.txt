@@ -6,6 +6,7 @@
     
          "devices":[ 
          { 
+         "netSuiteId": "1",
             "deviceIds":[ 
                { 
                   
