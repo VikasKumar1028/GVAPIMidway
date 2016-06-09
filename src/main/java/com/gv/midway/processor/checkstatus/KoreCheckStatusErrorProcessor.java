@@ -16,8 +16,11 @@ import com.gv.midway.constant.RequestType;
 import com.gv.midway.pojo.BaseRequest;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.callback.Netsuite.KeyValues;
-import com.gv.midway.pojo.callback.Netsuite.NetSuiteCallBackError;
+import com.gv.midway.pojo.callback.Netsuite.KafkaNetSuiteCallBackError;
+import com.gv.midway.pojo.callback.Netsuite.NetSuiteCallBackProvisioningResponse;
 import com.gv.midway.pojo.kore.KoreErrorResponse;
+import com.gv.midway.pojo.verizon.DeviceId;
+import com.gv.midway.pojo.verizon.Devices;
 
 
 public class KoreCheckStatusErrorProcessor implements Processor {
@@ -54,6 +57,9 @@ public class KoreCheckStatusErrorProcessor implements Processor {
 		String midWayTransactionId = (String) exchange
 				.getProperty(IConstant.MIDWAY_TRANSACTION_ID);
 
+		String netSuiteID = (String) exchange
+				.getProperty(IConstant.MIDWAY_NETSUITE_ID);
+		
 		RequestType requestType = (RequestType) exchange
 				.getProperty(IConstant.MIDWAY_TRANSACTION_REQUEST_TYPE);
 
@@ -110,7 +116,7 @@ public class KoreCheckStatusErrorProcessor implements Processor {
 
 		callbackCommonResponse.setDataArea(callbackCommonResponseDataArea);*/
 		
-		NetSuiteCallBackError netSuiteCallBackError =new NetSuiteCallBackError();
+		KafkaNetSuiteCallBackError netSuiteCallBackError =new KafkaNetSuiteCallBackError();
 		
 		netSuiteCallBackError.setApp("Midway");
 		netSuiteCallBackError.setCategory("Kore Call Back Error");
@@ -139,22 +145,54 @@ public class KoreCheckStatusErrorProcessor implements Processor {
 		keyValues1.setK("transactionId");
 		keyValues1.setV(header.getTransactionId());
 		
-        KeyValues keyValues2=new KeyValues();
+		KeyValues keyValues2=new KeyValues();
 		
-		keyValues2.setK("midwayTransactionId");
+		keyValues2.setK("orderNumber");
 		keyValues2.setV(midWayTransactionId);
 		
-		KeyValues[] keyValuesArr=new KeyValues[2];
+		KeyValues keyValues3=new KeyValues();
+			
+	    keyValues3.setK("deviceIds");
+	    keyValues3.setV(midWayTransactionDeviceNumber.replace("'\'", ""));
+		
+		KeyValues[] keyValuesArr=new KeyValues[3];
 		
 		keyValuesArr[0]=keyValues1;
 		keyValuesArr[1]=keyValues2;
+		keyValuesArr[2]=keyValues3;
 		
 		netSuiteCallBackError.setKeyValues(keyValuesArr);
 		
+		exchange.setProperty(IConstant.KAFKA_OBJECT, netSuiteCallBackError);
 		
-		message.setBody(netSuiteCallBackError);
+		NetSuiteCallBackProvisioningResponse netSuiteCallBackProvisioningResponse =new NetSuiteCallBackProvisioningResponse();
+		
+		netSuiteCallBackProvisioningResponse.setRequestType(requestType);
+		netSuiteCallBackProvisioningResponse.setStatus("fail");
+		netSuiteCallBackProvisioningResponse.setResponse(errorDescription);
+		netSuiteCallBackProvisioningResponse.setCarrierOrderNumber(midWayTransactionId);
+		netSuiteCallBackProvisioningResponse.setNetSuiteID(netSuiteID);
 		
 		
+	    StringBuffer deviceIdsArr= new StringBuffer("{\"deviceIds\":");
+		
+	    deviceIdsArr.append(midWayTransactionDeviceNumber);
+		
+		String str="}";
+		
+		deviceIdsArr.append(str);
+		
+		ObjectMapper mapper=new ObjectMapper();
+		
+        Devices devices = mapper.readValue(deviceIdsArr.toString(),Devices.class);
+		
+		DeviceId[] deviceIds=devices.getDeviceIds();
+		
+		netSuiteCallBackProvisioningResponse.setDeviceIds(deviceIds);
+		
+		message.setBody(netSuiteCallBackProvisioningResponse);
+		
+		log.info("error callback resposne for Kore..."+exchange.getIn().getBody());
 
 	}
 

@@ -1,10 +1,9 @@
 package com.gv.midway.pojo.restoreDevice.request;
-import java.util.Arrays;
 
+import java.util.Arrays;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.gv.midway.pojo.activateDevice.request.ActivateDevices;
+import com.gv.midway.pojo.MidWayDevices;
 import com.gv.midway.pojo.verizon.CustomFields;
-import com.gv.midway.pojo.verizon.Devices;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -20,7 +19,7 @@ public class RestoreDeviceRequestDataArea{
 	private CustomFields[] customFields;
 	
 	@ApiModelProperty(value = "All identifiers for the device.")
-	private Devices[] devices;
+	private MidWayDevices[] devices;
 	
 	@ApiModelProperty(value = "Service Plan that that device belongs to.", required=true)
 	private String servicePlan;
@@ -51,11 +50,11 @@ public class RestoreDeviceRequestDataArea{
 
 	
 
-	public Devices[] getDevices() {
+	public MidWayDevices[] getDevices() {
 		return devices;
 	}
 
-	public void setDevices(Devices[] devices) {
+	public void setDevices(MidWayDevices[] devices) {
 		this.devices = devices;
 	}
 
@@ -115,12 +114,21 @@ public class RestoreDeviceRequestDataArea{
 
 	@Override
 	public String toString() {
-		return "RestoreDeviceRequestDataArea [groupName=" + groupName
-				+ ", accountName=" + accountName + ", customFields="
-				+ Arrays.toString(customFields) + ", devices="
-				+ Arrays.toString(devices) + ", servicePlan=" + servicePlan
-				+ "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("RestoreDeviceRequestDataArea [groupName=");
+		builder.append(groupName);
+		builder.append(", accountName=");
+		builder.append(accountName);
+		builder.append(", customFields=");
+		builder.append(Arrays.toString(customFields));
+		builder.append(", devices=");
+		builder.append(Arrays.toString(devices));
+		builder.append(", servicePlan=");
+		builder.append(servicePlan);
+		builder.append("]");
+		return builder.toString();
 	}
+
 	
 	
 }

@@ -8,6 +8,9 @@ public class ActivateDevices {
 	
 	@ApiModelProperty(value = "Having type and value of device identifier")
 	private ActivateDeviceId[] deviceIds;
+	
+	@ApiModelProperty(value = "Device NetSuite Id")
+	private String netSuiteId;
 
 	public ActivateDeviceId[] getDeviceIds() {
 		return deviceIds;
@@ -17,11 +20,32 @@ public class ActivateDevices {
 		this.deviceIds = deviceIds;
 	}
 
+	public String getNetSuiteId() {
+		return netSuiteId;
+	}
+
+	public void setNetSuiteId(String netSuiteId) {
+		this.netSuiteId = netSuiteId;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("ActivateDevices [deviceIds=");
+		builder.append(Arrays.toString(deviceIds));
+		builder.append(", netSuiteId=");
+		builder.append(netSuiteId);
+		builder.append("]");
+		return builder.toString();
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + Arrays.hashCode(deviceIds);
+		result = prime * result
+				+ ((netSuiteId == null) ? 0 : netSuiteId.hashCode());
 		return result;
 	}
 
@@ -36,13 +60,14 @@ public class ActivateDevices {
 		ActivateDevices other = (ActivateDevices) obj;
 		if (!Arrays.equals(deviceIds, other.deviceIds))
 			return false;
+		if (netSuiteId == null) {
+			if (other.netSuiteId != null)
+				return false;
+		} else if (!netSuiteId.equals(other.netSuiteId))
+			return false;
 		return true;
 	}
 
-	@Override
-	public String toString() {
-		return "ActivateDevices [deviceIds=" + Arrays.toString(deviceIds) + "]";
-	}
-
+	
 	
 }

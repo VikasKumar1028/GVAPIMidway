@@ -9,12 +9,16 @@ import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.RequestType;
 import com.gv.midway.pojo.BaseRequest;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.callback.Netsuite.KeyValues;
-import com.gv.midway.pojo.callback.Netsuite.NetSuiteCallBackEvent;
+import com.gv.midway.pojo.callback.Netsuite.KafkaNetSuiteCallBackEvent;
+import com.gv.midway.pojo.callback.Netsuite.NetSuiteCallBackProvisioningResponse;
+import com.gv.midway.pojo.verizon.DeviceId;
+import com.gv.midway.pojo.verizon.Devices;
 
 
 public class KoreCheckStatusPostProcessor implements Processor {
@@ -50,6 +54,9 @@ public class KoreCheckStatusPostProcessor implements Processor {
 		String midWayTransactionId = (String) exchange
 				.getProperty(IConstant.MIDWAY_TRANSACTION_ID);
 
+		String netSuiteID = (String) exchange
+				.getProperty(IConstant.MIDWAY_NETSUITE_ID);
+		
 		RequestType requestType = (RequestType) exchange
 				.getProperty(IConstant.MIDWAY_TRANSACTION_REQUEST_TYPE);
 
@@ -128,7 +135,7 @@ public class KoreCheckStatusPostProcessor implements Processor {
 
 		callbackCommonResponse.setDataArea(callbackCommonResponseDataArea);*/
 		
-	    NetSuiteCallBackEvent netSuiteCallBackEvent =new NetSuiteCallBackEvent();
+	    KafkaNetSuiteCallBackEvent netSuiteCallBackEvent =new KafkaNetSuiteCallBackEvent();
 		
 	    netSuiteCallBackEvent.setApp("Midway");
 	    netSuiteCallBackEvent.setCategory("Kore Call Back Success");
@@ -159,18 +166,99 @@ public class KoreCheckStatusPostProcessor implements Processor {
 		
         KeyValues keyValues2=new KeyValues();
 		
-		keyValues2.setK("midwayTransactionId");
+		keyValues2.setK("orderNumber");
 		keyValues2.setV(midWayTransactionId);
 		
-		KeyValues[] keyValuesArr=new KeyValues[2];
+		KeyValues keyValues3=new KeyValues();
+			
+	    keyValues3.setK("deviceIds");
+	    keyValues3.setV(midWayTransactionDeviceNumber.replace("'\'", ""));
+		
+		KeyValues[] keyValuesArr=new KeyValues[3];
 		
 		keyValuesArr[0]=keyValues1;
 		keyValuesArr[1]=keyValues2;
+		keyValuesArr[2]=keyValues3;
 		
 		netSuiteCallBackEvent.setKeyValues(keyValuesArr);
 		
-		message.setBody(netSuiteCallBackEvent);
+		exchange.setProperty(IConstant.KAFKA_OBJECT, netSuiteCallBackEvent);
 		
+        NetSuiteCallBackProvisioningResponse netSuiteCallBackProvisioningResponse =new NetSuiteCallBackProvisioningResponse();
+		
+		netSuiteCallBackProvisioningResponse.setRequestType(requestType);
+		netSuiteCallBackProvisioningResponse.setStatus("success");
+		 
+		
+		netSuiteCallBackProvisioningResponse.setCarrierOrderNumber(midWayTransactionId);
+		netSuiteCallBackProvisioningResponse.setNetSuiteID(netSuiteID);
+		
+		
+	    StringBuffer deviceIdsArr= new StringBuffer("{\"deviceIds\":");
+		
+	    deviceIdsArr.append(midWayTransactionDeviceNumber);
+		
+		String str="}";
+		
+		deviceIdsArr.append(str);
+		
+		ObjectMapper mapper=new ObjectMapper();
+		
+        Devices devices = mapper.readValue(deviceIdsArr.toString(),Devices.class);
+		
+		DeviceId[] deviceIds=devices.getDeviceIds();
+		
+		netSuiteCallBackProvisioningResponse.setDeviceIds(deviceIds);
+		
+		switch (requestType) {
+		case ACTIVATION:
+
+			netSuiteCallBackProvisioningResponse.setResponse("Device successfully activated.");
+			break;
+
+		case DEACTIVATION:
+
+			netSuiteCallBackProvisioningResponse.setResponse("Device successfully DeActivated.");
+
+			break;
+
+		case REACTIVATION:
+
+			netSuiteCallBackProvisioningResponse.setResponse("Device successfully ReActivated.");
+
+			break;
+
+		case RESTORE:
+
+			netSuiteCallBackProvisioningResponse.setResponse("Device successfully ReStored.");
+
+			break;
+
+		case SUSPEND:
+
+			netSuiteCallBackProvisioningResponse.setResponse("Device successfully Suspended.");
+
+			break;
+
+		case CHANGESERVICEPLAN:
+
+			netSuiteCallBackProvisioningResponse.setResponse("Device Service Plan Changed successfully.");
+
+			break;
+
+		case CHANGECUSTOMFIELDS:
+
+			netSuiteCallBackProvisioningResponse.setResponse("Device Custom Fields Changed successfully.");
+
+			break;
+
+		default:
+			break;
+		}
+		
+		message.setBody(netSuiteCallBackProvisioningResponse);
+		
+		log.info("success callback resposne for Kore..."+exchange.getIn().getBody());
 		
 
 	}

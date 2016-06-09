@@ -18,5 +18,6 @@ public class ITransaction {
 	public static final String AUDIT_TRANSACTION_ID = "auditTransactionId";
 	public static final String CALL_BACK_RECEIVED = "callBackReceived";
 	public static final String CALL_BACK_FAILURE_TO_NETSUITE_REASON = "callBackFailureToNetSuiteReason";
+	public static final String NETSUITE_ID = "netSuiteId";
 
 }

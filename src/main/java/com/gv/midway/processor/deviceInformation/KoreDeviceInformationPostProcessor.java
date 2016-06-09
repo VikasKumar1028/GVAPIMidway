@@ -197,14 +197,14 @@ public class KoreDeviceInformationPostProcessor implements Processor {
 
 		if (msisdnOrmdn != null && !msisdnOrmdn.trim().equals("")) {
 			DeviceId deviceId1 = new DeviceId();
-			deviceId1.setKind("msisdnOrmdn");
+			deviceId1.setKind("mdn");
 			deviceId1.setId(msisdnOrmdn);
 			deviceIdList.add(deviceId1);
 		}
 
 		if (imsiOrMin != null && !imsiOrMin.trim().equals("")) {
 			DeviceId deviceId2 = new DeviceId();
-			deviceId2.setKind("imsiOrMin");
+			deviceId2.setKind("min");
 			deviceId2.setId(imsiOrMin);
 			deviceIdList.add(deviceId2);
 		}

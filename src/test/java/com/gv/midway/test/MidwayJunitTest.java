@@ -29,6 +29,8 @@ import org.springframework.mock.web.MockServletContext;
 
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.Header;
+import com.gv.midway.pojo.MidWayDeviceId;
+import com.gv.midway.pojo.MidWayDevices;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceId;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequestDataArea;
@@ -429,12 +431,12 @@ import com.gv.midway.service.ISessionService;
 
 				ReactivateDeviceRequestDataArea dataArea = new ReactivateDeviceRequestDataArea();
 			
-				Devices [] deDevices=new Devices[1];
-				Devices ddevices = new Devices();
+				MidWayDevices [] deDevices=new MidWayDevices[1];
+				MidWayDevices ddevices = new MidWayDevices();
 
-		        DeviceId[] reactivateDeviceIdArray = new DeviceId[1];
+				MidWayDeviceId[] reactivateDeviceIdArray = new MidWayDeviceId[1];
 		 		 
-		 		DeviceId reactivateDeviceId= new DeviceId();
+				MidWayDeviceId reactivateDeviceId= new MidWayDeviceId();
 		 		
 		 		reactivateDeviceId.setId("89014103277405946190");
 		 		reactivateDeviceId.setKind("");
@@ -479,12 +481,12 @@ import com.gv.midway.service.ISessionService;
 
 						SuspendDeviceRequestDataArea dataArea = new SuspendDeviceRequestDataArea();
 					
-						Devices [] deDevices=new Devices[1];
-						Devices ddevices = new Devices();
+						MidWayDevices [] deDevices=new MidWayDevices[1];
+						MidWayDevices ddevices = new MidWayDevices();
 
-				        DeviceId[] suspendDeviceIdArray = new DeviceId[1];
+						MidWayDeviceId[] suspendDeviceIdArray = new MidWayDeviceId[1];
 				 		 
-				 		DeviceId suspendDeviceId= new DeviceId();
+						MidWayDeviceId suspendDeviceId= new MidWayDeviceId();
 				 		
 				 		suspendDeviceId.setId("89014103277405946190");
 				 		
@@ -522,13 +524,13 @@ import com.gv.midway.service.ISessionService;
 
 						SuspendDeviceRequestDataArea dataArea = new SuspendDeviceRequestDataArea();
 						
-						Devices [] deDevices=new Devices[1];
-						Devices ddevices = new Devices();
+						MidWayDevices [] deDevices=new MidWayDevices[1];
+						MidWayDevices ddevices = new MidWayDevices();
 
-				        DeviceId[] suspendDeviceIdArray = new DeviceId[2];
+						MidWayDeviceId[] suspendDeviceIdArray = new MidWayDeviceId[2];
 				 		 
-				 		DeviceId suspendDeviceId1= new DeviceId();
-				 		DeviceId suspendDeviceId2= new DeviceId();
+						MidWayDeviceId suspendDeviceId1= new MidWayDeviceId();
+						MidWayDeviceId suspendDeviceId2= new MidWayDeviceId();
 				 		
 				 		
 				 		suspendDeviceId1.setId("353238063289994");
@@ -571,13 +573,13 @@ import com.gv.midway.service.ISessionService;
 
 						SuspendDeviceRequestDataArea dataArea = new SuspendDeviceRequestDataArea();
 						
-						Devices [] deDevices=new Devices[1];
-						Devices ddevices = new Devices();
+						MidWayDevices [] deDevices=new MidWayDevices[1];
+						MidWayDevices ddevices = new MidWayDevices();
 
-				        DeviceId[] suspendDeviceIdArray = new DeviceId[2];
+						MidWayDeviceId[] suspendDeviceIdArray = new MidWayDeviceId[2];
 				 		 
-				 		DeviceId suspendDeviceId1= new DeviceId();
-				 		DeviceId suspendDeviceId2= new DeviceId();
+				        MidWayDeviceId suspendDeviceId1= new MidWayDeviceId();
+				        MidWayDeviceId suspendDeviceId2= new MidWayDeviceId();
 	
 				 		
 				 		suspendDeviceId1.setId("353238063289994");
@@ -623,12 +625,12 @@ import com.gv.midway.service.ISessionService;
 
 							RestoreDeviceRequestDataArea dataArea = new RestoreDeviceRequestDataArea();
 							
-							Devices [] deDevices=new Devices[1];
-							Devices ddevices = new Devices();
+							MidWayDevices [] deDevices=new MidWayDevices[1];
+							MidWayDevices ddevices = new MidWayDevices();
 
-					        DeviceId[] restoreDeviceIdArray = new DeviceId[1];
+							MidWayDeviceId[] restoreDeviceIdArray = new MidWayDeviceId[1];
 					 		 
-					 		DeviceId restoreDeviceId= new DeviceId();
+							MidWayDeviceId restoreDeviceId= new MidWayDeviceId();
 					 		
 					 		restoreDeviceId.setId("89014103277405946190");
 					 		
@@ -668,13 +670,13 @@ import com.gv.midway.service.ISessionService;
 
 							RestoreDeviceRequestDataArea dataArea = new RestoreDeviceRequestDataArea();
 						
-							Devices [] deDevices=new Devices[1];
-							Devices ddevices = new Devices();
+							MidWayDevices [] deDevices=new MidWayDevices[1];
+							MidWayDevices ddevices = new MidWayDevices();
 
-					        DeviceId[] restoreDeviceIdArray = new DeviceId[2];
+							MidWayDeviceId[] restoreDeviceIdArray = new MidWayDeviceId[2];
 					 		 
-					 		DeviceId restoreDeviceId1= new DeviceId();
-					 		DeviceId restoreDeviceId2= new DeviceId();
+							MidWayDeviceId restoreDeviceId1= new MidWayDeviceId();
+							MidWayDeviceId restoreDeviceId2= new MidWayDeviceId();
 					
 					 		restoreDeviceId1.setId("353238063289994");
 					 		restoreDeviceId1.setKind("IMEI");
@@ -719,13 +721,13 @@ import com.gv.midway.service.ISessionService;
 
 								RestoreDeviceRequestDataArea dataArea = new RestoreDeviceRequestDataArea();
 								
-								Devices [] deDevices=new Devices[1];
-								Devices ddevices = new Devices();
+								MidWayDevices [] deDevices=new MidWayDevices[1];
+								MidWayDevices ddevices = new MidWayDevices();
 
-						        DeviceId[] restoreDeviceIdArray = new DeviceId[2];
+								MidWayDeviceId[] restoreDeviceIdArray = new MidWayDeviceId[2];
 						 		 
-						 		DeviceId restoreDeviceId1= new DeviceId();
-						 		DeviceId restoreDeviceId2= new DeviceId();
+								MidWayDeviceId restoreDeviceId1= new MidWayDeviceId();
+								MidWayDeviceId restoreDeviceId2= new MidWayDeviceId();
 						 	
 						 		restoreDeviceId1.setId("353238063289994");
 						 		restoreDeviceId1.setKind("");
@@ -775,12 +777,12 @@ import com.gv.midway.service.ISessionService;
 								Header header = new Header();
 
 								CustomFieldsDeviceRequestDataArea dataArea = new CustomFieldsDeviceRequestDataArea();
-								Devices [] deDevices=new Devices[1];
-								Devices ddevices = new Devices();
+								MidWayDevices [] deDevices=new MidWayDevices[1];
+								MidWayDevices ddevices = new MidWayDevices();
 
-						        DeviceId[] customFiledsDeviceIdArray = new DeviceId[1];
+								MidWayDeviceId[] customFiledsDeviceIdArray = new MidWayDeviceId[1];
 						 		 
-						 		DeviceId customFieldsDeviceId= new DeviceId();
+						        MidWayDeviceId customFieldsDeviceId= new MidWayDeviceId();
 						 		
 						 		customFieldsDeviceId.setId("89014103277405946190");
 						 	
@@ -819,12 +821,12 @@ import com.gv.midway.service.ISessionService;
 
 								CustomFieldsDeviceRequestDataArea dataArea = new CustomFieldsDeviceRequestDataArea();
 								
-								Devices [] deDevices=new Devices[1];
-								Devices ddevices = new Devices();
+								MidWayDevices [] deDevices=new MidWayDevices[1];
+								MidWayDevices ddevices = new MidWayDevices();
 
-						        DeviceId[] customFiledsDeviceIdArray = new DeviceId[1];
+								MidWayDeviceId[] customFiledsDeviceIdArray = new MidWayDeviceId[1];
 						 		 
-						 		DeviceId customFieldsDeviceId1= new DeviceId();
+						        MidWayDeviceId customFieldsDeviceId1= new MidWayDeviceId();
 						 		//DeviceId customFieldsDeviceId2= new DeviceId();
 						 	
 						 		customFieldsDeviceId1.setId("353238063289994");
@@ -872,12 +874,12 @@ import com.gv.midway.service.ISessionService;
 
 								CustomFieldsDeviceRequestDataArea dataArea = new CustomFieldsDeviceRequestDataArea();
 								
-								Devices [] deDevices=new Devices[1];
-								Devices ddevices = new Devices();
+								MidWayDevices [] deDevices=new MidWayDevices[1];
+								MidWayDevices ddevices = new MidWayDevices();
 
-						        DeviceId[] customFiledsDeviceIdArray = new DeviceId[1];
+								MidWayDeviceId[] customFiledsDeviceIdArray = new MidWayDeviceId[1];
 						 		 
-						 		DeviceId customFieldsDeviceId1= new DeviceId();
+								MidWayDeviceId customFieldsDeviceId1= new MidWayDeviceId();
 						 		//DeviceId customFieldsDeviceId2= new DeviceId();
 						 	
 						 		customFieldsDeviceId1.setId("3532363289994");
@@ -929,12 +931,12 @@ import com.gv.midway.service.ISessionService;
 
 								ChangeDeviceServicePlansRequestDataArea dataArea = new ChangeDeviceServicePlansRequestDataArea();
 								
-								Devices [] deDevices=new Devices[1];
-								Devices ddevices = new Devices();
+								MidWayDevices [] deDevices=new MidWayDevices[1];
+								MidWayDevices ddevices = new MidWayDevices();
 
-						        DeviceId[] changeServicePlanDeviceIdArray = new DeviceId[1];
+								MidWayDeviceId[] changeServicePlanDeviceIdArray = new MidWayDeviceId[1];
 						 		 
-						 		DeviceId changeServicePlanDeviceId= new DeviceId();
+						        MidWayDeviceId changeServicePlanDeviceId= new MidWayDeviceId();
 						 		
 						 		changeServicePlanDeviceId.setId("8901260761246107398");
 						 		changeServicePlanDeviceId.setKind("");
@@ -978,12 +980,12 @@ import com.gv.midway.service.ISessionService;
 
 								ChangeDeviceServicePlansRequestDataArea dataArea = new ChangeDeviceServicePlansRequestDataArea();
 								
-								Devices [] deDevices=new Devices[1];
-								Devices ddevices = new Devices();
+								MidWayDevices [] deDevices=new MidWayDevices[1];
+								MidWayDevices ddevices = new MidWayDevices();
 
-						        DeviceId[] changeServicePlanDeviceIdArray = new DeviceId[1];
+								MidWayDeviceId[] changeServicePlanDeviceIdArray = new MidWayDeviceId[1];
 						 		 
-						 		DeviceId changeServicePlanDeviceId1= new DeviceId();
+								MidWayDeviceId changeServicePlanDeviceId1= new MidWayDeviceId();
 						 		//DeviceId changeServicePlanDeviceId2= new DeviceId();
 						 		
 						 		changeServicePlanDeviceId1.setId("353238063289994");
@@ -1033,13 +1035,13 @@ import com.gv.midway.service.ISessionService;
 
 								ChangeDeviceServicePlansRequestDataArea dataArea = new ChangeDeviceServicePlansRequestDataArea();
 								
-								Devices [] deDevices=new Devices[1];
-								Devices ddevices = new Devices();
+								MidWayDevices [] deDevices=new MidWayDevices[1];
+								MidWayDevices ddevices = new MidWayDevices();
 
-						        DeviceId[] changeServicePlanDeviceIdArray = new DeviceId[2];
+								MidWayDeviceId[] changeServicePlanDeviceIdArray = new MidWayDeviceId[2];
 						 		 
-						 		DeviceId changeServicePlanDeviceId1= new DeviceId();
-						 		DeviceId changeServicePlanDeviceId2= new DeviceId();
+						        MidWayDeviceId changeServicePlanDeviceId1= new MidWayDeviceId();
+						 		MidWayDeviceId changeServicePlanDeviceId2= new MidWayDeviceId();
 						 		
 						 		changeServicePlanDeviceId1.setId("353238063289994");
 						 							 		

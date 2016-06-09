@@ -7,6 +7,7 @@ import org.springframework.core.env.Environment;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gv.midway.constant.IConstant;
 
 
 public class KafkaProcessor implements Processor {
@@ -33,21 +34,21 @@ public class KafkaProcessor implements Processor {
 	public void process(Exchange exchange) throws Exception {
 		// TODO Auto-generated method stub
 		
-		Object object=exchange.getIn().getBody();
+		Object kafkaObject=exchange.getProperty(IConstant.KAFKA_OBJECT);
 		
-		log.info(object.getClass().getName());
+		log.info(kafkaObject.getClass().getName());
 		
-		log.info("Data to write in Kafka Queue is......."+object.toString());
+		log.info("Data to write in Kafka Queue is......."+kafkaObject.toString());
 		
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		byte[] bytes = null;
 		try {
-			bytes = objectMapper.writeValueAsString(object).getBytes();
+			bytes = objectMapper.writeValueAsString(kafkaObject).getBytes();
 			log.info(" data converted to bytes...");
 		} catch (JsonProcessingException e) {
 			
-			log.info("Exception in wrting the Kafka Queue is......."+e.getMessage()+ "for the paylaod.."+object.toString());
+			log.info("Exception in wrting the Kafka Queue is......."+e.getMessage()+ "for the paylaod.."+kafkaObject.toString());
 		}
 
 		exchange.getIn().setBody(bytes);

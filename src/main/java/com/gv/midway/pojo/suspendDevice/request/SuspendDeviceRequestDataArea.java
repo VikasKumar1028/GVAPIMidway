@@ -3,15 +3,15 @@ package com.gv.midway.pojo.suspendDevice.request;
 import java.util.Arrays;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.gv.midway.pojo.MidWayDevices;
 import com.gv.midway.pojo.verizon.CustomFields;
-import com.gv.midway.pojo.verizon.Devices;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SuspendDeviceRequestDataArea {
 
 	@ApiModelProperty(value = "All identifiers for the device.")
-	private Devices[] devices;
+	private MidWayDevices[] devices;
 	
 	@ApiModelProperty(value = "Name of the billing account.")
 	private String accountName;
@@ -25,15 +25,14 @@ public class SuspendDeviceRequestDataArea {
 	@ApiModelProperty(value = "The custom fields and values that have been set for the device.")
 	private CustomFields[] customFields;
 	
-/*	@ApiModelProperty(value = "The number of Device that has to be activated.")
-	private String deviceNumber;*/
 
+	
 
-	public Devices[] getDevices() {
+	public MidWayDevices[] getDevices() {
 		return devices;
 	}
 
-	public void setDevices(Devices[] devices) {
+	public void setDevices(MidWayDevices[] devices) {
 		this.devices = devices;
 	}
 
@@ -69,14 +68,6 @@ public class SuspendDeviceRequestDataArea {
 		this.customFields = customFields;
 	}
 
-/*	public String getDeviceNumber() {
-		return deviceNumber;
-	}
-
-	public void setDeviceNumber(String deviceNumber) {
-		this.deviceNumber = deviceNumber;
-	}*/
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -84,8 +75,6 @@ public class SuspendDeviceRequestDataArea {
 		result = prime * result
 				+ ((accountName == null) ? 0 : accountName.hashCode());
 		result = prime * result + Arrays.hashCode(customFields);
-		/*result = prime * result
-				+ ((deviceNumber == null) ? 0 : deviceNumber.hashCode());*/
 		result = prime * result + Arrays.hashCode(devices);
 		result = prime * result
 				+ ((groupName == null) ? 0 : groupName.hashCode());
@@ -110,11 +99,6 @@ public class SuspendDeviceRequestDataArea {
 			return false;
 		if (!Arrays.equals(customFields, other.customFields))
 			return false;
-		/*if (deviceNumber == null) {
-			if (other.deviceNumber != null)
-				return false;
-		} else if (!deviceNumber.equals(other.deviceNumber))
-			return false;*/
 		if (!Arrays.equals(devices, other.devices))
 			return false;
 		if (groupName == null) {
@@ -132,11 +116,19 @@ public class SuspendDeviceRequestDataArea {
 
 	@Override
 	public String toString() {
-		return "SuspendDeviceRequestDataArea [devices="
-				+ Arrays.toString(devices) + ", accountName=" + accountName
-				+ ", groupName=" + groupName + ", servicePlan=" + servicePlan
-				+ ", customFields=" + Arrays.toString(customFields)
-				/*+ ", deviceNumber=" + deviceNumber */+ "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("SuspendDeviceRequestDataArea [devices=");
+		builder.append(Arrays.toString(devices));
+		builder.append(", accountName=");
+		builder.append(accountName);
+		builder.append(", groupName=");
+		builder.append(groupName);
+		builder.append(", servicePlan=");
+		builder.append(servicePlan);
+		builder.append(", customFields=");
+		builder.append(Arrays.toString(customFields));
+		builder.append("]");
+		return builder.toString();
 	}
 	
 	

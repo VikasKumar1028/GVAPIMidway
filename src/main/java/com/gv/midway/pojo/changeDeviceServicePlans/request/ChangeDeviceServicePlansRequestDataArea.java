@@ -3,8 +3,8 @@ package com.gv.midway.pojo.changeDeviceServicePlans.request;
 import java.util.Arrays;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.gv.midway.pojo.MidWayDevices;
 import com.gv.midway.pojo.verizon.CustomFields;
-import com.gv.midway.pojo.verizon.Devices;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -17,7 +17,7 @@ public class ChangeDeviceServicePlansRequestDataArea {
 	private CustomFields[] customFields;
 
 	@ApiModelProperty(value = "All identifiers for the device.")
-	private Devices[] devices;
+	private MidWayDevices[] devices;
 
 	@ApiModelProperty(value = "New Service Plan.", required = true)
 	private String servicePlan;
@@ -45,11 +45,11 @@ public class ChangeDeviceServicePlansRequestDataArea {
 		this.customFields = customFields;
 	}
 
-	public Devices[] getDevices() {
+	public MidWayDevices[] getDevices() {
 		return devices;
 	}
 
-	public void setDevices(Devices[] devices) {
+	public void setDevices(MidWayDevices[] devices) {
 		this.devices = devices;
 	}
 
@@ -150,6 +150,8 @@ public class ChangeDeviceServicePlansRequestDataArea {
 		builder.append("]");
 		return builder.toString();
 	}
+
+	
 
 
 	

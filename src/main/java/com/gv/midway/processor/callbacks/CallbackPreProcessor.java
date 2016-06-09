@@ -11,10 +11,9 @@ import org.springframework.core.env.Environment;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.Response;
-import com.gv.midway.pojo.callback.Netsuite.NetSuiteCallBackError;
-import com.gv.midway.pojo.callback.Netsuite.NetSuiteCallBackEvent;
-import com.gv.midway.pojo.callback.common.response.CallbackCommonResponse;
-import com.gv.midway.pojo.callback.common.response.CallbackCommonResponseDataArea;
+import com.gv.midway.pojo.callback.Netsuite.KafkaNetSuiteCallBackError;
+import com.gv.midway.pojo.callback.Netsuite.KafkaNetSuiteCallBackEvent;
+import com.gv.midway.pojo.callback.Netsuite.NetSuiteCallBackProvisioningResponse;
 import com.gv.midway.pojo.callback.request.CallBackVerizonRequest;
 
 public class CallbackPreProcessor implements Processor {
@@ -67,9 +66,17 @@ public class CallbackPreProcessor implements Processor {
 		exchange.setProperty(IConstant.VERIZON_CALLBACK_RESPONE,
 				req);
 		
+		NetSuiteCallBackProvisioningResponse netSuiteCallBackProvisioningResponse=new NetSuiteCallBackProvisioningResponse();
+		netSuiteCallBackProvisioningResponse.setDeviceIds(req.getDeviceIds());
+		
+		
+		
 		if(req.getFaultResponse() != null) {
+			
+			netSuiteCallBackProvisioningResponse.setStatus("fail");
+			netSuiteCallBackProvisioningResponse.setResponse(req.getFaultResponse().getFaultstring());
 
-			NetSuiteCallBackError netSuiteCallBackError =new NetSuiteCallBackError();
+			KafkaNetSuiteCallBackError netSuiteCallBackError =new KafkaNetSuiteCallBackError();
 			
 			netSuiteCallBackError.setApp("Midway");
 			netSuiteCallBackError.setCategory("Verizon Call Back Error");
@@ -79,13 +86,16 @@ public class CallbackPreProcessor implements Processor {
 			netSuiteCallBackError.setVersion("1");
 			netSuiteCallBackError.setException(req.getFaultResponse().getFaultstring());
 			netSuiteCallBackError.setMsg("Error in Call Back from Verizon.");
-			exchange.getIn().setBody(netSuiteCallBackError);
+			
+			exchange.setProperty(IConstant.KAFKA_OBJECT, netSuiteCallBackError);
 
 		} 
 		
 		else {
 			
-			   NetSuiteCallBackEvent netSuiteCallBackEvent =new NetSuiteCallBackEvent();
+			netSuiteCallBackProvisioningResponse.setStatus("success");
+			
+			   KafkaNetSuiteCallBackEvent netSuiteCallBackEvent =new KafkaNetSuiteCallBackEvent();
 				
 			    netSuiteCallBackEvent.setApp("Midway");
 			    netSuiteCallBackEvent.setCategory("Verizon Call Back Success");
@@ -95,9 +105,12 @@ public class CallbackPreProcessor implements Processor {
 			    netSuiteCallBackEvent.setVersion("1");
 				
 			    netSuiteCallBackEvent.setMsg("Succesfull Call Back from Verizon.");
-			    exchange.getIn().setBody(netSuiteCallBackEvent);
+			    
+			    exchange.setProperty(IConstant.KAFKA_OBJECT, netSuiteCallBackEvent);
 
 		}
+		
+		exchange.getIn().setBody(netSuiteCallBackProvisioningResponse);
 	}
 
 }

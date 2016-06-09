@@ -383,7 +383,7 @@ public class CamelRoute extends RouteBuilder {
 		// Insert or Update Device Details in Bulk
 		updateDevicesDetailsBulk();
 
-		//Retrieve Device Usage History
+		//Retrieve Device Usage History from Carrier
 		retrieveDeviceUsageHistory();
 		
 		// Execution of schduled jobs scheduledJobs
