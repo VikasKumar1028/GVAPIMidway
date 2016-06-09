@@ -21,11 +21,11 @@ import com.gv.midway.pojo.verizon.DeviceId;
 import com.gv.midway.processor.activateDevice.VerizonActivateDevicePreProcessor;
 import com.gv.midway.utility.CommonUtil;
 
-public class CreateVerizonDeviceConnectionHistoryPayloadProcessor implements
+public class VerizonDeviceConnectionHistoryPreProcessor implements
 		Processor {
 
 	Logger log = Logger
-			.getLogger(CreateVerizonDeviceConnectionHistoryPayloadProcessor.class
+			.getLogger(VerizonDeviceConnectionHistoryPreProcessor.class
 					.getName());
 
 	@Override

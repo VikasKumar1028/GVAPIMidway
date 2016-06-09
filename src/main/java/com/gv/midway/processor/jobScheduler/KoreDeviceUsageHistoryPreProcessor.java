@@ -16,9 +16,9 @@ import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationReq
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.verizon.DeviceId;
 
-public class CreateKoreDeviceUsageHistoryPayloadProcessor implements Processor{
+public class KoreDeviceUsageHistoryPreProcessor implements Processor{
 
-	Logger log = Logger.getLogger(CreateKoreDeviceUsageHistoryPayloadProcessor.class
+	Logger log = Logger.getLogger(KoreDeviceUsageHistoryPreProcessor.class
 			.getName());
 
 	@Override

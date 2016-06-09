@@ -17,10 +17,10 @@ import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.verizon.DeviceId;
 import com.gv.midway.utility.CommonUtil;
 
-public class CreateVerizonDeviceUsageHistoryPayloadProcessor implements
+public class VerizonDeviceUsageHistoryPreProcessor implements
 		Processor {
 	Logger log = Logger
-			.getLogger(CreateVerizonDeviceUsageHistoryPayloadProcessor.class
+			.getLogger(VerizonDeviceUsageHistoryPreProcessor.class
 					.getName());
 
 	@Override
