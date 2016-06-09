@@ -174,11 +174,19 @@ public class KoreCheckStatusPostProcessor implements Processor {
 	    keyValues3.setK("deviceIds");
 	    keyValues3.setV(midWayTransactionDeviceNumber.replace("'\'", ""));
 		
-		KeyValues[] keyValuesArr=new KeyValues[3];
+	
+        KeyValues keyValues4=new KeyValues();
+		
+	    keyValues4.setK("netSuiteID");
+	    keyValues4.setV(netSuiteID);
+		
+		KeyValues[] keyValuesArr=new KeyValues[4];
 		
 		keyValuesArr[0]=keyValues1;
 		keyValuesArr[1]=keyValues2;
 		keyValuesArr[2]=keyValues3;
+		keyValuesArr[3]=keyValues4;
+		
 		
 		netSuiteCallBackEvent.setKeyValues(keyValuesArr);
 		
