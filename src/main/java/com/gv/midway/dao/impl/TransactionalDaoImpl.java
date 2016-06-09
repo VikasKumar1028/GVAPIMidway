@@ -666,12 +666,18 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		
 	    keyValues3.setK("deviceIds");
 	    keyValues3.setV(strDeviceNumber.replace("'\'", ""));
+	    
+        KeyValues keyValues4=new KeyValues();
 		
-		KeyValues[] keyValuesArr=new KeyValues[2];
+	    keyValues4.setK("netSuiteID");
+	    keyValues4.setV(findOne.getNetSuiteId());
+		
+		KeyValues[] keyValuesArr=new KeyValues[4];
 		
 		keyValuesArr[0]=keyValues1;
 		keyValuesArr[1]=keyValues2;
 		keyValuesArr[2]=keyValues3;
+		keyValuesArr[3]=keyValues4;
 		
 		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,
 				findOne.getDeviceNumber());
