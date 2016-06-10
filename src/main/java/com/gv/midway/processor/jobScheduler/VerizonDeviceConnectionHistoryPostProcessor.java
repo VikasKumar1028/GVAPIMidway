@@ -8,6 +8,7 @@ import org.apache.camel.Processor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
+import com.gv.midway.job.JobDetail;
 import com.gv.midway.pojo.connectionInformation.verizon.response.ConnectionEvent;
 import com.gv.midway.pojo.connectionInformation.verizon.response.ConnectionHistory;
 import com.gv.midway.pojo.connectionInformation.verizon.response.ConnectionInformationResponse;
@@ -26,6 +27,9 @@ public class VerizonDeviceConnectionHistoryPostProcessor implements Processor {
 		ConnectionInformationResponse connectionResponse = mapper.convertValue(
 				map, ConnectionInformationResponse.class);
 		DeviceConnection deviceConnection = new DeviceConnection();
+		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+		
+		
 		deviceConnection.setCarrierName((String) exchange
 				.getProperty("CarrierName"));
 		deviceConnection.setDeviceId((DeviceId) exchange
@@ -68,14 +72,15 @@ public class VerizonDeviceConnectionHistoryPostProcessor implements Processor {
 			deviceConnection.setEvent(null);
 		}
 
-		deviceConnection.setTimestamp(CommonUtil.getCurrentTimeStamp());
+		//The Day for which Job Ran
+		deviceConnection.setTimestamp(jobDetail.getDate());
 		deviceConnection.setTransactionErrorReason(null);
 		deviceConnection
 				.setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_SUCCESS);
 		deviceConnection.setNetSuiteId((String) exchange
 				.getProperty("NetSuiteId"));
 		deviceConnection.setIsValid(true);
-		deviceConnection.setOccurredAt(connectionResponse.getConnectionHistory()[0].getOccurredAt());
+		//deviceConnection.setOccurredAt(connectionResponse.getConnectionHistory()[0].getOccurredAt());
 
 		exchange.getIn().setBody(deviceConnection);
 

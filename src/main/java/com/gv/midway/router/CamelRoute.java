@@ -1195,7 +1195,7 @@ public class CamelRoute extends RouteBuilder {
 				// Deleting Existing Records
 				.choice()
 				.when(simple("${exchangeProperty[jobName]} == 'VERIZON_CONNECTION_HISTORY'"))
-				.log("Records to Delete")
+				.bean(iJobService, "deleteDeviceConnectionHistoryRecords")
 				.when(simple("${exchangeProperty[jobName]} == 'KORE_DEVICE_USAGE'"))
 				.bean(iJobService, "deleteDeviceUsageRecords")
 				.when(simple("${exchangeProperty[jobName]} == 'VERIZON_DEVICE_USAGE'"))
@@ -1255,8 +1255,11 @@ public class CamelRoute extends RouteBuilder {
 				.json(JsonLibrary.Jackson)
 				.process(new VerizonDeviceConnectionHistoryPostProcessor())
 				.bean(iSchedulerService, "saveDeviceConnectionHistory")
-				.doCatch(CxfOperationException.class)
-				.process(new VerizonBatchExceptionProcessor(env)).endDoTry();
+				.doCatch(CxfOperationException.class,
+						UnknownHostException.class, ConnectException.class)
+				.process(new VerizonBatchExceptionProcessor(env))
+				.bean(iSchedulerService, "saveDeviceConnectionHistory")
+				.endDoTry();
 
 	}
 

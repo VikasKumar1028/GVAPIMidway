@@ -1,10 +1,5 @@
 package com.gv.midway.processor.jobScheduler;
 
-import java.sql.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.Message;
@@ -13,12 +8,9 @@ import org.apache.log4j.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
-import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationRequest;
 import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationRequestDataArea;
-import com.gv.midway.pojo.connectionInformation.verizon.response.ConnectionHistory;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.verizon.DeviceId;
-import com.gv.midway.processor.activateDevice.VerizonActivateDevicePreProcessor;
 import com.gv.midway.utility.CommonUtil;
 
 public class VerizonDeviceConnectionHistoryPreProcessor implements
@@ -35,9 +27,9 @@ public class VerizonDeviceConnectionHistoryPreProcessor implements
 				+ exchange.getProperty(IConstant.VZ_SEESION_TOKEN));
 		log.info("Session Parameters  VZAuthorization"
 				+ exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN));
-
+/*
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-		Calendar cal = Calendar.getInstance();
+		Calendar cal = Calendar.getInstance();*/
 
 		DeviceInformation deviceInfo = (DeviceInformation) exchange.getIn()
 				.getBody();
@@ -47,17 +39,26 @@ public class VerizonDeviceConnectionHistoryPreProcessor implements
 		 */
 		ConnectionInformationRequestDataArea dataArea = new ConnectionInformationRequestDataArea();
 		DeviceId device = new DeviceId();
-		device.setId(deviceInfo.getDeviceIds()[0].getId());
-		device.setKind(deviceInfo.getDeviceIds()[0].getKind());
+	
+		
+		//Fetching Recommended device Identifiers
+		DeviceId recommendedDeviceId=CommonUtil.getRecommendedDeviceIdentifier(deviceInfo.getDeviceIds());
+		
+		device.setId(recommendedDeviceId.getId());
+		device.setKind(recommendedDeviceId.getKind());
 		dataArea.setDeviceId(device);
 
 		exchange.setProperty("DeviceId", device);
 		exchange.setProperty("CarrierName", deviceInfo.getBs_carrier());
 		exchange.setProperty("NetSuiteId", deviceInfo.getNetSuiteId());
 
-		dataArea.setLatest(dateFormat.format(cal.getTime()));
+/*		dataArea.setLatest(dateFormat.format(cal.getTime()));
 		cal.add(Calendar.HOUR, -24);
-		dataArea.setEarliest(dateFormat.format(cal.getTime()));
+		dataArea.setEarliest(dateFormat.format(cal.getTime()));*/
+		
+		dataArea.setLatest(exchange.getProperty("jobEndTime").toString());
+		dataArea.setEarliest(exchange.getProperty("jobStartTime").toString());
+		
 
 		ObjectMapper objectMapper = new ObjectMapper();
 

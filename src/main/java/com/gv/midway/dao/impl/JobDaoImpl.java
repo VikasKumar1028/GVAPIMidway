@@ -1,9 +1,6 @@
 package com.gv.midway.dao.impl;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -18,9 +15,9 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import com.gv.midway.constant.IConstant;
-import com.gv.midway.constant.JobType;
 import com.gv.midway.dao.IJobDao;
 import com.gv.midway.job.JobDetail;
+import com.gv.midway.pojo.deviceHistory.DeviceConnection;
 import com.gv.midway.pojo.deviceHistory.DeviceUsage;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.mongodb.WriteResult;
@@ -145,6 +142,36 @@ public class JobDaoImpl implements IJobDao {
 
 			WriteResult result = mongoTemplate.updateMulti(searchJobQuery,
 					update, DeviceUsage.class);
+
+			log.info("WriteResult *********************" + result);
+
+		}
+
+		catch (Exception e) {
+			log.info("Error In Saving Job Detail-----------------------------");
+		}
+
+	}
+	
+	
+	@Override
+	public void deleteDeviceConnectionHistoryRecords(Exchange exchange) {
+
+		log.info("Inside deleteDeviceUsageRecords .....................");
+
+		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+		try {
+
+			Query searchJobQuery = new Query(Criteria.where("carrierName").is(
+					jobDetail.getCarrierName())).addCriteria(Criteria.where(
+					"timestamp").is(jobDetail.getDate()));
+
+			Update update = new Update();
+
+			update.set("isValid", false);
+
+			WriteResult result = mongoTemplate.updateMulti(searchJobQuery,
+					update, DeviceConnection.class);
 
 			log.info("WriteResult *********************" + result);
 

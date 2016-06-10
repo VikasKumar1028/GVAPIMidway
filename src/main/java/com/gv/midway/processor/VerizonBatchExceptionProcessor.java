@@ -13,6 +13,7 @@ import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.JobName;
 import com.gv.midway.exception.VerizonSessionTokenExpirationException;
 import com.gv.midway.job.JobDetail;
+import com.gv.midway.pojo.deviceHistory.DeviceConnection;
 import com.gv.midway.pojo.deviceHistory.DeviceUsage;
 import com.gv.midway.pojo.usageInformation.verizon.response.UsageHistory;
 import com.gv.midway.pojo.verizon.DeviceId;
@@ -97,7 +98,23 @@ public class VerizonBatchExceptionProcessor implements Processor {
 		} else {
 			System.out
 					.println("**********************************CONNECTION HISTORY******************************************************************");
+			
+			
+			DeviceConnection deviceConnection = new DeviceConnection();
 
+			deviceConnection.setCarrierName((String) exchange
+					.getProperty("CarrierName"));
+			deviceConnection.setDeviceId((DeviceId) exchange
+					.getProperty("DeviceId"));
+			
+			deviceConnection.setTimestamp(jobDetail.getDate());
+			deviceConnection.setTransactionErrorReason(errorType);
+			deviceConnection
+					.setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
+			deviceConnection.setNetSuiteId((String) exchange
+					.getProperty("NetSuiteId"));
+			deviceConnection.setIsValid(true);
+			exchange.getIn().setBody(deviceConnection);
 		}
 
 

@@ -13,5 +13,7 @@ public interface IJobDao {
 	public void updateJobDetails(Exchange exchange);
 	
 	public void deleteDeviceUsageRecords(Exchange exchange);
+	
+	public void deleteDeviceConnectionHistoryRecords(Exchange exchange);
 
 }

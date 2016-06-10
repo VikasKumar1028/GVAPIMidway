@@ -35,7 +35,7 @@ public class VerizonDeviceUsageHistoryPostProcessor implements Processor {
 				.setCarrierName((String) exchange.getProperty("CarrierName"));
 		deviceUsage.setDeviceId((DeviceId) exchange.getProperty("DeviceId"));
 		deviceUsage.setDataUsed(totalBytesUsed);
-		
+		//The Day for which Job Ran
 		deviceUsage.setTimestamp(jobDetail.getDate());
 		deviceUsage.setTransactionErrorReason(null);
 		deviceUsage

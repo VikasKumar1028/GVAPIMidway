@@ -76,6 +76,12 @@ public class JobServiceImpl implements IJobService {
 		iJobDao.deleteDeviceUsageRecords(exchange);
 	}
 	
+	
+	public void deleteDeviceConnectionHistoryRecords(Exchange exchange){
+		iJobDao.deleteDeviceConnectionHistoryRecords(exchange);
+	}
+	
+	
 	/**
 	 * Function is used for setting the latest Start Time and End Time For running the Job
 	 * For Now we have set the verizon Api start and end time in exchange
