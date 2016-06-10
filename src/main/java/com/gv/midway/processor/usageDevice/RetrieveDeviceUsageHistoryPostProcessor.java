@@ -53,13 +53,16 @@ public class RetrieveDeviceUsageHistoryPostProcessor implements Processor {
 		UsageInformationResponseDataArea usageInformationResponseDataArea = new UsageInformationResponseDataArea();
 
 		long totalBytesUsed = 0L;
+		String totalBytestValue ="0";
 		if (usageResponse.getUsageHistory() != null) {
 			for (UsageHistory history : usageResponse.getUsageHistory()) {
 				totalBytesUsed = history.getBytesUsed() + totalBytesUsed;
+				totalBytestValue=String.valueOf(totalBytesUsed);
+				log.info("totalBytestValue::"+totalBytestValue);
 			}
 		}
 
-		// usageInformationResponseDataArea.setTotalUsages(totalBytesUsed);
+		 
 
 		if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
 
@@ -67,7 +70,7 @@ public class RetrieveDeviceUsageHistoryPostProcessor implements Processor {
 			response.setResponseCode(IResponse.SUCCESS_CODE);
 			response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
 			response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVICE_USAGE_MIDWAY);
-			usageInformationResponseDataArea.setTotalUsages(totalBytesUsed);
+			usageInformationResponseDataArea.setTotalUsages(totalBytestValue);
 
 		} else {
 
@@ -95,11 +98,10 @@ public class RetrieveDeviceUsageHistoryPostProcessor implements Processor {
 
 		usageInformationResponseDataArea.setHeader(responseheader);
 		usageInformationResponseDataArea.setResponse(response);
+		
 
 		exchange.getIn().setBody(usageInformationResponseDataArea);
 
-		log.info("usageInformationResponseDataArea:::::::::::::::::::"
-				+ totalBytesUsed);
 		log.info("End::RetrieveDeviceUsageHistoryPostProcessor");
 	}
 }

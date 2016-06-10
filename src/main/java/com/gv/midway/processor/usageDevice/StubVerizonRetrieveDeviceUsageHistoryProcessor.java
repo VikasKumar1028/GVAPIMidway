@@ -43,7 +43,7 @@ public class StubVerizonRetrieveDeviceUsageHistoryProcessor implements Processor
 
 		usageInformationResponse.setHeader(responseheader);
 		usageInformationResponse.setResponse(response);
-		usageInformationResponseDataArea.setTotalUsages(12314517);
+		usageInformationResponseDataArea.setTotalUsages("12314517");
 		usageInformationResponse.setDataArea(usageInformationResponseDataArea);
 		
 		
