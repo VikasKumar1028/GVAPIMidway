@@ -1190,6 +1190,7 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iJobService, "updateJobDetails")
 				.end()
 				.bean(iJobService, "insertJobDetails")
+				.bean(iJobService,"setJobStartandEndTime")
 				.bean(iJobService, "fetchDevices")
 				.split()
 				.method("jobSplitter")

@@ -91,24 +91,6 @@ public class JobDaoImpl implements IJobDao {
 		// inserting in the exchange as property
 		exchange.setProperty("jobDetail", jobDetail);
 
-		// finding the Start and end time of Job and Setting in exchange as
-		// parameter
-		try {
-			DateFormat verizondateFormat = new SimpleDateFormat(
-					"yyyy-MM-dd'T'HH:mm:ss'Z'");
-			DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(dateFormat.parse(jobDetail.getDate()));
-			exchange.setProperty("jobStartTime",
-					verizondateFormat.format(cal.getTime()));
-			cal.add(Calendar.HOUR, 24);
-			exchange.setProperty("jobEndTime",
-					verizondateFormat.format(cal.getTime()));
-
-		} catch (Exception ex) {
-			log.error("................Error in Setting Job Dates");
-		}
-
 		// inserting in the database as property
 		mongoTemplate.insert(jobDetail);
 	}

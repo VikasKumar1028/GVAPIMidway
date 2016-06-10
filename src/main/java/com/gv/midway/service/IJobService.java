@@ -17,6 +17,8 @@ public interface IJobService {
 	public void deleteDeviceUsageRecords(Exchange exchange) ;
 	
 	public void setJobDetails(Exchange exchange,String carrierName,JobName jobName);
+	
+	public void setJobStartandEndTime(Exchange exchange);
 
 }
 	
