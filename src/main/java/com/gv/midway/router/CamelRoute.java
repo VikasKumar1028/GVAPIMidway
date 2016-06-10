@@ -383,9 +383,9 @@ public class CamelRoute extends RouteBuilder {
 		// Insert or Update Device Details in Bulk
 		updateDevicesDetailsBulk();
 
-		//Retrieve Device Usage History from Carrier
+		// Retrieve Device Usage History from Carrier
 		retrieveDeviceUsageHistory();
-		
+
 		// Execution of schduled jobs scheduledJobs
 		/* scheduledJobs(); */
 
@@ -1175,10 +1175,9 @@ public class CamelRoute extends RouteBuilder {
 	}
 
 	// TODO Add KORE DEVICE USAGE JOB
-	
-	
-	//BATCH JOB
-	
+
+	// BATCH JOB
+
 	public void startJob() {
 
 		from("direct:startJob").to("direct:processJob");
@@ -1190,28 +1189,42 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iJobService, "updateJobDetails")
 				.end()
 				.bean(iJobService, "insertJobDetails")
-				.bean(iJobService,"setJobStartandEndTime")
+				.bean(iJobService, "setJobStartandEndTime")
 				.bean(iJobService, "fetchDevices")
-				.split()
-				.method("jobSplitter")
-				// .recipientList()
-				// .method("jobCarrierRouter");
+
+				// Deleting Existing Records
 				.choice()
 				.when(simple("${exchangeProperty[jobName]} == 'VERIZON_CONNECTION_HISTORY'"))
-				.to("seda:processVerizonConnectionHistoryJob")
+				.log("Records to Delete")
 				.when(simple("${exchangeProperty[jobName]} == 'KORE_DEVICE_USAGE'"))
-				.bean(iJobService,"deleteDeviceUsageRecords")
-				.to("seda:processKoreDeviceUsageJob")
+				.bean(iJobService, "deleteDeviceUsageRecords")
 				.when(simple("${exchangeProperty[jobName]} == 'VERIZON_DEVICE_USAGE'"))
-				.bean(iJobService,"deleteDeviceUsageRecords")
+				.bean(iJobService, "deleteDeviceUsageRecords")
+				.endChoice()
+				.end()
+
+				// Fetch List Forwarded to Respective SEDA
+
+				.choice()
+				.when(simple("${exchangeProperty[jobName]} == 'VERIZON_CONNECTION_HISTORY'"))
+				.split()
+				.method("jobSplitter")
+				.to("seda:processVerizonConnectionHistoryJob")
+				.endChoice()
+				.when(simple("${exchangeProperty[jobName]} == 'KORE_DEVICE_USAGE'"))
+				.split()
+				.method("jobSplitter")
+				.to("seda:processKoreDeviceUsageJob")
+				.endChoice()
+				.when(simple("${exchangeProperty[jobName]} == 'VERIZON_DEVICE_USAGE'"))
+				.split().method("jobSplitter")
 				.to("seda:processVerizonDeviceUsageJob").endChoice();
 
 		// KORE Job-DEVICE USAGE
 		from("seda:processKoreDeviceUsageJob?concurrentConsumers=5")
 				.log("KOREJob-DEVICE USAGE")
 
-				.doTry()
-				.process(new KoreDeviceUsageHistoryPreProcessor())
+				.doTry().process(new KoreDeviceUsageHistoryPreProcessor())
 				.to(uriRestKoreEndPoint).unmarshal().json(JsonLibrary.Jackson)
 				.process(new KoreDeviceUsageHistoryPostProcessor())
 				.bean(iSchedulerService, "saveDeviceUsageHistory")
@@ -1219,84 +1232,85 @@ public class CamelRoute extends RouteBuilder {
 
 		// VERIZON Job-DEVICE USAGE
 		from("seda:processVerizonDeviceUsageJob?concurrentConsumers=4")
-				.log("VERIZONJob-DEVICE USAGE").doTry()
+				.log("VERIZONJob-DEVICE USAGE")
+				.doTry()
 				.bean(iSessionService, "setContextTokenInExchange")
 				.process(new VerizonDeviceUsageHistoryPreProcessor())
-				.to(uriRestVerizonEndPoint).unmarshal()
+				.to(uriRestVerizonEndPoint)
+				.unmarshal()
 				.json(JsonLibrary.Jackson)
 				.process(new VerizonDeviceUsageHistoryPostProcessor())
 				.bean(iSchedulerService, "saveDeviceUsageHistory")
-				.doCatch(CxfOperationException.class,UnknownHostException.class, ConnectException.class)
+				.doCatch(CxfOperationException.class,
+						UnknownHostException.class, ConnectException.class)
 				.process(new VerizonBatchExceptionProcessor(env))
-				.bean(iSchedulerService, "saveDeviceUsageHistory")
-				.endDoTry();
+				.bean(iSchedulerService, "saveDeviceUsageHistory").endDoTry();
 
 		// VERIZON Job CONNECTION HISTORY
 		from("seda:processVerizonConnectionHistoryJob?concurrentConsumers=5")
-				.log("VERIZONJob CONNECTION HISTORY")
-				.doTry()
+				.log("VERIZONJob CONNECTION HISTORY").doTry()
 				.bean(iSessionService, "setContextTokenInExchange")
-				.process(
-						new VerizonDeviceConnectionHistoryPreProcessor())
+				.process(new VerizonDeviceConnectionHistoryPreProcessor())
 				.to(uriRestVerizonEndPoint).unmarshal()
 				.json(JsonLibrary.Jackson)
 				.process(new VerizonDeviceConnectionHistoryPostProcessor())
 				.bean(iSchedulerService, "saveDeviceConnectionHistory")
 				.doCatch(CxfOperationException.class)
 				.process(new VerizonBatchExceptionProcessor(env)).endDoTry();
-		
+
 	}
 
+	public void retrieveDeviceUsageHistory() {
+		from("direct:retrieveDeviceUsageHistory")
+				.process(new HeaderProcessor())
+				.choice()
+				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
+				.choice()
+				.when(header("derivedCarrierName").isEqualTo("VERIZON"))
+				.process(new StubVerizonRetrieveDeviceUsageHistoryProcessor())
+				.to("log:input")
+				.endChoice()
+				.otherwise()
+				.choice()
 
-		public void retrieveDeviceUsageHistory()
-		{
-			from("direct:retrieveDeviceUsageHistory").process(new HeaderProcessor()).choice()
-			.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
-			.choice().when(header("derivedCarrierName").isEqualTo("VERIZON"))
-			.process(new StubVerizonRetrieveDeviceUsageHistoryProcessor())
-			.to("log:input").endChoice().otherwise().choice()
-			
-			
-			.when(header("derivedCarrierName").isEqualTo("VERIZON"))
-			.bean(iSessionService, "setContextTokenInExchange")
-			.bean(iTransactionalService, "populateRetrieveDeviceUsageHistoryDBPayload")
-			// will store only one time in Audit even on connection failure
-			.bean(iAuditService, "auditExternalRequestCall")
-			.to("direct:VerizonretrieveDeviceUsageHistoryFlow1").endChoice().end()
-			.to("log:input").endChoice().end();
-			
-			
-			// Verizon Flow-1
-			from("direct:VerizonretrieveDeviceUsageHistoryFlow1")
-					.doTry()
-					.to("direct:VerizonretrieveDeviceUsageHistoryFlow2")
-					.doCatch(CxfOperationException.class)
-					/*.bean(iTransactionalService,
-							"populateVerizonTransactionalErrorResponse")*/
-					.bean(iAuditService, "auditExternalExceptionResponseCall")
-					.process(new VerizonGenericExceptionProcessor(env)).endDoTry()
-					.end();
+				.when(header("derivedCarrierName").isEqualTo("VERIZON"))
+				.bean(iSessionService, "setContextTokenInExchange")
+				.bean(iTransactionalService,
+						"populateRetrieveDeviceUsageHistoryDBPayload")
+				// will store only one time in Audit even on connection failure
+				.bean(iAuditService, "auditExternalRequestCall")
+				.to("direct:VerizonretrieveDeviceUsageHistoryFlow1")
+				.endChoice().end().to("log:input").endChoice().end();
 
-			
-			
-			// Verizon Flow-2
-			from("direct:VerizonretrieveDeviceUsageHistoryFlow2")
-					.errorHandler(noErrorHandler())
-					// REMOVED Audit will store record 3 times in case of failure
-					// (see onException for connection.class above)
-					// .bean(iAuditService, "auditExternalRequestCall")
-					.bean(iSessionService, "setContextTokenInExchange")
-					.process(new RetrieveDeviceUsageHistoryPreProcessor())
-					.to(uriRestVerizonEndPoint)
-					.unmarshal()
-					.json(JsonLibrary.Jackson)
-					/*.bean(iTransactionalService,
-							"populateRetrieveDeviceUsageHistoryDBPayload")*/
-					.bean(iAuditService, "auditExternalResponseCall")
-					.process(new RetrieveDeviceUsageHistoryPostProcessor(env));
-			
-		}
+		// Verizon Flow-1
+		from("direct:VerizonretrieveDeviceUsageHistoryFlow1").doTry()
+				.to("direct:VerizonretrieveDeviceUsageHistoryFlow2")
+				.doCatch(CxfOperationException.class)
+				/*
+				 * .bean(iTransactionalService,
+				 * "populateVerizonTransactionalErrorResponse")
+				 */
+				.bean(iAuditService, "auditExternalExceptionResponseCall")
+				.process(new VerizonGenericExceptionProcessor(env)).endDoTry()
+				.end();
 
+		// Verizon Flow-2
+		from("direct:VerizonretrieveDeviceUsageHistoryFlow2")
+				.errorHandler(noErrorHandler())
+				// REMOVED Audit will store record 3 times in case of failure
+				// (see onException for connection.class above)
+				// .bean(iAuditService, "auditExternalRequestCall")
+				.bean(iSessionService, "setContextTokenInExchange")
+				.process(new RetrieveDeviceUsageHistoryPreProcessor())
+				.to(uriRestVerizonEndPoint).unmarshal()
+				.json(JsonLibrary.Jackson)
+				/*
+				 * .bean(iTransactionalService,
+				 * "populateRetrieveDeviceUsageHistoryDBPayload")
+				 */
+				.bean(iAuditService, "auditExternalResponseCall")
+				.process(new RetrieveDeviceUsageHistoryPostProcessor(env));
 
-	
+	}
+
 }
