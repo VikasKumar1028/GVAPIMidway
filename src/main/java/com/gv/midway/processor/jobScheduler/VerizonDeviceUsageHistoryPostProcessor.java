@@ -10,7 +10,7 @@ import com.gv.midway.constant.IConstant;
 import com.gv.midway.job.JobDetail;
 import com.gv.midway.pojo.deviceHistory.DeviceUsage;
 import com.gv.midway.pojo.usageInformation.verizon.response.UsageHistory;
-import com.gv.midway.pojo.usageInformation.verizon.response.UsageInformationResponse;
+import com.gv.midway.pojo.usageInformation.verizon.response.VerizonUsageInformationResponse;
 import com.gv.midway.pojo.verizon.DeviceId;
 
 public class VerizonDeviceUsageHistoryPostProcessor implements Processor {
@@ -20,8 +20,8 @@ public class VerizonDeviceUsageHistoryPostProcessor implements Processor {
 
 		Map map = exchange.getIn().getBody(Map.class);
 		ObjectMapper mapper = new ObjectMapper();
-		UsageInformationResponse usageResponse = mapper.convertValue(map,
-				UsageInformationResponse.class);
+		VerizonUsageInformationResponse usageResponse = mapper.convertValue(map,
+				VerizonUsageInformationResponse.class);
 		DeviceUsage deviceUsage = new DeviceUsage();
 		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
 

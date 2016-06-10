@@ -1,16 +1,12 @@
 package com.gv.midway.processor.connectionInformation.deviceSessionBeginEndInfo;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IResponse;
@@ -43,11 +39,6 @@ public class VerizonDeviceSessionBeginEndInfoPostProcessor implements Processor 
 		SessionBeginEndResponseDataArea sessionBeginEndResponseDataArea = new SessionBeginEndResponseDataArea();
 		Header responseheader = new Header();
 		Response response = new Response();
-
-		DateFormat dateFormat = new SimpleDateFormat(
-				newEnv.getProperty(IConstant.DATE_FORMAT));
-
-		Date date = new Date();
 
 		log.info("exchange.getIn().getBody().toString()***************************************"
 				+ exchange.getIn().getBody().toString());
@@ -184,7 +175,8 @@ public class VerizonDeviceSessionBeginEndInfoPostProcessor implements Processor 
 		responseheader.setOrganization(exchange.getProperty(
 				IConstant.ORGANIZATION).toString());
 
-		responseheader.setTimestamp(dateFormat.format(date));
+		responseheader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT)
+				.toString());
 		responseheader.setSourceName(exchange
 				.getProperty(IConstant.SOURCE_NAME).toString());
 		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)

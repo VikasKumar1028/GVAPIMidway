@@ -18,7 +18,8 @@ import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.reActivateDevice.response.ReactivateDeviceResponse;
 import com.gv.midway.pojo.restoreDevice.response.RestoreDeviceResponse;
 import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
-import com.gv.midway.pojo.usageInformation.verizon.response.UsageInformationResponseDataArea;
+import com.gv.midway.pojo.usageInformation.response.UsageInformationResponse;
+
 
 public class GenericErrorProcessor implements Processor {
 
@@ -171,7 +172,7 @@ public class GenericErrorProcessor implements Processor {
 		
 		if ("Endpoint[direct://retrieveDeviceUsageHistory]".equals(exchange
 				.getFromEndpoint().toString())) {
-			UsageInformationResponseDataArea responseObject = new UsageInformationResponseDataArea();
+			UsageInformationResponse responseObject = new UsageInformationResponse();
 			responseObject.setHeader(responseHeader);
 			responseObject.setResponse(response);
 			exchange.getIn().setBody(responseObject);

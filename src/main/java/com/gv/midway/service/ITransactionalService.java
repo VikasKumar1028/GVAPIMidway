@@ -47,6 +47,5 @@ public interface ITransactionalService {
 
 	public void populateKoreCustomChangeResponse(Exchange exchange);
 	
-	public void populateRetrieveDeviceUsageHistoryDBPayload(Exchange exchange);
 	
 }

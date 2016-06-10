@@ -1,8 +1,6 @@
 package com.gv.midway.processor.usageDevice;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+
 import java.util.Map;
 
 import org.apache.camel.Exchange;
@@ -15,9 +13,10 @@ import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
+import com.gv.midway.pojo.usageInformation.response.UsageInformationResponse;
+import com.gv.midway.pojo.usageInformation.response.UsageInformationResponseDataArea;
 import com.gv.midway.pojo.usageInformation.verizon.response.UsageHistory;
-import com.gv.midway.pojo.usageInformation.verizon.response.UsageInformationResponse;
-import com.gv.midway.pojo.usageInformation.verizon.response.UsageInformationResponseDataArea;
+import com.gv.midway.pojo.usageInformation.verizon.response.VerizonUsageInformationResponse;
 
 public class RetrieveDeviceUsageHistoryPostProcessor implements Processor {
 
@@ -39,40 +38,44 @@ public class RetrieveDeviceUsageHistoryPostProcessor implements Processor {
 
 		Header responseheader = new Header();
 		Response response = new Response();
-		DateFormat dateFormat = new SimpleDateFormat(
-				newEnv.getProperty(IConstant.DATE_FORMAT));
-
-		Date date = new Date();
-
-		Map map = exchange.getIn().getBody(Map.class);
-		ObjectMapper mapper = new ObjectMapper();
-
-		UsageInformationResponse usageResponse = mapper.convertValue(map,
-				UsageInformationResponse.class);
+		
+		
+		long totalBytesUsed = 0L;
+		
+		UsageInformationResponse usageInformationResponse=new UsageInformationResponse();
 
 		UsageInformationResponseDataArea usageInformationResponseDataArea = new UsageInformationResponseDataArea();
 
-		long totalBytesUsed = 0L;
-		String totalBytestValue ="0";
-		if (usageResponse.getUsageHistory() != null) {
-			for (UsageHistory history : usageResponse.getUsageHistory()) {
-				totalBytesUsed = history.getBytesUsed() + totalBytesUsed;
-				totalBytestValue=String.valueOf(totalBytesUsed);
-				log.info("totalBytestValue::"+totalBytestValue);
+		
+		if (!exchange.getIn().getBody().toString().contains("errorMessage="))
+		{
+			
+			Map map = exchange.getIn().getBody(Map.class);
+			ObjectMapper mapper = new ObjectMapper();
+
+			VerizonUsageInformationResponse usageResponse = mapper.convertValue(map,
+					VerizonUsageInformationResponse.class);
+			
+			
+			if (usageResponse.getUsageHistory() != null) {
+				for (UsageHistory history : usageResponse.getUsageHistory()) {
+					totalBytesUsed = history.getBytesUsed() + totalBytesUsed;
+				}
 			}
-		}
-
-		 
-
-		if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
+			
 
 			log.info("RequestID::" + exchange.getIn().getBody().toString());
 			response.setResponseCode(IResponse.SUCCESS_CODE);
 			response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
 			response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVICE_USAGE_MIDWAY);
-			usageInformationResponseDataArea.setTotalUsages(totalBytestValue);
 
-		} else {
+			usageInformationResponseDataArea.setTotalUsages(totalBytesUsed);
+			usageInformationResponse.setDataArea(usageInformationResponseDataArea);
+		}
+
+
+		
+		else {
 
 			response.setResponseCode(400);
 			response.setResponseStatus(IResponse.ERROR_MESSAGE);
@@ -88,7 +91,8 @@ public class RetrieveDeviceUsageHistoryPostProcessor implements Processor {
 		responseheader.setOrganization(exchange.getProperty(
 				IConstant.ORGANIZATION).toString());
 
-		responseheader.setTimestamp(dateFormat.format(date));
+		responseheader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT)
+				.toString());
 		responseheader.setSourceName(exchange
 				.getProperty(IConstant.SOURCE_NAME).toString());
 		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
@@ -96,11 +100,11 @@ public class RetrieveDeviceUsageHistoryPostProcessor implements Processor {
 		responseheader.setTransactionId(exchange.getProperty(
 				IConstant.GV_TRANSACTION_ID).toString());
 
-		usageInformationResponseDataArea.setHeader(responseheader);
-		usageInformationResponseDataArea.setResponse(response);
+		usageInformationResponse.setHeader(responseheader);
+		usageInformationResponse.setResponse(response);
 		
 
-		exchange.getIn().setBody(usageInformationResponseDataArea);
+		exchange.getIn().setBody(usageInformationResponse);
 
 		log.info("End::RetrieveDeviceUsageHistoryPostProcessor");
 	}

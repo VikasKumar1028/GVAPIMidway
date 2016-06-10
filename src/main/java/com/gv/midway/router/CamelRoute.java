@@ -1278,21 +1278,15 @@ public class CamelRoute extends RouteBuilder {
 
 				.when(header("derivedCarrierName").isEqualTo("VERIZON"))
 				.bean(iSessionService, "setContextTokenInExchange")
-				.bean(iTransactionalService,
-						"populateRetrieveDeviceUsageHistoryDBPayload")
 				// will store only one time in Audit even on connection failure
 				.bean(iAuditService, "auditExternalRequestCall")
 				.to("direct:VerizonretrieveDeviceUsageHistoryFlow1")
-				.endChoice().end().to("log:input").endChoice().end();
+				.endChoice().end();
 
 		// Verizon Flow-1
 		from("direct:VerizonretrieveDeviceUsageHistoryFlow1").doTry()
 				.to("direct:VerizonretrieveDeviceUsageHistoryFlow2")
 				.doCatch(CxfOperationException.class)
-				/*
-				 * .bean(iTransactionalService,
-				 * "populateVerizonTransactionalErrorResponse")
-				 */
 				.bean(iAuditService, "auditExternalExceptionResponseCall")
 				.process(new VerizonGenericExceptionProcessor(env)).endDoTry()
 				.end();

@@ -37,8 +37,8 @@ import com.gv.midway.pojo.restoreDevice.response.RestoreDeviceResponse;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequest;
 import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
 import com.gv.midway.pojo.usageInformation.request.UsageInformationRequest;
-import com.gv.midway.pojo.usageInformation.verizon.response.UsageInformationResponse;
-import com.gv.midway.pojo.usageInformation.verizon.response.UsageInformationResponseDataArea;
+import com.gv.midway.pojo.usageInformation.response.UsageInformationResponse;
+import com.gv.midway.pojo.usageInformation.response.UsageInformationResponseDataArea;
 import com.gv.midway.pojo.verizon.DeviceId;
 
 @SuppressWarnings("all")
@@ -280,10 +280,10 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 	}
 
 	@Override
-	public UsageInformationResponseDataArea retrieveDeviceUsageHistory(
+	public UsageInformationResponse retrieveDeviceUsageHistory(
 			UsageInformationRequest usageInformationRequest) {
 		// TODO Auto-generated method stub
-		return (UsageInformationResponseDataArea) producer.requestBody(
+		return (UsageInformationResponse) producer.requestBody(
 				"direct:retrieveDeviceUsageHistory", usageInformationRequest);
 	}
 }

@@ -33,7 +33,7 @@ import com.gv.midway.pojo.restoreDevice.response.RestoreDeviceResponse;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequest;
 import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
 import com.gv.midway.pojo.usageInformation.request.UsageInformationRequest;
-import com.gv.midway.pojo.usageInformation.verizon.response.UsageInformationResponseDataArea;
+import com.gv.midway.pojo.usageInformation.response.UsageInformationResponse;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 
@@ -160,8 +160,8 @@ public interface IAdaptaionLayerService {
 	@Path("/device/usage/session")
 	@Produces("application/json")
 	@Consumes("application/json")
-	@ApiOperation(value = "Retrieve Device Usage History for Verizon")
-	UsageInformationResponseDataArea retrieveDeviceUsageHistory(
+	@ApiOperation(value = "Retrieve Device data Usage for Verizon")
+	UsageInformationResponse retrieveDeviceUsageHistory(
 			UsageInformationRequest usageInformationRequest);
 	
 	@POST

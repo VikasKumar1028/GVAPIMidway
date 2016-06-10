@@ -7,8 +7,8 @@ import org.apache.log4j.Logger;
 import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
-import com.gv.midway.pojo.usageInformation.verizon.response.UsageInformationResponse;
-import com.gv.midway.pojo.usageInformation.verizon.response.UsageInformationResponseDataArea;
+import com.gv.midway.pojo.usageInformation.response.UsageInformationResponse;
+import com.gv.midway.pojo.usageInformation.response.UsageInformationResponseDataArea;
 import com.gv.midway.processor.activateDevice.StubVerizonActivateDeviceProcessor;
 
 public class StubVerizonRetrieveDeviceUsageHistoryProcessor implements Processor {
@@ -43,7 +43,7 @@ public class StubVerizonRetrieveDeviceUsageHistoryProcessor implements Processor
 
 		usageInformationResponse.setHeader(responseheader);
 		usageInformationResponse.setResponse(response);
-		usageInformationResponseDataArea.setTotalUsages("12314517");
+		usageInformationResponseDataArea.setTotalUsages(12314517L);
 		usageInformationResponse.setDataArea(usageInformationResponseDataArea);
 		
 		

@@ -1272,41 +1272,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 	
 	}
 
-	@Override
-	public void populateRetrieveDeviceUsageHistoryDBPayload(Exchange exchange) {
-		
-		log.info("populateRetrieveDeviceUsageHistoryDBPayload ");
-		
-		ArrayList<Transaction> list = new ArrayList<Transaction>();
-
-		String currentDataTime = CommonUtil.getCurrentTimeStamp();
-		
-		try {
-
-			Transaction transaction = new Transaction();
-			transaction.setMidwayTransactionId(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID).toString());
-			
-			//Sorting the device id by kind and inserting into deviceNumber
-			//Arrays.sort(transactionPayloadDeviceId,  (DeviceId a,DeviceId b) -> a.getKind().compareTo(b.getKind()));
-			
-			ObjectMapper obj = new ObjectMapper();
-			//String strDeviceNumber = obj.writeValueAsString(transactionPayloadDeviceId);
-			//transaction.setDeviceNumber(strDeviceNumber);
-			//transaction.setDevicePayload(dbPayload);
-			//transaction.setMidwayStatus(IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
-			transaction.setCarrierName(exchange.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString());
-			transaction.setTimeStampReceived(currentDataTime);
-			transaction.setAuditTransactionId(exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID).toString());
-			transaction.setRequestType(RequestType.RETRIEVEDEVICEUSAGEHISTORY);
-		
-			list.add(transaction);
-
-		} catch (Exception ex) {
-			log.error("Inside populateDeactivateDBPayload");
-
-		}
-		mongoTemplate.insertAll(list);
-		
-	}
+	
 
 }

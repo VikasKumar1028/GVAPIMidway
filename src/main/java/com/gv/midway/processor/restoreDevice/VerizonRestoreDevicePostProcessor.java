@@ -1,9 +1,6 @@
 package com.gv.midway.processor.restoreDevice;
 
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -45,11 +42,6 @@ public class VerizonRestoreDevicePostProcessor implements Processor {
 		RestoreDeviceResponseDataArea restoreDeviceResponseDataArea = new RestoreDeviceResponseDataArea();
 		Header responseheader = new Header();
 		Response response = new Response();
-
-		DateFormat dateFormat = new SimpleDateFormat(
-				newEnv.getProperty(IConstant.DATE_FORMAT));
-
-		Date date = new Date();
 		
 
 		log.info("exchange.getIn().getBody().toString()***************************************"+ exchange.getIn().getBody().toString());
@@ -80,10 +72,8 @@ public class VerizonRestoreDevicePostProcessor implements Processor {
 		responseheader.setOrganization(exchange.getProperty(
 				IConstant.ORGANIZATION).toString());
 
-		/*responseheader.setTimestamp(exchange.getProperty(
-				IConstant.DATE_FORMAT).toString());*/
-
-		responseheader.setTimestamp(dateFormat.format(date));
+		responseheader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT)
+				.toString());
 		responseheader.setSourceName(exchange
 				.getProperty(IConstant.SOURCE_NAME).toString());
 		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)

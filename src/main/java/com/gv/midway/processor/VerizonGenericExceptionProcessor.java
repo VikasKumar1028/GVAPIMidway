@@ -22,7 +22,7 @@ import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.reActivateDevice.response.ReactivateDeviceResponse;
 import com.gv.midway.pojo.restoreDevice.response.RestoreDeviceResponse;
 import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
-import com.gv.midway.pojo.usageInformation.verizon.response.UsageInformationResponseDataArea;
+import com.gv.midway.pojo.usageInformation.response.UsageInformationResponse;
 import com.gv.midway.pojo.verizon.VerizonErrorResponse;
 
 public class VerizonGenericExceptionProcessor implements Processor {
@@ -198,7 +198,7 @@ public class VerizonGenericExceptionProcessor implements Processor {
 
 		if ("Endpoint[direct://retrieveDeviceUsageHistory]".equals(exchange
 				.getFromEndpoint().toString())) {
-			UsageInformationResponseDataArea responseObject = new UsageInformationResponseDataArea();
+			UsageInformationResponse responseObject = new UsageInformationResponse();
 			responseObject.setHeader(responseHeader);
 			responseObject.setResponse(response);
 			exchange.getIn().setBody(responseObject);

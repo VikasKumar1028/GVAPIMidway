@@ -120,10 +120,5 @@ public class TransactionalServiceImpl implements ITransactionalService {
 		transactionalDao.populateKoreCustomChangeResponse(exchange);
 	}
 
-	@Override
-	public void populateRetrieveDeviceUsageHistoryDBPayload(Exchange exchange) {
-		transactionalDao.populateRetrieveDeviceUsageHistoryDBPayload(exchange);
-		
-	}
 
 }

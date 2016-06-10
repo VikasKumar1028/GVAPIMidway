@@ -4,18 +4,17 @@ import java.util.Arrays;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gv.midway.pojo.BaseResponse;
+import com.gv.midway.pojo.usageInformation.response.UsageInformationResponseDataArea;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UsageInformationResponse extends BaseResponse {
+public class VerizonUsageInformationResponse  {
 
-	@ApiModelProperty(value = "Data area for Retrieve Device Usage Response")
-	private UsageInformationResponseDataArea dataArea;
 	
-	@ApiModelProperty(value = "Device connection evnents.")
+
 	private UsageHistory[] usageHistory;
 
-	@ApiModelProperty(value = "Indicates that there is more data to be retrieved.")
+	
 	private String hasMoreData;
 
 	public UsageHistory[] getUsageHistory() {
@@ -32,15 +31,6 @@ public class UsageInformationResponse extends BaseResponse {
 
 	public void setHasMoreData(String hasMoreData) {
 		this.hasMoreData = hasMoreData;
-	}
-	
-	
-	public UsageInformationResponseDataArea getDataArea() {
-		return dataArea;
-	}
-
-	public void setDataArea(UsageInformationResponseDataArea dataArea) {
-		this.dataArea = dataArea;
 	}
 
 	@Override
@@ -61,7 +51,7 @@ public class UsageInformationResponse extends BaseResponse {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		UsageInformationResponse other = (UsageInformationResponse) obj;
+		VerizonUsageInformationResponse other = (VerizonUsageInformationResponse) obj;
 		if (hasMoreData == null) {
 			if (other.hasMoreData != null)
 				return false;
@@ -74,19 +64,15 @@ public class UsageInformationResponse extends BaseResponse {
 
 	@Override
 	public String toString() {
-		return "UsageInformationResponse [usageHistory="
-				+ Arrays.toString(usageHistory) + ", hasMoreData="
-				+ hasMoreData + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("VerizonUsageInformationResponse [usageHistory=");
+		builder.append(Arrays.toString(usageHistory));
+		builder.append(", hasMoreData=");
+		builder.append(hasMoreData);
+		builder.append("]");
+		return builder.toString();
 	}
-
-
 	
-	
-
-
-	
-
-
 	
 	
 	

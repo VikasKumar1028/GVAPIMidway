@@ -29,36 +29,24 @@ public class RetrieveDeviceUsageHistoryPreProcessor implements Processor {
 		log.info("Session Parameters  VZAuthorization"
 				+ exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN));
 
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-		Calendar cal = Calendar.getInstance();
-
-		UsageInformationRequest usageInformationRequest = (UsageInformationRequest) exchange
+		
+		UsageInformationRequest proxyRequest = (UsageInformationRequest) exchange
 				.getIn().getBody();
 
-		UsageInformationRequestDataArea usageInformationRequestDataArea = usageInformationRequest
-				.getDataArea();
+		UsageInformationRequestDataArea businessRequest =new UsageInformationRequestDataArea();
 
-		log.info("usageInformationRequestDataArea:::" + usageInformationRequest);
-
-		DeviceId device = new DeviceId();
-		device.setId(usageInformationRequestDataArea.getDeviceId().getId());
-		device.setKind(usageInformationRequestDataArea.getDeviceId().getKind());
-
-		usageInformationRequestDataArea.setDeviceId(device);
-
-		exchange.setProperty("DeviceId", device);
-
-		usageInformationRequestDataArea.setLatest(dateFormat.format(cal
-				.getTime()));
-
-		cal.add(Calendar.HOUR, IConstant.DURATION);
-		usageInformationRequestDataArea.setEarliest(dateFormat.format(cal
-				.getTime()));
+		businessRequest.setEarliest(proxyRequest.getDataArea().getEarliest());
+		businessRequest.setLatest(proxyRequest.getDataArea().getLatest());
+		
+		DeviceId deviceId = new DeviceId();
+		deviceId.setId(proxyRequest.getDataArea().getDeviceId().getId());
+		deviceId.setKind(proxyRequest.getDataArea().getDeviceId().getKind());
+		businessRequest.setDeviceId(deviceId);
 
 		ObjectMapper objectMapper = new ObjectMapper();
 
 		String strRequestBody = objectMapper
-				.writeValueAsString(usageInformationRequestDataArea);
+				.writeValueAsString(businessRequest);
 
 		exchange.getIn().setBody(strRequestBody);
 

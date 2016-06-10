@@ -1,14 +1,11 @@
 package com.gv.midway.processor.deactivateDevice;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
-
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.Header;
@@ -62,10 +59,9 @@ public class KoreDeactivateDevicePostProcessor implements Processor {
 				IConstant.APPLICATION_NAME).toString());
 		responseheader.setRegion(exchange.getProperty(IConstant.REGION)
 				.toString());
-		DateFormat dateFormat = new SimpleDateFormat(
-				newEnv.getProperty(IConstant.DATE_FORMAT));
-		Date date = new Date();
-		responseheader.setTimestamp(dateFormat.format(date));
+		
+		responseheader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT)
+				.toString());
 		responseheader.setOrganization(exchange.getProperty(
 				IConstant.ORGANIZATION).toString());
 		responseheader.setSourceName(exchange

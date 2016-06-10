@@ -84,7 +84,8 @@ public class VerizonActivateDevicePostProcessor implements Processor {
 		 * IConstant.DATE_FORMAT).toString());
 		 */
 
-		responseheader.setTimestamp(dateFormat.format(date));
+		responseheader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT)
+				.toString());
 		responseheader.setSourceName(exchange
 				.getProperty(IConstant.SOURCE_NAME).toString());
 		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
