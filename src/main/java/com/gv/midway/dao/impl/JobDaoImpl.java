@@ -1,6 +1,9 @@
 package com.gv.midway.dao.impl;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -15,6 +18,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import com.gv.midway.constant.IConstant;
+import com.gv.midway.constant.JobType;
 import com.gv.midway.dao.IJobDao;
 import com.gv.midway.job.JobDetail;
 import com.gv.midway.pojo.deviceHistory.DeviceUsage;
@@ -73,14 +77,37 @@ public class JobDaoImpl implements IJobDao {
 		return deviceInformationList;
 	}
 
+	/**
+	 * Inserting the Job Details and setting date parameters
+	 */
 	@Override
 	public void insertJobDetails(Exchange exchange) {
 		JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
+
+		log.info("-----------Job Details -------" + jobDetail.toString());
 		jobDetail.setStartTime(new Date().toString());
 		jobDetail.setStatus(IConstant.JOB_STARTED);
 
 		// inserting in the exchange as property
 		exchange.setProperty("jobDetail", jobDetail);
+
+		// finding the Start and end time of Job and Setting in exchange as
+		// parameter
+		try {
+			DateFormat verizondateFormat = new SimpleDateFormat(
+					"yyyy-MM-dd'T'HH:mm:ss'Z'");
+			DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(dateFormat.parse(jobDetail.getDate()));
+			exchange.setProperty("jobStartTime",
+					verizondateFormat.format(cal.getTime()));
+			cal.add(Calendar.HOUR, 24);
+			exchange.setProperty("jobEndTime",
+					verizondateFormat.format(cal.getTime()));
+
+		} catch (Exception ex) {
+			log.error("................Error in Setting Job Dates");
+		}
 
 		// inserting in the database as property
 		mongoTemplate.insert(jobDetail);
@@ -134,10 +161,10 @@ public class JobDaoImpl implements IJobDao {
 
 			update.set("isValid", false);
 
-			WriteResult result=mongoTemplate
-					.updateMulti(searchJobQuery, update, DeviceUsage.class);
-			
-			log.info("WriteResult *********************"+ result);
+			WriteResult result = mongoTemplate.updateMulti(searchJobQuery,
+					update, DeviceUsage.class);
+
+			log.info("WriteResult *********************" + result);
 
 		}
 
