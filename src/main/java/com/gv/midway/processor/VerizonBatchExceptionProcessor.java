@@ -114,6 +114,7 @@ public class VerizonBatchExceptionProcessor implements Processor {
 			deviceConnection.setNetSuiteId((String) exchange
 					.getProperty("NetSuiteId"));
 			deviceConnection.setIsValid(true);
+			deviceConnection.setEvent(null);
 			exchange.getIn().setBody(deviceConnection);
 		}
 

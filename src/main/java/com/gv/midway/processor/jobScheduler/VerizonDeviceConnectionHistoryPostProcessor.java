@@ -42,21 +42,24 @@ public class VerizonDeviceConnectionHistoryPostProcessor implements Processor {
 					.getConnectionHistory()) {
 
 				int count = 0;
+				DeviceEvent event = new DeviceEvent();
+				
+				
 
 				for (ConnectionEvent events : history
 						.getConnectionEventAttributes()) {
 
-					DeviceEvent event = new DeviceEvent();
+					
 
 					if (events.getKey().toString()
 							.equalsIgnoreCase("BytesUsed")) {
 						event.setBytesUsed(events.getValue());
-						deviceEventList.add(event);
+						//deviceEventList.add(event);
 						count++;
 					} else if (events.getKey().toString()
 							.equalsIgnoreCase("Event")) {
 						event.setEventType(events.getValue());
-						deviceEventList.add(event);
+						//deviceEventList.add(event);
 						count++;
 					}
 					if (count == 2) {
@@ -65,6 +68,8 @@ public class VerizonDeviceConnectionHistoryPostProcessor implements Processor {
 					}
 
 				}
+				event.setOccurredAt(history.getOccurredAt());
+				deviceEventList.add(event);
 			}
 			deviceConnection.setEvent(deviceEventList
 					.toArray(new DeviceEvent[deviceEventList.size()]));
