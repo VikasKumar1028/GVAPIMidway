@@ -59,7 +59,7 @@ public class JobServiceImpl implements IJobService {
 		// New Job Will Run Today but for Previous day(Current -1 day) data so
 		// setting the Job date to previous day not current date
 
-		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.HOUR, IConstant.DURATION);
 		jobDetail.setDate(dateFormat.format(cal.getTime()));

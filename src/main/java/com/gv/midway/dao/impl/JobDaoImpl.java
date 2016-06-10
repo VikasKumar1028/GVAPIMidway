@@ -96,7 +96,7 @@ public class JobDaoImpl implements IJobDao {
 		try {
 			DateFormat verizondateFormat = new SimpleDateFormat(
 					"yyyy-MM-dd'T'HH:mm:ss'Z'");
-			DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+			DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(dateFormat.parse(jobDetail.getDate()));
 			exchange.setProperty("jobStartTime",

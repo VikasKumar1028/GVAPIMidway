@@ -1,10 +1,5 @@
 package com.gv.midway.processor.jobScheduler;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.Message;
@@ -32,16 +27,11 @@ public class VerizonDeviceUsageHistoryPreProcessor implements
 		log.info("Session Parameters  VZAuthorization"
 				+ exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN));
 
-		/*DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-		DateFormat dateFormat1 = new SimpleDateFormat("dd-MM-yyyy");
-		Calendar cal = Calendar.getInstance();*/
+
 
 		DeviceInformation deviceInfo = (DeviceInformation) exchange.getIn()
 				.getBody();
-		/*
-		 * ConnectionInformationRequest request = new
-		 * ConnectionInformationRequest();
-		 */
+
 		ConnectionInformationRequestDataArea dataArea = new ConnectionInformationRequestDataArea();
 		DeviceId device = new DeviceId();
 		
@@ -61,15 +51,6 @@ public class VerizonDeviceUsageHistoryPreProcessor implements
 		exchange.setProperty("DataAmt",
 				deviceInfo.getBs_plan().getData_amt());*/
 
-		
-	/*	String date1=dateFormat1.format(new Date())+" 00:00:00";
-		cal.setTime(dateFormat1.parse(dateFormat1.format(new Date())));*/
-		
-		//log.info(date1+"------------NEW DATE----------"+ dateFormat.format(date1));
-		
-		/*dataArea.setLatest(dateFormat.format(cal.getTime()));
-		cal.add(Calendar.HOUR, IConstant.DURATION);
-		dataArea.setEarliest(dateFormat.format(cal.getTime()))*/;
 		dataArea.setLatest(exchange.getProperty("jobEndTime").toString());
 		dataArea.setEarliest(exchange.getProperty("jobStartTime").toString());
 		
