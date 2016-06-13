@@ -75,10 +75,13 @@ import com.gv.midway.processor.deviceInformation.VerizonDeviceInformationPostPro
 import com.gv.midway.processor.deviceInformation.VerizonDeviceInformationPreProcessor;
 import com.gv.midway.processor.jobScheduler.KoreDeviceUsageHistoryPostProcessor;
 import com.gv.midway.processor.jobScheduler.KoreDeviceUsageHistoryPreProcessor;
+import com.gv.midway.processor.jobScheduler.KoreTransactionFailureDeviceUsageHistoryPreProcessor;
 import com.gv.midway.processor.jobScheduler.VerizonDeviceConnectionHistoryPostProcessor;
 import com.gv.midway.processor.jobScheduler.VerizonDeviceConnectionHistoryPreProcessor;
 import com.gv.midway.processor.jobScheduler.VerizonDeviceUsageHistoryPostProcessor;
 import com.gv.midway.processor.jobScheduler.VerizonDeviceUsageHistoryPreProcessor;
+import com.gv.midway.processor.jobScheduler.VerizonTransactionFailureDeviceConnectionHistoryPreProcessor;
+import com.gv.midway.processor.jobScheduler.VerizonTransactionFailureDeviceUsageHistoryPreProcessor;
 import com.gv.midway.processor.kafka.KafkaProcessor;
 import com.gv.midway.processor.reactivate.KoreReactivateDevicePostProcessor;
 import com.gv.midway.processor.reactivate.KoreReactivateDevicePreProcessor;
@@ -1318,7 +1321,7 @@ public class CamelRoute extends RouteBuilder {
 			from("seda:processTransactionFailureKoreDeviceUsageJob?concurrentConsumers=5")
 					.log("KOREJob-DEVICE USAGE")
 
-					.doTry().process(new KoreDeviceUsageHistoryPreProcessor())
+					.doTry().process(new KoreTransactionFailureDeviceUsageHistoryPreProcessor())
 					.to(uriRestKoreEndPoint).unmarshal().json(JsonLibrary.Jackson)
 					.process(new KoreDeviceUsageHistoryPostProcessor())
 					.bean(iSchedulerService, "saveDeviceUsageHistory")
@@ -1329,7 +1332,7 @@ public class CamelRoute extends RouteBuilder {
 					.log("VERIZONJob-DEVICE USAGE")
 					.doTry()
 					.bean(iSessionService, "setContextTokenInExchange")
-					.process(new VerizonDeviceUsageHistoryPreProcessor())
+					.process(new VerizonTransactionFailureDeviceUsageHistoryPreProcessor())
 					.to(uriRestVerizonEndPoint)
 					.unmarshal()
 					.json(JsonLibrary.Jackson)
@@ -1344,7 +1347,7 @@ public class CamelRoute extends RouteBuilder {
 			from("seda:processTransactionFailureVerizonConnectionHistoryJob?concurrentConsumers=5")
 					.log("VERIZONJob CONNECTION HISTORY").doTry()
 					.bean(iSessionService, "setContextTokenInExchange")
-					.process(new VerizonDeviceConnectionHistoryPreProcessor())
+					.process(new VerizonTransactionFailureDeviceConnectionHistoryPreProcessor())
 					.to(uriRestVerizonEndPoint).unmarshal()
 					.json(JsonLibrary.Jackson)
 					.process(new VerizonDeviceConnectionHistoryPostProcessor())
