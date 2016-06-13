@@ -73,7 +73,14 @@ public class JobServiceImpl implements IJobService {
 	}
 
 	public void deleteDeviceUsageRecords(Exchange exchange) {
-		iJobDao.deleteDeviceUsageRecords(exchange);
+		
+		JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
+		 if(JobType.RERUN.toString().equals(jobDetail.getType().toString()))
+		 {
+			 iJobDao.deleteDeviceUsageRecords(exchange);
+		 }
+		
+		
 	}
 
 	public void deleteDeviceConnectionHistoryRecords(Exchange exchange) {
