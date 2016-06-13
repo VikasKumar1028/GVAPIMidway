@@ -257,23 +257,26 @@ public class JobDaoImpl implements IJobDao {
 
 	@Override
 	public void deleteTransactionFailureDeviceUsageRecords(Exchange exchange) {
-		log.info("Inside deleteDeviceUsageRecords .....................");
+		log.info("Inside deleteTransactionFailureDeviceUsageRecords .....................");
 
 		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
 		try {
 
+			
+
+			
 			Query searchJobQuery = new Query(Criteria.where("carrierName").is(
 					jobDetail.getCarrierName())).addCriteria(Criteria.where(
-					"timestamp").is(jobDetail.getDate())).addCriteria(Criteria.where(
-					"transactionStatus").is(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR)).addCriteria(Criteria.where(
-					"isValid").is(true));
+					"timestamp").is(jobDetail.getDate()))
+					.addCriteria(Criteria.where("transactionStatus").is(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR))
+					.addCriteria(Criteria.where("isValid").is(true));
 
 			Update update = new Update();
 
 			update.set("isValid", false);
 
 			WriteResult result = mongoTemplate.updateMulti(searchJobQuery,
-					update, DeviceConnection.class);
+					update, DeviceUsage.class);
 
 			log.info("WriteResult *********************" + result);
 
