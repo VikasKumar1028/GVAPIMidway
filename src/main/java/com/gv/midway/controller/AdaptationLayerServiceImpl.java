@@ -226,7 +226,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 			jobDetail.setCarrierName(CarrierType.VERIZON.toString());
 		}
 
-		producer.requestBody("direct:startJob", jobDetail);
+		producer.requestBody("direct:startTransactionFailureJob", jobDetail);
 
 	}
 
@@ -241,7 +241,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 			jobDetail.setCarrierName(CarrierType.VERIZON.toString());
 		}
 
-		producer.requestBody("direct:startJob", jobDetail);
+		producer.requestBody("direct:startTransactionFailureJob", jobDetail);
 
 	}
 
