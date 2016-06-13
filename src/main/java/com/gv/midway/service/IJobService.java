@@ -22,7 +22,7 @@ public interface IJobService {
 	
 	public void setJobStartandEndTime(Exchange exchange);
 	
-	public void fetchTransactionFailureDevices(Exchange exchange);
+	public List fetchTransactionFailureDevices(Exchange exchange);
 	
 	public void deleteTransactionFailureDeviceUsageRecords(Exchange exchange) ;
 	

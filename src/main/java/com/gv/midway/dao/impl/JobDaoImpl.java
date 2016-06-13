@@ -15,6 +15,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import com.gv.midway.constant.IConstant;
+import com.gv.midway.constant.JobName;
 import com.gv.midway.dao.IJobDao;
 import com.gv.midway.job.JobDetail;
 import com.gv.midway.pojo.deviceHistory.DeviceConnection;
@@ -198,8 +199,55 @@ public class JobDaoImpl implements IJobDao {
 
 
 	@Override
-	public void fetchTransactionFailureDevices(Exchange exchange) {
-		// TODO Auto-generated method stub
+	public List fetchTransactionFailureDevices(Exchange exchange) {
+		JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
+
+		exchange.setProperty("jobName", jobDetail.getName().toString());
+
+		
+		List list = null;
+
+		try {
+
+			String carrierName = jobDetail.getCarrierName();
+
+			log.info("Carrier Name -----------------" + carrierName);
+			// We have to check bs_carrier with possible reseller values for
+			// that carrier.
+			Query searchQuery = new Query(Criteria.where("carrierName").is(
+					jobDetail.getCarrierName())).addCriteria(Criteria.where(
+					"timestamp").is(jobDetail.getDate())).addCriteria(Criteria.where(
+					"transactionStatus").is(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR)).addCriteria(Criteria.where(
+					"isValid").is(true));
+
+			
+			
+			if(JobName.KORE_DEVICE_USAGE.toString().equalsIgnoreCase(jobDetail.getName().toString()) ||JobName.VERIZON_DEVICE_USAGE.toString().equalsIgnoreCase(jobDetail.getName().toString()))
+			{
+			list = mongoTemplate.find(searchQuery,
+					DeviceUsage.class);
+			}
+			else{
+				list = mongoTemplate.find(searchQuery,
+						DeviceConnection.class);
+				
+			}
+
+			/*
+			 * list = new
+			 * ArrayList<DeviceInformation>(Collections.nCopies(10000,
+			 * deviceInformationList.get(0)));
+			 */
+
+		
+		}
+
+		catch (Exception e) {
+			System.out.println("e");
+		}
+
+		 //return list;
+		return list;
 		
 	}
 

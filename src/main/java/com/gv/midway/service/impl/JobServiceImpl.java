@@ -118,9 +118,9 @@ public class JobServiceImpl implements IJobService {
 	}
 
 	@Override
-	public void fetchTransactionFailureDevices(Exchange exchange) {
+	public List fetchTransactionFailureDevices(Exchange exchange) {
 
-		iJobDao.fetchTransactionFailureDevices(exchange);
+		return iJobDao.fetchTransactionFailureDevices(exchange);
 	}
 
 	@Override

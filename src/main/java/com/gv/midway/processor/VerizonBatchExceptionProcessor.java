@@ -96,9 +96,6 @@ public class VerizonBatchExceptionProcessor implements Processor {
 			exchange.getIn().setBody(deviceUsage);
 
 		} else {
-			System.out
-					.println("**********************************CONNECTION HISTORY******************************************************************");
-			
 			
 			DeviceConnection deviceConnection = new DeviceConnection();
 
