@@ -15,5 +15,11 @@ public interface IJobDao {
 	public void deleteDeviceUsageRecords(Exchange exchange);
 	
 	public void deleteDeviceConnectionHistoryRecords(Exchange exchange);
+	
+	public void fetchTransactionFailureDevices(Exchange exchange);
+	
+	public void deleteTransactionFailureDeviceUsageRecords(Exchange exchange) ;
+	
+	public void deleteTransactionFailureDeviceConnectionHistoryRecords(Exchange exchange);
 
 }

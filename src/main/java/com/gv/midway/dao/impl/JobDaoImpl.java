@@ -30,7 +30,7 @@ public class JobDaoImpl implements IJobDao {
 
 	Logger log = Logger.getLogger(JobDaoImpl.class);
 
-	@Override
+	//@Override
 	public List fetchDevices(Exchange exchange) {
 
 		JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
@@ -74,6 +74,13 @@ public class JobDaoImpl implements IJobDao {
 		return deviceInformationList;
 	}
 
+	
+	
+	
+	
+	
+
+	
 	/**
 	 * Inserting the Job Details and setting date parameters
 	 */
@@ -181,5 +188,36 @@ public class JobDaoImpl implements IJobDao {
 			log.info("Error In Saving Job Detail-----------------------------");
 		}
 
+	}
+
+
+
+
+
+	@Override
+	public void fetchTransactionFailureDevices(Exchange exchange) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+
+
+	@Override
+	public void deleteTransactionFailureDeviceUsageRecords(Exchange exchange) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+
+
+	@Override
+	public void deleteTransactionFailureDeviceConnectionHistoryRecords(
+			Exchange exchange) {
+		// TODO Auto-generated method stub
+		
 	}
 }

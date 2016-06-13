@@ -392,6 +392,10 @@ public class CamelRoute extends RouteBuilder {
 		deviceConnectionHistoryVerizonJob();
 		deviceUsageHistoryVerizonJob();
 
+		//Transaction Failure Job
+		startTransactionFailureJob();
+		
+		//Start Job
 		startJob();
 	}
 
@@ -1263,6 +1267,112 @@ public class CamelRoute extends RouteBuilder {
 
 	}
 
+	
+	
+	
+	// BATCH JOB
+
+		public void startTransactionFailureJob() {
+
+			from("direct:startTransactionFailureJob").to("direct:processTransactionFailureJob");
+
+			// Job Flow-1
+
+			from("direct:processTransactionFailureJob")
+					.onCompletion()
+					.bean(iJobService, "updateJobDetails")
+					.end()
+					.bean(iJobService, "insertJobDetails")
+					.bean(iJobService, "setJobStartandEndTime")
+					.bean(iJobService, "fetchTransactionFailureDevices")
+
+					// Deleting Transaction Failure Existing Records
+					.choice()
+					.when(simple("${exchangeProperty[jobName]} == 'VERIZON_CONNECTION_HISTORY'"))
+					.bean(iJobService, "deleteTransactionFailureDeviceConnectionHistoryRecords")
+					.when(simple("${exchangeProperty[jobName]} == 'KORE_DEVICE_USAGE'"))
+					.bean(iJobService, "deleteTransactionFailureDeviceUsageRecords")
+					.when(simple("${exchangeProperty[jobName]} == 'VERIZON_DEVICE_USAGE'"))
+					.bean(iJobService, "deleteTransactionFailureDeviceUsageRecords")
+					.endChoice()
+					.end()
+
+					// Fetch List Forwarded to Respective SEDA
+
+					.choice()
+					.when(simple("${exchangeProperty[jobName]} == 'VERIZON_CONNECTION_HISTORY'"))
+					.split()
+					.method("jobSplitter")
+					.to("seda:processTransactionFailureVerizonConnectionHistoryJob")
+					.endChoice()
+					.when(simple("${exchangeProperty[jobName]} == 'KORE_DEVICE_USAGE'"))
+					.split()
+					.method("jobSplitter")
+					.to("seda:processTransactionFailureKoreDeviceUsageJob")
+					.endChoice()
+					.when(simple("${exchangeProperty[jobName]} == 'VERIZON_DEVICE_USAGE'"))
+					.split().method("jobSplitter")
+					.to("seda:processTransactionFailureVerizonDeviceUsageJob").endChoice();
+
+			// KORE Job-DEVICE USAGE
+			from("seda:processTransactionFailureKoreDeviceUsageJob?concurrentConsumers=5")
+					.log("KOREJob-DEVICE USAGE")
+
+					.doTry().process(new KoreDeviceUsageHistoryPreProcessor())
+					.to(uriRestKoreEndPoint).unmarshal().json(JsonLibrary.Jackson)
+					.process(new KoreDeviceUsageHistoryPostProcessor())
+					.bean(iSchedulerService, "saveDeviceUsageHistory")
+					.doCatch(Exception.class).end();
+
+			// VERIZON Job-DEVICE USAGE
+			from("seda:processTransactionFailureVerizonDeviceUsageJob?concurrentConsumers=4")
+					.log("VERIZONJob-DEVICE USAGE")
+					.doTry()
+					.bean(iSessionService, "setContextTokenInExchange")
+					.process(new VerizonDeviceUsageHistoryPreProcessor())
+					.to(uriRestVerizonEndPoint)
+					.unmarshal()
+					.json(JsonLibrary.Jackson)
+					.process(new VerizonDeviceUsageHistoryPostProcessor())
+					.bean(iSchedulerService, "saveDeviceUsageHistory")
+					.doCatch(CxfOperationException.class,
+							UnknownHostException.class, ConnectException.class)
+					.process(new VerizonBatchExceptionProcessor(env))
+					.bean(iSchedulerService, "saveDeviceUsageHistory").endDoTry();
+
+			// VERIZON Job CONNECTION HISTORY
+			from("seda:processTransactionFailureVerizonConnectionHistoryJob?concurrentConsumers=5")
+					.log("VERIZONJob CONNECTION HISTORY").doTry()
+					.bean(iSessionService, "setContextTokenInExchange")
+					.process(new VerizonDeviceConnectionHistoryPreProcessor())
+					.to(uriRestVerizonEndPoint).unmarshal()
+					.json(JsonLibrary.Jackson)
+					.process(new VerizonDeviceConnectionHistoryPostProcessor())
+					.bean(iSchedulerService, "saveDeviceConnectionHistory")
+					.doCatch(CxfOperationException.class,
+							UnknownHostException.class, ConnectException.class)
+					.process(new VerizonBatchExceptionProcessor(env))
+					.bean(iSchedulerService, "saveDeviceConnectionHistory")
+					.endDoTry();
+
+		}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	public void retrieveDeviceUsageHistory() {
 		from("direct:retrieveDeviceUsageHistory")
 				.process(new HeaderProcessor())

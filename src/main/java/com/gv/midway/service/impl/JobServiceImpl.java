@@ -109,5 +109,24 @@ public class JobServiceImpl implements IJobService {
 		}
 
 	}
+
+	@Override
+	public void fetchTransactionFailureDevices(Exchange exchange) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deleteTransactionFailureDeviceUsageRecords(Exchange exchange) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deleteTransactionFailureDeviceConnectionHistoryRecords(
+			Exchange exchange) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
