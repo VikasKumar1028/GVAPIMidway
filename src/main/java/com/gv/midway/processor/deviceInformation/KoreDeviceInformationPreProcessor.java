@@ -34,8 +34,9 @@ public class KoreDeviceInformationPreProcessor implements Processor {
 		DeviceInformationRequest request = (DeviceInformationRequest) exchange
 				.getIn().getBody(DeviceInformationRequest.class);
 		exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID, request.getDataArea().getNetSuiteId());
-		String deviceId=request.getDataArea().getDeviceId().getId();
 		
+		String deviceId=request.getDataArea().getDeviceId().getId();
+		exchange.setProperty(IConstant.KORE_SIM_NUMBER, deviceId);
 		net.sf.json.JSONObject obj = new net.sf.json.JSONObject();
 		obj.put("deviceNumber", deviceId);
 
