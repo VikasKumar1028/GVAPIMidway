@@ -106,6 +106,7 @@ public class JobDaoImpl implements IJobDao {
 
 		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
 		try {
+			
 
 			Query searchJobQuery = new Query(Criteria.where("carrierName").is(
 					jobDetail.getCarrierName()))
@@ -141,7 +142,8 @@ public class JobDaoImpl implements IJobDao {
 
 			Query searchJobQuery = new Query(Criteria.where("carrierName").is(
 					jobDetail.getCarrierName())).addCriteria(Criteria.where(
-					"timestamp").is(jobDetail.getDate()));
+					"timestamp").is(jobDetail.getDate())).addCriteria(Criteria.where(
+							"isValid").is(true));
 
 			Update update = new Update();
 
@@ -164,14 +166,15 @@ public class JobDaoImpl implements IJobDao {
 	@Override
 	public void deleteDeviceConnectionHistoryRecords(Exchange exchange) {
 
-		log.info("Inside deleteDeviceUsageRecords .....................");
+		log.info("Inside deleteDeviceConnectionRecords .....................");
 
 		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
 		try {
 
 			Query searchJobQuery = new Query(Criteria.where("carrierName").is(
 					jobDetail.getCarrierName())).addCriteria(Criteria.where(
-					"timestamp").is(jobDetail.getDate()));
+					"timestamp").is(jobDetail.getDate())).addCriteria(Criteria.where(
+							"isValid").is(true));
 
 			Update update = new Update();
 
@@ -206,7 +209,32 @@ public class JobDaoImpl implements IJobDao {
 
 	@Override
 	public void deleteTransactionFailureDeviceUsageRecords(Exchange exchange) {
-		// TODO Auto-generated method stub
+		log.info("Inside deleteDeviceUsageRecords .....................");
+
+		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+		try {
+
+			Query searchJobQuery = new Query(Criteria.where("carrierName").is(
+					jobDetail.getCarrierName())).addCriteria(Criteria.where(
+					"timestamp").is(jobDetail.getDate())).addCriteria(Criteria.where(
+					"transactionStatus").is(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR)).addCriteria(Criteria.where(
+					"isValid").is(true));
+
+			Update update = new Update();
+
+			update.set("isValid", false);
+
+			WriteResult result = mongoTemplate.updateMulti(searchJobQuery,
+					update, DeviceConnection.class);
+
+			log.info("WriteResult *********************" + result);
+
+		}
+
+		catch (Exception e) {
+			log.info("Error In Saving Job Detail-----------------------------");
+		}
+
 		
 	}
 
@@ -217,7 +245,31 @@ public class JobDaoImpl implements IJobDao {
 	@Override
 	public void deleteTransactionFailureDeviceConnectionHistoryRecords(
 			Exchange exchange) {
-		// TODO Auto-generated method stub
+		log.info("Inside deleteDeviceConnectionRecords .....................");
+
+		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+		try {
+
+			Query searchJobQuery = new Query(Criteria.where("carrierName").is(
+					jobDetail.getCarrierName())).addCriteria(Criteria.where(
+					"timestamp").is(jobDetail.getDate())).addCriteria(Criteria.where(
+					"transactionStatus").is(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR)).addCriteria(Criteria.where(
+					"isValid").is(true));
+
+			Update update = new Update();
+
+			update.set("isValid", false);
+
+			WriteResult result = mongoTemplate.updateMulti(searchJobQuery,
+					update, DeviceConnection.class);
+
+			log.info("WriteResult *********************" + result);
+
+		}
+
+		catch (Exception e) {
+			log.info("Error In Saving Job Detail-----------------------------");
+		}
 		
 	}
 }
