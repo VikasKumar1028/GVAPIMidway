@@ -53,8 +53,10 @@ public class KoreDeviceInformationPostProcessor implements Processor {
 
 			deviceInformation = new DeviceInformation();
 		}
-        
-		deviceInformation.setSimNumber(exchange.getProperty(IConstant.KORE_SIM_NUMBER).toString());
+        if(deviceInformation.getSimNumber()==null||deviceInformation.getSimNumber().trim().equals("")){
+        	deviceInformation.setSimNumber(exchange.getProperty(IConstant.KORE_SIM_NUMBER).toString());
+        }
+		
 		DeviceInformationResponse deviceInformationResponse = new DeviceInformationResponse();
 
 		DeviceInformationResponseDataArea deviceInformationResponseDataArea = new DeviceInformationResponseDataArea();

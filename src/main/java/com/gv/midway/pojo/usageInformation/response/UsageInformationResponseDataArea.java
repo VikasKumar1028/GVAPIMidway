@@ -1,12 +1,10 @@
 package com.gv.midway.pojo.usageInformation.response;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
-@JsonIgnoreProperties(ignoreUnknown = true)
+
 public class UsageInformationResponseDataArea {
 
 	@ApiModelProperty(value = "Total Device Usages")
