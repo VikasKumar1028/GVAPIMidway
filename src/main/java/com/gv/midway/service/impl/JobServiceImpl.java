@@ -22,7 +22,7 @@ import com.gv.midway.service.IJobService;
 
 @Service
 public class JobServiceImpl implements IJobService {
-	
+
 	Logger log = Logger.getLogger(JobServiceImpl.class);
 
 	@Autowired
@@ -75,20 +75,20 @@ public class JobServiceImpl implements IJobService {
 	public void deleteDeviceUsageRecords(Exchange exchange) {
 		iJobDao.deleteDeviceUsageRecords(exchange);
 	}
-	
-	
-	public void deleteDeviceConnectionHistoryRecords(Exchange exchange){
+
+	public void deleteDeviceConnectionHistoryRecords(Exchange exchange) {
 		iJobDao.deleteDeviceConnectionHistoryRecords(exchange);
 	}
-	
-	
+
 	/**
-	 * Function is used for setting the latest Start Time and End Time For running the Job
-	 * For Now we have set the verizon Api start and end time in exchange
+	 * Function is used for setting the latest Start Time and End Time For
+	 * running the Job For Now we have set the verizon Api start and end time in
+	 * exchange
+	 * 
 	 * @param exchange
 	 */
 	public void setJobStartandEndTime(Exchange exchange) {
-		
+
 		JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
 		// finding the Start and end time of Job and Setting in exchange as
 		// parameter
@@ -112,21 +112,22 @@ public class JobServiceImpl implements IJobService {
 
 	@Override
 	public void fetchTransactionFailureDevices(Exchange exchange) {
-		// TODO Auto-generated method stub
-		
+
+		iJobDao.fetchTransactionFailureDevices(exchange);
 	}
 
 	@Override
 	public void deleteTransactionFailureDeviceUsageRecords(Exchange exchange) {
-		// TODO Auto-generated method stub
-		
+
+		iJobDao.deleteTransactionFailureDeviceUsageRecords(exchange);
+
 	}
 
 	@Override
 	public void deleteTransactionFailureDeviceConnectionHistoryRecords(
 			Exchange exchange) {
-		// TODO Auto-generated method stub
-		
+		iJobDao.deleteTransactionFailureDeviceConnectionHistoryRecords(exchange);
+
 	}
-	
+
 }
