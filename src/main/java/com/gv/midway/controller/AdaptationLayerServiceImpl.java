@@ -262,6 +262,8 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 		}
 		//producer.requestBody("direct:startJob", jobDetail);
 		producer.asyncRequestBody("direct:startJob", jobDetail);
+		producer.requestBody("direct:jobResponse", jobDetail);
+		
 		return "{\"Job Status\":\"Job Started Successfully\"}";
 		
 	}

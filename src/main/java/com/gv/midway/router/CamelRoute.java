@@ -406,6 +406,10 @@ public class CamelRoute extends RouteBuilder {
 		
 		//Start Job
 		startJob();
+		
+		//Returns the Job Response
+		jobResponse();
+		
 	}
 
 	/**
@@ -1368,20 +1372,6 @@ public class CamelRoute extends RouteBuilder {
 
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	public void retrieveDeviceUsageHistory() {
 		from("direct:retrieveDeviceUsageHistory")
 				.process(new HeaderProcessor())
@@ -1427,6 +1417,10 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iAuditService, "auditExternalResponseCall")
 				.process(new RetrieveDeviceUsageHistoryPostProcessor(env));
 
+	}
+	
+	public void  jobResponse(){
+		from("direct:jobResponse").log("*********Inside the Job response");
 	}
 
 }
