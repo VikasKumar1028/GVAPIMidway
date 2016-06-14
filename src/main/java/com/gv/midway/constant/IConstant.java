@@ -85,6 +85,8 @@ public interface IConstant {
 	static String KAFKA_TOPIC_NAME="topicName";
 	static String KAFKA_OBJECT="kafkaObject";
 	
+	static String HEADER="header";
+	
 	
 	static int DURATION = -24;
 	

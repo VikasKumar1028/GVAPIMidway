@@ -6,6 +6,8 @@ import org.apache.log4j.Logger;
 
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.exception.InvalidParameterException;
+import com.gv.midway.exception.MissingParameterException;
+import com.gv.midway.pojo.BaseRequest;
 import com.gv.midway.utility.CommonUtil;
 
 public class HeaderProcessor implements Processor {
@@ -22,7 +24,29 @@ public class HeaderProcessor implements Processor {
 				midwayTransactionID);
 
 		String derivedCarrierName = CommonUtil.getDerivedCarrierName(exchange
-				.getProperty(IConstant.BSCARRIER).toString());
+				.getProperty(IConstant.BSCARRIER));
+		
+		Object bs_carrier=exchange.getProperty(IConstant.BSCARRIER);
+		Object sourceName=exchange.getProperty(IConstant.SOURCE_NAME);
+		Object applicationName=exchange.getProperty(IConstant.APPLICATION_NAME);
+		Object region=exchange.getProperty(IConstant.REGION);
+		Object dateFormat=exchange.getProperty(IConstant.DATE_FORMAT);
+		Object organization=exchange.getProperty(IConstant.ORGANIZATION);
+		Object gv_transactionId=exchange.getProperty(IConstant.GV_TRANSACTION_ID);
+		
+		if(bs_carrier==null||sourceName==null||applicationName==null||region==null||dateFormat==null||
+				organization==null||gv_transactionId==null
+				)
+		{
+			
+			exchange.setProperty(IConstant.RESPONSE_CODE, "402");
+			exchange.setProperty(IConstant.RESPONSE_STATUS, "Missing Parameter");
+			exchange.setProperty(IConstant.RESPONSE_DESCRIPTION,
+					"Pass all the required header parameters. ");
+			throw new MissingParameterException("402",
+					"Pass all the required header parameters.");
+			
+		}
 
 		if (derivedCarrierName == null
 				|| ((exchange.getFromEndpoint().toString()

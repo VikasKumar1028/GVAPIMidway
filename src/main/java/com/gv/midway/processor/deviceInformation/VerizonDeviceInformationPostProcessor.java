@@ -72,7 +72,10 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 
 		DeviceInformationResponse deviceInformationResponse = new DeviceInformationResponse();
 
-		
+		 if(deviceInformation.getBs_carrier()==null||deviceInformation.getBs_carrier().trim().equals("")){
+	        	deviceInformation.setBs_carrier(exchange.getProperty(IConstant.BSCARRIER)
+					.toString());
+	     }
 		
 		Header responseheader = new Header();
 

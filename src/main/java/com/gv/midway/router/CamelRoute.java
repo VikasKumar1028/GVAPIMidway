@@ -17,6 +17,7 @@ import com.gv.midway.constant.CarrierType;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.JobName;
 import com.gv.midway.exception.InvalidParameterException;
+import com.gv.midway.exception.MissingParameterException;
 import com.gv.midway.exception.VerizonSessionTokenExpirationException;
 import com.gv.midway.pojo.checkstatus.kore.KoreCheckStatusResponse;
 import com.gv.midway.pojo.deviceInformation.kore.response.DeviceInformationResponseKore;
@@ -27,6 +28,7 @@ import com.gv.midway.pojo.token.VerizonAuthorizationResponse;
 import com.gv.midway.pojo.token.VerizonSessionLoginResponse;
 import com.gv.midway.processor.BulkDeviceProcessor;
 import com.gv.midway.processor.GenericErrorProcessor;
+import com.gv.midway.processor.HeaderErrorProcessor;
 import com.gv.midway.processor.HeaderProcessor;
 import com.gv.midway.processor.KoreGenericExceptionProcessor;
 import com.gv.midway.processor.VerizonBatchExceptionProcessor;
@@ -186,6 +188,10 @@ public class CamelRoute extends RouteBuilder {
 		onException(InvalidParameterException.class).handled(true)
 				.log(LoggingLevel.INFO, "Invalid Parameter Passed Error")
 				.process(new GenericErrorProcessor(env));
+		
+		onException(MissingParameterException.class).handled(true)
+		.log(LoggingLevel.INFO, "Pass all the required header parameters")
+		.process(new HeaderErrorProcessor(env));
 
 		from("direct:tokenGeneration").bean(iSessionService, "checkToken")
 				.choice().when(body().contains("true"))
@@ -1118,7 +1124,7 @@ public class CamelRoute extends RouteBuilder {
 	 * Get DeviceInformation from MasterDB and return back to Calling System.
 	 **/
 	public void getDeviceInformationDB() {
-		from("direct:getDeviceInformationDB")
+		from("direct:getDeviceInformationDB").process(new HeaderProcessor())
 				.bean(iDeviceService, "getDeviceInformationDB").to("log:input")
 				.end();
 
@@ -1127,7 +1133,7 @@ public class CamelRoute extends RouteBuilder {
 	/** Insert or Update Single Device details in MasterDB **/
 
 	public void updateDeviceDetails() {
-		from("direct:updateDeviceDetails").choice()
+		from("direct:updateDeviceDetails").process(new HeaderProcessor()).choice()
 				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
 				.process(new StubCellUploadProcessor()).endChoice().otherwise()
 				.bean(iDeviceService, "updateDeviceDetails").end();
@@ -1136,7 +1142,7 @@ public class CamelRoute extends RouteBuilder {
 	/** Insert or Upload Batch Device details in MasterDB. **/
 	public void updateDevicesDetailsBulk() {
 
-		from("direct:updateDevicesDetailsBulk").choice()
+		from("direct:updateDevicesDetailsBulk").process(new HeaderProcessor()).choice()
 				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
 				.process(new StubCellBulkUploadProcessor()).endChoice()
 				.otherwise().to("direct:updateDevicesDetailsBulkActual").end();

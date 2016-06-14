@@ -69,15 +69,21 @@ public class CommonUtil {
 
 	}
 
-	public static String getDerivedCarrierName(String carrierName) {
+	public static String getDerivedCarrierName(Object carrierName) {
 
 		String sourceDirived = null;
+		
+		if(carrierName==null){
+			
+			return null;
+		}
 
-		if (carrierName.startsWith("V")) {
+		
+		if (carrierName.toString().startsWith("V")) {
 
 			return sourceDirived = "VERIZON";
 
-		} else if (carrierName.startsWith("K")) {
+		} else if (carrierName.toString().startsWith("K")) {
 
 			return sourceDirived = "KORE";
 		}

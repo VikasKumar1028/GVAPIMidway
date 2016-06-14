@@ -1,9 +1,11 @@
 package com.gv.midway.job;
 
+
 import com.gv.midway.constant.CarrierType;
 
 public class JobParameter {
 
+	
 	private String date;
 	private CarrierType carrierName ;
 	

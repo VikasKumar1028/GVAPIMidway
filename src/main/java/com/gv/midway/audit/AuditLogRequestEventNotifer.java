@@ -67,6 +67,11 @@ public class AuditLogRequestEventNotifer extends EventNotifierSupport {
 				audit.setTo(exchange.getFromEndpoint().toString());
 				audit.setTimeStamp(localTime);
 				audit.setAuditTransactionId(TransactionId);
+				
+				exchange.setProperty(IConstant.HEADER, baseRequest.getHeader());
+				
+				if(baseRequest.getHeader()!=null)
+				{
 
 				exchange.setProperty(IConstant.BSCARRIER, baseRequest
 						.getHeader().getBsCarrier());
@@ -83,11 +88,15 @@ public class AuditLogRequestEventNotifer extends EventNotifierSupport {
 
 				exchange.setProperty(IConstant.GV_TRANSACTION_ID, baseRequest
 						.getHeader().getTransactionId());
+				
+				audit.setGvTransactionId(exchange.getProperty(
+						IConstant.GV_TRANSACTION_ID).toString());
+				
+				}
 				exchange.setProperty(IConstant.GV_HOSTNAME,
 						CommonUtil.getIpAddress());
 
-				audit.setGvTransactionId(exchange.getProperty(
-						IConstant.GV_TRANSACTION_ID).toString());
+				
 				audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME)
 						.toString());
 
