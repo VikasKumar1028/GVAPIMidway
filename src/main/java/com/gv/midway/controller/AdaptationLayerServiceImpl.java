@@ -246,7 +246,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 	}
 
 	@Override
-	public void reRunDeviceUsageJob(JobParameter jobParameter) {
+	public String reRunDeviceUsageJob(JobParameter jobParameter) {
 		
 
 		JobDetail jobDetail = new JobDetail();
@@ -260,8 +260,10 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 			jobDetail.setCarrierName(CarrierType.VERIZON.toString());
 			
 		}
-		producer.requestBody("direct:startJob", jobDetail);
-
+		//producer.requestBody("direct:startJob", jobDetail);
+		producer.asyncRequestBody("direct:startJob", jobDetail);
+		return "{\"Job Status\":\"Job Started Successfully\"}";
+		
 	}
 
 	@Override

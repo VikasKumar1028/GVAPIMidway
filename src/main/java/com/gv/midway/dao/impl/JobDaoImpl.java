@@ -296,7 +296,7 @@ public class JobDaoImpl implements IJobDao {
 	@Override
 	public void deleteTransactionFailureDeviceConnectionHistoryRecords(
 			Exchange exchange) {
-		log.info("Inside deleteDeviceConnectionRecords .....................");
+		log.info("Inside deleteTransactionFailureDeviceConnectionHistoryRecords .....................");
 
 		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
 		try {

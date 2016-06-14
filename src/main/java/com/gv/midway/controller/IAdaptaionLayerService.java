@@ -191,7 +191,7 @@ public interface IAdaptaionLayerService {
 	@Produces("application/json")
 	@Consumes("application/json")
 	@ApiOperation(value = "Rerun Device Usage Job")
-	void reRunDeviceUsageJob(JobParameter jobParameter);
+	String reRunDeviceUsageJob(JobParameter jobParameter);
 	
 	@POST
 	@Path("/devices/job/connectionHistory/reRun")
