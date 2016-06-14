@@ -16,6 +16,7 @@ import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
 import com.gv.midway.pojo.callback.request.CallBackVerizonRequest;
 import com.gv.midway.pojo.changeDeviceServicePlans.request.ChangeDeviceServicePlansRequest;
 import com.gv.midway.pojo.changeDeviceServicePlans.response.ChangeDeviceServicePlansResponse;
+import com.gv.midway.pojo.connectionInformation.JobinitializedResponse;
 import com.gv.midway.pojo.connectionInformation.deviceSessionBeginEndInfo.response.SessionBeginEndResponse;
 import com.gv.midway.pojo.connectionInformation.deviceStatus.response.ConnectionStatusResponse;
 import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationRequest;
@@ -38,7 +39,6 @@ import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequest;
 import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
 import com.gv.midway.pojo.usageInformation.request.UsageInformationRequest;
 import com.gv.midway.pojo.usageInformation.response.UsageInformationResponse;
-import com.gv.midway.pojo.usageInformation.response.UsageInformationResponseDataArea;
 import com.gv.midway.pojo.verizon.DeviceId;
 
 @SuppressWarnings("all")
@@ -213,7 +213,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 
 
 	@Override
-	public void transactionFailureDeviceUsageJob(JobParameter jobParameter) {
+	public JobinitializedResponse transactionFailureDeviceUsageJob(JobParameter jobParameter) {
 
 		JobDetail jobDetail = new JobDetail();
 		jobDetail.setType(JobType.TRANSACTION_FAILURE);
@@ -226,12 +226,14 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 			jobDetail.setCarrierName(CarrierType.VERIZON.toString());
 		}
 
-		producer.requestBody("direct:startTransactionFailureJob", jobDetail);
+		producer.asyncRequestBody("direct:startTransactionFailureJob", jobDetail);
+		return (JobinitializedResponse) producer.requestBody(
+				"direct:jobResponse", jobDetail);
 
 	}
 
 	@Override
-	public void transactionFailureConnectionHistoryJob(JobParameter jobParameter) {
+	public JobinitializedResponse transactionFailureConnectionHistoryJob(JobParameter jobParameter) {
 
 		JobDetail jobDetail = new JobDetail();
 		jobDetail.setType(JobType.TRANSACTION_FAILURE);
@@ -241,13 +243,14 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 			jobDetail.setCarrierName(CarrierType.VERIZON.toString());
 		}
 
-		producer.requestBody("direct:startTransactionFailureJob", jobDetail);
+		producer.asyncRequestBody("direct:startTransactionFailureJob", jobDetail);
+		return (JobinitializedResponse) producer.requestBody(
+				"direct:jobResponse", jobDetail);
 
-	}
+			}
 
 	@Override
-	public String reRunDeviceUsageJob(JobParameter jobParameter) {
-		
+	public JobinitializedResponse reRunDeviceUsageJob(JobParameter jobParameter) {
 
 		JobDetail jobDetail = new JobDetail();
 		jobDetail.setType(JobType.RERUN);
@@ -258,18 +261,16 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 		} else if ("VERIZON".equals(jobParameter.getCarrierName().toString())) {
 			jobDetail.setName(JobName.VERIZON_DEVICE_USAGE);
 			jobDetail.setCarrierName(CarrierType.VERIZON.toString());
-			
+
 		}
-		//producer.requestBody("direct:startJob", jobDetail);
 		producer.asyncRequestBody("direct:startJob", jobDetail);
-		producer.requestBody("direct:jobResponse", jobDetail);
-		
-		return "{\"Job Status\":\"Job Started Successfully\"}";
-		
+		return (JobinitializedResponse) producer.requestBody(
+				"direct:jobResponse", jobDetail);
 	}
 
 	@Override
-	public void reRunConnectionHistoryJob(JobParameter jobParameter) {
+	public JobinitializedResponse reRunConnectionHistoryJob(
+			JobParameter jobParameter) {
 
 		JobDetail jobDetail = new JobDetail();
 		jobDetail.setType(JobType.RERUN);
@@ -279,10 +280,11 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 			jobDetail.setName(JobName.VERIZON_CONNECTION_HISTORY);
 		}
 
-		producer.requestBody("direct:startJob", jobDetail);
-
+		producer.asyncRequestBody("direct:startJob", jobDetail);
+		return (JobinitializedResponse) producer.requestBody(
+				"direct:jobResponse", jobDetail);
 	}
-
+	
 	@Override
 	public UsageInformationResponse retrieveDeviceUsageHistory(
 			UsageInformationRequest usageInformationRequest) {

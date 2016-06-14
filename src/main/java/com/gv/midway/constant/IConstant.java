@@ -90,7 +90,7 @@ public interface IConstant {
 	
 	static int DURATION = -24;
 	
-	
+	static String JOB_INITIALIZED_MESSAGE="Job Started Successfully";
 	
 	
 	

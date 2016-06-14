@@ -14,6 +14,7 @@ import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
 import com.gv.midway.pojo.callback.request.CallBackVerizonRequest;
 import com.gv.midway.pojo.changeDeviceServicePlans.request.ChangeDeviceServicePlansRequest;
 import com.gv.midway.pojo.changeDeviceServicePlans.response.ChangeDeviceServicePlansResponse;
+import com.gv.midway.pojo.connectionInformation.JobinitializedResponse;
 import com.gv.midway.pojo.connectionInformation.deviceSessionBeginEndInfo.response.SessionBeginEndResponse;
 import com.gv.midway.pojo.connectionInformation.deviceStatus.response.ConnectionStatusResponse;
 import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationRequest;
@@ -177,26 +178,26 @@ public interface IAdaptaionLayerService {
 	@Produces("application/json")
 	@Consumes("application/json")
 	@ApiOperation(value = "Transactional Failure Device Usage Job")
-	void transactionFailureDeviceUsageJob(JobParameter jobParameter);
+	JobinitializedResponse transactionFailureDeviceUsageJob(JobParameter jobParameter);
 	
 	@POST
 	@Path("/devices/job/connectionHistory/transactionFailure")
 	@Produces("application/json")
 	@Consumes("application/json")
 	@ApiOperation(value = "Transactional Failure Device Connection History Job")
-	void transactionFailureConnectionHistoryJob(JobParameter jobParameter);	
+	JobinitializedResponse transactionFailureConnectionHistoryJob(JobParameter jobParameter);	
 	
 	@POST
 	@Path("/devices/job/usage/reRun")
 	@Produces("application/json")
 	@Consumes("application/json")
 	@ApiOperation(value = "Rerun Device Usage Job")
-	String reRunDeviceUsageJob(JobParameter jobParameter);
+	JobinitializedResponse reRunDeviceUsageJob(JobParameter jobParameter);
 	
 	@POST
 	@Path("/devices/job/connectionHistory/reRun")
 	@Produces("application/json")
 	@Consumes("application/json")
 	@ApiOperation(value = "Rerun Device Connection History Job")
-	void reRunConnectionHistoryJob(JobParameter jobParameter);
+	JobinitializedResponse reRunConnectionHistoryJob(JobParameter jobParameter);
 }

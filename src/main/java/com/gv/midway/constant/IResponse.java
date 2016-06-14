@@ -38,5 +38,5 @@ public class IResponse {
 	public static final String ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB="Error in fecthing the Device Data from Midway";
 	public static final String ERROR_DESCRIPTION_CONNECTION_MIDWAYDB="Error in Connection with Carrier";
 	
-	
+	public static final String SUCCESS_DESCRIPTION_JOB_INITIALIZED="Job Started Successfully";
 }

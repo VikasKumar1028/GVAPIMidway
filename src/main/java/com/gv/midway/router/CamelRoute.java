@@ -75,6 +75,7 @@ import com.gv.midway.processor.deviceInformation.StubKoreDeviceInformationProces
 import com.gv.midway.processor.deviceInformation.StubVerizonDeviceInformationProcessor;
 import com.gv.midway.processor.deviceInformation.VerizonDeviceInformationPostProcessor;
 import com.gv.midway.processor.deviceInformation.VerizonDeviceInformationPreProcessor;
+import com.gv.midway.processor.jobScheduler.JobInitializedPostProcessor;
 import com.gv.midway.processor.jobScheduler.KoreDeviceUsageHistoryPostProcessor;
 import com.gv.midway.processor.jobScheduler.KoreDeviceUsageHistoryPreProcessor;
 import com.gv.midway.processor.jobScheduler.KoreTransactionFailureDeviceUsageHistoryPreProcessor;
@@ -1241,7 +1242,7 @@ public class CamelRoute extends RouteBuilder {
 		from("seda:processKoreDeviceUsageJob?concurrentConsumers=5")
 				.log("KOREJob-DEVICE USAGE")
 
-				.doTry().process(new KoreDeviceUsageHistoryPreProcessor())
+				.doTry().process(new KoreDeviceUsageHistoryPreProcessor(env))
 				.to(uriRestKoreEndPoint).unmarshal().json(JsonLibrary.Jackson)
 				.process(new KoreDeviceUsageHistoryPostProcessor())
 				.bean(iSchedulerService, "saveDeviceUsageHistory")
@@ -1331,7 +1332,7 @@ public class CamelRoute extends RouteBuilder {
 			from("seda:processTransactionFailureKoreDeviceUsageJob?concurrentConsumers=5")
 					.log("KOREJob-DEVICE USAGE")
 
-					.doTry().process(new KoreTransactionFailureDeviceUsageHistoryPreProcessor())
+					.doTry().process(new KoreTransactionFailureDeviceUsageHistoryPreProcessor(env))
 					.to(uriRestKoreEndPoint).unmarshal().json(JsonLibrary.Jackson)
 					.process(new KoreDeviceUsageHistoryPostProcessor())
 					.bean(iSchedulerService, "saveDeviceUsageHistory")
@@ -1420,7 +1421,7 @@ public class CamelRoute extends RouteBuilder {
 	}
 	
 	public void  jobResponse(){
-		from("direct:jobResponse").log("*********Inside the Job response");
+		from("direct:jobResponse").log("*********Inside the Job response").process(new JobInitializedPostProcessor());
 	}
 
 }

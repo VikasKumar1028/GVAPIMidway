@@ -61,7 +61,9 @@ public class AuditLogResponseEventNotifer extends EventNotifierSupport {
 					logger.info("apiOperationName" + apiOperationName);
 
 					Audit audit = new Audit();
-
+                    
+					if(!apiOperationName.equals("GV_jobResponse_ProxyResponse"))
+					{
 					audit.setApiOperationName(apiOperationName);
 					audit.setFrom(baseResponse.getHeader().getSourceName());
 					audit.setTo(exchange.getFromEndpoint().toString());
@@ -70,6 +72,7 @@ public class AuditLogResponseEventNotifer extends EventNotifierSupport {
 					audit.setGvTransactionId(exchange.getProperty(IConstant.GV_TRANSACTION_ID).toString());
 					audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME).toString());
 					audit.setPayload(exchange.getIn().getBody());
+					}
 					if (IResponse.SUCCESS_CODE != baseResponse.getResponse()
 							.getResponseCode()) {
 						audit.setErrorDetails(baseResponse.getResponse().getResponseDescription());
