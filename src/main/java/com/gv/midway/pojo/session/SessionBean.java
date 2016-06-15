@@ -11,6 +11,7 @@ public class SessionBean {
 	String vzSessionToken;
 	String vzAuthorizationToken;
 	String isValid;
+	String ipAddress;
 	public String getVzSessionToken() {
 		return vzSessionToken;
 	}
@@ -34,6 +35,12 @@ public class SessionBean {
 	}
 	public void setId(String id) {
 		this.id = id;
+	}
+	public String getIpAddress() {
+		return ipAddress;
+	}
+	public void setIpAddress(String ipAddress) {
+		this.ipAddress = ipAddress;
 	}
 
 	

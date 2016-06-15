@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.gv.midway.dao.ISessionDao;
 import com.gv.midway.pojo.session.SessionBean;
+import com.gv.midway.utility.CommonUtil;
 
 @Service
 public class SessionDaoImpl implements ISessionDao {
@@ -18,16 +19,24 @@ public class SessionDaoImpl implements ISessionDao {
 	MongoTemplate mongoTemplate;
 
 	public SessionBean getSessionBean() {
-
-		Query searchUserQuery = new Query(Criteria.where("isValid").is("0"));
+		
+		//Ip Address of the Machine
+		String ipAddress=CommonUtil.getIpAddress();
+		
+		Query searchUserQuery = new Query(Criteria.where("isValid").is("0")).addCriteria(Criteria.where("ipAddress").is(ipAddress));
 		SessionBean sessionbean = mongoTemplate.findOne(searchUserQuery,
 				SessionBean.class);
 		return sessionbean;
 	}
 
 	public SessionBean saveSesionBean(SessionBean sessionBean) {
-
-		Query searchUserQuery = new Query(Criteria.where("isValid").is("0"));
+		
+		//Setting the Ip Address of the machine
+		String ipAddress=CommonUtil.getIpAddress();
+		sessionBean.setIpAddress(ipAddress);
+		
+		
+		Query searchUserQuery = new Query(Criteria.where("isValid").is("0")).addCriteria(Criteria.where("ipAddress").is(ipAddress));
 		SessionBean previousSessionBean = mongoTemplate.findOne(
 				searchUserQuery, SessionBean.class);
 
