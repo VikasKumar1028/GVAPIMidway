@@ -19,6 +19,7 @@ import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.BaseResponse;
 import com.gv.midway.pojo.audit.Audit;
 import com.gv.midway.pojo.callback.TargetResponse;
+import com.gv.midway.pojo.connectionInformation.JobinitializedResponse;
 
 public class AuditLogResponseEventNotifer extends EventNotifierSupport {
 
@@ -34,7 +35,7 @@ public class AuditLogResponseEventNotifer extends EventNotifierSupport {
 			Exchange exchange = create.getExchange();
 			logger.info("In Audit log Response");
 
-			if (exchange.getIn().getBody() instanceof BaseResponse) {
+			if (exchange.getIn().getBody() instanceof BaseResponse &&  !(exchange.getIn().getBody() instanceof  JobinitializedResponse) ){
 				logger.info("In Audit log Response4");
 				if (!(exchange.getIn().getBody() instanceof TargetResponse)) {
 					BaseResponse baseResponse = (BaseResponse) exchange.getIn()
