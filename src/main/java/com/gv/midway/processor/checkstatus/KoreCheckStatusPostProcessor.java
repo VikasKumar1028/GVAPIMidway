@@ -19,6 +19,7 @@ import com.gv.midway.pojo.callback.Netsuite.KafkaNetSuiteCallBackEvent;
 import com.gv.midway.pojo.callback.Netsuite.NetSuiteCallBackProvisioningResponse;
 import com.gv.midway.pojo.verizon.DeviceId;
 import com.gv.midway.pojo.verizon.Devices;
+import com.gv.midway.utility.NetSuiteOAuthUtil;
 
 
 public class KoreCheckStatusPostProcessor implements Processor {
@@ -218,33 +219,69 @@ public class KoreCheckStatusPostProcessor implements Processor {
 		
 		netSuiteCallBackProvisioningResponse.setDeviceIds(deviceIds);
 		
+		String oauthConsumerKey = newEnv
+				.getProperty("netSuite.oauthConsumerKey");
+		String oauthTokenId = newEnv.getProperty("netSuite.oauthTokenId");
+		String oauthTokenSecret = newEnv
+				.getProperty("netSuite.oauthTokenSecret");
+		String oauthConsumerSecret = newEnv
+				.getProperty("netSuite.oauthConsumerSecret");
+		String relam = newEnv.getProperty("netSuite.Relam");
+		String endPoint = newEnv.getProperty("netSuite.endPoint");
+		
+		String script=null;
+	    String oauthHeader=null;
+	    
+	    message.setHeader(Exchange.CONTENT_TYPE, "application/json");
+		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
+		message.setHeader(Exchange.HTTP_METHOD, "POST");
+		
+        log.info("request type for NetSuite CallBack error...."+requestType);
+		
+		log.info("oauth info is....."+oauthConsumerKey+" "+oauthTokenId+" "+endPoint+" "+oauthTokenSecret+" "+oauthConsumerSecret+" "+relam);
+		
 		switch (requestType) {
 		case ACTIVATION:
 
 			netSuiteCallBackProvisioningResponse.setResponse("Device successfully activated.");
+			script="529";
+			oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
+			message.setHeader(Exchange.HTTP_PATH, "?script=529&deploy=1");
 			break;
 
 		case DEACTIVATION:
 
 			netSuiteCallBackProvisioningResponse.setResponse("Device successfully DeActivated.");
+			script="531";
+			oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
+			message.setHeader(Exchange.HTTP_PATH, "?script=531&deploy=1");
 
 			break;
 
 		case REACTIVATION:
 
 			netSuiteCallBackProvisioningResponse.setResponse("Device successfully ReActivated.");
+			script="532";
+			oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
+			message.setHeader(Exchange.HTTP_PATH, "?script=532&deploy=1");
 
 			break;
 
 		case RESTORE:
 
 			netSuiteCallBackProvisioningResponse.setResponse("Device successfully ReStored.");
+			script="534";
+			oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
+			message.setHeader(Exchange.HTTP_PATH, "?script=534&deploy=1");
 
 			break;
 
 		case SUSPEND:
 
 			netSuiteCallBackProvisioningResponse.setResponse("Device successfully Suspended.");
+			script="533";
+			oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
+			message.setHeader(Exchange.HTTP_PATH, "?script=533&deploy=1");
 
 			break;
 
@@ -264,6 +301,7 @@ public class KoreCheckStatusPostProcessor implements Processor {
 			break;
 		}
 		
+		message.setHeader("Authorization", oauthHeader);
 		message.setBody(netSuiteCallBackProvisioningResponse);
 		
 		log.info("success callback resposne for Kore..."+exchange.getIn().getBody());

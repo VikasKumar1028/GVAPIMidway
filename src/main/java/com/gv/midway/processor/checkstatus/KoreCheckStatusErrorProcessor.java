@@ -7,6 +7,7 @@ import org.apache.camel.ExchangePattern;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.camel.component.cxf.CxfOperationException;
+import org.apache.camel.language.Constant;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
 
@@ -21,6 +22,7 @@ import com.gv.midway.pojo.callback.Netsuite.NetSuiteCallBackProvisioningResponse
 import com.gv.midway.pojo.kore.KoreErrorResponse;
 import com.gv.midway.pojo.verizon.DeviceId;
 import com.gv.midway.pojo.verizon.Devices;
+import com.gv.midway.utility.NetSuiteOAuthUtil;
 
 
 public class KoreCheckStatusErrorProcessor implements Processor {
@@ -65,9 +67,13 @@ public class KoreCheckStatusErrorProcessor implements Processor {
 
 		String errorDescription = (String) exchange
 				.getProperty(IConstant.MIDWAY_CARRIER_ERROR_DESC);
+		
+		log.info("cxf operation not caught before is...........");
 
 		CxfOperationException exception = (CxfOperationException) exchange
 				.getProperty(Exchange.EXCEPTION_CAUGHT);
+		
+		log.info("cxf operation caught is...........");
 
 		if (exception != null) {
 
@@ -198,6 +204,92 @@ public class KoreCheckStatusErrorProcessor implements Processor {
 		
 		message.setBody(netSuiteCallBackProvisioningResponse);
 		
+		log.info("body set for netSuiteCallBack........."+exchange.getIn().getBody());
+		
+		String oauthConsumerKey = newEnv
+				.getProperty("netSuite.oauthConsumerKey");
+		String oauthTokenId = newEnv.getProperty("netSuite.oauthTokenId");
+		String oauthTokenSecret = newEnv
+				.getProperty("netSuite.oauthTokenSecret");
+		String oauthConsumerSecret = newEnv
+				.getProperty("netSuite.oauthConsumerSecret");
+		String relam = newEnv.getProperty("netSuite.Relam");
+		String endPoint = newEnv.getProperty("netSuite.endPoint");
+		
+		String script=null;
+	    String oauthHeader=null;
+	    
+	    message.setHeader(Exchange.CONTENT_TYPE, "application/json");
+		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
+		message.setHeader(Exchange.HTTP_METHOD, "POST");
+		
+		log.info("request type for NetSuite CallBack error...."+requestType);
+		
+		log.info("oauth info is....."+oauthConsumerKey+" "+oauthTokenId+" "+endPoint+" "+oauthTokenSecret+" "+oauthConsumerSecret+" "+relam);
+	    
+	    switch (requestType) {
+		case ACTIVATION:
+
+			
+			script="529";
+			oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
+			//message.setHeader(Exchange.HTTP_QUERY, constant("script=529&deploy=1"));
+			message.setHeader(Exchange.HTTP_PATH, "?script=529&deploy=1");
+
+			break;
+
+		case DEACTIVATION:
+
+			
+			script="531";
+			oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
+			message.setHeader(Exchange.HTTP_PATH, "?script=531&deploy=1");
+
+			break;
+
+		case REACTIVATION:
+
+			
+			script="532";
+			oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
+			message.setHeader(Exchange.HTTP_PATH, "?script=532&deploy=1");
+
+			break;
+
+		case RESTORE:
+
+			
+			script="534";
+			oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
+			message.setHeader(Exchange.HTTP_PATH, "?script=534&deploy=1");
+
+			break;
+
+		case SUSPEND:
+
+			
+			script="533";
+			oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
+			message.setHeader(Exchange.HTTP_PATH, "?script=533&deploy=1");
+
+			break;
+
+		case CHANGESERVICEPLAN:
+
+			
+			break;
+
+		case CHANGECUSTOMFIELDS:
+
+			
+
+			break;
+
+		default:
+			break;
+		}
+		
+	    message.setHeader("Authorization", oauthHeader);
 		log.info("error callback resposne for Kore..."+exchange.getIn().getBody());
 
 	}

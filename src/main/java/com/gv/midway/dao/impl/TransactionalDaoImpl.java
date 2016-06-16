@@ -1,5 +1,7 @@
 package com.gv.midway.dao.impl;
 
+import java.net.ConnectException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -1195,6 +1197,11 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			update.set(ITransaction.CALL_BACK_PAYLOAD, errorResponsePayload);
 		}
 		
+		else{
+			
+			log.info("no cxf exception........");
+		}
+		
 
 		update.set(ITransaction.MIDWAY_STATUS, IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
 		update.set(ITransaction.CARRIER_STATUS, IConstant.CARRIER_TRANSACTION_STATUS_ERROR);
@@ -1258,9 +1265,23 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		Update update = new Update();
 		
 		Exception exception =  (Exception)exchange.getProperty(Exchange.EXCEPTION_CAUGHT);
-
 		
-	    update.set(ITransaction.CALL_BACK_FAILURE_TO_NETSUITE_REASON ,exception.getMessage());
+		
+		
+		if(exception instanceof CxfOperationException)
+		{
+	    CxfOperationException cxfOperationException = (CxfOperationException)exception;
+	    update.set(ITransaction.CALL_BACK_FAILURE_TO_NETSUITE_REASON ,cxfOperationException.getResponseBody());
+	    
+		}
+		
+		else
+		{
+			
+			
+	     update.set(ITransaction.CALL_BACK_FAILURE_TO_NETSUITE_REASON ,exception.getMessage());
+			
+		}
 		
 		
 		

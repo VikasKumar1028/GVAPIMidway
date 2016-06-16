@@ -221,10 +221,8 @@ public class CamelRoute extends RouteBuilder {
 				.process(new CallbackPreProcessor(env))
 				.bean(iTransactionalService, "findMidwayTransactionId")
 				.doTry()
-				.process(new CallbackPostProcessor())
-				./*
-				 * to( uriRestNetsuitEndPoint ).
-				 */
+				.process(new CallbackPostProcessor(env)).
+				to( uriRestNetsuitEndPoint ). 
 				doCatch(Exception.class)
 				.bean(iTransactionalService, "updateNetSuiteCallBackError")
 				.doFinally()
@@ -310,10 +308,8 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iTransactionalService,
 						"populateKoreCheckStatusErrorResponse")
 				.doTry()
-				.process(new KoreCheckStatusErrorProcessor())
-				./*
-				 * to( uriRestNetsuitEndPoint ).
-				 */
+				.process(new KoreCheckStatusErrorProcessor(env))
+				.to( uriRestNetsuitEndPoint).
 				doCatch(Exception.class)
 				.bean(iTransactionalService, "updateNetSuiteCallBackError")
 				.doFinally()
@@ -325,10 +321,8 @@ public class CamelRoute extends RouteBuilder {
 		from("direct:koreCustomChangeSubProcess")
 				.bean(iTransactionalService, "populateKoreCustomChangeResponse")
 				.doTry()
-				.process(new KoreCheckStatusPostProcessor())
-				./*
-				 * to( uriRestNetsuitEndPoint ).
-				 */
+				.process(new KoreCheckStatusPostProcessor(env))
+				.to(uriRestNetsuitEndPoint).
 				doCatch(Exception.class)
 				.bean(iTransactionalService, "updateNetSuiteCallBackError")
 				.doFinally()
@@ -340,10 +334,8 @@ public class CamelRoute extends RouteBuilder {
 		from("direct:koreCheckStatusSubProcess")
 				.bean(iTransactionalService, "populateKoreCheckStatusResponse")
 				.doTry()
-				.process(new KoreCheckStatusPostProcessor())
-				./*
-				 * to( uriRestNetsuitEndPoint ).
-				 */
+				.process(new KoreCheckStatusPostProcessor(env)).
+				to( uriRestNetsuitEndPoint).
 				doCatch(Exception.class)
 				.bean(iTransactionalService, "updateNetSuiteCallBackError")
 				.doFinally()
