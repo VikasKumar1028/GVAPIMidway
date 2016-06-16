@@ -21,6 +21,7 @@ import com.gv.midway.job.JobDetail;
 import com.gv.midway.pojo.deviceHistory.DeviceConnection;
 import com.gv.midway.pojo.deviceHistory.DeviceUsage;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
+import com.gv.midway.utility.CommonUtil;
 import com.mongodb.WriteResult;
 
 @Service
@@ -92,7 +93,7 @@ public class JobDaoImpl implements IJobDao {
 		log.info("-----------Job Details -------" + jobDetail.toString());
 		jobDetail.setStartTime(new Date().toString());
 		jobDetail.setStatus(IConstant.JOB_STARTED);
-
+		jobDetail.setIpAddress(CommonUtil.getIpAddress());
 		// inserting in the exchange as property
 		exchange.setProperty("jobDetail", jobDetail);
 

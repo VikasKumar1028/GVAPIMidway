@@ -18,6 +18,14 @@ public class JobDetail {
 	private String transactionFailed;
 	private String transactionPassed;
 	private String carrierName;
+	private String ipAddress;
+	
+	public String getIpAddress() {
+		return ipAddress;
+	}
+	public void setIpAddress(String ipAddress) {
+		this.ipAddress = ipAddress;
+	}
 	public JobName getName() {
 		return name;
 	}
@@ -81,6 +89,8 @@ public class JobDetail {
 				+ ((carrierName == null) ? 0 : carrierName.hashCode());
 		result = prime * result + ((date == null) ? 0 : date.hashCode());
 		result = prime * result + ((endTime == null) ? 0 : endTime.hashCode());
+		result = prime * result
+				+ ((ipAddress == null) ? 0 : ipAddress.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result
 				+ ((startTime == null) ? 0 : startTime.hashCode());
@@ -120,6 +130,11 @@ public class JobDetail {
 				return false;
 		} else if (!endTime.equals(other.endTime))
 			return false;
+		if (ipAddress == null) {
+			if (other.ipAddress != null)
+				return false;
+		} else if (!ipAddress.equals(other.ipAddress))
+			return false;
 		if (name != other.name)
 			return false;
 		if (startTime == null) {
@@ -152,7 +167,8 @@ public class JobDetail {
 				+ ", startTime=" + startTime + ", endTime=" + endTime
 				+ ", status=" + status + ", transactionFailed="
 				+ transactionFailed + ", transactionPassed="
-				+ transactionPassed + ", carrierName=" + carrierName + "]";
+				+ transactionPassed + ", carrierName=" + carrierName
+				+ ", ipAddress=" + ipAddress + "]";
 	}
 
 }
