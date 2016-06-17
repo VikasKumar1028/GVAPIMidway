@@ -1,15 +1,13 @@
 package com.gv.midway.processor.deviceInformation;
 
-import java.text.DateFormat;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.Response;
@@ -77,7 +75,7 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 					.toString());
 	     }
 		
-		Header responseheader = new Header();
+		//Header responseheader = new Header();
 
 		Response response = new Response();
 		
@@ -85,7 +83,7 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 		response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
 		response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_CARRIER);
 
-		responseheader.setApplicationName(exchange.getProperty(IConstant.APPLICATION_NAME).toString());
+		/*responseheader.setApplicationName(exchange.getProperty(IConstant.APPLICATION_NAME).toString());
 		responseheader.setRegion(exchange.getProperty(IConstant.REGION).toString());
 		
 
@@ -94,7 +92,9 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 		responseheader.setSourceName(exchange.getProperty(IConstant.SOURCE_NAME).toString());
 		//String TransactionId = (String) exchange.getProperty(newEnv.getProperty(IConstant.EXCHANEGE_PROPERTY));
 		responseheader.setTransactionId(exchange.getProperty(IConstant.GV_TRANSACTION_ID).toString());
-		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER).toString());
+		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER).toString());*/
+		
+		Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
 
 		deviceInformationResponse.setHeader(responseheader);
 		deviceInformationResponse.setResponse(response);

@@ -46,7 +46,7 @@ public class KoreGenericExceptionProcessor implements Processor {
 				+ exception.getResponseBody());
 		log.info("----.getStatusCode()----------" + exception.getStatusCode());
 
-		Header responseHeader = new Header();
+		/*Header responseHeader = new Header();
 		responseHeader.setApplicationName(exchange.getProperty(
 				IConstant.APPLICATION_NAME).toString());
 		responseHeader.setRegion(exchange.getProperty(IConstant.REGION)
@@ -62,7 +62,7 @@ public class KoreGenericExceptionProcessor implements Processor {
 		responseHeader.setTransactionId(exchange.getProperty(
 				IConstant.GV_TRANSACTION_ID).toString());
 		responseHeader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
-				.toString());
+				.toString());*/
 
 		ObjectMapper mapper = new ObjectMapper();
 
@@ -81,6 +81,8 @@ public class KoreGenericExceptionProcessor implements Processor {
 
 		response.setResponseStatus(IResponse.ERROR_MESSAGE);
 		response.setResponseDescription(responsePayload.getErrorMessage());
+		
+		Header responseHeader = (Header) exchange.getProperty(IConstant.HEADER);
 
 		if ("Endpoint[direct://deviceInformationCarrier]".equals(exchange
 				.getFromEndpoint().toString())) {

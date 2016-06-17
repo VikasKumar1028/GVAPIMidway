@@ -36,7 +36,7 @@ public class RetrieveDeviceUsageHistoryPostProcessor implements Processor {
 		// TODO Auto-generated method stub
 		log.info("Begin::RetrieveDeviceUsageHistoryPostProcessor");
 
-		Header responseheader = new Header();
+		//Header responseheader = new Header();
 		Response response = new Response();
 		
 		
@@ -84,7 +84,7 @@ public class RetrieveDeviceUsageHistoryPostProcessor implements Processor {
 
 		}
 
-		responseheader.setApplicationName(exchange.getProperty(
+		/*responseheader.setApplicationName(exchange.getProperty(
 				IConstant.APPLICATION_NAME).toString());
 		responseheader.setRegion(exchange.getProperty(IConstant.REGION)
 				.toString());
@@ -98,7 +98,9 @@ public class RetrieveDeviceUsageHistoryPostProcessor implements Processor {
 		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
 				.toString());
 		responseheader.setTransactionId(exchange.getProperty(
-				IConstant.GV_TRANSACTION_ID).toString());
+				IConstant.GV_TRANSACTION_ID).toString());*/
+		
+		Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
 
 		usageInformationResponse.setHeader(responseheader);
 		usageInformationResponse.setResponse(response);

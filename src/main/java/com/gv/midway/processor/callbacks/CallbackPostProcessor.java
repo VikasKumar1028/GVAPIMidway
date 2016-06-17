@@ -84,7 +84,7 @@ public class CallbackPostProcessor implements Processor {
 			
 			script="529";
 			oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
-			message.setHeader(Exchange.HTTP_PATH, "?script=529&deploy=1");
+			
 			
 			break;
 			
@@ -92,14 +92,14 @@ public class CallbackPostProcessor implements Processor {
 			
         	script="531";
  			oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
-        	message.setHeader(Exchange.HTTP_PATH, "?script=531&deploy=1");
+        	
 			break;
 			
          case SUSPEND:
  			
         	 script="533";
   			 oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
-        	 message.setHeader(Exchange.HTTP_PATH, "?script=533&deploy=1");
+        	
         	 
  			break;
  			
@@ -107,7 +107,7 @@ public class CallbackPostProcessor implements Processor {
  			
         	 script="534";
   			 oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
-        	 message.setHeader(Exchange.HTTP_PATH, "?script=534&deploy=1");
+        	
  			break;
  			
         /* case REACTIVATION:
@@ -133,6 +133,7 @@ public class CallbackPostProcessor implements Processor {
 			break;
 		}
 		
+		exchange.setProperty("script", script);
 		message.setHeader("Authorization", oauthHeader);
 	}
 

@@ -37,10 +37,10 @@ public class GenericErrorProcessor implements Processor {
 
 	public void process(Exchange exchange) throws Exception {
 
-		Header responseHeader = new Header();
+		//Header responseHeader = new Header();
 		Response response = new Response();
 
-		responseHeader.setApplicationName(exchange.getProperty(
+		/*responseHeader.setApplicationName(exchange.getProperty(
 				IConstant.APPLICATION_NAME).toString());
 		responseHeader.setRegion(exchange.getProperty(IConstant.REGION)
 				.toString());
@@ -55,7 +55,9 @@ public class GenericErrorProcessor implements Processor {
 		responseHeader.setTransactionId(exchange.getProperty(
 				IConstant.GV_TRANSACTION_ID).toString());
 		responseHeader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
-				.toString());
+				.toString());*/
+		
+		Header responseHeader = (Header) exchange.getProperty(IConstant.HEADER);
 
 		if (exchange.getProperty(IConstant.RESPONSE_CODE) != null) {
 

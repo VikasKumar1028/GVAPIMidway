@@ -1,7 +1,6 @@
 package com.gv.midway.processor.connectionInformation.deviceSessionBeginEndInfo;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Map;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -37,7 +36,7 @@ public class VerizonDeviceSessionBeginEndInfoPostProcessor implements Processor 
 
 		SessionBeginEndResponse businessResponse = new SessionBeginEndResponse();
 		SessionBeginEndResponseDataArea sessionBeginEndResponseDataArea = new SessionBeginEndResponseDataArea();
-		Header responseheader = new Header();
+		//Header responseheader = new Header();
 		Response response = new Response();
 
 		log.info("exchange.getIn().getBody().toString()***************************************"
@@ -168,7 +167,7 @@ public class VerizonDeviceSessionBeginEndInfoPostProcessor implements Processor 
 
 		}
 
-		responseheader.setApplicationName(exchange.getProperty(
+		/*responseheader.setApplicationName(exchange.getProperty(
 				IConstant.APPLICATION_NAME).toString());
 		responseheader.setRegion(exchange.getProperty(IConstant.REGION)
 				.toString());
@@ -182,8 +181,10 @@ public class VerizonDeviceSessionBeginEndInfoPostProcessor implements Processor 
 		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
 				.toString());
 		responseheader.setTransactionId(exchange.getProperty(
-				IConstant.GV_TRANSACTION_ID).toString());
+				IConstant.GV_TRANSACTION_ID).toString());*/
 
+		Header responseheader = (Header) exchange.getProperty(IConstant.HEADER); 
+		
 		businessResponse.setHeader(responseheader);
 		businessResponse.setResponse(response);
 

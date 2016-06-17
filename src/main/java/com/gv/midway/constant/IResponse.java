@@ -32,7 +32,7 @@ public class IResponse {
 	public static final String ERROR_MESSAGE="Error";
 	
 	public static final String ERROR_DESCRIPTION_UPDATE_MIDWAYDB="Failed to upload record in Midway";
-	public static final String ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB="No NetsuiteId for the record";
+	public static final String ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB="NetSuite id is missing in Request";
 	public static final String ERROR_DESCRIPTION_NODATA_DEVCIEINFO_MIDWAYDB="No data found in Midway";
 	public static final String ERROR_DESCRIPTION_NODATA_UPDATEDEVCIE_MIDWAYDB="No record found to Update in Midway";
 	public static final String ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB="Error in fecthing the Device Data from Midway";

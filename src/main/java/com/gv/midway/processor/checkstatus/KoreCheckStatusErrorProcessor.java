@@ -233,8 +233,7 @@ public class KoreCheckStatusErrorProcessor implements Processor {
 			
 			script="529";
 			oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
-			//message.setHeader(Exchange.HTTP_QUERY, constant("script=529&deploy=1"));
-			message.setHeader(Exchange.HTTP_PATH, "?script=529&deploy=1");
+			
 
 			break;
 
@@ -243,7 +242,7 @@ public class KoreCheckStatusErrorProcessor implements Processor {
 			
 			script="531";
 			oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
-			message.setHeader(Exchange.HTTP_PATH, "?script=531&deploy=1");
+			
 
 			break;
 
@@ -252,7 +251,7 @@ public class KoreCheckStatusErrorProcessor implements Processor {
 			
 			script="532";
 			oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
-			message.setHeader(Exchange.HTTP_PATH, "?script=532&deploy=1");
+			
 
 			break;
 
@@ -261,7 +260,7 @@ public class KoreCheckStatusErrorProcessor implements Processor {
 			
 			script="534";
 			oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
-			message.setHeader(Exchange.HTTP_PATH, "?script=534&deploy=1");
+			
 
 			break;
 
@@ -270,7 +269,7 @@ public class KoreCheckStatusErrorProcessor implements Processor {
 			
 			script="533";
 			oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
-			message.setHeader(Exchange.HTTP_PATH, "?script=533&deploy=1");
+			
 
 			break;
 
@@ -290,6 +289,7 @@ public class KoreCheckStatusErrorProcessor implements Processor {
 		}
 		
 	    message.setHeader("Authorization", oauthHeader);
+	    exchange.setProperty("script", script);
 		log.info("error callback resposne for Kore..."+exchange.getIn().getBody());
 
 	}

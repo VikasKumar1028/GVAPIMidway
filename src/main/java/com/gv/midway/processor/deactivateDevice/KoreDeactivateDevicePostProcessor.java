@@ -36,7 +36,7 @@ public class KoreDeactivateDevicePostProcessor implements Processor {
 		DeactivateDeviceResponse deactivateDeviceResponse = new DeactivateDeviceResponse();
 		DeactivateDeviceResponseDataArea deactivateDeviceResponseDataArea = new DeactivateDeviceResponseDataArea();
 
-		Header responseheader = new Header();
+		//Header responseheader = new Header();
 
 		Response response = new Response();
 		if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
@@ -55,7 +55,7 @@ public class KoreDeactivateDevicePostProcessor implements Processor {
 			response.setResponseDescription(exchange.getIn().getMessageId());
 		}
 
-		responseheader.setApplicationName(exchange.getProperty(
+		/*responseheader.setApplicationName(exchange.getProperty(
 				IConstant.APPLICATION_NAME).toString());
 		responseheader.setRegion(exchange.getProperty(IConstant.REGION)
 				.toString());
@@ -70,7 +70,9 @@ public class KoreDeactivateDevicePostProcessor implements Processor {
 		responseheader.setTransactionId(exchange.getProperty(
 				IConstant.GV_TRANSACTION_ID).toString());
 		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
-				.toString());
+				.toString());*/
+		
+		Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
 
 		deactivateDeviceResponse.setHeader(responseheader);
 

@@ -3,6 +3,7 @@ package com.gv.midway.router;
 import java.net.ConnectException;
 import java.net.UnknownHostException;
 
+import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.cxf.CxfOperationException;
@@ -31,6 +32,7 @@ import com.gv.midway.processor.GenericErrorProcessor;
 import com.gv.midway.processor.HeaderErrorProcessor;
 import com.gv.midway.processor.HeaderProcessor;
 import com.gv.midway.processor.KoreGenericExceptionProcessor;
+import com.gv.midway.processor.NetSuiteIdValidationProcessor;
 import com.gv.midway.processor.VerizonBatchExceptionProcessor;
 import com.gv.midway.processor.VerizonGenericExceptionProcessor;
 import com.gv.midway.processor.activateDevice.KoreActivateDevicePostProcessor;
@@ -222,6 +224,8 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iTransactionalService, "findMidwayTransactionId")
 				.doTry()
 				.process(new CallbackPostProcessor(env)).
+				setHeader(Exchange.HTTP_QUERY). 
+				simple("script=${exchangeProperty[script]}&deploy=1").
 				to( uriRestNetsuitEndPoint ). 
 				doCatch(Exception.class)
 				.bean(iTransactionalService, "updateNetSuiteCallBackError")
@@ -308,7 +312,9 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iTransactionalService,
 						"populateKoreCheckStatusErrorResponse")
 				.doTry()
-				.process(new KoreCheckStatusErrorProcessor(env))
+				.process(new KoreCheckStatusErrorProcessor(env)).
+				setHeader(Exchange.HTTP_QUERY). 
+				simple("script=${exchangeProperty[script]}&deploy=1")
 				.to( uriRestNetsuitEndPoint).
 				doCatch(Exception.class)
 				.bean(iTransactionalService, "updateNetSuiteCallBackError")
@@ -321,7 +327,9 @@ public class CamelRoute extends RouteBuilder {
 		from("direct:koreCustomChangeSubProcess")
 				.bean(iTransactionalService, "populateKoreCustomChangeResponse")
 				.doTry()
-				.process(new KoreCheckStatusPostProcessor(env))
+				.process(new KoreCheckStatusPostProcessor(env)).
+				setHeader(Exchange.HTTP_QUERY). 
+				simple("script=${exchangeProperty[script]}&deploy=1")
 				.to(uriRestNetsuitEndPoint).
 				doCatch(Exception.class)
 				.bean(iTransactionalService, "updateNetSuiteCallBackError")
@@ -335,6 +343,8 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iTransactionalService, "populateKoreCheckStatusResponse")
 				.doTry()
 				.process(new KoreCheckStatusPostProcessor(env)).
+				setHeader(Exchange.HTTP_QUERY). 
+				simple("script=${exchangeProperty[script]}&deploy=1").
 				to( uriRestNetsuitEndPoint).
 				doCatch(Exception.class)
 				.bean(iTransactionalService, "updateNetSuiteCallBackError")
@@ -1058,7 +1068,7 @@ public class CamelRoute extends RouteBuilder {
 	 **/
 	public void deviceInformationCarrier() {
 
-		from("direct:deviceInformationCarrier").process(new HeaderProcessor())
+		from("direct:deviceInformationCarrier").process(new HeaderProcessor()).process(new NetSuiteIdValidationProcessor())
 				.choice()
 				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
 				.choice().when(header("derivedCarrierName").isEqualTo("KORE"))

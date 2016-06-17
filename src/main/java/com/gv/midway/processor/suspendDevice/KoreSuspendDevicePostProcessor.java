@@ -37,7 +37,7 @@ public class KoreSuspendDevicePostProcessor implements Processor {
 
 		SuspendDeviceResponseDataArea SuspendDeviceResponseDataArea = new SuspendDeviceResponseDataArea();
 
-		Header responseheader = new Header();
+		//Header responseheader = new Header();
 
 		Response response = new Response();
 
@@ -45,7 +45,7 @@ public class KoreSuspendDevicePostProcessor implements Processor {
 		response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
 		response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_SUSPEND_MIDWAY);
 
-		responseheader.setApplicationName(exchange.getProperty(
+		/*responseheader.setApplicationName(exchange.getProperty(
 				IConstant.APPLICATION_NAME).toString());
 		responseheader.setRegion(exchange.getProperty(IConstant.REGION)
 				.toString());
@@ -60,7 +60,9 @@ public class KoreSuspendDevicePostProcessor implements Processor {
 		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
 				.toString());
 		responseheader.setTransactionId(exchange.getProperty(
-				IConstant.GV_TRANSACTION_ID).toString());
+				IConstant.GV_TRANSACTION_ID).toString());*/
+		
+		Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
 
 		SuspendDeviceResponse.setHeader(responseheader);
 		SuspendDeviceResponse.setResponse(response);

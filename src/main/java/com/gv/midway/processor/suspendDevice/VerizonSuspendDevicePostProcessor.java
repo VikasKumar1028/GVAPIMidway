@@ -39,7 +39,7 @@ public class VerizonSuspendDevicePostProcessor implements Processor {
 
 		SuspendDeviceResponse suspendDeviceResponse = new SuspendDeviceResponse();
 		SuspendDeviceResponseDataArea suspendDeviceResponseDataArea = new SuspendDeviceResponseDataArea();
-		Header responseheader = new Header();
+		//Header responseheader = new Header();
 		Response response = new Response();
 
 
@@ -64,17 +64,17 @@ public class VerizonSuspendDevicePostProcessor implements Processor {
 
 		}
 
-		responseheader.setApplicationName(exchange.getProperty(
+		/*responseheader.setApplicationName(exchange.getProperty(
 				IConstant.APPLICATION_NAME).toString());
 		responseheader.setRegion(exchange.getProperty(IConstant.REGION)
 				.toString());
 		responseheader.setOrganization(exchange.getProperty(
 				IConstant.ORGANIZATION).toString());
 
-		/*
+		
 		 * responseheader.setTimestamp(exchange.getProperty(
 		 * IConstant.DATE_FORMAT).toString());
-		 */
+		 
 
 		responseheader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT)
 				.toString());
@@ -83,7 +83,9 @@ public class VerizonSuspendDevicePostProcessor implements Processor {
 		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
 				.toString());
 		responseheader.setTransactionId(exchange.getProperty(
-				IConstant.GV_TRANSACTION_ID).toString());
+				IConstant.GV_TRANSACTION_ID).toString());*/
+		
+		Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
 
 		suspendDeviceResponse.setHeader(responseheader);
 		suspendDeviceResponse.setResponse(response);

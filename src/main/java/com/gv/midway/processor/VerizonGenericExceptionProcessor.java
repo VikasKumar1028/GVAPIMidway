@@ -52,10 +52,10 @@ public class VerizonGenericExceptionProcessor implements Processor {
 				+ exception.getResponseBody());
 		log.info("----.getStatusCode()----------" + exception.getStatusCode());
 
-		Header responseHeader = new Header();
+		//Header responseHeader = new Header();
 		System.out.println(exchange.getFromEndpoint().toString());
 
-		responseHeader.setApplicationName(exchange.getProperty(
+		/*responseHeader.setApplicationName(exchange.getProperty(
 				IConstant.APPLICATION_NAME).toString());
 		responseHeader.setRegion(exchange.getProperty(IConstant.REGION)
 				.toString());
@@ -70,8 +70,10 @@ public class VerizonGenericExceptionProcessor implements Processor {
 		responseHeader.setTransactionId(exchange.getProperty(
 				IConstant.GV_TRANSACTION_ID).toString());
 		responseHeader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
-				.toString());
+				.toString());*/
 
+		Header responseHeader = (Header) exchange.getProperty(IConstant.HEADER);
+		
 		Response response = new Response();
 		// TODO SAME Functionality
 		if (exception.getStatusCode() == 401

@@ -136,6 +136,19 @@ public class DeviceDaoImpl implements IDeviceDao {
 		deviceInformationResponse.setHeader(deviceInformationRequest
 				.getHeader());
 		Response response = new Response();
+		if(netSuiteId==null||netSuiteId.trim().equals("")){
+			
+			
+			response.setResponseCode(IResponse.INVALID_PAYLOAD);
+			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
+			
+			deviceInformationResponse.setResponse(response);
+			
+			return deviceInformationResponse;
+		}
+		else
+		{
 		try {
 
 			Query searchDeviceQuery = new Query(Criteria.where("netSuiteId")
@@ -188,6 +201,8 @@ public class DeviceDaoImpl implements IDeviceDao {
 					.setDataArea(deviceInformationResponseDataArea);
 
 			return deviceInformationResponse;
+		}
+		
 		}
 
 	}

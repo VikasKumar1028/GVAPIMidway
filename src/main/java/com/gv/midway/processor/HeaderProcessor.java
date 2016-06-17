@@ -3,11 +3,9 @@ package com.gv.midway.processor;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
-
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.exception.InvalidParameterException;
 import com.gv.midway.exception.MissingParameterException;
-import com.gv.midway.pojo.BaseRequest;
 import com.gv.midway.utility.CommonUtil;
 
 public class HeaderProcessor implements Processor {
@@ -28,13 +26,13 @@ public class HeaderProcessor implements Processor {
 		
 		Object bs_carrier=exchange.getProperty(IConstant.BSCARRIER);
 		Object sourceName=exchange.getProperty(IConstant.SOURCE_NAME);
-		Object applicationName=exchange.getProperty(IConstant.APPLICATION_NAME);
-		Object region=exchange.getProperty(IConstant.REGION);
+		/*Object applicationName=exchange.getProperty(IConstant.APPLICATION_NAME);
+		Object region=exchange.getProperty(IConstant.REGION);*/
 		Object dateFormat=exchange.getProperty(IConstant.DATE_FORMAT);
 		Object organization=exchange.getProperty(IConstant.ORGANIZATION);
 		Object gv_transactionId=exchange.getProperty(IConstant.GV_TRANSACTION_ID);
 		
-		if(bs_carrier==null||sourceName==null||applicationName==null||region==null||dateFormat==null||
+		if(bs_carrier==null||sourceName==null||dateFormat==null||
 				organization==null||gv_transactionId==null
 				)
 		{

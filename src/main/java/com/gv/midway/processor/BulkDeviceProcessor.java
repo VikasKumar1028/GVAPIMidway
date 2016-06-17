@@ -31,7 +31,7 @@ public class BulkDeviceProcessor implements Processor {
 		
 		
 		
-		Header responseheader = new Header();
+		//Header responseheader = new Header();
 
 		Response response = new Response();
 		
@@ -41,7 +41,7 @@ public class BulkDeviceProcessor implements Processor {
 		response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
 		response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_CARRIER);
 
-		responseheader.setApplicationName(exchange.getProperty(IConstant.APPLICATION_NAME).toString());
+		/*responseheader.setApplicationName(exchange.getProperty(IConstant.APPLICATION_NAME).toString());
 		responseheader.setRegion(exchange.getProperty(IConstant.REGION).toString());
 		
 		responseheader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT).toString());
@@ -49,7 +49,9 @@ public class BulkDeviceProcessor implements Processor {
 		responseheader.setSourceName(exchange.getProperty(IConstant.SOURCE_NAME).toString());
 	
 		responseheader.setTransactionId(exchange.getProperty(IConstant.GV_TRANSACTION_ID).toString());
-		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER).toString());
+		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER).toString());*/
+		
+		Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
 		
 		BatchDeviceResponse batchDeviceResponse=new BatchDeviceResponse();
 		

@@ -36,7 +36,7 @@ public class KoreChangeDeviceServicePlansPostProcessor implements Processor {
 
 		ChangeDeviceServicePlansResponseDataArea changeDeviceServicePlansResponseDataArea = new ChangeDeviceServicePlansResponseDataArea();
 
-		Header responseheader = new Header();
+		//Header responseheader = new Header();
 
 		Response response = new Response();
 
@@ -44,7 +44,7 @@ public class KoreChangeDeviceServicePlansPostProcessor implements Processor {
 		response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
 		response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
 
-		responseheader.setApplicationName(exchange.getProperty(IConstant.APPLICATION_NAME).toString());
+		/*responseheader.setApplicationName(exchange.getProperty(IConstant.APPLICATION_NAME).toString());
 		responseheader.setRegion(exchange.getProperty(IConstant.REGION).toString());
 
 		responseheader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT).toString());
@@ -52,7 +52,9 @@ public class KoreChangeDeviceServicePlansPostProcessor implements Processor {
 
 		responseheader.setSourceName(exchange.getProperty(IConstant.SOURCE_NAME).toString());
 		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER).toString());
-		responseheader.setTransactionId(exchange.getProperty(IConstant.GV_TRANSACTION_ID).toString());
+		responseheader.setTransactionId(exchange.getProperty(IConstant.GV_TRANSACTION_ID).toString());*/
+		
+		Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
 
 		changeDeviceServicePlansResponse.setHeader(responseheader);
 		changeDeviceServicePlansResponse.setResponse(response);

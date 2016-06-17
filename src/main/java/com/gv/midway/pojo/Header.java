@@ -1,7 +1,9 @@
 package com.gv.midway.pojo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 public class Header {
 	@ApiModelProperty(value = "Region for the request.")
 	private String region;

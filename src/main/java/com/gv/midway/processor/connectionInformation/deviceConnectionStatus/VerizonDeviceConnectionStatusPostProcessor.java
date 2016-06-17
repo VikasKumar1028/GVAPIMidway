@@ -35,7 +35,7 @@ public class VerizonDeviceConnectionStatusPostProcessor implements Processor {
 
 		ConnectionStatusResponse businessResponse = new ConnectionStatusResponse();
 		ConnectionStatusResponseDataArea connectionStatusResponseDataArea = new ConnectionStatusResponseDataArea();
-		Header responseheader = new Header();
+		//Header responseheader = new Header();
 		Response response = new Response();
 
 		log.info("exchange.getIn().getBody().toString()***************************************"
@@ -94,17 +94,17 @@ public class VerizonDeviceConnectionStatusPostProcessor implements Processor {
 
 		}
 
-		responseheader.setApplicationName(exchange.getProperty(
+		/*responseheader.setApplicationName(exchange.getProperty(
 				IConstant.APPLICATION_NAME).toString());
 		responseheader.setRegion(exchange.getProperty(IConstant.REGION)
 				.toString());
 		responseheader.setOrganization(exchange.getProperty(
 				IConstant.ORGANIZATION).toString());
 
-		/*
+		
 		 * responseheader.setTimestamp(exchange.getProperty(
 		 * IConstant.DATE_FORMAT).toString());
-		 */
+		 
 
 		responseheader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT)
 				.toString());
@@ -113,7 +113,9 @@ public class VerizonDeviceConnectionStatusPostProcessor implements Processor {
 		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
 				.toString());
 		responseheader.setTransactionId(exchange.getProperty(
-				IConstant.GV_TRANSACTION_ID).toString());
+				IConstant.GV_TRANSACTION_ID).toString());*/
+		
+		Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
 
 		businessResponse.setHeader(responseheader);
 		businessResponse.setResponse(response);

@@ -66,7 +66,7 @@ public class KoreDeviceInformationPostProcessor implements Processor {
 
 		DeviceInformationResponseDataArea deviceInformationResponseDataArea = new DeviceInformationResponseDataArea();
 
-		Header responseheader = new Header();
+		//Header responseheader = new Header();
 
 		Response response = new Response();
 
@@ -75,7 +75,7 @@ public class KoreDeviceInformationPostProcessor implements Processor {
 		response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
 		response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_CARRIER);
 
-		responseheader.setApplicationName(exchange.getProperty(
+		/*responseheader.setApplicationName(exchange.getProperty(
 				IConstant.APPLICATION_NAME).toString());
 		responseheader.setRegion(exchange.getProperty(IConstant.REGION)
 				.toString());
@@ -90,7 +90,8 @@ public class KoreDeviceInformationPostProcessor implements Processor {
 		responseheader.setTransactionId(exchange.getProperty(
 				IConstant.GV_TRANSACTION_ID).toString());
 		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
-				.toString());
+				.toString());*/
+		Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
 
 		deviceInformationResponse.setHeader(responseheader);
 		deviceInformationResponse.setResponse(response);

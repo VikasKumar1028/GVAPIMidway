@@ -38,11 +38,11 @@ public class VerizonDeactivateDevicePostProcessor implements Processor {
 		DeactivateDeviceResponse deactivateDeviceResponse = new DeactivateDeviceResponse();
 		DeactivateDeviceResponseDataArea deactivateDeviceResponseDataArea = new DeactivateDeviceResponseDataArea();
 
-		Header responseheader = new Header();
+		//Header responseheader = new Header();
 
 		Response response = new Response();
 
-		responseheader.setApplicationName(exchange.getProperty(
+		/*responseheader.setApplicationName(exchange.getProperty(
 				IConstant.APPLICATION_NAME).toString());
 		responseheader.setRegion(exchange.getProperty(IConstant.REGION)
 				.toString());
@@ -57,7 +57,7 @@ public class VerizonDeactivateDevicePostProcessor implements Processor {
 		responseheader.setSourceName(exchange
 				.getProperty(IConstant.SOURCE_NAME).toString());
 		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
-				.toString());
+				.toString());*/
 
 		
 		if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
@@ -75,6 +75,7 @@ public class VerizonDeactivateDevicePostProcessor implements Processor {
 					.toString());
 		}
 
+		Header responseheader=(Header) exchange.getProperty(IConstant.HEADER);
 		deactivateDeviceResponse.setHeader(responseheader);
 		deactivateDeviceResponse.setResponse(response);
 		deactivateDeviceResponseDataArea.setOrderNumber(exchange.getProperty(
