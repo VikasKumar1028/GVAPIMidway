@@ -407,6 +407,12 @@ public class CamelRoute extends RouteBuilder {
 		//Transaction Failure Job
 		startTransactionFailureJob();
 		
+		// Get Device Data Usage from Midway DB
+		getDeviceUsageInfoDB();
+
+		// Get Connection History from Midway DB
+		getDeviceConnectionHistoryInfoDB();
+
 		//Start Job
 		startJob();
 		
@@ -1426,4 +1432,13 @@ public class CamelRoute extends RouteBuilder {
 		from("direct:jobResponse").log("*********Inside the Job response").process(new JobInitializedPostProcessor());
 	}
 
+	public void getDeviceUsageInfoDB() {
+		from("direct:getDeviceUsageInfoDB").log(
+				"*********Inside the getDeviceUsageInfoDB");
+	}
+
+	public void getDeviceConnectionHistoryInfoDB() {
+		from("direct:getDeviceConnectionHistoryInfoDB").log(
+				"*********Inside the getDeviceConnectionHistoryInfoDB");
+	}
 }

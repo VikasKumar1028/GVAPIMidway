@@ -10,8 +10,8 @@ import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponseDataArea;
-import com.gv.midway.pojo.connectionInformation.JobinitializedResponse;
-import com.gv.midway.pojo.connectionInformation.JobinitializedResponseDataArea;
+import com.gv.midway.pojo.job.JobinitializedResponse;
+import com.gv.midway.pojo.job.JobinitializedResponseDataArea;
 
 public class JobInitializedPostProcessor implements Processor {
 

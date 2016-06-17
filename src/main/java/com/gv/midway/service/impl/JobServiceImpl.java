@@ -17,7 +17,7 @@ import com.gv.midway.constant.JobName;
 import com.gv.midway.constant.JobType;
 import com.gv.midway.dao.IJobDao;
 import com.gv.midway.dao.impl.JobDaoImpl;
-import com.gv.midway.job.JobDetail;
+import com.gv.midway.pojo.job.JobDetail;
 import com.gv.midway.service.IJobService;
 
 @Service

@@ -1,4 +1,4 @@
-package com.gv.midway.job;
+package com.gv.midway.pojo.job;
 
 
 import com.gv.midway.constant.CarrierType;

@@ -18,13 +18,20 @@ import com.gv.midway.constant.IResponse;
 import com.gv.midway.dao.IDeviceDao;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
+import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationMidwayRequest;
+import com.gv.midway.pojo.connectionInformation.verizon.response.ConnectionInformationMidwayResponse;
+import com.gv.midway.pojo.connectionInformation.verizon.response.ConnectionInformationResponseMidwayDataArea;
 import com.gv.midway.pojo.device.request.SingleDevice;
 import com.gv.midway.pojo.device.response.BatchDeviceId;
 import com.gv.midway.pojo.device.response.UpdateDeviceResponse;
+import com.gv.midway.pojo.deviceHistory.DeviceUsage;
 import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponseDataArea;
+import com.gv.midway.pojo.usageInformation.request.UsageInformationMidwayRequest;
+import com.gv.midway.pojo.usageInformation.response.UsageInformationMidwayResponse;
+import com.gv.midway.pojo.usageInformation.response.UsageInformationResponseMidwayDataArea;
 
 @Service
 public class DeviceDaoImpl implements IDeviceDao {
@@ -364,4 +371,156 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 	}
 
+	@Override
+	public UsageInformationMidwayResponse getDeviceUsageInfoDB(
+			UsageInformationMidwayRequest usageInformationMidwayRequest) {
+
+		String netSuiteId = usageInformationMidwayRequest
+				.getUsageInformationRequestMidwayDataArea().getNetSuiteId();
+		log.info("device dao netsuite id is..." + netSuiteId);
+
+		UsageInformationMidwayResponse usageInformationMidwayResponse = new UsageInformationMidwayResponse();
+
+		usageInformationMidwayResponse.setHeader(usageInformationMidwayRequest
+				.getHeader());
+		Response response = new Response();
+		if (netSuiteId == null || netSuiteId.trim().equals("")) {
+
+			response.setResponseCode(IResponse.INVALID_PAYLOAD);
+			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
+
+			usageInformationMidwayResponse.setResponse(response);
+
+			return usageInformationMidwayResponse;
+		} else {
+			try {
+
+				Query searchDeviceQuery = new Query(Criteria
+						.where("netSuiteId").is(netSuiteId));
+
+				DeviceUsage deviceUsage = (DeviceUsage) mongoTemplate.findOne(
+						searchDeviceQuery, DeviceUsage.class);
+
+				if (deviceUsage == null)
+
+				{
+
+					response.setResponseCode(IResponse.NO_DATA_FOUND_CODE);
+					response.setResponseDescription(IResponse.ERROR_DESCRIPTION_NODATA_DEVCIEINFO_MIDWAYDB);
+					response.setResponseStatus(IResponse.ERROR_MESSAGE);
+
+				}
+
+				else {
+
+					response.setResponseCode(IResponse.SUCCESS_CODE);
+					response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_MIDWAYDB);
+					response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+
+				}
+
+				usageInformationMidwayResponse.setResponse(response);
+
+				UsageInformationResponseMidwayDataArea usageInformationResponseMidwayDataArea = new UsageInformationResponseMidwayDataArea();
+
+				usageInformationMidwayResponse
+						.setDataArea(usageInformationResponseMidwayDataArea);
+
+				return usageInformationMidwayResponse;
+			} catch (Exception e) {
+
+				response.setResponseCode(IResponse.DB_ERROR_CODE);
+				response.setResponseDescription(IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB);
+				response.setResponseStatus(IResponse.ERROR_MESSAGE);
+
+				usageInformationMidwayResponse.setResponse(response);
+
+				UsageInformationResponseMidwayDataArea usageInformationResponseMidwayDataArea = new UsageInformationResponseMidwayDataArea();
+
+				usageInformationMidwayResponse
+						.setDataArea(usageInformationResponseMidwayDataArea);
+
+				return usageInformationMidwayResponse;
+			}
+
+		}
+
+	}
+
+	@Override
+	public ConnectionInformationMidwayResponse getDeviceConnectionHistoryInfoDB(
+			ConnectionInformationMidwayRequest connectionInformationMidwayRequest) {
+		// TODO Auto-generated method stub
+		String netSuiteId = connectionInformationMidwayRequest.getDataArea()
+				.getNetSuiteId();
+
+		log.info("device dao netsuite id is..." + netSuiteId);
+
+		ConnectionInformationMidwayResponse connectionInformationMidwayResponse = new ConnectionInformationMidwayResponse();
+
+		connectionInformationMidwayResponse
+				.setHeader(connectionInformationMidwayRequest.getHeader());
+		Response response = new Response();
+		if (netSuiteId == null || netSuiteId.trim().equals("")) {
+
+			response.setResponseCode(IResponse.INVALID_PAYLOAD);
+			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
+
+			connectionInformationMidwayResponse.setResponse(response);
+
+			return connectionInformationMidwayResponse;
+		} else {
+			try {
+
+				Query searchDeviceQuery = new Query(Criteria
+						.where("netSuiteId").is(netSuiteId));
+
+				DeviceUsage deviceUsage = (DeviceUsage) mongoTemplate.findOne(
+						searchDeviceQuery, DeviceUsage.class);
+
+				if (deviceUsage == null)
+
+				{
+
+					response.setResponseCode(IResponse.NO_DATA_FOUND_CODE);
+					response.setResponseDescription(IResponse.ERROR_DESCRIPTION_NODATA_DEVCIEINFO_MIDWAYDB);
+					response.setResponseStatus(IResponse.ERROR_MESSAGE);
+
+				}
+
+				else {
+
+					response.setResponseCode(IResponse.SUCCESS_CODE);
+					response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_MIDWAYDB);
+					response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+
+				}
+
+				connectionInformationMidwayResponse.setResponse(response);
+
+				ConnectionInformationResponseMidwayDataArea connectionInformationResponseMidwayDataArea = new ConnectionInformationResponseMidwayDataArea();
+
+				connectionInformationMidwayResponse
+						.setDataArea(connectionInformationResponseMidwayDataArea);
+
+				return connectionInformationMidwayResponse;
+			} catch (Exception e) {
+
+				response.setResponseCode(IResponse.DB_ERROR_CODE);
+				response.setResponseDescription(IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB);
+				response.setResponseStatus(IResponse.ERROR_MESSAGE);
+
+				connectionInformationMidwayResponse.setResponse(response);
+
+				ConnectionInformationResponseMidwayDataArea connectionInformationResponseMidwayDataArea = new ConnectionInformationResponseMidwayDataArea();
+
+				return connectionInformationMidwayResponse;
+			}
+
+		
+
+		}
+	}
 }

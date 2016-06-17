@@ -1,4 +1,4 @@
-package com.gv.midway.job;
+package com.gv.midway.pojo.job;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 

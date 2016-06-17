@@ -1,4 +1,4 @@
-package com.gv.midway.pojo.connectionInformation;
+package com.gv.midway.pojo.job;
 
 import com.wordnik.swagger.annotations.ApiModelProperty;
 

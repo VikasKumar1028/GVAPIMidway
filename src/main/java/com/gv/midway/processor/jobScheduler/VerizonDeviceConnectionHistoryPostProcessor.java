@@ -8,12 +8,12 @@ import org.apache.camel.Processor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
-import com.gv.midway.job.JobDetail;
 import com.gv.midway.pojo.connectionInformation.verizon.response.ConnectionEvent;
 import com.gv.midway.pojo.connectionInformation.verizon.response.ConnectionHistory;
 import com.gv.midway.pojo.connectionInformation.verizon.response.ConnectionInformationResponse;
 import com.gv.midway.pojo.deviceHistory.DeviceConnection;
 import com.gv.midway.pojo.deviceHistory.DeviceEvent;
+import com.gv.midway.pojo.job.JobDetail;
 import com.gv.midway.pojo.verizon.DeviceId;
 import com.gv.midway.utility.CommonUtil;
 

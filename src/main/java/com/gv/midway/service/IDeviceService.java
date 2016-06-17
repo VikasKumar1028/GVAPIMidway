@@ -4,9 +4,11 @@ import java.util.ArrayList;
 
 import org.apache.camel.Exchange;
 
+import com.gv.midway.pojo.connectionInformation.verizon.response.ConnectionInformationMidwayResponse;
 import com.gv.midway.pojo.device.response.UpdateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
+import com.gv.midway.pojo.usageInformation.response.UsageInformationMidwayResponse;
 
 public interface IDeviceService {
 
@@ -24,4 +26,7 @@ public interface IDeviceService {
 	
 	public ArrayList<DeviceInformation> getAllDevices();
 
+	public UsageInformationMidwayResponse getDeviceUsageInfoDB(Exchange exchange);
+	
+	public ConnectionInformationMidwayResponse getDeviceConnectionHistoryInfoDB(Exchange exchange);
 }

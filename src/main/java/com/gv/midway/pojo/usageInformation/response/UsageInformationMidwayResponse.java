@@ -1,18 +1,17 @@
-package com.gv.midway.pojo.connectionInformation;
+package com.gv.midway.pojo.usageInformation.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gv.midway.pojo.BaseResponse;
-import com.wordnik.swagger.annotations.ApiModelProperty;
 
-public class JobinitializedResponse extends BaseResponse {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class UsageInformationMidwayResponse extends BaseResponse {
+	private UsageInformationResponseMidwayDataArea dataArea;
 
-	@ApiModelProperty(value = "Data area for Job initialized status response")
-	private JobinitializedResponseDataArea dataArea;
-
-	public JobinitializedResponseDataArea getDataArea() {
+	public UsageInformationResponseMidwayDataArea getDataArea() {
 		return dataArea;
 	}
 
-	public void setDataArea(JobinitializedResponseDataArea dataArea) {
+	public void setDataArea(UsageInformationResponseMidwayDataArea dataArea) {
 		this.dataArea = dataArea;
 	}
 
@@ -26,6 +25,11 @@ public class JobinitializedResponse extends BaseResponse {
 	}
 
 	@Override
+	public String toString() {
+		return "UsageInformationMidwayResponse [dataArea=" + dataArea + "]";
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -33,7 +37,7 @@ public class JobinitializedResponse extends BaseResponse {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		JobinitializedResponse other = (JobinitializedResponse) obj;
+		UsageInformationMidwayResponse other = (UsageInformationMidwayResponse) obj;
 		if (dataArea == null) {
 			if (other.dataArea != null)
 				return false;
@@ -41,10 +45,4 @@ public class JobinitializedResponse extends BaseResponse {
 			return false;
 		return true;
 	}
-
-	@Override
-	public String toString() {
-		return "JobinitializedResponse [dataArea=" + dataArea + "]";
-	}
-
 }

@@ -17,10 +17,10 @@ import org.springframework.stereotype.Service;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.JobName;
 import com.gv.midway.dao.IJobDao;
-import com.gv.midway.job.JobDetail;
 import com.gv.midway.pojo.deviceHistory.DeviceConnection;
 import com.gv.midway.pojo.deviceHistory.DeviceUsage;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
+import com.gv.midway.pojo.job.JobDetail;
 import com.gv.midway.utility.CommonUtil;
 import com.mongodb.WriteResult;
 
