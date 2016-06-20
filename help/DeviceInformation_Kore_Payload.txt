@@ -3,3 +3,7 @@
   
 ************************Carrier Response Payload
 ************************MidWay Response Payload
+ Net Suite Id220597  KORE
+
+ Net Suite Id 220578 --KORE
+ 

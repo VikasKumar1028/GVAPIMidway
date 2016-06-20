@@ -2,30 +2,27 @@
 
 {  
    "dataArea":{  
-     
      "accountName":"0442090022-00001",
       "servicePlan":"M2MPERMB",
-      "mdnZipCode":"84037",
+      "mdnZipCode":"84339",
       "devices":[  
          {  
-          "netSuiteId": "1",
+          "netSuiteId": "187135",
             "deviceIds":[  
                {  
-                  "id":"353238061040837",
-                  "kind":"IMEI"
+                  
+                  "kind":"IMEI",
+                   "id":"353238063289994"
                }
-            ]
-         },
-		
-         {  
-         "netSuiteId": "1",
-            "deviceIds":[  
-               {  
-                  "id":"89148000002034203015",
-                  "kind":"ICCID"
-               }
+                                       ,
+            {  
+               "kind":"ICCID",
+               "id":"89148000002377648495"
+            }
             ]
          }
+                        
+       
       ]
    },
    "header":{  
@@ -37,7 +34,7 @@
       "applicationName":"WEB",
       "bsCarrier":"VERIZON"
    }
-}
+   }
 *********************************************************
 
 {  

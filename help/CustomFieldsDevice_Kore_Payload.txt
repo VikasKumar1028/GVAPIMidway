@@ -35,7 +35,7 @@
       ],
       "devices":[  
          {  
-         "netSuiteId": "1",
+         "netSuiteId": "220597",
             "deviceIds":[  
                {  
                   "kind":"",
@@ -44,7 +44,7 @@
             ]
          },
          { 
-         "netSuiteId": "1", 
+         "netSuiteId": "220578", 
             "deviceIds":[  
                {  
                   "kind":"",

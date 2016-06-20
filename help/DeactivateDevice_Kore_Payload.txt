@@ -9,11 +9,12 @@
          {  
             "deviceIds":[  
                {  
-                  "id":"89014103277405947099",
-                  "kind":""
+                  "id":"89014103277405945812",
+                  "kind":"",
+                  "flagScrap": false
                }
             ],
-            "netSuiteId": "1"
+            "netSuiteId": "212974"
          }
       ]
    },

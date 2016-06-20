@@ -3,17 +3,17 @@
    "dataArea":{  
       "accountName":"0442090022-00001",
       "servicePlan":"M2MPERMB",
-      "mdnZipCode":"38523",
+      "mdnZipCode":"84037",
 	  "eAPCode": "EAP02500797",
       "devices":[  
          {  
             "deviceIds":[  
                {  
-                  "id":"89014103277405947099",
+                  "id":"89014103277405945812",
                   "kind":""
                }
             ],
-			 "netSuiteId": "1"
+			 "netSuiteId": "212974"
          }
       ]
    },

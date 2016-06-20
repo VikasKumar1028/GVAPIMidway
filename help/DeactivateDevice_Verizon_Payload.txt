@@ -1,26 +1,15 @@
  *************************MidWay Payload
- 
  {  
    "dataArea":{  
    "accountName":"0442090022-00001",
-     
+     "reasonCode":"FF",
       "devices":[  
          {  
-         "netSuiteId": "1",
+         "netSuiteId": "187135",
             "deviceIds":[  
                {  
-                  "id":"353238063362759",
+                  "id":"353238063289994",
                   "kind":"IMEI",
-				  "flagScrap":"false"
-               }
-            ]
-         },
-         {  
-         "netSuiteId": "1",
-            "deviceIds":[  
-               {  
-                  "id":"89148000002377519373",
-                  "kind":"ICCID",
 				  "flagScrap":"false"
                }
             ]
@@ -37,6 +26,7 @@
       "bsCarrier":"VERIZON"
    }
 }
+
 
  
  
