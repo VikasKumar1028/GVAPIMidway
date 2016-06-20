@@ -19,7 +19,7 @@ import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.BaseResponse;
 import com.gv.midway.pojo.audit.Audit;
 import com.gv.midway.pojo.callback.TargetResponse;
-import com.gv.midway.pojo.connectionInformation.JobinitializedResponse;
+import com.gv.midway.pojo.job.JobinitializedResponse;
 
 public class AuditLogResponseEventNotifer extends EventNotifierSupport {
 
