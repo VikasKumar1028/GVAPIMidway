@@ -105,15 +105,21 @@ public class TransactionalServiceImpl implements ITransactionalService {
 	
 	
 	@Override
-	public void updateNetSuiteCallBack(Exchange exchange) {
+	public void updateNetSuiteCallBackResponse(Exchange exchange) {
 		// TODO Auto-generated method stub
-		transactionalDao.updateNetSuiteCallBack(exchange);
+		transactionalDao.updateNetSuiteCallBackResponse(exchange);
 	}
 	
 	@Override
 	public void updateNetSuiteCallBackError(Exchange exchange){
 		transactionalDao.updateNetSuiteCallBackError(exchange);
 	}
+	
+	@Override
+	public void updateNetSuiteCallBackRequest(Exchange exchange){
+		transactionalDao.updateNetSuiteCallBackRequest(exchange);
+	}
+	
 	
 	@Override
 	public void populateKoreCustomChangeResponse(Exchange exchange){

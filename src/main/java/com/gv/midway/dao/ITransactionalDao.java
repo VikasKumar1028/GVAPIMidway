@@ -21,8 +21,9 @@ public interface ITransactionalDao {
 	public void populateKoreCheckStatusResponse(Exchange exchange);
 	public void populateKoreCheckStatusConnectionResponse(Exchange exchange);
 	public void populateKoreCheckStatusErrorResponse(Exchange exchange);
-	public void updateNetSuiteCallBack(Exchange exchange);
+	public void updateNetSuiteCallBackResponse(Exchange exchange);
 	public void updateNetSuiteCallBackError(Exchange exchange);
+	public void updateNetSuiteCallBackRequest(Exchange exchange);
 	public void populateKoreCustomChangeResponse(Exchange exchange);
 	
 	

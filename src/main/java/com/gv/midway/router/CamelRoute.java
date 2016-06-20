@@ -223,14 +223,14 @@ public class CamelRoute extends RouteBuilder {
 				.process(new CallbackPreProcessor(env))
 				.bean(iTransactionalService, "findMidwayTransactionId")
 				.doTry()
-				.process(new CallbackPostProcessor(env)).
+				.process(new CallbackPostProcessor(env)).bean(iTransactionalService, "updateNetSuiteCallBackRequest").
 				setHeader(Exchange.HTTP_QUERY). 
 				simple("script=${exchangeProperty[script]}&deploy=1").
-				to( uriRestNetsuitEndPoint ). 
+				to( uriRestNetsuitEndPoint ).
 				doCatch(Exception.class)
 				.bean(iTransactionalService, "updateNetSuiteCallBackError")
 				.doFinally()
-				.bean(iTransactionalService, "updateNetSuiteCallBack")
+				.bean(iTransactionalService, "updateNetSuiteCallBackResponse")
 				.process(new KafkaProcessor(env))
 				.log("kafka topic message"
 						+ simple("${exchangeProperty[topicName]}").getText())
@@ -312,14 +312,14 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iTransactionalService,
 						"populateKoreCheckStatusErrorResponse")
 				.doTry()
-				.process(new KoreCheckStatusErrorProcessor(env)).
+				.process(new KoreCheckStatusErrorProcessor(env)).bean(iTransactionalService, "updateNetSuiteCallBackRequest").
 				setHeader(Exchange.HTTP_QUERY). 
 				simple("script=${exchangeProperty[script]}&deploy=1")
 				.to( uriRestNetsuitEndPoint).
 				doCatch(Exception.class)
 				.bean(iTransactionalService, "updateNetSuiteCallBackError")
 				.doFinally()
-				.bean(iTransactionalService, "updateNetSuiteCallBack")
+				.bean(iTransactionalService, "updateNetSuiteCallBackResponse")
 				.process(new KafkaProcessor(env))
 				.to("kafka:" + env.getProperty("kafka.endpoint")
 						+ ",?topic=midway-app-errors").end();
@@ -327,14 +327,14 @@ public class CamelRoute extends RouteBuilder {
 		from("direct:koreCustomChangeSubProcess")
 				.bean(iTransactionalService, "populateKoreCustomChangeResponse")
 				.doTry()
-				.process(new KoreCheckStatusPostProcessor(env)).
+				.process(new KoreCheckStatusPostProcessor(env)).bean(iTransactionalService, "updateNetSuiteCallBackRequest").
 				setHeader(Exchange.HTTP_QUERY). 
 				simple("script=${exchangeProperty[script]}&deploy=1")
 				.to(uriRestNetsuitEndPoint).
 				doCatch(Exception.class)
 				.bean(iTransactionalService, "updateNetSuiteCallBackError")
 				.doFinally()
-				.bean(iTransactionalService, "updateNetSuiteCallBack")
+				.bean(iTransactionalService, "updateNetSuiteCallBackResponse")
 				.process(new KafkaProcessor(env))
 				.to("kafka:" + env.getProperty("kafka.endpoint")
 						+ ",?topic=midway-alerts").end();
@@ -342,14 +342,14 @@ public class CamelRoute extends RouteBuilder {
 		from("direct:koreCheckStatusSubProcess")
 				.bean(iTransactionalService, "populateKoreCheckStatusResponse")
 				.doTry()
-				.process(new KoreCheckStatusPostProcessor(env)).
+				.process(new KoreCheckStatusPostProcessor(env)).bean(iTransactionalService, "updateNetSuiteCallBackRequest").
 				setHeader(Exchange.HTTP_QUERY). 
 				simple("script=${exchangeProperty[script]}&deploy=1").
 				to( uriRestNetsuitEndPoint).
 				doCatch(Exception.class)
 				.bean(iTransactionalService, "updateNetSuiteCallBackError")
 				.doFinally()
-				.bean(iTransactionalService, "updateNetSuiteCallBack")
+				.bean(iTransactionalService, "updateNetSuiteCallBackResponse")
 				.process(new KafkaProcessor(env))
 				.to("kafka:" + env.getProperty("kafka.endpoint")
 						+ ",?topic=midway-alerts").end();

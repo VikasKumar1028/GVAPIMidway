@@ -1,12 +1,10 @@
 package com.gv.midway.dao.impl;
 
-import java.net.ConnectException;
-import java.net.UnknownHostException;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.component.cxf.CxfOperationException;
 import org.apache.log4j.Logger;
@@ -16,13 +14,13 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
-
 import com.esotericsoftware.kryo.Kryo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IResponse;
 import com.gv.midway.constant.ITransaction;
+import com.gv.midway.constant.NetSuiteRequestType;
 import com.gv.midway.constant.RequestType;
 import com.gv.midway.dao.ITransactionalDao;
 import com.gv.midway.pojo.BaseRequest;
@@ -36,7 +34,7 @@ import com.gv.midway.pojo.activateDevice.request.ActivateDevices;
 import com.gv.midway.pojo.callback.Netsuite.KeyValues;
 import com.gv.midway.pojo.callback.Netsuite.KafkaNetSuiteCallBackError;
 import com.gv.midway.pojo.callback.Netsuite.KafkaNetSuiteCallBackEvent;
-import com.gv.midway.pojo.callback.Netsuite.NetSuiteCallBackProvisioningResponse;
+import com.gv.midway.pojo.callback.Netsuite.NetSuiteCallBackProvisioningRequest;
 import com.gv.midway.pojo.callback.request.CallBackVerizonRequest;
 import com.gv.midway.pojo.changeDeviceServicePlans.request.ChangeDeviceServicePlansRequest;
 import com.gv.midway.pojo.changeDeviceServicePlans.request.ChangeDeviceServicePlansRequestDataArea;
@@ -57,7 +55,6 @@ import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequest;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequestDataArea;
 import com.gv.midway.pojo.transaction.Transaction;
 import com.gv.midway.pojo.verizon.DeviceId;
-import com.gv.midway.pojo.verizon.Devices;
 import com.gv.midway.pojo.verizon.VerizonErrorResponse;
 import com.gv.midway.pojo.verizon.VerizonProvisoningResponse;
 import com.gv.midway.utility.CommonUtil;
@@ -687,12 +684,12 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_ID,
 				midWayTransactionID);
 		
-		NetSuiteCallBackProvisioningResponse netSuiteCallBackProvisioningResponse=(NetSuiteCallBackProvisioningResponse)exchange.getIn().getBody();
+		NetSuiteCallBackProvisioningRequest netSuiteCallBackProvisioningRequest=(NetSuiteCallBackProvisioningRequest)exchange.getIn().getBody();
 		
-		netSuiteCallBackProvisioningResponse.setNetSuiteID(findOne.getNetSuiteId());
-		netSuiteCallBackProvisioningResponse.setCarrierOrderNumber(findOne.getMidwayTransactionId());
+		netSuiteCallBackProvisioningRequest.setNetSuiteID(findOne.getNetSuiteId());
+		netSuiteCallBackProvisioningRequest.setCarrierOrderNumber(findOne.getMidwayTransactionId());
 		
-		netSuiteCallBackProvisioningResponse.setRequestType(requestType);
+		//netSuiteCallBackProvisioningRequest.setRequestType(requestType);
 		
 		Object kafkaObject=exchange.getProperty(IConstant.KAFKA_OBJECT);
 		
@@ -707,6 +704,59 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			netSuiteCallBackError.setBody(devicePayload);
 			netSuiteCallBackError.setKeyValues(keyValuesArr);
 			exchange.setProperty(IConstant.KAFKA_OBJECT, netSuiteCallBackError);
+			
+			  switch (requestType) {
+				case ACTIVATION:
+
+					netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.ACTIVATION);
+					
+					break;
+
+				case DEACTIVATION:
+
+					netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.DEACTIVATION);
+					
+
+					break;
+
+				case REACTIVATION:
+
+					netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.REACTIVATION);
+					
+
+					break;
+
+				case RESTORE:
+
+					netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.RESTORATION);
+					
+
+					break;
+
+				case SUSPEND:
+
+					netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.SUSPENSION);
+					
+
+					break;
+
+				case CHANGESERVICEPLAN:
+
+					//To do
+					
+
+					break;
+
+				case CHANGECUSTOMFIELDS:
+
+					//To do
+					
+
+					break;
+
+				default:
+					break;
+				}
 		}
 		
 		else{
@@ -723,42 +773,49 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		    switch (requestType) {
 			case ACTIVATION:
 
-				netSuiteCallBackProvisioningResponse.setResponse("Device successfully activated.");
+				netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.ACTIVATION);
+				netSuiteCallBackProvisioningRequest.setResponse("Device successfully activated.");
 				break;
 
 			case DEACTIVATION:
 
-				netSuiteCallBackProvisioningResponse.setResponse("Device successfully DeActivated.");
+				netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.DEACTIVATION);
+				netSuiteCallBackProvisioningRequest.setResponse("Device successfully DeActivated.");
 
 				break;
 
 			case REACTIVATION:
 
-				netSuiteCallBackProvisioningResponse.setResponse("Device successfully ReActivated.");
+				netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.REACTIVATION);
+				netSuiteCallBackProvisioningRequest.setResponse("Device successfully ReActivated.");
 
 				break;
 
 			case RESTORE:
 
-				netSuiteCallBackProvisioningResponse.setResponse("Device successfully ReStored.");
+				netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.RESTORATION);
+				netSuiteCallBackProvisioningRequest.setResponse("Device successfully ReStored.");
 
 				break;
 
 			case SUSPEND:
 
-				netSuiteCallBackProvisioningResponse.setResponse("Device successfully Suspended.");
+				netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.SUSPENSION);
+				netSuiteCallBackProvisioningRequest.setResponse("Device successfully Suspended.");
 
 				break;
 
 			case CHANGESERVICEPLAN:
 
-				netSuiteCallBackProvisioningResponse.setResponse("Device Service Plan Changed successfully.");
+				//To do
+				netSuiteCallBackProvisioningRequest.setResponse("Device Service Plan Changed successfully.");
 
 				break;
 
 			case CHANGECUSTOMFIELDS:
 
-				netSuiteCallBackProvisioningResponse.setResponse("Device Custom Fields Changed successfully.");
+				//To do
+				netSuiteCallBackProvisioningRequest.setResponse("Device Custom Fields Changed successfully.");
 
 				break;
 
@@ -768,7 +825,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		}
 		
 		
-		exchange.getIn().setBody(netSuiteCallBackProvisioningResponse);
+		exchange.getIn().setBody(netSuiteCallBackProvisioningRequest);
 	}
 
 	public void populateReactivateDBPayload(Exchange exchange) {
@@ -1232,8 +1289,25 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 	}
 
 	@Override
-	public void updateNetSuiteCallBack(Exchange exchange){
+	public void updateNetSuiteCallBackResponse(Exchange exchange)
+	{
 		log.info("is netsuite callback error......."+exchange.getProperty("isNetSuiteCallBackError"));
+		
+		Map map = exchange.getIn().getBody(Map.class);
+		
+		ObjectMapper mapper=new ObjectMapper();
+		
+		String jsonstring=null;
+		
+		try {
+			jsonstring=mapper.writeValueAsString(map);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		log.info("is netsuite callback response......."+exchange.getIn().getBody().toString()+"   "+jsonstring);
+		
 		if(exchange.getProperty("isNetSuiteCallBackError")==null)
 		{
 		Query searchQuery = new Query(Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)).andOperator(Criteria.where(ITransaction.DEVICE_NUMBER).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));	
@@ -1242,6 +1316,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		Update update = new Update();
 
 		update.set(ITransaction.CALL_BACK_DELIVERED ,true);
+		update.set(ITransaction.NETSUITE_RESPONSE, jsonstring);
 		update.set(ITransaction.LAST_TIME_STAMP_UPDATED, CommonUtil.getCurrentTimeStamp());
 		mongoTemplate.updateFirst(searchQuery, update, Transaction.class);
 		
@@ -1293,6 +1368,22 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 	
 	}
 
+	@Override
+	public void updateNetSuiteCallBackRequest(Exchange exchange){
+		
+		log.info("net suite call back request.............");
 	
+		Query searchQuery = new Query(Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)).andOperator(Criteria.where(ITransaction.DEVICE_NUMBER).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
+		
+		Update update = new Update();
+		
+		update.set(ITransaction.NETSUITE_REQUEST ,exchange.getIn().getBody());
+		
+		mongoTemplate.updateFirst(searchQuery, update, Transaction.class);
+		
+		
+	
+	}
+
 
 }

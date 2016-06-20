@@ -1,12 +1,11 @@
 package com.gv.midway.pojo.callback.Netsuite;
 
 import java.util.Arrays;
-
-import com.gv.midway.constant.RequestType;
+import com.gv.midway.constant.NetSuiteRequestType;
 import com.gv.midway.pojo.verizon.DeviceId;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
-public class NetSuiteCallBackProvisioningResponse {
+public class NetSuiteCallBackProvisioningRequest {
 	
 	@ApiModelProperty(value = "Having type and value of device identifier.")
 	private DeviceId[] deviceIds;
@@ -16,7 +15,7 @@ public class NetSuiteCallBackProvisioningResponse {
 	private String carrierOrderNumber;
 	
 	@ApiModelProperty(value = "Type of Request - Activation, Deactivation etc.")
-	private RequestType requestType;
+	private NetSuiteRequestType requestType;
 	
 	@ApiModelProperty(value = "NetSuite Id of the device.")
 	private String netSuiteID;
@@ -43,11 +42,11 @@ public class NetSuiteCallBackProvisioningResponse {
 		this.carrierOrderNumber = carrierOrderNumber;
 	}
 
-	public RequestType getRequestType() {
+	public NetSuiteRequestType getRequestType() {
 		return requestType;
 	}
 
-	public void setRequestType(RequestType requestType) {
+	public void setRequestType(NetSuiteRequestType requestType) {
 		this.requestType = requestType;
 	}
 
@@ -102,7 +101,7 @@ public class NetSuiteCallBackProvisioningResponse {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		NetSuiteCallBackProvisioningResponse other = (NetSuiteCallBackProvisioningResponse) obj;
+		NetSuiteCallBackProvisioningRequest other = (NetSuiteCallBackProvisioningRequest) obj;
 		if (carrierOrderNumber == null) {
 			if (other.carrierOrderNumber != null)
 				return false;

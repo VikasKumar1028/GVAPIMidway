@@ -1,18 +1,16 @@
 package com.gv.midway.processor.callbacks;
 
 import org.apache.camel.Exchange;
+import org.apache.camel.ExchangePattern;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
-import com.gv.midway.constant.RequestType;
+import com.gv.midway.constant.NetSuiteRequestType;
 import com.gv.midway.pojo.callback.Netsuite.KafkaNetSuiteCallBackError;
-import com.gv.midway.pojo.callback.Netsuite.KafkaNetSuiteCallBackEvent;
-import com.gv.midway.pojo.callback.Netsuite.NetSuiteCallBackProvisioningResponse;
+import com.gv.midway.pojo.callback.Netsuite.NetSuiteCallBackProvisioningRequest;
 import com.gv.midway.utility.NetSuiteOAuthUtil;
 
 
@@ -34,7 +32,7 @@ public class CallbackPostProcessor implements Processor {
 		log.info("Inside CallbackPostProcessor process " + exchange.getIn().getBody());
 		
 		
-		NetSuiteCallBackProvisioningResponse netSuiteCallBackProvisioningResponse= (NetSuiteCallBackProvisioningResponse)exchange.getIn().getBody();
+		NetSuiteCallBackProvisioningRequest netSuiteCallBackProvisioningRequest= (NetSuiteCallBackProvisioningRequest)exchange.getIn().getBody();
 		
 		
 		Object kafkaObject=exchange.getProperty(IConstant.KAFKA_OBJECT);
@@ -54,7 +52,7 @@ public class CallbackPostProcessor implements Processor {
 			exchange.setProperty(IConstant.KAFKA_TOPIC_NAME, "midway-alerts");
 		}
 		
-		RequestType requestType=netSuiteCallBackProvisioningResponse.getRequestType();
+		NetSuiteRequestType requestType=netSuiteCallBackProvisioningRequest.getRequestType();
 		
 		Message message = exchange.getIn();
 		
@@ -77,12 +75,15 @@ public class CallbackPostProcessor implements Processor {
 	  
       String script=null;
       String oauthHeader=null;
+      
+      script="539";
+      exchange.setProperty("script", script);
 		
 		switch (requestType) 
 		{
 		case ACTIVATION:
 			
-			script="529";
+			
 			oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
 			
 			
@@ -90,22 +91,22 @@ public class CallbackPostProcessor implements Processor {
 			
          case DEACTIVATION:
 			
-        	script="531";
+        	
  			oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
         	
 			break;
 			
-         case SUSPEND:
+         case SUSPENSION:
  			
-        	 script="533";
+        	
   			 oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
         	
         	 
  			break;
  			
-         case RESTORE:
+         case RESTORATION:
  			
-        	 script="534";
+        	
   			 oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
         	
  			break;
@@ -117,7 +118,7 @@ public class CallbackPostProcessor implements Processor {
         	message.setHeader(Exchange.HTTP_PATH, "?script=532&deploy=1");
  			break;*/
  			
-         case CHANGECUSTOMFIELDS:
+       /*  case CHANGECUSTOMFIELDS:
  			// To do need to get URL
         	 
  			break;
@@ -126,14 +127,15 @@ public class CallbackPostProcessor implements Processor {
         	 
         	// To do need to get URL
  			
- 			break;
+ 			break;*/
  			
        
 		default:
 			break;
 		}
 		
-		exchange.setProperty("script", script);
+	
+		exchange.setPattern(ExchangePattern.InOut);
 		message.setHeader("Authorization", oauthHeader);
 	}
 

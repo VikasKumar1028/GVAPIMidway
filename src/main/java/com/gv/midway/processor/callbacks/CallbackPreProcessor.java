@@ -2,18 +2,14 @@ package com.gv.midway.processor.callbacks;
 
 
 import java.util.Date;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
-
 import com.gv.midway.constant.IConstant;
-import com.gv.midway.constant.IResponse;
-import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.callback.Netsuite.KafkaNetSuiteCallBackError;
 import com.gv.midway.pojo.callback.Netsuite.KafkaNetSuiteCallBackEvent;
-import com.gv.midway.pojo.callback.Netsuite.NetSuiteCallBackProvisioningResponse;
+import com.gv.midway.pojo.callback.Netsuite.NetSuiteCallBackProvisioningRequest;
 import com.gv.midway.pojo.callback.request.CallBackVerizonRequest;
 
 public class CallbackPreProcessor implements Processor {
@@ -66,15 +62,15 @@ public class CallbackPreProcessor implements Processor {
 		exchange.setProperty(IConstant.VERIZON_CALLBACK_RESPONE,
 				req);
 		
-		NetSuiteCallBackProvisioningResponse netSuiteCallBackProvisioningResponse=new NetSuiteCallBackProvisioningResponse();
-		netSuiteCallBackProvisioningResponse.setDeviceIds(req.getDeviceIds());
+		NetSuiteCallBackProvisioningRequest netSuiteCallBackProvisioningRequest=new NetSuiteCallBackProvisioningRequest();
+		netSuiteCallBackProvisioningRequest.setDeviceIds(req.getDeviceIds());
 		
 		
 		
 		if(req.getFaultResponse() != null) {
 			
-			netSuiteCallBackProvisioningResponse.setStatus("fail");
-			netSuiteCallBackProvisioningResponse.setResponse(req.getFaultResponse().getFaultstring());
+			netSuiteCallBackProvisioningRequest.setStatus("fail");
+			netSuiteCallBackProvisioningRequest.setResponse(req.getFaultResponse().getFaultstring());
 
 			KafkaNetSuiteCallBackError netSuiteCallBackError =new KafkaNetSuiteCallBackError();
 			
@@ -93,7 +89,7 @@ public class CallbackPreProcessor implements Processor {
 		
 		else {
 			
-			netSuiteCallBackProvisioningResponse.setStatus("success");
+			netSuiteCallBackProvisioningRequest.setStatus("success");
 			
 			   KafkaNetSuiteCallBackEvent netSuiteCallBackEvent =new KafkaNetSuiteCallBackEvent();
 				
@@ -110,7 +106,7 @@ public class CallbackPreProcessor implements Processor {
 
 		}
 		
-		exchange.getIn().setBody(netSuiteCallBackProvisioningResponse);
+		exchange.getIn().setBody(netSuiteCallBackProvisioningRequest);
 	}
 
 }

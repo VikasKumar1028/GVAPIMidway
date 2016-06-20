@@ -11,12 +11,13 @@ import org.springframework.core.env.Environment;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
+import com.gv.midway.constant.NetSuiteRequestType;
 import com.gv.midway.constant.RequestType;
 import com.gv.midway.pojo.BaseRequest;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.callback.Netsuite.KeyValues;
 import com.gv.midway.pojo.callback.Netsuite.KafkaNetSuiteCallBackEvent;
-import com.gv.midway.pojo.callback.Netsuite.NetSuiteCallBackProvisioningResponse;
+import com.gv.midway.pojo.callback.Netsuite.NetSuiteCallBackProvisioningRequest;
 import com.gv.midway.pojo.verizon.DeviceId;
 import com.gv.midway.pojo.verizon.Devices;
 import com.gv.midway.utility.NetSuiteOAuthUtil;
@@ -193,14 +194,14 @@ public class KoreCheckStatusPostProcessor implements Processor {
 		
 		exchange.setProperty(IConstant.KAFKA_OBJECT, netSuiteCallBackEvent);
 		
-        NetSuiteCallBackProvisioningResponse netSuiteCallBackProvisioningResponse =new NetSuiteCallBackProvisioningResponse();
+        NetSuiteCallBackProvisioningRequest netSuiteCallBackProvisioningRequest =new NetSuiteCallBackProvisioningRequest();
 		
-		netSuiteCallBackProvisioningResponse.setRequestType(requestType);
-		netSuiteCallBackProvisioningResponse.setStatus("success");
+		//netSuiteCallBackProvisioningRequest.setRequestType(requestType);
+		netSuiteCallBackProvisioningRequest.setStatus("success");
 		 
 		
-		netSuiteCallBackProvisioningResponse.setCarrierOrderNumber(midWayTransactionId);
-		netSuiteCallBackProvisioningResponse.setNetSuiteID(netSuiteID);
+		netSuiteCallBackProvisioningRequest.setCarrierOrderNumber(midWayTransactionId);
+		netSuiteCallBackProvisioningRequest.setNetSuiteID(netSuiteID);
 		
 		
 	    StringBuffer deviceIdsArr= new StringBuffer("{\"deviceIds\":");
@@ -217,7 +218,7 @@ public class KoreCheckStatusPostProcessor implements Processor {
 		
 		DeviceId[] deviceIds=devices.getDeviceIds();
 		
-		netSuiteCallBackProvisioningResponse.setDeviceIds(deviceIds);
+		netSuiteCallBackProvisioningRequest.setDeviceIds(deviceIds);
 		
 		String oauthConsumerKey = newEnv
 				.getProperty("netSuite.oauthConsumerKey");
@@ -240,19 +241,23 @@ public class KoreCheckStatusPostProcessor implements Processor {
 		
 		log.info("oauth info is....."+oauthConsumerKey+" "+oauthTokenId+" "+endPoint+" "+oauthTokenSecret+" "+oauthConsumerSecret+" "+relam);
 		
+		script="539";
+		
+		exchange.setProperty("script", script);
+		
 		switch (requestType) {
 		case ACTIVATION:
 
-			netSuiteCallBackProvisioningResponse.setResponse("Device successfully activated.");
-			script="529";
+			netSuiteCallBackProvisioningRequest.setResponse("Device successfully activated.");
+			netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.ACTIVATION);
 			oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
 			
 			break;
 
 		case DEACTIVATION:
 
-			netSuiteCallBackProvisioningResponse.setResponse("Device successfully DeActivated.");
-			script="531";
+			netSuiteCallBackProvisioningRequest.setResponse("Device successfully DeActivated.");
+			netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.DEACTIVATION);
 			oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
 			
 
@@ -260,8 +265,8 @@ public class KoreCheckStatusPostProcessor implements Processor {
 
 		case REACTIVATION:
 
-			netSuiteCallBackProvisioningResponse.setResponse("Device successfully ReActivated.");
-			script="532";
+			netSuiteCallBackProvisioningRequest.setResponse("Device successfully ReActivated.");
+			netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.REACTIVATION);
 			oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
 			
 
@@ -269,8 +274,8 @@ public class KoreCheckStatusPostProcessor implements Processor {
 
 		case RESTORE:
 
-			netSuiteCallBackProvisioningResponse.setResponse("Device successfully ReStored.");
-			script="534";
+			netSuiteCallBackProvisioningRequest.setResponse("Device successfully ReStored.");
+			netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.RESTORATION);
 			oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
 			
 
@@ -278,33 +283,33 @@ public class KoreCheckStatusPostProcessor implements Processor {
 
 		case SUSPEND:
 
-			netSuiteCallBackProvisioningResponse.setResponse("Device successfully Suspended.");
-			script="533";
+			netSuiteCallBackProvisioningRequest.setResponse("Device successfully Suspended.");
+			netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.SUSPENSION);
 			oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
 			
 
 			break;
 
-		case CHANGESERVICEPLAN:
+	/*	case CHANGESERVICEPLAN:
 
-			netSuiteCallBackProvisioningResponse.setResponse("Device Service Plan Changed successfully.");
+			netSuiteCallBackProvisioningRequest.setResponse("Device Service Plan Changed successfully.");
 
 			break;
 
 		case CHANGECUSTOMFIELDS:
 
-			netSuiteCallBackProvisioningResponse.setResponse("Device Custom Fields Changed successfully.");
+			netSuiteCallBackProvisioningRequest.setResponse("Device Custom Fields Changed successfully.");
 
-			break;
+			break;*/
 
 		default:
 			break;
 		}
 		
-		exchange.setProperty("script", script);
-		message.setHeader("Authorization", oauthHeader);
-		message.setBody(netSuiteCallBackProvisioningResponse);
 		
+		message.setHeader("Authorization", oauthHeader);
+		message.setBody(netSuiteCallBackProvisioningRequest);
+		exchange.setPattern(ExchangePattern.InOut);
 		log.info("success callback resposne for Kore..."+exchange.getIn().getBody());
 		
 

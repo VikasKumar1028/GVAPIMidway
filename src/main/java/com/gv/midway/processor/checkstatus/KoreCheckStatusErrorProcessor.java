@@ -7,18 +7,18 @@ import org.apache.camel.ExchangePattern;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.camel.component.cxf.CxfOperationException;
-import org.apache.camel.language.Constant;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
+import com.gv.midway.constant.NetSuiteRequestType;
 import com.gv.midway.constant.RequestType;
 import com.gv.midway.pojo.BaseRequest;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.callback.Netsuite.KeyValues;
 import com.gv.midway.pojo.callback.Netsuite.KafkaNetSuiteCallBackError;
-import com.gv.midway.pojo.callback.Netsuite.NetSuiteCallBackProvisioningResponse;
+import com.gv.midway.pojo.callback.Netsuite.NetSuiteCallBackProvisioningRequest;
 import com.gv.midway.pojo.kore.KoreErrorResponse;
 import com.gv.midway.pojo.verizon.DeviceId;
 import com.gv.midway.pojo.verizon.Devices;
@@ -177,13 +177,13 @@ public class KoreCheckStatusErrorProcessor implements Processor {
 		
 		exchange.setProperty(IConstant.KAFKA_OBJECT, netSuiteCallBackError);
 		
-		NetSuiteCallBackProvisioningResponse netSuiteCallBackProvisioningResponse =new NetSuiteCallBackProvisioningResponse();
+		NetSuiteCallBackProvisioningRequest netSuiteCallBackProvisioningRequest =new NetSuiteCallBackProvisioningRequest();
 		
-		netSuiteCallBackProvisioningResponse.setRequestType(requestType);
-		netSuiteCallBackProvisioningResponse.setStatus("fail");
-		netSuiteCallBackProvisioningResponse.setResponse(errorDescription);
-		netSuiteCallBackProvisioningResponse.setCarrierOrderNumber(midWayTransactionId);
-		netSuiteCallBackProvisioningResponse.setNetSuiteID(netSuiteID);
+		//netSuiteCallBackProvisioningRequest.setRequestType(requestType);
+		netSuiteCallBackProvisioningRequest.setStatus("fail");
+		netSuiteCallBackProvisioningRequest.setResponse(errorDescription);
+		netSuiteCallBackProvisioningRequest.setCarrierOrderNumber(midWayTransactionId);
+		netSuiteCallBackProvisioningRequest.setNetSuiteID(netSuiteID);
 		
 		
 	    StringBuffer deviceIdsArr= new StringBuffer("{\"deviceIds\":");
@@ -200,9 +200,9 @@ public class KoreCheckStatusErrorProcessor implements Processor {
 		
 		DeviceId[] deviceIds=devices.getDeviceIds();
 		
-		netSuiteCallBackProvisioningResponse.setDeviceIds(deviceIds);
+		netSuiteCallBackProvisioningRequest.setDeviceIds(deviceIds);
 		
-		message.setBody(netSuiteCallBackProvisioningResponse);
+		message.setBody(netSuiteCallBackProvisioningRequest);
 		
 		log.info("body set for netSuiteCallBack........."+exchange.getIn().getBody());
 		
@@ -226,12 +226,15 @@ public class KoreCheckStatusErrorProcessor implements Processor {
 		log.info("request type for NetSuite CallBack error...."+requestType);
 		
 		log.info("oauth info is....."+oauthConsumerKey+" "+oauthTokenId+" "+endPoint+" "+oauthTokenSecret+" "+oauthConsumerSecret+" "+relam);
+		
+		script="539";
+		exchange.setProperty("script", script);
 	    
 	    switch (requestType) {
 		case ACTIVATION:
 
 			
-			script="529";
+			netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.ACTIVATION);
 			oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
 			
 
@@ -240,7 +243,7 @@ public class KoreCheckStatusErrorProcessor implements Processor {
 		case DEACTIVATION:
 
 			
-			script="531";
+			netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.DEACTIVATION);
 			oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
 			
 
@@ -249,7 +252,7 @@ public class KoreCheckStatusErrorProcessor implements Processor {
 		case REACTIVATION:
 
 			
-			script="532";
+			netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.REACTIVATION);
 			oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
 			
 
@@ -258,7 +261,7 @@ public class KoreCheckStatusErrorProcessor implements Processor {
 		case RESTORE:
 
 			
-			script="534";
+			netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.RESTORATION);
 			oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
 			
 
@@ -267,13 +270,13 @@ public class KoreCheckStatusErrorProcessor implements Processor {
 		case SUSPEND:
 
 			
-			script="533";
+			netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.SUSPENSION);
 			oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
 			
 
 			break;
 
-		case CHANGESERVICEPLAN:
+		/*case CHANGESERVICEPLAN:
 
 			
 			break;
@@ -282,7 +285,7 @@ public class KoreCheckStatusErrorProcessor implements Processor {
 
 			
 
-			break;
+			break;*/
 
 		default:
 			break;
@@ -290,6 +293,7 @@ public class KoreCheckStatusErrorProcessor implements Processor {
 		
 	    message.setHeader("Authorization", oauthHeader);
 	    exchange.setProperty("script", script);
+	   exchange.setPattern(ExchangePattern.InOut);
 		log.info("error callback resposne for Kore..."+exchange.getIn().getBody());
 
 	}

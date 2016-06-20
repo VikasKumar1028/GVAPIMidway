@@ -24,15 +24,35 @@ public class Transaction {
 	private Boolean callBackReceived;
 	private String callBackFailureToNetSuiteReason;
 	private String netSuiteId;
+	private Object netSuiteRequest;
+	private String netSuiteResponse;
 
 	
-
-
-
 	public Transaction() {
 		super();
 	}
 
+	public Object getNetSuiteRequest() {
+		return netSuiteRequest;
+	}
+
+
+
+	public void setNetSuiteRequest(Object netSuiteRequest) {
+		this.netSuiteRequest = netSuiteRequest;
+	}
+
+
+
+	public String getNetSuiteResponse() {
+		return netSuiteResponse;
+	}
+
+
+
+	public void setNetSuiteResponse(String netSuiteResponse) {
+		this.netSuiteResponse = netSuiteResponse;
+	}
 
 
 	public Object getDeviceNumber() {
@@ -245,6 +265,11 @@ public class Transaction {
 		result = prime * result
 				+ ((netSuiteId == null) ? 0 : netSuiteId.hashCode());
 		result = prime * result
+				+ ((netSuiteRequest == null) ? 0 : netSuiteRequest.hashCode());
+		result = prime
+				* result
+				+ ((netSuiteResponse == null) ? 0 : netSuiteResponse.hashCode());
+		result = prime * result
 				+ ((requestType == null) ? 0 : requestType.hashCode());
 		result = prime
 				* result
@@ -341,6 +366,16 @@ public class Transaction {
 				return false;
 		} else if (!netSuiteId.equals(other.netSuiteId))
 			return false;
+		if (netSuiteRequest == null) {
+			if (other.netSuiteRequest != null)
+				return false;
+		} else if (!netSuiteRequest.equals(other.netSuiteRequest))
+			return false;
+		if (netSuiteResponse == null) {
+			if (other.netSuiteResponse != null)
+				return false;
+		} else if (!netSuiteResponse.equals(other.netSuiteResponse))
+			return false;
 		if (requestType != other.requestType)
 			return false;
 		if (timeStampReceived == null) {
@@ -390,9 +425,17 @@ public class Transaction {
 		builder.append(callBackFailureToNetSuiteReason);
 		builder.append(", netSuiteId=");
 		builder.append(netSuiteId);
+		builder.append(", netSuiteRequest=");
+		builder.append(netSuiteRequest);
+		builder.append(", netSuiteResponse=");
+		builder.append(netSuiteResponse);
 		builder.append("]");
 		return builder.toString();
 	}
+
+
+
+	
 
 	
 

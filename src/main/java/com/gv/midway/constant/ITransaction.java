@@ -19,5 +19,7 @@ public class ITransaction {
 	public static final String CALL_BACK_RECEIVED = "callBackReceived";
 	public static final String CALL_BACK_FAILURE_TO_NETSUITE_REASON = "callBackFailureToNetSuiteReason";
 	public static final String NETSUITE_ID = "netSuiteId";
+	public static final String NETSUITE_REQUEST= "netSuiteRequest";
+	public static final String NETSUITE_RESPONSE = "netSuiteResponse";
 
 }
