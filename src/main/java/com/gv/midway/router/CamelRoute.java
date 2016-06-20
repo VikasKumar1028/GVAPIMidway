@@ -752,7 +752,7 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iAuditService, "auditExternalRequestCall")
 				.to(uriRestKoreEndPoint)
 				.unmarshal()
-				.json(JsonLibrary.Jackson, DeviceInformationResponseKore.class)
+				.json(JsonLibrary.Jackson, KoreProvisoningResponse.class)
 				.bean(iAuditService, "auditExternalResponseCall")
 				.bean(iTransactionalService,
 						"populateKoreTransactionalResponse")
@@ -1434,11 +1434,17 @@ public class CamelRoute extends RouteBuilder {
 
 	public void getDeviceUsageInfoDB() {
 		from("direct:getDeviceUsageInfoDB").log(
-				"*********Inside the getDeviceUsageInfoDB");
+				"*********Inside the getDeviceUsageInfoDB").process(new HeaderProcessor())
+				.bean(iDeviceService, "getDeviceUsageInfoDB")
+				.end();
+;
 	}
 
 	public void getDeviceConnectionHistoryInfoDB() {
 		from("direct:getDeviceConnectionHistoryInfoDB").log(
-				"*********Inside the getDeviceConnectionHistoryInfoDB");
+				"*********Inside the getDeviceConnectionHistoryInfoDB").process(new HeaderProcessor())
+				.bean(iDeviceService, "getDeviceConnectionHistoryInfoDB")
+				.end();
+;
 	}
 }

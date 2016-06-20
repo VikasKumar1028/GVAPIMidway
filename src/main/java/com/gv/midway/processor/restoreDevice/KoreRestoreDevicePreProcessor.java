@@ -1,6 +1,7 @@
 package com.gv.midway.processor.restoreDevice;
 
 import org.apache.camel.Exchange;
+import org.apache.camel.ExchangePattern;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
@@ -60,6 +61,7 @@ public class KoreRestoreDevicePreProcessor implements Processor {
 		message.setHeader(Exchange.HTTP_PATH, "/json/restoreDevice");
 
 		message.setBody(restoreDeviceRequestKore);
+		exchange.setPattern(ExchangePattern.InOut);
 
 		log.info("End:KoreRestoreDevicePreProcessor");
 	}
