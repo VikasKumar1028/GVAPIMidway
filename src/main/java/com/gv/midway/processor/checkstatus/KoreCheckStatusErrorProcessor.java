@@ -293,6 +293,7 @@ public class KoreCheckStatusErrorProcessor implements Processor {
 		
 	    message.setHeader("Authorization", oauthHeader);
 	    exchange.setProperty("script", script);
+	    message.setHeader(Exchange.HTTP_PATH, null);
 	   exchange.setPattern(ExchangePattern.InOut);
 		log.info("error callback resposne for Kore..."+exchange.getIn().getBody());
 

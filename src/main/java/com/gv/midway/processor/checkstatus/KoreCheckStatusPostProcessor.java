@@ -309,6 +309,7 @@ public class KoreCheckStatusPostProcessor implements Processor {
 		
 		message.setHeader("Authorization", oauthHeader);
 		message.setBody(netSuiteCallBackProvisioningRequest);
+		message.setHeader(Exchange.HTTP_PATH, null);
 		exchange.setPattern(ExchangePattern.InOut);
 		log.info("success callback resposne for Kore..."+exchange.getIn().getBody());
 		
