@@ -173,6 +173,7 @@ import com.gv.midway.service.ISessionService;
 					ActivateDeviceIdArray[1] = deviceId2;
 					
 					adevices.setDeviceIds(ActivateDeviceIdArray);
+					adevices.setNetSuiteId("12345");
 					decs[0] = adevices;
 					dataArea.setDevices(decs);
 					
@@ -188,6 +189,8 @@ import com.gv.midway.service.ISessionService;
 			 		header.setApplicationName("WEB");
 			 		header.setOrganization("Grant Victor");
 			        header.setRegion("USA");
+			        header.setTimestamp("timestamp");
+			        header.setTransactionId("12345");
 
 			        req.setHeader(header);
 					ActivateDeviceResponse response = (ActivateDeviceResponse) template.requestBody("direct:activateDevice", req);
@@ -228,6 +231,7 @@ import com.gv.midway.service.ISessionService;
 								ActivateDeviceIdArray[1] = deviceId2;*/
 								
 								adevices.setDeviceIds(ActivateDeviceIdArray);
+								adevices.setNetSuiteId("12345");
 								decs[0] = adevices;
 								dataArea.setDevices(decs);
 								
@@ -244,6 +248,8 @@ import com.gv.midway.service.ISessionService;
 						 		header.setApplicationName("WEB");
 						 		header.setOrganization("Grant Victor");
 						        header.setRegion("USA");
+						        header.setTimestamp("timestamp");
+						        header.setTransactionId("12345");
 
 						        req.setHeader(header);
 								ActivateDeviceResponse response = (ActivateDeviceResponse) template.requestBody("direct:activateDevice", req);
