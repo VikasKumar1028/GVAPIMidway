@@ -302,6 +302,7 @@ import com.gv.midway.service.ISessionService;
  		header.setApplicationName("WEB");
  		header.setOrganization("Grant Victor");
         header.setRegion("USA");
+        header.setTimestamp("timestamp");
  		req.setFlagScrap(false);
 		
  		deactivateRequest.setHeader(header);
