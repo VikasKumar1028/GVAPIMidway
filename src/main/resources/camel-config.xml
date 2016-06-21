@@ -155,11 +155,16 @@
 		<property name="scan" value="true" />
 	</bean>
 
-	<mongo:mongo host="${mongo.endpoint}" port="${mongo.port}" />
-	<mongo:db-factory dbname="midWayDB" />
-
+	<!-- <mongo:mongo host="${mongo.endpoint}" port="${mongo.port}" /> -->
+	<!-- <mongo:db-factory dbname="midWayDB" /> -->
+	
+	<mongo:mongo id="midWayRs" replica-set="${mongo.replica-set}" /> 
+	
 	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
-		<constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
+		<!-- <constructor-arg name="mongoDbFactory" ref="mongoDbFactory" /> -->
+		  <constructor-arg ref="midWayRs"/>
+          <constructor-arg name="databaseName" value="midWayDB"/>
+        <!--   <constructor-arg name="userCredentials" ref="userCredentials"/> -->
 		<property name="writeConcern">
 			<util:constant static-field="com.mongodb.WriteConcern.SAFE" />
 		</property>
