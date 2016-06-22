@@ -53,9 +53,7 @@ public class KoreDeviceInformationPostProcessor implements Processor {
 
 			deviceInformation = new DeviceInformation();
 		}
-        if(deviceInformation.getSimNumber()==null||deviceInformation.getSimNumber().trim().equals("")){
-        	deviceInformation.setSimNumber(exchange.getProperty(IConstant.KORE_SIM_NUMBER).toString());
-        }
+       
         
         if(deviceInformation.getBs_carrier()==null||deviceInformation.getBs_carrier().trim().equals("")){
         	deviceInformation.setBs_carrier(exchange.getProperty(IConstant.BSCARRIER)
@@ -218,6 +216,11 @@ public class KoreDeviceInformationPostProcessor implements Processor {
 			deviceIdList.add(deviceId2);
 		}
 
+		DeviceId deviceId3=new DeviceId();
+		deviceId3.setId(exchange.getProperty(IConstant.KORE_SIM_NUMBER).toString());
+		deviceId3.setKind("SIM");
+		deviceIdList.add(deviceId3);
+		
 		DeviceId[] deviceIds = new DeviceId[deviceIdList.size()];
 		for (int i = 0; i < deviceIds.length; i++) {
 			deviceIds[i] = deviceIdList.get(i);

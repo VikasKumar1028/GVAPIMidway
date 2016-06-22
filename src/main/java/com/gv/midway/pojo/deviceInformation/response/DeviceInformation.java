@@ -2,10 +2,8 @@ package com.gv.midway.pojo.deviceInformation.response;
 
 
 import java.util.Arrays;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.gv.midway.pojo.verizon.CustomFields;
@@ -58,8 +56,6 @@ public class DeviceInformation {
 	@ApiModelProperty(value = "The custom fields and values that have been set for the device.")
 	private CustomFields[] customFields;
 	
-	@ApiModelProperty(value = "Sim number of the device.Only Applicable in case of Kore.Mandatory Field for Kore Devices.")
-	private String simNumber;
 	
 	@ApiModelProperty(value = "All identifiers for the device.")
 	private DeviceId[] deviceIds;
@@ -465,15 +461,6 @@ public class DeviceInformation {
 		this.lstExtFeatures = lstExtFeatures;
 	}
 
-	public String getSimNumber() {
-		return simNumber;
-	}
-
-
-	public void setSimNumber(String simNumber) {
-		this.simNumber = simNumber;
-	}
-
 
 	@Override
 	public int hashCode() {
@@ -552,8 +539,6 @@ public class DeviceInformation {
 				+ ((netSuiteId == null) ? 0 : netSuiteId.hashCode());
 		result = prime * result
 				+ ((serial_num == null) ? 0 : serial_num.hashCode());
-		result = prime * result
-				+ ((simNumber == null) ? 0 : simNumber.hashCode());
 		result = prime * result + ((state == null) ? 0 : state.hashCode());
 		result = prime
 				* result
@@ -715,11 +700,6 @@ public class DeviceInformation {
 				return false;
 		} else if (!serial_num.equals(other.serial_num))
 			return false;
-		if (simNumber == null) {
-			if (other.simNumber != null)
-				return false;
-		} else if (!simNumber.equals(other.simNumber))
-			return false;
 		if (state == null) {
 			if (other.state != null)
 				return false;
@@ -763,8 +743,6 @@ public class DeviceInformation {
 		builder.append(ipAddress);
 		builder.append(", customFields=");
 		builder.append(Arrays.toString(customFields));
-		builder.append(", simNumber=");
-		builder.append(simNumber);
 		builder.append(", deviceIds=");
 		builder.append(Arrays.toString(deviceIds));
 		builder.append(", extendedAttributes=");
