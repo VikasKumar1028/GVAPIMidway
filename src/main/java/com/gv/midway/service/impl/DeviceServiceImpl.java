@@ -140,7 +140,7 @@ public class DeviceServiceImpl implements IDeviceService {
 		return iDeviceDao.getAllDevices();
 	}
 
-	@Override
+
 	public UsageInformationMidwayResponse getDeviceUsageInfoDB(Exchange exchange) {
 		// TODO Auto-generated method stub
 		UsageInformationMidwayRequest usageInformationMidwayRequest = (UsageInformationMidwayRequest) exchange
@@ -148,7 +148,7 @@ public class DeviceServiceImpl implements IDeviceService {
 		return iDeviceDao.getDeviceUsageInfoDB(usageInformationMidwayRequest);
 	}
 
-	@Override
+
 	public ConnectionInformationMidwayResponse getDeviceConnectionHistoryInfoDB(
 			Exchange exchange) {
 

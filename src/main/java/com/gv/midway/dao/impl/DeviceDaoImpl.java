@@ -516,6 +516,10 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 				ConnectionInformationResponseMidwayDataArea connectionInformationResponseMidwayDataArea = new ConnectionInformationResponseMidwayDataArea();
 
+				connectionInformationMidwayResponse
+				.setDataArea(connectionInformationResponseMidwayDataArea);
+
+				
 				return connectionInformationMidwayResponse;
 			}
 

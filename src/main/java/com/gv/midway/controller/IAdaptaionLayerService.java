@@ -16,6 +16,7 @@ import com.gv.midway.pojo.changeDeviceServicePlans.response.ChangeDeviceServiceP
 import com.gv.midway.pojo.connectionInformation.deviceSessionBeginEndInfo.response.SessionBeginEndResponse;
 import com.gv.midway.pojo.connectionInformation.deviceStatus.response.ConnectionStatusResponse;
 import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationRequest;
+import com.gv.midway.pojo.connectionInformation.verizon.response.ConnectionInformationMidwayResponse;
 import com.gv.midway.pojo.customFieldsDevice.request.CustomFieldsDeviceRequest;
 import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponse;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
@@ -34,6 +35,7 @@ import com.gv.midway.pojo.restoreDevice.response.RestoreDeviceResponse;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequest;
 import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
 import com.gv.midway.pojo.usageInformation.request.UsageInformationRequest;
+import com.gv.midway.pojo.usageInformation.response.UsageInformationMidwayResponse;
 import com.gv.midway.pojo.usageInformation.response.UsageInformationResponse;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -164,7 +166,7 @@ public interface IAdaptaionLayerService {
 	@ApiOperation(value = "Retrieve Device data Usage for Verizon")
 	UsageInformationResponse retrieveDeviceUsageHistory(
 			UsageInformationRequest usageInformationRequest);
-	
+
 	@POST
 	@Path("/devices/connections/session/info")
 	@Produces("application/json")
@@ -172,32 +174,67 @@ public interface IAdaptaionLayerService {
 	@ApiOperation(value = "Service to check Device Session Begin and End infomration for Verizon")
 	SessionBeginEndResponse deviceSessionBeginEndResponse(
 			ConnectionInformationRequest connectionInformationRequest);
-	
+
 	@POST
 	@Path("/devices/job/usage/transactionFailure")
 	@Produces("application/json")
 	@Consumes("application/json")
 	@ApiOperation(value = "Transactional Failure Device Usage Job")
-	JobinitializedResponse transactionFailureDeviceUsageJob(JobParameter jobParameter);
-	
+	JobinitializedResponse transactionFailureDeviceUsageJob(
+			JobParameter jobParameter);
+
 	@POST
 	@Path("/devices/job/connectionHistory/transactionFailure")
 	@Produces("application/json")
 	@Consumes("application/json")
 	@ApiOperation(value = "Transactional Failure Device Connection History Job")
-	JobinitializedResponse transactionFailureConnectionHistoryJob(JobParameter jobParameter);	
-	
+	JobinitializedResponse transactionFailureConnectionHistoryJob(
+			JobParameter jobParameter);
+
 	@POST
 	@Path("/devices/job/usage/reRun")
 	@Produces("application/json")
 	@Consumes("application/json")
 	@ApiOperation(value = "Rerun Device Usage Job")
 	JobinitializedResponse reRunDeviceUsageJob(JobParameter jobParameter);
-	
+
 	@POST
 	@Path("/devices/job/connectionHistory/reRun")
 	@Produces("application/json")
 	@Consumes("application/json")
 	@ApiOperation(value = "Rerun Device Connection History Job")
 	JobinitializedResponse reRunConnectionHistoryJob(JobParameter jobParameter);
+
+	@GET
+	@Path("/devices/usage")
+	@Produces("application/json")
+	@ApiOperation(value = "Get Device Usage from Midway")
+	UsageInformationMidwayResponse getDeviceUsageInfoDB(
+			@QueryParam("region") final String region,
+			@QueryParam("timestamp") final String timestamp,
+			@QueryParam("organization") final String organization,
+			@QueryParam("transactionId") final String transactionId,
+			@QueryParam("sourceName") final String sourceName,
+			@QueryParam("applicationName") final String applicationName,
+			@QueryParam("bsCarrier") final String bsCarrier,
+			@QueryParam("netSuiteId") final String netSuiteId,
+			@QueryParam("startDate") final String startDate,
+			@QueryParam("endDate") final String endDate);
+
+	@GET
+	@Path("/devices/connectionHistory")
+	@Produces("application/json")
+	@ApiOperation(value = "Get Device Connection History from Midway")
+	ConnectionInformationMidwayResponse getDeviceConnectionHistoryInfoDB(
+			@QueryParam("region") final String region,
+			@QueryParam("timestamp") final String timestamp,
+			@QueryParam("organization") final String organization,
+			@QueryParam("transactionId") final String transactionId,
+			@QueryParam("sourceName") final String sourceName,
+			@QueryParam("applicationName") final String applicationName,
+			@QueryParam("bsCarrier") final String bsCarrier,
+			@QueryParam("netSuiteId") final String netSuiteId,
+			@QueryParam("startDate") final String startDate,
+			@QueryParam("endDate") final String endDate);
+
 }

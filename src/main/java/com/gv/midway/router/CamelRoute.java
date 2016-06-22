@@ -1437,14 +1437,13 @@ public class CamelRoute extends RouteBuilder {
 				"*********Inside the getDeviceUsageInfoDB").process(new HeaderProcessor())
 				.bean(iDeviceService, "getDeviceUsageInfoDB")
 				.end();
-;
+
 	}
 
 	public void getDeviceConnectionHistoryInfoDB() {
-		from("direct:getDeviceConnectionHistoryInfoDB").log(
-				"*********Inside the getDeviceConnectionHistoryInfoDB").process(new HeaderProcessor())
+		
+		from("direct:getDeviceConnectionHistoryInfoDB").process(new HeaderProcessor())
 				.bean(iDeviceService, "getDeviceConnectionHistoryInfoDB")
 				.end();
-;
 	}
 }

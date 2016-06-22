@@ -16,7 +16,10 @@ import com.gv.midway.pojo.changeDeviceServicePlans.request.ChangeDeviceServicePl
 import com.gv.midway.pojo.changeDeviceServicePlans.response.ChangeDeviceServicePlansResponse;
 import com.gv.midway.pojo.connectionInformation.deviceSessionBeginEndInfo.response.SessionBeginEndResponse;
 import com.gv.midway.pojo.connectionInformation.deviceStatus.response.ConnectionStatusResponse;
+import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationMidwayRequest;
 import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationRequest;
+import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationRequestMidwayDataArea;
+import com.gv.midway.pojo.connectionInformation.verizon.response.ConnectionInformationMidwayResponse;
 import com.gv.midway.pojo.customFieldsDevice.request.CustomFieldsDeviceRequest;
 import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponse;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
@@ -37,7 +40,10 @@ import com.gv.midway.pojo.restoreDevice.request.RestoreDeviceRequest;
 import com.gv.midway.pojo.restoreDevice.response.RestoreDeviceResponse;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequest;
 import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
+import com.gv.midway.pojo.usageInformation.request.UsageInformationMidwayRequest;
 import com.gv.midway.pojo.usageInformation.request.UsageInformationRequest;
+import com.gv.midway.pojo.usageInformation.request.UsageInformationRequestMidwayDataArea;
+import com.gv.midway.pojo.usageInformation.response.UsageInformationMidwayResponse;
 import com.gv.midway.pojo.usageInformation.response.UsageInformationResponse;
 import com.gv.midway.pojo.verizon.DeviceId;
 
@@ -291,5 +297,64 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 		// TODO Auto-generated method stub
 		return (UsageInformationResponse) producer.requestBody(
 				"direct:retrieveDeviceUsageHistory", usageInformationRequest);
+	}
+
+	@Override
+	public UsageInformationMidwayResponse getDeviceUsageInfoDB(String region,
+			String timestamp, String organization, String transactionId,
+			String sourceName, String applicationName, String bsCarrier,
+			String netSuiteId, String startDate, String endDate) {
+
+
+		UsageInformationMidwayRequest usageInformationMidwayRequest = new UsageInformationMidwayRequest();
+
+		Header header = new Header();
+		header.setRegion(region);
+		header.setApplicationName(applicationName);
+		header.setBsCarrier(bsCarrier);
+		header.setSourceName(sourceName);
+		header.setTimestamp(timestamp);
+		header.setTransactionId(transactionId);
+		header.setOrganization(organization);
+
+		UsageInformationRequestMidwayDataArea dataArea = new UsageInformationRequestMidwayDataArea();
+		dataArea.setNetSuiteId(netSuiteId);
+
+		usageInformationMidwayRequest.setHeader(header);
+		usageInformationMidwayRequest.setUsageInformationRequestMidwayDataArea(dataArea);
+
+		UsageInformationMidwayResponse response = (UsageInformationMidwayResponse) producer
+				.requestBody("direct:getDeviceUsageInfoDB",	usageInformationMidwayRequest);
+
+		return response;
+	}
+
+	@Override
+	public ConnectionInformationMidwayResponse getDeviceConnectionHistoryInfoDB(
+			String region, String timestamp, String organization,
+			String transactionId, String sourceName, String applicationName,
+			String bsCarrier, String netSuiteId, String startDate,
+			String endDate) {
+
+		ConnectionInformationMidwayRequest connectionInformationMidwayRequest = new ConnectionInformationMidwayRequest();
+
+		Header header = new Header();
+		header.setRegion(region);
+		header.setApplicationName(applicationName);
+		header.setBsCarrier(bsCarrier);
+		header.setSourceName(sourceName);
+		header.setTimestamp(timestamp);
+		header.setTransactionId(transactionId);
+		header.setOrganization(organization);
+
+		ConnectionInformationRequestMidwayDataArea dataArea = new ConnectionInformationRequestMidwayDataArea();
+		dataArea.setNetSuiteId(netSuiteId);
+
+		connectionInformationMidwayRequest.setHeader(header);
+		connectionInformationMidwayRequest.setDataArea(dataArea);
+
+		ConnectionInformationMidwayResponse response = (ConnectionInformationMidwayResponse) producer.requestBody("direct:getDeviceConnectionHistoryInfoDB",connectionInformationMidwayRequest);
+
+		return response;
 	}
 }
