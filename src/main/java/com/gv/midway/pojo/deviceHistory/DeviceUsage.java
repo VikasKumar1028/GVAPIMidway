@@ -1,5 +1,7 @@
 package com.gv.midway.pojo.deviceHistory;
 
+import java.util.Date;
+
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.gv.midway.pojo.verizon.DeviceId;
@@ -9,7 +11,7 @@ public class DeviceUsage {
 
 	private DeviceId deviceId;
 	private String netSuiteId;
-	private String timestamp;
+	private Date date;
 	private float dataUsed;
 	private String transactionStatus;
 	private String transactionErrorReason;
@@ -36,12 +38,7 @@ public class DeviceUsage {
 	public void setNetSuiteId(String netSuiteId) {
 		this.netSuiteId = netSuiteId;
 	}
-	public String getTimestamp() {
-		return timestamp;
-	}
-	public void setTimestamp(String timestamp) {
-		this.timestamp = timestamp;
-	}
+	
 	public float getDataUsed() {
 		return dataUsed;
 	}
@@ -76,8 +73,8 @@ public class DeviceUsage {
 	@Override
 	public String toString() {
 		return "DeviceUsage [deviceId=" + deviceId + ", netSuiteId="
-				+ netSuiteId + ", timestamp=" + timestamp + ", dataUsed="
-				+ dataUsed + ", transactionStatus=" + transactionStatus
+				+ netSuiteId + ", date=" + date + ", dataUsed=" + dataUsed
+				+ ", transactionStatus=" + transactionStatus
 				+ ", transactionErrorReason=" + transactionErrorReason
 				+ ", isValid=" + isValid + ", carrierName=" + carrierName
 				+ ", billCycleComplete=" + billCycleComplete + "]";
@@ -93,13 +90,12 @@ public class DeviceUsage {
 		result = prime * result
 				+ ((carrierName == null) ? 0 : carrierName.hashCode());
 		result = prime * result + Float.floatToIntBits(dataUsed);
+		result = prime * result + ((date == null) ? 0 : date.hashCode());
 		result = prime * result
 				+ ((deviceId == null) ? 0 : deviceId.hashCode());
 		result = prime * result + ((isValid == null) ? 0 : isValid.hashCode());
 		result = prime * result
 				+ ((netSuiteId == null) ? 0 : netSuiteId.hashCode());
-		result = prime * result
-				+ ((timestamp == null) ? 0 : timestamp.hashCode());
 		result = prime
 				* result
 				+ ((transactionErrorReason == null) ? 0
@@ -109,6 +105,12 @@ public class DeviceUsage {
 				+ ((transactionStatus == null) ? 0 : transactionStatus
 						.hashCode());
 		return result;
+	}
+	public Date getDate() {
+		return date;
+	}
+	public void setDate(Date date) {
+		this.date = date;
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -132,6 +134,11 @@ public class DeviceUsage {
 		if (Float.floatToIntBits(dataUsed) != Float
 				.floatToIntBits(other.dataUsed))
 			return false;
+		if (date == null) {
+			if (other.date != null)
+				return false;
+		} else if (!date.equals(other.date))
+			return false;
 		if (deviceId == null) {
 			if (other.deviceId != null)
 				return false;
@@ -146,11 +153,6 @@ public class DeviceUsage {
 			if (other.netSuiteId != null)
 				return false;
 		} else if (!netSuiteId.equals(other.netSuiteId))
-			return false;
-		if (timestamp == null) {
-			if (other.timestamp != null)
-				return false;
-		} else if (!timestamp.equals(other.timestamp))
 			return false;
 		if (transactionErrorReason == null) {
 			if (other.transactionErrorReason != null)

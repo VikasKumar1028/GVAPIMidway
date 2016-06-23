@@ -319,6 +319,8 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 
 		UsageInformationRequestMidwayDataArea dataArea = new UsageInformationRequestMidwayDataArea();
 		dataArea.setNetSuiteId(netSuiteId);
+		dataArea.setStartDate(startDate);
+		dataArea.setEndDate(endDate);
 
 		usageInformationMidwayRequest.setHeader(header);
 		usageInformationMidwayRequest.setUsageInformationRequestMidwayDataArea(dataArea);
@@ -349,6 +351,8 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 
 		ConnectionInformationRequestMidwayDataArea dataArea = new ConnectionInformationRequestMidwayDataArea();
 		dataArea.setNetSuiteId(netSuiteId);
+		dataArea.setStartDate(startDate);
+		dataArea.setEndDate(endDate);
 
 		connectionInformationMidwayRequest.setHeader(header);
 		connectionInformationMidwayRequest.setDataArea(dataArea);

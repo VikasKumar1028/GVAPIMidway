@@ -2,6 +2,9 @@ package com.gv.midway.processor;
 
 import java.net.ConnectException;
 import java.net.UnknownHostException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -15,9 +18,7 @@ import com.gv.midway.exception.VerizonSessionTokenExpirationException;
 import com.gv.midway.pojo.deviceHistory.DeviceConnection;
 import com.gv.midway.pojo.deviceHistory.DeviceUsage;
 import com.gv.midway.pojo.job.JobDetail;
-import com.gv.midway.pojo.usageInformation.verizon.response.UsageHistory;
 import com.gv.midway.pojo.verizon.DeviceId;
-import com.gv.midway.utility.CommonUtil;
 
 public class VerizonBatchExceptionProcessor implements Processor {
 
@@ -85,7 +86,11 @@ public class VerizonBatchExceptionProcessor implements Processor {
 			deviceUsage
 					.setDeviceId((DeviceId) exchange.getProperty("DeviceId"));
 			deviceUsage.setDataUsed(0);
-			deviceUsage.setTimestamp(jobDetail.getDate());
+			DateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
+			Date date = (Date) formatter.parse(jobDetail.getDate());
+
+			log.info("----------------------D----A-----T-------E-------" + date);
+			deviceUsage.setDate(date);
 			deviceUsage.setTransactionErrorReason(errorType);
 			deviceUsage
 					.setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
@@ -96,14 +101,14 @@ public class VerizonBatchExceptionProcessor implements Processor {
 			exchange.getIn().setBody(deviceUsage);
 
 		} else {
-			
+
 			DeviceConnection deviceConnection = new DeviceConnection();
 
 			deviceConnection.setCarrierName((String) exchange
 					.getProperty("CarrierName"));
 			deviceConnection.setDeviceId((DeviceId) exchange
 					.getProperty("DeviceId"));
-			
+
 			deviceConnection.setTimestamp(jobDetail.getDate());
 			deviceConnection.setTransactionErrorReason(errorType);
 			deviceConnection
@@ -114,8 +119,6 @@ public class VerizonBatchExceptionProcessor implements Processor {
 			deviceConnection.setEvent(null);
 			exchange.getIn().setBody(deviceConnection);
 		}
-
-
 
 	}
 }
