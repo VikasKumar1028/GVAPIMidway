@@ -12,14 +12,15 @@ import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
 import com.gv.midway.pojo.changeDeviceServicePlans.response.ChangeDeviceServicePlansResponse;
 import com.gv.midway.pojo.connectionInformation.deviceSessionBeginEndInfo.response.SessionBeginEndResponse;
 import com.gv.midway.pojo.connectionInformation.deviceStatus.response.ConnectionStatusResponse;
+import com.gv.midway.pojo.connectionInformation.verizon.response.ConnectionInformationMidwayResponse;
 import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponse;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.reActivateDevice.response.ReactivateDeviceResponse;
 import com.gv.midway.pojo.restoreDevice.response.RestoreDeviceResponse;
 import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
+import com.gv.midway.pojo.usageInformation.response.UsageInformationMidwayResponse;
 import com.gv.midway.pojo.usageInformation.response.UsageInformationResponse;
-
 
 public class GenericErrorProcessor implements Processor {
 
@@ -37,26 +38,27 @@ public class GenericErrorProcessor implements Processor {
 
 	public void process(Exchange exchange) throws Exception {
 
-		//Header responseHeader = new Header();
+		// Header responseHeader = new Header();
 		Response response = new Response();
 
-		/*responseHeader.setApplicationName(exchange.getProperty(
-				IConstant.APPLICATION_NAME).toString());
-		responseHeader.setRegion(exchange.getProperty(IConstant.REGION)
-				.toString());
+		/*
+		 * responseHeader.setApplicationName(exchange.getProperty(
+		 * IConstant.APPLICATION_NAME).toString());
+		 * responseHeader.setRegion(exchange.getProperty(IConstant.REGION)
+		 * .toString());
+		 * 
+		 * responseHeader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT
+		 * ) .toString()); responseHeader.setOrganization(exchange.getProperty(
+		 * IConstant.ORGANIZATION).toString());
+		 * responseHeader.setSourceName(exchange
+		 * .getProperty(IConstant.SOURCE_NAME).toString());
+		 * 
+		 * responseHeader.setTransactionId(exchange.getProperty(
+		 * IConstant.GV_TRANSACTION_ID).toString());
+		 * responseHeader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
+		 * .toString());
+		 */
 
-		responseHeader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT)
-				.toString());
-		responseHeader.setOrganization(exchange.getProperty(
-				IConstant.ORGANIZATION).toString());
-		responseHeader.setSourceName(exchange
-				.getProperty(IConstant.SOURCE_NAME).toString());
-
-		responseHeader.setTransactionId(exchange.getProperty(
-				IConstant.GV_TRANSACTION_ID).toString());
-		responseHeader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
-				.toString());*/
-		
 		Header responseHeader = (Header) exchange.getProperty(IConstant.HEADER);
 
 		if (exchange.getProperty(IConstant.RESPONSE_CODE) != null) {
@@ -171,15 +173,31 @@ public class GenericErrorProcessor implements Processor {
 			exchange.getIn().setBody(responseObject);
 
 		}
-		
-		if ("Endpoint[direct://retrieveDeviceUsageHistoryCarrier]".equals(exchange
-				.getFromEndpoint().toString())) {
+
+		if ("Endpoint[direct://retrieveDeviceUsageHistoryCarrier]"
+				.equals(exchange.getFromEndpoint().toString())) {
 			UsageInformationResponse responseObject = new UsageInformationResponse();
 			responseObject.setHeader(responseHeader);
 			responseObject.setResponse(response);
 			exchange.getIn().setBody(responseObject);
 
 		}
-	}
+		if ("Endpoint[direct://getDeviceUsageInfoDB]".equals(exchange
+				.getFromEndpoint().toString())) {
+			UsageInformationMidwayResponse responseObject = new UsageInformationMidwayResponse();
+			responseObject.setHeader(responseHeader);
+			responseObject.setResponse(response);
+			exchange.getIn().setBody(responseObject);
 
+		}
+
+		if ("Endpoint[direct://getDeviceConnectionHistoryInfoDB]"
+				.equals(exchange.getFromEndpoint().toString())) {
+			ConnectionInformationMidwayResponse responseObject = new ConnectionInformationMidwayResponse();
+			responseObject.setHeader(responseHeader);
+			responseObject.setResponse(response);
+			exchange.getIn().setBody(responseObject);
+
+		}
+	}
 }

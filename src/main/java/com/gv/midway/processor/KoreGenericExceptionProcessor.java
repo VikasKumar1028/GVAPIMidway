@@ -13,6 +13,7 @@ import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
 import com.gv.midway.pojo.changeDeviceServicePlans.response.ChangeDeviceServicePlansResponse;
+import com.gv.midway.pojo.connectionInformation.verizon.response.ConnectionInformationMidwayResponse;
 import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponse;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
@@ -20,6 +21,7 @@ import com.gv.midway.pojo.kore.KoreErrorResponse;
 import com.gv.midway.pojo.reActivateDevice.response.ReactivateDeviceResponse;
 import com.gv.midway.pojo.restoreDevice.response.RestoreDeviceResponse;
 import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
+import com.gv.midway.pojo.usageInformation.response.UsageInformationMidwayResponse;
 
 public class KoreGenericExceptionProcessor implements Processor {
 
@@ -46,23 +48,24 @@ public class KoreGenericExceptionProcessor implements Processor {
 				+ exception.getResponseBody());
 		log.info("----.getStatusCode()----------" + exception.getStatusCode());
 
-		/*Header responseHeader = new Header();
-		responseHeader.setApplicationName(exchange.getProperty(
-				IConstant.APPLICATION_NAME).toString());
-		responseHeader.setRegion(exchange.getProperty(IConstant.REGION)
-				.toString());
-
-		responseHeader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT)
-				.toString());
-		responseHeader.setOrganization(exchange.getProperty(
-				IConstant.ORGANIZATION).toString());
-		responseHeader.setSourceName(exchange
-				.getProperty(IConstant.SOURCE_NAME).toString());
-
-		responseHeader.setTransactionId(exchange.getProperty(
-				IConstant.GV_TRANSACTION_ID).toString());
-		responseHeader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
-				.toString());*/
+		/*
+		 * Header responseHeader = new Header();
+		 * responseHeader.setApplicationName(exchange.getProperty(
+		 * IConstant.APPLICATION_NAME).toString());
+		 * responseHeader.setRegion(exchange.getProperty(IConstant.REGION)
+		 * .toString());
+		 * 
+		 * responseHeader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT
+		 * ) .toString()); responseHeader.setOrganization(exchange.getProperty(
+		 * IConstant.ORGANIZATION).toString());
+		 * responseHeader.setSourceName(exchange
+		 * .getProperty(IConstant.SOURCE_NAME).toString());
+		 * 
+		 * responseHeader.setTransactionId(exchange.getProperty(
+		 * IConstant.GV_TRANSACTION_ID).toString());
+		 * responseHeader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
+		 * .toString());
+		 */
 
 		ObjectMapper mapper = new ObjectMapper();
 
@@ -81,7 +84,7 @@ public class KoreGenericExceptionProcessor implements Processor {
 
 		response.setResponseStatus(IResponse.ERROR_MESSAGE);
 		response.setResponseDescription(responsePayload.getErrorMessage());
-		
+
 		Header responseHeader = (Header) exchange.getProperty(IConstant.HEADER);
 
 		if ("Endpoint[direct://deviceInformationCarrier]".equals(exchange
@@ -159,6 +162,22 @@ public class KoreGenericExceptionProcessor implements Processor {
 		if ("Endpoint[direct://reactivateDevice]".equals(exchange
 				.getFromEndpoint().toString())) {
 			ReactivateDeviceResponse responseObject = new ReactivateDeviceResponse();
+			responseObject.setHeader(responseHeader);
+			responseObject.setResponse(response);
+			exchange.getIn().setBody(responseObject);
+
+		}
+		if ("Endpoint[direct://getDeviceUsageInfoDB]".equals(exchange
+				.getFromEndpoint().toString())) {
+			UsageInformationMidwayResponse responseObject = new UsageInformationMidwayResponse();
+			responseObject.setHeader(responseHeader);
+			responseObject.setResponse(response);
+			exchange.getIn().setBody(responseObject);
+
+		}
+		if ("Endpoint[direct://getDeviceConnectionHistoryInfoDB]"
+				.equals(exchange.getFromEndpoint().toString())) {
+			ConnectionInformationMidwayResponse responseObject = new ConnectionInformationMidwayResponse();
 			responseObject.setHeader(responseHeader);
 			responseObject.setResponse(response);
 			exchange.getIn().setBody(responseObject);

@@ -392,30 +392,15 @@ public class DeviceDaoImpl implements IDeviceDao {
 		Date startDateValue = null;
 		Date endDateValue = null;
 		Float dataUsed = null;
-
-		try {
-
-			startDateValue = (Date) formatter.parse(startDate);
-			endDateValue = (Date) formatter.parse(endDate);
-
-			log.info("startDateValue..." + startDateValue);
-			log.info("endDateValue..." + endDateValue);
-		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
 		UsageInformationMidwayResponse usageInformationMidwayResponse = new UsageInformationMidwayResponse();
 
 		usageInformationMidwayResponse.setHeader(usageInformationMidwayRequest
 				.getHeader());
 		Response response = new Response();
-		if (netSuiteId == null || netSuiteId.trim().equals("")
-				&& startDateValue == null
-				|| startDateValue.toString().trim().equals("")
-				&& endDateValue == null
-				|| endDateValue.toString().trim().equals("")) {
 
+		if (netSuiteId == null || netSuiteId.trim().equals("")) {
+
+			log.info("Enter netSuiteId..." + netSuiteId);
 			response.setResponseCode(IResponse.INVALID_PAYLOAD);
 			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB);
 			response.setResponseStatus(IResponse.ERROR_MESSAGE);
@@ -423,7 +408,47 @@ public class DeviceDaoImpl implements IDeviceDao {
 			usageInformationMidwayResponse.setResponse(response);
 
 			return usageInformationMidwayResponse;
-		} else {
+		}
+		try {
+
+			if (startDate != null && endDate != null) {
+
+				startDateValue = (Date) formatter.parse(startDate);
+				endDateValue = (Date) formatter.parse(endDate);
+				log.info("startDateValue..." + startDateValue);
+				log.info("endDateValue..." + endDateValue);
+
+			}
+
+		} catch (ParseException e1) {
+
+			log.info(" Date that you provided is invalid");
+			response.setResponseCode(IResponse.INVALID_PAYLOAD);
+			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_STARTDATE_VALIDATE_MIDWAYDB);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
+			usageInformationMidwayResponse.setResponse(response);
+			return usageInformationMidwayResponse;
+		}
+
+		if (startDate == null) {
+
+			response.setResponseCode(IResponse.INVALID_PAYLOAD);
+			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_START_DATE_FORMAT_MIDWAYDB);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
+			usageInformationMidwayResponse.setResponse(response);
+			return usageInformationMidwayResponse;
+
+		}
+		if (endDate == null) {
+			response.setResponseCode(IResponse.INVALID_PAYLOAD);
+			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_END_DATE_FORMAT_MIDWAYDB);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
+			usageInformationMidwayResponse.setResponse(response);
+			return usageInformationMidwayResponse;
+		}
+
+		else {
+
 			try {
 
 				Query searchDeviceQuery = new Query(Criteria
@@ -446,7 +471,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 					response.setResponseCode(IResponse.NO_DATA_FOUND_CODE);
 					response.setResponseDescription(IResponse.ERROR_DESCRIPTION_NODATA_DEVCIEINFO_MIDWAYDB);
 					response.setResponseStatus(IResponse.ERROR_MESSAGE);
-
+					usageInformationMidwayResponse.setResponse(response);
 				}
 
 				else {
@@ -454,23 +479,17 @@ public class DeviceDaoImpl implements IDeviceDao {
 					response.setResponseCode(IResponse.SUCCESS_CODE);
 					response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_MIDWAYDB);
 					response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+					usageInformationMidwayResponse.setResponse(response);
 
+					UsageInformationResponseMidwayDataArea usageInformationResponseMidwayDataArea = new UsageInformationResponseMidwayDataArea();
+					dataUsed = deviceUsage.getDataUsed();
+					log.info("deviceUsage.getDataUsed() ---------------------------------"
+							+ dataUsed);
+					usageInformationResponseMidwayDataArea
+							.setTotalUsages(dataUsed.longValue());
+					usageInformationMidwayResponse
+							.setDataArea(usageInformationResponseMidwayDataArea);
 				}
-
-				usageInformationMidwayResponse.setResponse(response);
-
-				UsageInformationResponseMidwayDataArea usageInformationResponseMidwayDataArea = new UsageInformationResponseMidwayDataArea();
-
-				dataUsed = deviceUsage.getDataUsed();
-
-				log.info("deviceUsage.getDataUsed() ---------------------------------"
-						+ dataUsed);
-
-				usageInformationResponseMidwayDataArea.setTotalUsages(dataUsed
-						.longValue());
-
-				usageInformationMidwayResponse
-						.setDataArea(usageInformationResponseMidwayDataArea);
 
 				return usageInformationMidwayResponse;
 
@@ -490,23 +509,18 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 				return usageInformationMidwayResponse;
 			}
-
 		}
-
 	}
 
 	@Override
 	public ConnectionInformationMidwayResponse getDeviceConnectionHistoryInfoDB(
 			ConnectionInformationMidwayRequest connectionInformationMidwayRequest) {
-
 		log.info("Begin::getDeviceConnectionHistoryInfoDB");
-		// TODO Auto-generated method stub
+
 		String netSuiteId = connectionInformationMidwayRequest.getDataArea()
 				.getNetSuiteId();
-
 		String startDate = connectionInformationMidwayRequest.getDataArea()
 				.getStartDate();
-
 		String endDate = connectionInformationMidwayRequest.getDataArea()
 				.getEndDate();
 
@@ -519,30 +533,15 @@ public class DeviceDaoImpl implements IDeviceDao {
 		Date startDateValue = null;
 		Date endDateValue = null;
 		Float dataUsed = null;
-
-		try {
-
-			startDateValue = (Date) formatter.parse(startDate);
-			endDateValue = (Date) formatter.parse(endDate);
-
-			log.info("startDateValue..." + startDateValue);
-			log.info("endDateValue..." + endDateValue);
-		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
 		ConnectionInformationMidwayResponse connectionInformationMidwayResponse = new ConnectionInformationMidwayResponse();
 
 		connectionInformationMidwayResponse
 				.setHeader(connectionInformationMidwayRequest.getHeader());
 		Response response = new Response();
-		if (netSuiteId == null || netSuiteId.trim().equals("")
-				&& startDateValue == null
-				|| startDateValue.toString().trim().equals("")
-				&& endDateValue == null
-				|| endDateValue.toString().trim().equals("")) {
 
+		if (netSuiteId == null || netSuiteId.trim().equals("")) {
+
+			log.info("Enter netSuiteId..." + netSuiteId);
 			response.setResponseCode(IResponse.INVALID_PAYLOAD);
 			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB);
 			response.setResponseStatus(IResponse.ERROR_MESSAGE);
@@ -550,7 +549,47 @@ public class DeviceDaoImpl implements IDeviceDao {
 			connectionInformationMidwayResponse.setResponse(response);
 
 			return connectionInformationMidwayResponse;
-		} else {
+		}
+		try {
+
+			if (startDate != null && endDate != null) {
+
+				startDateValue = (Date) formatter.parse(startDate);
+				endDateValue = (Date) formatter.parse(endDate);
+				log.info("startDateValue..." + startDateValue);
+				log.info("endDateValue..." + endDateValue);
+
+			}
+
+		} catch (ParseException e1) {
+
+			log.info(" Date that you provided is invalid");
+			response.setResponseCode(IResponse.INVALID_PAYLOAD);
+			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_STARTDATE_VALIDATE_MIDWAYDB);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
+			connectionInformationMidwayResponse.setResponse(response);
+			return connectionInformationMidwayResponse;
+		}
+
+		if (startDate == null) {
+
+			response.setResponseCode(IResponse.INVALID_PAYLOAD);
+			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_START_DATE_FORMAT_MIDWAYDB);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
+			connectionInformationMidwayResponse.setResponse(response);
+			return connectionInformationMidwayResponse;
+
+		}
+		if (endDate == null) {
+			response.setResponseCode(IResponse.INVALID_PAYLOAD);
+			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_END_DATE_FORMAT_MIDWAYDB);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
+			connectionInformationMidwayResponse.setResponse(response);
+			return connectionInformationMidwayResponse;
+		}
+
+		else {
+
 			try {
 
 				Query searchDeviceQuery = new Query(Criteria
@@ -561,7 +600,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 								.orOperator(
 										Criteria.where("date").lt(endDateValue)));
 
-				log.info("searchDeviceQuery" + searchDeviceQuery);
+				log.info("searchDeviceQuery::::::::::::::" + searchDeviceQuery);
 
 				DeviceUsage deviceUsage = (DeviceUsage) mongoTemplate.findOne(
 						searchDeviceQuery, DeviceUsage.class);
@@ -573,7 +612,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 					response.setResponseCode(IResponse.NO_DATA_FOUND_CODE);
 					response.setResponseDescription(IResponse.ERROR_DESCRIPTION_NODATA_DEVCIEINFO_MIDWAYDB);
 					response.setResponseStatus(IResponse.ERROR_MESSAGE);
-
+					connectionInformationMidwayResponse.setResponse(response);
 				}
 
 				else {
@@ -581,27 +620,23 @@ public class DeviceDaoImpl implements IDeviceDao {
 					response.setResponseCode(IResponse.SUCCESS_CODE);
 					response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_MIDWAYDB);
 					response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+					connectionInformationMidwayResponse.setResponse(response);
 
+					ConnectionInformationResponseMidwayDataArea connectionInformationResponseMidwayDataArea = new ConnectionInformationResponseMidwayDataArea();
+					dataUsed = deviceUsage.getDataUsed();
+					log.info("deviceUsage.getDataUsed() ---------------------------------"
+							+ dataUsed);
+					connectionInformationResponseMidwayDataArea
+							.setTotalUsages(dataUsed.longValue());
+					connectionInformationMidwayResponse
+							.setDataArea(connectionInformationResponseMidwayDataArea);
 				}
 
-				connectionInformationMidwayResponse.setResponse(response);
-
-				ConnectionInformationResponseMidwayDataArea connectionInformationResponseMidwayDataArea = new ConnectionInformationResponseMidwayDataArea();
-
-				dataUsed = deviceUsage.getDataUsed();
-
-				log.info("deviceUsage.getDataUsed() ---------------------------------"
-						+ dataUsed);
-
-				connectionInformationResponseMidwayDataArea
-						.setTotalUsages(dataUsed.longValue());
-
-				connectionInformationMidwayResponse
-						.setDataArea(connectionInformationResponseMidwayDataArea);
-
 				return connectionInformationMidwayResponse;
+
 			} catch (Exception e) {
 
+				e.printStackTrace();
 				response.setResponseCode(IResponse.DB_ERROR_CODE);
 				response.setResponseDescription(IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB);
 				response.setResponseStatus(IResponse.ERROR_MESSAGE);
@@ -615,7 +650,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 				return connectionInformationMidwayResponse;
 			}
-
 		}
+
 	}
 }

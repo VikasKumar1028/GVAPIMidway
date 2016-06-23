@@ -37,6 +37,11 @@ public class IResponse {
 	public static final String ERROR_DESCRIPTION_NODATA_UPDATEDEVCIE_MIDWAYDB="No record found to Update in Midway";
 	public static final String ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB="Error in fecthing the Device Data from Midway";
 	public static final String ERROR_DESCRIPTION_CONNECTION_MIDWAYDB="Error in Connection with Carrier";
+	public static final String ERROR_DESCRIPTION_START_DATE_FORMAT_MIDWAYDB="Start Date  is missing in Request";
+	public static final String ERROR_DESCRIPTION_END_DATE_FORMAT_MIDWAYDB="End Date  is missing in Request";
+	
+	public static final String ERROR_DESCRIPTION_STARTDATE_VALIDATE_MIDWAYDB="Date that you provided is invalid and Current Format-"+"MM-DD-YYY";
+	public static final String ERROR_DESCRIPTION_ENDTDATE_VALIDATE_MIDWAYDB="The End date that you provided is invalid and Current Format MM-DD-YYY";
 	
 	public static final String SUCCESS_DESCRIPTION_JOB_INITIALIZED="Job Started Successfully";
 }
