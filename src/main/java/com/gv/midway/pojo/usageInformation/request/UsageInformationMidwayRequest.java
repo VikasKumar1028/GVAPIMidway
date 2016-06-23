@@ -6,15 +6,15 @@ import com.gv.midway.pojo.BaseRequest;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UsageInformationMidwayRequest extends BaseRequest {
 
-	private UsageInformationRequestMidwayDataArea usageInformationRequestMidwayDataArea;
+	private UsageInformationRequestMidwayDataArea dataArea;
 
 	public UsageInformationRequestMidwayDataArea getUsageInformationRequestMidwayDataArea() {
-		return usageInformationRequestMidwayDataArea;
+		return dataArea;
 	}
 
 	public void setUsageInformationRequestMidwayDataArea(
-			UsageInformationRequestMidwayDataArea usageInformationRequestMidwayDataArea) {
-		this.usageInformationRequestMidwayDataArea = usageInformationRequestMidwayDataArea;
+			UsageInformationRequestMidwayDataArea dataArea) {
+		this.dataArea = dataArea;
 	}
 
 	@Override
@@ -23,8 +23,8 @@ public class UsageInformationMidwayRequest extends BaseRequest {
 		int result = super.hashCode();
 		result = prime
 				* result
-				+ ((usageInformationRequestMidwayDataArea == null) ? 0
-						: usageInformationRequestMidwayDataArea.hashCode());
+				+ ((dataArea == null) ? 0
+						: dataArea.hashCode());
 		return result;
 	}
 
@@ -37,18 +37,18 @@ public class UsageInformationMidwayRequest extends BaseRequest {
 		if (getClass() != obj.getClass())
 			return false;
 		UsageInformationMidwayRequest other = (UsageInformationMidwayRequest) obj;
-		if (usageInformationRequestMidwayDataArea == null) {
-			if (other.usageInformationRequestMidwayDataArea != null)
+		if (dataArea == null) {
+			if (other.dataArea != null)
 				return false;
-		} else if (!usageInformationRequestMidwayDataArea
-				.equals(other.usageInformationRequestMidwayDataArea))
+		} else if (!dataArea
+				.equals(other.dataArea))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "UsageInformationMidwayRequest [usageInformationRequestMidwayDataArea="
-				+ usageInformationRequestMidwayDataArea + "]";
+		return "UsageInformationMidwayRequest [dataArea="
+				+ dataArea + "]";
 	}
 }

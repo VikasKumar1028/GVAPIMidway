@@ -167,7 +167,7 @@ public class HeaderErrorProcessor implements Processor {
 
 			break;
 
-		case "Endpoint[direct://retrieveDeviceUsageHistory]":
+		case "Endpoint[direct://retrieveDeviceUsageHistoryCarrier]":
 			UsageInformationResponse usageInformationResponse = new UsageInformationResponse();
 			usageInformationResponse.setHeader(responseHeader);
 			usageInformationResponse.setResponse(response);

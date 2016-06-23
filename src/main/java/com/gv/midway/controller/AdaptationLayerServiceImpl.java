@@ -292,11 +292,11 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 	}
 	
 	@Override
-	public UsageInformationResponse retrieveDeviceUsageHistory(
+	public UsageInformationResponse retrieveDeviceUsageHistoryCarrier(
 			UsageInformationRequest usageInformationRequest) {
 		// TODO Auto-generated method stub
 		return (UsageInformationResponse) producer.requestBody(
-				"direct:retrieveDeviceUsageHistory", usageInformationRequest);
+				"direct:retrieveDeviceUsageHistoryCarrier", usageInformationRequest);
 	}
 
 	@Override

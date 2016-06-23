@@ -163,15 +163,15 @@ public interface IAdaptaionLayerService {
 	@Path("/device/usage/session")
 	@Produces("application/json")
 	@Consumes("application/json")
-	@ApiOperation(value = "Retrieve Device data Usage for Verizon")
-	UsageInformationResponse retrieveDeviceUsageHistory(
+	@ApiOperation(value = "Retrieve Device data Usage by start and end Date from Carrier for Veriozn Devices.")
+	UsageInformationResponse retrieveDeviceUsageHistoryCarrier(
 			UsageInformationRequest usageInformationRequest);
 
 	@POST
 	@Path("/devices/connections/session/info")
 	@Produces("application/json")
 	@Consumes("application/json")
-	@ApiOperation(value = "Service to check Device Session Begin and End infomration for Verizon")
+	@ApiOperation(value = "Service to check Device Session Begin and End information for Verizon")
 	SessionBeginEndResponse deviceSessionBeginEndResponse(
 			ConnectionInformationRequest connectionInformationRequest);
 
@@ -206,9 +206,9 @@ public interface IAdaptaionLayerService {
 	JobinitializedResponse reRunConnectionHistoryJob(JobParameter jobParameter);
 
 	@GET
-	@Path("/devices/usage")
+	@Path("/device/usage")
 	@Produces("application/json")
-	@ApiOperation(value = "Get Device Usage from Midway")
+	@ApiOperation(value = "Get Device Usage by start and end Date from Midway")
 	UsageInformationMidwayResponse getDeviceUsageInfoDB(
 			@QueryParam("region") final String region,
 			@QueryParam("timestamp") final String timestamp,
@@ -222,9 +222,9 @@ public interface IAdaptaionLayerService {
 			@QueryParam("endDate") final String endDate);
 
 	@GET
-	@Path("/devices/connectionHistory")
+	@Path("/device/connectionHistory")
 	@Produces("application/json")
-	@ApiOperation(value = "Get Device Connection History from Midway")
+	@ApiOperation(value = "Get Device Connection History by start and end Date from Midway for Veriozn Devices.")
 	ConnectionInformationMidwayResponse getDeviceConnectionHistoryInfoDB(
 			@QueryParam("region") final String region,
 			@QueryParam("timestamp") final String timestamp,

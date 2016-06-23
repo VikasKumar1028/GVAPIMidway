@@ -172,7 +172,7 @@ public class GenericErrorProcessor implements Processor {
 
 		}
 		
-		if ("Endpoint[direct://retrieveDeviceUsageHistory]".equals(exchange
+		if ("Endpoint[direct://retrieveDeviceUsageHistoryCarrier]".equals(exchange
 				.getFromEndpoint().toString())) {
 			UsageInformationResponse responseObject = new UsageInformationResponse();
 			responseObject.setHeader(responseHeader);

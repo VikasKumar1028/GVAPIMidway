@@ -396,7 +396,7 @@ public class CamelRoute extends RouteBuilder {
 		updateDevicesDetailsBulk();
 
 		// Retrieve Device Usage History from Carrier
-		retrieveDeviceUsageHistory();
+		retrieveDeviceUsageHistoryCarrier();
 
 		// Execution of schduled jobs scheduledJobs
 		/* scheduledJobs(); */
@@ -1381,8 +1381,8 @@ public class CamelRoute extends RouteBuilder {
 
 	
 	
-	public void retrieveDeviceUsageHistory() {
-		from("direct:retrieveDeviceUsageHistory")
+	public void retrieveDeviceUsageHistoryCarrier() {
+		from("direct:retrieveDeviceUsageHistoryCarrier")
 				.process(new HeaderProcessor())
 				.choice()
 				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))

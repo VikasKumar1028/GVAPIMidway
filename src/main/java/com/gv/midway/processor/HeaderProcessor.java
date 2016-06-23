@@ -54,7 +54,7 @@ public class HeaderProcessor implements Processor {
 						.equalsIgnoreCase("KORE"))||(exchange.getFromEndpoint().toString()
 								.matches("(.*)reactivateDevice(.*)") && derivedCarrierName
 								.equalsIgnoreCase("VERIZON"))||(exchange.getFromEndpoint().toString()
-										.matches("(.*)retrieveDeviceUsageHistory(.*)") && derivedCarrierName
+										.matches("(.*)retrieveDeviceUsageHistoryCarrier(.*)") && derivedCarrierName
 										.equalsIgnoreCase("KORE"))) {
 			exchange.setProperty(IConstant.RESPONSE_CODE, "402");
 			exchange.setProperty(IConstant.RESPONSE_STATUS, "Invalid Parameter");

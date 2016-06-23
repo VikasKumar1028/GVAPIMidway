@@ -32,26 +32,10 @@ public class DeviceServiceImpl implements IDeviceService {
 
 	private Logger log = Logger.getLogger(DeviceServiceImpl.class.getName());
 
-	/*
-	 * public InsertDeviceResponse insertDeviceDetails(Exchange exchange) {
-	 * 
-	 * SingleDevice device = (SingleDevice) exchange.getIn().getBody();
-	 * 
-	 * return iDeviceDao.insertDeviceDetails(device);
-	 * 
-	 * 
-	 * 
-	 * }
-	 */
+
 
 	public UpdateDeviceResponse updateDeviceDetails(Exchange exchange) {
 		// TODO Auto-generated method stub
-
-		/*
-		 * c
-		 * 
-		 * String deviceId = exchange.getIn().getHeader("id", String.class); ;
-		 */
 
 		SingleDevice device = (SingleDevice) exchange.getIn().getBody();
 
@@ -62,12 +46,7 @@ public class DeviceServiceImpl implements IDeviceService {
 	public DeviceInformationResponse getDeviceInformationDB(Exchange exchange) {
 		// TODO Auto-generated method stub
 
-		/*
-		 * String deviceId = exchange.getIn().getHeader("id", String.class);
-		 * 
-		 * System.out.println("id is...."+deviceId);
-		 */
-
+		
 		DeviceInformationRequest deviceInformationRequest = (DeviceInformationRequest) exchange
 				.getIn().getBody();
 
@@ -80,19 +59,7 @@ public class DeviceServiceImpl implements IDeviceService {
 		return iDeviceDao.getDeviceInformationDB(deviceInformationRequest);
 	}
 
-	/*
-	 * public Object getDeviceDetailsBsId(Exchange exchange) { // TODO
-	 * Auto-generated method stub
-	 * 
-	 * String bs_Id = exchange.getIn().getHeader("bs_id", String.class);
-	 * 
-	 * System.out.println("bs_Id is...."+bs_Id);
-	 * 
-	 * 
-	 * return iDeviceDao.getDeviceDetailsBsId(bs_Id);
-	 * 
-	 * }
-	 */
+	
 
 	public void updateDevicesDetailsBulk(Exchange exchange) {
 		// TODO Auto-generated method stub
@@ -158,20 +125,6 @@ public class DeviceServiceImpl implements IDeviceService {
 				.getDeviceConnectionHistoryInfoDB(connectionInformationMidwayRequest);
 	}
 
-	/**
-	 * public String insertDevicesDetailsInBatch(Exchange exchange) {
-	 * 
-	 * Devices devices = (Devices) exchange.getIn().getBody(); return
-	 * iDeviceDao.insertDevicesDetailsInBatch(devices);
-	 * 
-	 * }
-	 * 
-	 * public String updateDevicesDetailsInBatch(Exchange exchange) {
-	 * 
-	 * Devices devices = (Devices) exchange.getIn().getBody(); return
-	 * iDeviceDao.updateDevicesDetailsInBatch(devices);
-	 * 
-	 * }
-	 */
+	
 
 }
