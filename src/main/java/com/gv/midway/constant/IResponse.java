@@ -40,8 +40,8 @@ public class IResponse {
 	public static final String ERROR_DESCRIPTION_START_DATE_FORMAT_MIDWAYDB="Start Date  is missing in Request";
 	public static final String ERROR_DESCRIPTION_END_DATE_FORMAT_MIDWAYDB="End Date  is missing in Request";
 	
-	public static final String ERROR_DESCRIPTION_STARTDATE_VALIDATE_MIDWAYDB="Date that you provided is invalid and Current Format-"+"MM-DD-YYY";
-	public static final String ERROR_DESCRIPTION_ENDTDATE_VALIDATE_MIDWAYDB="The End date that you provided is invalid and Current Format MM-DD-YYY";
+	public static final String ERROR_DESCRIPTION_STARTDATE_VALIDATE_MIDWAYDB="Please provide start and end Date in MM-DD-YYYY format";
+	
 	
 	public static final String SUCCESS_DESCRIPTION_JOB_INITIALIZED="Job Started Successfully";
 }
