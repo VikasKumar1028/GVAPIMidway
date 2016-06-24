@@ -182,22 +182,6 @@ public class GenericErrorProcessor implements Processor {
 			exchange.getIn().setBody(responseObject);
 
 		}
-		if ("Endpoint[direct://getDeviceUsageInfoDB]".equals(exchange
-				.getFromEndpoint().toString())) {
-			UsageInformationMidwayResponse responseObject = new UsageInformationMidwayResponse();
-			responseObject.setHeader(responseHeader);
-			responseObject.setResponse(response);
-			exchange.getIn().setBody(responseObject);
-
-		}
-
-		if ("Endpoint[direct://getDeviceConnectionHistoryInfoDB]"
-				.equals(exchange.getFromEndpoint().toString())) {
-			ConnectionInformationMidwayResponse responseObject = new ConnectionInformationMidwayResponse();
-			responseObject.setHeader(responseHeader);
-			responseObject.setResponse(response);
-			exchange.getIn().setBody(responseObject);
-
-		}
+		
 	}
 }

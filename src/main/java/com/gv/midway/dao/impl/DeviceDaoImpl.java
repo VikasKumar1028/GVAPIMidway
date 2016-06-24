@@ -455,9 +455,9 @@ public class DeviceDaoImpl implements IDeviceDao {
 						.where("netSuiteId").is(netSuiteId))
 						.addCriteria(Criteria
 								.where("date")
-								.gt(startDateValue)
+								.gte(startDateValue)
 								.orOperator(
-										Criteria.where("date").lt(endDateValue)));
+										Criteria.where("date").lte(endDateValue)));
 
 				log.info("searchDeviceQuery::::::::::::::" + searchDeviceQuery);
 
@@ -596,9 +596,9 @@ public class DeviceDaoImpl implements IDeviceDao {
 						.where("netSuiteId").is(netSuiteId))
 						.addCriteria(Criteria
 								.where("date")
-								.gt(startDateValue)
+								.gte(startDateValue)
 								.orOperator(
-										Criteria.where("date").lt(endDateValue)));
+										Criteria.where("date").lte(endDateValue)));
 
 				log.info("searchDeviceQuery::::::::::::::" + searchDeviceQuery);
 
