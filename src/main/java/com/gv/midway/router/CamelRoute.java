@@ -28,6 +28,7 @@ import com.gv.midway.pojo.kore.KoreProvisoningResponse;
 import com.gv.midway.pojo.token.VerizonAuthorizationResponse;
 import com.gv.midway.pojo.token.VerizonSessionLoginResponse;
 import com.gv.midway.processor.BulkDeviceProcessor;
+import com.gv.midway.processor.DateValidationProcessor;
 import com.gv.midway.processor.GenericErrorProcessor;
 import com.gv.midway.processor.HeaderErrorProcessor;
 import com.gv.midway.processor.HeaderProcessor;
@@ -987,7 +988,7 @@ public class CamelRoute extends RouteBuilder {
 
 		// Begin:Device Connection Status
 
-		from("direct:deviceConnectionStatus").process(new HeaderProcessor())
+		from("direct:deviceConnectionStatus").process(new HeaderProcessor()).process(new DateValidationProcessor())
 				.choice()
 				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
 				.process(new StubVerizonDeviceConnectionStatusProcessor())
@@ -1031,7 +1032,7 @@ public class CamelRoute extends RouteBuilder {
 
 		// Begin: Device Session Begin End
 
-		from("direct:deviceSessionBeginEndInfo").process(new HeaderProcessor())
+		from("direct:deviceSessionBeginEndInfo").process(new HeaderProcessor()).process(new DateValidationProcessor())
 				.choice()
 				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
 				.process(new StubVerizonDeviceSessionBeginEndInfoProcessor())
@@ -1383,7 +1384,7 @@ public class CamelRoute extends RouteBuilder {
 	
 	public void retrieveDeviceUsageHistoryCarrier() {
 		from("direct:retrieveDeviceUsageHistoryCarrier")
-				.process(new HeaderProcessor())
+				.process(new HeaderProcessor()).process(new DateValidationProcessor())
 				.choice()
 				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
 				.choice()

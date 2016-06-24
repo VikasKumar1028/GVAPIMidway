@@ -39,9 +39,8 @@ public class IResponse {
 	public static final String ERROR_DESCRIPTION_CONNECTION_MIDWAYDB="Error in Connection with Carrier";
 	public static final String ERROR_DESCRIPTION_START_DATE_FORMAT_MIDWAYDB="Start Date  is missing in Request";
 	public static final String ERROR_DESCRIPTION_END_DATE_FORMAT_MIDWAYDB="End Date  is missing in Request";
-	
-	public static final String ERROR_DESCRIPTION_STARTDATE_VALIDATE_MIDWAYDB="Please provide start and end Date in MM-DD-YYYY format";
-	
+		public static final String ERROR_DESCRIPTION_STARTDATE_VALIDATE_MIDWAYDB="Please provide start and end Date in MM-DD-YYYY format";
+		public static final String ERROR_DESCRIPTION_DATE_MIDWAYDB="Please provide start and end Date in YYYY-MM-DD hh:mm:Ss format in GMT time zone";
 	
 	public static final String SUCCESS_DESCRIPTION_JOB_INITIALIZED="Job Started Successfully";
 }

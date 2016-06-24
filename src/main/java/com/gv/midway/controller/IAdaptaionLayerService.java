@@ -143,13 +143,22 @@ public interface IAdaptaionLayerService {
 	@ApiOperation(value = "Service for Receiving Callback from Verizon")
 	void callbacks(CallBackVerizonRequest activateDeviceRequest);
 
-	@POST
+	@GET
 	@Path("/devices/connections/getStatus")
 	@Produces("application/json")
-	@Consumes("application/json")
 	@ApiOperation(value = "Service to check Device in Session for Verizon")
 	ConnectionStatusResponse deviceConnectionStatusRequest(
-			ConnectionInformationRequest connectionInformationRequest);
+			@QueryParam("region") final String region,
+			@QueryParam("timestamp") final String timestamp,
+			@QueryParam("organization") final String organization,
+			@QueryParam("transactionId") final String transactionId,
+			@QueryParam("sourceName") final String sourceName,
+			@QueryParam("applicationName") final String applicationName,
+			@QueryParam("bsCarrier") final String bsCarrier,
+			@QueryParam("deviceId") final String deviceId,
+			@QueryParam("kind") final String kind,
+			@QueryParam("earliest") final String earliest,
+			@QueryParam("latest") final String latest);
 
 	@POST
 	@Path("/device/restore")
@@ -159,21 +168,39 @@ public interface IAdaptaionLayerService {
 	RestoreDeviceResponse restoreDevice(
 			RestoreDeviceRequest restoreDeviceRequest);
 
-	@POST
+	@GET
 	@Path("/device/usage/session")
 	@Produces("application/json")
-	@Consumes("application/json")
 	@ApiOperation(value = "Retrieve Device data Usage by start and end Date from Carrier for Veriozn Devices.")
 	UsageInformationResponse retrieveDeviceUsageHistoryCarrier(
-			UsageInformationRequest usageInformationRequest);
+			@QueryParam("region") final String region,
+			@QueryParam("timestamp") final String timestamp,
+			@QueryParam("organization") final String organization,
+			@QueryParam("transactionId") final String transactionId,
+			@QueryParam("sourceName") final String sourceName,
+			@QueryParam("applicationName") final String applicationName,
+			@QueryParam("bsCarrier") final String bsCarrier,
+			@QueryParam("deviceId") final String deviceId,
+			@QueryParam("kind") final String kind,
+			@QueryParam("earliest") final String earliest,
+			@QueryParam("latest") final String latest);
 
-	@POST
+	@GET
 	@Path("/devices/connections/session/info")
 	@Produces("application/json")
-	@Consumes("application/json")
 	@ApiOperation(value = "Service to check Device Session Begin and End information for Verizon")
 	SessionBeginEndResponse deviceSessionBeginEndResponse(
-			ConnectionInformationRequest connectionInformationRequest);
+			@QueryParam("region") final String region,
+			@QueryParam("timestamp") final String timestamp,
+			@QueryParam("organization") final String organization,
+			@QueryParam("transactionId") final String transactionId,
+			@QueryParam("sourceName") final String sourceName,
+			@QueryParam("applicationName") final String applicationName,
+			@QueryParam("bsCarrier") final String bsCarrier,
+			@QueryParam("deviceId") final String deviceId,
+			@QueryParam("kind") final String kind,
+			@QueryParam("earliest") final String earliest,
+			@QueryParam("latest") final String latest);
 
 	@POST
 	@Path("/devices/job/usage/transactionFailure")

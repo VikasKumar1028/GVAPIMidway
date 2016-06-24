@@ -12,6 +12,7 @@ import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
 import com.gv.midway.pojo.changeDeviceServicePlans.response.ChangeDeviceServicePlansResponse;
 import com.gv.midway.pojo.connectionInformation.deviceSessionBeginEndInfo.response.SessionBeginEndResponse;
 import com.gv.midway.pojo.connectionInformation.deviceStatus.response.ConnectionStatusResponse;
+import com.gv.midway.pojo.connectionInformation.verizon.response.ConnectionInformationMidwayResponse;
 import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponse;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.pojo.device.response.BatchDeviceResponse;
@@ -20,6 +21,7 @@ import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.reActivateDevice.response.ReactivateDeviceResponse;
 import com.gv.midway.pojo.restoreDevice.response.RestoreDeviceResponse;
 import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
+import com.gv.midway.pojo.usageInformation.response.UsageInformationMidwayResponse;
 import com.gv.midway.pojo.usageInformation.response.UsageInformationResponse;
 
 public class HeaderErrorProcessor implements Processor {
@@ -57,8 +59,8 @@ public class HeaderErrorProcessor implements Processor {
 			responseHeader = (Header) exchange.getProperty(IConstant.HEADER);
 		}
 
-		log.info("endpoint is......"+exchange.getFromEndpoint().toString());
-		
+		log.info("endpoint is......" + exchange.getFromEndpoint().toString());
+
 		switch (exchange.getFromEndpoint().toString()) {
 		case "Endpoint[direct://deviceInformationCarrier]":
 			DeviceInformationResponse deviceInformationResponse = new DeviceInformationResponse();
@@ -73,7 +75,7 @@ public class HeaderErrorProcessor implements Processor {
 			deviceInformationResponseDB.setHeader(responseHeader);
 			deviceInformationResponseDB.setResponse(response);
 			exchange.getIn().setBody(deviceInformationResponseDB);
- 
+
 			break;
 
 		case "Endpoint[direct://updateDevicesDetailsBulk]":
@@ -175,10 +177,27 @@ public class HeaderErrorProcessor implements Processor {
 
 			break;
 
+		case "Endpoint[direct://getDeviceUsageInfoDB]":
+			UsageInformationMidwayResponse usageInformationMidwayResponse = new UsageInformationMidwayResponse();
+			usageInformationMidwayResponse.setHeader(responseHeader);
+			usageInformationMidwayResponse.setResponse(response);
+			exchange.getIn().setBody(usageInformationMidwayResponse);
+
+			break;
+
+		case "Endpoint[direct://getDeviceConnectionHistoryInfoDB]":
+			ConnectionInformationMidwayResponse connectionInformationMidwayResponse = new ConnectionInformationMidwayResponse();
+			connectionInformationMidwayResponse.setHeader(responseHeader);
+			connectionInformationMidwayResponse.setResponse(response);
+			exchange.getIn().setBody(connectionInformationMidwayResponse);
+
+			break;
+
 		default:
 			break;
 		}
 
-		log.info("return object is......"+exchange.getIn().getBody().toString());
+		log.info("return object is......"
+				+ exchange.getIn().getBody().toString());
 	}
 }
