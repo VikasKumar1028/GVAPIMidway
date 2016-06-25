@@ -24,6 +24,9 @@ public class DateValidationProcessor implements Processor {
 	public void process(Exchange exchange) throws Exception {
 		// TODO Auto-generated method stub
 
+		SimpleDateFormat formatter = new SimpleDateFormat(
+				"yyyy-MM-dd'T'HH:mm:ss");
+
 		if (exchange.getFromEndpoint().toString()
 				.equals("Endpoint[direct://retrieveDeviceUsageHistoryCarrier]")) {
 
@@ -32,9 +35,6 @@ public class DateValidationProcessor implements Processor {
 
 			UsageInformationRequestDataArea usageInformationRequestDataArea = request
 					.getDataArea();
-
-			SimpleDateFormat formatter = new SimpleDateFormat(
-					"yyyy-MM-dd'T'HH:mm:ss");
 
 			try {
 
@@ -59,6 +59,7 @@ public class DateValidationProcessor implements Processor {
 									.getEarliest());
 					Date latestDate = formatter
 							.parse(usageInformationRequestDataArea.getLatest());
+
 				}
 
 			}
@@ -88,8 +89,6 @@ public class DateValidationProcessor implements Processor {
 
 			ConnectionInformationRequestDataArea connectionInformationRequestDataArea = request
 					.getDataArea();
-			SimpleDateFormat formatter = new SimpleDateFormat(
-					"yyyy-MM-dd'T'HH:mm:ss");
 
 			try {
 
@@ -142,9 +141,6 @@ public class DateValidationProcessor implements Processor {
 
 			ConnectionInformationRequestDataArea connectionInformationRequestDataArea = request
 					.getDataArea();
-
-			SimpleDateFormat formatter = new SimpleDateFormat(
-					"yyyy-MM-dd'T'HH:mm:ss");
 
 			try {
 

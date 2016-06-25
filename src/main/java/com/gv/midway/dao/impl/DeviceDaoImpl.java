@@ -447,6 +447,17 @@ public class DeviceDaoImpl implements IDeviceDao {
 			return usageInformationMidwayResponse;
 		}
 
+		if (startDateValue.after(endDateValue)) {
+
+			log.info("Earliest date should not be greater than Latest date");
+			response.setResponseCode(IResponse.INVALID_PAYLOAD);
+			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_START_END_VALIDATION_MIDWAYDB);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
+			usageInformationMidwayResponse.setResponse(response);
+			return usageInformationMidwayResponse;
+
+		}
+
 		else {
 
 			try {
@@ -457,7 +468,8 @@ public class DeviceDaoImpl implements IDeviceDao {
 								.where("date")
 								.gte(startDateValue)
 								.orOperator(
-										Criteria.where("date").lte(endDateValue)));
+										Criteria.where("date")
+												.lte(endDateValue)));
 
 				log.info("searchDeviceQuery::::::::::::::" + searchDeviceQuery);
 
@@ -587,6 +599,16 @@ public class DeviceDaoImpl implements IDeviceDao {
 			connectionInformationMidwayResponse.setResponse(response);
 			return connectionInformationMidwayResponse;
 		}
+		if (startDateValue.after(endDateValue)) {
+
+			log.info("Earliest date should not be greater than Latest date");
+			response.setResponseCode(IResponse.INVALID_PAYLOAD);
+			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_START_END_VALIDATION_MIDWAYDB);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
+			connectionInformationMidwayResponse.setResponse(response);
+			return connectionInformationMidwayResponse;
+
+		}
 
 		else {
 
@@ -598,7 +620,8 @@ public class DeviceDaoImpl implements IDeviceDao {
 								.where("date")
 								.gte(startDateValue)
 								.orOperator(
-										Criteria.where("date").lte(endDateValue)));
+										Criteria.where("date")
+												.lte(endDateValue)));
 
 				log.info("searchDeviceQuery::::::::::::::" + searchDeviceQuery);
 
