@@ -458,6 +458,22 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 		}
 
+		if (startDateValue != null && endDateValue != null) {
+			try {
+				startDateValue = formatter.parse(startDateValue.toString());
+				endDateValue = formatter.parse(endDateValue.toString());
+			}
+
+			catch (Exception e) {
+				response.setResponseCode(IResponse.NO_DATA_FOUND_CODE);
+				response.setResponseDescription(IResponse.ERROR_DESCRIPTION_STARTDATE_VALIDATE_MIDWAYDB);
+				response.setResponseStatus(IResponse.ERROR_MESSAGE);
+				usageInformationMidwayResponse.setResponse(response);
+
+			}
+			return usageInformationMidwayResponse;
+		}
+
 		else {
 
 			try {
@@ -608,6 +624,22 @@ public class DeviceDaoImpl implements IDeviceDao {
 			connectionInformationMidwayResponse.setResponse(response);
 			return connectionInformationMidwayResponse;
 
+		}
+
+		if (startDateValue != null && endDateValue != null) {
+			try {
+				startDateValue = formatter.parse(startDateValue.toString());
+				endDateValue = formatter.parse(endDateValue.toString());
+			}
+
+			catch (Exception e) {
+				response.setResponseCode(IResponse.NO_DATA_FOUND_CODE);
+				response.setResponseDescription(IResponse.ERROR_DESCRIPTION_STARTDATE_VALIDATE_MIDWAYDB);
+				response.setResponseStatus(IResponse.ERROR_MESSAGE);
+				connectionInformationMidwayResponse.setResponse(response);
+
+			}
+			return connectionInformationMidwayResponse;
 		}
 
 		else {
