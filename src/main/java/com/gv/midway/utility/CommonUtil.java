@@ -72,13 +72,12 @@ public class CommonUtil {
 	public static String getDerivedCarrierName(Object carrierName) {
 
 		String sourceDirived = null;
-		
-		if(carrierName==null){
-			
+
+		if (carrierName == null) {
+
 			return null;
 		}
 
-		
 		if (carrierName.toString().startsWith("V")) {
 
 			return sourceDirived = "VERIZON";
@@ -115,7 +114,7 @@ public class CommonUtil {
 
 	public static DeviceId getRecommendedDeviceIdentifier(DeviceId[] devices) {
 
-		log.info("getRecommendedDeviceIdentifier........deviceId..is......." );
+		log.info("getRecommendedDeviceIdentifier........deviceId..is.......");
 
 		for (DeviceId device : devices) {
 			if (("ESN".equalsIgnoreCase(device.getKind()))
@@ -130,4 +129,24 @@ public class CommonUtil {
 		return devices[0];
 
 	}
+
+	// Returning the Sim Number from the DeviceId Array
+	// Device Usage Batch Jobs
+
+	public static DeviceId getSimNumber(DeviceId[] devices) {
+
+		log.info("getSimNumber........deviceId..is.......");
+
+		for (DeviceId device : devices) {
+			if (("SIM".equalsIgnoreCase(device.getKind()))) {
+
+				return device;
+			}
+
+		}
+
+		return null;
+
+	}
+
 }
