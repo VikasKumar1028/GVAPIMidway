@@ -27,6 +27,8 @@ public interface IJobService {
 	public void deleteTransactionFailureDeviceUsageRecords(Exchange exchange) ;
 	
 	public void deleteTransactionFailureDeviceConnectionHistoryRecords(Exchange exchange);
+	
+	
 }
 	
 

@@ -3,7 +3,6 @@ package com.gv.midway.service.impl;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.camel.Exchange;
@@ -11,13 +10,12 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.gv.midway.constant.CarrierType;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.JobName;
 import com.gv.midway.constant.JobType;
 import com.gv.midway.dao.IJobDao;
-import com.gv.midway.dao.impl.JobDaoImpl;
 import com.gv.midway.pojo.job.JobDetail;
+import com.gv.midway.pojo.server.ServerDetail;
 import com.gv.midway.service.IJobService;
 import com.gv.midway.utility.CommonUtil;
 
@@ -37,23 +35,28 @@ public class JobServiceImpl implements IJobService {
 		if (jobDetail.getType().toString()
 				.equalsIgnoreCase(JobType.RERUN.toString())) {
 
-		String currentServerIp=	CommonUtil.getIpAddress();
-			
-		
-		//Send currentServerIp and fetch serverDetail;
-		//get the jobType of the serverDEtail
+			String currentServerIp = CommonUtil.getIpAddress();
+
+			log.info("currentServerIp:::::::" + currentServerIp);
+
+			ServerDetail serverDetail = null;
+			serverDetail = iJobDao.fetchServerIp(currentServerIp);
+			log.info("serverDetail:::::" + serverDetail.getJobType());
+
+			// Send currentServerIp and fetch serverDetail;
+			// get the jobType of the serverDEtail
 			String serverip;
 			String jobType = "ODD";
+			// serverDetail.getJobType()
 
-			if ("ODD".equalsIgnoreCase(jobType)) {
+			if ("ODD".equalsIgnoreCase(serverDetail.getJobType())) {
 				return iJobDao.fetchOddDevices(exchange);
 			}
 
-			if ("EVEN".equalsIgnoreCase(jobType)) {
+			if ("EVEN".equalsIgnoreCase(serverDetail.getJobType())) {
 				return iJobDao.fetchEvenDevices(exchange);
 			}
 
-			
 		}
 
 		return iJobDao.fetchDevices(exchange);

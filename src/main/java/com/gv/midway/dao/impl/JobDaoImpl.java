@@ -21,6 +21,7 @@ import com.gv.midway.pojo.deviceHistory.DeviceConnection;
 import com.gv.midway.pojo.deviceHistory.DeviceUsage;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.job.JobDetail;
+import com.gv.midway.pojo.server.ServerDetail;
 import com.gv.midway.utility.CommonUtil;
 import com.mongodb.WriteResult;
 
@@ -32,7 +33,7 @@ public class JobDaoImpl implements IJobDao {
 
 	Logger log = Logger.getLogger(JobDaoImpl.class);
 
-	//@Override
+	// @Override
 	public List fetchDevices(Exchange exchange) {
 
 		JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
@@ -72,13 +73,14 @@ public class JobDaoImpl implements IJobDao {
 			System.out.println("e");
 		}
 
-		 //return list;
+		// return list;
 		return deviceInformationList;
 	}
 
-	
 	public List fetchOddDevices(Exchange exchange) {
 
+		log.info("fetchOddDevices::::::::");
+
 		JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
 
 		exchange.setProperty("jobName", jobDetail.getName().toString());
@@ -94,7 +96,10 @@ public class JobDaoImpl implements IJobDao {
 			// We have to check bs_carrier with possible reseller values for
 			// that carrier.
 			Query searchDeviceQuery = new Query(Criteria.where("bs_carrier")
-					.is(carrierName)).addCriteria(Criteria.where("netSuiteId").mod(2, 1));
+					.is(carrierName)).addCriteria(Criteria.where("netSuiteId")
+					.mod(2, 0));
+
+			log.info("searchDeviceQuery::::::::::" + searchDeviceQuery);
 
 			deviceInformationList = mongoTemplate.find(searchDeviceQuery,
 					DeviceInformation.class);
@@ -113,16 +118,19 @@ public class JobDaoImpl implements IJobDao {
 		}
 
 		catch (Exception e) {
+
+			e.printStackTrace();
 			System.out.println("e");
 		}
 
-		 //return list;
+		// return list;
 		return deviceInformationList;
 	}
 
-	
 	public List fetchEvenDevices(Exchange exchange) {
 
+		log.info("fetchEvenDevices::::::::");
+
 		JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
 
 		exchange.setProperty("jobName", jobDetail.getName().toString());
@@ -138,7 +146,9 @@ public class JobDaoImpl implements IJobDao {
 			// We have to check bs_carrier with possible reseller values for
 			// that carrier.
 			Query searchDeviceQuery = new Query(Criteria.where("bs_carrier")
-					.is(carrierName)).addCriteria(Criteria.where("netSuiteId").mod(2, 0));;
+					.is(carrierName)).addCriteria(Criteria.where("netSuiteId")
+					.mod(2, 0));
+			;
 
 			deviceInformationList = mongoTemplate.find(searchDeviceQuery,
 					DeviceInformation.class);
@@ -157,19 +167,14 @@ public class JobDaoImpl implements IJobDao {
 		}
 
 		catch (Exception e) {
-			System.out.println("e");
+			e.printStackTrace();
+			log.info("Exception" + e);
 		}
 
-		 //return list;
+		// return list;
 		return deviceInformationList;
 	}
 
-	
-	
-	
-	
-
-	
 	/**
 	 * Inserting the Job Details and setting date parameters
 	 */
@@ -195,7 +200,6 @@ public class JobDaoImpl implements IJobDao {
 
 		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
 		try {
-			
 
 			Query searchJobQuery = new Query(Criteria.where("carrierName").is(
 					jobDetail.getCarrierName()))
@@ -230,133 +234,8 @@ public class JobDaoImpl implements IJobDao {
 		try {
 
 			Query searchJobQuery = new Query(Criteria.where("carrierName").is(
-					jobDetail.getCarrierName())).addCriteria(Criteria.where(
-					"timestamp").is(jobDetail.getDate())).addCriteria(Criteria.where(
-							"isValid").is(true));
-
-			Update update = new Update();
-
-			update.set("isValid", false);
-
-			WriteResult result = mongoTemplate.updateMulti(searchJobQuery,
-					update, DeviceUsage.class);
-
-			log.info("WriteResult *********************" + result);
-
-		}
-
-		catch (Exception e) {
-			log.info("Error In Saving Job Detail-----------------------------");
-		}
-
-	}
-	
-	
-	@Override
-	public void deleteDeviceConnectionHistoryRecords(Exchange exchange) {
-
-		log.info("Inside deleteDeviceConnectionRecords .....................");
-
-		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
-		try {
-
-			Query searchJobQuery = new Query(Criteria.where("carrierName").is(
-					jobDetail.getCarrierName())).addCriteria(Criteria.where(
-					"timestamp").is(jobDetail.getDate())).addCriteria(Criteria.where(
-							"isValid").is(true));
-
-			Update update = new Update();
-
-			update.set("isValid", false);
-
-			WriteResult result = mongoTemplate.updateMulti(searchJobQuery,
-					update, DeviceConnection.class);
-
-			log.info("WriteResult *********************" + result);
-
-		}
-
-		catch (Exception e) {
-			log.info("Error In Saving Job Detail-----------------------------");
-		}
-
-	}
-
-
-
-
-
-	@Override
-	public List fetchTransactionFailureDevices(Exchange exchange) {
-		JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
-
-		exchange.setProperty("jobName", jobDetail.getName().toString());
-
-		
-		List list = null;
-
-		try {
-
-			String carrierName = jobDetail.getCarrierName();
-
-			log.info("Carrier Name -----------------" + carrierName);
-			// We have to check bs_carrier with possible reseller values for
-			// that carrier.
-			Query searchQuery = new Query(Criteria.where("carrierName").is(
-					jobDetail.getCarrierName())).addCriteria(Criteria.where(
-					"timestamp").is(jobDetail.getDate())).addCriteria(Criteria.where(
-					"transactionStatus").is(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR)).addCriteria(Criteria.where(
-					"isValid").is(true));
-
-			
-			
-			if(JobName.KORE_DEVICE_USAGE.toString().equalsIgnoreCase(jobDetail.getName().toString()) ||JobName.VERIZON_DEVICE_USAGE.toString().equalsIgnoreCase(jobDetail.getName().toString()))
-			{
-			list = mongoTemplate.find(searchQuery,
-					DeviceUsage.class);
-			}
-			else{
-				list = mongoTemplate.find(searchQuery,
-						DeviceConnection.class);
-				
-			}
-
-			/*
-			 * list = new
-			 * ArrayList<DeviceInformation>(Collections.nCopies(10000,
-			 * deviceInformationList.get(0)));
-			 */
-
-		
-		}
-
-		catch (Exception e) {
-			System.out.println("e");
-		}
-
-		 //return list;
-		return list;
-		
-	}
-
-
-
-
-
-	@Override
-	public void deleteTransactionFailureDeviceUsageRecords(Exchange exchange) {
-		log.info("Inside deleteTransactionFailureDeviceUsageRecords .....................");
-
-		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
-		try {
-
-			
-
-			
-			Query searchJobQuery = new Query(Criteria.where("carrierName").is(
-					jobDetail.getCarrierName())).addCriteria(Criteria.where(
-					"timestamp").is(jobDetail.getDate()))
-					.addCriteria(Criteria.where("transactionStatus").is(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR))
+					jobDetail.getCarrierName())).addCriteria(
+					Criteria.where("timestamp").is(jobDetail.getDate()))
 					.addCriteria(Criteria.where("isValid").is(true));
 
 			Update update = new Update();
@@ -374,26 +253,20 @@ public class JobDaoImpl implements IJobDao {
 			log.info("Error In Saving Job Detail-----------------------------");
 		}
 
-		
 	}
 
-
-
-
-
 	@Override
-	public void deleteTransactionFailureDeviceConnectionHistoryRecords(
-			Exchange exchange) {
-		log.info("Inside deleteTransactionFailureDeviceConnectionHistoryRecords .....................");
+	public void deleteDeviceConnectionHistoryRecords(Exchange exchange) {
+
+		log.info("Inside deleteDeviceConnectionRecords .....................");
 
 		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
 		try {
 
 			Query searchJobQuery = new Query(Criteria.where("carrierName").is(
-					jobDetail.getCarrierName())).addCriteria(Criteria.where(
-					"timestamp").is(jobDetail.getDate())).addCriteria(Criteria.where(
-					"transactionStatus").is(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR)).addCriteria(Criteria.where(
-					"isValid").is(true));
+					jobDetail.getCarrierName())).addCriteria(
+					Criteria.where("timestamp").is(jobDetail.getDate()))
+					.addCriteria(Criteria.where("isValid").is(true));
 
 			Update update = new Update();
 
@@ -409,6 +282,146 @@ public class JobDaoImpl implements IJobDao {
 		catch (Exception e) {
 			log.info("Error In Saving Job Detail-----------------------------");
 		}
-		
+
+	}
+
+	@Override
+	public List fetchTransactionFailureDevices(Exchange exchange) {
+		JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
+
+		exchange.setProperty("jobName", jobDetail.getName().toString());
+
+		List list = null;
+
+		try {
+
+			String carrierName = jobDetail.getCarrierName();
+
+			log.info("Carrier Name -----------------" + carrierName);
+			// We have to check bs_carrier with possible reseller values for
+			// that carrier.
+			Query searchQuery = new Query(Criteria.where("carrierName").is(
+					jobDetail.getCarrierName()))
+					.addCriteria(
+							Criteria.where("timestamp").is(jobDetail.getDate()))
+					.addCriteria(
+							Criteria.where("transactionStatus").is(
+									IConstant.MIDWAY_TRANSACTION_STATUS_ERROR))
+					.addCriteria(Criteria.where("isValid").is(true));
+
+			if (JobName.KORE_DEVICE_USAGE.toString().equalsIgnoreCase(
+					jobDetail.getName().toString())
+					|| JobName.VERIZON_DEVICE_USAGE.toString()
+							.equalsIgnoreCase(jobDetail.getName().toString())) {
+				list = mongoTemplate.find(searchQuery, DeviceUsage.class);
+			} else {
+				list = mongoTemplate.find(searchQuery, DeviceConnection.class);
+
+			}
+
+			/*
+			 * list = new
+			 * ArrayList<DeviceInformation>(Collections.nCopies(10000,
+			 * deviceInformationList.get(0)));
+			 */
+
+		}
+
+		catch (Exception e) {
+			System.out.println("e");
+		}
+
+		// return list;
+		return list;
+
+	}
+
+	@Override
+	public void deleteTransactionFailureDeviceUsageRecords(Exchange exchange) {
+		log.info("Inside deleteTransactionFailureDeviceUsageRecords .....................");
+
+		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+		try {
+
+			Query searchJobQuery = new Query(Criteria.where("carrierName").is(
+					jobDetail.getCarrierName()))
+					.addCriteria(
+							Criteria.where("timestamp").is(jobDetail.getDate()))
+					.addCriteria(
+							Criteria.where("transactionStatus").is(
+									IConstant.MIDWAY_TRANSACTION_STATUS_ERROR))
+					.addCriteria(Criteria.where("isValid").is(true));
+
+			Update update = new Update();
+
+			update.set("isValid", false);
+
+			WriteResult result = mongoTemplate.updateMulti(searchJobQuery,
+					update, DeviceUsage.class);
+
+			log.info("WriteResult *********************" + result);
+
+		}
+
+		catch (Exception e) {
+			log.info("Error In Saving Job Detail-----------------------------");
+		}
+
+	}
+
+	@Override
+	public void deleteTransactionFailureDeviceConnectionHistoryRecords(
+			Exchange exchange) {
+		log.info("Inside deleteTransactionFailureDeviceConnectionHistoryRecords .....................");
+
+		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+		try {
+
+			Query searchJobQuery = new Query(Criteria.where("carrierName").is(
+					jobDetail.getCarrierName()))
+					.addCriteria(
+							Criteria.where("timestamp").is(jobDetail.getDate()))
+					.addCriteria(
+							Criteria.where("transactionStatus").is(
+									IConstant.MIDWAY_TRANSACTION_STATUS_ERROR))
+					.addCriteria(Criteria.where("isValid").is(true));
+
+			Update update = new Update();
+
+			update.set("isValid", false);
+
+			WriteResult result = mongoTemplate.updateMulti(searchJobQuery,
+					update, DeviceConnection.class);
+
+			log.info("WriteResult *********************" + result);
+
+		}
+
+		catch (Exception e) {
+			log.info("Error In Saving Job Detail-----------------------------");
+		}
+
+	}
+
+	@Override
+	public ServerDetail fetchServerIp(String currentServerIp) {
+		// TODO Auto-generated method stub
+
+		log.info("Inside fetchServerIp.....................");
+
+		log.info("currentServerIp:::::::" + currentServerIp);
+
+		ServerDetail serverDetail = null;
+
+		Query searchDeviceQuery = new Query(Criteria.where("ipAddress").is(
+				currentServerIp));
+
+		log.info("searchDeviceQuery:::::::::::" + searchDeviceQuery);
+
+		serverDetail = mongoTemplate.findOne(searchDeviceQuery,
+				ServerDetail.class);
+
+		return serverDetail;
+
 	}
 }
