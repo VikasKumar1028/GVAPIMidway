@@ -37,16 +37,19 @@ public class JobServiceImpl implements IJobService {
 		if (jobDetail.getType().toString()
 				.equalsIgnoreCase(JobType.RERUN.toString())) {
 
-			CommonUtil.getIpAddress();
+		String currentServerIp=	CommonUtil.getIpAddress();
 			
+		
+		//Send currentServerIp and fetch serverDetail;
+		//get the jobType of the serverDEtail
 			String serverip;
-			String jobParameter = "ODD";
+			String jobType = "ODD";
 
-			if ("ODD".equalsIgnoreCase(jobParameter)) {
+			if ("ODD".equalsIgnoreCase(jobType)) {
 				return iJobDao.fetchOddDevices(exchange);
 			}
 
-			if ("EVEN".equalsIgnoreCase(jobParameter)) {
+			if ("EVEN".equalsIgnoreCase(jobType)) {
 				return iJobDao.fetchEvenDevices(exchange);
 			}
 

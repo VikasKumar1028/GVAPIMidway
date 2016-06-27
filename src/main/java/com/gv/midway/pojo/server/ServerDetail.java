@@ -8,7 +8,7 @@ public class ServerDetail {
 
 	private String name;
 	private String ipAddress;
-	private String jobParameter;
+	private String jobType;
 	public String getName() {
 		return name;
 	}
@@ -21,11 +21,11 @@ public class ServerDetail {
 	public void setIpAddress(String ipAddress) {
 		this.ipAddress = ipAddress;
 	}
-	public String getJobParameter() {
-		return jobParameter;
+	public String getJobType() {
+		return jobType;
 	}
-	public void setJobParameter(String jobParameter) {
-		this.jobParameter = jobParameter;
+	public void setJobType(String jobType) {
+		this.jobType = jobType;
 	}
 	@Override
 	public int hashCode() {
@@ -33,8 +33,7 @@ public class ServerDetail {
 		int result = 1;
 		result = prime * result
 				+ ((ipAddress == null) ? 0 : ipAddress.hashCode());
-		result = prime * result
-				+ ((jobParameter == null) ? 0 : jobParameter.hashCode());
+		result = prime * result + ((jobType == null) ? 0 : jobType.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
 	}
@@ -52,10 +51,10 @@ public class ServerDetail {
 				return false;
 		} else if (!ipAddress.equals(other.ipAddress))
 			return false;
-		if (jobParameter == null) {
-			if (other.jobParameter != null)
+		if (jobType == null) {
+			if (other.jobType != null)
 				return false;
-		} else if (!jobParameter.equals(other.jobParameter))
+		} else if (!jobType.equals(other.jobType))
 			return false;
 		if (name == null) {
 			if (other.name != null)
@@ -67,6 +66,7 @@ public class ServerDetail {
 	@Override
 	public String toString() {
 		return "ServerDetail [name=" + name + ", ipAddress=" + ipAddress
-				+ ", jobParameter=" + jobParameter + "]";
+				+ ", jobType=" + jobType + "]";
 	}
+	
 }
