@@ -19,6 +19,7 @@ import com.gv.midway.dao.IJobDao;
 import com.gv.midway.dao.impl.JobDaoImpl;
 import com.gv.midway.pojo.job.JobDetail;
 import com.gv.midway.service.IJobService;
+import com.gv.midway.utility.CommonUtil;
 
 @Service
 public class JobServiceImpl implements IJobService {
@@ -30,7 +31,30 @@ public class JobServiceImpl implements IJobService {
 
 	@Override
 	public List fetchDevices(Exchange exchange) {
+
+		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+
+		if (jobDetail.getType().toString()
+				.equalsIgnoreCase(JobType.RERUN.toString())) {
+
+			CommonUtil.getIpAddress();
+			
+			String serverip;
+			String jobParameter = "ODD";
+
+			if ("ODD".equalsIgnoreCase(jobParameter)) {
+				return iJobDao.fetchOddDevices(exchange);
+			}
+
+			if ("EVEN".equalsIgnoreCase(jobParameter)) {
+				return iJobDao.fetchEvenDevices(exchange);
+			}
+
+			
+		}
+
 		return iJobDao.fetchDevices(exchange);
+
 	}
 
 	@Override
@@ -73,22 +97,19 @@ public class JobServiceImpl implements IJobService {
 	}
 
 	public void deleteDeviceUsageRecords(Exchange exchange) {
-		
+
 		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
-		 if(JobType.RERUN.toString().equals(jobDetail.getType().toString()))
-		 {
-			 iJobDao.deleteDeviceUsageRecords(exchange);
-		 }
-		
-		
+		if (JobType.RERUN.toString().equals(jobDetail.getType().toString())) {
+			iJobDao.deleteDeviceUsageRecords(exchange);
+		}
+
 	}
 
 	public void deleteDeviceConnectionHistoryRecords(Exchange exchange) {
 		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
-		 if(JobType.RERUN.toString().equals(jobDetail.getType().toString()))
-		 {
-		iJobDao.deleteDeviceConnectionHistoryRecords(exchange);
-		 }
+		if (JobType.RERUN.toString().equals(jobDetail.getType().toString())) {
+			iJobDao.deleteDeviceConnectionHistoryRecords(exchange);
+		}
 	}
 
 	/**

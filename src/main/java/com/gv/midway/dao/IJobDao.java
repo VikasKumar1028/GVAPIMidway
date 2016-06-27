@@ -7,6 +7,10 @@ import org.apache.camel.Exchange;
 public interface IJobDao {
 
 	public List fetchDevices(Exchange exchange);
+	
+	public List fetchOddDevices(Exchange exchange);
+	
+	public List fetchEvenDevices(Exchange exchange);
 
 	public void insertJobDetails(Exchange exchange);
 

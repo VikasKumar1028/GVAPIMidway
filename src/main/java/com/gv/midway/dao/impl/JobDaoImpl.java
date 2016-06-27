@@ -77,6 +77,93 @@ public class JobDaoImpl implements IJobDao {
 	}
 
 	
+	public List fetchOddDevices(Exchange exchange) {
+
+		JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
+
+		exchange.setProperty("jobName", jobDetail.getName().toString());
+
+		List<DeviceInformation> deviceInformationList = null;
+		List<DeviceInformation> list = null;
+
+		try {
+
+			String carrierName = jobDetail.getCarrierName();
+
+			log.info("Carrier Name -----------------" + carrierName);
+			// We have to check bs_carrier with possible reseller values for
+			// that carrier.
+			Query searchDeviceQuery = new Query(Criteria.where("bs_carrier")
+					.is(carrierName)).addCriteria(Criteria.where("netSuiteId").mod(2, 1));
+
+			deviceInformationList = mongoTemplate.find(searchDeviceQuery,
+					DeviceInformation.class);
+
+			/*
+			 * list = new
+			 * ArrayList<DeviceInformation>(Collections.nCopies(10000,
+			 * deviceInformationList.get(0)));
+			 */
+
+			list = new ArrayList<DeviceInformation>(Collections.nCopies(10,
+					deviceInformationList.get(0)));
+
+			log.info("deviceInformationList ------------------"
+					+ deviceInformationList.size());
+		}
+
+		catch (Exception e) {
+			System.out.println("e");
+		}
+
+		 //return list;
+		return deviceInformationList;
+	}
+
+	
+	public List fetchEvenDevices(Exchange exchange) {
+
+		JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
+
+		exchange.setProperty("jobName", jobDetail.getName().toString());
+
+		List<DeviceInformation> deviceInformationList = null;
+		List<DeviceInformation> list = null;
+
+		try {
+
+			String carrierName = jobDetail.getCarrierName();
+
+			log.info("Carrier Name -----------------" + carrierName);
+			// We have to check bs_carrier with possible reseller values for
+			// that carrier.
+			Query searchDeviceQuery = new Query(Criteria.where("bs_carrier")
+					.is(carrierName)).addCriteria(Criteria.where("netSuiteId").mod(2, 0));;
+
+			deviceInformationList = mongoTemplate.find(searchDeviceQuery,
+					DeviceInformation.class);
+
+			/*
+			 * list = new
+			 * ArrayList<DeviceInformation>(Collections.nCopies(10000,
+			 * deviceInformationList.get(0)));
+			 */
+
+			list = new ArrayList<DeviceInformation>(Collections.nCopies(10,
+					deviceInformationList.get(0)));
+
+			log.info("deviceInformationList ------------------"
+					+ deviceInformationList.size());
+		}
+
+		catch (Exception e) {
+			System.out.println("e");
+		}
+
+		 //return list;
+		return deviceInformationList;
+	}
+
 	
 	
 	
