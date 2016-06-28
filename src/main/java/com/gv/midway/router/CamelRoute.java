@@ -27,6 +27,7 @@ import com.gv.midway.pojo.kore.DKoreResponseCode;
 import com.gv.midway.pojo.kore.KoreProvisoningResponse;
 import com.gv.midway.pojo.token.VerizonAuthorizationResponse;
 import com.gv.midway.pojo.token.VerizonSessionLoginResponse;
+import com.gv.midway.pojo.usageInformation.kore.response.UsageInformationKoreResponse;
 import com.gv.midway.processor.BulkDeviceProcessor;
 import com.gv.midway.processor.DateValidationProcessor;
 import com.gv.midway.processor.GenericErrorProcessor;
@@ -1252,7 +1253,8 @@ public class CamelRoute extends RouteBuilder {
 				.log("KOREJob-DEVICE USAGE")
 
 				.doTry().process(new KoreDeviceUsageHistoryPreProcessor(env))
-				.to(uriRestKoreEndPoint).unmarshal().json(JsonLibrary.Jackson)
+				.to(uriRestKoreEndPoint).unmarshal()
+						
 				.process(new KoreDeviceUsageHistoryPostProcessor())
 				.bean(iSchedulerService, "saveDeviceUsageHistory")
 				.doCatch(Exception.class).end();

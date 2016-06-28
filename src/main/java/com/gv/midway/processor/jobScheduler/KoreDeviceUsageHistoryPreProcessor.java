@@ -45,28 +45,34 @@ public class KoreDeviceUsageHistoryPreProcessor implements Processor {
 
 		UsageInformationKoreRequest usageInformationKoreRequest = new UsageInformationKoreRequest();
 
-		usageInformationKoreRequest.setSimNumber(deviceInfo.getDeviceIds()[0]
-				.getId());
+		/*
+		 * usageInformationKoreRequest.setSimNumber(deviceInfo.getDeviceIds()[0]
+		 * .getId());
+		 */
+
+		usageInformationKoreRequest.setSimNumber("89014103277405945606");
+
+		// {"simNumber": "89014103277405945606"}
 
 		String strRequestBody = objectMapper
 				.writeValueAsString(usageInformationKoreRequest);
 
-		
-		log.info("strRequestBody::"+strRequestBody.toString());
+		log.info("strRequestBody::" + strRequestBody.toString());
 
 		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.HTTP_METHOD, "POST");
 		message.setHeader("Authorization",
 				newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
-		message.setHeader(Exchange.HTTP_PATH, "/json/queryDeviceUsage");
 
-		//message.setHeader(Exchange.HTTP_PATH, "/json/queryDeviceUsageBySimNumber");
+		message.setHeader(Exchange.HTTP_PATH,
+				"/json/queryDeviceUsageBySimNumber");
 
 		message.setBody(strRequestBody);
 
 		exchange.setPattern(ExchangePattern.InOut);
-		log.info("message::"+message.toString());
+
+		log.info("message::" + message.toString());
 
 		log.info("End:KoreDeviceUsageHistoryPreProcessor");
 

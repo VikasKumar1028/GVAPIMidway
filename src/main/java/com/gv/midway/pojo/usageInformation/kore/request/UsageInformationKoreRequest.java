@@ -1,5 +1,8 @@
 package com.gv.midway.pojo.usageInformation.kore.request;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UsageInformationKoreRequest {
 
 	@Override

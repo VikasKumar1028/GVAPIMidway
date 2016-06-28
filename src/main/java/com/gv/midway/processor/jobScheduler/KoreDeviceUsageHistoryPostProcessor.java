@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.deviceHistory.DeviceUsage;
 import com.gv.midway.pojo.job.JobDetail;
+import com.gv.midway.pojo.usageInformation.kore.response.UsageInformationKoreResponse;
 import com.gv.midway.pojo.usageInformation.verizon.response.UsageHistory;
 import com.gv.midway.pojo.usageInformation.verizon.response.VerizonUsageInformationResponse;
 import com.gv.midway.pojo.verizon.DeviceId;
@@ -26,19 +27,23 @@ public class KoreDeviceUsageHistoryPostProcessor implements Processor {
 	public void process(Exchange exchange) throws Exception {
 
 		log.info("Begin:KoreDeviceUsageHistoryPostProcessor");
-		Map map = exchange.getIn().getBody(Map.class);
-		ObjectMapper mapper = new ObjectMapper();
-		VerizonUsageInformationResponse usageResponse = mapper.convertValue(
-				map, VerizonUsageInformationResponse.class);
+
+		System.out.println("exchange::::" + exchange.getIn().getBody());
+
+		UsageInformationKoreResponse usageInformationKoreResponse = (UsageInformationKoreResponse) exchange
+				.getIn().getBody();
+
+		System.out.println("usageInformationKoreResponse:::::::::"				+ usageInformationKoreResponse.toString());
+
 		DeviceUsage deviceUsage = new DeviceUsage();
 		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
 
 		long totalBytesUsed = 0L;
-		if (usageResponse.getUsageHistory() != null) {
-			for (UsageHistory history : usageResponse.getUsageHistory()) {
-				totalBytesUsed = history.getBytesUsed() + totalBytesUsed;
-			}
-		}
+		/*
+		 * if (usageResponse.getUsageHistory() != null) { for (UsageHistory
+		 * history : usageResponse.getUsageHistory()) { totalBytesUsed =
+		 * history.getBytesUsed() + totalBytesUsed; } }
+		 */
 		deviceUsage
 				.setCarrierName((String) exchange.getProperty("CarrierName"));
 		deviceUsage.setDeviceId((DeviceId) exchange.getProperty("DeviceId"));

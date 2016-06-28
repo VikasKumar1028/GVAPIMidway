@@ -41,8 +41,9 @@ public class JobServiceImpl implements IJobService {
 
 			ServerDetail serverDetail = null;
 			serverDetail = iJobDao.fetchServerIp(currentServerIp);
-			log.info("serverDetail:::::" + serverDetail.getJobType());
-
+			
+			/*log.info("serverDetail:::::" + serverDetail.getJobType());
+*/
 			// Send currentServerIp and fetch serverDetail;
 			// get the jobType of the serverDEtail
 	
