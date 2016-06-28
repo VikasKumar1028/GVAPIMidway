@@ -458,7 +458,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 		}
 
-		if (startDateValue != null && endDateValue != null) {
+		/*if (startDateValue != null && endDateValue != null) {
 			try {
 				startDateValue = formatter.parse(startDateValue.toString());
 				endDateValue = formatter.parse(endDateValue.toString());
@@ -472,9 +472,9 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 			}
 			return usageInformationMidwayResponse;
-		}
+		}*/
 
-		else {
+		//else {
 
 			try {
 
@@ -537,7 +537,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 				return usageInformationMidwayResponse;
 			}
-		}
+		//}
 	}
 
 	@Override
@@ -626,7 +626,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 		}
 
-		if (startDateValue != null && endDateValue != null) {
+		/*if (startDateValue != null && endDateValue != null) {
 			try {
 				startDateValue = formatter.parse(startDateValue.toString());
 				endDateValue = formatter.parse(endDateValue.toString());
@@ -640,9 +640,9 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 			}
 			return connectionInformationMidwayResponse;
-		}
+		}*/
 
-		else {
+		//else {
 
 			try {
 
@@ -705,7 +705,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 				return connectionInformationMidwayResponse;
 			}
-		}
+		//}
 
 	}
 }

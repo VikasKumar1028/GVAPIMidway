@@ -196,12 +196,12 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 				"direct:restoreDevice", restoreDeviceRequest);
 	}
 
-	public SessionBeginEndResponse deviceSessionBeginEndResponse(
+	/*public SessionBeginEndResponse deviceSessionBeginEndResponse(
 			ConnectionInformationRequest connectionInformationRequest) {
 		return (SessionBeginEndResponse) producer.requestBody(
 				"direct:deviceSessionBeginEndInfo",
 				connectionInformationRequest);
-	}
+	}*/
 
 	public ChangeDeviceServicePlansResponse changeDeviceServicePlans(
 			ChangeDeviceServicePlansRequest changeDeviceServicePlansRequest) {

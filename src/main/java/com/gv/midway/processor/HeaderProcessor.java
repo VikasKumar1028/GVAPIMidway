@@ -62,7 +62,7 @@ public class HeaderProcessor implements Processor {
 						IResponse.ERROR_DESCRIPTION_DATE__TIMESTAMP_MIDWAYDB);
 				throw new MissingParameterException(
 						IResponse.INVALID_PAYLOAD.toString(),
-						IResponse.ERROR_DESCRIPTION_DATE_MIDWAYDB);
+						IResponse.ERROR_DESCRIPTION_DATE__TIMESTAMP_MIDWAYDB);
 			}
 		}
 
