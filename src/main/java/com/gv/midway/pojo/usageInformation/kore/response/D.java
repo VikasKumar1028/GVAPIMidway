@@ -1,11 +1,43 @@
 package com.gv.midway.pojo.usageInformation.kore.response;
 
 import java.util.Arrays;
+import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+@SuppressWarnings("unused")
+@JsonAutoDetect()
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class D {
+
+	@Override
+	public String toString() {
+		return "D [__type=" + __type + ", DataInBytesMtd=" + DataInBytesMtd
+				+ ", SimNumber=" + SimNumber + ", SmsMtd=" + SmsMtd
+				+ ", Usage=" + Usage + "]";
+	}
+
+	private String __type;
+
+	private Double DataInBytesMtd;
+	private String SimNumber;
+	private Long SmsMtd;
+
+	// private String Usage[];
+
+	private List<Usage> Usage;
+
+	@SuppressWarnings("unchecked")
+	@JsonSerialize
+	@JsonProperty("Usage")
+	public List<Usage> getUsage() {
+		return Usage;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -15,7 +47,7 @@ public class D {
 		result = prime * result
 				+ ((SimNumber == null) ? 0 : SimNumber.hashCode());
 		result = prime * result + ((SmsMtd == null) ? 0 : SmsMtd.hashCode());
-		result = prime * result + Arrays.hashCode(Usage);
+		result = prime * result + ((Usage == null) ? 0 : Usage.hashCode());
 		result = prime * result + ((__type == null) ? 0 : __type.hashCode());
 		return result;
 	}
@@ -44,7 +76,10 @@ public class D {
 				return false;
 		} else if (!SmsMtd.equals(other.SmsMtd))
 			return false;
-		if (!Arrays.equals(Usage, other.Usage))
+		if (Usage == null) {
+			if (other.Usage != null)
+				return false;
+		} else if (!Usage.equals(other.Usage))
 			return false;
 		if (__type == null) {
 			if (other.__type != null)
@@ -54,60 +89,67 @@ public class D {
 		return true;
 	}
 
-	private String __type;
+	@SuppressWarnings("unchecked")
+	@JsonDeserialize
+	@JsonProperty("Usage")
+	public void setUsage(List<Usage> usage) {
+		Usage = usage;
+	}
 
-	private String SimNumber;
-
-	private String SmsMtd;
-
-	private Usage[] Usage;
-
-	private String DataInBytesMtd;
-
+	@SuppressWarnings("unchecked")
+	@JsonSerialize
+	@JsonProperty("__type")
 	public String get__type() {
 		return __type;
 	}
 
+	@SuppressWarnings("unchecked")
+	@JsonDeserialize
+	@JsonProperty("__type")
 	public void set__type(String __type) {
 		this.__type = __type;
 	}
 
+	@SuppressWarnings("unchecked")
+	@JsonSerialize
+	@JsonProperty("DataInBytesMtd")
+	public Double getDataInBytesMtd() {
+		return DataInBytesMtd;
+	}
+
+	@SuppressWarnings("unchecked")
+	@JsonDeserialize
+	@JsonProperty("DataInBytesMtd")
+	public void setDataInBytesMtd(Double dataInBytesMtd) {
+		DataInBytesMtd = dataInBytesMtd;
+	}
+
+	@SuppressWarnings("unchecked")
+	@JsonSerialize
+	@JsonProperty("SimNumber")
 	public String getSimNumber() {
 		return SimNumber;
 	}
 
-	public void setSimNumber(String SimNumber) {
-		this.SimNumber = SimNumber;
+	@SuppressWarnings("unchecked")
+	@JsonDeserialize
+	@JsonProperty("SimNumber")
+	public void setSimNumber(String simNumber) {
+		SimNumber = simNumber;
 	}
 
-	public String getSmsMtd() {
+	@SuppressWarnings("unchecked")
+	@JsonSerialize
+	@JsonProperty("SmsMtd")
+	public Long getSmsMtd() {
 		return SmsMtd;
 	}
 
-	public void setSmsMtd(String SmsMtd) {
-		this.SmsMtd = SmsMtd;
+	@SuppressWarnings("unchecked")
+	@JsonDeserialize
+	@JsonProperty("SmsMtd")
+	public void setSmsMtd(Long smsMtd) {
+		SmsMtd = smsMtd;
 	}
 
-	public Usage[] getUsage() {
-		return Usage;
-	}
-
-	public void setUsage(Usage[] Usage) {
-		this.Usage = Usage;
-	}
-
-	public String getDataInBytesMtd() {
-		return DataInBytesMtd;
-	}
-
-	public void setDataInBytesMtd(String DataInBytesMtd) {
-		this.DataInBytesMtd = DataInBytesMtd;
-	}
-
-	@Override
-	public String toString() {
-		return "D [__type=" + __type + ", SimNumber=" + SimNumber + ", SmsMtd="
-				+ SmsMtd + ", Usage=" + Arrays.toString(Usage)
-				+ ", DataInBytesMtd=" + DataInBytesMtd + "]";
-	}
 }

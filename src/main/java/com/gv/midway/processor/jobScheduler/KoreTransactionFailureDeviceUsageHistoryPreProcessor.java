@@ -48,7 +48,7 @@ public class KoreTransactionFailureDeviceUsageHistoryPreProcessor implements
 		ObjectMapper objectMapper = new ObjectMapper();
 
 		UsageInformationRequest proxyRequest = new UsageInformationRequest();
-		
+
 		UsageInformationKoreRequest usageInformationKoreRequest = new UsageInformationKoreRequest();
 
 		usageInformationKoreRequest.setSimNumber(proxyRequest.getDataArea()
@@ -62,8 +62,9 @@ public class KoreTransactionFailureDeviceUsageHistoryPreProcessor implements
 		message.setHeader(Exchange.HTTP_METHOD, "POST");
 		message.setHeader("Authorization",
 				newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
-		message.setHeader(Exchange.HTTP_PATH, "/json/queryDeviceUsage");
 
+		message.setHeader(Exchange.HTTP_PATH,
+				"/json/queryDeviceUsageBySimNumber");
 		message.setBody(strRequestBody);
 
 		exchange.setPattern(ExchangePattern.InOut);

@@ -20,7 +20,7 @@ import com.gv.midway.pojo.verizon.DeviceId;
 
 public class KoreDeviceUsageHistoryPostProcessor implements Processor {
 
-	Logger log = Logger.getLogger(KoreDeviceUsageHistoryPreProcessor.class
+	Logger log = Logger.getLogger(KoreDeviceUsageHistoryPostProcessor.class
 			.getName());
 
 	@Override
@@ -28,22 +28,28 @@ public class KoreDeviceUsageHistoryPostProcessor implements Processor {
 
 		log.info("Begin:KoreDeviceUsageHistoryPostProcessor");
 
-		System.out.println("exchange::::" + exchange.getIn().getBody());
+		log.info("exchange::::" + exchange.getIn().getBody());
 
-		UsageInformationKoreResponse usageInformationKoreResponse = (UsageInformationKoreResponse) exchange
-				.getIn().getBody();
+		Map map = exchange.getIn().getBody(Map.class);
+		ObjectMapper mapper = new ObjectMapper();
+		UsageInformationKoreResponse usageResponse = mapper.convertValue(map,
+				UsageInformationKoreResponse.class);
 
-		System.out.println("usageInformationKoreResponse:::::::::"				+ usageInformationKoreResponse.toString());
+		long totalBytesUsed = 0L;
+		log.info("usageInformationKoreResponse:::::::::"
+				+ usageResponse.toString());
+
+		if (usageResponse.getD().getUsage() != null) {
+
+			totalBytesUsed = usageResponse.getD().getDataInBytesMtd()
+					.longValue();
+			log.info("usageResponse.getD().getUsage()::::::::"
+					+ usageResponse.getD().getDataInBytesMtd());
+		}
 
 		DeviceUsage deviceUsage = new DeviceUsage();
 		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
 
-		long totalBytesUsed = 0L;
-		/*
-		 * if (usageResponse.getUsageHistory() != null) { for (UsageHistory
-		 * history : usageResponse.getUsageHistory()) { totalBytesUsed =
-		 * history.getBytesUsed() + totalBytesUsed; } }
-		 */
 		deviceUsage
 				.setCarrierName((String) exchange.getProperty("CarrierName"));
 		deviceUsage.setDeviceId((DeviceId) exchange.getProperty("DeviceId"));
@@ -61,7 +67,7 @@ public class KoreDeviceUsageHistoryPostProcessor implements Processor {
 
 		exchange.getIn().setBody(deviceUsage);
 
-		log.info("Begin:KoreDeviceUsageHistoryPostProcessor");
+		log.info("End:KoreDeviceUsageHistoryPostProcessor");
 	}
 
 }

@@ -1,11 +1,83 @@
 package com.gv.midway.pojo.usageInformation.kore.response;
 
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-
-
+@SuppressWarnings("unused")
+@JsonAutoDetect()
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Usage {
+
+	@SuppressWarnings("unchecked")
+	@JsonSerialize
+	@JsonProperty("__type")
+	public String get__type() {
+		return __type;
+	}
+
+	@SuppressWarnings("unchecked")
+	@JsonDeserialize
+	@JsonProperty("__type")
+	public void set__type(String __type) {
+		this.__type = __type;
+	}
+
+	@SuppressWarnings("unchecked")
+	@JsonSerialize
+	@JsonProperty("DataInBytes")
+	public Double getDataInBytes() {
+		return DataInBytes;
+	}
+
+	@SuppressWarnings("unchecked")
+	@JsonDeserialize
+	@JsonProperty("DataInBytes")
+	public void setDataInBytes(Double dataInBytes) {
+		DataInBytes = dataInBytes;
+	}
+
+	@Override
+	public String toString() {
+		return "Usage [__type=" + __type + ", DataInBytes=" + DataInBytes
+				+ ", UsageDate=" + UsageDate + ", Sms=" + Sms + "]";
+	}
+
+	@SuppressWarnings("unchecked")
+	@JsonSerialize
+	@JsonProperty("Sms")
+	public Long getSms() {
+		return Sms;
+	}
+
+	@SuppressWarnings("unchecked")
+	@JsonDeserialize
+	@JsonProperty("Sms")
+	public void setSms(Long sms) {
+		Sms = sms;
+	}
+
+	private String __type;
+
+	private Double DataInBytes;
+
+	@JsonIgnore
+	public Date getUsageDate() {
+		return UsageDate;
+	}
+
+	@JsonIgnore
+	public void setUsageDate(Date usageDate) {
+		UsageDate = usageDate;
+	}
+
+	@JsonIgnore
+	private Date UsageDate;
 
 	@Override
 	public int hashCode() {
@@ -52,49 +124,5 @@ public class Usage {
 		return true;
 	}
 
-	@Override
-	public String toString() {
-		return "Usage [__type=" + __type + ", UsageDate=" + UsageDate
-				+ ", Sms=" + Sms + ", DataInBytes=" + DataInBytes + "]";
-	}
-
-	private String __type;
-
-	private String UsageDate;
-
-	private String Sms;
-
-	private String DataInBytes;
-
-	public String get__type() {
-		return __type;
-	}
-
-	public void set__type(String __type) {
-		this.__type = __type;
-	}
-
-	public String getUsageDate() {
-		return UsageDate;
-	}
-
-	public void setUsageDate(String UsageDate) {
-		this.UsageDate = UsageDate;
-	}
-
-	public String getSms() {
-		return Sms;
-	}
-
-	public void setSms(String Sms) {
-		this.Sms = Sms;
-	}
-
-	public String getDataInBytes() {
-		return DataInBytes;
-	}
-
-	public void setDataInBytes(String DataInBytes) {
-		this.DataInBytes = DataInBytes;
-	}
+	private Long Sms;
 }
