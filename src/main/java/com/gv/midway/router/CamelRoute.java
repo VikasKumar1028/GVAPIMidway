@@ -1254,6 +1254,7 @@ public class CamelRoute extends RouteBuilder {
 
 				.doTry().process(new KoreDeviceUsageHistoryPreProcessor(env))
 				.to(uriRestKoreEndPoint).unmarshal()
+				.json(JsonLibrary.Jackson,UsageInformationKoreResponse.class)
 						
 				.process(new KoreDeviceUsageHistoryPostProcessor())
 				.bean(iSchedulerService, "saveDeviceUsageHistory")
