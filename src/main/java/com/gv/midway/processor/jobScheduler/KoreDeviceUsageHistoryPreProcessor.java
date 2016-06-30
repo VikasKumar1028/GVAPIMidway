@@ -37,6 +37,9 @@ public class KoreDeviceUsageHistoryPreProcessor implements Processor {
 
 		log.info("Begin:KoreDeviceUsageHistoryPreProcessor");
 		Message message = exchange.getIn();
+		
+	
+		log.info("jobDetailDate ------" + exchange.getProperty("jobDetailDate"));
 
 		ObjectMapper objectMapper = new ObjectMapper();
 
@@ -45,12 +48,10 @@ public class KoreDeviceUsageHistoryPreProcessor implements Processor {
 
 		UsageInformationKoreRequest usageInformationKoreRequest = new UsageInformationKoreRequest();
 
-		/*
-		 * usageInformationKoreRequest.setSimNumber(deviceInfo.getDeviceIds()[0]
-		 * .getId());
-		 */
+		/*usageInformationKoreRequest.setSimNumber(deviceInfo.getDeviceIds()[0]
+				.getId());*/
 
-		usageInformationKoreRequest.setSimNumber("89014103277405945606");
+			usageInformationKoreRequest.setSimNumber("89014103277405945606");
 
 		// {"simNumber": "89014103277405945606"}
 

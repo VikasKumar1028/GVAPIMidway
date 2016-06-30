@@ -188,6 +188,7 @@ public class JobDaoImpl implements IJobDao {
 		jobDetail.setIpAddress(CommonUtil.getIpAddress());
 		// inserting in the exchange as property
 		exchange.setProperty("jobDetail", jobDetail);
+		exchange.setProperty("jobDetailDate", jobDetail.getDate());
 
 		// inserting in the database as property
 		mongoTemplate.insert(jobDetail);

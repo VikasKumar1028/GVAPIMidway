@@ -66,18 +66,22 @@ public class Usage {
 
 	private Double DataInBytes;
 
-	@JsonIgnore
-	public Date getUsageDate() {
+	@SuppressWarnings("unchecked")
+	@JsonSerialize
+	@JsonProperty("UsageDate")
+	public String getUsageDate() {
 		return UsageDate;
 	}
 
-	@JsonIgnore
-	public void setUsageDate(Date usageDate) {
+	@SuppressWarnings("unchecked")
+	@JsonDeserialize
+	@JsonProperty("UsageDate")
+	public void setUsageDate(String usageDate) {
 		UsageDate = usageDate;
 	}
 
 	@JsonIgnore
-	private Date UsageDate;
+	private String UsageDate;
 
 	@Override
 	public int hashCode() {
