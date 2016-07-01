@@ -62,8 +62,7 @@ public class AuditDaoImpl implements IAuditDao {
 			Audit audit = new Audit();
 
 			Date localTime = new Date();
-			DateFormat converter = new SimpleDateFormat("dd/MM/yyyy:HH:mm:ss");
-			converter.setTimeZone(TimeZone.getTimeZone("GMT"));
+			
 
 			audit.setApiOperationName(apiOperationName);
 			audit.setFrom(exchange.getProperty("sourceName").toString());
@@ -118,9 +117,7 @@ public class AuditDaoImpl implements IAuditDao {
 			Audit audit = new Audit();
 
 			Date localTime = new Date();
-			DateFormat converter = new SimpleDateFormat("dd/MM/yyyy:HH:mm:ss");
-			converter.setTimeZone(TimeZone.getTimeZone("GMT"));
-
+		
 			audit.setApiOperationName(apiOperationName);
 			audit.setFrom(exchange.getProperty("sourceName").toString());
 			audit.setTo(exchange.getFromEndpoint().toString());
@@ -191,9 +188,7 @@ public class AuditDaoImpl implements IAuditDao {
 			Audit audit = new Audit();
 
 			Date localTime = new Date();
-			DateFormat converter = new SimpleDateFormat("dd/MM/yyyy:HH:mm:ss");
-			converter.setTimeZone(TimeZone.getTimeZone("GMT"));
-
+			
 			audit.setApiOperationName(apiOperationName);
 			audit.setFrom(exchange.getProperty("sourceName").toString());
 			audit.setTo(exchange.getFromEndpoint().toString());
@@ -292,8 +287,7 @@ public class AuditDaoImpl implements IAuditDao {
 			Audit audit = new Audit();
 
 			Date localTime = new Date();
-			DateFormat converter = new SimpleDateFormat("dd/MM/yyyy:HH:mm:ss");
-			converter.setTimeZone(TimeZone.getTimeZone("GMT"));
+			
 
 			audit.setApiOperationName(apiOperationName);
 			audit.setFrom(exchange.getProperty("sourceName").toString());

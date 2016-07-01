@@ -232,8 +232,10 @@ public class KoreDeviceInformationPostProcessor implements Processor {
 
 		deviceInformation.setCustomFields(customeFields);
 
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-		deviceInformation.setLastUpdated(sdf.format(new Date()));
+		/*SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+		deviceInformation.setLastUpdated(sdf.format(new Date()));*/
+		
+		deviceInformation.setLastUpdated(new Date());
 
 		deviceInformation.setState(koreDeviceInformationResponse.getD()
 				.getStatus());

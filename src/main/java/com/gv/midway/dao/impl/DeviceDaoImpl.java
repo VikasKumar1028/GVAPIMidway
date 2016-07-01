@@ -78,10 +78,12 @@ public class DeviceDaoImpl implements IDeviceDao {
 			deviceInfomation = (DeviceInformation) mongoTemplate.findOne(
 					searchDeviceQuery, DeviceInformation.class);
 
-			SimpleDateFormat sdf = new SimpleDateFormat(
-					"yyyy-MM-dd'T'HH:mm:ssZ");
+			/*SimpleDateFormat sdf = new SimpleDateFormat(
+					"yyyy-MM-dd'T'HH:mm:ssZ");*/
 
-			deviceInformationToUpdate.setLastUpdated(sdf.format(new Date()));
+			//deviceInformationToUpdate.setLastUpdated(sdf.format(new Date()));
+			
+			deviceInformationToUpdate.setLastUpdated(new Date());
 
 			Header header = device.getHeader();
 			Response response = new Response();
@@ -311,10 +313,12 @@ public class DeviceDaoImpl implements IDeviceDao {
 				DeviceInformation deviceInformation = (DeviceInformation) mongoTemplate
 						.findOne(searchDeviceQuery, DeviceInformation.class);
 
-				SimpleDateFormat sdf = new SimpleDateFormat(
+				/*SimpleDateFormat sdf = new SimpleDateFormat(
 						"yyyy-MM-dd'T'HH:mm:ssZ");
 				deviceInformationToUpdate
-						.setLastUpdated(sdf.format(new Date()));
+						.setLastUpdated(sdf.format(new Date()));*/
+				
+				deviceInformation.setLastUpdated(new Date());
 
 				if (deviceInformation == null)
 

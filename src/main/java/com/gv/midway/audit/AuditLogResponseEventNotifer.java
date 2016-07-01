@@ -45,9 +45,7 @@ public class AuditLogResponseEventNotifer extends EventNotifierSupport {
 							.getProperty(IConstant.AUDIT_TRANSACTION_ID);
 
 					Date localTime = new Date();
-					DateFormat converter = new SimpleDateFormat(
-							"dd/MM/yyyy:HH:mm:ss");
-					converter.setTimeZone(TimeZone.getTimeZone("GMT"));
+					
 
 					String responseEndpint = exchange.getFromEndpoint()
 							.toString();

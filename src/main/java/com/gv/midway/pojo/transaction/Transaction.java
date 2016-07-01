@@ -1,5 +1,7 @@
 package com.gv.midway.pojo.transaction;
 
+import java.util.Date;
+
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.gv.midway.constant.RequestType;
@@ -14,8 +16,8 @@ public class Transaction {
 	private String midwayStatus;
 	private String carrierStatus;
 	private String carrierName;
-	private String timeStampReceived;
-	private String lastTimeStampUpdated;
+	private Date timeStampReceived;
+	private Date lastTimeStampUpdated;
 	private String carrierErrorDescription;
 	private RequestType requestType;
 	private Object callBackPayload;
@@ -138,19 +140,19 @@ public class Transaction {
 	}
 
 	
-	public String getTimeStampReceived() {
+	public Date getTimeStampReceived() {
 		return timeStampReceived;
 	}
 
-	public void setTimeStampReceived(String timeStampReceived) {
+	public void setTimeStampReceived(Date timeStampReceived) {
 		this.timeStampReceived = timeStampReceived;
 	}
 
-	public String getLastTimeStampUpdated() {
+	public Date getLastTimeStampUpdated() {
 		return lastTimeStampUpdated;
 	}
 
-	public void setLastTimeStampUpdated(String lastTimeStampUpdated) {
+	public void setLastTimeStampUpdated(Date lastTimeStampUpdated) {
 		this.lastTimeStampUpdated = lastTimeStampUpdated;
 	}
 

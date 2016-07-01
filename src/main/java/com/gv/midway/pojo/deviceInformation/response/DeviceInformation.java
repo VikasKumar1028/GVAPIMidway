@@ -2,8 +2,11 @@ package com.gv.midway.pojo.deviceInformation.response;
 
 
 import java.util.Arrays;
+import java.util.Date;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.gv.midway.pojo.verizon.CustomFields;
@@ -42,7 +45,7 @@ public class DeviceInformation {
 	private Bs_plan bs_plan;
 
 	@ApiModelProperty(value = "TimeStamp for latest devcie Information updated.")
-	private String lastUpdated;
+	private Date lastUpdated;
 
 	@ApiModelProperty(value = "State of the device.like active,suspended,deactivate,restore")
 	private String state;
@@ -202,12 +205,12 @@ public class DeviceInformation {
 	}
 
 
-	public String getLastUpdated() {
+	public Date getLastUpdated() {
 		return lastUpdated;
 	}
 
 
-	public void setLastUpdated(String lastUpdated) {
+	public void setLastUpdated(Date lastUpdated) {
 		this.lastUpdated = lastUpdated;
 	}
 

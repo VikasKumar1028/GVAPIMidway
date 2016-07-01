@@ -201,9 +201,11 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 		}
 
 
-		 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+		/* SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 		 
-		 deviceInformation.setLastUpdated(sdf.format(new Date()));
+		 deviceInformation.setLastUpdated(sdf.format(new Date()));*/
+		
+		deviceInformation.setLastUpdated(new Date());
 		 
 		DeviceInformationResponseDataArea deviceInformationResponseDataArea = new DeviceInformationResponseDataArea();
 

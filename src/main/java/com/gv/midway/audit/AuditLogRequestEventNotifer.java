@@ -45,9 +45,7 @@ public class AuditLogRequestEventNotifer extends EventNotifierSupport {
 						TransactionId);
 
 				Date localTime = new Date();
-				DateFormat converter = new SimpleDateFormat(
-						"dd/MM/yyyy:HH:mm:ss");
-				converter.setTimeZone(TimeZone.getTimeZone("GMT"));
+				
 
 				String requestEndpint = exchange.getFromEndpoint().toString();
 				String requestEndpintSpilt[] = requestEndpint.split("//");
