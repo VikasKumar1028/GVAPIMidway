@@ -41,18 +41,17 @@ public class JobServiceImpl implements IJobService {
 
 			ServerDetail serverDetail = null;
 			serverDetail = iJobDao.fetchServerIp(currentServerIp);
-			
-			/*log.info("serverDetail:::::" + serverDetail.getJobType());
-*/
+
 			// Send currentServerIp and fetch serverDetail;
 			// get the jobType of the serverDEtail
-	
 
-			if (serverDetail!=null && "ODD".equalsIgnoreCase(serverDetail.getJobType())) {
+			if (serverDetail != null
+					&& "ODD".equalsIgnoreCase(serverDetail.getJobType())) {
 				return iJobDao.fetchOddDevices(exchange);
 			}
 
-			if ( serverDetail!=null &&  "EVEN".equalsIgnoreCase(serverDetail.getJobType())) {
+			if (serverDetail != null
+					&& "EVEN".equalsIgnoreCase(serverDetail.getJobType())) {
 				return iJobDao.fetchEvenDevices(exchange);
 			}
 
@@ -65,7 +64,11 @@ public class JobServiceImpl implements IJobService {
 	@Override
 	public void insertJobDetails(Exchange exchange) {
 		iJobDao.insertJobDetails(exchange);
-		//iJobDao.insertBulkRecords();
+
+		// To be removed just to populate dummy bulk data in deviceInfo and
+		// device Usage
+
+		// iJobDao.insertBulkRecords();
 
 	}
 
@@ -143,7 +146,7 @@ public class JobServiceImpl implements IJobService {
 					verizondateFormat.format(cal.getTime()));
 
 		} catch (Exception ex) {
-			log.error("................Error in Setting Job Dates");
+			log.error("................Error in Setting Job Dates" + ex);
 		}
 
 	}
@@ -167,11 +170,18 @@ public class JobServiceImpl implements IJobService {
 		iJobDao.deleteTransactionFailureDeviceConnectionHistoryRecords(exchange);
 
 	}
-	
+
+	/*
+	 * finding the Device Usage Overages (non-Javadoc)
+	 * 
+	 * @see
+	 * com.gv.midway.service.IJobService#processDeviceNotification(org.apache
+	 * .camel.Exchange)
+	 */
 	@Override
-	public void processDeviceNotification(Exchange exchange){
+	public void processDeviceNotification(Exchange exchange) {
 		iJobDao.processDeviceNotification(exchange);
-		
+
 	}
 
 }

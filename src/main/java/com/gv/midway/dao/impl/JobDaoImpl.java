@@ -203,8 +203,7 @@ public class JobDaoImpl implements IJobDao {
 		log.info("-----------Job Details -------" + jobDetail.toString());
 		jobDetail.setStartTime(new Date().toString());
 		jobDetail.setStatus(IConstant.JOB_STARTED);
-		jobDetail.setIpAddress(CommonUtil.getIpAddress());
-		// inserting in the exchange as property
+		jobDetail.setIpAddress(CommonUtil.getIpAddress());		
 		exchange.setProperty("jobDetail", jobDetail);
 		exchange.setProperty("jobDetailDate", jobDetail.getDate());
 
@@ -264,7 +263,7 @@ public class JobDaoImpl implements IJobDao {
 			WriteResult result = mongoTemplate.updateMulti(searchJobQuery,
 					update, DeviceUsage.class);
 
-			log.info("WriteResult *********************" + result);
+			log.info("WriteResult ............." + result);
 
 		}
 
@@ -498,10 +497,15 @@ public class JobDaoImpl implements IJobDao {
 	}
 	
 	
+	/*
+	 * Inserting the Dummy Records in Device Usage and DeviceInfo Collection
+	 * (non-Javadoc)
+	 * @see com.gv.midway.dao.IJobDao#insertBulkRecords()
+	 */
+	
 	public void insertBulkRecords(){
 
-		
-
+	
 		for(int i=0;i<1220000;i++){
 		DeviceUsage deviceUsage=new DeviceUsage();
 		deviceUsage.setCarrierName("VERIZON");

@@ -1451,10 +1451,9 @@ public class CamelRoute extends RouteBuilder {
 	public void deviceUsageNotificationJob() {
 
 		from(
-				/*"quartz2://job/deviceUsageNotifcationTimer?cron="
-						+ IConstant.JOB_TIME_CONFIGURATION)*/
-				"timer://deviceUsageNotifcationTimer?period=150m")
-				.log("****************************NOTIFICATION****************************************")
+				"quartz2://job/deviceUsageNotifcationTimer?cron="
+						+ IConstant.JOB_TIME_CONFIGURATION)
+				//"timer://deviceUsageNotifcationTimer?period=150m")
 				.bean(iJobService,
 						"setJobDetails(${exchange},"
 								+ CarrierType.VERIZON.toString() + ", "
