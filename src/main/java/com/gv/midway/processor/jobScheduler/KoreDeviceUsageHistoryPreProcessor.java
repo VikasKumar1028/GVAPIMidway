@@ -6,12 +6,12 @@ import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.usageInformation.kore.request.UsageInformationKoreRequest;
-import com.gv.midway.pojo.usageInformation.request.UsageInformationRequest;
+import com.gv.midway.pojo.verizon.DeviceId;
+import com.gv.midway.utility.CommonUtil;
 
 public class KoreDeviceUsageHistoryPreProcessor implements Processor {
 
@@ -51,7 +51,12 @@ public class KoreDeviceUsageHistoryPreProcessor implements Processor {
 		/*usageInformationKoreRequest.setSimNumber(deviceInfo.getDeviceIds()[0]
 				.getId());*/
 
-			usageInformationKoreRequest.setSimNumber("89014103277405945606");
+		DeviceId deviceId=CommonUtil.getSimNumber(deviceInfo.getDeviceIds());
+		
+		String simNumber=deviceId.getId();
+		
+		
+		usageInformationKoreRequest.setSimNumber(simNumber);
 
 		// {"simNumber": "89014103277405945606"}
 

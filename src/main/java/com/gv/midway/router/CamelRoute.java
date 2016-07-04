@@ -33,6 +33,7 @@ import com.gv.midway.processor.DateValidationProcessor;
 import com.gv.midway.processor.GenericErrorProcessor;
 import com.gv.midway.processor.HeaderErrorProcessor;
 import com.gv.midway.processor.HeaderProcessor;
+import com.gv.midway.processor.KoreBatchExceptionProcessor;
 import com.gv.midway.processor.KoreGenericExceptionProcessor;
 import com.gv.midway.processor.NetSuiteIdValidationProcessor;
 import com.gv.midway.processor.VerizonBatchExceptionProcessor;
@@ -1262,7 +1263,10 @@ public class CamelRoute extends RouteBuilder {
 						
 				.process(new KoreDeviceUsageHistoryPostProcessor())
 				.bean(iSchedulerService, "saveDeviceUsageHistory")
-				.doCatch(Exception.class).end();
+				.doCatch(CxfOperationException.class,
+						UnknownHostException.class, ConnectException.class)
+				.process(new KoreBatchExceptionProcessor(env))
+				.bean(iSchedulerService, "saveDeviceUsageHistory").endDoTry();
 
 		// VERIZON Job-DEVICE USAGE
 		from("seda:processVerizonDeviceUsageJob?concurrentConsumers=4")
@@ -1352,7 +1356,10 @@ public class CamelRoute extends RouteBuilder {
 					.to(uriRestKoreEndPoint).unmarshal().json(JsonLibrary.Jackson)
 					.process(new KoreDeviceUsageHistoryPostProcessor())
 					.bean(iSchedulerService, "saveDeviceUsageHistory")
-					.doCatch(Exception.class).end();
+					.doCatch(CxfOperationException.class,
+						UnknownHostException.class, ConnectException.class)
+				.process(new KoreBatchExceptionProcessor(env))
+				.bean(iSchedulerService, "saveDeviceUsageHistory").endDoTry();
 
 			// VERIZON Job-DEVICE USAGE
 			from("seda:processTransactionFailureVerizonDeviceUsageJob?concurrentConsumers=4")

@@ -3,15 +3,12 @@ package com.gv.midway.processor.jobScheduler;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.deviceHistory.DeviceUsage;
@@ -45,15 +42,16 @@ public class KoreDeviceUsageHistoryPostProcessor implements Processor {
 		log.info("usageInformationKoreResponse:::::::::"
 				+ usageResponse.toString());
 
-		if (usageResponse.getD().getUsage() != null) {
+		if (usageResponse.getD().getUsage() != null && usageResponse.getD().getUsage().size()>0) 
+		{
 
 			for (Usage usage : usageResponse.getD().getUsage()) {
 
-				usageDatevalue = KoreUsageDateFormate(usage);
+				usageDatevalue = getKoreDeviceUsageDate(usage);
 				log.info("jobDetailDate::"+exchange.getProperty("jobDetailDate"));
-				log.info("Condition Check::"+exchange.getProperty("jobDetailDate").equals(usageDatevalue));
+				//log.info("Condition Check::"+exchange.getProperty("jobDetailDate").equals(usageDatevalue));
 				
-				if (exchange.getProperty("jobDetailDate").equals(usageDatevalue) && usageDatevalue!=null)
+				if (usageDatevalue!=null && exchange.getProperty("jobDetailDate").equals(usageDatevalue))
 				{
 
 					totalBytesUsed = usage.getDataInBytes().longValue()
@@ -88,15 +86,18 @@ public class KoreDeviceUsageHistoryPostProcessor implements Processor {
 		log.info("End:KoreDeviceUsageHistoryPostProcessor");
 	}
 
-	private String KoreUsageDateFormate(Usage usage) {
+	private String getKoreDeviceUsageDate(Usage usage) {
 
 		log.info("Begin:KoreUsageDateFormate()");
+		
 
-		String firstParteDate = null;
+		/*String firstParteDate = null;
 		String seconParteDate = null;
-		String finalUsageDateformate = null;
+		String finalUsageDateformate = null;*/
 
-		firstParteDate = usage.getUsageDate().substring(6);
+		String koreUsageDate=usage.getUsageDate();
+		
+		/*firstParteDate = koreUsageDate.substring(6);
 
 		log.info("****************firstusageDate" + firstParteDate);
 
@@ -125,9 +126,33 @@ public class KoreDeviceUsageHistoryPostProcessor implements Processor {
 
 		log.info("finalUsageDateformate:::::::" + finalUsageDateformate);
 
-		log.info("End:KoreUsageDateFormate()");
+		log.info("End:KoreUsageDateFormate()");*/
+		
+        String longValueOfDate=koreUsageDate.substring(koreUsageDate.indexOf("(")+1,koreUsageDate.indexOf("-"));
+		
+        log.info("long value of Date is........."+longValueOfDate);
+		
+		Long valueOfDateInLong = Long.valueOf(longValueOfDate);
+		
+        String timeZoneofDate=koreUsageDate.substring(koreUsageDate.indexOf("-"),koreUsageDate.indexOf(")"));
+		
+		log.info("time zone is......."+timeZoneofDate);
+		
+		DateTimeZone timeZone = DateTimeZone.forID(timeZoneofDate);
+		
+		log.info("****************timeZone ID is" + timeZone);
+		
+		DateTime dateTime = new DateTime(valueOfDateInLong, timeZone);
 
-		return finalUsageDateformate;
+		log.info("****************" + dateTime.toString());
+		
+        DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+		
+        String finalUsageDateformat = df.format(dateTime.toDate());
+
+		log.info("finalUsageDateformat :::::::" + finalUsageDateformat);
+
+		return finalUsageDateformat;
 
 	}
 }
