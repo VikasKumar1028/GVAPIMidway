@@ -57,6 +57,8 @@ public class KoreDeviceUsageHistoryPostProcessor implements Processor {
 					totalBytesUsed = usage.getDataInBytes().longValue()
 							+ totalBytesUsed;
 					log.info("totalBytesUsed:" + totalBytesUsed);
+					
+					break;
 				}
 
 			}
@@ -89,45 +91,9 @@ public class KoreDeviceUsageHistoryPostProcessor implements Processor {
 	private String getKoreDeviceUsageDate(Usage usage) {
 
 		log.info("Begin:KoreUsageDateFormate()");
-		
-
-		/*String firstParteDate = null;
-		String seconParteDate = null;
-		String finalUsageDateformate = null;*/
 
 		String koreUsageDate=usage.getUsageDate();
-		
-		/*firstParteDate = koreUsageDate.substring(6);
-
-		log.info("****************firstusageDate" + firstParteDate);
-
-		String lastPartDate = firstParteDate.substring(13, 18);
-
-		log.info("****************lastdigitDate" + lastPartDate);
-
-		seconParteDate = firstParteDate.substring(0, 13);
-
-		log.info("****************SecondusageDate" + seconParteDate);
-
-		Long lObj2 = Long.valueOf(seconParteDate);
-
-		log.info("****************lObj2::::::" + lObj2);
-
-		DateTimeZone timeZone = DateTimeZone.forID(lastPartDate);
-
-		log.info("****************timeZone" + timeZone);
-		DateTime dateTime = new DateTime(lObj2, timeZone);
-
-		log.info("****************" + dateTime.toString());
-		
-		DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-		
-		finalUsageDateformate = df.format(dateTime.toDate());
-
-		log.info("finalUsageDateformate:::::::" + finalUsageDateformate);
-
-		log.info("End:KoreUsageDateFormate()");*/
-		
+			
         String longValueOfDate=koreUsageDate.substring(koreUsageDate.indexOf("(")+1,koreUsageDate.indexOf("-"));
 		
         log.info("long value of Date is........."+longValueOfDate);
@@ -146,7 +112,7 @@ public class KoreDeviceUsageHistoryPostProcessor implements Processor {
 
 		log.info("****************" + dateTime.toString());
 		
-        DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        DateFormat df = new SimpleDateFormat("MM-dd-yyyy");
 		
         String finalUsageDateformat = df.format(dateTime.toDate());
 

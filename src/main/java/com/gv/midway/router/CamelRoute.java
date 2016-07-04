@@ -406,6 +406,8 @@ public class CamelRoute extends RouteBuilder {
 
 		deviceConnectionHistoryVerizonJob();
 		deviceUsageHistoryVerizonJob();
+		
+		deviceUsageHistoryKoreJob();
 
 		//Transaction Failure Job
 		startTransactionFailureJob();
@@ -1203,6 +1205,20 @@ public class CamelRoute extends RouteBuilder {
 						"setJobDetails(${exchange},"
 								+ CarrierType.VERIZON.toString() + ", "
 								+ JobName.VERIZON_DEVICE_USAGE + ")")
+				.to("direct:startJob").end();
+
+	}
+	
+	
+	public void deviceUsageHistoryKoreJob() {
+
+		
+		from("quartz2://job/deviceDetailsUsageTimer?cron="
+						+ IConstant.JOB_TIME_CONFIGURATION)
+				.bean(iJobService,
+						"setJobDetails(${exchange},"
+								+ CarrierType.KORE.toString() + ", "
+								+ JobName.KORE_DEVICE_USAGE + ")")
 				.to("direct:startJob").end();
 
 	}
