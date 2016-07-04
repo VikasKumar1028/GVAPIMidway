@@ -1,14 +1,24 @@
 package com.gv.midway.dao.impl;
 
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import org.apache.camel.Exchange;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -32,6 +42,9 @@ public class JobDaoImpl implements IJobDao {
 	MongoTemplate mongoTemplate;
 
 	Logger log = Logger.getLogger(JobDaoImpl.class);
+	static Random r = new Random();
+	
+	static int numbers=0;
 
 	// @Override
 	public List fetchDevices(Exchange exchange) {
@@ -56,21 +69,26 @@ public class JobDaoImpl implements IJobDao {
 			deviceInformationList = mongoTemplate.find(searchDeviceQuery,
 					DeviceInformation.class);
 
+		//list  =	deviceInformationList.subList(0, 1000);
+			
+			
+			
+			
 			/*
 			 * list = new
 			 * ArrayList<DeviceInformation>(Collections.nCopies(10000,
 			 * deviceInformationList.get(0)));
 			 */
 
-			list = new ArrayList<DeviceInformation>(Collections.nCopies(10,
-					deviceInformationList.get(0)));
+		/*	list = new ArrayList<DeviceInformation>(Collections.nCopies(10,
+					deviceInformationList.get(0)));*/
 
 			log.info("deviceInformationList ------------------"
 					+ deviceInformationList.size());
 		}
 
 		catch (Exception e) {
-			System.out.println("e");
+			e.printStackTrace();
 		}
 
 		// return list;
@@ -425,4 +443,90 @@ public class JobDaoImpl implements IJobDao {
 		return serverDetail;
 
 	}
+	
+	public void processDeviceNotification(Exchange exchange){
+		
+		System.out.println("*********processDeviceNotification*****************");
+		
+		DeviceInformation deviceInfo = (DeviceInformation) exchange.getIn()
+				.getBody();
+		
+		String netSuiteId=deviceInfo.getNetSuiteId();
+		//String billingDay=deviceInfo.getBs_plan().getBill_day();
+		String billingDay=null;
+		String valuee="2016-05-30";
+		Date billingStartDate =null;
+	/*	try{
+		
+		
+       billingStartDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ").parse(valuee);
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}*/
+		//Date billingStartDate=new Date("30-05-2016");
+		
+		
+
+	
+		Aggregation agg = newAggregation(
+				match(Criteria.where("netSuiteId").is(netSuiteId)),
+				//.and("timestamp").gte(billingStartDate)),
+				group("netSuiteId").sum("dataUsed").as("dataUsed"),
+				project("dataUsed").and("netSuiteId").previousOperation()
+				
+				);
+				
+		AggregationResults<DeviceUsage> results=mongoTemplate.aggregate(agg,  DeviceUsage.class, DeviceUsage.class);
+		
+		Iterator itr = results.iterator();
+	      while(itr.hasNext()) {
+	    	  DeviceUsage element = (DeviceUsage)itr.next();
+	         System.out.print(element.getDataUsed() + " ----------------------------------------" +element.getNetSuiteId());
+	  
+	     	mongoTemplate.save(element, "Notification");
+	      }
+		System.out.println("*********processDeviceNotification*****dd************");
+		
+		
+
+		
+		
+		
+		
+	}
+	
+	
+	public void insertBulkRecords(){
+
+		
+
+		for(int i=0;i<1220000;i++){
+		DeviceUsage deviceUsage=new DeviceUsage();
+		deviceUsage.setCarrierName("VERIZON");
+		deviceUsage.setDataUsed(r.nextInt((100 - 10) + 1) + 10);
+		deviceUsage.setNetSuiteId(new String((r.nextInt((4000 - 4) + 1) + 4)+""));
+		deviceUsage.setDate(new Date(new Date().getTime()-1000*60*60*r.nextInt((120 - 90)+91 ) ));
+		mongoTemplate.save(deviceUsage);
+		//ystem.out.println(i);
+		}
+		
+		/*
+		for(int i=0;i<20000;i++){
+		DeviceInformation deviceUsage=new DeviceInformation();
+		deviceUsage.setBs_carrier("VERIZON");
+		//deviceUsage.setDataUsed(r.nextInt((100 - 10) + 1) + 10);
+		deviceUsage.setNetSuiteId(new String((r.nextInt((4000 - 4) + 1) + 4)+""));
+		//deviceUsage(new Date(new Date().getTime()-1000*60*60*r.nextInt((30 - 10) ) ));
+		mongoTemplate.save(deviceUsage);
+		//ystem.out.println(i);
+		}
+		*/
+		
+		
+	}
+	
+	
+	
 }

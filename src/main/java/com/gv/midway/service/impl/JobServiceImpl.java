@@ -65,6 +65,7 @@ public class JobServiceImpl implements IJobService {
 	@Override
 	public void insertJobDetails(Exchange exchange) {
 		iJobDao.insertJobDetails(exchange);
+		//iJobDao.insertBulkRecords();
 
 	}
 
@@ -165,6 +166,12 @@ public class JobServiceImpl implements IJobService {
 			Exchange exchange) {
 		iJobDao.deleteTransactionFailureDeviceConnectionHistoryRecords(exchange);
 
+	}
+	
+	@Override
+	public void processDeviceNotification(Exchange exchange){
+		iJobDao.processDeviceNotification(exchange);
+		
 	}
 
 }

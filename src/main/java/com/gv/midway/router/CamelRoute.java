@@ -421,6 +421,10 @@ public class CamelRoute extends RouteBuilder {
 		//Returns the Job Response
 		jobResponse();
 		
+		notificationJob();
+		
+		deviceUsageNotificationJob() ;
+		
 	}
 
 	/**
@@ -1432,13 +1436,71 @@ public class CamelRoute extends RouteBuilder {
 
 	}
 	
+	
+	
+	
+	
+	
+	public void deviceUsageNotificationJob() {
+
+		from(
+				/*"quartz2://job/deviceUsageNotifcationTimer?cron="
+						+ IConstant.JOB_TIME_CONFIGURATION)*/
+				"timer://deviceUsageNotifcationTimer?period=150m")
+				.log("****************************NOTIFICATION****************************************")
+				.bean(iJobService,
+						"setJobDetails(${exchange},"
+								+ CarrierType.VERIZON.toString() + ", "
+								+ JobName.DEVICE_USAGE_NOTIFICATION+ ")")
+				.to("direct:notificationJob").end();
+
+	}
+	
+	
+	/**
+	 * Notification Job
+	 */
+	
+	public void notificationJob(){
+	
+	// Job Flow-1
+
+			from("direct:notificationJob")
+			.onCompletion()
+			.bean(iJobService, "updateJobDetails")
+			.end()
+			.log("**************JOB START")
+			.bean(iJobService, "insertJobDetails")
+			//.bean(iJobService, "setJobStartandEndTime")
+			.bean(iJobService, "fetchDevices")
+			.split()
+			.method("jobSplitter")
+			.to("seda:processDeviceUsageNotificationJob");
+			
+
+
+	// NOTIFICATION Job-DEVICE USAGE
+	from("seda:processDeviceUsageNotificationJob?concurrentConsumers=4")
+			.log("DeviceUSageNoficicationJob")						
+			.bean(iJobService,"processDeviceNotification");
+	
+
+	
+
+}
+
+	
+	
+	
+	
+	
 	public void  jobResponse(){
-		from("direct:jobResponse").log("*********Inside the Job response").process(new JobInitializedPostProcessor());
+		from("direct:jobResponse").log("Inside the Job response").process(new JobInitializedPostProcessor());
 	}
 
 	public void getDeviceUsageInfoDB() {
 		from("direct:getDeviceUsageInfoDB").log(
-				"*********Inside the getDeviceUsageInfoDB").process(new HeaderProcessor())
+				"Inside the getDeviceUsageInfoDB").process(new HeaderProcessor())
 				.bean(iDeviceService, "getDeviceUsageInfoDB")
 				.end();
 

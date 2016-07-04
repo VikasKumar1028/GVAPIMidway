@@ -28,6 +28,8 @@ public interface IJobService {
 	
 	public void deleteTransactionFailureDeviceConnectionHistoryRecords(Exchange exchange);
 	
+	public void processDeviceNotification(Exchange exchange);
+	
 	
 }
 	

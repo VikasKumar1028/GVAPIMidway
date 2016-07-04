@@ -31,4 +31,8 @@ public interface IJobDao {
 
 	public ServerDetail fetchServerIp(String currentServerIp);
 
+	public void processDeviceNotification(Exchange exchange);
+	
+	public void insertBulkRecords();
+
 }
