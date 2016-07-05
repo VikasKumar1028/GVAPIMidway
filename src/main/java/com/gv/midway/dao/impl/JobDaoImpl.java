@@ -253,7 +253,7 @@ public class JobDaoImpl implements IJobDao {
 
 		Query searchJobQuery = new Query(Criteria.where("carrierName").is(
 				jobDetail.getCarrierName())).addCriteria(
-				Criteria.where("timestamp").is(jobDetail.getDate()))
+				Criteria.where("date").is(jobDetail.getDate()))
 				.addCriteria(Criteria.where("isValid").is(true));
 
 		Update update = new Update();
@@ -277,7 +277,7 @@ public class JobDaoImpl implements IJobDao {
 
 			Query searchJobQuery = new Query(Criteria.where("carrierName").is(
 					jobDetail.getCarrierName())).addCriteria(
-					Criteria.where("timestamp").is(jobDetail.getDate()))
+					Criteria.where("date").is(jobDetail.getDate()))
 					.addCriteria(Criteria.where("isValid").is(true));
 
 			Update update = new Update();
@@ -315,7 +315,7 @@ public class JobDaoImpl implements IJobDao {
 			Query searchQuery = new Query(Criteria.where("carrierName").is(
 					jobDetail.getCarrierName()))
 					.addCriteria(
-							Criteria.where("timestamp").is(jobDetail.getDate()))
+							Criteria.where("date").is(jobDetail.getDate()))
 					.addCriteria(
 							Criteria.where("transactionStatus").is(
 									IConstant.MIDWAY_TRANSACTION_STATUS_ERROR))
@@ -358,7 +358,7 @@ public class JobDaoImpl implements IJobDao {
 			Query searchJobQuery = new Query(Criteria.where("carrierName").is(
 					jobDetail.getCarrierName()))
 					.addCriteria(
-							Criteria.where("timestamp").is(jobDetail.getDate()))
+							Criteria.where("date").is(jobDetail.getDate()))
 					.addCriteria(
 							Criteria.where("transactionStatus").is(
 									IConstant.MIDWAY_TRANSACTION_STATUS_ERROR))
@@ -392,7 +392,7 @@ public class JobDaoImpl implements IJobDao {
 			Query searchJobQuery = new Query(Criteria.where("carrierName").is(
 					jobDetail.getCarrierName()))
 					.addCriteria(
-							Criteria.where("timestamp").is(jobDetail.getDate()))
+							Criteria.where("date").is(jobDetail.getDate()))
 					.addCriteria(
 							Criteria.where("transactionStatus").is(
 									IConstant.MIDWAY_TRANSACTION_STATUS_ERROR))
