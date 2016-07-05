@@ -33,6 +33,7 @@ import com.gv.midway.pojo.deviceHistory.DeviceConnection;
 import com.gv.midway.pojo.deviceHistory.DeviceUsage;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.job.JobDetail;
+import com.gv.midway.pojo.notification.DeviceOverageNotification;
 import com.gv.midway.pojo.server.ServerDetail;
 import com.gv.midway.utility.CommonUtil;
 import com.mongodb.WriteResult;
@@ -492,14 +493,16 @@ public class JobDaoImpl implements IJobDao {
 				group("netSuiteId").sum("dataUsed").as("dataUsed"),
 				project("dataUsed").and("netSuiteId").previousOperation());
 
-		AggregationResults<DeviceUsage> results = mongoTemplate.aggregate(agg,
-				DeviceUsage.class, DeviceUsage.class);
+		AggregationResults<DeviceOverageNotification> results = mongoTemplate.aggregate(agg,
+				DeviceUsage.class, DeviceOverageNotification.class);
 
 		Iterator itr = results.iterator();
 		while (itr.hasNext()) {
-			DeviceUsage element = (DeviceUsage) itr.next();
+			DeviceOverageNotification element = (DeviceOverageNotification) itr.next();
+			//setting Billing Date
+			element.setDate(billingStartDate);
 
-			mongoTemplate.save(element, "Notification");
+			mongoTemplate.save(element);
 		}
 
 	}
