@@ -1,17 +1,14 @@
 package com.gv.midway.pojo.deactivateDevice.kore.request;
 
-
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-
+import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DeactivateDeviceRequestKore {
 
-   @ApiModelProperty(value = "The number of Device that has to be activated.", required = true)
-   private String deviceNumber;
-	@ApiModelProperty(value = "KORE : A flag indicating whether to scrap the device or just deactivate it to stock." , required = true)
+	@ApiModelProperty(value = "The number of Device that has to be activated.", required = true)
+	private String deviceNumber;
+	@ApiModelProperty(value = "KORE : A flag indicating whether to scrap the device or just deactivate it to stock.", required = true)
 	private Boolean flagScrap;
 
 	public String getDeviceNumber() {
@@ -73,8 +70,5 @@ public class DeactivateDeviceRequestKore {
 			return false;
 		return true;
 	}
-	
-
-	
 
 }
