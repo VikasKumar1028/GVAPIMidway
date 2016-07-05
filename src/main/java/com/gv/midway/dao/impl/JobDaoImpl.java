@@ -251,22 +251,12 @@ public class JobDaoImpl implements IJobDao {
 		log.info("Inside deleteDeviceUsageRecords .....................");
 
 		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
-		
-		//log.info("Inside deleteDeviceUsageRecords ....................."+jobDetail.getDate());
-		
-		
-		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
-	
-		
-		try {
-			Date date=	dateFormat.parse(jobDetail.getDate());
+
 			
 			
-			
-			log.info("Inside deleteDeviceUsageRecords ....................."+date);
 			Query searchJobQuery = new Query(Criteria.where("carrierName").is(
 					jobDetail.getCarrierName())).addCriteria(
-					Criteria.where("timestamp").is(date))
+					Criteria.where("timestamp").is(jobDetail.getDate()))
 					.addCriteria(Criteria.where("isValid").is(true));
 
 			Update update = new Update();
@@ -278,12 +268,7 @@ public class JobDaoImpl implements IJobDao {
 
 			log.info("WriteResult ............." + result);
 
-		}
-
-		catch (Exception e) {
-			log.info("Error In Saving Job Detail-----------------------------");
-		}
-
+	
 	}
 
 	@Override
