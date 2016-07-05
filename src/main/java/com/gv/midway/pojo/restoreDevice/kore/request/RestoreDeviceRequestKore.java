@@ -4,7 +4,7 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 
 public class RestoreDeviceRequestKore{
 	
-	@ApiModelProperty(value = "Device number to be restored.")
+	@ApiModelProperty(value = "Device number to be restored.", required = true)
 	private String deviceNumber;
 
 	public String getDeviceNumber() {

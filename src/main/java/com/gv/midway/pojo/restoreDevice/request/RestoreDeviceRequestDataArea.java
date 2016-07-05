@@ -9,19 +9,18 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RestoreDeviceRequestDataArea{
 	
-	@ApiModelProperty(value = "The device group that the requested device belongs to.")
+	@ApiModelProperty(value = "VERIZON: The device group that the requested device belongs to. This parameter can serve either of two purposes:If you specify devices by ID in the devices paramters, this is the name of a device group that the devices should be added to. They will be in the default device group if you don't specify one.If you don't specify individual devices with the devices parameter,you can provide the name of a device group to activate all devices in that group")
 	private String groupName;
 
-	@ApiModelProperty(value = "Name of the billing account.")
+	@ApiModelProperty(value = "Name of the billing account.This parameter is only required if the UWS account used for the current API session has access to multiple billing accounts")
 	private String accountName;
 	
 	@ApiModelProperty(value = "The custom fields and values that have been set for the device.")
 	private CustomFields[] customFields;
 	
-	@ApiModelProperty(value = "All identifiers for the device.")
+	@ApiModelProperty(value = "All identifiers for the device.", required=true)
 	private MidWayDevices[] devices;
 	
-	@ApiModelProperty(value = "Service Plan that that device belongs to.", required=true)
 	private String servicePlan;
 
 	public String getGroupName() {
