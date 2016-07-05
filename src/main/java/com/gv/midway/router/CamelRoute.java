@@ -216,146 +216,10 @@ public class CamelRoute extends RouteBuilder {
 				// sync DB and session token in the ServletContext
 				.bean(iSessionService, "synchronizeDBContextToken");
 
-		/**
-		 * saving callbacks from verizon into MongoDB and and sending it to
-		 * target the target system
-		 * 
-		 * */
-		from("direct:callbacks")
-				.bean(iTransactionalService, "populateCallbackDBPayload")
-				.process(new CallbackPreProcessor(env))
-				.bean(iTransactionalService, "findMidwayTransactionId")
-				.doTry()
-				.process(new CallbackPostProcessor(env)).bean(iTransactionalService, "updateNetSuiteCallBackRequest").
-				setHeader(Exchange.HTTP_QUERY). 
-				simple("script=${exchangeProperty[script]}&deploy=1").
-				to( uriRestNetsuitEndPoint ).
-				doCatch(Exception.class)
-				.bean(iTransactionalService, "updateNetSuiteCallBackError")
-				.doFinally()
-				.bean(iTransactionalService, "updateNetSuiteCallBackResponse")
-				.process(new KafkaProcessor(env))
-				.log("kafka topic message"
-						+ simple("${exchangeProperty[topicName]}").getText())
-				.onWhen(simple("${exchangeProperty[topicName]} == 'midway-alerts'"))
-				.to("kafka:" + env.getProperty("kafka.endpoint")
-						+ ",?topic=midway-alerts")
-				.onWhen(simple("${exchangeProperty[topicName]} == 'midway-app-errors'"))
-				.to("kafka:" + env.getProperty("kafka.endpoint")
-						+ ",?topic=midway-app-errors")
+		
+		
 
-				// .to("kafka:localhost:9092?topic=topic")
-				// .to("kafka:10.10.2.190:9092,10.10.2.190:9093,10.10.2.190:9094?topic=my-replicated-topic")
-				// .process(new CallbackKafkaPostProcessor())
-				// ******************DONOT REMOVE THIS COMMENTED CODE
-				// **********************
-				// .doTry()
-				// .to(uriRestNetsuitEndPoint)
-				// .doCatch(CxfOperationException.class)
-				.end();
-
-		/**
-		 * Get all the Kore devices with carrier status pending or error and
-		 * Midway status as Pending from TransactionDB
-		 */
-
-		from("timer://koreCheckStatusTimer?period=5m")
-				.bean(iTransactionalService, "populatePendingKoreCheckStatus")
-				.split().method("checkStatusSplitter").recipientList()
-				.method("koreCheckStatusServiceRouter");
-
-		/**
-		 * Check status of all the Kore devices with carrier status pending or
-		 * error and updated it in TransactionDB if it is completed or error
-		 * from Kore and call the netsuiteEndpoint for them.
-		 */
-
-		from("seda:koreSedaCheckStatus?concurrentConsumers=5")
-				/**
-				 * If any exception comes while calling the Kore check status
-				 * then send it back to netsuite endpoint and write in Kafka
-				 * Queue.
-				 **/
-				.onException(CxfOperationException.class)
-				.handled(true)
-				.to("direct:koreCheckStatusErrorSubProcess")
-				.end()
-
-				.onException(UnknownHostException.class, ConnectException.class)
-				.handled(true)
-				.bean(iTransactionalService,
-						"populateKoreCheckStatusConnectionResponse")
-				.end()
-
-				.process(new KoreCheckStatusPreProcessor(env))
-				.choice()
-				.
-				/**
-				 * Now call the netsuite end point for error and write in Kafka
-				 * Queue.
-				 */
-				when(header("KoreCheckStatusFlow").isEqualTo("end"))
-				.to("direct:koreCheckStatusErrorSubProcess")
-				.
-
-				// now call the netsuite end point for changeServicePlan and
-				// changeCustomeFields.
-
-				when(header("KoreCheckStatusFlow").isEqualTo("change"))
-				.to("direct:koreCustomChangeSubProcess").
-				/**
-				 * Call the Kore API to check the status of device
-				 */
-				when(header("KoreCheckStatusFlow").isEqualTo("forward"))
-				.to(uriRestKoreEndPoint).unmarshal()
-				.json(JsonLibrary.Jackson, KoreCheckStatusResponse.class)
-				.to("direct:koreCheckStatusSubProcess").endChoice();
-
-		from("direct:koreCheckStatusErrorSubProcess")
-				.bean(iTransactionalService,
-						"populateKoreCheckStatusErrorResponse")
-				.doTry()
-				.process(new KoreCheckStatusErrorProcessor(env)).bean(iTransactionalService, "updateNetSuiteCallBackRequest").
-				setHeader(Exchange.HTTP_QUERY). 
-				simple("script=${exchangeProperty[script]}&deploy=1")
-				.to( uriRestNetsuitEndPoint).
-				doCatch(Exception.class)
-				.bean(iTransactionalService, "updateNetSuiteCallBackError")
-				.doFinally()
-				.bean(iTransactionalService, "updateNetSuiteCallBackResponse")
-				.process(new KafkaProcessor(env))
-				.to("kafka:" + env.getProperty("kafka.endpoint")
-						+ ",?topic=midway-app-errors").end();
-
-		from("direct:koreCustomChangeSubProcess")
-				.bean(iTransactionalService, "populateKoreCustomChangeResponse")
-				.doTry()
-				.process(new KoreCheckStatusPostProcessor(env)).bean(iTransactionalService, "updateNetSuiteCallBackRequest").
-				setHeader(Exchange.HTTP_QUERY). 
-				simple("script=${exchangeProperty[script]}&deploy=1")
-				.to(uriRestNetsuitEndPoint).
-				doCatch(Exception.class)
-				.bean(iTransactionalService, "updateNetSuiteCallBackError")
-				.doFinally()
-				.bean(iTransactionalService, "updateNetSuiteCallBackResponse")
-				.process(new KafkaProcessor(env))
-				.to("kafka:" + env.getProperty("kafka.endpoint")
-						+ ",?topic=midway-alerts").end();
-
-		from("direct:koreCheckStatusSubProcess")
-				.bean(iTransactionalService, "populateKoreCheckStatusResponse")
-				.doTry()
-				.process(new KoreCheckStatusPostProcessor(env)).bean(iTransactionalService, "updateNetSuiteCallBackRequest").
-				setHeader(Exchange.HTTP_QUERY). 
-				simple("script=${exchangeProperty[script]}&deploy=1").
-				to( uriRestNetsuitEndPoint).
-				doCatch(Exception.class)
-				.bean(iTransactionalService, "updateNetSuiteCallBackError")
-				.doFinally()
-				.bean(iTransactionalService, "updateNetSuiteCallBackResponse")
-				.process(new KafkaProcessor(env))
-				.to("kafka:" + env.getProperty("kafka.endpoint")
-						+ ",?topic=midway-alerts").end();
+		
 
 		/** Main Change Device Service Plans Flow **/
 
@@ -428,8 +292,14 @@ public class CamelRoute extends RouteBuilder {
 		
 		deviceUsageNotificationJob() ;
 		
+		//Verizon Call Back
+		callbacks();
+		
+		//Kore Check Status Timer
+		koreCheckStatusTimer();
 	}
 
+	
 	/**
 	 * Activation Flow for Verizon and Kore
 	 * 
@@ -1186,7 +1056,7 @@ public class CamelRoute extends RouteBuilder {
 	public void deviceConnectionHistoryVerizonJob() {
 
 		from(
-				"quartz2://job/deviceDetailsConnectionTimer?cron="
+				"quartz2://job/deviceDetailsConnectionTimerVerizon?cron="
 						+ IConstant.JOB_TIME_CONFIGURATION)
 				.bean(iJobService,
 						"setJobDetails(${exchange},"
@@ -1199,7 +1069,7 @@ public class CamelRoute extends RouteBuilder {
 	public void deviceUsageHistoryVerizonJob() {
 
 		from(
-				"quartz2://job/deviceDetailsUsageTimer?cron="
+				"quartz2://job/deviceDetailsUsageTimerVerizon?cron="
 						+ IConstant.JOB_TIME_CONFIGURATION)
 				.bean(iJobService,
 						"setJobDetails(${exchange},"
@@ -1213,7 +1083,7 @@ public class CamelRoute extends RouteBuilder {
 	public void deviceUsageHistoryKoreJob() {
 
 		
-		from("quartz2://job/deviceDetailsUsageTimer?cron="
+		from("quartz2://job/deviceDetailsUsageTimerKore?cron="
 						+ IConstant.JOB_TIME_CONFIGURATION)
 				.bean(iJobService,
 						"setJobDetails(${exchange},"
@@ -1534,4 +1404,146 @@ public class CamelRoute extends RouteBuilder {
 				.bean(iDeviceService, "getDeviceConnectionHistoryInfoDB")
 				.end();
 	}
+	
+	/**
+	 * saving callbacks from verizon into MongoDB and and sending it to
+	 * NetSuite and Kafka
+	 * 
+	 * */
+	public void callbacks() {
+		// TODO Auto-generated method stub
+		from("direct:callbacks")
+		.bean(iTransactionalService, "populateCallbackDBPayload")
+		.process(new CallbackPreProcessor(env))
+		.bean(iTransactionalService, "findMidwayTransactionId")
+		.doTry()
+		.process(new CallbackPostProcessor(env)).bean(iTransactionalService, "updateNetSuiteCallBackRequest").
+		setHeader(Exchange.HTTP_QUERY). 
+		simple("script=${exchangeProperty[script]}&deploy=1").
+		to( uriRestNetsuitEndPoint ).
+		doCatch(Exception.class)
+		.bean(iTransactionalService, "updateNetSuiteCallBackError")
+		.doFinally()
+		.bean(iTransactionalService, "updateNetSuiteCallBackResponse")
+		.process(new KafkaProcessor(env))
+		.log("kafka topic message"
+				+ simple("${exchangeProperty[topicName]}").getText())
+		.onWhen(simple("${exchangeProperty[topicName]} == 'midway-alerts'"))
+		.to("kafka:" + env.getProperty("kafka.endpoint")
+				+ ",?topic=midway-alerts")
+		.onWhen(simple("${exchangeProperty[topicName]} == 'midway-app-errors'"))
+		.to("kafka:" + env.getProperty("kafka.endpoint")
+				+ ",?topic=midway-app-errors")
+		.end();
+	}
+
+	/**
+	 * Get all the Kore devices with carrier status pending or error and
+	 * Midway status as Pending from TransactionDB
+	 */
+	public void koreCheckStatusTimer() {
+		// TODO Auto-generated method stub
+		from("timer://koreCheckStatusTimer?period=5m")
+				.bean(iTransactionalService, "populatePendingKoreCheckStatus")
+				.split().method("checkStatusSplitter").recipientList()
+				.method("koreCheckStatusServiceRouter");
+
+		/**
+		 * Check status of all the Kore devices with carrier status pending or
+		 * error and updated it in TransactionDB if it is completed or error
+		 * from Kore and call the netsuiteEndpoint for them.
+		 */
+
+		from("seda:koreSedaCheckStatus?concurrentConsumers=5")
+				/**
+				 * If any exception comes while calling the Kore check status
+				 * then send it back to netsuite endpoint and write in Kafka
+				 * Queue.
+				 **/
+				.onException(CxfOperationException.class)
+				.handled(true)
+				.to("direct:koreCheckStatusErrorSubProcess")
+				.end()
+
+				.onException(UnknownHostException.class, ConnectException.class)
+				.handled(true)
+				.bean(iTransactionalService,
+						"populateKoreCheckStatusConnectionResponse")
+				.end()
+
+				.process(new KoreCheckStatusPreProcessor(env))
+				.choice()
+				.
+				/**
+				 * Now call the netsuite end point for error and write in Kafka
+				 * Queue.
+				 */
+				when(header("KoreCheckStatusFlow").isEqualTo("end"))
+				.to("direct:koreCheckStatusErrorSubProcess")
+				.
+
+				// now call the netsuite end point for changeServicePlan and
+				// changeCustomeFields.
+
+				when(header("KoreCheckStatusFlow").isEqualTo("change"))
+				.to("direct:koreCustomChangeSubProcess").
+				/**
+				 * Call the Kore API to check the status of device
+				 */
+				when(header("KoreCheckStatusFlow").isEqualTo("forward"))
+				.to(uriRestKoreEndPoint).unmarshal()
+				.json(JsonLibrary.Jackson, KoreCheckStatusResponse.class)
+				.to("direct:koreCheckStatusSubProcess").endChoice();
+
+		from("direct:koreCheckStatusErrorSubProcess")
+				.bean(iTransactionalService,
+						"populateKoreCheckStatusErrorResponse")
+				.doTry()
+				.process(new KoreCheckStatusErrorProcessor(env))
+				.bean(iTransactionalService, "updateNetSuiteCallBackRequest")
+				.setHeader(Exchange.HTTP_QUERY)
+				.simple("script=${exchangeProperty[script]}&deploy=1")
+				.to(uriRestNetsuitEndPoint)
+				.doCatch(Exception.class)
+				.bean(iTransactionalService, "updateNetSuiteCallBackError")
+				.doFinally()
+				.bean(iTransactionalService, "updateNetSuiteCallBackResponse")
+				.process(new KafkaProcessor(env))
+				.to("kafka:" + env.getProperty("kafka.endpoint")
+						+ ",?topic=midway-app-errors").end();
+
+		from("direct:koreCustomChangeSubProcess")
+				.bean(iTransactionalService, "populateKoreCustomChangeResponse")
+				.doTry()
+				.process(new KoreCheckStatusPostProcessor(env))
+				.bean(iTransactionalService, "updateNetSuiteCallBackRequest")
+				.setHeader(Exchange.HTTP_QUERY)
+				.simple("script=${exchangeProperty[script]}&deploy=1")
+				.to(uriRestNetsuitEndPoint)
+				.doCatch(Exception.class)
+				.bean(iTransactionalService, "updateNetSuiteCallBackError")
+				.doFinally()
+				.bean(iTransactionalService, "updateNetSuiteCallBackResponse")
+				.process(new KafkaProcessor(env))
+				.to("kafka:" + env.getProperty("kafka.endpoint")
+						+ ",?topic=midway-alerts").end();
+
+		from("direct:koreCheckStatusSubProcess")
+				.bean(iTransactionalService, "populateKoreCheckStatusResponse")
+				.doTry()
+				.process(new KoreCheckStatusPostProcessor(env))
+				.bean(iTransactionalService, "updateNetSuiteCallBackRequest")
+				.setHeader(Exchange.HTTP_QUERY)
+				.simple("script=${exchangeProperty[script]}&deploy=1")
+				.to(uriRestNetsuitEndPoint)
+				.doCatch(Exception.class)
+				.bean(iTransactionalService, "updateNetSuiteCallBackError")
+				.doFinally()
+				.bean(iTransactionalService, "updateNetSuiteCallBackResponse")
+				.process(new KafkaProcessor(env))
+				.to("kafka:" + env.getProperty("kafka.endpoint")
+						+ ",?topic=midway-alerts").end();
+	}
+
+	
 }
