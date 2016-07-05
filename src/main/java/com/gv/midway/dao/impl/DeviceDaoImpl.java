@@ -26,6 +26,8 @@ import com.gv.midway.pojo.connectionInformation.verizon.response.ConnectionInfor
 import com.gv.midway.pojo.device.request.SingleDevice;
 import com.gv.midway.pojo.device.response.BatchDeviceId;
 import com.gv.midway.pojo.device.response.UpdateDeviceResponse;
+import com.gv.midway.pojo.deviceHistory.DeviceConnection;
+import com.gv.midway.pojo.deviceHistory.DeviceEvent;
 import com.gv.midway.pojo.deviceHistory.DeviceUsage;
 import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
@@ -79,11 +81,13 @@ public class DeviceDaoImpl implements IDeviceDao {
 			deviceInfomation = (DeviceInformation) mongoTemplate.findOne(
 					searchDeviceQuery, DeviceInformation.class);
 
-			/*SimpleDateFormat sdf = new SimpleDateFormat(
-					"yyyy-MM-dd'T'HH:mm:ssZ");*/
+			/*
+			 * SimpleDateFormat sdf = new SimpleDateFormat(
+			 * "yyyy-MM-dd'T'HH:mm:ssZ");
+			 */
 
-			//deviceInformationToUpdate.setLastUpdated(sdf.format(new Date()));
-			
+			// deviceInformationToUpdate.setLastUpdated(sdf.format(new Date()));
+
 			deviceInformationToUpdate.setLastUpdated(new Date());
 
 			Header header = device.getHeader();
@@ -314,11 +318,12 @@ public class DeviceDaoImpl implements IDeviceDao {
 				DeviceInformation deviceInformation = (DeviceInformation) mongoTemplate
 						.findOne(searchDeviceQuery, DeviceInformation.class);
 
-				/*SimpleDateFormat sdf = new SimpleDateFormat(
-						"yyyy-MM-dd'T'HH:mm:ssZ");
-				deviceInformationToUpdate
-						.setLastUpdated(sdf.format(new Date()));*/
-				
+				/*
+				 * SimpleDateFormat sdf = new SimpleDateFormat(
+				 * "yyyy-MM-dd'T'HH:mm:ssZ"); deviceInformationToUpdate
+				 * .setLastUpdated(sdf.format(new Date()));
+				 */
+
 				deviceInformation.setLastUpdated(new Date());
 
 				if (deviceInformation == null)
@@ -392,7 +397,6 @@ public class DeviceDaoImpl implements IDeviceDao {
 		log.info("device dao startDate is..." + startDate);
 		log.info("device dao endDate is..." + endDate);
 
-		
 		Float dataUsed = null;
 		UsageInformationMidwayResponse usageInformationMidwayResponse = new UsageInformationMidwayResponse();
 
@@ -411,23 +415,20 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 			return usageInformationMidwayResponse;
 		}
-		
 
-			if (startDate != null && endDate != null) {
-				
-				if(!(CommonUtil.isValidDateFormat(startDate)&&CommonUtil.isValidDateFormat(endDate)))
-				{
-					log.info(" Date that you provided is invalid");
-					response.setResponseCode(IResponse.INVALID_PAYLOAD);
-					response.setResponseDescription(IResponse.ERROR_DESCRIPTION_STARTDATE_VALIDATE_MIDWAYDB);
-					response.setResponseStatus(IResponse.ERROR_MESSAGE);
-					usageInformationMidwayResponse.setResponse(response);
-					return usageInformationMidwayResponse;	
-				}
+		if (startDate != null && endDate != null) {
 
+			if (!(CommonUtil.isValidDateFormat(startDate) && CommonUtil
+					.isValidDateFormat(endDate))) {
+				log.info(" Date that you provided is invalid");
+				response.setResponseCode(IResponse.INVALID_PAYLOAD);
+				response.setResponseDescription(IResponse.ERROR_DESCRIPTION_STARTDATE_VALIDATE_MIDWAYDB);
+				response.setResponseStatus(IResponse.ERROR_MESSAGE);
+				usageInformationMidwayResponse.setResponse(response);
+				return usageInformationMidwayResponse;
 			}
 
-		
+		}
 
 		if (startDate == null) {
 
@@ -450,7 +451,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 		Date startDateValue = null;
 		Date endDateValue = null;
-		
+
 		try {
 			startDateValue = (Date) formatter.parse(startDate);
 			endDateValue = (Date) formatter.parse(endDate);
@@ -463,10 +464,9 @@ public class DeviceDaoImpl implements IDeviceDao {
 			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_STARTDATE_VALIDATE_MIDWAYDB);
 			response.setResponseStatus(IResponse.ERROR_MESSAGE);
 			usageInformationMidwayResponse.setResponse(response);
-			return usageInformationMidwayResponse;	
+			return usageInformationMidwayResponse;
 		}
-		
-		
+
 		if (startDateValue.after(endDateValue)) {
 
 			log.info("Earliest date should not be greater than Latest date");
@@ -478,70 +478,64 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 		}
 
-		
+		try {
 
-			try {
+			Query searchDeviceQuery = new Query(Criteria.where("netSuiteId")
+					.is(netSuiteId)).addCriteria(Criteria.where("date")
+					.gte(startDate)
+					.orOperator(Criteria.where("date").lte(endDate)));
 
-				Query searchDeviceQuery = new Query(Criteria
-						.where("netSuiteId").is(netSuiteId))
-						.addCriteria(Criteria
-								.where("date")
-								.gte(startDate)
-								.orOperator(
-										Criteria.where("date")
-												.lte(endDate)));
+			log.info("searchDeviceQuery::::::::::::::" + searchDeviceQuery);
 
-				log.info("searchDeviceQuery::::::::::::::" + searchDeviceQuery);
+			DeviceUsage deviceUsage = (DeviceUsage) mongoTemplate.findOne(
+					searchDeviceQuery, DeviceUsage.class);
 
-				DeviceUsage deviceUsage = (DeviceUsage) mongoTemplate.findOne(
-						searchDeviceQuery, DeviceUsage.class);
+			if (deviceUsage == null)
 
-				if (deviceUsage == null)
+			{
 
-				{
-
-					response.setResponseCode(IResponse.NO_DATA_FOUND_CODE);
-					response.setResponseDescription(IResponse.ERROR_DESCRIPTION_NODATA_DEVCIEINFO_MIDWAYDB);
-					response.setResponseStatus(IResponse.ERROR_MESSAGE);
-					usageInformationMidwayResponse.setResponse(response);
-				}
-
-				else {
-
-					response.setResponseCode(IResponse.SUCCESS_CODE);
-					response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_MIDWAYDB);
-					response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
-					usageInformationMidwayResponse.setResponse(response);
-
-					UsageInformationResponseMidwayDataArea usageInformationResponseMidwayDataArea = new UsageInformationResponseMidwayDataArea();
-					dataUsed = deviceUsage.getDataUsed();
-					log.info("deviceUsage.getDataUsed() ---------------------------------"
-							+ dataUsed);
-					usageInformationResponseMidwayDataArea
-							.setTotalUsages(dataUsed.longValue());
-					usageInformationMidwayResponse
-							.setDataArea(usageInformationResponseMidwayDataArea);
-				}
-
-				return usageInformationMidwayResponse;
-
-			} catch (Exception e) {
-
-				e.printStackTrace();
-				response.setResponseCode(IResponse.DB_ERROR_CODE);
-				response.setResponseDescription(IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB);
+				response.setResponseCode(IResponse.NO_DATA_FOUND_CODE);
+				response.setResponseDescription(IResponse.ERROR_DESCRIPTION_NODATA_DEVCIEINFO_MIDWAYDB);
 				response.setResponseStatus(IResponse.ERROR_MESSAGE);
+				usageInformationMidwayResponse.setResponse(response);
+			}
 
+			else {
+
+				response.setResponseCode(IResponse.SUCCESS_CODE);
+				response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_MIDWAYDB);
+				response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
 				usageInformationMidwayResponse.setResponse(response);
 
 				UsageInformationResponseMidwayDataArea usageInformationResponseMidwayDataArea = new UsageInformationResponseMidwayDataArea();
-
+				dataUsed = deviceUsage.getDataUsed();
+				log.info("deviceUsage.getDataUsed() ---------------------------------"
+						+ dataUsed);
+				usageInformationResponseMidwayDataArea.setTotalUsages(dataUsed
+						.longValue());
 				usageInformationMidwayResponse
 						.setDataArea(usageInformationResponseMidwayDataArea);
-
-				return usageInformationMidwayResponse;
 			}
-		
+
+			return usageInformationMidwayResponse;
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+			response.setResponseCode(IResponse.DB_ERROR_CODE);
+			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
+
+			usageInformationMidwayResponse.setResponse(response);
+
+			UsageInformationResponseMidwayDataArea usageInformationResponseMidwayDataArea = new UsageInformationResponseMidwayDataArea();
+
+			usageInformationMidwayResponse
+					.setDataArea(usageInformationResponseMidwayDataArea);
+
+			return usageInformationMidwayResponse;
+		}
+
 	}
 
 	@Override
@@ -560,7 +554,6 @@ public class DeviceDaoImpl implements IDeviceDao {
 		log.info("device dao startDate is..." + startDate);
 		log.info("device dao endDate is..." + endDate);
 
-		
 		Float dataUsed = null;
 		ConnectionInformationMidwayResponse connectionInformationMidwayResponse = new ConnectionInformationMidwayResponse();
 
@@ -580,20 +573,18 @@ public class DeviceDaoImpl implements IDeviceDao {
 			return connectionInformationMidwayResponse;
 		}
 		if (startDate != null && endDate != null) {
-			
-			if(!(CommonUtil.isValidDateFormat(startDate)&&CommonUtil.isValidDateFormat(endDate)))
-			{
+
+			if (!(CommonUtil.isValidDateFormat(startDate) && CommonUtil
+					.isValidDateFormat(endDate))) {
 				log.info(" Date that you provided is invalid");
 				response.setResponseCode(IResponse.INVALID_PAYLOAD);
 				response.setResponseDescription(IResponse.ERROR_DESCRIPTION_STARTDATE_VALIDATE_MIDWAYDB);
 				response.setResponseStatus(IResponse.ERROR_MESSAGE);
 				connectionInformationMidwayResponse.setResponse(response);
-				return connectionInformationMidwayResponse;	
+				return connectionInformationMidwayResponse;
 			}
 
 		}
-		
-		
 
 		if (startDate == null) {
 
@@ -611,12 +602,12 @@ public class DeviceDaoImpl implements IDeviceDao {
 			connectionInformationMidwayResponse.setResponse(response);
 			return connectionInformationMidwayResponse;
 		}
-		
+
 		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
 		Date startDateValue = null;
 		Date endDateValue = null;
-		
+
 		try {
 			startDateValue = (Date) formatter.parse(startDate);
 			endDateValue = (Date) formatter.parse(endDate);
@@ -629,9 +620,9 @@ public class DeviceDaoImpl implements IDeviceDao {
 			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_STARTDATE_VALIDATE_MIDWAYDB);
 			response.setResponseStatus(IResponse.ERROR_MESSAGE);
 			connectionInformationMidwayResponse.setResponse(response);
-			return connectionInformationMidwayResponse;	
+			return connectionInformationMidwayResponse;
 		}
-		
+
 		if (startDateValue.after(endDateValue)) {
 
 			log.info("Earliest date should not be greater than Latest date");
@@ -643,70 +634,84 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 		}
 
-		
+		try {
 
-			try {
+			Query searchDeviceQuery = new Query(Criteria.where("netSuiteId")
+					.is(netSuiteId)).addCriteria(Criteria.where("date")
+					.gte(startDate)
+					.orOperator(Criteria.where("date").lte(endDate)));
 
-				Query searchDeviceQuery = new Query(Criteria
-						.where("netSuiteId").is(netSuiteId))
-						.addCriteria(Criteria
-								.where("date")
-								.gte(startDate)
-								.orOperator(
-										Criteria.where("date")
-												.lte(endDate)));
+			log.info("searchDeviceQuery::::::::::::::" + searchDeviceQuery);
 
-				log.info("searchDeviceQuery::::::::::::::" + searchDeviceQuery);
+			/*
+			 * DeviceUsage deviceUsage = (DeviceUsage) mongoTemplate.findOne(
+			 * searchDeviceQuery, DeviceUsage.class);
+			 */
 
-				DeviceUsage deviceUsage = (DeviceUsage) mongoTemplate.findOne(
-						searchDeviceQuery, DeviceUsage.class);
+			List<DeviceConnection> deviceConnectionUsage = mongoTemplate.find(
+					searchDeviceQuery, DeviceConnection.class);
 
-				if (deviceUsage == null)
+			if (deviceConnectionUsage.size() == 0)
 
-				{
+			{
 
-					response.setResponseCode(IResponse.NO_DATA_FOUND_CODE);
-					response.setResponseDescription(IResponse.ERROR_DESCRIPTION_NODATA_DEVCIEINFO_MIDWAYDB);
-					response.setResponseStatus(IResponse.ERROR_MESSAGE);
-					connectionInformationMidwayResponse.setResponse(response);
-				}
-
-				else {
-
-					response.setResponseCode(IResponse.SUCCESS_CODE);
-					response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_MIDWAYDB);
-					response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
-					connectionInformationMidwayResponse.setResponse(response);
-
-					ConnectionInformationResponseMidwayDataArea connectionInformationResponseMidwayDataArea = new ConnectionInformationResponseMidwayDataArea();
-					dataUsed = deviceUsage.getDataUsed();
-					log.info("deviceUsage.getDataUsed() ---------------------------------"
-							+ dataUsed);
-					connectionInformationResponseMidwayDataArea
-							.setTotalUsages(dataUsed.longValue());
-					connectionInformationMidwayResponse
-							.setDataArea(connectionInformationResponseMidwayDataArea);
-				}
-
-				return connectionInformationMidwayResponse;
-
-			} catch (Exception e) {
-
-				e.printStackTrace();
-				response.setResponseCode(IResponse.DB_ERROR_CODE);
-				response.setResponseDescription(IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB);
+				response.setResponseCode(IResponse.NO_DATA_FOUND_CODE);
+				response.setResponseDescription(IResponse.ERROR_DESCRIPTION_NODATA_DEVCIEINFO_MIDWAYDB);
 				response.setResponseStatus(IResponse.ERROR_MESSAGE);
+				connectionInformationMidwayResponse.setResponse(response);
+			}
 
+			else {
+
+				response.setResponseCode(IResponse.SUCCESS_CODE);
+				response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_MIDWAYDB);
+				response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
 				connectionInformationMidwayResponse.setResponse(response);
 
+				String bytesUsedValue = null;
+				Long bytesUsedSecond = 0L;
+				Long bytesUsedFirst = 0L;
+				for (DeviceConnection deviceConnection : deviceConnectionUsage) {
+
+					deviceConnection.setEvent(deviceConnection.getEvent());
+
+					for (DeviceEvent eventq : deviceConnection.getEvent()) {
+						bytesUsedValue = eventq.getBytesUsed();
+						bytesUsedFirst = Long.parseLong(bytesUsedValue)
+								+ bytesUsedFirst;
+
+						log.info("bytesUsedFirst Array::::" + bytesUsedFirst);
+					}
+					bytesUsedSecond = bytesUsedFirst;
+
+					log.info("bytesUsedSecoond Array:" + bytesUsedSecond);
+				}
 				ConnectionInformationResponseMidwayDataArea connectionInformationResponseMidwayDataArea = new ConnectionInformationResponseMidwayDataArea();
 
+				connectionInformationResponseMidwayDataArea
+						.setTotalUsages(bytesUsedSecond);
 				connectionInformationMidwayResponse
 						.setDataArea(connectionInformationResponseMidwayDataArea);
-
-				return connectionInformationMidwayResponse;
 			}
-		
+
+			return connectionInformationMidwayResponse;
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+			response.setResponseCode(IResponse.DB_ERROR_CODE);
+			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
+
+			connectionInformationMidwayResponse.setResponse(response);
+
+			ConnectionInformationResponseMidwayDataArea connectionInformationResponseMidwayDataArea = new ConnectionInformationResponseMidwayDataArea();
+
+			connectionInformationMidwayResponse
+					.setDataArea(connectionInformationResponseMidwayDataArea);
+
+			return connectionInformationMidwayResponse;
+		}
 
 	}
 }
