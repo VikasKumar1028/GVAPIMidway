@@ -6,10 +6,10 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 
 public class ActivateDevices {
 	
-	@ApiModelProperty(value = "Having type and value of device identifier")
+	@ApiModelProperty(value = "Having type and value of device identifier" , required = true)
 	private ActivateDeviceId[] deviceIds;
 	
-	@ApiModelProperty(value = "Device NetSuite Id")
+	@ApiModelProperty(value = "Device NetSuite Id" , required = true)
 	private String netSuiteId;
 
 	public ActivateDeviceId[] getDeviceIds() {

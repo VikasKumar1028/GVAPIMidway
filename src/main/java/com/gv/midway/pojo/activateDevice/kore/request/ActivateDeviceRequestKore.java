@@ -12,7 +12,7 @@ public class ActivateDeviceRequestKore {
 	@ApiModelProperty(value = "The number of Device that has to be activated.")
 	private String deviceNumber;
 	
-		@ApiModelProperty(value = "The EAP code is the Express Activation Profile to use for the activation.")
+		@ApiModelProperty(value = "KORE , The EAP code is the Express Activation Profile to use for the activation.", required = true)
 		@JsonProperty("EAPCode")
 		private String EAPCode;
 

@@ -14,43 +14,43 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 @JsonInclude(Include.NON_EMPTY)
 public class ActivateDeviceRequestVerizon {
 
-	@ApiModelProperty(value = "The device group that the requested device belongs to.")
+	@ApiModelProperty(value = "VERIZON: The device group that the requested device belongs to. This parameter can serve either of two purposes:If you specify devices by ID in the devices paramters, this is the name of a device group that the devices should be added to. They will be in the default device group if you don't specify one.If you don't specify individual devices with the devices parameter,you can provide the name of a device group to activate all devices in that group")
 	private String groupName;
 
-	@ApiModelProperty(value = "Name of the billing account.")
+	@ApiModelProperty(value = "Name of the billing account.This parameter is only required if the UWS account used for the current API session has access to multiple billing accounts")
 	private String accountName;
 
-	@ApiModelProperty(value = "Stock Keeping Unit(SKU) number of a 4G device.")
+	@ApiModelProperty(value = "VERIZON : Stock Keeping Unit(SKU) number of a 4G device. The Stock Keeping Unit (SKU) number of a 4G device type with an embedded SIM. Can be used with ICCID device identifiers in lieu of an IMEI when activating 4G devices. The SkuNumber will be used with all devices in the request, so all devices must be of the same type.Only 4G devices with embedded SIMs can be activated by SKU at this time")
 	private String skuNumber;
 
 	@ApiModelProperty(value = "The custom fields and values that have been set for the device.")
 	private CustomFields[] customFields;
 
-	@ApiModelProperty(value = "Name of cost Center Code.")
+	@ApiModelProperty(value = " VERIZON :Name of cost Center Code.")
 	private String costCenterCode;
 
-	@ApiModelProperty(value = "IName of the carrier Ip Pool.")
+	@ApiModelProperty(value = "VERIZON :Name of the carrier Ip Pool.")
 	private String carrierIpPoolName;
 
-	@ApiModelProperty(value = "Service Plan that that device belongs to.", required=true)
+	@ApiModelProperty(value = "Service Plan that that device belongs to.Verizon Wireless provides service plan codes at the time of on-boarding and subsequently whenever there are any changes to the service plan. NOTE:  Any devices in the request that are not supported by the service plan will not activate. For example, if the service plan is only for 4G devices, any 3G devices included in the activation request will fail.", required=true)
 	private String servicePlan;
 
-	@ApiModelProperty(value = "The residential street address or the primary business street address of the customer")
+	@ApiModelProperty(value = "The residential street address or the primary business street address of the Customer and Customer Name . Leave these fields empty to use the account profile address as the primary place of use. These values will be applied to all devices in the activation request.If the account is enabled for non-geographic MDNs and the device supports it, the primaryPlaceOfUse address will also be used to derive the MDN for the device.The Primary Place of Use location may affect taxation or have other legal implications. You may want to speak with legal and/or financial advisers before entering values for these fields.primaryPlaceOfUse cannot be used with leadId. VPP partners should enter a leadId value for a customer lead, and the AddressZipCode in the lead record will be used for taxation. VPP partners can use primaryPlaceOfUse fields without a leadId to associate customer-specific data with devices.")
 	private PrimaryPlaceOfUse primaryPlaceOfUse;
 
-	@ApiModelProperty(value = "The device lead id that the device belongs to.")
+	@ApiModelProperty(value = "VERIZON : The device lead id that the device belongs to.The ID of a Qualified or Closed - Won VPP customer lead, which is used with other values to determine MDN assignment, taxation, and compensation.This parameter is required when activating devices for Verizon Partner Program accounts, and it is not allowed for other activations.If you include leadId in an activation request, you should set the mdnZipCode value to match the zip value in the address returned for the lead.")
 	private String leadId;
 
-	@ApiModelProperty(value = "The name of the Carrier.")
+	@ApiModelProperty(value = "The name of the Carrier.",required = true)
 	private String carrierName;
 
-	@ApiModelProperty(value = "Name of Public IP Restriction.It may be restricted/unrestricted.")
+	@ApiModelProperty(value = "VERIZON : Name of Public IP Restriction.It may be restricted/unrestricted.If left blank, the device will get the default value set for the account. Public network devices with dynamic IP addresses are always unrestricted.")
 	private String publicIpRestriction;
 
 	@ApiModelProperty(value = "MDN zip code number" , required=true)
 	private String mdnZipCode;
 
-	@ApiModelProperty(value = "All identifiers for the device.")
+	@ApiModelProperty(value = "All identifiers for the device.", required=true)
 	private Devices[] devices;
 	
 
