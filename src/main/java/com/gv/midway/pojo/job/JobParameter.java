@@ -8,7 +8,7 @@ public class JobParameter {
 	@ApiModelProperty(value = "Date of Devices Usages identifier.", required = true)
 	private String date;
 	@ApiModelProperty(dataType = "string", allowableValues = "VERIZON,	KORE", value = "description", notes = "notes", required = true)
-	private CarrierType carrierName;
+	private String carrierName;
 
 	public String getDate() {
 		return date;
@@ -18,11 +18,11 @@ public class JobParameter {
 		this.date = date;
 	}
 
-	public CarrierType getCarrierName() {
+	public String getCarrierName() {
 		return carrierName;
 	}
 
-	public void setCarrierName(CarrierType carrierName) {
+	public void setCarrierName(String carrierName) {
 		this.carrierName = carrierName;
 	}
 
