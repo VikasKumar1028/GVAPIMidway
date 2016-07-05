@@ -253,8 +253,8 @@ public class JobDaoImpl implements IJobDao {
 
 		Query searchJobQuery = new Query(Criteria.where("carrierName").is(
 				jobDetail.getCarrierName())).addCriteria(
-				Criteria.where("date").is(jobDetail.getDate()))
-				.addCriteria(Criteria.where("isValid").is(true));
+				Criteria.where("date").is(jobDetail.getDate())).addCriteria(
+				Criteria.where("isValid").is(true));
 
 		Update update = new Update();
 
@@ -314,8 +314,7 @@ public class JobDaoImpl implements IJobDao {
 			// that carrier.
 			Query searchQuery = new Query(Criteria.where("carrierName").is(
 					jobDetail.getCarrierName()))
-					.addCriteria(
-							Criteria.where("date").is(jobDetail.getDate()))
+					.addCriteria(Criteria.where("date").is(jobDetail.getDate()))
 					.addCriteria(
 							Criteria.where("transactionStatus").is(
 									IConstant.MIDWAY_TRANSACTION_STATUS_ERROR))
@@ -357,8 +356,7 @@ public class JobDaoImpl implements IJobDao {
 
 			Query searchJobQuery = new Query(Criteria.where("carrierName").is(
 					jobDetail.getCarrierName()))
-					.addCriteria(
-							Criteria.where("date").is(jobDetail.getDate()))
+					.addCriteria(Criteria.where("date").is(jobDetail.getDate()))
 					.addCriteria(
 							Criteria.where("transactionStatus").is(
 									IConstant.MIDWAY_TRANSACTION_STATUS_ERROR))
@@ -391,8 +389,7 @@ public class JobDaoImpl implements IJobDao {
 
 			Query searchJobQuery = new Query(Criteria.where("carrierName").is(
 					jobDetail.getCarrierName()))
-					.addCriteria(
-							Criteria.where("date").is(jobDetail.getDate()))
+					.addCriteria(Criteria.where("date").is(jobDetail.getDate()))
 					.addCriteria(
 							Criteria.where("transactionStatus").is(
 									IConstant.MIDWAY_TRANSACTION_STATUS_ERROR))
@@ -439,34 +436,61 @@ public class JobDaoImpl implements IJobDao {
 
 	public void processDeviceNotification(Exchange exchange) {
 
-		System.out
-				.println("*********processDeviceNotification*****************");
-
 		DeviceInformation deviceInfo = (DeviceInformation) exchange.getIn()
 				.getBody();
-
-		String netSuiteId = deviceInfo.getNetSuiteId();
-		// String billingDay=deviceInfo.getBs_plan().getBill_day();
 		String billingDay = null;
-		String valuee = "2016-05-30";
-		Date billingStartDate = null;
-		/*
-		 * try{
-		 * 
-		 * 
-		 * billingStartDate = new
-		 * SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ").parse(valuee); }
-		 * catch(Exception ex) { ex.printStackTrace(); }
-		 */
-		// Date billingStartDate=new Date("30-05-2016");
+		String billingStartDate = null;
+		String netSuiteId = deviceInfo.getNetSuiteId();
+		if (deviceInfo.getBs_plan() != null) {
+
+			billingDay = deviceInfo.getBs_plan().getBill_day();
+
+		}
+
+		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+		String jobDay = jobDetail.getDate().substring(9, 10);
+
+		// Creating The bill start date
+		// billday One oR two character
+		if (billingDay != null && billingDay.length() == 1) {
+			billingDay = "0" + billingDay;
+		}
+		try {
+			if (billingDay != null) {
+
+				// billing day>JobDetail Day
+				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(dateFormat.parse(jobDetail.getDate()));
+
+				if (Integer.parseInt(billingDay) > Integer.parseInt(jobDay)) {
+
+					// previous month data
+					cal.add(cal.MONTH, -1);
+					cal.set(cal.DATE, Integer.parseInt(billingDay));
+					billingStartDate = dateFormat.format(cal.getTime());
+
+				}
+
+				// billing day<= JobDetail Day
+				if (Integer.parseInt(billingDay) <= Integer.parseInt(jobDay)) {
+
+					// current month of data
+					cal.set(cal.DATE, Integer.parseInt(billingDay));
+					billingStartDate = dateFormat.format(cal.getTime());
+
+				}
+			}
+
+		} catch (Exception ex) {
+			log.error("................Error in Setting Job Dates" + ex);
+		}
 
 		Aggregation agg = newAggregation(
-				match(Criteria.where("netSuiteId").is(netSuiteId)),
-				// .and("timestamp").gte(billingStartDate)),
+				match(Criteria.where("netSuiteId").is(netSuiteId).and("date")
+						.gte(billingStartDate).and("isValid").is(true)),
 				group("netSuiteId").sum("dataUsed").as("dataUsed"),
-				project("dataUsed").and("netSuiteId").previousOperation()
-
-		);
+				project("dataUsed").and("netSuiteId").previousOperation());
 
 		AggregationResults<DeviceUsage> results = mongoTemplate.aggregate(agg,
 				DeviceUsage.class, DeviceUsage.class);
@@ -474,14 +498,9 @@ public class JobDaoImpl implements IJobDao {
 		Iterator itr = results.iterator();
 		while (itr.hasNext()) {
 			DeviceUsage element = (DeviceUsage) itr.next();
-			System.out.print(element.getDataUsed()
-					+ " ----------------------------------------"
-					+ element.getNetSuiteId());
 
 			mongoTemplate.save(element, "Notification");
 		}
-		System.out
-				.println("*********processDeviceNotification*****dd************");
 
 	}
 
