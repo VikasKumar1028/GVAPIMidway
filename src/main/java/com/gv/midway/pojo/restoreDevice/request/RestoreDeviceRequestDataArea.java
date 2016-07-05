@@ -21,6 +21,7 @@ public class RestoreDeviceRequestDataArea{
 	@ApiModelProperty(value = "All identifiers for the device.", required=true)
 	private MidWayDevices[] devices;
 	
+	@ApiModelProperty(value = "Service Plan that that device belongs to.Verizon Wireless provides service plan codes at the time of on-boarding and subsequently whenever there are any changes to the service plan. NOTE:  Any devices in the request that are not supported by the service plan will not activate. For example, if the service plan is only for 4G devices, any 3G devices included in the activation request will fail.", required=true)
 	private String servicePlan;
 
 	public String getGroupName() {
