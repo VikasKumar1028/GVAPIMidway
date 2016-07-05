@@ -4,7 +4,7 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 
 public class SuspendDeviceRequestKore {
 
-	@ApiModelProperty(value = "The number of Device that has to be activated.")
+	@ApiModelProperty(value = "The number of Device that has to be activated.", required = true)
 	private String deviceNumber;
 	
 

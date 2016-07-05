@@ -10,16 +10,16 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SuspendDeviceRequestDataArea {
 
-	@ApiModelProperty(value = "All identifiers for the device.")
+	@ApiModelProperty(value = "All identifiers for the device.", required=true)
 	private MidWayDevices[] devices;
 	
-	@ApiModelProperty(value = "Name of the billing account.")
+	@ApiModelProperty(value = "Name of the billing account.This parameter is only required if the UWS account used for the current API session has access to multiple billing accounts")
 	private String accountName;
 	
-	@ApiModelProperty(value = "The device group that the requested device belongs to.")
+	@ApiModelProperty(value = "VERIZON: The device group that the requested device belongs to. This parameter can serve either of two purposes:If you specify devices by ID in the devices paramters, this is the name of a device group that the devices should be added to. They will be in the default device group if you don't specify one.If you don't specify individual devices with the devices parameter,you can provide the name of a device group to activate all devices in that group")
 	private String groupName;
 	
-	@ApiModelProperty(value = "Service Plan that that device belongs to.", required=true)
+	@ApiModelProperty(value = "Service Plan that that device belongs to.Verizon Wireless provides service plan codes at the time of on-boarding and subsequently whenever there are any changes to the service plan. NOTE:  Any devices in the request that are not supported by the service plan will not activate. For example, if the service plan is only for 4G devices, any 3G devices included in the activation request will fail.", required=true)
 	private String servicePlan;
 	
 	@ApiModelProperty(value = "The custom fields and values that have been set for the device.")

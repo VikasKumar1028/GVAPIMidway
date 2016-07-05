@@ -1,17 +1,15 @@
 package com.gv.midway.pojo;
 
-
-
 import java.util.Arrays;
 
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 public class MidWayDevices {
-	
-	@ApiModelProperty(value = "Having type and value of device identifier")
+
+	@ApiModelProperty(value = "Having type and value of device identifier", required = true)
 	private MidWayDeviceId[] deviceIds;
-	
-	@ApiModelProperty(value = "Device NetSuite Id")
+
+	@ApiModelProperty(value = "Device NetSuite Id", required = true)
 	private String netSuiteId;
 
 	public MidWayDeviceId[] getDeviceIds() {
@@ -70,7 +68,4 @@ public class MidWayDevices {
 		return builder.toString();
 	}
 
-	
-	
-	
 }
