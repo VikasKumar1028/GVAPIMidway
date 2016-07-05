@@ -11,7 +11,7 @@ public class DeactivateDeviceId {
 	@ApiModelProperty(value = "The type of device indentifier.", required = true)
 	private String kind;
 	
-	@ApiModelProperty(value = "A flag indicating whether to scrap the device or just deactivate it to stock.")
+	@ApiModelProperty(value = "KORE : A flag indicating whether to scrap the device or just deactivate it to stock.")
 	private Boolean flagScrap;
 
 	public String getId() {

@@ -9,8 +9,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DeactivateDeviceRequestKore {
 
+   @ApiModelProperty(value = "The number of Device that has to be activated.", required = true)
    private String deviceNumber;
-	
+	@ApiModelProperty(value = "KORE : A flag indicating whether to scrap the device or just deactivate it to stock." , required = true)
 	private Boolean flagScrap;
 
 	public String getDeviceNumber() {

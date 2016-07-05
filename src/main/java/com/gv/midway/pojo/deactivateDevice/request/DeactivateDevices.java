@@ -4,10 +4,10 @@ import java.util.Arrays;
 import com.wordnik.swagger.annotations.ApiModelProperty;
  
 public class DeactivateDevices {
-	@ApiModelProperty(value = "All identifiers for the device")
+	@ApiModelProperty(value = "All identifiers for the device" , required = true)
     private DeactivateDeviceId[] deviceIds;
 	
-	@ApiModelProperty(value = "Device NetSuite Id")
+	@ApiModelProperty(value = "Device NetSuite Id" , required = true)
 	private String netSuiteId;
  
        public String getNetSuiteId() {

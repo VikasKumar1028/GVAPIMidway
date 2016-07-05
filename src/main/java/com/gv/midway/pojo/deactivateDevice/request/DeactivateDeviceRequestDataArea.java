@@ -9,22 +9,22 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DeactivateDeviceRequestDataArea {
-	@ApiModelProperty(value = "The device group that the device belongs to.")
+	@ApiModelProperty(value = "VERIZON: The device group that the requested device belongs to. This parameter can serve either of two purposes:If you specify devices by ID in the devices paramters, this is the name of a device group that the devices should be added to. They will be in the default device group if you don't specify one.If you don't specify individual devices with the devices parameter,you can provide the name of a device group to activate all devices in that group")
 	private String groupName;
 
-	@ApiModelProperty(value = "The billing account for which a list of devices will be returned.")
+	@ApiModelProperty(value = "Name of the billing account.This parameter is only required if the UWS account used for the current API session has access to multiple billing accounts")
 	private String accountName;
 
 	@ApiModelProperty(value = "The custom fields and values that have been set for the device.")
 	private CustomFields[] customFields;
 
-	@ApiModelProperty(value = "Service Plan that that device belongs to.")
+	@ApiModelProperty(value = "Service Plan that that device belongs to.Verizon Wireless provides service plan codes at the time of on-boarding and subsequently whenever there are any changes to the service plan. NOTE:  Any devices in the request that are not supported by the service plan will not activate. For example, if the service plan is only for 4G devices, any 3G devices included in the activation request will fail.", required=true)
 	private String servicePlan;
 	
-	@ApiModelProperty(value = "Code identifying the reason for the deactivation.")
+	@ApiModelProperty(value = "VERIZON : Code identifying the reason for the deactivation.Currently the only valid reason code is FF, which corresponds to General Admin/Maintenance.", required=true)
 	private String reasonCode;
 
-	@ApiModelProperty(value = "All identifiers for the device.")
+	@ApiModelProperty(value = "All identifiers for the device." , required=true)
 	private DeactivateDevices[] devices;
 
 	public DeactivateDevices[] getDevices() {
@@ -34,7 +34,7 @@ public class DeactivateDeviceRequestDataArea {
 	public void setDevices(DeactivateDevices[] devices) {
 		this.devices = devices;
 	}
-	@ApiModelProperty(value = "The etfWaiver parameter waives the Early Termination Fee (ETF), if applicable.")
+	@ApiModelProperty(value = "VERIZON : The etfWaiver parameter waives the Early Termination Fee (ETF), if applicable. Fees may be assessed for deactivating Verizon Wireless devices, depending on the account contract. The etfWaiver parameter waives the Early Termination Fee (ETF), if applicable.•When etfWaiver is set to true, the fee will be waived, assuming that waivers are allowed in the contract and they have not all been used.•When etfWaiver is set to false, the fee will not be waived via this mechanism. If you use a business process where you deactivate devices and apply ETF waivers through some other mechanism, you may continue to follow that process,and simply set etfWaiver to false.If your account does not have ETF waivers at all, set etfWaiver to False. The Deactivate request will fail if you set etfWaiter to true and there are no waivers available based on the contract.")
 	private String etfWaiver;
 
 	
