@@ -73,9 +73,9 @@ public class KoreDeviceUsageHistoryPostProcessor implements Processor {
 		deviceUsage.setDeviceId((DeviceId) exchange.getProperty("DeviceId"));
 		deviceUsage.setDataUsed(totalBytesUsed);
 		// The Day for which Job Ran
-		DateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
-		Date date = (Date) formatter.parse(jobDetail.getDate());
-		deviceUsage.setDate(date);
+/*		DateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
+		Date date = (Date) formatter.parse(jobDetail.getDate());*/
+		deviceUsage.setDate(jobDetail.getDate());
 		deviceUsage.setTransactionErrorReason(null);
 		deviceUsage
 				.setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_SUCCESS);

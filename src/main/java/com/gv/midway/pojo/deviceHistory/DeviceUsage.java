@@ -11,7 +11,7 @@ public class DeviceUsage {
 
 	private DeviceId deviceId;
 	private String netSuiteId;
-	private Date date;
+	private String date;
 	private float dataUsed;
 	private String transactionStatus;
 	private String transactionErrorReason;
@@ -106,12 +106,7 @@ public class DeviceUsage {
 						.hashCode());
 		return result;
 	}
-	public Date getDate() {
-		return date;
-	}
-	public void setDate(Date date) {
-		this.date = date;
-	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -165,5 +160,11 @@ public class DeviceUsage {
 		} else if (!transactionStatus.equals(other.transactionStatus))
 			return false;
 		return true;
+	}
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
 	}
 }

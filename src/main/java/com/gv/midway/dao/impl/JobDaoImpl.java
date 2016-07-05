@@ -5,8 +5,10 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.matc
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -204,7 +206,7 @@ public class JobDaoImpl implements IJobDao {
 		jobDetail.setStartTime(new Date().toString());
 		jobDetail.setStatus(IConstant.JOB_STARTED);
 		jobDetail.setIpAddress(CommonUtil.getIpAddress());		
-		exchange.setProperty("jobDetail", jobDetail);
+		exchange.setProperty("jobDetail", jobDetail);		
 		exchange.setProperty("jobDetailDate", jobDetail.getDate());
 
 		// inserting in the database as property
@@ -249,11 +251,22 @@ public class JobDaoImpl implements IJobDao {
 		log.info("Inside deleteDeviceUsageRecords .....................");
 
 		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+		
+		//log.info("Inside deleteDeviceUsageRecords ....................."+jobDetail.getDate());
+		
+		
+		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
+	
+		
 		try {
-
+			Date date=	dateFormat.parse(jobDetail.getDate());
+			
+			
+			
+			log.info("Inside deleteDeviceUsageRecords ....................."+date);
 			Query searchJobQuery = new Query(Criteria.where("carrierName").is(
 					jobDetail.getCarrierName())).addCriteria(
-					Criteria.where("timestamp").is(jobDetail.getDate()))
+					Criteria.where("timestamp").is(date))
 					.addCriteria(Criteria.where("isValid").is(true));
 
 			Update update = new Update();
@@ -511,7 +524,7 @@ public class JobDaoImpl implements IJobDao {
 		deviceUsage.setCarrierName("VERIZON");
 		deviceUsage.setDataUsed(r.nextInt((100 - 10) + 1) + 10);
 		deviceUsage.setNetSuiteId(new String((r.nextInt((4000 - 4) + 1) + 4)+""));
-		deviceUsage.setDate(new Date(new Date().getTime()-1000*60*60*r.nextInt((120 - 90)+91 ) ));
+		deviceUsage.setDate((new Date(new Date().getTime()-1000*60*60*r.nextInt((120 - 90)+91 ) )).toString());
 		mongoTemplate.save(deviceUsage);
 		//ystem.out.println(i);
 		}

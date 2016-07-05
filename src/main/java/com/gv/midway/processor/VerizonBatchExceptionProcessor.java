@@ -90,7 +90,7 @@ public class VerizonBatchExceptionProcessor implements Processor {
 			Date date = (Date) formatter.parse(jobDetail.getDate());
 
 			log.info("----------------------D----A-----T-------E-------" + date);
-			deviceUsage.setDate(date);
+			deviceUsage.setDate(jobDetail.getDate());
 			deviceUsage.setTransactionErrorReason(errorType);
 			deviceUsage
 					.setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
