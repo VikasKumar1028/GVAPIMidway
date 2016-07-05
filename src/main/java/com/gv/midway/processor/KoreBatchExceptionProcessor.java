@@ -63,11 +63,10 @@ public class KoreBatchExceptionProcessor implements Processor {
 				.setCarrierName((String) exchange.getProperty("CarrierName"));
 		deviceUsage.setDeviceId((DeviceId) exchange.getProperty("DeviceId"));
 		deviceUsage.setDataUsed(0);
-		DateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
-		Date date = (Date) formatter.parse(jobDetail.getDate());
-
+	
+        String date=jobDetail.getDate();
 		log.info("----------------------D----A-----T-------E-------" + date);
-		deviceUsage.setDate(jobDetail.getDate());
+		deviceUsage.setDate(date);
 		deviceUsage.setTransactionErrorReason(errorType);
 		deviceUsage
 				.setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);

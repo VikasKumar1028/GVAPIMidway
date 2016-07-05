@@ -49,7 +49,7 @@ public class KoreDeviceUsageHistoryPostProcessor implements Processor {
 
 				usageDatevalue = getKoreDeviceUsageDate(usage);
 				log.info("jobDetailDate::"+exchange.getProperty("jobDetailDate"));
-				//log.info("Condition Check::"+exchange.getProperty("jobDetailDate").equals(usageDatevalue));
+				
 				
 				if (usageDatevalue!=null && exchange.getProperty("jobDetailDate").equals(usageDatevalue))
 				{
@@ -112,7 +112,7 @@ public class KoreDeviceUsageHistoryPostProcessor implements Processor {
 
 		log.info("****************" + dateTime.toString());
 		
-        DateFormat df = new SimpleDateFormat("MM-dd-yyyy");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		
         String finalUsageDateformat = df.format(dateTime.toDate());
 

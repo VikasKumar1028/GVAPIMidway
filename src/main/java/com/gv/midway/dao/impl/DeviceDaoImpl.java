@@ -391,7 +391,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 		log.info("device dao startDate is..." + startDate);
 		log.info("device dao endDate is..." + endDate);
 
-		DateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
+		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
 		Date startDateValue = null;
 		Date endDateValue = null;
@@ -560,7 +560,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 		log.info("device dao startDate is..." + startDate);
 		log.info("device dao endDate is..." + endDate);
 
-		DateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
+		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
 		Date startDateValue = null;
 		Date endDateValue = null;

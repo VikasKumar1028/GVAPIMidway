@@ -78,7 +78,7 @@ public class VerizonDeviceConnectionHistoryPostProcessor implements Processor {
 		}
 
 		//The Day for which Job Ran
-		deviceConnection.setTimestamp(jobDetail.getDate());
+		deviceConnection.setDate(jobDetail.getDate());
 		deviceConnection.setTransactionErrorReason(null);
 		deviceConnection
 				.setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_SUCCESS);

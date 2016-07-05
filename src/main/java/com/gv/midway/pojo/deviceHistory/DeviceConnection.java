@@ -12,7 +12,7 @@ public class DeviceConnection {
 
 	private DeviceId deviceId;
 	private String netSuiteId;
-	private String timestamp;
+	private String date;
 	private String carrierName;
 	private String transactionStatus;
 	private String transactionErrorReason;
@@ -39,11 +39,11 @@ public class DeviceConnection {
 	public void setNetSuiteId(String netSuiteId) {
 		this.netSuiteId = netSuiteId;
 	}
-	public String getTimestamp() {
-		return timestamp;
+	public String getDate() {
+		return date;
 	}
-	public void setTimestamp(String timestamp) {
-		this.timestamp = timestamp;
+	public void setDate(String date) {
+		this.date = date;
 	}
 	public String getCarrierName() {
 		return carrierName;
@@ -90,7 +90,7 @@ public class DeviceConnection {
 		result = prime * result
 				+ ((occurredAt == null) ? 0 : occurredAt.hashCode());
 		result = prime * result
-				+ ((timestamp == null) ? 0 : timestamp.hashCode());
+				+ ((date == null) ? 0 : date.hashCode());
 		result = prime
 				* result
 				+ ((transactionErrorReason == null) ? 0
@@ -137,10 +137,10 @@ public class DeviceConnection {
 				return false;
 		} else if (!occurredAt.equals(other.occurredAt))
 			return false;
-		if (timestamp == null) {
-			if (other.timestamp != null)
+		if (date == null) {
+			if (other.date != null)
 				return false;
-		} else if (!timestamp.equals(other.timestamp))
+		} else if (!date.equals(other.date))
 			return false;
 		if (transactionErrorReason == null) {
 			if (other.transactionErrorReason != null)
@@ -157,7 +157,7 @@ public class DeviceConnection {
 	@Override
 	public String toString() {
 		return "DeviceConnection [deviceId=" + deviceId + ", netSuiteId="
-				+ netSuiteId + ", timestamp=" + timestamp + ", carrierName="
+				+ netSuiteId + ", date=" + date + ", carrierName="
 				+ carrierName + ", transactionStatus=" + transactionStatus
 				+ ", transactionErrorReason=" + transactionErrorReason
 				+ ", isValid=" + isValid + ", event=" + Arrays.toString(event)
