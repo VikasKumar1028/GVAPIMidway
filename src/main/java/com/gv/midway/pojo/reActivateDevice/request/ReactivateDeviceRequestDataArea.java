@@ -6,7 +6,7 @@ import com.gv.midway.pojo.MidWayDevices;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 public class ReactivateDeviceRequestDataArea {
-	@ApiModelProperty(value = "All identifiers for the device.")
+	@ApiModelProperty(value = "All identifiers for the device.", required = true)
 	private MidWayDevices[] devices;
 
 	/**
