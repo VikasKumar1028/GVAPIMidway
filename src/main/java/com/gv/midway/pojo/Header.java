@@ -8,22 +8,22 @@ public class Header {
 	@ApiModelProperty(value = "Region for the request.")
 	private String region;
 
-	@ApiModelProperty(value = "Date and time of the request.")
+	@ApiModelProperty(value = "Date and time of the request.Format will be yyyy-MM-dd'T'HH:mm:ss", required = true)
 	private String timestamp;
 
-	@ApiModelProperty(value = "Organization name of the request.")
+	@ApiModelProperty(value = "Organization name of the request.", required = true)
 	private String organization;
 
-	@ApiModelProperty(value = "Unique id of the entire flow for the request.")
+	@ApiModelProperty(value = "Unique id of the entire flow for the request.", required = true)
 	private String transactionId;
 
-	@ApiModelProperty(value = "Name of the source from where the request is triggered.")
+	@ApiModelProperty(value = "Name of the source from where the request is triggered.", required = true)
 	private String sourceName;
 
 	@ApiModelProperty(value = "Mode of the request triggered.")
 	private String applicationName;
 
-	@ApiModelProperty(value = "Target System of the request.")
+	@ApiModelProperty(value = "Target System of the request.", required = true)
 	private String bsCarrier;
 
 	public String getBsCarrier() {
