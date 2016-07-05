@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 
 import com.gv.midway.constant.CarrierType;
 import com.gv.midway.constant.IEndPoints;
+import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.job.JobParameter;
 import com.gv.midway.pojo.job.JobinitializedResponse;
 import com.gv.midway.pojo.verizon.DeviceId;
@@ -178,5 +179,80 @@ public class CommonUtil {
         }
 	}
 	
+	public static JobinitializedResponse validateJobParameterForDeviceUsage(JobParameter jobParameter){
+		
+		JobinitializedResponse jobinitializedResponse =new JobinitializedResponse();
+		
+		if(jobParameter==null){
+			
+			jobinitializedResponse.setMessage("Please provide job parameters");
+			
+			return jobinitializedResponse;
+		}
+		
+		String carrierName=jobParameter.getCarrierName();
+		
+		if(carrierName==null){
+			jobinitializedResponse.setMessage("Please provide Carrier Name. Allowable Values are KORE and VERIZON");
+			return jobinitializedResponse;
+		}
+		
+		
+		if(!(carrierName.equals("KORE")||carrierName.equals("VERIZON"))){
+			
+			jobinitializedResponse.setMessage("Please provide valid Carrier Name. Allowable Values are KORE and VERIZON");
+			return jobinitializedResponse;
+		}
+		
+		String date= jobParameter.getDate();
+		
+		if(!isValidDateFormat(date)){
+			
+			jobinitializedResponse.setMessage(IResponse.ERROR_DESCRIPTION_DATE_VALIDATE_JOB_MIDWAYDB);
+			return jobinitializedResponse;
+		}
+		return null;
+		
+	}
 	
+	
+	public static JobinitializedResponse validateJobParameterForDeviceConnection(
+			JobParameter jobParameter) {
+
+		JobinitializedResponse jobinitializedResponse = new JobinitializedResponse();
+
+		if (jobParameter == null) {
+
+			jobinitializedResponse.setMessage("Please provide job parameters");
+
+			return jobinitializedResponse;
+		}
+
+		String carrierName = jobParameter.getCarrierName();
+
+		if (carrierName == null) {
+			jobinitializedResponse
+					.setMessage("Please provide Carrier Name. Allowable Value is VERIZON");
+			return jobinitializedResponse;
+		}
+
+		if (!(carrierName.equals("VERIZON"))) {
+
+			jobinitializedResponse
+					.setMessage("Please provide valid Carrier Name. Allowable Value is VERIZON");
+			return jobinitializedResponse;
+		}
+
+		String date = jobParameter.getDate();
+
+		if (!isValidDateFormat(date)) {
+
+			jobinitializedResponse
+					.setMessage(IResponse.ERROR_DESCRIPTION_DATE_VALIDATE_JOB_MIDWAYDB);
+			return jobinitializedResponse;
+		}
+		return null;
+
+	}
+
 }
