@@ -34,6 +34,7 @@ import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponseDa
 import com.gv.midway.pojo.usageInformation.request.UsageInformationMidwayRequest;
 import com.gv.midway.pojo.usageInformation.response.UsageInformationMidwayResponse;
 import com.gv.midway.pojo.usageInformation.response.UsageInformationResponseMidwayDataArea;
+import com.gv.midway.utility.CommonUtil;
 
 @Service
 public class DeviceDaoImpl implements IDeviceDao {
@@ -391,10 +392,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 		log.info("device dao startDate is..." + startDate);
 		log.info("device dao endDate is..." + endDate);
 
-		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-
-		Date startDateValue = null;
-		Date endDateValue = null;
+		
 		Float dataUsed = null;
 		UsageInformationMidwayResponse usageInformationMidwayResponse = new UsageInformationMidwayResponse();
 
@@ -413,26 +411,23 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 			return usageInformationMidwayResponse;
 		}
-		try {
+		
 
 			if (startDate != null && endDate != null) {
-
-				startDateValue = (Date) formatter.parse(startDate);
-				endDateValue = (Date) formatter.parse(endDate);
-				log.info("startDateValue..." + startDateValue);
-				log.info("endDateValue..." + endDateValue);
+				
+				if(!(CommonUtil.isValidDateFormat(startDate)&&CommonUtil.isValidDateFormat(endDate)))
+				{
+					log.info(" Date that you provided is invalid");
+					response.setResponseCode(IResponse.INVALID_PAYLOAD);
+					response.setResponseDescription(IResponse.ERROR_DESCRIPTION_STARTDATE_VALIDATE_MIDWAYDB);
+					response.setResponseStatus(IResponse.ERROR_MESSAGE);
+					usageInformationMidwayResponse.setResponse(response);
+					return usageInformationMidwayResponse;	
+				}
 
 			}
 
-		} catch (ParseException e1) {
-
-			log.info(" Date that you provided is invalid");
-			response.setResponseCode(IResponse.INVALID_PAYLOAD);
-			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_STARTDATE_VALIDATE_MIDWAYDB);
-			response.setResponseStatus(IResponse.ERROR_MESSAGE);
-			usageInformationMidwayResponse.setResponse(response);
-			return usageInformationMidwayResponse;
-		}
+		
 
 		if (startDate == null) {
 
@@ -451,6 +446,27 @@ public class DeviceDaoImpl implements IDeviceDao {
 			return usageInformationMidwayResponse;
 		}
 
+		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+		Date startDateValue = null;
+		Date endDateValue = null;
+		
+		try {
+			startDateValue = (Date) formatter.parse(startDate);
+			endDateValue = (Date) formatter.parse(endDate);
+			log.info("startDateValue..." + startDateValue);
+			log.info("endDateValue..." + endDateValue);
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			log.info(" format error while parsing the date");
+			response.setResponseCode(IResponse.INVALID_PAYLOAD);
+			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_STARTDATE_VALIDATE_MIDWAYDB);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
+			usageInformationMidwayResponse.setResponse(response);
+			return usageInformationMidwayResponse;	
+		}
+		
+		
 		if (startDateValue.after(endDateValue)) {
 
 			log.info("Earliest date should not be greater than Latest date");
@@ -462,23 +478,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 		}
 
-		/*if (startDateValue != null && endDateValue != null) {
-			try {
-				startDateValue = formatter.parse(startDateValue.toString());
-				endDateValue = formatter.parse(endDateValue.toString());
-			}
-
-			catch (Exception e) {
-				response.setResponseCode(IResponse.NO_DATA_FOUND_CODE);
-				response.setResponseDescription(IResponse.ERROR_DESCRIPTION_STARTDATE_VALIDATE_MIDWAYDB);
-				response.setResponseStatus(IResponse.ERROR_MESSAGE);
-				usageInformationMidwayResponse.setResponse(response);
-
-			}
-			return usageInformationMidwayResponse;
-		}*/
-
-		//else {
+		
 
 			try {
 
@@ -486,10 +486,10 @@ public class DeviceDaoImpl implements IDeviceDao {
 						.where("netSuiteId").is(netSuiteId))
 						.addCriteria(Criteria
 								.where("date")
-								.gte(startDateValue)
+								.gte(startDate)
 								.orOperator(
 										Criteria.where("date")
-												.lte(endDateValue)));
+												.lte(endDate)));
 
 				log.info("searchDeviceQuery::::::::::::::" + searchDeviceQuery);
 
@@ -541,7 +541,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 				return usageInformationMidwayResponse;
 			}
-		//}
+		
 	}
 
 	@Override
@@ -560,10 +560,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 		log.info("device dao startDate is..." + startDate);
 		log.info("device dao endDate is..." + endDate);
 
-		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-
-		Date startDateValue = null;
-		Date endDateValue = null;
+		
 		Float dataUsed = null;
 		ConnectionInformationMidwayResponse connectionInformationMidwayResponse = new ConnectionInformationMidwayResponse();
 
@@ -582,26 +579,21 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 			return connectionInformationMidwayResponse;
 		}
-		try {
-
-			if (startDate != null && endDate != null) {
-
-				startDateValue = (Date) formatter.parse(startDate);
-				endDateValue = (Date) formatter.parse(endDate);
-				log.info("startDateValue..." + startDateValue);
-				log.info("endDateValue..." + endDateValue);
-
+		if (startDate != null && endDate != null) {
+			
+			if(!(CommonUtil.isValidDateFormat(startDate)&&CommonUtil.isValidDateFormat(endDate)))
+			{
+				log.info(" Date that you provided is invalid");
+				response.setResponseCode(IResponse.INVALID_PAYLOAD);
+				response.setResponseDescription(IResponse.ERROR_DESCRIPTION_STARTDATE_VALIDATE_MIDWAYDB);
+				response.setResponseStatus(IResponse.ERROR_MESSAGE);
+				connectionInformationMidwayResponse.setResponse(response);
+				return connectionInformationMidwayResponse;	
 			}
 
-		} catch (ParseException e1) {
-
-			log.info(" Date that you provided is invalid");
-			response.setResponseCode(IResponse.INVALID_PAYLOAD);
-			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_STARTDATE_VALIDATE_MIDWAYDB);
-			response.setResponseStatus(IResponse.ERROR_MESSAGE);
-			connectionInformationMidwayResponse.setResponse(response);
-			return connectionInformationMidwayResponse;
 		}
+		
+		
 
 		if (startDate == null) {
 
@@ -619,6 +611,27 @@ public class DeviceDaoImpl implements IDeviceDao {
 			connectionInformationMidwayResponse.setResponse(response);
 			return connectionInformationMidwayResponse;
 		}
+		
+		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+		Date startDateValue = null;
+		Date endDateValue = null;
+		
+		try {
+			startDateValue = (Date) formatter.parse(startDate);
+			endDateValue = (Date) formatter.parse(endDate);
+			log.info("startDateValue..." + startDateValue);
+			log.info("endDateValue..." + endDateValue);
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			log.info(" format error while parsing the date");
+			response.setResponseCode(IResponse.INVALID_PAYLOAD);
+			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_STARTDATE_VALIDATE_MIDWAYDB);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
+			connectionInformationMidwayResponse.setResponse(response);
+			return connectionInformationMidwayResponse;	
+		}
+		
 		if (startDateValue.after(endDateValue)) {
 
 			log.info("Earliest date should not be greater than Latest date");
@@ -630,23 +643,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 		}
 
-		/*if (startDateValue != null && endDateValue != null) {
-			try {
-				startDateValue = formatter.parse(startDateValue.toString());
-				endDateValue = formatter.parse(endDateValue.toString());
-			}
-
-			catch (Exception e) {
-				response.setResponseCode(IResponse.NO_DATA_FOUND_CODE);
-				response.setResponseDescription(IResponse.ERROR_DESCRIPTION_STARTDATE_VALIDATE_MIDWAYDB);
-				response.setResponseStatus(IResponse.ERROR_MESSAGE);
-				connectionInformationMidwayResponse.setResponse(response);
-
-			}
-			return connectionInformationMidwayResponse;
-		}*/
-
-		//else {
+		
 
 			try {
 
@@ -654,10 +651,10 @@ public class DeviceDaoImpl implements IDeviceDao {
 						.where("netSuiteId").is(netSuiteId))
 						.addCriteria(Criteria
 								.where("date")
-								.gte(startDateValue)
+								.gte(startDate)
 								.orOperator(
 										Criteria.where("date")
-												.lte(endDateValue)));
+												.lte(endDate)));
 
 				log.info("searchDeviceQuery::::::::::::::" + searchDeviceQuery);
 
@@ -709,7 +706,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 				return connectionInformationMidwayResponse;
 			}
-		//}
+		
 
 	}
 }

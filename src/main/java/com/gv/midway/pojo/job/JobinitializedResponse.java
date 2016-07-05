@@ -1,27 +1,26 @@
 package com.gv.midway.pojo.job;
 
-import com.gv.midway.pojo.BaseResponse;
+
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
-public class JobinitializedResponse extends BaseResponse {
+public class JobinitializedResponse  {
 
-	@ApiModelProperty(value = "Data area for Job initialized status response")
-	private JobinitializedResponseDataArea dataArea;
+	@ApiModelProperty(value = "message Job initialized status response")
+	private String message;
 
-	public JobinitializedResponseDataArea getDataArea() {
-		return dataArea;
+	public String getMessage() {
+		return message;
 	}
 
-	public void setDataArea(JobinitializedResponseDataArea dataArea) {
-		this.dataArea = dataArea;
+	public void setMessage(String message) {
+		this.message = message;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result
-				+ ((dataArea == null) ? 0 : dataArea.hashCode());
+		int result = 1;
+		result = prime * result + ((message == null) ? 0 : message.hashCode());
 		return result;
 	}
 
@@ -29,22 +28,28 @@ public class JobinitializedResponse extends BaseResponse {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (!super.equals(obj))
+		if (obj == null)
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
 		JobinitializedResponse other = (JobinitializedResponse) obj;
-		if (dataArea == null) {
-			if (other.dataArea != null)
+		if (message == null) {
+			if (other.message != null)
 				return false;
-		} else if (!dataArea.equals(other.dataArea))
+		} else if (!message.equals(other.message))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "JobinitializedResponse [dataArea=" + dataArea + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("JobinitializedResponse [message=");
+		builder.append(message);
+		builder.append("]");
+		return builder.toString();
 	}
+
+	
 
 }

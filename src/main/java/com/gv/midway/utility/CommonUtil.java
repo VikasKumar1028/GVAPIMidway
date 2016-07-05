@@ -8,10 +8,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
+import com.gv.midway.constant.CarrierType;
 import com.gv.midway.constant.IEndPoints;
+import com.gv.midway.pojo.job.JobParameter;
+import com.gv.midway.pojo.job.JobinitializedResponse;
 import com.gv.midway.pojo.verizon.DeviceId;
 
 public class CommonUtil {
@@ -148,5 +153,30 @@ public class CommonUtil {
 		return null;
 
 	}
-
+	
+	public static boolean isValidDateFormat(String date){
+		
+      
+        String exp="^([\\d]{4})[-]?(0?[1-9]|1[012])[-]?(0?[1-9]|[12][0-9]|3[01])";
+        
+        Pattern pattern = Pattern.compile(exp,Pattern.CASE_INSENSITIVE);   
+        
+        Matcher matcher = pattern.matcher(date);   
+        
+        if(matcher.matches())
+        {   
+           log.info("valid date format for....."+date);  
+           
+            
+            return true;
+        } 
+        else
+        {
+            log.info("invalid date format for....."+date);
+            
+            return false;
+        }
+	}
+	
+	
 }

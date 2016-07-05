@@ -275,6 +275,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 	public JobinitializedResponse reRunConnectionHistoryJob(
 			JobParameter jobParameter) {
 
+		
 		JobDetail jobDetail = new JobDetail();
 		jobDetail.setType(JobType.RERUN);
 		jobDetail.setDate(jobParameter.getDate());
