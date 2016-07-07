@@ -1,3 +1,7 @@
+/*
+ * This Class is Developed to Interact with DB for all the Operations related to Batch Jobs
+ */
+
 package com.gv.midway.dao.impl;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
@@ -5,10 +9,7 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.matc
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -47,9 +48,11 @@ public class JobDaoImpl implements IJobDao {
 	Logger log = Logger.getLogger(JobDaoImpl.class);
 	static Random r = new Random();
 
-	static int numbers = 0;
 
-	// @Override
+	/**
+	 * Fetch all the devices 
+	 */
+	@Override
 	public List fetchDevices(Exchange exchange) {
 
 		JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
@@ -90,13 +93,17 @@ public class JobDaoImpl implements IJobDao {
 		}
 
 		catch (Exception e) {
-			e.printStackTrace();
+			log.error("Error in fetchDevices :"+e);
 		}
 
 		// return list;
 		return deviceInformationList;
 	}
 
+	
+	/**
+	 * Fetch only devices with Odd Net Suited ID 
+	 */
 	public List fetchOddDevices(Exchange exchange) {
 
 		log.info("fetchOddDevices::::::::");
@@ -139,14 +146,16 @@ public class JobDaoImpl implements IJobDao {
 
 		catch (Exception e) {
 
-			e.printStackTrace();
-			System.out.println("e");
+			log.error("Error in fetchOddDevices :"+e);
 		}
 
 		// return list;
 		return deviceInformationList;
 	}
 
+	/**
+	 * Fetch only devices with Even Net Suited ID 
+	 */
 	public List fetchEvenDevices(Exchange exchange) {
 
 		log.info("fetchEvenDevices::::::::");
@@ -187,8 +196,8 @@ public class JobDaoImpl implements IJobDao {
 		}
 
 		catch (Exception e) {
-			e.printStackTrace();
-			log.info("Exception" + e);
+			
+			log.error("Error in fetchEvenDevices :"+e);
 		}
 
 		// return list;
@@ -213,6 +222,11 @@ public class JobDaoImpl implements IJobDao {
 		mongoTemplate.insert(jobDetail);
 	}
 
+	
+
+	/**
+	 * Updating the Job Details parameters
+	 */
 	@Override
 	public void updateJobDetails(Exchange exchange) {
 
@@ -240,11 +254,15 @@ public class JobDaoImpl implements IJobDao {
 		}
 
 		catch (Exception e) {
-			log.info("Error In Saving Job Detail-----------------------------");
+			log.error("Error In updateJobDetails-----------------------------"+e);
 		}
 
 	}
 
+	
+	/**
+	 * Soft Delete the Device Usage records  in Job Rerun Case
+	 */
 	@Override
 	public void deleteDeviceUsageRecords(Exchange exchange) {
 
@@ -268,6 +286,9 @@ public class JobDaoImpl implements IJobDao {
 
 	}
 
+	/**
+	 * Soft Delete the Device Connection History records  in Job Rerun Case
+	 */
 	@Override
 	public void deleteDeviceConnectionHistoryRecords(Exchange exchange) {
 
@@ -293,7 +314,7 @@ public class JobDaoImpl implements IJobDao {
 		}
 
 		catch (Exception e) {
-			log.info("Error In Saving Job Detail-----------------------------");
+			log.error("Error In deleteDeviceConnectionHistoryRecords-----------------------------");
 		}
 
 	}
@@ -331,22 +352,19 @@ public class JobDaoImpl implements IJobDao {
 
 			}
 
-			/*
-			 * list = new
-			 * ArrayList<DeviceInformation>(Collections.nCopies(10000,
-			 * deviceInformationList.get(0)));
-			 */
-
 		}
 
 		catch (Exception e) {
-			System.out.println("e");
+			log.error("Error In Fetching Transactioon Failure Device Usage/Device Connection Records-----------------------------"+e);
 		}
 
-		// return list;
 		return list;
 
 	}
+
+	/**
+	 * Soft Delete the Transaction Failure records for Device Usage
+	 */
 
 	@Override
 	public void deleteTransactionFailureDeviceUsageRecords(Exchange exchange) {
@@ -375,11 +393,14 @@ public class JobDaoImpl implements IJobDao {
 		}
 
 		catch (Exception e) {
-			log.info("Error In Saving Job Detail-----------------------------");
+			log.error("Error In Deleting Device Usage Records-----------------------------"+e);
 		}
 
 	}
 
+	/**
+	 * Soft Delete the Transaction Failure records for Device Connection
+	 */
 	@Override
 	public void deleteTransactionFailureDeviceConnectionHistoryRecords(
 			Exchange exchange) {
@@ -408,25 +429,23 @@ public class JobDaoImpl implements IJobDao {
 		}
 
 		catch (Exception e) {
-			log.info("Error In Saving Job Detail-----------------------------");
+			log.error("Error In Saving Job Detail-----------------------------");
 		}
 
 	}
 
+	/**
+	 * Fetch the Stored server Ip Address from the Database
+	 */
 	@Override
 	public ServerDetail fetchServerIp(String currentServerIp) {
-		// TODO Auto-generated method stub
 
 		log.info("Inside fetchServerIp.....................");
-
-		log.info("currentServerIp:::::::" + currentServerIp);
 
 		ServerDetail serverDetail = null;
 
 		Query searchDeviceQuery = new Query(Criteria.where("ipAddress").is(
 				currentServerIp));
-
-		log.info("searchDeviceQuery:::::::::::" + searchDeviceQuery);
 
 		serverDetail = mongoTemplate.findOne(searchDeviceQuery,
 				ServerDetail.class);
@@ -434,6 +453,11 @@ public class JobDaoImpl implements IJobDao {
 		return serverDetail;
 
 	}
+
+	/**
+	 * This Method returns the notification if the device Usage exceed the
+	 * billing plan
+	 */
 
 	public void processDeviceNotification(Exchange exchange) {
 
@@ -444,76 +468,39 @@ public class JobDaoImpl implements IJobDao {
 		String netSuiteId = deviceInfo.getNetSuiteId();
 		if (deviceInfo.getBs_plan() != null) {
 
+			JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
 			billingDay = deviceInfo.getBs_plan().getBill_day();
+			billingStartDate = CommonUtil.getDeviceBillingStartDate(billingDay,
+					jobDetail.getDate());
 
-		}
+			Aggregation agg = newAggregation(
+					match(Criteria.where("netSuiteId").is(netSuiteId)
+							.and("date").gte(billingStartDate).and("isValid")
+							.is(true)),
+					group("netSuiteId").sum("dataUsed").as("dataUsed"),
+					project("dataUsed").and("netSuiteId").previousOperation());
 
-		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
-		String jobDay = jobDetail.getDate().substring(9, 10);
+			AggregationResults<DeviceOverageNotification> results = mongoTemplate
+					.aggregate(agg, DeviceUsage.class,
+							DeviceOverageNotification.class);
 
-		// Creating The bill start date
-		// billday One oR two character
-		if (billingDay != null && billingDay.length() == 1) {
-			billingDay = "0" + billingDay;
-		}
-		try {
-			if (billingDay != null) {
+			Iterator itr = results.iterator();
+			while (itr.hasNext()) {
+				DeviceOverageNotification element = (DeviceOverageNotification) itr
+						.next();
+				// setting Billing Date
+				element.setDate(billingStartDate);
 
-				// billing day>JobDetail Day
-				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(dateFormat.parse(jobDetail.getDate()));
-
-				if (Integer.parseInt(billingDay) > Integer.parseInt(jobDay)) {
-
-					// previous month data
-					cal.add(cal.MONTH, -1);
-					cal.set(cal.DATE, Integer.parseInt(billingDay));
-					billingStartDate = dateFormat.format(cal.getTime());
-
-				}
-
-				// billing day<= JobDetail Day
-				if (Integer.parseInt(billingDay) <= Integer.parseInt(jobDay)) {
-
-					// current month of data
-					cal.set(cal.DATE, Integer.parseInt(billingDay));
-					billingStartDate = dateFormat.format(cal.getTime());
-
-				}
+				mongoTemplate.save(element);
 			}
-
-		} catch (Exception ex) {
-			log.error("................Error in Setting Job Dates" + ex);
-		}
-
-		Aggregation agg = newAggregation(
-				match(Criteria.where("netSuiteId").is(netSuiteId).and("date")
-						.gte(billingStartDate).and("isValid").is(true)),
-				group("netSuiteId").sum("dataUsed").as("dataUsed"),
-				project("dataUsed").and("netSuiteId").previousOperation());
-
-		AggregationResults<DeviceOverageNotification> results = mongoTemplate.aggregate(agg,
-				DeviceUsage.class, DeviceOverageNotification.class);
-
-		Iterator itr = results.iterator();
-		while (itr.hasNext()) {
-			DeviceOverageNotification element = (DeviceOverageNotification) itr.next();
-			//setting Billing Date
-			element.setDate(billingStartDate);
-
-			mongoTemplate.save(element);
 		}
 
 	}
 
-	/*
-	 * Inserting the Dummy Records in Device Usage and DeviceInfo Collection
-	 * (non-Javadoc)
-	 * 
-	 * @see com.gv.midway.dao.IJobDao#insertBulkRecords()
+	/**
+	 * Inserting the Dummy Records in Device Usage and DeviceInfo Collection for
+	 * Testing
 	 */
-
 	public void insertBulkRecords() {
 
 		for (int i = 0; i < 1220000; i++) {

@@ -1,18 +1,8 @@
 /**
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+Midway Junit is developed to test the
+ Provision request of different carrier
+ Batch Jobs of different carrier
+
  */
 package com.gv.midway.test;
 
@@ -36,39 +26,29 @@ import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequestDataArea;
 import com.gv.midway.pojo.activateDevice.request.ActivateDevices;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
-import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponseDataArea;
 import com.gv.midway.pojo.changeDeviceServicePlans.request.ChangeDeviceServicePlansRequest;
 import com.gv.midway.pojo.changeDeviceServicePlans.request.ChangeDeviceServicePlansRequestDataArea;
 import com.gv.midway.pojo.changeDeviceServicePlans.response.ChangeDeviceServicePlansResponse;
-import com.gv.midway.pojo.changeDeviceServicePlans.response.ChangeDeviceServicePlansResponseDataArea;
 import com.gv.midway.pojo.customFieldsDevice.request.CustomFieldsDeviceRequest;
 import com.gv.midway.pojo.customFieldsDevice.request.CustomFieldsDeviceRequestDataArea;
 import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponse;
-import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponseDataArea;
 import com.gv.midway.pojo.deactivateDevice.kore.request.DeactivateDeviceRequestKore;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceId;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequestDataArea;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDevices;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
-import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponseDataArea;
 import com.gv.midway.pojo.deactivateDevice.verizon.request.DeactivateDeviceRequestVerizon;
 import com.gv.midway.pojo.reActivateDevice.request.ReactivateDeviceRequest;
 import com.gv.midway.pojo.reActivateDevice.request.ReactivateDeviceRequestDataArea;
 import com.gv.midway.pojo.reActivateDevice.response.ReactivateDeviceResponse;
-import com.gv.midway.pojo.reActivateDevice.response.ReactivateDeviceResponseDataArea;
 import com.gv.midway.pojo.restoreDevice.request.RestoreDeviceRequest;
 import com.gv.midway.pojo.restoreDevice.request.RestoreDeviceRequestDataArea;
 import com.gv.midway.pojo.restoreDevice.response.RestoreDeviceResponse;
-import com.gv.midway.pojo.restoreDevice.response.RestoreDeviceResponseDataArea;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequest;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequestDataArea;
 import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
-import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponseDataArea;
 import com.gv.midway.pojo.verizon.CustomFieldsToUpdate;
-import com.gv.midway.pojo.verizon.DeviceId;
-import com.gv.midway.pojo.verizon.Devices;
-import com.gv.midway.processor.activateDevice.KoreActivateDevicePostProcessor;
 import com.gv.midway.service.ISessionService;
 
 

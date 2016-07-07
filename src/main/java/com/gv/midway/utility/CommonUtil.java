@@ -5,6 +5,7 @@ import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -13,7 +14,6 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
-import com.gv.midway.constant.CarrierType;
 import com.gv.midway.constant.IEndPoints;
 import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.job.JobParameter;
@@ -74,7 +74,11 @@ public class CommonUtil {
 		return Long.toString(timestamp);
 
 	}
-
+	/**
+	 * Method to get the carrier Name from the input
+	 * @param carrierName
+	 * @return
+	 */
 	public static String getDerivedCarrierName(Object carrierName) {
 
 		String sourceDirived = null;
@@ -154,68 +158,65 @@ public class CommonUtil {
 		return null;
 
 	}
-	
-	public static boolean isValidDateFormat(String date){
-		
-      
-        String exp="^([\\d]{4})[-]?(0?[1-9]|1[012])[-]?(0?[1-9]|[12][0-9]|3[01])";
-        
-        Pattern pattern = Pattern.compile(exp,Pattern.CASE_INSENSITIVE);   
-        
-        Matcher matcher = pattern.matcher(date);   
-        
-        if(matcher.matches())
-        {   
-           log.info("valid date format for....."+date);  
-           
-            
-            return true;
-        } 
-        else
-        {
-            log.info("invalid date format for....."+date);
-            
-            return false;
-        }
+
+	public static boolean isValidDateFormat(String date) {
+
+		String exp = "^([\\d]{4})[-]?(0?[1-9]|1[012])[-]?(0?[1-9]|[12][0-9]|3[01])";
+
+		Pattern pattern = Pattern.compile(exp, Pattern.CASE_INSENSITIVE);
+
+		Matcher matcher = pattern.matcher(date);
+
+		if (matcher.matches()) {
+			log.info("valid date format for....." + date);
+
+			return true;
+		} else {
+			log.info("invalid date format for....." + date);
+
+			return false;
+		}
 	}
-	
-	public static JobinitializedResponse validateJobParameterForDeviceUsage(JobParameter jobParameter){
-		
-		JobinitializedResponse jobinitializedResponse =new JobinitializedResponse();
-		
-		if(jobParameter==null){
-			
+
+	public static JobinitializedResponse validateJobParameterForDeviceUsage(
+			JobParameter jobParameter) {
+
+		JobinitializedResponse jobinitializedResponse = new JobinitializedResponse();
+
+		if (jobParameter == null) {
+
 			jobinitializedResponse.setMessage("Please provide job parameters");
-			
+
 			return jobinitializedResponse;
 		}
-		
-		String carrierName=jobParameter.getCarrierName();
-		
-		if(carrierName==null){
-			jobinitializedResponse.setMessage("Please provide Carrier Name. Allowable Values are KORE and VERIZON");
+
+		String carrierName = jobParameter.getCarrierName();
+
+		if (carrierName == null) {
+			jobinitializedResponse
+					.setMessage("Please provide Carrier Name. Allowable Values are KORE and VERIZON");
 			return jobinitializedResponse;
 		}
-		
-		
-		if(!(carrierName.equals("KORE")||carrierName.equals("VERIZON"))){
-			
-			jobinitializedResponse.setMessage("Please provide valid Carrier Name. Allowable Values are KORE and VERIZON");
+
+		if (!(carrierName.equals("KORE") || carrierName.equals("VERIZON"))) {
+
+			jobinitializedResponse
+					.setMessage("Please provide valid Carrier Name. Allowable Values are KORE and VERIZON");
 			return jobinitializedResponse;
 		}
-		
-		String date= jobParameter.getDate();
-		
-		if(!isValidDateFormat(date)){
-			
-			jobinitializedResponse.setMessage(IResponse.ERROR_DESCRIPTION_DATE_VALIDATE_JOB_MIDWAYDB);
+
+		String date = jobParameter.getDate();
+
+		if (!isValidDateFormat(date)) {
+
+			jobinitializedResponse
+					.setMessage(IResponse.ERROR_DESCRIPTION_DATE_VALIDATE_JOB_MIDWAYDB);
 			return jobinitializedResponse;
 		}
 		return null;
-		
+
 	}
-	
-	
+
 	public static JobinitializedResponse validateJobParameterForDeviceConnection(
 			JobParameter jobParameter) {
 
@@ -253,6 +254,58 @@ public class CommonUtil {
 		}
 		return null;
 
+	}
+
+	/**
+	 * Method takes the Billing Day(eg 10 and Creates the billing Start date
+	 * yyyy-MM-dd)
+	 * 
+	 * @param billDay
+	 * @param jobDate
+	 * @return
+	 */
+	public static String getDeviceBillingStartDate(String billingDay, String jobDate) {
+
+		String billingStartDate = null;
+		String jobDay = jobDate.substring(9, 10);
+
+		// Creating The bill start date
+		// billingday One oR two character
+		if (billingDay != null && billingDay.length() == 1) {
+			billingDay = "0" + billingDay;
+		}
+		try {
+			if (billingDay != null) {
+
+				// billing day>JobDetail Day
+				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(dateFormat.parse(jobDate));
+
+				if (Integer.parseInt(billingDay) > Integer.parseInt(jobDay)) {
+
+					// previous month data
+					cal.add(Calendar.MONTH, -1);
+					cal.set(Calendar.DATE, Integer.parseInt(billingDay));
+					billingStartDate = dateFormat.format(cal.getTime());
+
+				}
+
+				// billing day<= JobDetail Day
+				if (Integer.parseInt(billingDay) <= Integer.parseInt(jobDay)) {
+
+					// current month of data
+					cal.set(Calendar.DATE, Integer.parseInt(billingDay));
+					billingStartDate = dateFormat.format(cal.getTime());
+
+				}
+			}
+
+		} catch (Exception ex) {
+			log.error("................Error in Setting Job Dates" + ex);
+		}
+
+		return billingStartDate;
 	}
 
 }
