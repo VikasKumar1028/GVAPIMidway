@@ -1,30 +1,29 @@
 package com.gv.midway.pojo.connectionInformation.verizon.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ConnectionInformationResponseMidwayDataArea {
 
-	@ApiModelProperty(value = "Total Device Usages")
-	@JsonProperty("totalUsages")
-	private Long totalUsages;
+	private ConnectionEventMidway connectionEventAttributes;
 
-	public Long getTotalUsages() {
-		return totalUsages;
+	public ConnectionEventMidway getConnectionEventAttributes() {
+		return connectionEventAttributes;
 	}
 
-	public void setTotalUsages(Long totalUsages) {
-		this.totalUsages = totalUsages;
+	public void setConnectionEventAttributes(
+			ConnectionEventMidway connectionEventAttributes) {
+		this.connectionEventAttributes = connectionEventAttributes;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((totalUsages == null) ? 0 : totalUsages.hashCode());
+		result = prime
+				* result
+				+ ((connectionEventAttributes == null) ? 0
+						: connectionEventAttributes.hashCode());
 		return result;
 	}
 
@@ -37,10 +36,11 @@ public class ConnectionInformationResponseMidwayDataArea {
 		if (getClass() != obj.getClass())
 			return false;
 		ConnectionInformationResponseMidwayDataArea other = (ConnectionInformationResponseMidwayDataArea) obj;
-		if (totalUsages == null) {
-			if (other.totalUsages != null)
+		if (connectionEventAttributes == null) {
+			if (other.connectionEventAttributes != null)
 				return false;
-		} else if (!totalUsages.equals(other.totalUsages))
+		} else if (!connectionEventAttributes
+				.equals(other.connectionEventAttributes))
 			return false;
 		return true;
 	}

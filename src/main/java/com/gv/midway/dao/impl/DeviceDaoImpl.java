@@ -21,8 +21,10 @@ import com.gv.midway.dao.IDeviceDao;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationMidwayRequest;
+import com.gv.midway.pojo.connectionInformation.verizon.response.ConnectionEventMidway;
 import com.gv.midway.pojo.connectionInformation.verizon.response.ConnectionInformationMidwayResponse;
 import com.gv.midway.pojo.connectionInformation.verizon.response.ConnectionInformationResponseMidwayDataArea;
+import com.gv.midway.pojo.connectionInformation.verizon.response.DeviceEvents;
 import com.gv.midway.pojo.device.request.SingleDevice;
 import com.gv.midway.pojo.device.response.BatchDeviceId;
 import com.gv.midway.pojo.device.response.UpdateDeviceResponse;
@@ -668,28 +670,40 @@ public class DeviceDaoImpl implements IDeviceDao {
 				response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
 				connectionInformationMidwayResponse.setResponse(response);
 
-				String bytesUsedValue = null;
-				Long bytesUsedSecond = 0L;
-				Long bytesUsedFirst = 0L;
+				ConnectionInformationResponseMidwayDataArea connectionInformationResponseMidwayDataArea = new ConnectionInformationResponseMidwayDataArea();
+				ConnectionEventMidway connectionEventMidway = null;
+				DeviceEvents midwayEvent = null;
+				DeviceEvents deviceEvent[] = null;
+
 				for (DeviceConnection deviceConnection : deviceConnectionUsage) {
 
+					connectionEventMidway = new ConnectionEventMidway();
+
 					deviceConnection.setEvent(deviceConnection.getEvent());
+					int eventlength = deviceConnection.getEvent().length;
+					deviceEvent = new DeviceEvents[eventlength];
 
-					for (DeviceEvent eventq : deviceConnection.getEvent()) {
-						bytesUsedValue = eventq.getBytesUsed();
-						bytesUsedFirst = Long.parseLong(bytesUsedValue)
-								+ bytesUsedFirst;
+					DeviceEvent eventq[] = deviceConnection.getEvent();
 
-						log.info("bytesUsedFirst Array::::" + bytesUsedFirst);
+					for (int j = 0; j < eventlength; j++) {
+
+						midwayEvent = new DeviceEvents();
+						midwayEvent.setBytesUsed(eventq[j].getBytesUsed());
+						midwayEvent.setOccurredAt(eventq[j].getOccurredAt());
+						midwayEvent.setEventType(eventq[j].getEventType());
+						deviceEvent[j] = midwayEvent;
+						log.info("deviceEvent:::::" + deviceEvent[j]);
+
+						connectionEventMidway.setEvent(deviceEvent);
+
 					}
-					bytesUsedSecond = bytesUsedFirst;
+					// Arrays.sort(connectionEventMidway);
 
-					log.info("bytesUsedSecoond Array:" + bytesUsedSecond);
 				}
-				ConnectionInformationResponseMidwayDataArea connectionInformationResponseMidwayDataArea = new ConnectionInformationResponseMidwayDataArea();
 
 				connectionInformationResponseMidwayDataArea
-						.setTotalUsages(bytesUsedSecond);
+						.setConnectionEventAttributes(connectionEventMidway);
+
 				connectionInformationMidwayResponse
 						.setDataArea(connectionInformationResponseMidwayDataArea);
 			}
