@@ -19,6 +19,7 @@ import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.callback.Netsuite.KeyValues;
 import com.gv.midway.pojo.callback.Netsuite.KafkaNetSuiteCallBackError;
 import com.gv.midway.pojo.callback.Netsuite.NetSuiteCallBackProvisioningRequest;
+import com.gv.midway.pojo.changeDeviceServicePlans.request.ChangeDeviceServicePlansRequest;
 import com.gv.midway.pojo.kore.KoreErrorResponse;
 import com.gv.midway.pojo.verizon.DeviceId;
 import com.gv.midway.pojo.verizon.Devices;
@@ -202,7 +203,7 @@ public class KoreCheckStatusErrorProcessor implements Processor {
 		
 		netSuiteCallBackProvisioningRequest.setDeviceIds(deviceIds);
 		
-		message.setBody(netSuiteCallBackProvisioningRequest);
+		
 		
 		log.info("body set for netSuiteCallBack........."+exchange.getIn().getBody());
 		
@@ -276,16 +277,23 @@ public class KoreCheckStatusErrorProcessor implements Processor {
 
 			break;
 
-		/*case CHANGESERVICEPLAN:
-
-			
+		case CHANGESERVICEPLAN:
+			ChangeDeviceServicePlansRequest changeDeviceServicePlansRequest=(ChangeDeviceServicePlansRequest)body;
+			log.info("change devcie servcie plan data area...."+changeDeviceServicePlansRequest.getDataArea().toString());
+			String oldServicePlan=changeDeviceServicePlansRequest.getDataArea().getCurrentServicePlan();
+			String newServicePlan=changeDeviceServicePlansRequest.getDataArea().getServicePlan();
+			log.info("service plan new is..."+newServicePlan+" old service plan is....."+oldServicePlan);
+			netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.SERVICE_PLAN);
+			netSuiteCallBackProvisioningRequest.setOldServicePlan(oldServicePlan);
+			netSuiteCallBackProvisioningRequest.setNewServicePlan(newServicePlan);
+			oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
 			break;
 
 		case CHANGECUSTOMFIELDS:
 
-			
-
-			break;*/
+			netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.CUSTOM_FIELDS);
+			oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
+			break;
 
 		default:
 			break;
@@ -294,7 +302,8 @@ public class KoreCheckStatusErrorProcessor implements Processor {
 	    message.setHeader("Authorization", oauthHeader);
 	    exchange.setProperty("script", script);
 	    message.setHeader(Exchange.HTTP_PATH, null);
-	   exchange.setPattern(ExchangePattern.InOut);
+	    message.setBody(netSuiteCallBackProvisioningRequest);
+	    exchange.setPattern(ExchangePattern.InOut);
 		log.info("error callback resposne for Kore..."+exchange.getIn().getBody());
 
 	}

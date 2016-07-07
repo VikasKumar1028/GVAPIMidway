@@ -78,15 +78,23 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		ActivateDeviceRequestDataArea activateDeviceRequestDataArea = (ActivateDeviceRequestDataArea) req.getDataArea();
 
-		ActivateDevices[] activateDevices = activateDeviceRequestDataArea.getDevices();
+		//ActivateDevices[] activateDevices = activateDeviceRequestDataArea.getDevices();
+		
+		ActivateDevices activateDevices = activateDeviceRequestDataArea.getDevices();
+		
+		ActivateDevices[] activateDevicesArr=new ActivateDevices[1];
+		
+		if(activateDevices!=null){
+			activateDevicesArr[0]=activateDevices;
+		}
 
 		Kryo kryo = new Kryo();
-		for (ActivateDevices activateDevice : activateDevices) {
+		for (ActivateDevices activateDevice : activateDevicesArr) {
 
 			ActivateDeviceRequest dbPayload = new ActivateDeviceRequest();
 			dbPayload.setHeader(req.getHeader());
             String netSuiteId=activateDevice.getNetSuiteId();
-			ActivateDevices[] businessPayLoadDevicesArray = new ActivateDevices[1];
+			//ActivateDevices[] businessPayLoadDevicesArray = new ActivateDevices[1];
 			ActivateDevices businessPayLoadActivateDevices = new ActivateDevices();
 			ActivateDeviceId[] businessPayloadDeviceId = new ActivateDeviceId[activateDevice.getDeviceIds().length];
 
@@ -106,11 +114,20 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 			}
 			businessPayLoadActivateDevices.setDeviceIds(businessPayloadDeviceId);
-			businessPayLoadDevicesArray[0] = businessPayLoadActivateDevices;
+			businessPayLoadActivateDevices.setNetSuiteId(activateDevice.getNetSuiteId());
+			businessPayLoadActivateDevices.setMacAddress(activateDevice.getMacAddress());
+			businessPayLoadActivateDevices.setSerialNumber(activateDevice.getSerialNumber());
+			businessPayLoadActivateDevices.setCustomFields(activateDevice.getCustomFields());
+			businessPayLoadActivateDevices.setTitle(activateDevice.getTitle());
+			businessPayLoadActivateDevices.setMiddleName(activateDevice.getMiddleName());
+			businessPayLoadActivateDevices.setAddress(activateDevice.getAddress());
+			businessPayLoadActivateDevices.setServicePlan(activateDevice.getServicePlan());
+			//businessPayLoadDevicesArray[0] = businessPayLoadActivateDevices;
 
 			ActivateDeviceRequestDataArea copyDataArea = kryo.copy(req.getDataArea());
 
-			copyDataArea.setDevices(businessPayLoadDevicesArray);
+			//copyDataArea.setDevices(businessPayLoadDevicesArray);
+			copyDataArea.setDevices(businessPayLoadActivateDevices);
 			dbPayload.setDataArea(copyDataArea);
 
 			// copy.getDataArea().setDevices();
@@ -598,22 +615,19 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 	}
 
+	/**
+	 * fetching midwayTransactionID from MongoDB as per requestID and device
+	 * number and setting it to target response
+	 * 
+	 * 
+	 * 
+	 * */
 	public void findMidwayTransactionId(Exchange exchange) {
-
-
-		/**
-		 * fetching midwayTransactionID from MongoDB as per requestID and device
-		 * number and setting it to target response
-		 * 
-		 * 
-		 * 
-		 * */
 
 		log.info("CallbackTransactionDaoImpl-getCallbackMidwayTransactionID");
 		log.info("Exchange inside" + exchange.getIn().getBody());
 
 	
-		
 		CallBackVerizonRequest req = (CallBackVerizonRequest)exchange.getProperty(IConstant.VERIZON_CALLBACK_RESPONE);
 		
 		String requestId=req.getRequestId();
@@ -741,15 +755,21 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				case CHANGESERVICEPLAN:
 
 					//To do
-					
-
+					ChangeDeviceServicePlansRequest changeDeviceServicePlansRequest=(ChangeDeviceServicePlansRequest)findOne.getDevicePayload();
+					log.info("change devcie servcie plan data area...."+changeDeviceServicePlansRequest.getDataArea().toString());
+					String oldServicePlan=changeDeviceServicePlansRequest.getDataArea().getCurrentServicePlan();
+					String newServicePlan=changeDeviceServicePlansRequest.getDataArea().getServicePlan();
+					log.info("service plan new is..."+newServicePlan+" old service plan is....."+oldServicePlan);
+					netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.SERVICE_PLAN);
+					netSuiteCallBackProvisioningRequest.setOldServicePlan(oldServicePlan);
+					netSuiteCallBackProvisioningRequest.setNewServicePlan(newServicePlan);
 					break;
 
 				case CHANGECUSTOMFIELDS:
 
 					//To do
 					
-
+					netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.CUSTOM_FIELDS);
 					break;
 
 				default:
@@ -806,6 +826,14 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			case CHANGESERVICEPLAN:
 
 				//To do
+				ChangeDeviceServicePlansRequest changeDeviceServicePlansRequest=(ChangeDeviceServicePlansRequest)findOne.getDevicePayload();
+				log.info("change devcie servcie plan data area...."+changeDeviceServicePlansRequest.getDataArea().toString());
+				String oldServicePlan=changeDeviceServicePlansRequest.getDataArea().getCurrentServicePlan();
+				String newServicePlan=changeDeviceServicePlansRequest.getDataArea().getServicePlan();
+				log.info("service plan new is..."+newServicePlan+" old service plan is....."+oldServicePlan);
+				netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.SERVICE_PLAN);
+				netSuiteCallBackProvisioningRequest.setOldServicePlan(oldServicePlan);
+				netSuiteCallBackProvisioningRequest.setNewServicePlan(newServicePlan);
 				netSuiteCallBackProvisioningRequest.setResponse("Device Service Plan Changed successfully.");
 
 				break;
@@ -813,6 +841,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			case CHANGECUSTOMFIELDS:
 
 				//To do
+				netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.CUSTOM_FIELDS);
 				netSuiteCallBackProvisioningRequest.setResponse("Device Custom Fields Changed successfully.");
 
 				break;

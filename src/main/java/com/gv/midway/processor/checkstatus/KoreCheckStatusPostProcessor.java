@@ -18,6 +18,7 @@ import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.callback.Netsuite.KeyValues;
 import com.gv.midway.pojo.callback.Netsuite.KafkaNetSuiteCallBackEvent;
 import com.gv.midway.pojo.callback.Netsuite.NetSuiteCallBackProvisioningRequest;
+import com.gv.midway.pojo.changeDeviceServicePlans.request.ChangeDeviceServicePlansRequest;
 import com.gv.midway.pojo.verizon.DeviceId;
 import com.gv.midway.pojo.verizon.Devices;
 import com.gv.midway.utility.NetSuiteOAuthUtil;
@@ -290,17 +291,28 @@ public class KoreCheckStatusPostProcessor implements Processor {
 
 			break;
 
-	/*	case CHANGESERVICEPLAN:
+    	case CHANGESERVICEPLAN:
 
 			netSuiteCallBackProvisioningRequest.setResponse("Device Service Plan Changed successfully.");
+			
+			ChangeDeviceServicePlansRequest changeDeviceServicePlansRequest=(ChangeDeviceServicePlansRequest)body;
+			log.info("change devcie servcie plan data area...."+changeDeviceServicePlansRequest.getDataArea().toString());
+			String oldServicePlan=changeDeviceServicePlansRequest.getDataArea().getCurrentServicePlan();
+			String newServicePlan=changeDeviceServicePlansRequest.getDataArea().getServicePlan();
+			log.info("service plan new is..."+newServicePlan+" old service plan is....."+oldServicePlan);
+			netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.SERVICE_PLAN);
+			netSuiteCallBackProvisioningRequest.setOldServicePlan(oldServicePlan);
+			netSuiteCallBackProvisioningRequest.setNewServicePlan(newServicePlan);
+			oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
 
 			break;
 
 		case CHANGECUSTOMFIELDS:
 
 			netSuiteCallBackProvisioningRequest.setResponse("Device Custom Fields Changed successfully.");
-
-			break;*/
+			netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.CUSTOM_FIELDS);
+			oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
+			break;
 
 		default:
 			break;

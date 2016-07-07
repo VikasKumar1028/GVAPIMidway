@@ -11,8 +11,11 @@ import com.gv.midway.pojo.activateDevice.request.ActivateDeviceId;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.request.ActivateDevices;
 import com.gv.midway.pojo.activateDevice.verizon.request.ActivateDeviceRequestVerizon;
+import com.gv.midway.pojo.verizon.Address;
+import com.gv.midway.pojo.verizon.CustomerName;
 import com.gv.midway.pojo.verizon.DeviceId;
 import com.gv.midway.pojo.verizon.Devices;
+import com.gv.midway.pojo.verizon.PrimaryPlaceOfUse;
 
 public class VerizonActivateDevicePreProcessor implements Processor {
 
@@ -39,22 +42,66 @@ public class VerizonActivateDevicePreProcessor implements Processor {
 				.getCarrierName());
 		businessRequest.setCostCenterCode(proxyRequest.getDataArea()
 				.getCostCenterCode());
-		businessRequest.setCustomFields(proxyRequest.getDataArea()
-				.getCustomFields());
+		/*businessRequest.setCustomFields(proxyRequest.getDataArea()
+				.getCustomFields());*/
+		businessRequest.setCustomFields(proxyRequest.getDataArea().getDevices().getCustomFields());
 		businessRequest.setGroupName(proxyRequest.getDataArea().getGroupName());
 		businessRequest.setLeadId(proxyRequest.getDataArea().getLeadId());
 		businessRequest.setMdnZipCode(proxyRequest.getDataArea()
 				.getMdnZipCode());
-		businessRequest.setPrimaryPlaceOfUse(proxyRequest.getDataArea()
-				.getPrimaryPlaceOfUse());
+		/*businessRequest.setPrimaryPlaceOfUse(proxyRequest.getDataArea()
+				.getPrimaryPlaceOfUse());*/
+		String macAddress=proxyRequest.getDataArea().getDevices().getMacAddress();
+		String serialNumber=proxyRequest.getDataArea().getDevices().getSerialNumber();
+		String middleName=proxyRequest.getDataArea().getDevices().getMiddleName();
+		String title=proxyRequest.getDataArea().getDevices().getTitle();
+		Address address=proxyRequest.getDataArea().getDevices().getAddress();
+		if(serialNumber==null&&title==null&&middleName==null&&macAddress==null&&address==null)
+		{
+			
+			businessRequest.setPrimaryPlaceOfUse(null);
+		}
+		else
+		{
+		PrimaryPlaceOfUse primaryPlaceOfUse=new PrimaryPlaceOfUse();
+		if(address!=null)
+		{
+		primaryPlaceOfUse.setAddress(address);
+		}
+		if(serialNumber!=null||title!=null||middleName!=null||macAddress!=null){
+			CustomerName customerName=new CustomerName();
+			if(middleName!=null)
+			{
+			customerName.setMiddleName(middleName);
+			}
+			if(title!=null)
+			{
+			customerName.setTitle(title);
+			}
+			if(serialNumber!=null){
+				customerName.setFirstName(serialNumber);
+			}
+			if(macAddress!=null)
+			{
+			customerName.setLastName(macAddress);
+			}
+			
+			primaryPlaceOfUse.setCustomerName(customerName);
+		}
+		
+		businessRequest.setPrimaryPlaceOfUse(primaryPlaceOfUse);
+		}
+		
 		businessRequest.setPublicIpRestriction(proxyRequest.getDataArea()
 				.getPublicIpRestriction());
-		businessRequest.setServicePlan(proxyRequest.getDataArea()
-				.getServicePlan());
+		/*businessRequest.setServicePlan(proxyRequest.getDataArea()
+				.getServicePlan());*/
+		businessRequest.setServicePlan(proxyRequest.getDataArea().getDevices().getServicePlan());
 		businessRequest.setSkuNumber(proxyRequest.getDataArea().getSkuNumber());
 
-		ActivateDevices[] proxyDevicesArray = proxyRequest.getDataArea()
+		/*ActivateDevices[] proxyDevicesArray = proxyRequest.getDataArea()
 				.getDevices();
+		
 		Devices[] businessDevicesArray = new Devices[proxyDevicesArray.length];
 
 		for (int j = 0; j < proxyDevicesArray.length; j++) {
@@ -79,7 +126,35 @@ public class VerizonActivateDevicePreProcessor implements Processor {
 			businessDevicesArray[j] = businessDevice;
 
 			businessDevicesArray[j].setDeviceIds(businessDeviceIdArray);
+		}*/
+		
+		ActivateDevices proxyDevices = proxyRequest.getDataArea()
+				.getDevices();
+		
+		Devices[] businessDevicesArray = new Devices[1];
+		
+		DeviceId[] businessDeviceIdArray = new DeviceId[proxyDevices
+				.getDeviceIds().length];
+		
+		Devices businessDevice = new Devices();
+		
+		for (int i = 0; i < proxyDevices.getDeviceIds().length; i++) {
+			ActivateDeviceId proxyDeviceId = proxyDevices.getDeviceIds()[i];
+
+			DeviceId businessDeviceId = new DeviceId();
+			businessDeviceId.setId(proxyDeviceId.getId());
+			businessDeviceId.setKind(proxyDeviceId.getKind());
+
+			log.info(proxyDeviceId.getId());
+
+			businessDeviceIdArray[i] = businessDeviceId;
+
 		}
+		
+		businessDevice.setDeviceIds(businessDeviceIdArray);
+		
+		businessDevicesArray[0]=businessDevice;
+				
 		businessRequest.setDevices(businessDevicesArray);
 
 		ObjectMapper objectMapper = new ObjectMapper();

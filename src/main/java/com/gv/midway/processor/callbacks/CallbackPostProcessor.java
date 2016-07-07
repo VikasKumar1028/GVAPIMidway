@@ -118,16 +118,23 @@ public class CallbackPostProcessor implements Processor {
         	message.setHeader(Exchange.HTTP_PATH, "?script=532&deploy=1");
  			break;*/
  			
-       /*  case CHANGECUSTOMFIELDS:
+        case SERVICE_PLAN:
  			// To do need to get URL
         	 
- 			break;
+        	 oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
+         	
+  			break;
+  			
  			
-         case CHANGESERVICEPLAN:
+         case CUSTOM_FIELDS:
         	 
         	// To do need to get URL
  			
- 			break;*/
+        	 oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
+         	
+  			break;
+  			
+ 		
  			
        
 		default:

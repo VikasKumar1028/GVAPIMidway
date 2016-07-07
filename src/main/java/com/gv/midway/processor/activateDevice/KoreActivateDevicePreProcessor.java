@@ -40,10 +40,10 @@ public class KoreActivateDevicePreProcessor implements Processor {
 		ActivateDeviceRequest activateDeviceRequest = (ActivateDeviceRequest) transaction
 				.getDevicePayload();
 
-		String deviceId = activateDeviceRequest.getDataArea().getDevices()[0]
+		String deviceId = activateDeviceRequest.getDataArea().getDevices()
 				.getDeviceIds()[0].getId();
 
-		String EAPCode = activateDeviceRequest.getDataArea().geteAPCode();
+		String EAPCode = activateDeviceRequest.getDataArea().getDevices().getServicePlan();
 
 		ActivateDeviceRequestKore acticationDeviceRequestKore = new ActivateDeviceRequestKore();
 		acticationDeviceRequestKore.setDeviceNumber(deviceId);
