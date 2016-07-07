@@ -160,19 +160,27 @@ public class CommonUtil {
 	}
 
 	public static boolean isValidDateFormat(String date) {
+		
+		if(date==null)
+		{
+			log.info("date is null.....");
+			return false;
+		}
+		
+		String trimDate=date.trim();
 
 		String exp = "^([\\d]{4})[-]?(0?[1-9]|1[012])[-]?(0?[1-9]|[12][0-9]|3[01])";
 
 		Pattern pattern = Pattern.compile(exp, Pattern.CASE_INSENSITIVE);
 
-		Matcher matcher = pattern.matcher(date);
+		Matcher matcher = pattern.matcher(trimDate);
 
 		if (matcher.matches()) {
-			log.info("valid date format for....." + date);
+			log.info("valid date format for....." + trimDate);
 
 			return true;
 		} else {
-			log.info("invalid date format for....." + date);
+			log.info("invalid date format for....." + trimDate);
 
 			return false;
 		}
