@@ -44,7 +44,7 @@ public class VerizonDeviceUsageHistoryPreProcessor implements
 
 		exchange.setProperty("DeviceId", device);
 		exchange.setProperty("CarrierName", deviceInfo.getBs_carrier());
-		exchange.setProperty("NetSuiteId", deviceInfo.getNetSuiteId());
+		exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID, deviceInfo.getNetSuiteId());
 		exchange.setProperty("ServicePlan", deviceInfo.getCurrentServicePlan());
 /*		exchange.setProperty("BillDay",
 				deviceInfo.getBs_plan().getBill_day());

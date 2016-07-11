@@ -67,7 +67,7 @@ public class KoreDeviceUsageHistoryPreProcessor implements Processor {
 		
 		exchange.setProperty("DeviceId", deviceId);
 		exchange.setProperty("CarrierName", deviceInfo.getBs_carrier());
-		exchange.setProperty("NetSuiteId", deviceInfo.getNetSuiteId());
+		exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID, deviceInfo.getNetSuiteId());
 
 		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");

@@ -34,9 +34,9 @@ public class NetSuiteIdValidationProcessor implements Processor {
 		
 		else{
 			
-			String netSuiteId=deviceInformationRequestDataArea.getNetSuiteId();
+			Integer netSuiteId=deviceInformationRequestDataArea.getNetSuiteId();
 			
-			if(netSuiteId==null||netSuiteId.trim().equals(""))
+			if(netSuiteId==null/*||netSuiteId.trim().equals("")*/)
 			{
 				
 				 missingNetSuiteId(exchange);

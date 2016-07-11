@@ -9,16 +9,16 @@ public class DeviceInformationRequestDataArea {
 	
 	
 	@ApiModelProperty(value = "An identifier from NetSuite system")
-	private String netSuiteId;
+	private Integer netSuiteId;
 	
 	@ApiModelProperty(value="An identifier for device identification")
     private DeviceId deviceId;
 
-	public String getNetSuiteId() {
+	public Integer getNetSuiteId() {
 		return netSuiteId;
 	}
 
-	public void setNetSuiteId(String netSuiteId) {
+	public void setNetSuiteId(Integer netSuiteId) {
 		this.netSuiteId = netSuiteId;
 	}
 

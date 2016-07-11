@@ -14,10 +14,12 @@ import org.springframework.core.env.Environment;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationRequestDataArea;
+import com.gv.midway.pojo.deviceHistory.DeviceUsage;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.usageInformation.kore.request.UsageInformationKoreRequest;
 import com.gv.midway.pojo.usageInformation.request.UsageInformationRequest;
 import com.gv.midway.pojo.verizon.DeviceId;
+import com.gv.midway.utility.CommonUtil;
 
 public class KoreTransactionFailureDeviceUsageHistoryPreProcessor implements
 		Processor {
@@ -39,23 +41,34 @@ public class KoreTransactionFailureDeviceUsageHistoryPreProcessor implements
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		log.info("*************Testing**************************************"
-				+ exchange.getIn().getBody());
 
 		log.info("Begin:KoreTransactionFailureDeviceUsageHistoryPreProcessor");
 		Message message = exchange.getIn();
+		
+		DeviceUsage deviceInfo = (DeviceUsage) exchange.getIn()
+				.getBody();
 
 		ObjectMapper objectMapper = new ObjectMapper();
-
-		UsageInformationRequest proxyRequest = new UsageInformationRequest();
-
+		
+		
 		UsageInformationKoreRequest usageInformationKoreRequest = new UsageInformationKoreRequest();
 
-		usageInformationKoreRequest.setSimNumber(proxyRequest.getDataArea()
-				.getDeviceId().getId());
+		DeviceId deviceId=deviceInfo.getDeviceId();
+		
+		String simNumber=deviceId.getId();
+		
+		
+		usageInformationKoreRequest.setSimNumber(simNumber);
+
 
 		String strRequestBody = objectMapper
 				.writeValueAsString(usageInformationKoreRequest);
+
+		log.info("strRequestBody::" + strRequestBody.toString());
+		
+		exchange.setProperty("DeviceId", deviceId);
+		exchange.setProperty("CarrierName", deviceInfo.getCarrierName());
+		exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID, deviceInfo.getNetSuiteId());
 
 		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");

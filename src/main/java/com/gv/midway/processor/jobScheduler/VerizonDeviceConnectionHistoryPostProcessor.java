@@ -82,8 +82,8 @@ public class VerizonDeviceConnectionHistoryPostProcessor implements Processor {
 		deviceConnection.setTransactionErrorReason(null);
 		deviceConnection
 				.setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_SUCCESS);
-		deviceConnection.setNetSuiteId((String) exchange
-				.getProperty("NetSuiteId"));
+		deviceConnection.setNetSuiteId((Integer)exchange
+				.getProperty(IConstant.MIDWAY_NETSUITE_ID));
 		deviceConnection.setIsValid(true);
 		//deviceConnection.setOccurredAt(connectionResponse.getConnectionHistory()[0].getOccurredAt());
 

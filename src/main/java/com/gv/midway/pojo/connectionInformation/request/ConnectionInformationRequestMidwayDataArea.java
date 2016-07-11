@@ -7,7 +7,7 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 public class ConnectionInformationRequestMidwayDataArea {
 
 	@ApiModelProperty(value = "Device NetSuite Id")
-	private String netSuiteId;
+	private Integer netSuiteId;
 
 	@ApiModelProperty(value = "Start Date")
 	private String startDate;
@@ -61,11 +61,11 @@ public class ConnectionInformationRequestMidwayDataArea {
 		return true;
 	}
 
-	public String getNetSuiteId() {
+	public Integer getNetSuiteId() {
 		return netSuiteId;
 	}
 
-	public void setNetSuiteId(String netSuiteId) {
+	public void setNetSuiteId(Integer netSuiteId) {
 		this.netSuiteId = netSuiteId;
 	}
 

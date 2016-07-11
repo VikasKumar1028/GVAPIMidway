@@ -43,7 +43,7 @@ public class VerizonTransactionFailureDeviceUsageHistoryPreProcessor implements 
 
 		exchange.setProperty("DeviceId", device);
 		exchange.setProperty("CarrierName", deviceInfo.getCarrierName());
-		exchange.setProperty("NetSuiteId", deviceInfo.getNetSuiteId());
+		exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID, deviceInfo.getNetSuiteId());
 		
 		//exchange.setProperty("ServicePlan", deviceInfo.getCurrentServicePlan());
 /*		exchange.setProperty("BillDay",

@@ -465,7 +465,7 @@ public class JobDaoImpl implements IJobDao {
 				.getBody();
 		String billingDay = null;
 		String billingStartDate = null;
-		String netSuiteId = deviceInfo.getNetSuiteId();
+		Integer netSuiteId = deviceInfo.getNetSuiteId();
 		if (deviceInfo.getBs_plan() != null) {
 
 			JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
@@ -507,7 +507,7 @@ public class JobDaoImpl implements IJobDao {
 			DeviceUsage deviceUsage = new DeviceUsage();
 			deviceUsage.setCarrierName("VERIZON");
 			deviceUsage.setDataUsed(r.nextInt((100 - 10) + 1) + 10);
-			deviceUsage.setNetSuiteId(new String(
+			deviceUsage.setNetSuiteId(new Integer(
 					(r.nextInt((4000 - 4) + 1) + 4) + ""));
 			deviceUsage.setDate((new Date(new Date().getTime() - 1000 * 60 * 60
 					* r.nextInt((120 - 90) + 91))).toString());

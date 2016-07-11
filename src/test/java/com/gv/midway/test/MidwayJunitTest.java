@@ -98,14 +98,16 @@ import com.gv.midway.service.ISessionService;
 				ActivateDeviceIdArray[0] = deviceId;
 				
 				adevices.setDeviceIds(ActivateDeviceIdArray);
+				adevices.setServicePlan("EAP02500797");
 				decs[0] = adevices;
-				dataArea.setDevices(decs);
+				//dataArea.setDevices(decs);
+				dataArea.setDevices(adevices);
 				
 				req.setDataArea(dataArea);
 				dataArea.setAccountName("0442090022-00001");
-				dataArea.seteAPCode("EAP02500797");
+				//dataArea.seteAPCode("EAP02500797");
 				dataArea.setMdnZipCode("38523");
-				dataArea.setServicePlan("M2MPERMB");
+				//dataArea.setServicePlan("M2MPERMB");
 				
 				req.setDataArea(dataArea);
 			 	
@@ -153,13 +155,16 @@ import com.gv.midway.service.ISessionService;
 					ActivateDeviceIdArray[1] = deviceId2;
 					
 					adevices.setDeviceIds(ActivateDeviceIdArray);
-					adevices.setNetSuiteId("12345");
+					//adevices.setNetSuiteId("12345");
+					adevices.setNetSuiteId(12345);
+					adevices.setServicePlan("M2MPERMB");
 					decs[0] = adevices;
-					dataArea.setDevices(decs);
+					dataArea.setDevices(adevices);
+					//dataArea.setDevices(decs);
 					
 					dataArea.setAccountName("0442090022-00001");
 					dataArea.setMdnZipCode("38523");
-					dataArea.setServicePlan("M2MPERMB");
+					//dataArea.setServicePlan("M2MPERMB");
 					
 					req.setDataArea(dataArea);
 				 	
@@ -211,14 +216,17 @@ import com.gv.midway.service.ISessionService;
 								ActivateDeviceIdArray[1] = deviceId2;*/
 								
 								adevices.setDeviceIds(ActivateDeviceIdArray);
-								adevices.setNetSuiteId("12345");
+								//adevices.setNetSuiteId("12345");
+								adevices.setNetSuiteId(12345);
+								adevices.setServicePlan("M2MPERMB");
 								decs[0] = adevices;
-								dataArea.setDevices(decs);
+								//dataArea.setDevices(decs);
+								dataArea.setDevices(adevices);
 								
 								//dataArea.setAccountName("0442090022-00001");
 								//dataArea.seteAPCode("EAP02500797");
 								dataArea.setMdnZipCode("38523");
-								dataArea.setServicePlan("M2MPERMB");
+								//dataArea.setServicePlan("M2MPERMB");
 								
 								req.setDataArea(dataArea);
 							 	

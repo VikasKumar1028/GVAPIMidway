@@ -10,7 +10,7 @@ public class MidWayDevices {
 	private MidWayDeviceId[] deviceIds;
 
 	@ApiModelProperty(value = "Device NetSuite Id", required = true)
-	private String netSuiteId;
+	private Integer netSuiteId;
 
 	public MidWayDeviceId[] getDeviceIds() {
 		return deviceIds;
@@ -20,11 +20,11 @@ public class MidWayDevices {
 		this.deviceIds = deviceIds;
 	}
 
-	public String getNetSuiteId() {
+	public Integer getNetSuiteId() {
 		return netSuiteId;
 	}
 
-	public void setNetSuiteId(String netSuiteId) {
+	public void setNetSuiteId(Integer netSuiteId) {
 		this.netSuiteId = netSuiteId;
 	}
 

@@ -45,7 +45,7 @@ public class VerizonDeviceUsageHistoryPostProcessor implements Processor {
 		deviceUsage.setTransactionErrorReason(null);
 		deviceUsage
 				.setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_SUCCESS);
-		deviceUsage.setNetSuiteId((String) exchange.getProperty("NetSuiteId"));
+		deviceUsage.setNetSuiteId((Integer) exchange.getProperty(IConstant.MIDWAY_NETSUITE_ID));
 		deviceUsage.setIsValid(true);
 		deviceUsage.setBillCycleComplete(false);
 

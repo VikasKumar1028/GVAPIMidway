@@ -58,10 +58,10 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 			DeviceInformation deviceInformationToUpdate = device.getDataArea()
 					.getDevice();
-			String netSuiteId = device.getDataArea().getDevice()
+			Integer netSuiteId = device.getDataArea().getDevice()
 					.getNetSuiteId();
 
-			if (netSuiteId == null || netSuiteId.trim().equals("")) {
+			if (netSuiteId == null /*|| netSuiteId.trim().equals("")*/) {
 
 				Header header = device.getHeader();
 
@@ -145,7 +145,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 			DeviceInformationRequest deviceInformationRequest) {
 		// TODO Auto-generated method stub
 
-		String netSuiteId = deviceInformationRequest.getDataArea()
+		Integer netSuiteId = deviceInformationRequest.getDataArea()
 				.getNetSuiteId();
 		log.info("device dao netsuite id is..." + netSuiteId);
 
@@ -154,7 +154,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 		deviceInformationResponse.setHeader(deviceInformationRequest
 				.getHeader());
 		Response response = new Response();
-		if (netSuiteId == null || netSuiteId.trim().equals("")) {
+		if (netSuiteId == null /*|| netSuiteId.trim().equals("")*/) {
 
 			response.setResponseCode(IResponse.INVALID_PAYLOAD);
 			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB);
@@ -225,7 +225,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 	public void setDeviceInformationDB(Exchange exchange) {
 		// TODO Auto-generated method stub
 
-		String netSuiteId = (String) exchange
+		Integer netSuiteId = (Integer) exchange
 				.getProperty(IConstant.MIDWAY_NETSUITE_ID);
 		DeviceInformation deviceInformation = null;
 		try {
@@ -272,7 +272,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 		else {
 			log.info("device info was not already in master DB");
 
-			String netSuiteId = (String) exchange
+			Integer netSuiteId = (Integer) exchange
 					.getProperty(IConstant.MIDWAY_NETSUITE_ID);
 
 			log.info("device info to insert for netsuideId " + netSuiteId);
@@ -296,11 +296,11 @@ public class DeviceDaoImpl implements IDeviceDao {
 		DeviceInformation deviceInformationToUpdate = (DeviceInformation) exchange
 				.getIn().getBody();
 
-		String netSuiteId = deviceInformationToUpdate.getNetSuiteId();
+		Integer netSuiteId = deviceInformationToUpdate.getNetSuiteId();
 
 		try {
 
-			if (netSuiteId == null || netSuiteId.trim().equals("")) {
+			if (netSuiteId == null /*|| netSuiteId.trim().equals("")*/) {
 
 				List<BatchDeviceId> batchDeviceList = (List<BatchDeviceId>) exchange
 						.getProperty(IConstant.BULK_ERROR_LIST);
@@ -348,7 +348,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 				List<BatchDeviceId> batchDeviceList = (List<BatchDeviceId>) exchange
 						.getProperty(IConstant.BULK_SUCCESS_LIST);
 				BatchDeviceId successBatchDeviceId = new BatchDeviceId();
-				successBatchDeviceId.setNetSuiteId(netSuiteId);
+				successBatchDeviceId.setNetSuiteId(""+netSuiteId);
 				batchDeviceList.add(successBatchDeviceId);
 
 				exchange.setProperty(IConstant.BULK_SUCCESS_LIST,
@@ -362,7 +362,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 			List<BatchDeviceId> batchDeviceList = (List<BatchDeviceId>) exchange
 					.getProperty(IConstant.BULK_ERROR_LIST);
 			BatchDeviceId errorBatchDeviceId = new BatchDeviceId();
-			errorBatchDeviceId.setNetSuiteId(netSuiteId);
+			errorBatchDeviceId.setNetSuiteId(""+netSuiteId);
 			errorBatchDeviceId
 					.setErrorMessage(IResponse.ERROR_DESCRIPTION_UPDATE_MIDWAYDB);
 			batchDeviceList.add(errorBatchDeviceId);
@@ -387,7 +387,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 			UsageInformationMidwayRequest usageInformationMidwayRequest) {
 
 		log.info("Begin::getDeviceUsageInfoDB");
-		String netSuiteId = usageInformationMidwayRequest
+		Integer netSuiteId = usageInformationMidwayRequest
 				.getUsageInformationRequestMidwayDataArea().getNetSuiteId();
 
 		String startDate = usageInformationMidwayRequest
@@ -406,7 +406,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 				.getHeader());
 		Response response = new Response();
 
-		if (netSuiteId == null || netSuiteId.trim().equals("")) {
+		if (netSuiteId == null /*|| netSuiteId.trim().equals("")*/) {
 
 			log.info("Enter netSuiteId..." + netSuiteId);
 			response.setResponseCode(IResponse.INVALID_PAYLOAD);
@@ -545,7 +545,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 			ConnectionInformationMidwayRequest connectionInformationMidwayRequest) {
 		log.info("Begin::getDeviceConnectionHistoryInfoDB");
 
-		String netSuiteId = connectionInformationMidwayRequest.getDataArea()
+		Integer netSuiteId = connectionInformationMidwayRequest.getDataArea()
 				.getNetSuiteId();
 		String startDate = connectionInformationMidwayRequest.getDataArea()
 				.getStartDate();
@@ -563,7 +563,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 				.setHeader(connectionInformationMidwayRequest.getHeader());
 		Response response = new Response();
 
-		if (netSuiteId == null || netSuiteId.trim().equals("")) {
+		if (netSuiteId == null /*|| netSuiteId.trim().equals("")*/) {
 
 			log.info("Enter netSuiteId..." + netSuiteId);
 			response.setResponseCode(IResponse.INVALID_PAYLOAD);

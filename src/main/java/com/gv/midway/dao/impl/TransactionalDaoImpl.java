@@ -93,7 +93,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 			ActivateDeviceRequest dbPayload = new ActivateDeviceRequest();
 			dbPayload.setHeader(req.getHeader());
-            String netSuiteId=activateDevice.getNetSuiteId();
+            Integer netSuiteId=activateDevice.getNetSuiteId();
 			//ActivateDevices[] businessPayLoadDevicesArray = new ActivateDevices[1];
 			ActivateDevices businessPayLoadActivateDevices = new ActivateDevices();
 			ActivateDeviceId[] businessPayloadDeviceId = new ActivateDeviceId[activateDevice.getDeviceIds().length];
@@ -188,7 +188,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		for (DeactivateDevices deactivateDevice : deactivateDevices) {
 			DeactivateDeviceRequest dbPayload = new DeactivateDeviceRequest();
 			dbPayload.setHeader(req.getHeader());
-			String netSuiteId=deactivateDevice.getNetSuiteId();
+			Integer netSuiteId=deactivateDevice.getNetSuiteId();
 			DeactivateDevices[] businessPayloadDeviceArray = new DeactivateDevices[1];
 			DeactivateDevices businessPayLoadDeactivateDevices = new DeactivateDevices();
 			DeactivateDeviceId[] businessPayloadDeviceId = new DeactivateDeviceId[deactivateDevice.getDeviceIds().length];
@@ -274,7 +274,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		for (MidWayDevices suspendDevice : suspendDevices) {
 			SuspendDeviceRequest dbPayload = new SuspendDeviceRequest();
 			dbPayload.setHeader(req.getHeader());
-            String netSuiteId=suspendDevice.getNetSuiteId();
+			Integer netSuiteId=suspendDevice.getNetSuiteId();
 			MidWayDevices[] businessPayloadDeviceArray = new MidWayDevices[1];
 			MidWayDevices businessPayLoadSuspendDevices = new MidWayDevices();
 			MidWayDeviceId[] businessPayloadDeviceId = new MidWayDeviceId[suspendDevice.getDeviceIds().length];
@@ -681,7 +681,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
         KeyValues keyValues4=new KeyValues();
 		
 	    keyValues4.setK("netSuiteID");
-	    keyValues4.setV(findOne.getNetSuiteId());
+	    keyValues4.setV(""+findOne.getNetSuiteId());
 		
 		KeyValues[] keyValuesArr=new KeyValues[4];
 		
@@ -698,7 +698,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		
 		NetSuiteCallBackProvisioningRequest netSuiteCallBackProvisioningRequest=(NetSuiteCallBackProvisioningRequest)exchange.getIn().getBody();
 		
-		netSuiteCallBackProvisioningRequest.setNetSuiteID(findOne.getNetSuiteId());
+		netSuiteCallBackProvisioningRequest.setNetSuiteID(""+findOne.getNetSuiteId());
 		netSuiteCallBackProvisioningRequest.setCarrierOrderNumber(findOne.getMidwayTransactionId());
 		
 		//netSuiteCallBackProvisioningRequest.setRequestType(requestType);
@@ -871,7 +871,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 			ReactivateDeviceRequest dbPayload = new ReactivateDeviceRequest();
 			dbPayload.setHeader(req.getHeader());
-            String netSuiteId=reActivateDevice.getNetSuiteId();
+			Integer netSuiteId=reActivateDevice.getNetSuiteId();
 			MidWayDevices[] businessPayLoadDevicesArray = new MidWayDevices[1];
 			MidWayDevices businessPayLoadActivateDevices = new MidWayDevices();
 			MidWayDeviceId[] businessPayloadDeviceId = new MidWayDeviceId[reActivateDevice.getDeviceIds().length];
@@ -953,7 +953,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 			RestoreDeviceRequest dbPayload = new RestoreDeviceRequest();
 			dbPayload.setHeader(req.getHeader());
-            String netSuiteId=restoreDevice.getNetSuiteId();
+			Integer netSuiteId=restoreDevice.getNetSuiteId();
 			MidWayDevices[] businessPayLoadDevicesArray = new MidWayDevices[1];
 			MidWayDevices businessPayLoadRestoreDevices = new MidWayDevices();
 			MidWayDeviceId[] businessPayloadDeviceId = new MidWayDeviceId[restoreDevice.getDeviceIds().length];
@@ -1036,7 +1036,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 			CustomFieldsDeviceRequest dbPayload = new CustomFieldsDeviceRequest();
 			dbPayload.setHeader(req.getHeader());
-            String netSuiteId=customFieldsDevice.getNetSuiteId();
+			Integer netSuiteId=customFieldsDevice.getNetSuiteId();
 			MidWayDevices[] businessPayLoadDevicesArray = new MidWayDevices[1];
 			MidWayDevices businessPayLoadActivateDevices = new MidWayDevices();
 			MidWayDeviceId[] businessPayloadDeviceId = new MidWayDeviceId[customFieldsDevice.getDeviceIds().length];
@@ -1123,7 +1123,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		for (MidWayDevices changeServicePlansDevice : changeServicePlansDevices) {
 			ChangeDeviceServicePlansRequest dbPayload = new ChangeDeviceServicePlansRequest();
 			dbPayload.setHeader(req.getHeader());
-            String netSuiteId=changeServicePlansDevice.getNetSuiteId();
+			Integer netSuiteId=changeServicePlansDevice.getNetSuiteId();
 			MidWayDevices[] businessPayloadDeviceArray = new MidWayDevices[1];
 			MidWayDevices businessPayLoadChangeServicePlansDevices = new MidWayDevices();
 			MidWayDeviceId[] businessPayloadDeviceId = new MidWayDeviceId[changeServicePlansDevice.getDeviceIds().length];

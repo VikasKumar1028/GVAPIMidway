@@ -50,7 +50,7 @@ public class VerizonDeviceConnectionHistoryPreProcessor implements
 
 		exchange.setProperty("DeviceId", device);
 		exchange.setProperty("CarrierName", deviceInfo.getBs_carrier());
-		exchange.setProperty("NetSuiteId", deviceInfo.getNetSuiteId());
+		exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID, deviceInfo.getNetSuiteId());
 
 /*		dataArea.setLatest(dateFormat.format(cal.getTime()));
 		cal.add(Calendar.HOUR, -24);

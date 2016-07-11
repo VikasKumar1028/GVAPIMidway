@@ -11,7 +11,7 @@ public class ActivateDevices {
 	private ActivateDeviceId[] deviceIds;
 	
 	@ApiModelProperty(value = "Device NetSuite Id" , required = true)
-	private String netSuiteId;
+	private Integer netSuiteId;
 	
 	@ApiModelProperty(value = "Service Plan that that device belongs to.In Case of Verizon or EAP code for Kore", required=true)
 	private String servicePlan;
@@ -60,11 +60,11 @@ public class ActivateDevices {
 		this.deviceIds = deviceIds;
 	}
 
-	public String getNetSuiteId() {
+	public Integer getNetSuiteId() {
 		return netSuiteId;
 	}
 
-	public void setNetSuiteId(String netSuiteId) {
+	public void setNetSuiteId(Integer netSuiteId) {
 		this.netSuiteId = netSuiteId;
 	}
 

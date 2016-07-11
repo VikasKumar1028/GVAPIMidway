@@ -11,7 +11,7 @@ public class DeviceConnection {
 	
 
 	private DeviceId deviceId;
-	private String netSuiteId;
+	private Integer netSuiteId;
 	private String date;
 	private String carrierName;
 	private String transactionStatus;
@@ -33,10 +33,10 @@ public class DeviceConnection {
 	public void setDeviceId(DeviceId deviceId) {
 		this.deviceId = deviceId;
 	}
-	public String getNetSuiteId() {
+	public Integer getNetSuiteId() {
 		return netSuiteId;
 	}
-	public void setNetSuiteId(String netSuiteId) {
+	public void setNetSuiteId(Integer netSuiteId) {
 		this.netSuiteId = netSuiteId;
 	}
 	public String getDate() {

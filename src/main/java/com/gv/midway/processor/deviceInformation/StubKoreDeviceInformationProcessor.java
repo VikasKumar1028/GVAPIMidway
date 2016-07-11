@@ -47,7 +47,7 @@ public class StubKoreDeviceInformationProcessor implements Processor {
 		deviceInformationResponse.setResponse(response);
 
 		deviceInformation.setAccountName("null");
-		deviceInformation.setNetSuiteId("NS002");
+		deviceInformation.setNetSuiteId(00002);
 		deviceInformation.setMidwayMasterDeviceId("MMD002");
 		deviceInformation.setBillingCycleEndDate("null");
 		deviceInformation.setConnected(false);

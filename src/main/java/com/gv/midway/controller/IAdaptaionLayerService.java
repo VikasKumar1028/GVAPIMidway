@@ -63,7 +63,7 @@ public interface IAdaptaionLayerService {
 			@QueryParam("sourceName") final String sourceName,
 			@QueryParam("applicationName") final String applicationName,
 			@QueryParam("bsCarrier") final String bsCarrier,
-			@QueryParam("netSuiteId") final String netSuiteId);
+			@QueryParam("netSuiteId") final Integer netSuiteId);
 
 	@GET
 	@Path("/cell/info/carrier")
@@ -77,7 +77,7 @@ public interface IAdaptaionLayerService {
 			@QueryParam("sourceName") final String sourceName,
 			@QueryParam("applicationName") final String applicationName,
 			@QueryParam("bsCarrier") final String bsCarrier,
-			@QueryParam("netSuiteId") final String netSuiteId,
+			@QueryParam("netSuiteId") final Integer netSuiteId,
 			@QueryParam("deviceId") final String deviceId,
 			@QueryParam("kind") final String kind);
 
@@ -244,7 +244,7 @@ public interface IAdaptaionLayerService {
 			@QueryParam("sourceName") final String sourceName,
 			@QueryParam("applicationName") final String applicationName,
 			@QueryParam("bsCarrier") final String bsCarrier,
-			@QueryParam("netSuiteId") final String netSuiteId,
+			@QueryParam("netSuiteId") final Integer netSuiteId,
 			@QueryParam("startDate") final String startDate,
 			@QueryParam("endDate") final String endDate);
 
@@ -260,7 +260,7 @@ public interface IAdaptaionLayerService {
 			@QueryParam("sourceName") final String sourceName,
 			@QueryParam("applicationName") final String applicationName,
 			@QueryParam("bsCarrier") final String bsCarrier,
-			@QueryParam("netSuiteId") final String netSuiteId,
+			@QueryParam("netSuiteId") final Integer netSuiteId,
 			@QueryParam("startDate") final String startDate,
 			@QueryParam("endDate") final String endDate);
 

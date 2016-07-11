@@ -8,7 +8,7 @@ import com.gv.midway.pojo.verizon.DeviceId;
 public class DeviceOverageNotification {
 
 	private DeviceId deviceId;
-	private String netSuiteId;
+	private Integer netSuiteId;
 	private String date;
 	private float dataUsed;	
 	private String carrierName;
@@ -19,10 +19,10 @@ public class DeviceOverageNotification {
 	public void setDeviceId(DeviceId deviceId) {
 		this.deviceId = deviceId;
 	}
-	public String getNetSuiteId() {
+	public Integer getNetSuiteId() {
 		return netSuiteId;
 	}
-	public void setNetSuiteId(String netSuiteId) {
+	public void setNetSuiteId(Integer netSuiteId) {
 		this.netSuiteId = netSuiteId;
 	}
 	public String getDate() {

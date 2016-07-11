@@ -24,7 +24,7 @@ public class DeviceInformation {
 	private String midwayMasterDeviceId;
 	
 	@ApiModelProperty(value = "An identifier from NetSuite system")
-	private String netSuiteId;
+	private Integer netSuiteId;
 	
 	@ApiModelProperty(value = "value of the device identifer.Cell information")
 	private Cell cell;
@@ -135,12 +135,12 @@ public class DeviceInformation {
 	}
 
 
-	public String getNetSuiteId() {
+	public Integer getNetSuiteId() {
 		return netSuiteId;
 	}
 
 
-	public void setNetSuiteId(String netSuiteId) {
+	public void setNetSuiteId(Integer netSuiteId) {
 		this.netSuiteId = netSuiteId;
 	}
 

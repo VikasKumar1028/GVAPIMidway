@@ -197,7 +197,8 @@ public class DeviceTestData extends Header {
 		
 		adevices.setDeviceIds(ActivateDeviceIdArray);
 		decs[0] = adevices;
-		dataArea.setDevices(decs);
+		//dataArea.setDevices(decs);
+		dataArea.setDevices(adevices);
 		req.setDataArea(dataArea);
     
   		 header.setSourceName("KORE");

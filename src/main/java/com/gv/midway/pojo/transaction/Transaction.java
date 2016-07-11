@@ -25,7 +25,7 @@ public class Transaction {
 	private String auditTransactionId;
 	private Boolean callBackReceived;
 	private String callBackFailureToNetSuiteReason;
-	private String netSuiteId;
+	private Integer netSuiteId;
 	private Object netSuiteRequest;
 	private String netSuiteResponse;
 
@@ -205,13 +205,13 @@ public class Transaction {
 		this.callBackFailureToNetSuiteReason = callBackFailureToNetSuiteReason;
 	}
 
-	public String getNetSuiteId() {
+	public Integer getNetSuiteId() {
 		return netSuiteId;
 	}
 
 
 
-	public void setNetSuiteId(String netSuiteId) {
+	public void setNetSuiteId(Integer netSuiteId) {
 		this.netSuiteId = netSuiteId;
 	}
 

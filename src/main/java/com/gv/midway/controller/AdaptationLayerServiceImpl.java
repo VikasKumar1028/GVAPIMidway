@@ -75,7 +75,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 	public DeviceInformationResponse getDeviceInfoDB(String region,
 			String timestamp, String organization, String transactionId,
 			String sourceName, String applicationName, String bsCarrier,
-			String netSuiteId) {
+			Integer netSuiteId) {
 		// TODO Auto-generated method stub
 
 		DeviceInformationRequest deviceInformationRequest = new DeviceInformationRequest();
@@ -105,7 +105,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 	public DeviceInformationResponse getDeviceInfoCarrier(String region,
 			String timestamp, String organization, String transactionId,
 			String sourceName, String applicationName, String bsCarrier,
-			String netSuiteId, String deviceId, String kind) {
+			Integer netSuiteId, String deviceId, String kind) {
 		// TODO Auto-generated method stub
 
 		DeviceInformationRequest deviceInformationRequest = new DeviceInformationRequest();
@@ -316,7 +316,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 	public UsageInformationMidwayResponse getDeviceUsageInfoDB(String region,
 			String timestamp, String organization, String transactionId,
 			String sourceName, String applicationName, String bsCarrier,
-			String netSuiteId, String startDate, String endDate) {
+			Integer netSuiteId, String startDate, String endDate) {
 
 		UsageInformationMidwayRequest usageInformationMidwayRequest = new UsageInformationMidwayRequest();
 
@@ -349,7 +349,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 	public ConnectionInformationMidwayResponse getDeviceConnectionHistoryInfoDB(
 			String region, String timestamp, String organization,
 			String transactionId, String sourceName, String applicationName,
-			String bsCarrier, String netSuiteId, String startDate,
+			String bsCarrier, Integer netSuiteId, String startDate,
 			String endDate) {
 
 		ConnectionInformationMidwayRequest connectionInformationMidwayRequest = new ConnectionInformationMidwayRequest();

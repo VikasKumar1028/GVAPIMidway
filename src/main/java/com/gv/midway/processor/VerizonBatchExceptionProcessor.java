@@ -94,8 +94,8 @@ public class VerizonBatchExceptionProcessor implements Processor {
 			deviceUsage.setTransactionErrorReason(errorType);
 			deviceUsage
 					.setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
-			deviceUsage.setNetSuiteId((String) exchange
-					.getProperty("NetSuiteId"));
+			deviceUsage.setNetSuiteId((Integer) exchange
+					.getProperty(IConstant.MIDWAY_NETSUITE_ID));
 			deviceUsage.setIsValid(true);
 
 			exchange.getIn().setBody(deviceUsage);
@@ -117,8 +117,8 @@ public class VerizonBatchExceptionProcessor implements Processor {
 			deviceConnection.setTransactionErrorReason(errorType);
 			deviceConnection
 					.setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
-			deviceConnection.setNetSuiteId((String) exchange
-					.getProperty("NetSuiteId"));
+			deviceConnection.setNetSuiteId((Integer) exchange
+					.getProperty(IConstant.MIDWAY_NETSUITE_ID));
 			deviceConnection.setIsValid(true);
 			deviceConnection.setEvent(null);
 			exchange.getIn().setBody(deviceConnection);

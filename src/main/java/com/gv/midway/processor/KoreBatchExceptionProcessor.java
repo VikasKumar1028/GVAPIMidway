@@ -70,7 +70,7 @@ public class KoreBatchExceptionProcessor implements Processor {
 		deviceUsage.setTransactionErrorReason(errorType);
 		deviceUsage
 				.setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
-		deviceUsage.setNetSuiteId((String) exchange.getProperty("NetSuiteId"));
+		deviceUsage.setNetSuiteId((Integer) exchange.getProperty(IConstant.MIDWAY_NETSUITE_ID));
 		deviceUsage.setIsValid(true);
 
 		exchange.getIn().setBody(deviceUsage);

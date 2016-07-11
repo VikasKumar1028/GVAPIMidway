@@ -55,7 +55,7 @@ public class VerizonTransactionFailureDeviceConnectionHistoryPreProcessor
 
 		exchange.setProperty("DeviceId", device);
 		exchange.setProperty("CarrierName", deviceInfo.getCarrierName());
-		exchange.setProperty("NetSuiteId", deviceInfo.getNetSuiteId());
+		exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID, deviceInfo.getNetSuiteId());
 
 		/*
 		 * dataArea.setLatest(dateFormat.format(cal.getTime()));

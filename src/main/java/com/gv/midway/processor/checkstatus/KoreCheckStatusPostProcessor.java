@@ -57,7 +57,7 @@ public class KoreCheckStatusPostProcessor implements Processor {
 		String midWayTransactionId = (String) exchange
 				.getProperty(IConstant.MIDWAY_TRANSACTION_ID);
 
-		String netSuiteID = (String) exchange
+		Integer netSuiteID = (Integer) exchange
 				.getProperty(IConstant.MIDWAY_NETSUITE_ID);
 		
 		RequestType requestType = (RequestType) exchange
@@ -181,7 +181,7 @@ public class KoreCheckStatusPostProcessor implements Processor {
         KeyValues keyValues4=new KeyValues();
 		
 	    keyValues4.setK("netSuiteID");
-	    keyValues4.setV(netSuiteID);
+	    keyValues4.setV(""+netSuiteID);
 		
 		KeyValues[] keyValuesArr=new KeyValues[4];
 		
@@ -202,7 +202,7 @@ public class KoreCheckStatusPostProcessor implements Processor {
 		 
 		
 		netSuiteCallBackProvisioningRequest.setCarrierOrderNumber(midWayTransactionId);
-		netSuiteCallBackProvisioningRequest.setNetSuiteID(netSuiteID);
+		netSuiteCallBackProvisioningRequest.setNetSuiteID(""+netSuiteID);
 		
 		
 	    StringBuffer deviceIdsArr= new StringBuffer("{\"deviceIds\":");
