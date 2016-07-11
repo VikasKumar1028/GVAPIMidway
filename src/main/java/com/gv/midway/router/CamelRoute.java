@@ -27,7 +27,6 @@ import com.gv.midway.pojo.kore.DKoreResponseCode;
 import com.gv.midway.pojo.kore.KoreProvisoningResponse;
 import com.gv.midway.pojo.token.VerizonAuthorizationResponse;
 import com.gv.midway.pojo.token.VerizonSessionLoginResponse;
-import com.gv.midway.pojo.usageInformation.kore.response.UsageInformationKoreResponse;
 import com.gv.midway.processor.BulkDeviceProcessor;
 import com.gv.midway.processor.DateValidationProcessor;
 import com.gv.midway.processor.GenericErrorProcessor;
@@ -194,10 +193,12 @@ public class CamelRoute extends RouteBuilder {
 		onException(InvalidParameterException.class).handled(true)
 				.log(LoggingLevel.INFO, "Invalid Parameter Passed Error")
 				.process(new GenericErrorProcessor(env));
-		
-		onException(MissingParameterException.class).handled(true)
-		.log(LoggingLevel.INFO, "Pass all the required header parameters")
-		.process(new HeaderErrorProcessor(env));
+
+		onException(MissingParameterException.class)
+				.handled(true)
+				.log(LoggingLevel.INFO,
+						"Pass all the required header parameters")
+				.process(new HeaderErrorProcessor(env));
 
 		from("direct:tokenGeneration").bean(iSessionService, "checkToken")
 				.choice().when(body().contains("true"))
@@ -215,11 +216,6 @@ public class CamelRoute extends RouteBuilder {
 				.to("log:input").end()
 				// sync DB and session token in the ServletContext
 				.bean(iSessionService, "synchronizeDBContextToken");
-
-		
-		
-
-		
 
 		/** Main Change Device Service Plans Flow **/
 
@@ -270,36 +266,35 @@ public class CamelRoute extends RouteBuilder {
 
 		deviceConnectionHistoryVerizonJob();
 		deviceUsageHistoryVerizonJob();
-		
+
 		deviceUsageHistoryKoreJob();
 
-		//Transaction Failure Job
+		// Transaction Failure Job
 		startTransactionFailureJob();
-		
+
 		// Get Device Data Usage from Midway DB
 		getDeviceUsageInfoDB();
 
 		// Get Connection History from Midway DB
 		getDeviceConnectionHistoryInfoDB();
 
-		//Start Job
+		// Start Job
 		startJob();
-		
-		//Returns the Job Response
+
+		// Returns the Job Response
 		jobResponse();
-		
+
 		notificationJob();
-		
-		deviceUsageNotificationJob() ;
-		
-		//Verizon Call Back
+
+		deviceUsageNotificationJob();
+
+		// Verizon Call Back
 		callbacks();
-		
-		//Kore Check Status Timer
+
+		// Kore Check Status Timer
 		koreCheckStatusTimer();
 	}
 
-	
 	/**
 	 * Activation Flow for Verizon and Kore
 	 * 
@@ -866,8 +861,8 @@ public class CamelRoute extends RouteBuilder {
 
 		// Begin:Device Connection Status
 
-		from("direct:deviceConnectionStatus").process(new HeaderProcessor()).process(new DateValidationProcessor())
-				.choice()
+		from("direct:deviceConnectionStatus").process(new HeaderProcessor())
+				.process(new DateValidationProcessor()).choice()
 				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
 				.process(new StubVerizonDeviceConnectionStatusProcessor())
 				.to("log:input").endChoice().otherwise().choice()
@@ -910,8 +905,8 @@ public class CamelRoute extends RouteBuilder {
 
 		// Begin: Device Session Begin End
 
-		from("direct:deviceSessionBeginEndInfo").process(new HeaderProcessor()).process(new DateValidationProcessor())
-				.choice()
+		from("direct:deviceSessionBeginEndInfo").process(new HeaderProcessor())
+				.process(new DateValidationProcessor()).choice()
 				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
 				.process(new StubVerizonDeviceSessionBeginEndInfoProcessor())
 				.to("log:input").endChoice().otherwise().choice()
@@ -953,8 +948,8 @@ public class CamelRoute extends RouteBuilder {
 	 **/
 	public void deviceInformationCarrier() {
 
-		from("direct:deviceInformationCarrier").process(new HeaderProcessor()).process(new NetSuiteIdValidationProcessor())
-				.choice()
+		from("direct:deviceInformationCarrier").process(new HeaderProcessor())
+				.process(new NetSuiteIdValidationProcessor()).choice()
 				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
 				.choice().when(header("derivedCarrierName").isEqualTo("KORE"))
 				.process(new StubKoreDeviceInformationProcessor())
@@ -1025,7 +1020,8 @@ public class CamelRoute extends RouteBuilder {
 	/** Insert or Update Single Device details in MasterDB **/
 
 	public void updateDeviceDetails() {
-		from("direct:updateDeviceDetails").process(new HeaderProcessor()).choice()
+		from("direct:updateDeviceDetails").process(new HeaderProcessor())
+				.choice()
 				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
 				.process(new StubCellUploadProcessor()).endChoice().otherwise()
 				.bean(iDeviceService, "updateDeviceDetails").end();
@@ -1034,7 +1030,8 @@ public class CamelRoute extends RouteBuilder {
 	/** Insert or Upload Batch Device details in MasterDB. **/
 	public void updateDevicesDetailsBulk() {
 
-		from("direct:updateDevicesDetailsBulk").process(new HeaderProcessor()).choice()
+		from("direct:updateDevicesDetailsBulk").process(new HeaderProcessor())
+				.choice()
 				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
 				.process(new StubCellBulkUploadProcessor()).endChoice()
 				.otherwise().to("direct:updateDevicesDetailsBulkActual").end();
@@ -1078,12 +1075,11 @@ public class CamelRoute extends RouteBuilder {
 				.to("direct:startJob").end();
 
 	}
-	
-	
+
 	public void deviceUsageHistoryKoreJob() {
 
-		
-		from("quartz2://job/deviceDetailsUsageTimerKore?cron="
+		from(
+				"quartz2://job/deviceDetailsUsageTimerKore?cron="
 						+ IConstant.JOB_TIME_CONFIGURATION)
 				.bean(iJobService,
 						"setJobDetails(${exchange},"
@@ -1143,10 +1139,12 @@ public class CamelRoute extends RouteBuilder {
 		from("seda:processKoreDeviceUsageJob?concurrentConsumers=5")
 				.log("KOREJob-DEVICE USAGE")
 
-				.doTry().process(new KoreDeviceUsageHistoryPreProcessor(env))
-				.to(uriRestKoreEndPoint).unmarshal()
+				.doTry()
+				.process(new KoreDeviceUsageHistoryPreProcessor(env))
+				.to(uriRestKoreEndPoint)
+				.unmarshal()
 				.json(JsonLibrary.Jackson)
-						
+
 				.process(new KoreDeviceUsageHistoryPostProcessor())
 				.bean(iSchedulerService, "saveDeviceUsageHistory")
 				.doCatch(CxfOperationException.class,
@@ -1172,10 +1170,12 @@ public class CamelRoute extends RouteBuilder {
 
 		// VERIZON Job CONNECTION HISTORY
 		from("seda:processVerizonConnectionHistoryJob?concurrentConsumers=5")
-				.log("VERIZONJob CONNECTION HISTORY").doTry()
+				.log("VERIZONJob CONNECTION HISTORY")
+				.doTry()
 				.bean(iSessionService, "setContextTokenInExchange")
 				.process(new VerizonDeviceConnectionHistoryPreProcessor())
-				.to(uriRestVerizonEndPoint).unmarshal()
+				.to(uriRestVerizonEndPoint)
+				.unmarshal()
 				.json(JsonLibrary.Jackson)
 				.process(new VerizonDeviceConnectionHistoryPostProcessor())
 				.bean(iSchedulerService, "saveDeviceConnectionHistory")
@@ -1187,113 +1187,120 @@ public class CamelRoute extends RouteBuilder {
 
 	}
 
-	
-	
-	
 	// BATCH JOB
 
-		public void startTransactionFailureJob() {
+	public void startTransactionFailureJob() {
 
-			from("direct:startTransactionFailureJob").to("direct:processTransactionFailureJob");
+		from("direct:startTransactionFailureJob").to(
+				"direct:processTransactionFailureJob");
 
-			// Job Flow-1
+		// Job Flow-1
 
-			from("direct:processTransactionFailureJob")
-					.onCompletion()
-					.bean(iJobService, "updateJobDetails")
-					.end()
-					.bean(iJobService, "insertJobDetails")
-					.bean(iJobService, "setJobStartandEndTime")
-					.bean(iJobService, "fetchTransactionFailureDevices")
+		from("direct:processTransactionFailureJob")
+				.onCompletion()
+				.bean(iJobService, "updateJobDetails")
+				.end()
+				.bean(iJobService, "insertJobDetails")
+				.bean(iJobService, "setJobStartandEndTime")
+				.bean(iJobService, "fetchTransactionFailureDevices")
 
-					// Deleting Transaction Failure Existing Records
-					.choice()
-					.when(simple("${exchangeProperty[jobName]} == 'VERIZON_CONNECTION_HISTORY'"))
-					.bean(iJobService, "deleteTransactionFailureDeviceConnectionHistoryRecords")
-					.when(simple("${exchangeProperty[jobName]} == 'KORE_DEVICE_USAGE'"))
-					.bean(iJobService, "deleteTransactionFailureDeviceUsageRecords")
-					.when(simple("${exchangeProperty[jobName]} == 'VERIZON_DEVICE_USAGE'"))
-					.bean(iJobService, "deleteTransactionFailureDeviceUsageRecords")
-					.endChoice()
-					.end()
+				// Deleting Transaction Failure Existing Records
+				.choice()
+				.when(simple("${exchangeProperty[jobName]} == 'VERIZON_CONNECTION_HISTORY'"))
+				.bean(iJobService,
+						"deleteTransactionFailureDeviceConnectionHistoryRecords")
+				.when(simple("${exchangeProperty[jobName]} == 'KORE_DEVICE_USAGE'"))
+				.bean(iJobService, "deleteTransactionFailureDeviceUsageRecords")
+				.when(simple("${exchangeProperty[jobName]} == 'VERIZON_DEVICE_USAGE'"))
+				.bean(iJobService, "deleteTransactionFailureDeviceUsageRecords")
+				.endChoice()
+				.end()
 
-					// Fetch List Forwarded to Respective SEDA
+				// Fetch List Forwarded to Respective SEDA
 
-					.choice()
-					.when(simple("${exchangeProperty[jobName]} == 'VERIZON_CONNECTION_HISTORY'"))
-					.split()
-					.method("jobSplitter")
-					.to("seda:processTransactionFailureVerizonConnectionHistoryJob")
-					.endChoice()
-					.when(simple("${exchangeProperty[jobName]} == 'KORE_DEVICE_USAGE'"))
-					.split()
-					.method("jobSplitter")
-					.to("seda:processTransactionFailureKoreDeviceUsageJob")
-					.endChoice()
-					.when(simple("${exchangeProperty[jobName]} == 'VERIZON_DEVICE_USAGE'"))
-					.split().method("jobSplitter")
-					.to("seda:processTransactionFailureVerizonDeviceUsageJob").endChoice();
+				.choice()
+				.when(simple("${exchangeProperty[jobName]} == 'VERIZON_CONNECTION_HISTORY'"))
+				.split()
+				.method("jobSplitter")
+				.to("seda:processTransactionFailureVerizonConnectionHistoryJob")
+				.endChoice()
+				.when(simple("${exchangeProperty[jobName]} == 'KORE_DEVICE_USAGE'"))
+				.split()
+				.method("jobSplitter")
+				.to("seda:processTransactionFailureKoreDeviceUsageJob")
+				.endChoice()
+				.when(simple("${exchangeProperty[jobName]} == 'VERIZON_DEVICE_USAGE'"))
+				.split().method("jobSplitter")
+				.to("seda:processTransactionFailureVerizonDeviceUsageJob")
+				.endChoice();
 
-			// KORE Job-DEVICE USAGE
-			from("seda:processTransactionFailureKoreDeviceUsageJob?concurrentConsumers=5")
-					.log("KOREJob-DEVICE USAGE")
+		// KORE Job-DEVICE USAGE
+		from(
+				"seda:processTransactionFailureKoreDeviceUsageJob?concurrentConsumers=5")
+				.log("KOREJob-DEVICE USAGE")
 
-					.doTry().process(new KoreTransactionFailureDeviceUsageHistoryPreProcessor(env))
-					.to(uriRestKoreEndPoint).unmarshal().json(JsonLibrary.Jackson)
-					.process(new KoreDeviceUsageHistoryPostProcessor())
-					.bean(iSchedulerService, "saveDeviceUsageHistory")
-					.doCatch(CxfOperationException.class,
+				.doTry()
+				.process(
+						new KoreTransactionFailureDeviceUsageHistoryPreProcessor(
+								env))
+				.to(uriRestKoreEndPoint)
+				.unmarshal()
+				.json(JsonLibrary.Jackson)
+				.process(new KoreDeviceUsageHistoryPostProcessor())
+				.bean(iSchedulerService, "saveDeviceUsageHistory")
+				.doCatch(CxfOperationException.class,
 						UnknownHostException.class, ConnectException.class)
 				.process(new KoreBatchExceptionProcessor(env))
 				.bean(iSchedulerService, "saveDeviceUsageHistory").endDoTry();
 
-			// VERIZON Job-DEVICE USAGE
-			from("seda:processTransactionFailureVerizonDeviceUsageJob?concurrentConsumers=4")
-					.log("VERIZONJob-DEVICE USAGE")
-					.doTry()
-					.bean(iSessionService, "setContextTokenInExchange")
-					.process(new VerizonTransactionFailureDeviceUsageHistoryPreProcessor())
-					.to(uriRestVerizonEndPoint)
-					.unmarshal()
-					.json(JsonLibrary.Jackson)
-					.process(new VerizonDeviceUsageHistoryPostProcessor())
-					.bean(iSchedulerService, "saveDeviceUsageHistory")
-					.doCatch(CxfOperationException.class,
-							UnknownHostException.class, ConnectException.class)
-					.process(new VerizonBatchExceptionProcessor(env))
-					.bean(iSchedulerService, "saveDeviceUsageHistory").endDoTry();
+		// VERIZON Job-DEVICE USAGE
+		from(
+				"seda:processTransactionFailureVerizonDeviceUsageJob?concurrentConsumers=4")
+				.log("VERIZONJob-DEVICE USAGE")
+				.doTry()
+				.bean(iSessionService, "setContextTokenInExchange")
+				.process(
+						new VerizonTransactionFailureDeviceUsageHistoryPreProcessor())
+				.to(uriRestVerizonEndPoint)
+				.unmarshal()
+				.json(JsonLibrary.Jackson)
+				.process(new VerizonDeviceUsageHistoryPostProcessor())
+				.bean(iSchedulerService, "saveDeviceUsageHistory")
+				.doCatch(CxfOperationException.class,
+						UnknownHostException.class, ConnectException.class)
+				.process(new VerizonBatchExceptionProcessor(env))
+				.bean(iSchedulerService, "saveDeviceUsageHistory").endDoTry();
 
-			// VERIZON Job CONNECTION HISTORY
-			from("seda:processTransactionFailureVerizonConnectionHistoryJob?concurrentConsumers=5")
-					.log("VERIZONJob CONNECTION HISTORY").doTry()
-					.bean(iSessionService, "setContextTokenInExchange")
-					.process(new VerizonTransactionFailureDeviceConnectionHistoryPreProcessor())
-					.to(uriRestVerizonEndPoint).unmarshal()
-					.json(JsonLibrary.Jackson)
-					.process(new VerizonDeviceConnectionHistoryPostProcessor())
-					.bean(iSchedulerService, "saveDeviceConnectionHistory")
-					.doCatch(CxfOperationException.class,
-							UnknownHostException.class, ConnectException.class)
-					.process(new VerizonBatchExceptionProcessor(env))
-					.bean(iSchedulerService, "saveDeviceConnectionHistory")
-					.endDoTry();
+		// VERIZON Job CONNECTION HISTORY
+		from(
+				"seda:processTransactionFailureVerizonConnectionHistoryJob?concurrentConsumers=5")
+				.log("VERIZONJob CONNECTION HISTORY")
+				.doTry()
+				.bean(iSessionService, "setContextTokenInExchange")
+				.process(
+						new VerizonTransactionFailureDeviceConnectionHistoryPreProcessor())
+				.to(uriRestVerizonEndPoint)
+				.unmarshal()
+				.json(JsonLibrary.Jackson)
+				.process(new VerizonDeviceConnectionHistoryPostProcessor())
+				.bean(iSchedulerService, "saveDeviceConnectionHistory")
+				.doCatch(CxfOperationException.class,
+						UnknownHostException.class, ConnectException.class)
+				.process(new VerizonBatchExceptionProcessor(env))
+				.bean(iSchedulerService, "saveDeviceConnectionHistory")
+				.endDoTry();
 
-		}
+	}
 
-	
-	
 	public void retrieveDeviceUsageHistoryCarrier() {
 		from("direct:retrieveDeviceUsageHistoryCarrier")
-				.process(new HeaderProcessor()).process(new DateValidationProcessor())
-				.choice()
+				.process(new HeaderProcessor())
+				.process(new DateValidationProcessor()).choice()
 				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
 				.choice()
 				.when(header("derivedCarrierName").isEqualTo("VERIZON"))
 				.process(new StubVerizonRetrieveDeviceUsageHistoryProcessor())
-				.to("log:input")
-				.endChoice()
-				.otherwise()
-				.choice()
+				.to("log:input").endChoice().otherwise().choice()
 
 				.when(header("derivedCarrierName").isEqualTo("VERIZON"))
 				.bean(iSessionService, "setContextTokenInExchange")
@@ -1328,118 +1335,107 @@ public class CamelRoute extends RouteBuilder {
 				.process(new RetrieveDeviceUsageHistoryPostProcessor(env));
 
 	}
-	
-	
-	
-	
-	
-	
+
 	public void deviceUsageNotificationJob() {
 
 		from(
-				"quartz2://job/deviceUsageNotifcationTimer?cron="
-						+ IConstant.JOB_TIME_CONFIGURATION)
-				//"timer://deviceUsageNotifcationTimer?period=150m")
+		/*
+		 * "quartz2://job/deviceUsageNotifcationTimer?cron=" +
+		 * IConstant.JOB_TIME_CONFIGURATION)
+		 */
+		"timer://deviceUsageNotifcationTimer?period=150m")
 				.bean(iJobService,
 						"setJobDetails(${exchange},"
 								+ CarrierType.VERIZON.toString() + ", "
-								+ JobName.DEVICE_USAGE_NOTIFICATION+ ")")
+								+ JobName.DEVICE_USAGE_NOTIFICATION + ")")
 				.to("direct:notificationJob").end();
 
 	}
-	
-	
+
 	/**
 	 * Notification Job
 	 */
-	
-	public void notificationJob(){
-	
-	// Job Flow-1
 
-			from("direct:notificationJob")
-			.onCompletion()
-			.bean(iJobService, "updateJobDetails")
-			.end()
-			.log("**************JOB START")
-			.bean(iJobService, "insertJobDetails")
-			//.bean(iJobService, "setJobStartandEndTime")
-			.bean(iJobService, "fetchDevices")
-			.split()
-			.method("jobSplitter")
-			.to("seda:processDeviceUsageNotificationJob");
-			
+	public void notificationJob() {
 
+		// Job Flow-1
 
-	// NOTIFICATION Job-DEVICE USAGE
-	from("seda:processDeviceUsageNotificationJob?concurrentConsumers=4")
-			.log("DeviceUSageNoficicationJob")						
-			.bean(iJobService,"processDeviceNotification");
-	
+		from("direct:notificationJob").bean(iJobService, "insertJobDetails")
+				.bean(iJobService, "fetchDevices")
+				.bean(iJobService, "addNotificationList").split()
+				.method("jobSplitter")
+				.to("direct:processDeviceUsageNotification");
 
-	
+		from("direct:processDeviceUsageNotification")
+				.onCompletion()
+				// .onWhen(property("CamelSplitComplete").isEqualTo("true"))
+				.onWhen(simple("${exchangeProperty[CamelSplitComplete]} == 'true'"))
+				.bean(iJobService, "updateJobDetails")
+				.bean(iJobService, "checkNotificationList").end()
+				.to("seda:processDeviceUsageNotificationJob");
 
-}
+		// NOTIFICATION Job-DEVICE USAGE
+		from("seda:processDeviceUsageNotificationJob?concurrentConsumers=4")
+				.doTry().bean(iJobService, "processDeviceNotification")
+				.doCatch(CxfOperationException.class).endDoTry();
 
-	
-	
-	
-	
-	
-	public void  jobResponse(){
-		from("direct:jobResponse").log("Inside the Job response").process(new JobInitializedPostProcessor());
+	}
+
+	public void jobResponse() {
+		from("direct:jobResponse").log("Inside the Job response").process(
+				new JobInitializedPostProcessor());
 	}
 
 	public void getDeviceUsageInfoDB() {
-		from("direct:getDeviceUsageInfoDB").log(
-				"Inside the getDeviceUsageInfoDB").process(new HeaderProcessor())
-				.bean(iDeviceService, "getDeviceUsageInfoDB")
-				.end();
+		from("direct:getDeviceUsageInfoDB")
+				.log("Inside the getDeviceUsageInfoDB")
+				.process(new HeaderProcessor())
+				.bean(iDeviceService, "getDeviceUsageInfoDB").end();
 
 	}
 
 	public void getDeviceConnectionHistoryInfoDB() {
-		
-		from("direct:getDeviceConnectionHistoryInfoDB").process(new HeaderProcessor())
-				.bean(iDeviceService, "getDeviceConnectionHistoryInfoDB")
-				.end();
+
+		from("direct:getDeviceConnectionHistoryInfoDB")
+				.process(new HeaderProcessor())
+				.bean(iDeviceService, "getDeviceConnectionHistoryInfoDB").end();
 	}
-	
+
 	/**
-	 * saving callbacks from verizon into MongoDB and and sending it to
-	 * NetSuite and Kafka
+	 * saving callbacks from verizon into MongoDB and and sending it to NetSuite
+	 * and Kafka
 	 * 
 	 * */
 	public void callbacks() {
 		// TODO Auto-generated method stub
 		from("direct:callbacks")
-		.bean(iTransactionalService, "populateCallbackDBPayload")
-		.process(new CallbackPreProcessor(env))
-		.bean(iTransactionalService, "findMidwayTransactionId")
-		.doTry()
-		.process(new CallbackPostProcessor(env)).bean(iTransactionalService, "updateNetSuiteCallBackRequest").
-		setHeader(Exchange.HTTP_QUERY). 
-		simple("script=${exchangeProperty[script]}&deploy=1").
-		to( uriRestNetsuitEndPoint ).
-		doCatch(Exception.class)
-		.bean(iTransactionalService, "updateNetSuiteCallBackError")
-		.doFinally()
-		.bean(iTransactionalService, "updateNetSuiteCallBackResponse")
-		.process(new KafkaProcessor(env))
-		.log("kafka topic message"
-				+ simple("${exchangeProperty[topicName]}").getText())
-		.onWhen(simple("${exchangeProperty[topicName]} == 'midway-alerts'"))
-		.to("kafka:" + env.getProperty("kafka.endpoint")
-				+ ",?topic=midway-alerts")
-		.onWhen(simple("${exchangeProperty[topicName]} == 'midway-app-errors'"))
-		.to("kafka:" + env.getProperty("kafka.endpoint")
-				+ ",?topic=midway-app-errors")
-		.end();
+				.bean(iTransactionalService, "populateCallbackDBPayload")
+				.process(new CallbackPreProcessor(env))
+				.bean(iTransactionalService, "findMidwayTransactionId")
+				.doTry()
+				.process(new CallbackPostProcessor(env))
+				.bean(iTransactionalService, "updateNetSuiteCallBackRequest")
+				.setHeader(Exchange.HTTP_QUERY)
+				.simple("script=${exchangeProperty[script]}&deploy=1")
+				.to(uriRestNetsuitEndPoint)
+				.doCatch(Exception.class)
+				.bean(iTransactionalService, "updateNetSuiteCallBackError")
+				.doFinally()
+				.bean(iTransactionalService, "updateNetSuiteCallBackResponse")
+				.process(new KafkaProcessor(env))
+				.log("kafka topic message"
+						+ simple("${exchangeProperty[topicName]}").getText())
+				.onWhen(simple("${exchangeProperty[topicName]} == 'midway-alerts'"))
+				.to("kafka:" + env.getProperty("kafka.endpoint")
+						+ ",?topic=midway-alerts")
+				.onWhen(simple("${exchangeProperty[topicName]} == 'midway-app-errors'"))
+				.to("kafka:" + env.getProperty("kafka.endpoint")
+						+ ",?topic=midway-app-errors").end();
 	}
 
 	/**
-	 * Get all the Kore devices with carrier status pending or error and
-	 * Midway status as Pending from TransactionDB
+	 * Get all the Kore devices with carrier status pending or error and Midway
+	 * status as Pending from TransactionDB
 	 */
 	public void koreCheckStatusTimer() {
 		// TODO Auto-generated method stub
@@ -1545,5 +1541,4 @@ public class CamelRoute extends RouteBuilder {
 						+ ",?topic=midway-alerts").end();
 	}
 
-	
 }

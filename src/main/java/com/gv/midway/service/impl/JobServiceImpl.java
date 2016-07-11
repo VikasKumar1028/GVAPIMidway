@@ -2,6 +2,7 @@ package com.gv.midway.service.impl;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import com.gv.midway.constant.JobName;
 import com.gv.midway.constant.JobType;
 import com.gv.midway.dao.IJobDao;
 import com.gv.midway.pojo.job.JobDetail;
+import com.gv.midway.pojo.notification.DeviceOverageNotification;
 import com.gv.midway.pojo.server.ServerDetail;
 import com.gv.midway.service.IJobService;
 import com.gv.midway.utility.CommonUtil;
@@ -182,6 +184,23 @@ public class JobServiceImpl implements IJobService {
 	public void processDeviceNotification(Exchange exchange) {
 		iJobDao.processDeviceNotification(exchange);
 
+	}
+	
+	
+	public void addNotificationList(Exchange exchange){
+		
+		exchange.setProperty("NotificationLsit", new ArrayList<DeviceOverageNotification>());
+		
+	}
+	public void checkNotificationList(Exchange exchange){
+		
+		List <DeviceOverageNotification>notificationList=(List)exchange.getProperty("NotificationLsit");
+		
+		for (DeviceOverageNotification notification  : notificationList) {
+		    System.out.println("Notification  :::::::::::::::::: " + notification.getNetSuiteId());
+		}
+		
+		
 	}
 
 }

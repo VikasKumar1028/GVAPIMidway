@@ -30,6 +30,8 @@ public interface IJobService {
 	
 	public void processDeviceNotification(Exchange exchange);
 	
+	public void addNotificationList(Exchange exchange);
+	public void checkNotificationList(Exchange exchange);
 	
 }
 	

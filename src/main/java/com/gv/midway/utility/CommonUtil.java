@@ -74,8 +74,10 @@ public class CommonUtil {
 		return Long.toString(timestamp);
 
 	}
+
 	/**
 	 * Method to get the carrier Name from the input
+	 * 
 	 * @param carrierName
 	 * @return
 	 */
@@ -160,14 +162,13 @@ public class CommonUtil {
 	}
 
 	public static boolean isValidDateFormat(String date) {
-		
-		if(date==null)
-		{
+
+		if (date == null) {
 			log.info("date is null.....");
 			return false;
 		}
-		
-		String trimDate=date.trim();
+
+		String trimDate = date.trim();
 
 		String exp = "^([\\d]{4})[-]?(0?[1-9]|1[012])[-]?(0?[1-9]|[12][0-9]|3[01])";
 
@@ -272,16 +273,18 @@ public class CommonUtil {
 	 * @param jobDate
 	 * @return
 	 */
-	public static String getDeviceBillingStartDate(String billingDay, String jobDate) {
+	public static String getDeviceBillingStartDate(String billingDay,
+			String jobDate) {
 
 		String billingStartDate = null;
-		String jobDay = jobDate.substring(9, 10);
+		String jobDay = jobDate.substring(8);
 
 		// Creating The bill start date
 		// billingday One oR two character
 		if (billingDay != null && billingDay.length() == 1) {
 			billingDay = "0" + billingDay;
 		}
+
 		try {
 			if (billingDay != null) {
 
@@ -291,7 +294,6 @@ public class CommonUtil {
 				cal.setTime(dateFormat.parse(jobDate));
 
 				if (Integer.parseInt(billingDay) > Integer.parseInt(jobDay)) {
-
 					// previous month data
 					cal.add(Calendar.MONTH, -1);
 					cal.set(Calendar.DATE, Integer.parseInt(billingDay));
@@ -307,6 +309,7 @@ public class CommonUtil {
 					billingStartDate = dateFormat.format(cal.getTime());
 
 				}
+
 			}
 
 		} catch (Exception ex) {

@@ -48,9 +48,8 @@ public class JobDaoImpl implements IJobDao {
 	Logger log = Logger.getLogger(JobDaoImpl.class);
 	static Random r = new Random();
 
-
 	/**
-	 * Fetch all the devices 
+	 * Fetch all the devices
 	 */
 	@Override
 	public List fetchDevices(Exchange exchange) {
@@ -93,16 +92,15 @@ public class JobDaoImpl implements IJobDao {
 		}
 
 		catch (Exception e) {
-			log.error("Error in fetchDevices :"+e);
+			log.error("Error in fetchDevices :" + e);
 		}
 
 		// return list;
 		return deviceInformationList;
 	}
 
-	
 	/**
-	 * Fetch only devices with Odd Net Suited ID 
+	 * Fetch only devices with Odd Net Suited ID
 	 */
 	public List fetchOddDevices(Exchange exchange) {
 
@@ -146,7 +144,7 @@ public class JobDaoImpl implements IJobDao {
 
 		catch (Exception e) {
 
-			log.error("Error in fetchOddDevices :"+e);
+			log.error("Error in fetchOddDevices :" + e);
 		}
 
 		// return list;
@@ -154,7 +152,7 @@ public class JobDaoImpl implements IJobDao {
 	}
 
 	/**
-	 * Fetch only devices with Even Net Suited ID 
+	 * Fetch only devices with Even Net Suited ID
 	 */
 	public List fetchEvenDevices(Exchange exchange) {
 
@@ -196,8 +194,8 @@ public class JobDaoImpl implements IJobDao {
 		}
 
 		catch (Exception e) {
-			
-			log.error("Error in fetchEvenDevices :"+e);
+
+			log.error("Error in fetchEvenDevices :" + e);
 		}
 
 		// return list;
@@ -221,8 +219,6 @@ public class JobDaoImpl implements IJobDao {
 		// inserting in the database as property
 		mongoTemplate.insert(jobDetail);
 	}
-
-	
 
 	/**
 	 * Updating the Job Details parameters
@@ -254,14 +250,14 @@ public class JobDaoImpl implements IJobDao {
 		}
 
 		catch (Exception e) {
-			log.error("Error In updateJobDetails-----------------------------"+e);
+			log.error("Error In updateJobDetails-----------------------------"
+					+ e);
 		}
 
 	}
 
-	
 	/**
-	 * Soft Delete the Device Usage records  in Job Rerun Case
+	 * Soft Delete the Device Usage records in Job Rerun Case
 	 */
 	@Override
 	public void deleteDeviceUsageRecords(Exchange exchange) {
@@ -287,7 +283,7 @@ public class JobDaoImpl implements IJobDao {
 	}
 
 	/**
-	 * Soft Delete the Device Connection History records  in Job Rerun Case
+	 * Soft Delete the Device Connection History records in Job Rerun Case
 	 */
 	@Override
 	public void deleteDeviceConnectionHistoryRecords(Exchange exchange) {
@@ -355,7 +351,8 @@ public class JobDaoImpl implements IJobDao {
 		}
 
 		catch (Exception e) {
-			log.error("Error In Fetching Transactioon Failure Device Usage/Device Connection Records-----------------------------"+e);
+			log.error("Error In Fetching Transactioon Failure Device Usage/Device Connection Records-----------------------------"
+					+ e);
 		}
 
 		return list;
@@ -393,7 +390,8 @@ public class JobDaoImpl implements IJobDao {
 		}
 
 		catch (Exception e) {
-			log.error("Error In Deleting Device Usage Records-----------------------------"+e);
+			log.error("Error In Deleting Device Usage Records-----------------------------"
+					+ e);
 		}
 
 	}
@@ -463,6 +461,8 @@ public class JobDaoImpl implements IJobDao {
 
 		DeviceInformation deviceInfo = (DeviceInformation) exchange.getIn()
 				.getBody();
+		List<DeviceOverageNotification> notificationList = (List) exchange
+				.getProperty("NotificationLsit");
 		String billingDay = null;
 		String billingStartDate = null;
 		Integer netSuiteId = deviceInfo.getNetSuiteId();
@@ -490,7 +490,7 @@ public class JobDaoImpl implements IJobDao {
 						.next();
 				// setting Billing Date
 				element.setDate(billingStartDate);
-
+				notificationList.add(element);
 				mongoTemplate.save(element);
 			}
 		}
