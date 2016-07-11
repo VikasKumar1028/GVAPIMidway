@@ -4,6 +4,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -20,11 +23,11 @@ import com.gv.midway.constant.IResponse;
 import com.gv.midway.dao.IDeviceDao;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
+import com.gv.midway.pojo.activateDevice.request.ActivateDeviceId;
+import com.gv.midway.pojo.connectionInformation.ConnectionInformationMidwayResponse;
+import com.gv.midway.pojo.connectionInformation.ConnectionInformationResponseMidwayDataArea;
+import com.gv.midway.pojo.connectionInformation.DeviceEvents;
 import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationMidwayRequest;
-import com.gv.midway.pojo.connectionInformation.verizon.response.ConnectionEventMidway;
-import com.gv.midway.pojo.connectionInformation.verizon.response.ConnectionInformationMidwayResponse;
-import com.gv.midway.pojo.connectionInformation.verizon.response.ConnectionInformationResponseMidwayDataArea;
-import com.gv.midway.pojo.connectionInformation.verizon.response.DeviceEvents;
 import com.gv.midway.pojo.device.request.SingleDevice;
 import com.gv.midway.pojo.device.response.BatchDeviceId;
 import com.gv.midway.pojo.device.response.UpdateDeviceResponse;
@@ -652,8 +655,12 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 			List<DeviceConnection> deviceConnectionUsage = mongoTemplate.find(
 					searchDeviceQuery, DeviceConnection.class);
+			
+			int deviceConnectionUsageSize=deviceConnectionUsage.size();
+			
+			log.info("deviceConnectionUsage szie is....." + deviceConnectionUsageSize);
 
-			if (deviceConnectionUsage.size() == 0)
+			if (deviceConnectionUsageSize == 0)
 
 			{
 
@@ -671,7 +678,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 				connectionInformationMidwayResponse.setResponse(response);
 
 				ConnectionInformationResponseMidwayDataArea connectionInformationResponseMidwayDataArea = new ConnectionInformationResponseMidwayDataArea();
-				ConnectionEventMidway connectionEventMidway = null;
+				/*ConnectionEventMidway connectionEventMidway = null;
 				DeviceEvents midwayEvent = null;
 				DeviceEvents deviceEvent[] = null;
 
@@ -702,8 +709,50 @@ public class DeviceDaoImpl implements IDeviceDao {
 				}
 
 				connectionInformationResponseMidwayDataArea
-						.setConnectionEventAttributes(connectionEventMidway);
+						.setConnectionEventAttributes(connectionEventMidway);*/
+				
+			
+				
+				List<DeviceEvents> deviceEventsList=new ArrayList<DeviceEvents>();
+				
+				for (DeviceConnection deviceConnection : deviceConnectionUsage) {
+					
+					if(deviceConnection.getEvent()!=null)
+					{
+						DeviceEvent[] deviceEventArr=deviceConnection.getEvent();
+					
+						log.info("device event size for Date "+deviceConnection.getDate()+" is"+deviceEventArr.length);
+								
+						for (DeviceEvent deviceEvent : deviceEventArr) 
+						{
+							String eventType=deviceEvent.getEventType();
+							String occuredAt=deviceEvent.getOccurredAt();
+							String byteUsed= deviceEvent.getBytesUsed();
+							
+							DeviceEvents deviceEvents=new DeviceEvents();
+							deviceEvents.setBytesUsed(byteUsed);
+							deviceEvents.setEventType(eventType);
+							deviceEvents.setOccurredAt(occuredAt);
+							
+							deviceEventsList.add(deviceEvents);
+							
+						}
+					}
+				}
 
+				//Sort the deviceEventsList on the basis of time event occurred at
+				
+				 Collections.sort(deviceEventsList, new Comparator<DeviceEvents>() {
+			            @Override
+			            public int compare(DeviceEvents a, DeviceEvents b)
+			            {
+
+			                return  a.getOccurredAt().compareTo(b.getOccurredAt());
+			            }
+			        });
+				
+				connectionInformationResponseMidwayDataArea.setEvents(deviceEventsList);
+				
 				connectionInformationMidwayResponse
 						.setDataArea(connectionInformationResponseMidwayDataArea);
 			}

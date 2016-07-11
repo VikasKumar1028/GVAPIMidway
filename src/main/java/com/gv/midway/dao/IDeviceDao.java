@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import org.apache.camel.Exchange;
 
+import com.gv.midway.pojo.connectionInformation.ConnectionInformationMidwayResponse;
 import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationMidwayRequest;
-import com.gv.midway.pojo.connectionInformation.verizon.response.ConnectionInformationMidwayResponse;
 import com.gv.midway.pojo.device.request.SingleDevice;
 import com.gv.midway.pojo.device.response.UpdateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;

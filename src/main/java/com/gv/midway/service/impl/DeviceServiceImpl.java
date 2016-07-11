@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.dao.IDeviceDao;
+import com.gv.midway.pojo.connectionInformation.ConnectionInformationMidwayResponse;
 import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationMidwayRequest;
-import com.gv.midway.pojo.connectionInformation.verizon.response.ConnectionInformationMidwayResponse;
 import com.gv.midway.pojo.device.request.BulkDevices;
 import com.gv.midway.pojo.device.request.SingleDevice;
 import com.gv.midway.pojo.device.response.BatchDeviceId;

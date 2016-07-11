@@ -13,7 +13,7 @@ import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
 import com.gv.midway.pojo.changeDeviceServicePlans.response.ChangeDeviceServicePlansResponse;
-import com.gv.midway.pojo.connectionInformation.verizon.response.ConnectionInformationMidwayResponse;
+import com.gv.midway.pojo.connectionInformation.ConnectionInformationMidwayResponse;
 import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponse;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
