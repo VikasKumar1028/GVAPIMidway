@@ -1,10 +1,7 @@
 package com.gv.midway.audit;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.EventObject;
-import java.util.TimeZone;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.management.event.ExchangeCreatedEvent;
@@ -13,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.BaseRequest;
 import com.gv.midway.pojo.audit.Audit;
@@ -31,7 +29,7 @@ public class AuditLogRequestEventNotifer extends EventNotifierSupport {
 		if (event instanceof ExchangeCreatedEvent) {
 			ExchangeCreatedEvent create = (ExchangeCreatedEvent) event;
 			Exchange exchange = create.getExchange();
-			logger.info("In Audit log Request");
+		
 
 			if (exchange.getIn().getBody() instanceof BaseRequest
 					&& exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID) == null) {

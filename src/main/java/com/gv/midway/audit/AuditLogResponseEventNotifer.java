@@ -1,10 +1,7 @@
 package com.gv.midway.audit;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.EventObject;
-import java.util.TimeZone;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.management.event.ExchangeCompletedEvent;
@@ -33,7 +30,6 @@ public class AuditLogResponseEventNotifer extends EventNotifierSupport {
 		if (event instanceof ExchangeCompletedEvent) {
 			ExchangeCompletedEvent create = (ExchangeCompletedEvent) event;
 			Exchange exchange = create.getExchange();
-			logger.info("In Audit log Response");
 
 			if (exchange.getIn().getBody() instanceof BaseResponse &&  !(exchange.getIn().getBody() instanceof  JobinitializedResponse) ){
 				logger.info("In Audit log Response4");
