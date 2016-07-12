@@ -122,7 +122,7 @@ public class JobDaoImpl implements IJobDao {
 			// that carrier.
 			Query searchDeviceQuery = new Query(Criteria.where("bs_carrier")
 					.is(carrierName)).addCriteria(Criteria.where("netSuiteId")
-					.mod(2, 0));
+					.mod(2, 1));
 
 			log.info("searchDeviceQuery::::::::::" + searchDeviceQuery);
 

@@ -276,15 +276,17 @@ public class CommonUtil {
 	public static String getDeviceBillingStartDate(String billingDay,
 			String jobDate) {
 
-		String billingStartDate = null;
-		String jobDay = jobDate.substring(8);
 
-		// Creating The bill start date
-		// billingday One oR two character
-		if (billingDay != null && billingDay.length() == 1) {
-			billingDay = "0" + billingDay;
-		}
 
+	String billingStartDate = null;
+	String jobDay = jobDate.substring(8);
+
+	// Creating The bill start date
+	// billingday One oR two character
+	if (billingDay != null && billingDay.length() == 1) {
+		billingDay = "0" + billingDay;
+	}
+		
 		try {
 			if (billingDay != null) {
 
@@ -293,29 +295,50 @@ public class CommonUtil {
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(dateFormat.parse(jobDate));
 
+				log.info(billingDay +"::::::::::::::::::::"+jobDay);
 				if (Integer.parseInt(billingDay) > Integer.parseInt(jobDay)) {
 					// previous month data
+				
 					cal.add(Calendar.MONTH, -1);
-					cal.set(Calendar.DATE, Integer.parseInt(billingDay));
+						
+					int noOfLastDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+					
 					billingStartDate = dateFormat.format(cal.getTime());
+					
+					log.info(noOfLastDay +":::::::::::::::::::::::"+dateFormat.format(cal.getTime()));
+				
+					
+					int calculatedDay = Integer.parseInt(billingStartDate.substring(8));
+					
+					log.info("CAlculated Day "+ calculatedDay);
+					
+					if ((calculatedDay < noOfLastDay)&&  (Integer.parseInt(billingDay)<noOfLastDay)){
+						
+						cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(billingDay));
+						billingStartDate = dateFormat.format(cal.getTime());
+						
+						log.info("::::::::::::::::"+billingStartDate);
+					}
+				
 
-				}
+				}else
 
 				// billing day<= JobDetail Day
 				if (Integer.parseInt(billingDay) <= Integer.parseInt(jobDay)) {
-
+					
 					// current month of data
 					cal.set(Calendar.DATE, Integer.parseInt(billingDay));
 					billingStartDate = dateFormat.format(cal.getTime());
 
 				}
-
+				log.info("::::::::::::::::"+ billingStartDate);
+				
 			}
 
 		} catch (Exception ex) {
 			log.error("................Error in Setting Job Dates" + ex);
 		}
-
+		
 		return billingStartDate;
 	}
 

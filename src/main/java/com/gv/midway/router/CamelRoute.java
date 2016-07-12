@@ -1050,6 +1050,9 @@ public class CamelRoute extends RouteBuilder {
 				iDeviceService, "bulkOperationDeviceSyncInDB");
 	}
 
+	/**
+	 * Method to Schedule the Veriozon Device Connection History Job
+	 */
 	public void deviceConnectionHistoryVerizonJob() {
 
 		from(
@@ -1063,6 +1066,9 @@ public class CamelRoute extends RouteBuilder {
 
 	}
 
+	/**
+	 * Method to Schedule the Veriozon Device Usage Job
+	 */
 	public void deviceUsageHistoryVerizonJob() {
 
 		from(
@@ -1076,6 +1082,9 @@ public class CamelRoute extends RouteBuilder {
 
 	}
 
+	/**
+	 * Method to Schedule the Kore Device Usage Job
+	 */
 	public void deviceUsageHistoryKoreJob() {
 
 		from(
@@ -1089,9 +1098,9 @@ public class CamelRoute extends RouteBuilder {
 
 	}
 
-	// TODO Add KORE DEVICE USAGE JOB
-
-	// BATCH JOB
+	/**
+	 * Method contains flow of the batch jobs
+	 */
 
 	public void startJob() {
 
@@ -1187,7 +1196,9 @@ public class CamelRoute extends RouteBuilder {
 
 	}
 
-	// BATCH JOB
+	/**
+	 * Method contains flow of the transaction failure job
+	 */
 
 	public void startTransactionFailureJob() {
 

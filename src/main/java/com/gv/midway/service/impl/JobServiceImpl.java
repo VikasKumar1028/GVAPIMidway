@@ -173,34 +173,41 @@ public class JobServiceImpl implements IJobService {
 
 	}
 
-	/*
-	 * finding the Device Usage Overages (non-Javadoc)
-	 * 
-	 * @see
-	 * com.gv.midway.service.IJobService#processDeviceNotification(org.apache
-	 * .camel.Exchange)
+	/**
+	 * This Method is used for processing the device Overage notifications
 	 */
 	@Override
 	public void processDeviceNotification(Exchange exchange) {
 		iJobDao.processDeviceNotification(exchange);
 
 	}
-	
-	
-	public void addNotificationList(Exchange exchange){
-		
-		exchange.setProperty("NotificationLsit", new ArrayList<DeviceOverageNotification>());
-		
+
+	/**
+	 * This method is used to create a new notification list, so that SEDA
+	 * components can add device overage to this list
+	 */
+	@Override
+	public void addNotificationList(Exchange exchange) {
+
+		exchange.setProperty("NotificationLsit",
+				new ArrayList<DeviceOverageNotification>());
+
 	}
-	public void checkNotificationList(Exchange exchange){
-		
-		List <DeviceOverageNotification>notificationList=(List)exchange.getProperty("NotificationLsit");
-		
-		for (DeviceOverageNotification notification  : notificationList) {
-		    System.out.println("Notification  :::::::::::::::::: " + notification.getNetSuiteId());
+
+	/**
+	 * This method is used to check the notification list
+	 */
+	@Override
+	public void checkNotificationList(Exchange exchange) {
+
+		List<DeviceOverageNotification> notificationList = (List) exchange
+				.getProperty("NotificationLsit");
+
+		for (DeviceOverageNotification notification : notificationList) {
+			log.info("Notification  :::::::::::::::::: "
+					+ notification.getNetSuiteId());
 		}
-		
-		
+
 	}
 
 }
