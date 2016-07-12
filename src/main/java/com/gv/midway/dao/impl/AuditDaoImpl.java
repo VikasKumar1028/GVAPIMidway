@@ -1,9 +1,6 @@
 package com.gv.midway.dao.impl;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.TimeZone;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.component.cxf.CxfOperationException;
