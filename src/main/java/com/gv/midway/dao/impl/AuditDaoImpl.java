@@ -25,6 +25,10 @@ public class AuditDaoImpl implements IAuditDao {
 	@Autowired
 	MongoTemplate mongoTemplate;
 
+	/**
+	 * Method Saves the Audit Object for External Request
+	 */
+	@Override
 	public void auditExternalRequestCall(Exchange exchange) {
 		// TODO Auto-generated method stub
 		log.info("Begin-AuditDaoImpl :auditExternalRequestCall"
@@ -83,8 +87,12 @@ public class AuditDaoImpl implements IAuditDao {
 
 	}
 
+	/**
+	 * Method Saves the Audit Object for External Response
+	 */
+	@Override
 	public void auditExternalResponseCall(Exchange exchange) {
-		// TODO Auto-generated method stub
+		
 
 		log.info("Start-AuditDaoImpl:auditExternalResponseCall");
 
@@ -141,11 +149,15 @@ public class AuditDaoImpl implements IAuditDao {
 
 	}
 
+	/**
+	 * Method Saves the Audit Object for External Exception
+	 */
+	@Override
 	public void auditExternalExceptionResponseCall(Exchange exchange) {
 
 		log.info("Begin-AuditDaoImpl:auditExternalExceptionResponseCall");
 		String responseBody = "";
-		// TODO populate into below object
+		//  populate into below object
 		// KoreErrorResponse errorBody
 
 		CxfOperationException exception = null;
@@ -241,12 +253,15 @@ public class AuditDaoImpl implements IAuditDao {
 		}
 	}
 
+	/**
+	 * Method Saves the Audit Object for Connection Error Response
+	 */
+	@Override
 	public void auditExternalConnectionExceptionResponseCall(Exchange exchange) {
 
 		log.info("Start-auditExternalConnectionExceptionResponseCall");
 		String responseBody = "";
 
-		CxfOperationException exception = null;
 
 		if (exchange.getProperty(Exchange.EXCEPTION_CAUGHT) != null) {
 
