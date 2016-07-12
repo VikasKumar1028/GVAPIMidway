@@ -74,7 +74,6 @@ public class JobDaoImpl implements IJobDao {
 			deviceInformationList = mongoTemplate.find(searchDeviceQuery,
 					DeviceInformation.class);
 
-			// list = deviceInformationList.subList(0, 1000);
 
 			/*
 			 * list = new
@@ -82,10 +81,6 @@ public class JobDaoImpl implements IJobDao {
 			 * deviceInformationList.get(0)));
 			 */
 
-			/*
-			 * list = new ArrayList<DeviceInformation>(Collections.nCopies(10,
-			 * deviceInformationList.get(0)));
-			 */
 
 			log.info("deviceInformationList ------------------"
 					+ deviceInformationList.size());
@@ -95,7 +90,6 @@ public class JobDaoImpl implements IJobDao {
 			log.error("Error in fetchDevices :" + e);
 		}
 
-		// return list;
 		return deviceInformationList;
 	}
 
@@ -129,11 +123,6 @@ public class JobDaoImpl implements IJobDao {
 			deviceInformationList = mongoTemplate.find(searchDeviceQuery,
 					DeviceInformation.class);
 
-			/*
-			 * list = new
-			 * ArrayList<DeviceInformation>(Collections.nCopies(10000,
-			 * deviceInformationList.get(0)));
-			 */
 
 			list = new ArrayList<DeviceInformation>(Collections.nCopies(10,
 					deviceInformationList.get(0)));
@@ -147,7 +136,6 @@ public class JobDaoImpl implements IJobDao {
 			log.error("Error in fetchOddDevices :" + e);
 		}
 
-		// return list;
 		return deviceInformationList;
 	}
 
@@ -180,11 +168,6 @@ public class JobDaoImpl implements IJobDao {
 			deviceInformationList = mongoTemplate.find(searchDeviceQuery,
 					DeviceInformation.class);
 
-			/*
-			 * list = new
-			 * ArrayList<DeviceInformation>(Collections.nCopies(10000,
-			 * deviceInformationList.get(0)));
-			 */
 
 			list = new ArrayList<DeviceInformation>(Collections.nCopies(10,
 					deviceInformationList.get(0)));
@@ -198,7 +181,6 @@ public class JobDaoImpl implements IJobDao {
 			log.error("Error in fetchEvenDevices :" + e);
 		}
 
-		// return list;
 		return deviceInformationList;
 	}
 
