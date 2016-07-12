@@ -32,46 +32,18 @@ public class KoreDeactivateDevicePostProcessor implements Processor {
 
 	public void process(Exchange exchange) throws Exception {
 
-		// TODO Auto-generated method stub
+		log.info("Begin::KoreDeActivateDevicePostProcessor");
+		
 		DeactivateDeviceResponse deactivateDeviceResponse = new DeactivateDeviceResponse();
 		DeactivateDeviceResponseDataArea deactivateDeviceResponseDataArea = new DeactivateDeviceResponseDataArea();
 
-		//Header responseheader = new Header();
-
 		Response response = new Response();
-		if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
 
-			response.setResponseCode(IResponse.SUCCESS_CODE);
-			response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
-			response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
-			deactivateDeviceResponse
-					.setDataArea(deactivateDeviceResponseDataArea);
-
-		} else {
-
-			response.setResponseCode(400);
-			response.setResponseStatus(IResponse.ERROR_MESSAGE);
-			//response.setResponseDescription(exchange.getIn().getBody().toString());
-			response.setResponseDescription(exchange.getIn().getMessageId());
-		}
-
-		/*responseheader.setApplicationName(exchange.getProperty(
-				IConstant.APPLICATION_NAME).toString());
-		responseheader.setRegion(exchange.getProperty(IConstant.REGION)
-				.toString());
+		response.setResponseCode(IResponse.SUCCESS_CODE);
+		response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+		response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
 		
-		responseheader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT)
-				.toString());
-		responseheader.setOrganization(exchange.getProperty(
-				IConstant.ORGANIZATION).toString());
-		responseheader.setSourceName(exchange
-				.getProperty(IConstant.SOURCE_NAME).toString());
 
-		responseheader.setTransactionId(exchange.getProperty(
-				IConstant.GV_TRANSACTION_ID).toString());
-		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
-				.toString());*/
-		
 		Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
 
 		deactivateDeviceResponse.setHeader(responseheader);
@@ -79,7 +51,11 @@ public class KoreDeactivateDevicePostProcessor implements Processor {
 		deactivateDeviceResponse.setResponse(response);
 		deactivateDeviceResponseDataArea.setOrderNumber(exchange.getProperty(
 				IConstant.MIDWAY_TRANSACTION_ID).toString());
+		
+		deactivateDeviceResponse.setDataArea(deactivateDeviceResponseDataArea);
 
 		exchange.getIn().setBody(deactivateDeviceResponse);
+		
+		log.info("End::KoreDeActivateDevicePostProcessor");
 	}
 }

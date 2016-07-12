@@ -29,10 +29,13 @@ public class KoreActivateDevicePreProcessor implements Processor {
 	}
 
 	public void process(Exchange exchange) throws Exception {
-		log.info("*************Testing**************************************"
-				+ exchange.getIn().getBody());
+		
 
 		log.info("Begin:KoreActivateDevicePreProcessor");
+		
+		log.info("*************Testing**************************************"
+				+ exchange.getIn().getBody());
+		
 		Message message = exchange.getIn();
 
 		Transaction transaction = exchange.getIn().getBody(Transaction.class);

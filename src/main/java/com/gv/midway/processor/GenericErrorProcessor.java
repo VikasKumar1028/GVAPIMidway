@@ -2,6 +2,7 @@ package com.gv.midway.processor;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
+import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
 
 import com.gv.midway.constant.IConstant;
@@ -25,6 +26,9 @@ import com.gv.midway.pojo.usageInformation.response.UsageInformationMidwayRespon
 import com.gv.midway.pojo.usageInformation.response.UsageInformationResponse;
 
 public class GenericErrorProcessor implements Processor {
+	
+	Logger log = Logger.getLogger(VerizonGenericExceptionProcessor.class
+			.getName());
 
 	Environment newEnv;
 
@@ -40,26 +44,9 @@ public class GenericErrorProcessor implements Processor {
 
 	public void process(Exchange exchange) throws Exception {
 
-		// Header responseHeader = new Header();
+		log.info("----.Generic exchange----------"+exchange.getFromEndpoint().toString());
+	
 		Response response = new Response();
-
-		/*
-		 * responseHeader.setApplicationName(exchange.getProperty(
-		 * IConstant.APPLICATION_NAME).toString());
-		 * responseHeader.setRegion(exchange.getProperty(IConstant.REGION)
-		 * .toString());
-		 * 
-		 * responseHeader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT
-		 * ) .toString()); responseHeader.setOrganization(exchange.getProperty(
-		 * IConstant.ORGANIZATION).toString());
-		 * responseHeader.setSourceName(exchange
-		 * .getProperty(IConstant.SOURCE_NAME).toString());
-		 * 
-		 * responseHeader.setTransactionId(exchange.getProperty(
-		 * IConstant.GV_TRANSACTION_ID).toString());
-		 * responseHeader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
-		 * .toString());
-		 */
 
 		Header responseHeader = (Header) exchange.getProperty(IConstant.HEADER);
 

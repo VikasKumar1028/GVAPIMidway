@@ -39,16 +39,10 @@ public class VerizonActivateDevicePostProcessor implements Processor {
 
 		ActivateDeviceResponse activateDeviceResponse = new ActivateDeviceResponse();
 		ActivateDeviceResponseDataArea activateDeviceResponseDataArea = new ActivateDeviceResponseDataArea();
-		//Header responseheader = new Header();
+	
 		Response response = new Response();
 
-		/*DateFormat dateFormat = new SimpleDateFormat(
-				newEnv.getProperty(IConstant.DATE_FORMAT));*/
-
-		//Date date = new Date();
-
-		System.out
-				.println("exchange.getIn().getBody().toString()***************************************"
+		log.info("exchange.getIn().getBody().toString()***************************************"
 						+ exchange.getIn().getBody().toString());
 
 		if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
@@ -69,26 +63,7 @@ public class VerizonActivateDevicePostProcessor implements Processor {
 
 		}
 
-		/*responseheader.setApplicationName(exchange.getProperty(
-				IConstant.APPLICATION_NAME).toString());
-		responseheader.setRegion(exchange.getProperty(IConstant.REGION)
-				.toString());
-		responseheader.setOrganization(exchange.getProperty(
-				IConstant.ORGANIZATION).toString());*/
-
-		/*
-		 * responseheader.setTimestamp(exchange.getProperty(
-		 * IConstant.DATE_FORMAT).toString());
-		 */
-
-		/*responseheader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT)
-				.toString());
-		responseheader.setSourceName(exchange
-				.getProperty(IConstant.SOURCE_NAME).toString());
-		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
-				.toString());
-		responseheader.setTransactionId(exchange.getProperty(
-				IConstant.GV_TRANSACTION_ID).toString());*/
+		
 
 		Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
 		

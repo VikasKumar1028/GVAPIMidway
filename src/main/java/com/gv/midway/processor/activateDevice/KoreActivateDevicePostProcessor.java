@@ -37,30 +37,11 @@ public class KoreActivateDevicePostProcessor implements Processor {
 
 		ActivateDeviceResponseDataArea activateDeviceResponseDataArea = new ActivateDeviceResponseDataArea();
 
-		//Header responseheader = new Header();
-
 		Response response = new Response();
 
 		response.setResponseCode(IResponse.SUCCESS_CODE);
 		response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
 		response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
-
-		/*responseheader.setApplicationName(exchange.getProperty(
-				IConstant.APPLICATION_NAME).toString());
-		responseheader.setRegion(exchange.getProperty(IConstant.REGION)
-				.toString());
-
-		responseheader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT)
-				.toString());
-		responseheader.setOrganization(exchange.getProperty(
-				IConstant.ORGANIZATION).toString());
-
-		responseheader.setSourceName(exchange
-				.getProperty(IConstant.SOURCE_NAME).toString());
-		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
-				.toString());
-		responseheader.setTransactionId(exchange.getProperty(
-				IConstant.GV_TRANSACTION_ID).toString());*/
 		
 		Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
 
