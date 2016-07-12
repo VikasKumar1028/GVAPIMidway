@@ -1062,7 +1062,7 @@ public class CamelRoute extends RouteBuilder {
 						"setJobDetails(${exchange},"
 								+ CarrierType.VERIZON.toString() + ", "
 								+ JobName.VERIZON_CONNECTION_HISTORY + ")")
-				.to("direct:startJob").end();
+				.bean(iJobService, "scheduleJob").end();
 
 	}
 
@@ -1078,7 +1078,7 @@ public class CamelRoute extends RouteBuilder {
 						"setJobDetails(${exchange},"
 								+ CarrierType.VERIZON.toString() + ", "
 								+ JobName.VERIZON_DEVICE_USAGE + ")")
-				.to("direct:startJob").end();
+				.bean(iJobService, "scheduleJob").end();
 
 	}
 
@@ -1094,7 +1094,7 @@ public class CamelRoute extends RouteBuilder {
 						"setJobDetails(${exchange},"
 								+ CarrierType.KORE.toString() + ", "
 								+ JobName.KORE_DEVICE_USAGE + ")")
-				.to("direct:startJob").end();
+				.bean(iJobService, "scheduleJob").end();
 
 	}
 

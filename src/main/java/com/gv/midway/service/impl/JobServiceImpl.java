@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.apache.camel.EndpointInject;
 import org.apache.camel.Exchange;
+import org.apache.camel.ProducerTemplate;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,7 @@ import com.gv.midway.constant.JobName;
 import com.gv.midway.constant.JobType;
 import com.gv.midway.dao.IJobDao;
 import com.gv.midway.pojo.job.JobDetail;
+import com.gv.midway.pojo.job.JobinitializedResponse;
 import com.gv.midway.pojo.notification.DeviceOverageNotification;
 import com.gv.midway.pojo.server.ServerDetail;
 import com.gv.midway.service.IJobService;
@@ -28,6 +31,9 @@ public class JobServiceImpl implements IJobService {
 
 	@Autowired
 	private IJobDao iJobDao;
+
+	@EndpointInject(uri = "")
+	ProducerTemplate producer;
 
 	@Override
 	public List fetchDevices(Exchange exchange) {
@@ -207,6 +213,18 @@ public class JobServiceImpl implements IJobService {
 			log.info("Notification  :::::::::::::::::: "
 					+ notification.getNetSuiteId());
 		}
+
+	}
+
+	/**
+	 * Method To Schedule the jobs through camel route
+	 */
+	@Override
+	public void scheduleJob(Exchange exchange) {
+
+		log.info("scheduleJob  :::::::::::::::::: ");
+		JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
+		producer.requestBody("direct:startJob", jobDetail);
 
 	}
 
