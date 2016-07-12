@@ -18,6 +18,10 @@ public class SessionDaoImpl implements ISessionDao {
 	@Autowired
 	MongoTemplate mongoTemplate;
 
+	/**
+	 * Method fetches the existing valid session
+	 */
+	@Override
 	public SessionBean getSessionBean() {
 		
 		//Ip Address of the Machine
@@ -29,6 +33,10 @@ public class SessionDaoImpl implements ISessionDao {
 		return sessionbean;
 	}
 
+	/**
+	 * Method Invalidates the previous session tokens and saves the new token value
+	 */
+	@Override
 	public SessionBean saveSesionBean(SessionBean sessionBean) {
 		
 		//Setting the Ip Address of the machine
