@@ -261,16 +261,16 @@ public class CamelRoute extends RouteBuilder {
 		// Retrieve Device Usage History from Carrier
 		retrieveDeviceUsageHistoryCarrier();
 
-		// Execution of schduled jobs scheduledJobs
-		/* scheduledJobs(); */
+		// Execution of schduled jobs scheduledJobs		
 
 		deviceConnectionHistoryVerizonJob();
+		
 		deviceUsageHistoryVerizonJob();
 
 		deviceUsageHistoryKoreJob();
 
 		// Transaction Failure Job
-		startTransactionFailureJob();
+		transactionFailureJob();
 
 		// Get Device Data Usage from Midway DB
 		getDeviceUsageInfoDB();
@@ -284,6 +284,7 @@ public class CamelRoute extends RouteBuilder {
 		// Returns the Job Response
 		jobResponse();
 
+		//device Overage Notification Job
 		notificationJob();
 
 		deviceUsageNotificationJob();
@@ -467,6 +468,9 @@ public class CamelRoute extends RouteBuilder {
 		// End:Deactivate Devices
 	}
 
+	/**
+	 * Restore Flow for Verizon and Kore
+	 */
 	public void restoreDevice() {
 
 		// Begin:Restore Devices
@@ -548,6 +552,9 @@ public class CamelRoute extends RouteBuilder {
 
 		// End:Restore Devices
 	}
+	/**
+	 * Suspend Flow for Verizon and Kore
+	 */
 
 	public void suspendDevice() {
 
@@ -636,6 +643,9 @@ public class CamelRoute extends RouteBuilder {
 
 	}
 
+	/**
+	 * Reactivate Flow for Kore
+	 */
 	public void reactivateDevice() {
 
 		// Begin:Reactivate Devices
@@ -681,6 +691,9 @@ public class CamelRoute extends RouteBuilder {
 
 	}
 
+	/**
+	 * Custom Fields Flow for Verizon and Kore
+	 */
 	public void customeFields() {
 
 		// Begin:CustomeFields Devices
@@ -762,6 +775,10 @@ public class CamelRoute extends RouteBuilder {
 		// End:CustomeFields Devices
 
 	}
+	
+	/**
+	 * Change Service Plan Flow for Verizon and Kore
+	 */
 
 	public void changeDeviceServicePlans() {
 
@@ -857,6 +874,10 @@ public class CamelRoute extends RouteBuilder {
 
 	}
 
+	/** 
+	 * deviceConnectionStatus Flow for Verizon 
+	 */
+	
 	public void deviceConnectionStatus() {
 
 		// Begin:Device Connection Status
@@ -901,6 +922,9 @@ public class CamelRoute extends RouteBuilder {
 
 	}
 
+	/**
+	 * deviceConnectionStatus Flow for Verizon
+	 */
 	public void deviceSessionBeginEndInfo() {
 
 		// Begin: Device Session Begin End
@@ -1200,7 +1224,7 @@ public class CamelRoute extends RouteBuilder {
 	 * Method contains flow of the transaction failure job
 	 */
 
-	public void startTransactionFailureJob() {
+	public void transactionFailureJob() {
 
 		from("direct:startTransactionFailureJob").to(
 				"direct:processTransactionFailureJob");
@@ -1303,6 +1327,9 @@ public class CamelRoute extends RouteBuilder {
 
 	}
 
+	/**
+	 * This Method is used to retrieve device Usage History
+	 */
 	public void retrieveDeviceUsageHistoryCarrier() {
 		from("direct:retrieveDeviceUsageHistoryCarrier")
 				.process(new HeaderProcessor())
@@ -1347,6 +1374,9 @@ public class CamelRoute extends RouteBuilder {
 
 	}
 
+	/**
+	 * This Method is used to schedule device Overage Notification
+	 */
 	public void deviceUsageNotificationJob() {
 
 		from(
