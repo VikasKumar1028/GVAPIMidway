@@ -60,6 +60,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 			Integer netSuiteId = device.getDataArea().getDevice()
 					.getNetSuiteId();
 
+			if (netSuiteId == null) {
 
 				Header header = device.getHeader();
 
@@ -132,9 +133,9 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 	}
 
+	@Override
 	public DeviceInformationResponse getDeviceInformationDB(
 			DeviceInformationRequest deviceInformationRequest) {
-	@Override
 
 		Integer netSuiteId = deviceInformationRequest.getDataArea()
 				.getNetSuiteId();
@@ -145,6 +146,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 		deviceInformationResponse.setHeader(deviceInformationRequest
 				.getHeader());
 		Response response = new Response();
+		if (netSuiteId == null) {
 
 			response.setResponseCode(IResponse.INVALID_PAYLOAD);
 			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB);
@@ -212,8 +214,8 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 	}
 
-	public void setDeviceInformationDB(Exchange exchange) {
 	@Override
+	public void setDeviceInformationDB(Exchange exchange) {
 
 		Integer netSuiteId = (Integer) exchange
 				.getProperty(IConstant.MIDWAY_NETSUITE_ID);
@@ -238,8 +240,8 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 	}
 
-	public void updateDeviceInformationDB(Exchange exchange) {
 	@Override
+	public void updateDeviceInformationDB(Exchange exchange) {
 		DeviceInformationResponse deviceInformationResponse = (DeviceInformationResponse) exchange
 				.getIn().getBody();
 
@@ -280,8 +282,8 @@ public class DeviceDaoImpl implements IDeviceDao {
 		exchange.getIn().setBody(deviceInformationResponse);
 	}
 
-	public void bulkOperationDeviceUpload(Exchange exchange) {
 	@Override
+	public void bulkOperationDeviceUpload(Exchange exchange) {
 
 		DeviceInformation deviceInformationToUpdate = (DeviceInformation) exchange
 				.getIn().getBody();
@@ -391,6 +393,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 				.getHeader());
 		Response response = new Response();
 
+		if (netSuiteId == null ) {
 
 			log.info("Enter netSuiteId..." + netSuiteId);
 			response.setResponseCode(IResponse.INVALID_PAYLOAD);
@@ -546,6 +549,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 				.setHeader(connectionInformationMidwayRequest.getHeader());
 		Response response = new Response();
 
+		if (netSuiteId == null ) {
 
 			log.info("Enter netSuiteId..." + netSuiteId);
 			response.setResponseCode(IResponse.INVALID_PAYLOAD);
