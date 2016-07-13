@@ -59,7 +59,6 @@ public class JobDaoImpl implements IJobDao {
 		exchange.setProperty("jobName", jobDetail.getName().toString());
 
 		List<DeviceInformation> deviceInformationList = null;
-		List<DeviceInformation> list = null;
 
 		try {
 
@@ -73,14 +72,6 @@ public class JobDaoImpl implements IJobDao {
 
 			deviceInformationList = mongoTemplate.find(searchDeviceQuery,
 					DeviceInformation.class);
-
-
-			/*
-			 * list = new
-			 * ArrayList<DeviceInformation>(Collections.nCopies(10000,
-			 * deviceInformationList.get(0)));
-			 */
-
 
 			log.info("deviceInformationList ------------------"
 					+ deviceInformationList.size());
@@ -96,6 +87,7 @@ public class JobDaoImpl implements IJobDao {
 	/**
 	 * Fetch only devices with Odd Net Suited ID
 	 */
+	@Override
 	public List fetchOddDevices(Exchange exchange) {
 
 		log.info("fetchOddDevices::::::::");
@@ -105,7 +97,6 @@ public class JobDaoImpl implements IJobDao {
 		exchange.setProperty("jobName", jobDetail.getName().toString());
 
 		List<DeviceInformation> deviceInformationList = null;
-		List<DeviceInformation> list = null;
 
 		try {
 
@@ -123,10 +114,6 @@ public class JobDaoImpl implements IJobDao {
 			deviceInformationList = mongoTemplate.find(searchDeviceQuery,
 					DeviceInformation.class);
 
-
-			list = new ArrayList<DeviceInformation>(Collections.nCopies(10,
-					deviceInformationList.get(0)));
-
 			log.info("deviceInformationList ------------------"
 					+ deviceInformationList.size());
 		}
@@ -142,6 +129,7 @@ public class JobDaoImpl implements IJobDao {
 	/**
 	 * Fetch only devices with Even Net Suited ID
 	 */
+	@Override
 	public List fetchEvenDevices(Exchange exchange) {
 
 		log.info("fetchEvenDevices::::::::");
@@ -151,7 +139,6 @@ public class JobDaoImpl implements IJobDao {
 		exchange.setProperty("jobName", jobDetail.getName().toString());
 
 		List<DeviceInformation> deviceInformationList = null;
-		List<DeviceInformation> list = null;
 
 		try {
 
@@ -168,9 +155,6 @@ public class JobDaoImpl implements IJobDao {
 			deviceInformationList = mongoTemplate.find(searchDeviceQuery,
 					DeviceInformation.class);
 
-
-			list = new ArrayList<DeviceInformation>(Collections.nCopies(10,
-					deviceInformationList.get(0)));
 
 			log.info("deviceInformationList ------------------"
 					+ deviceInformationList.size());
@@ -232,7 +216,7 @@ public class JobDaoImpl implements IJobDao {
 		}
 
 		catch (Exception e) {
-			log.error("Error In updateJobDetails-----------------------------"
+			log.info("Error In updateJobDetails-----------------------------"
 					+ e);
 		}
 
@@ -292,7 +276,7 @@ public class JobDaoImpl implements IJobDao {
 		}
 
 		catch (Exception e) {
-			log.error("Error In deleteDeviceConnectionHistoryRecords-----------------------------");
+			log.error("Error In deleteDeviceConnectionHistoryRecords-----------------------------"+e);
 		}
 
 	}
@@ -422,7 +406,7 @@ public class JobDaoImpl implements IJobDao {
 
 		log.info("Inside fetchServerIp.....................");
 
-		ServerDetail serverDetail = null;
+		ServerDetail serverDetail;
 
 		Query searchDeviceQuery = new Query(Criteria.where("ipAddress").is(
 				currentServerIp));
@@ -439,14 +423,15 @@ public class JobDaoImpl implements IJobDao {
 	 * billing plan
 	 */
 
+	@Override
 	public void processDeviceNotification(Exchange exchange) {
 
 		DeviceInformation deviceInfo = (DeviceInformation) exchange.getIn()
 				.getBody();
 		List<DeviceOverageNotification> notificationList = (List) exchange
 				.getProperty("NotificationLsit");
-		String billingDay = null;
-		String billingStartDate = null;
+		String billingDay ;
+		String billingStartDate;
 		Integer netSuiteId = deviceInfo.getNetSuiteId();
 		if (deviceInfo.getBs_plan() != null) {
 
@@ -494,7 +479,6 @@ public class JobDaoImpl implements IJobDao {
 			deviceUsage.setDate((new Date(new Date().getTime() - 1000 * 60 * 60
 					* r.nextInt((120 - 90) + 91))).toString());
 			mongoTemplate.save(deviceUsage);
-			// ystem.out.println(i);
 		}
 
 		/*

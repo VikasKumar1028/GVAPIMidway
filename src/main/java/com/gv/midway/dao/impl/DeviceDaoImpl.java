@@ -542,7 +542,6 @@ public class DeviceDaoImpl implements IDeviceDao {
 		log.info("device dao startDate is..." + startDate);
 		log.info("device dao endDate is..." + endDate);
 
-		Float dataUsed = null;
 		ConnectionInformationMidwayResponse connectionInformationMidwayResponse = new ConnectionInformationMidwayResponse();
 
 		connectionInformationMidwayResponse
