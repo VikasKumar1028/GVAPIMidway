@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.camel.Exchange;
+import org.apache.camel.Message;
 import org.apache.camel.component.cxf.CxfOperationException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1200,6 +1201,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		
 		log.info("koreCheckStatusResponse is ............"+provisioningRequestStatus);
 		
+		Message message = exchange.getIn();
+		
 		if(provisioningRequestStatus.equals(IConstant.KORE_CHECKSTATUS_COMPLETED))
 		{
 			
@@ -1207,11 +1210,15 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			update.set(ITransaction.MIDWAY_STATUS, IConstant.MIDWAY_TRANSACTION_STATUS_SUCCESS);
 			update.set(ITransaction.CALL_BACK_PAYLOAD, koreCheckStatusResponse);
 			update.set(ITransaction.CALL_BACK_RECEIVED, true);
+			
+			message.setHeader(IConstant.KORE_PROVISIONING_REQUEST_STATUS, IConstant.KORE_CHECKSTATUS_COMPLETED);
 		}
 		
 		else
 		{
 			log.info("koreCheckStatusResponse other then completed is ............"+provisioningRequestStatus);
+			
+			message.setHeader(IConstant.KORE_PROVISIONING_REQUEST_STATUS, IConstant.KORE_CHECKSTATUS_PENDING);
 			
 		}
 		

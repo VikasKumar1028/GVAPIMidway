@@ -92,9 +92,15 @@ public interface IConstant {
 	
 	static String JOB_INITIALIZED_MESSAGE="Job Started Successfully";
 	
+
 	static String JOB_TYPE_ODD="ODD";
 	
 	static String JOB_TYPE_EVEN="EVEN";
+
+	static String KORE_CHECK_STATUS="KoreCheckStatusFlow";
+	
+	static String KORE_PROVISIONING_REQUEST_STATUS="KoreProvisioningRequestStatus";
+
 	
 	
 	

@@ -70,7 +70,7 @@ public class KoreCheckStatusPreProcessor implements Processor {
 
 		if (carrierStatus.equals(IConstant.CARRIER_TRANSACTION_STATUS_ERROR)) {
 			log.info("carrier status error is........." + carrierStatus);
-			message.setHeader("KoreCheckStatusFlow", "end");
+			message.setHeader(IConstant.KORE_CHECK_STATUS, "error");
 
 		}
 
@@ -79,7 +79,7 @@ public class KoreCheckStatusPreProcessor implements Processor {
 		else if (carrierStatus
 				.equals(IConstant.CARRIER_TRANSACTION_STATUS_SUCCESS)) {
 
-			message.setHeader("KoreCheckStatusFlow", "change");
+			message.setHeader(IConstant.KORE_CHECK_STATUS, "change");
 
 		}
 
@@ -90,7 +90,7 @@ public class KoreCheckStatusPreProcessor implements Processor {
 		 */
 		else {
 			log.info("carrier status not error is........." + carrierStatus);
-			message.setHeader("KoreCheckStatusFlow", "forward");
+			message.setHeader(IConstant.KORE_CHECK_STATUS, "forward");
 			String carrierTransationID = transaction.getCarrierTransactionId();
 			exchange.setProperty(IConstant.CARRIER_TRANSACTION_ID,
 					carrierTransationID);

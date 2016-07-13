@@ -1515,19 +1515,19 @@ public class CamelRoute extends RouteBuilder {
 				 * Now call the netsuite end point for error and write in Kafka
 				 * Queue.
 				 */
-				when(header("KoreCheckStatusFlow").isEqualTo("end"))
+				when(header(IConstant.KORE_CHECK_STATUS).isEqualTo("error"))
 				.to("direct:koreCheckStatusErrorSubProcess")
 				.
 
 				// now call the netsuite end point for changeServicePlan and
 				// changeCustomeFields.
 
-				when(header("KoreCheckStatusFlow").isEqualTo("change"))
+				when(header(IConstant.KORE_CHECK_STATUS).isEqualTo("change"))
 				.to("direct:koreCustomChangeSubProcess").
 				/**
 				 * Call the Kore API to check the status of device
 				 */
-				when(header("KoreCheckStatusFlow").isEqualTo("forward"))
+				when(header(IConstant.KORE_CHECK_STATUS).isEqualTo("forward"))
 				.to(uriRestKoreEndPoint).unmarshal()
 				.json(JsonLibrary.Jackson, KoreCheckStatusResponse.class)
 				.to("direct:koreCheckStatusSubProcess").endChoice();
@@ -1566,7 +1566,8 @@ public class CamelRoute extends RouteBuilder {
 						+ ",?topic=midway-alerts").end();
 
 		from("direct:koreCheckStatusSubProcess")
-				.bean(iTransactionalService, "populateKoreCheckStatusResponse")
+				.bean(iTransactionalService, "populateKoreCheckStatusResponse").choice()
+				.when(header(IConstant.KORE_PROVISIONING_REQUEST_STATUS).isEqualTo(IConstant.KORE_CHECKSTATUS_COMPLETED))
 				.doTry()
 				.process(new KoreCheckStatusPostProcessor(env))
 				.bean(iTransactionalService, "updateNetSuiteCallBackRequest")
