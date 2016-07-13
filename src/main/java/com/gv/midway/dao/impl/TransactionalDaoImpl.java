@@ -3,6 +3,8 @@ package com.gv.midway.dao.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -509,6 +511,15 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		
 		
 		List<Transaction> transactionListPendingStatus = mongoTemplate.find(searchPendingCheckStatusQuery, Transaction.class);
+		
+		 Collections.sort(transactionListPendingStatus, new Comparator<Transaction>() {
+             @Override
+             public int compare(Transaction a, Transaction b)
+             {
+
+                 return  a.getTimeStampReceived().compareTo(b.getTimeStampReceived());
+             }
+         });
 		
 		log.info("size of pending device list for Kore............."+transactionListPendingStatus.size());
 		exchange.getIn().setBody(transactionListPendingStatus);
