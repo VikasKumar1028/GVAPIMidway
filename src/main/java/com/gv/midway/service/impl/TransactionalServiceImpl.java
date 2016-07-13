@@ -12,84 +12,81 @@ public class TransactionalServiceImpl implements ITransactionalService {
 	@Autowired
 	private ITransactionalDao transactionalDao;
 
-	// santosh:new method
+	@Override
 	public void populateActivateDBPayload(Exchange exchange) {
 
 		transactionalDao.populateActivateDBPayload(exchange);
 	}
 
-	// santosh:new method
+	@Override
 	public void populateDeactivateDBPayload(Exchange exchange) {
 
 		transactionalDao.populateDeactivateDBPayload(exchange);
 	}
-
+	@Override
 	public void populateSuspendDBPayload(Exchange exchange) {
 
 		transactionalDao.populateSuspendDBPayload(exchange);
 	}
-
+	@Override
 	public void populateVerizonTransactionalResponse(Exchange exchange) {
 		transactionalDao.populateVerizonTransactionalResponse(exchange);
 
 	}
-
+	@Override
 	public void populateVerizonTransactionalErrorResponse(Exchange exchange) {
 		transactionalDao.populateVerizonTransactionalErrorResponse(exchange);
 
 	}
-
+	@Override
 	public void populateKoreTransactionalErrorResponse(Exchange exchange) {
 		transactionalDao.populateKoreTransactionalErrorResponse(exchange);
 
 	}
-
+	@Override
 	public void populateKoreTransactionalResponse(Exchange exchange) {
 		transactionalDao.populateKoreTransactionalResponse(exchange);
 
 	}
-
+	@Override
 	public void populatePendingKoreCheckStatus(Exchange exchange) {
-		// TODO Auto-generated method stub
 		transactionalDao.populatePendingKoreCheckStatus(exchange);
 	}
-
+	@Override
 	public void populateConnectionErrorResponse(Exchange exchange,
 			String errorType) {
 		transactionalDao.populateConnectionErrorResponse(exchange, errorType);
 	}
-
+	@Override
 	public void populateCallbackDBPayload(Exchange exchange) {
 		transactionalDao.populateCallbackDBPayload(exchange);
 
 	}
-
+	@Override
 	public void findMidwayTransactionId(Exchange exchange) {
 		transactionalDao.findMidwayTransactionId(exchange);
 
 	}
-
+	@Override
 	public void populateReactivateDBPayload(Exchange exchange) {
-		// TODO Auto-generated method stub
 		transactionalDao.populateReactivateDBPayload(exchange);
 
 	}
-
+	@Override
 	public void populateRestoreDBPayload(Exchange exchange) {
 		transactionalDao.populateRestoreDBPayload(exchange);
 	}
-
+	@Override
 	public void populateCustomeFieldsDBPayload(Exchange exchange) {
 		transactionalDao.populateCustomeFieldsDBPayload(exchange);
 	}
-
+	@Override
 	public void populateChangeDeviceServicePlansDBPayload(Exchange exchange) {
 		transactionalDao.populateChangeDeviceServicePlansDBPayload(exchange);
 	}
 
 	@Override
 	public void populateKoreCheckStatusResponse(Exchange exchange) {
-		// TODO Auto-generated method stub
 		transactionalDao.populateKoreCheckStatusResponse(exchange);
 	}
 	
@@ -106,7 +103,6 @@ public class TransactionalServiceImpl implements ITransactionalService {
 	
 	@Override
 	public void updateNetSuiteCallBackResponse(Exchange exchange) {
-		// TODO Auto-generated method stub
 		transactionalDao.updateNetSuiteCallBackResponse(exchange);
 	}
 	

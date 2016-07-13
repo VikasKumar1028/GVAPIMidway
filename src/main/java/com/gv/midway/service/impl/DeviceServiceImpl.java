@@ -33,7 +33,7 @@ public class DeviceServiceImpl implements IDeviceService {
 	private Logger log = Logger.getLogger(DeviceServiceImpl.class.getName());
 
 
-
+	@Override
 	public UpdateDeviceResponse updateDeviceDetails(Exchange exchange) {
 
 		SingleDevice device = (SingleDevice) exchange.getIn().getBody();
@@ -41,9 +41,8 @@ public class DeviceServiceImpl implements IDeviceService {
 		return iDeviceDao.updateDeviceDetails(device);
 
 	}
-
+	@Override
 	public DeviceInformationResponse getDeviceInformationDB(Exchange exchange) {
-		// TODO Auto-generated method stub
 
 		
 		DeviceInformationRequest deviceInformationRequest = (DeviceInformationRequest) exchange
@@ -59,9 +58,8 @@ public class DeviceServiceImpl implements IDeviceService {
 	}
 
 	
-
+	@Override
 	public void updateDevicesDetailsBulk(Exchange exchange) {
-		// TODO Auto-generated method stub
 		BulkDevices devices = (BulkDevices) exchange.getIn().getBody();
 
 		DeviceInformation[] deviceInformationArr = devices.getDataArea()
@@ -84,19 +82,16 @@ public class DeviceServiceImpl implements IDeviceService {
 		log.info("******************In the end of bulk insert***************");
 
 	}
-
+	@Override
 	public void setDeviceInformationDB(Exchange exchange) {
-		// TODO Auto-generated method stub
 		iDeviceDao.setDeviceInformationDB(exchange);
 	}
-
+	@Override
 	public void updateDeviceInformationDB(Exchange exchange) {
-		// TODO Auto-generated method stub
 		iDeviceDao.updateDeviceInformationDB(exchange);
 	}
-
+	@Override
 	public void bulkOperationDeviceSyncInDB(Exchange exchange) {
-		// TODO Auto-generated method stub
 		iDeviceDao.bulkOperationDeviceUpload(exchange);
 	}
 
@@ -106,15 +101,14 @@ public class DeviceServiceImpl implements IDeviceService {
 		return iDeviceDao.getAllDevices();
 	}
 
-
+	@Override
 	public UsageInformationMidwayResponse getDeviceUsageInfoDB(Exchange exchange) {
-		// TODO Auto-generated method stub
 		UsageInformationMidwayRequest usageInformationMidwayRequest = (UsageInformationMidwayRequest) exchange
 				.getIn().getBody();
 		return iDeviceDao.getDeviceUsageInfoDB(usageInformationMidwayRequest);
 	}
 
-
+	@Override
 	public ConnectionInformationMidwayResponse getDeviceConnectionHistoryInfoDB(
 			Exchange exchange) {
 

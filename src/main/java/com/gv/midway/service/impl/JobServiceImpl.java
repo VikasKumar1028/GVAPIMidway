@@ -112,7 +112,7 @@ public class JobServiceImpl implements IJobService {
 	/**
 	 * Setting the Job Details for New Job Only
 	 */
-	
+	@Override
 	public void setJobDetails(Exchange exchange, String carrierName,
 			JobName jobName) {
 
@@ -138,7 +138,7 @@ public class JobServiceImpl implements IJobService {
 	 * running on New Job as it would run on two servers so in case of time lag
 	 * it would delete records inserted by other server
 	 */
-
+	@Override
 	public void deleteDeviceUsageRecords(Exchange exchange) {
 
 		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
@@ -153,6 +153,7 @@ public class JobServiceImpl implements IJobService {
 	 * Rerun,Reason for not running on New Job as it would run on two servers so
 	 * in case of time lag it would delete records inserted by other server
 	 */
+	@Override
 	public void deleteDeviceConnectionHistoryRecords(Exchange exchange) {
 		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
 		if (JobType.RERUN.toString().equals(jobDetail.getType().toString())) {
@@ -167,6 +168,7 @@ public class JobServiceImpl implements IJobService {
 	 * 
 	 * @param exchange
 	 */
+	@Override
 	public void setJobStartandEndTime(Exchange exchange) {
 
 		JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();

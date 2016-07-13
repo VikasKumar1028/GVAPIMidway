@@ -18,31 +18,30 @@ public class SessionServiceImpl implements ISessionService,ServletContextAware {
 	
 	Logger log = Logger.getLogger(SessionServiceImpl.class
 			.getName());
-//	@Autowired
 	private ServletContext servletContext;
 
 	@Autowired
 	private ISessionDao sessionDao;
 	
-	
+	@Override
 	public void setServletContext(ServletContext servletContext) {
 	     this.servletContext = servletContext;
 	}
-
+	@Override
 	public String getContextVzSessionToken() {
 
 		return servletContext.getAttribute(IConstant.VZ_SEESION_TOKEN) != null ? servletContext
 				.getAttribute(IConstant.VZ_SEESION_TOKEN).toString() : "";
 
 	}
-
+	@Override
 	public String getContextVzAuthorizationToken() {
 
 		return servletContext.getAttribute(IConstant.VZ_AUTHORIZATION_TOKEN) != null ? servletContext
 				.getAttribute(IConstant.VZ_AUTHORIZATION_TOKEN).toString() : "";
 
 	}
-
+	@Override
 	public void setVzToken(Exchange exchange) {
 
 		log.info(exchange
@@ -58,7 +57,7 @@ public class SessionServiceImpl implements ISessionService,ServletContextAware {
 		sessionBean.setIsValid("0");
 		sessionDao.saveSesionBean(sessionBean);
 	}
-
+	@Override
 	public void synchronizeDBContextToken() {
 		
 		log.info("**************synchronizeDBContextToken*****************************");
@@ -74,7 +73,7 @@ public class SessionServiceImpl implements ISessionService,ServletContextAware {
 		}
 
 	}
-
+	@Override
 	public String checkToken(Exchange exchange) {
 
 		SessionBean sessionBean = sessionDao.getSessionBean();
@@ -95,7 +94,7 @@ public class SessionServiceImpl implements ISessionService,ServletContextAware {
 			return "false";
 
 	}
-
+	@Override
 	public void setContextTokenInExchange(Exchange exchange) {
 		
 	
