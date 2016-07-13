@@ -12,9 +12,7 @@ import com.gv.midway.utility.CommonUtil;
 
 @Service
 public class SessionDaoImpl implements ISessionDao {
-	/*
-	 * @Autowired MongoDb grandVictorDB;
-	 */
+
 	@Autowired
 	MongoTemplate mongoTemplate;
 
@@ -28,9 +26,9 @@ public class SessionDaoImpl implements ISessionDao {
 		String ipAddress=CommonUtil.getIpAddress();
 		
 		Query searchUserQuery = new Query(Criteria.where("isValid").is("0")).addCriteria(Criteria.where("ipAddress").is(ipAddress));
-		SessionBean sessionbean = mongoTemplate.findOne(searchUserQuery,
+		return mongoTemplate.findOne(searchUserQuery,
 				SessionBean.class);
-		return sessionbean;
+		
 	}
 
 	/**

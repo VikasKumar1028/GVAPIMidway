@@ -30,7 +30,6 @@ public class AuditDaoImpl implements IAuditDao {
 	 */
 	@Override
 	public void auditExternalRequestCall(Exchange exchange) {
-		// TODO Auto-generated method stub
 		log.info("Begin-AuditDaoImpl :auditExternalRequestCall"
 				+ exchange.getIn().getBody());
 
@@ -160,7 +159,7 @@ public class AuditDaoImpl implements IAuditDao {
 		//  populate into below object
 		// KoreErrorResponse errorBody
 
-		CxfOperationException exception = null;
+		CxfOperationException exception ;
 
 		if (exchange.getProperty(Exchange.EXCEPTION_CAUGHT) != null) {
 			exception = (CxfOperationException) exchange

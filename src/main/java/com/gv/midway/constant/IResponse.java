@@ -2,6 +2,10 @@ package com.gv.midway.constant;
 
 public class IResponse {
 
+	private IResponse() {
+	
+	}
+
 	public static final Integer SUCCESS_CODE = 2000;
 	public static final Integer NO_DATA_FOUND_CODE = 1900;
 	public static final Integer DB_ERROR_CODE = 1901;

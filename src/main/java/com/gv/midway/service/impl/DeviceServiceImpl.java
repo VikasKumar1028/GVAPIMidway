@@ -35,7 +35,6 @@ public class DeviceServiceImpl implements IDeviceService {
 
 
 	public UpdateDeviceResponse updateDeviceDetails(Exchange exchange) {
-		// TODO Auto-generated method stub
 
 		SingleDevice device = (SingleDevice) exchange.getIn().getBody();
 

@@ -24,6 +24,7 @@ public class AuditLogRequestEventNotifer extends EventNotifierSupport {
 	@Autowired
 	MongoTemplate mongoTemplate;
 
+	@Override
 	public void notify(EventObject event) throws Exception {
 
 		if (event instanceof ExchangeCreatedEvent) {
@@ -104,14 +105,17 @@ public class AuditLogRequestEventNotifer extends EventNotifierSupport {
 
 	}
 
+	@Override
 	public boolean isEnabled(EventObject event) {
 		return event instanceof ExchangeCreatedEvent;
 	}
 
+	@Override
 	protected void doStart() throws Exception {
 		// noop
 	}
 
+	@Override
 	protected void doStop() throws Exception {
 		// noop
 	}

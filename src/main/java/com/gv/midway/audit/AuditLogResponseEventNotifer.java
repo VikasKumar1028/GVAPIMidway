@@ -25,7 +25,8 @@ public class AuditLogResponseEventNotifer extends EventNotifierSupport {
 
 	@Autowired
 	MongoTemplate mongoTemplate;
-
+	
+	@Override
 	public void notify(EventObject event) throws Exception {
 		if (event instanceof ExchangeCompletedEvent) {
 			ExchangeCompletedEvent create = (ExchangeCompletedEvent) event;
@@ -57,7 +58,7 @@ public class AuditLogResponseEventNotifer extends EventNotifierSupport {
 
 					Audit audit = new Audit();
                     
-					if(!apiOperationName.equals("GV_jobResponse_ProxyResponse"))
+					if(!("GV_jobResponse_ProxyResponse").equals(apiOperationName))
 					{
 					audit.setApiOperationName(apiOperationName);
 					audit.setFrom(baseResponse.getHeader().getSourceName());
@@ -85,16 +86,17 @@ public class AuditLogResponseEventNotifer extends EventNotifierSupport {
 		}
 
 	}
-
+	
+	@Override
 	public boolean isEnabled(EventObject event) {
 		// we only want the sent events
 		return event instanceof ExchangeCompletedEvent;
 	}
-
+	@Override
 	protected void doStart() throws Exception {
 		// noop
 	}
-
+	@Override
 	protected void doStop() throws Exception {
 		// noop
 	}

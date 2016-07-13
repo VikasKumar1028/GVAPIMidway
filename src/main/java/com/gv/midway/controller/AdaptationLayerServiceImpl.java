@@ -80,14 +80,11 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 
 		DeviceInformationRequest deviceInformationRequest = new DeviceInformationRequest();
 
-		Header header = new Header();
-		header.setRegion(region);
-		header.setApplicationName(applicationName);
-		header.setBsCarrier(bsCarrier);
-		header.setSourceName(sourceName);
-		header.setTimestamp(timestamp);
-		header.setTransactionId(transactionId);
-		header.setOrganization(organization);
+		
+		Header header= createHeader( region,
+				 timestamp,  organization,  transactionId,
+				 sourceName, applicationName,  bsCarrier);
+	
 
 		DeviceInformationRequestDataArea dataArea = new DeviceInformationRequestDataArea();
 		dataArea.setNetSuiteId(netSuiteId);
@@ -110,14 +107,11 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 
 		DeviceInformationRequest deviceInformationRequest = new DeviceInformationRequest();
 
-		Header header = new Header();
-		header.setRegion(region);
-		header.setApplicationName(applicationName);
-		header.setBsCarrier(bsCarrier);
-		header.setSourceName(sourceName);
-		header.setTimestamp(timestamp);
-		header.setTransactionId(transactionId);
-		header.setOrganization(organization);
+		
+		Header header= createHeader( region,
+				 timestamp,  organization,  transactionId,
+				 sourceName, applicationName,  bsCarrier);
+		
 
 		DeviceInformationRequestDataArea dataArea = new DeviceInformationRequestDataArea();
 		dataArea.setNetSuiteId(netSuiteId);
@@ -320,14 +314,11 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 
 		UsageInformationMidwayRequest usageInformationMidwayRequest = new UsageInformationMidwayRequest();
 
-		Header header = new Header();
-		header.setRegion(region);
-		header.setApplicationName(applicationName);
-		header.setBsCarrier(bsCarrier);
-		header.setSourceName(sourceName);
-		header.setTimestamp(timestamp);
-		header.setTransactionId(transactionId);
-		header.setOrganization(organization);
+		
+		Header header= createHeader( region,
+				 timestamp,  organization,  transactionId,
+				 sourceName, applicationName,  bsCarrier);
+	
 
 		UsageInformationRequestMidwayDataArea dataArea = new UsageInformationRequestMidwayDataArea();
 		dataArea.setNetSuiteId(netSuiteId);
@@ -354,14 +345,9 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 
 		ConnectionInformationMidwayRequest connectionInformationMidwayRequest = new ConnectionInformationMidwayRequest();
 
-		Header header = new Header();
-		header.setRegion(region);
-		header.setApplicationName(applicationName);
-		header.setBsCarrier(bsCarrier);
-		header.setSourceName(sourceName);
-		header.setTimestamp(timestamp);
-		header.setTransactionId(transactionId);
-		header.setOrganization(organization);
+		Header header= createHeader( region,
+				 timestamp,  organization,  transactionId,
+				 sourceName, applicationName,  bsCarrier);
 
 		ConnectionInformationRequestMidwayDataArea dataArea = new ConnectionInformationRequestMidwayDataArea();
 		dataArea.setNetSuiteId(netSuiteId);
@@ -387,14 +373,9 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 
 		ConnectionInformationRequest connectionInformationRequest = new ConnectionInformationRequest();
 
-		Header header = new Header();
-		header.setRegion(region);
-		header.setApplicationName(applicationName);
-		header.setBsCarrier(bsCarrier);
-		header.setSourceName(sourceName);
-		header.setTimestamp(timestamp);
-		header.setTransactionId(transactionId);
-		header.setOrganization(organization);
+		Header header= createHeader( region,
+				 timestamp,  organization,  transactionId,
+				 sourceName, applicationName,  bsCarrier);
 
 		ConnectionInformationRequestDataArea dataArea = new ConnectionInformationRequestDataArea();
 		DeviceId deviceIdvalue = new DeviceId();
@@ -425,14 +406,9 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 
 		UsageInformationRequest UsageInformationRequest = new UsageInformationRequest();
 
-		Header header = new Header();
-		header.setRegion(region);
-		header.setApplicationName(applicationName);
-		header.setBsCarrier(bsCarrier);
-		header.setSourceName(sourceName);
-		header.setTimestamp(timestamp);
-		header.setTransactionId(transactionId);
-		header.setOrganization(organization);
+		Header header= createHeader( region,
+				 timestamp,  organization,  transactionId,
+				 sourceName, applicationName,  bsCarrier);
 
 		UsageInformationRequestDataArea dataArea = new UsageInformationRequestDataArea();
 		DeviceId deviceIdvalue = new DeviceId();
@@ -462,14 +438,9 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 
 		ConnectionInformationRequest connectionInformationRequest = new ConnectionInformationRequest();
 
-		Header header = new Header();
-		header.setRegion(region);
-		header.setApplicationName(applicationName);
-		header.setBsCarrier(bsCarrier);
-		header.setSourceName(sourceName);
-		header.setTimestamp(timestamp);
-		header.setTransactionId(transactionId);
-		header.setOrganization(organization);
+		Header header= createHeader( region,
+				 timestamp,  organization,  transactionId,
+				 sourceName, applicationName,  bsCarrier);
 
 		ConnectionInformationRequestDataArea dataArea = new ConnectionInformationRequestDataArea();
 		DeviceId deviceIdvalue = new DeviceId();
@@ -488,6 +459,25 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 						connectionInformationRequest);
 
 		return response;
+	}
+	
+	
+	private Header createHeader(String region,
+			String timestamp, String organization, String transactionId,
+			String sourceName, String applicationName, String bsCarrier){
+		
+		Header header = new Header();
+		header.setRegion(region);
+		header.setApplicationName(applicationName);
+		header.setBsCarrier(bsCarrier);
+		header.setSourceName(sourceName);
+		header.setTimestamp(timestamp);
+		header.setTransactionId(transactionId);
+		header.setOrganization(organization);
+		
+		return header;
+		
+		
 	}
 
 }

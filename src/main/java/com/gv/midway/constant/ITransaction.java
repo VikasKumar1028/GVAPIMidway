@@ -3,6 +3,9 @@ package com.gv.midway.constant;
 public class ITransaction {
 	
 
+	private ITransaction() {
+		
+	}
 	public static final String CALL_BACK_PAYLOAD = "callBackPayload";
 	public static final String CARRIER_ERROR_DESCRIPTION = "carrierErrorDescription";
 	public static final String CARRIER_STATUS = "carrierStatus";

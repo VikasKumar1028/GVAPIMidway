@@ -43,16 +43,14 @@ import com.gv.midway.utility.CommonUtil;
 
 @Service
 public class DeviceDaoImpl implements IDeviceDao {
-	/*
-	 * @Autowired MongoDb grandVictorDB;
-	 */
+
 	@Autowired
 	MongoTemplate mongoTemplate;
 
 	private Logger log = Logger.getLogger(DeviceDaoImpl.class.getName());
 
+	@Override
 	public UpdateDeviceResponse updateDeviceDetails(SingleDevice device) {
-		// TODO Auto-generated method stub
 
 		DeviceInformation deviceInfomation = null;
 		try {
@@ -62,7 +60,6 @@ public class DeviceDaoImpl implements IDeviceDao {
 			Integer netSuiteId = device.getDataArea().getDevice()
 					.getNetSuiteId();
 
-			if (netSuiteId == null /*|| netSuiteId.trim().equals("")*/) {
 
 				Header header = device.getHeader();
 
@@ -83,13 +80,6 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 			deviceInfomation = (DeviceInformation) mongoTemplate.findOne(
 					searchDeviceQuery, DeviceInformation.class);
-
-			/*
-			 * SimpleDateFormat sdf = new SimpleDateFormat(
-			 * "yyyy-MM-dd'T'HH:mm:ssZ");
-			 */
-
-			// deviceInformationToUpdate.setLastUpdated(sdf.format(new Date()));
 
 			deviceInformationToUpdate.setLastUpdated(new Date());
 
@@ -144,7 +134,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 	public DeviceInformationResponse getDeviceInformationDB(
 			DeviceInformationRequest deviceInformationRequest) {
-		// TODO Auto-generated method stub
+	@Override
 
 		Integer netSuiteId = deviceInformationRequest.getDataArea()
 				.getNetSuiteId();
@@ -155,7 +145,6 @@ public class DeviceDaoImpl implements IDeviceDao {
 		deviceInformationResponse.setHeader(deviceInformationRequest
 				.getHeader());
 		Response response = new Response();
-		if (netSuiteId == null /*|| netSuiteId.trim().equals("")*/) {
 
 			response.setResponseCode(IResponse.INVALID_PAYLOAD);
 			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB);
@@ -224,7 +213,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 	}
 
 	public void setDeviceInformationDB(Exchange exchange) {
-		// TODO Auto-generated method stub
+	@Override
 
 		Integer netSuiteId = (Integer) exchange
 				.getProperty(IConstant.MIDWAY_NETSUITE_ID);
@@ -250,7 +239,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 	}
 
 	public void updateDeviceInformationDB(Exchange exchange) {
-		// TODO Auto-generated method stub
+	@Override
 		DeviceInformationResponse deviceInformationResponse = (DeviceInformationResponse) exchange
 				.getIn().getBody();
 
@@ -292,7 +281,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 	}
 
 	public void bulkOperationDeviceUpload(Exchange exchange) {
-		// TODO Auto-generated method stub
+	@Override
 
 		DeviceInformation deviceInformationToUpdate = (DeviceInformation) exchange
 				.getIn().getBody();
@@ -301,7 +290,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 		try {
 
-			if (netSuiteId == null /*|| netSuiteId.trim().equals("")*/) {
+			if (netSuiteId == null ) {
 
 				List<BatchDeviceId> batchDeviceList = (List<BatchDeviceId>) exchange
 						.getProperty(IConstant.BULK_ERROR_LIST);
@@ -321,11 +310,6 @@ public class DeviceDaoImpl implements IDeviceDao {
 				DeviceInformation deviceInformation = (DeviceInformation) mongoTemplate
 						.findOne(searchDeviceQuery, DeviceInformation.class);
 
-				/*
-				 * SimpleDateFormat sdf = new SimpleDateFormat(
-				 * "yyyy-MM-dd'T'HH:mm:ssZ"); deviceInformationToUpdate
-				 * .setLastUpdated(sdf.format(new Date()));
-				 */
 
 				deviceInformation.setLastUpdated(new Date());
 
@@ -349,7 +333,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 				List<BatchDeviceId> batchDeviceList = (List<BatchDeviceId>) exchange
 						.getProperty(IConstant.BULK_SUCCESS_LIST);
 				BatchDeviceId successBatchDeviceId = new BatchDeviceId();
-				successBatchDeviceId.setNetSuiteId(""+netSuiteId);
+				successBatchDeviceId.setNetSuiteId("" + netSuiteId);
 				batchDeviceList.add(successBatchDeviceId);
 
 				exchange.setProperty(IConstant.BULK_SUCCESS_LIST,
@@ -363,7 +347,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 			List<BatchDeviceId> batchDeviceList = (List<BatchDeviceId>) exchange
 					.getProperty(IConstant.BULK_ERROR_LIST);
 			BatchDeviceId errorBatchDeviceId = new BatchDeviceId();
-			errorBatchDeviceId.setNetSuiteId(""+netSuiteId);
+			errorBatchDeviceId.setNetSuiteId("" + netSuiteId);
 			errorBatchDeviceId
 					.setErrorMessage(IResponse.ERROR_DESCRIPTION_UPDATE_MIDWAYDB);
 			batchDeviceList.add(errorBatchDeviceId);
@@ -407,7 +391,6 @@ public class DeviceDaoImpl implements IDeviceDao {
 				.getHeader());
 		Response response = new Response();
 
-		if (netSuiteId == null /*|| netSuiteId.trim().equals("")*/) {
 
 			log.info("Enter netSuiteId..." + netSuiteId);
 			response.setResponseCode(IResponse.INVALID_PAYLOAD);
@@ -461,7 +444,6 @@ public class DeviceDaoImpl implements IDeviceDao {
 			log.info("startDateValue..." + startDateValue);
 			log.info("endDateValue..." + endDateValue);
 		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
 			log.info(" format error while parsing the date");
 			response.setResponseCode(IResponse.INVALID_PAYLOAD);
 			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_STARTDATE_VALIDATE_MIDWAYDB);
@@ -564,7 +546,6 @@ public class DeviceDaoImpl implements IDeviceDao {
 				.setHeader(connectionInformationMidwayRequest.getHeader());
 		Response response = new Response();
 
-		if (netSuiteId == null /*|| netSuiteId.trim().equals("")*/) {
 
 			log.info("Enter netSuiteId..." + netSuiteId);
 			response.setResponseCode(IResponse.INVALID_PAYLOAD);
@@ -617,7 +598,6 @@ public class DeviceDaoImpl implements IDeviceDao {
 			log.info("startDateValue..." + startDateValue);
 			log.info("endDateValue..." + endDateValue);
 		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
 			log.info(" format error while parsing the date");
 			response.setResponseCode(IResponse.INVALID_PAYLOAD);
 			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_STARTDATE_VALIDATE_MIDWAYDB);
@@ -646,17 +626,15 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 			log.info("searchDeviceQuery::::::::::::::" + searchDeviceQuery);
 
-			/*
-			 * DeviceUsage deviceUsage = (DeviceUsage) mongoTemplate.findOne(
-			 * searchDeviceQuery, DeviceUsage.class);
-			 */
+
 
 			List<DeviceConnection> deviceConnectionUsage = mongoTemplate.find(
 					searchDeviceQuery, DeviceConnection.class);
-			
-			int deviceConnectionUsageSize=deviceConnectionUsage.size();
-			
-			log.info("deviceConnectionUsage szie is....." + deviceConnectionUsageSize);
+
+			int deviceConnectionUsageSize = deviceConnectionUsage.size();
+
+			log.info("deviceConnectionUsage szie is....."
+					+ deviceConnectionUsageSize);
 
 			if (deviceConnectionUsageSize == 0)
 
@@ -676,81 +654,52 @@ public class DeviceDaoImpl implements IDeviceDao {
 				connectionInformationMidwayResponse.setResponse(response);
 
 				ConnectionInformationResponseMidwayDataArea connectionInformationResponseMidwayDataArea = new ConnectionInformationResponseMidwayDataArea();
-				/*ConnectionEventMidway connectionEventMidway = null;
-				DeviceEvents midwayEvent = null;
-				DeviceEvents deviceEvent[] = null;
+				
+
+				List<DeviceEvents> deviceEventsList = new ArrayList<DeviceEvents>();
 
 				for (DeviceConnection deviceConnection : deviceConnectionUsage) {
 
-					connectionEventMidway = new ConnectionEventMidway();
+					if (deviceConnection.getEvent() != null) {
+						DeviceEvent[] deviceEventArr = deviceConnection
+								.getEvent();
 
-					deviceConnection.setEvent(deviceConnection.getEvent());
-					int eventlength = deviceConnection.getEvent().length;
-					deviceEvent = new DeviceEvents[eventlength];
+						log.info("device event size for Date "
+								+ deviceConnection.getDate() + " is"
+								+ deviceEventArr.length);
 
-					DeviceEvent eventq[] = deviceConnection.getEvent();
+						for (DeviceEvent deviceEvent : deviceEventArr) {
+							String eventType = deviceEvent.getEventType();
+							String occuredAt = deviceEvent.getOccurredAt();
+							String byteUsed = deviceEvent.getBytesUsed();
 
-					for (int j = 0; j < eventlength; j++) {
-
-						midwayEvent = new DeviceEvents();
-						midwayEvent.setBytesUsed(eventq[j].getBytesUsed());
-						midwayEvent.setOccurredAt(eventq[j].getOccurredAt());
-						midwayEvent.setEventType(eventq[j].getEventType());
-						deviceEvent[j] = midwayEvent;
-						log.info("deviceEvent:::::" + deviceEvent[j]);
-
-						connectionEventMidway.setEvent(deviceEvent);
-
-					}
-					// Arrays.sort(connectionEventMidway);
-
-				}
-
-				connectionInformationResponseMidwayDataArea
-						.setConnectionEventAttributes(connectionEventMidway);*/
-				
-			
-				
-				List<DeviceEvents> deviceEventsList=new ArrayList<DeviceEvents>();
-				
-				for (DeviceConnection deviceConnection : deviceConnectionUsage) {
-					
-					if(deviceConnection.getEvent()!=null)
-					{
-						DeviceEvent[] deviceEventArr=deviceConnection.getEvent();
-					
-						log.info("device event size for Date "+deviceConnection.getDate()+" is"+deviceEventArr.length);
-								
-						for (DeviceEvent deviceEvent : deviceEventArr) 
-						{
-							String eventType=deviceEvent.getEventType();
-							String occuredAt=deviceEvent.getOccurredAt();
-							String byteUsed= deviceEvent.getBytesUsed();
-							
-							DeviceEvents deviceEvents=new DeviceEvents();
+							DeviceEvents deviceEvents = new DeviceEvents();
 							deviceEvents.setBytesUsed(byteUsed);
 							deviceEvents.setEventType(eventType);
 							deviceEvents.setOccurredAt(occuredAt);
-							
+
 							deviceEventsList.add(deviceEvents);
-							
+
 						}
 					}
 				}
 
-				//Sort the deviceEventsList on the basis of time event occurred at
-				
-				 Collections.sort(deviceEventsList, new Comparator<DeviceEvents>() {
-			            @Override
-			            public int compare(DeviceEvents a, DeviceEvents b)
-			            {
+				// Sort the deviceEventsList on the basis of time event occurred
+				// at
 
-			                return  a.getOccurredAt().compareTo(b.getOccurredAt());
-			            }
-			        });
-				
-				connectionInformationResponseMidwayDataArea.setEvents(deviceEventsList);
-				
+				Collections.sort(deviceEventsList,
+						new Comparator<DeviceEvents>() {
+							@Override
+							public int compare(DeviceEvents a, DeviceEvents b) {
+
+								return a.getOccurredAt().compareTo(
+										b.getOccurredAt());
+							}
+						});
+
+				connectionInformationResponseMidwayDataArea
+						.setEvents(deviceEventsList);
+
 				connectionInformationMidwayResponse
 						.setDataArea(connectionInformationResponseMidwayDataArea);
 			}
