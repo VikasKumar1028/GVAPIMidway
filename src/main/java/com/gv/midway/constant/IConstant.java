@@ -92,6 +92,10 @@ public interface IConstant {
 	
 	static String JOB_INITIALIZED_MESSAGE="Job Started Successfully";
 	
+	static String JOB_TYPE_ODD="ODD";
+	
+	static String JOB_TYPE_EVEN="EVEN";
+	
 	
 	
 			

@@ -6,7 +6,7 @@
     
          "devices":[ 
          { 
-         "netSuiteId": "187135",
+         "netSuiteId": 187135,
             "deviceIds":[ 
                { 
                   

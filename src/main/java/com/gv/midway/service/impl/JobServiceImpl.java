@@ -18,7 +18,6 @@ import com.gv.midway.constant.JobName;
 import com.gv.midway.constant.JobType;
 import com.gv.midway.dao.IJobDao;
 import com.gv.midway.pojo.job.JobDetail;
-import com.gv.midway.pojo.job.JobinitializedResponse;
 import com.gv.midway.pojo.notification.DeviceOverageNotification;
 import com.gv.midway.pojo.server.ServerDetail;
 import com.gv.midway.service.IJobService;
@@ -35,13 +34,17 @@ public class JobServiceImpl implements IJobService {
 	@EndpointInject(uri = "")
 	ProducerTemplate producer;
 
+	/**
+	 * Fetching the Device List , In Case of New Job it will look for server details collection and fetch devices with odd /Even Netsuite Id
+	 * In Case if the Server Details are missing then it will return complete device list
+	 */
 	@Override
 	public List fetchDevices(Exchange exchange) {
 
 		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
 
 		if (jobDetail.getType().toString()
-				.equalsIgnoreCase(JobType.RERUN.toString())) {
+				.equalsIgnoreCase(JobType.NEW.toString())) {
 
 			String currentServerIp = CommonUtil.getIpAddress();
 
@@ -54,12 +57,14 @@ public class JobServiceImpl implements IJobService {
 			// get the jobType of the serverDEtail
 
 			if (serverDetail != null
-					&& "ODD".equalsIgnoreCase(serverDetail.getJobType())) {
+					&& IConstant.JOB_TYPE_ODD.equalsIgnoreCase(serverDetail
+							.getJobType())) {
 				return iJobDao.fetchOddDevices(exchange);
 			}
 
 			if (serverDetail != null
-					&& "EVEN".equalsIgnoreCase(serverDetail.getJobType())) {
+					&& IConstant.JOB_TYPE_EVEN.equalsIgnoreCase(serverDetail
+							.getJobType())) {
 				return iJobDao.fetchEvenDevices(exchange);
 			}
 
@@ -80,19 +85,34 @@ public class JobServiceImpl implements IJobService {
 
 	}
 
+	/**
+	 * Updating the Job Details on Completion
+	 */
 	@Override
 	public void updateJobDetails(Exchange exchange) {
 		iJobDao.updateJobDetails(exchange);
 	}
 
+	/**
+	 * Getter 
+	 * @return
+	 */
 	public IJobDao getiJobDao() {
 		return iJobDao;
 	}
 
+	/**
+	 * Setter 
+	 * @return
+	 */
 	public void setiJobDao(IJobDao iJobDao) {
 		this.iJobDao = iJobDao;
 	}
 
+	/**
+	 * Setting the Job Details for New Job Only
+	 */
+	
 	public void setJobDetails(Exchange exchange, String carrierName,
 			JobName jobName) {
 
@@ -113,6 +133,12 @@ public class JobServiceImpl implements IJobService {
 
 	}
 
+	/**
+	 * Deleting Records for Device Usage if the jobType is Rerun,Reason for not
+	 * running on New Job as it would run on two servers so in case of time lag
+	 * it would delete records inserted by other server
+	 */
+
 	public void deleteDeviceUsageRecords(Exchange exchange) {
 
 		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
@@ -122,6 +148,11 @@ public class JobServiceImpl implements IJobService {
 
 	}
 
+	/**
+	 * Deleting Records for Device Connection History if the jobType is
+	 * Rerun,Reason for not running on New Job as it would run on two servers so
+	 * in case of time lag it would delete records inserted by other server
+	 */
 	public void deleteDeviceConnectionHistoryRecords(Exchange exchange) {
 		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
 		if (JobType.RERUN.toString().equals(jobDetail.getType().toString())) {
@@ -159,12 +190,18 @@ public class JobServiceImpl implements IJobService {
 
 	}
 
+	/**
+	 * Fetching the Transactional Failure Records
+	 */
 	@Override
 	public List fetchTransactionFailureDevices(Exchange exchange) {
 
 		return iJobDao.fetchTransactionFailureDevices(exchange);
 	}
 
+	/**
+	 * Deleting the Transactional Failure Records for device Usage
+	 */
 	@Override
 	public void deleteTransactionFailureDeviceUsageRecords(Exchange exchange) {
 
@@ -172,6 +209,9 @@ public class JobServiceImpl implements IJobService {
 
 	}
 
+	/**
+	 * Deleting the Transactional Failure Records for device Connection
+	 */
 	@Override
 	public void deleteTransactionFailureDeviceConnectionHistoryRecords(
 			Exchange exchange) {
