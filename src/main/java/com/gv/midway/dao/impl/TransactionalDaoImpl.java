@@ -71,6 +71,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 	Logger log = Logger.getLogger(TransactionalDaoImpl.class);
 
+	@Override
 	public void populateActivateDBPayload(Exchange exchange) {
 		log.info("Inside populateActivateDBPayload");
 		ArrayList<Transaction> list = new ArrayList<Transaction>();
@@ -79,7 +80,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		ActivateDeviceRequestDataArea activateDeviceRequestDataArea = (ActivateDeviceRequestDataArea) req.getDataArea();
 
-		//ActivateDevices[] activateDevices = activateDeviceRequestDataArea.getDevices();
 		
 		ActivateDevices activateDevices = activateDeviceRequestDataArea.getDevices();
 		
@@ -95,7 +95,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			ActivateDeviceRequest dbPayload = new ActivateDeviceRequest();
 			dbPayload.setHeader(req.getHeader());
             Integer netSuiteId=activateDevice.getNetSuiteId();
-			//ActivateDevices[] businessPayLoadDevicesArray = new ActivateDevices[1];
 			ActivateDevices businessPayLoadActivateDevices = new ActivateDevices();
 			ActivateDeviceId[] businessPayloadDeviceId = new ActivateDeviceId[activateDevice.getDeviceIds().length];
 
@@ -104,10 +103,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 				ActivateDeviceId businessPayLoadActivateDeviceId = new ActivateDeviceId();
 
-				/*
-				 * businessPayLoadActivateDeviceId.seteAPCode(activateDeviceId
-				 * .geteAPCode());
-				 */
+
 				businessPayLoadActivateDeviceId.setId(activateDeviceId.getId());
 				businessPayLoadActivateDeviceId.setKind(activateDeviceId.getKind());
 
@@ -123,15 +119,12 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			businessPayLoadActivateDevices.setMiddleName(activateDevice.getMiddleName());
 			businessPayLoadActivateDevices.setAddress(activateDevice.getAddress());
 			businessPayLoadActivateDevices.setServicePlan(activateDevice.getServicePlan());
-			//businessPayLoadDevicesArray[0] = businessPayLoadActivateDevices;
 
 			ActivateDeviceRequestDataArea copyDataArea = kryo.copy(req.getDataArea());
 
-			//copyDataArea.setDevices(businessPayLoadDevicesArray);
 			copyDataArea.setDevices(businessPayLoadActivateDevices);
 			dbPayload.setDataArea(copyDataArea);
 
-			// copy.getDataArea().setDevices();
 
 			try {
 
@@ -142,7 +135,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				//Sorting the device id by kind and inserting into deviceNumber
 				Arrays.sort(businessPayloadDeviceId,  (ActivateDeviceId a,ActivateDeviceId b) -> a.getKind().compareTo(b.getKind()));
 				
-				// TODO if number of devices are more
 				ObjectMapper obj = new ObjectMapper();
 				String strDeviceNumber = obj.writeValueAsString(businessPayloadDeviceId);
 				transaction.setDeviceNumber(strDeviceNumber);
@@ -166,7 +158,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		// be set with arraylist of transaction for Verizon we simply add
 		// into database and do not change the exchange body
 
-		// activateDeviceRequestDataArea.setDevices(activateDevices);
 
 		if (exchange.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString().equals("KORE")) {
 
@@ -174,7 +165,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		}
 	}
 
-	// santosh:new method
+@Override
 	public void populateDeactivateDBPayload(Exchange exchange) {
 
 		log.info("Inside populateDeactivateDBPayload");
@@ -215,7 +206,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 			businessPayLoadDeactivateDevices.setDeviceIds(businessPayloadDeviceId);
 			businessPayloadDeviceArray[0] = businessPayLoadDeactivateDevices;
-			// payLoadDevices =(ActivateDevices[])kryo.copy(activateDevices);
 
 			DeactivateDeviceRequestDataArea copyDataArea = kryo.copy(req.getDataArea());
 
@@ -260,7 +250,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		}
 
 	}
-
+@Override
 	public void populateSuspendDBPayload(Exchange exchange) {
 
 		log.info("Inside populateSuspendDBPayload");
@@ -332,22 +322,13 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		}
 
 	}
-
+	@Override
 	public void populateVerizonTransactionalResponse(Exchange exchange) {
 
 		Map map = exchange.getIn().getBody(Map.class);
 		Query searchQuery = new Query(Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)));
 
-		/*
-		 * String carrierTransationID;//Call Back Thread String
-		 * carrierStatus;//Call Back Thread String
-		 * LastTimeStampUpdated;//CallBack Thread String
-		 * carrierErrorDescription;//CallBack Thread String
-		 * callBackPayload;//CallBack Thread Boolean
-		 * callBackDelivered;//CallBack Thread Boolean
-		 * callBackReceived;//CallBack Thread String
-		 * callBackFailureToNetSuitReason;//CallBack Thread
-		 */
+
 
 		Update update = new Update();
 		ObjectMapper mapper = new ObjectMapper();
@@ -382,21 +363,12 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		}
 
 	}
-
+	@Override
 	public void populateKoreTransactionalErrorResponse(Exchange exchange) {
 
 		Query searchQuery = new Query(Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)).andOperator(Criteria.where(ITransaction.DEVICE_NUMBER).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
 
-		/*
-		 * String carrierTransationID;//Call Back Thread String
-		 * carrierStatus;//Call Back Thread String
-		 * LastTimeStampUpdated;//CallBack Thread String
-		 * carrierErrorDescription;//CallBack Thread String
-		 * callBackPayload;//CallBack Thread Boolean
-		 * callBackDelivered;//CallBack Thread Boolean
-		 * callBackReceived;//CallBack Thread String
-		 * callBackFailureToNetSuitReason;//CallBack Thread
-		 */
+
 		CxfOperationException exception = (CxfOperationException) exchange.getProperty(Exchange.EXCEPTION_CAUGHT);
 
 		String errorResponseBody = exception.getResponseBody();
@@ -422,7 +394,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		exchange.setProperty(IConstant.RESPONSE_CODE, errorResponseBody);
 
 	}
-
+	@Override
 	public void populateVerizonTransactionalErrorResponse(Exchange exchange) {
 
 		CxfOperationException exception = (CxfOperationException) exchange.getProperty(Exchange.EXCEPTION_CAUGHT);
@@ -435,7 +407,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			Query searchQuery = new Query(Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)));
 
 			Update update = new Update();
-			//update.set(ITransaction.CALL_BACK_PAYLOAD, responsePayload);
 			update.set(ITransaction.CARRIER_ERROR_DESCRIPTION, responsePayload.getErrorMessage());
 			update.set(ITransaction.CALL_BACK_PAYLOAD, responsePayload);
 			update.set(ITransaction.MIDWAY_STATUS, IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
@@ -448,9 +419,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		}
 
 	}
-
+	@Override
 	public void populateKoreTransactionalResponse(Exchange exchange) {
-		// TODO Auto-generated method stub
 
 		Query searchQuery = new Query(Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)).andOperator(Criteria.where(ITransaction.DEVICE_NUMBER).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
 
@@ -476,7 +446,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			
 		}
 		
-		/*KoreProvisoningResponse koreProvisoningResponse = (KoreProvisoningResponse) exchange.getIn().getBody();*/
 	
 		update.set(ITransaction.LAST_TIME_STAMP_UPDATED, new Date());
 		
@@ -484,7 +453,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		mongoTemplate.updateFirst(searchQuery, update, Transaction.class);
 
 	}
-
+	@Override
 	public void populateConnectionErrorResponse(Exchange exchange, String errorType) {
 
 		// Applicable for provisioning request where we have Transaction Table
@@ -529,15 +498,9 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 	}
 
+	@Override
 	public void populatePendingKoreCheckStatus(Exchange exchange) {
-		// TODO Auto-generated method stub
 		
-		
-		/*Query searchPendingCheckStatusQuery =  new Query(Criteria.where(ITransaction.CARRIER_NAME).is("KORE").
-				andOperator(Criteria.where(ITransaction.MIDWAY_STATUS).is(IConstant.MIDWAY_TRANSACTION_STATUS_PENDING).
-				andOperator(Criteria.where(ITransaction.CARRIER_STATUS).is(IConstant.CARRIER_TRANSACTION_STATUS_PENDING).
-						orOperator(Criteria.where(ITransaction.CARRIER_STATUS).is(IConstant.CARRIER_TRANSACTION_STATUS_ERROR)))		
-						));*/
 		
 		
 		Query searchPendingCheckStatusQuery =  new Query(Criteria.where(ITransaction.CARRIER_NAME).is("KORE").andOperator
@@ -551,6 +514,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		exchange.getIn().setBody(transactionListPendingStatus);
 	}
 
+	@Override
 	public void populateCallbackDBPayload(Exchange exchange) {
 
 		log.info("TransactionDaoImpl-populateCallbackDBPayload");
@@ -581,16 +545,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		Query searchUserQuery = new Query(Criteria.where(ITransaction.CARRIER_TRANSACTION_ID).is(requestId).andOperator(Criteria.where(ITransaction.DEVICE_NUMBER).is(strDeviceNumber)));
 
-		/*
-		 * String carrierTransationID;//Call Back Thread String
-		 * carrierStatus;//Call Back Thread String
-		 * LastTimeStampUpdated;//CallBack Thread String
-		 * carrierErrorDecription;//CallBack Thread String
-		 * callBackPayload;//CallBack Thread Boolean
-		 * callBackDelivered;//CallBack Thread Boolean
-		 * callBackReceived;//CallBack Thread String
-		 * callBackFailureToNetSuitReason;//CallBack Thread
-		 */
+
 
 		Update update = new Update();
 		if (exchange.getIn().getBody().toString().contains("errorMessage=")) {
@@ -623,6 +578,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 	 * 
 	 * 
 	 * */
+	@Override
 	public void findMidwayTransactionId(Exchange exchange) {
 
 		log.info("CallbackTransactionDaoImpl-getCallbackMidwayTransactionID");
@@ -702,7 +658,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		netSuiteCallBackProvisioningRequest.setNetSuiteID(""+findOne.getNetSuiteId());
 		netSuiteCallBackProvisioningRequest.setCarrierOrderNumber(findOne.getMidwayTransactionId());
 		
-		//netSuiteCallBackProvisioningRequest.setRequestType(requestType);
 		
 		Object kafkaObject=exchange.getProperty(IConstant.KAFKA_OBJECT);
 		
@@ -755,7 +710,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 				case CHANGESERVICEPLAN:
 
-					//To do
 					ChangeDeviceServicePlansRequest changeDeviceServicePlansRequest=(ChangeDeviceServicePlansRequest)findOne.getDevicePayload();
 					log.info("change devcie servcie plan data area...."+changeDeviceServicePlansRequest.getDataArea().toString());
 					String oldServicePlan=changeDeviceServicePlansRequest.getDataArea().getCurrentServicePlan();
@@ -768,7 +722,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 				case CHANGECUSTOMFIELDS:
 
-					//To do
 					
 					netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.CUSTOM_FIELDS);
 					break;
@@ -826,7 +779,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 			case CHANGESERVICEPLAN:
 
-				//To do
 				ChangeDeviceServicePlansRequest changeDeviceServicePlansRequest=(ChangeDeviceServicePlansRequest)findOne.getDevicePayload();
 				log.info("change devcie servcie plan data area...."+changeDeviceServicePlansRequest.getDataArea().toString());
 				String oldServicePlan=changeDeviceServicePlansRequest.getDataArea().getCurrentServicePlan();
@@ -841,7 +793,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 			case CHANGECUSTOMFIELDS:
 
-				//To do
 				netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.CUSTOM_FIELDS);
 				netSuiteCallBackProvisioningRequest.setResponse("Device Custom Fields Changed successfully.");
 
@@ -856,6 +807,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		exchange.getIn().setBody(netSuiteCallBackProvisioningRequest);
 	}
 
+	@Override
 	public void populateReactivateDBPayload(Exchange exchange) {
 
 		log.info("Inside populateReactivateDBPayload");
@@ -882,10 +834,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 				MidWayDeviceId businessPayLoadActivateDeviceId = new MidWayDeviceId();
 
-				/*
-				 * businessPayLoadActivateDeviceId.seteAPCode(activateDeviceId
-				 * .geteAPCode());
-				 */
+	
 				businessPayLoadActivateDeviceId.setId(reActivateDeviceId.getId());
 				businessPayLoadActivateDeviceId.setKind(reActivateDeviceId.getKind());
 
@@ -900,14 +849,12 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			copyDataArea.setDevices(businessPayLoadDevicesArray);
 			dbPayload.setDataArea(copyDataArea);
 
-			// copy.getDataArea().setDevices();
 
 			try {
 
 				Transaction transaction = new Transaction();
 
 				transaction.setMidwayTransactionId(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID).toString());
-				// TODO if number of devices are more
 				ObjectMapper obj = new ObjectMapper();
 				String strDeviceNumber = obj.writeValueAsString(businessPayloadDeviceId);
 				transaction.setDeviceNumber(strDeviceNumber);
@@ -939,6 +886,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 	}
 	
 	//method to store payload in database for Restore Operation
+	@Override
 	public void populateRestoreDBPayload(Exchange exchange) {
 		log.info("Inside populateRestoreDBPayload");
 		ArrayList<Transaction> list = new ArrayList<Transaction>();
@@ -989,7 +937,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				//Sorting the device id by kind and inserting into deviceNumber
 				Arrays.sort(businessPayloadDeviceId,  (MidWayDeviceId a,MidWayDeviceId b) -> a.getKind().compareTo(b.getKind()));
 				
-				// TODO if number of devices are more
 				ObjectMapper obj = new ObjectMapper();
 				String strDeviceNumber = obj.writeValueAsString(businessPayloadDeviceId);
 				transaction.setDeviceNumber(strDeviceNumber);
@@ -1020,9 +967,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			exchange.getIn().setBody(list);
 		}
 	}
-
+	@Override
 	public void populateCustomeFieldsDBPayload(Exchange exchange) {
-		// TODO Auto-generated method stub
 		log.info("Inside populateCustomeFieldsDBPayload");
 		ArrayList<Transaction> list = new ArrayList<Transaction>();
 
@@ -1047,10 +993,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 				MidWayDeviceId businessPayLoadActivateDeviceId = new MidWayDeviceId();
 
-				/*
-				 * businessPayLoadActivateDeviceId.seteAPCode(activateDeviceId
-				 * .geteAPCode());
-				 */
+	
 				businessPayLoadActivateDeviceId.setId(customFieldsDeviceId.getId());
 				businessPayLoadActivateDeviceId.setKind(customFieldsDeviceId.getKind());
 
@@ -1065,7 +1008,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			copyDataArea.setDevices(businessPayLoadDevicesArray);
 			dbPayload.setDataArea(copyDataArea);
 
-			// copy.getDataArea().setDevices();
 
 			try {
 
@@ -1076,7 +1018,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				//Sorting the device id by kind and inserting into deviceNumber
 				Arrays.sort(businessPayloadDeviceId,  (MidWayDeviceId a,MidWayDeviceId b) -> a.getKind().compareTo(b.getKind()));
 				
-				// TODO if number of devices are more
 				ObjectMapper obj = new ObjectMapper();
 				String strDeviceNumber = obj.writeValueAsString(businessPayloadDeviceId);
 				transaction.setDeviceNumber(strDeviceNumber);
@@ -1100,7 +1041,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		// be set with arraylist of transaction for Verizon we simply add
 		// into database and do not change the exchange body
 
-		// activateDeviceRequestDataArea.setDevices(activateDevices);
 
 		if (exchange.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString().equals("KORE")) {
 
@@ -1108,9 +1048,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		}
 
 	}
-	
+	@Override
 	public void populateChangeDeviceServicePlansDBPayload(Exchange exchange) {
-		// TODO Auto-generated method stub
 		
 		log.info("Inside populateChangeDeviceServicePlansDBPayload");
 		ArrayList<Transaction> list = new ArrayList<Transaction>();
@@ -1187,7 +1126,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 	@Override
 	public void populateKoreCheckStatusResponse(Exchange exchange) {
-		// TODO Auto-generated method stub
 		
 		KoreCheckStatusResponse koreCheckStatusResponse=(KoreCheckStatusResponse)exchange.getIn().getBody();
 		
@@ -1231,7 +1169,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 	
 	@Override
 	public void populateKoreCheckStatusConnectionResponse(Exchange exchange) {
-		// TODO Auto-generated method stub
 		
 		
 		
@@ -1253,7 +1190,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 	
 	@Override
 	public void populateKoreCheckStatusErrorResponse(Exchange exchange) {
-		// TODO Auto-generated method stub
 		
 		
 		Query searchQuery = new Query(Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)).andOperator(Criteria.where(ITransaction.DEVICE_NUMBER).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
@@ -1298,7 +1234,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 	
 	@Override
 	public void populateKoreCustomChangeResponse(Exchange exchange) {
-		// TODO Auto-generated method stub
 		
 		
 		Query searchQuery = new Query(Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)).andOperator(Criteria.where(ITransaction.DEVICE_NUMBER).is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
@@ -1328,7 +1263,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		try {
 			jsonstring=mapper.writeValueAsString(map);
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
