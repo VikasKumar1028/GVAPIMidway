@@ -2,9 +2,7 @@ package com.gv.midway.constant;
 
 public class IResponse {
 
-	private IResponse() {
-	
-	}
+
 
 	public static final Integer SUCCESS_CODE = 2000;
 	public static final Integer NO_DATA_FOUND_CODE = 1900;
@@ -46,4 +44,8 @@ public class IResponse {
 	public static final String ERROR_DESCRIPTION_START_END_VALIDATION_MIDWAYDB = "Earliest date should not be greater than Latest date";
 
 	public static final String SUCCESS_DESCRIPTION_JOB_INITIALIZED = "Job Started Successfully";
+	
+	private IResponse() {
+		
+	}
 }

@@ -41,6 +41,7 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 		
 	}
 	public VerizonDeviceInformationPostProcessor() {
+		//Empty Constructor
 	}
 	
 	/*

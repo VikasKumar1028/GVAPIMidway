@@ -39,6 +39,7 @@ public class GenericErrorProcessor implements Processor {
 	}
 
 	public GenericErrorProcessor() {
+		//Empty Constructor
 	}
 	@Override
 	public void process(Exchange exchange) throws Exception {

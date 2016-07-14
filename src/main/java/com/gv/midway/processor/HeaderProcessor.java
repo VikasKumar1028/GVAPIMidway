@@ -29,7 +29,7 @@ public class HeaderProcessor implements Processor {
 				midwayTransactionID);
 
 		String derivedCarrierName = CommonUtil.getDerivedCarrierName(exchange
-				.getProperty(IConstant.BSCARRIER));
+				.getProperty(IConstant.BSCARRIER).toString());
 
 		Object bs_carrier = exchange.getProperty(IConstant.BSCARRIER);
 		Object sourceName = exchange.getProperty(IConstant.SOURCE_NAME);
@@ -79,17 +79,17 @@ public class HeaderProcessor implements Processor {
 				|| ((exchange.getFromEndpoint().toString()
 						.matches("(.*)deviceConnectionStatus(.*)") || exchange
 						.getFromEndpoint().toString()
-						.matches("(.*)deviceSessionBeginEndInfo(.*)")) && derivedCarrierName
-						.equalsIgnoreCase("KORE"))
+						.matches("(.*)deviceSessionBeginEndInfo(.*)")) && IConstant.BSCARRIER_SERVICE_KORE 
+						.equalsIgnoreCase(derivedCarrierName))
 				|| (exchange.getFromEndpoint().toString()
-						.matches("(.*)reactivateDevice(.*)") && derivedCarrierName
-						.equalsIgnoreCase("VERIZON"))
+						.matches("(.*)reactivateDevice(.*)") && IConstant.BSCARRIER_SERVICE_VERIZON
+						.equalsIgnoreCase(derivedCarrierName))
 				|| (exchange.getFromEndpoint().toString()
-						.matches("(.*)retrieveDeviceUsageHistoryCarrier(.*)") && derivedCarrierName
-						.equalsIgnoreCase("KORE"))
+						.matches("(.*)retrieveDeviceUsageHistoryCarrier(.*)") && IConstant.BSCARRIER_SERVICE_KORE
+						.equalsIgnoreCase(derivedCarrierName))
 				|| (exchange.getFromEndpoint().toString()
-						.matches("(.*)getDeviceConnectionHistoryInfoDB(.*)") && derivedCarrierName
-						.equalsIgnoreCase("KORE"))) {
+						.matches("(.*)getDeviceConnectionHistoryInfoDB(.*)") && IConstant.BSCARRIER_SERVICE_VERIZON
+						.equalsIgnoreCase(derivedCarrierName))) {
 			exchange.setProperty(IConstant.RESPONSE_CODE, "402");
 			exchange.setProperty(IConstant.RESPONSE_STATUS, "Invalid Parameter");
 			exchange.setProperty(IConstant.RESPONSE_DESCRIPTION,

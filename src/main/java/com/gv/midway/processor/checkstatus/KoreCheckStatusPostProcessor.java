@@ -35,7 +35,7 @@ public class KoreCheckStatusPostProcessor implements Processor {
 	private Environment newEnv;
 
 	public KoreCheckStatusPostProcessor() {
-
+		//Empty Constructor
 	}
 
 	public KoreCheckStatusPostProcessor(Environment env) {

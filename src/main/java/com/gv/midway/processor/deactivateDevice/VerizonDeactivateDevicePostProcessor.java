@@ -28,7 +28,7 @@ public class VerizonDeactivateDevicePostProcessor implements Processor {
 	}
 
 	public VerizonDeactivateDevicePostProcessor() {
-
+		//Empty Constructor
 	}
 	@Override
 	public void process(Exchange exchange) throws Exception {

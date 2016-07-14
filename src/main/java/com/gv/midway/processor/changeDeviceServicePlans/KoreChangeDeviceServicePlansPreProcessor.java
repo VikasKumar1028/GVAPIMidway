@@ -19,7 +19,7 @@ public class KoreChangeDeviceServicePlansPreProcessor implements Processor {
 	Environment newEnv;
 
 	public KoreChangeDeviceServicePlansPreProcessor() {
-
+		//Empty Constructor
 	}
 
 	public KoreChangeDeviceServicePlansPreProcessor(Environment env) {

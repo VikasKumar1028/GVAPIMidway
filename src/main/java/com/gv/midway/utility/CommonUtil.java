@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
+import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IEndPoints;
 import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.job.JobParameter;
@@ -45,6 +46,10 @@ public class CommonUtil {
 		endPointList.add(IEndPoints.CHANGE_CUSTOMFIELD_SEDA_KORE_ENDPOINT);
 	}
 
+	/**
+	 * Get Current date
+	 * @return
+	 */
 	public static String getCurrentTimeStamp() {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		Date date = new Date();
@@ -53,6 +58,10 @@ public class CommonUtil {
 
 	}
 
+	/**
+	 * Get the IP address of Machine
+	 * @return
+	 */
 	public static String getIpAddress()
 
 	{
@@ -62,6 +71,7 @@ public class CommonUtil {
 
 			ip = InetAddress.getLocalHost();
 		} catch (UnknownHostException e) {
+			log.error("Exception ex: "+ e);
 			return "Defulat_IP";
 		}
 
@@ -69,6 +79,10 @@ public class CommonUtil {
 
 	}
 
+	/**
+	 * Generate Midway Transaction Id
+	 * @return
+	 */
 	public static String getMidwayTransactionID() {
 		long timestamp = System.currentTimeMillis();
 		return Long.toString(timestamp);
@@ -81,26 +95,25 @@ public class CommonUtil {
 	 * @param carrierName
 	 * @return
 	 */
-	public static String getDerivedCarrierName(Object carrierName) {
+	public static String getDerivedCarrierName(String carrierName) {
 
-		String sourceDirived = null;
+		if (carrierName.equalsIgnoreCase("VERIZON")) {
 
-		if (carrierName == null) {
+			return "VERIZON";
 
-			return null;
+		} else if (carrierName.equalsIgnoreCase("KORE")) {
+
+			return "KORE";
 		}
 
-		if (carrierName.toString().startsWith("V")) {
-
-			return sourceDirived = "VERIZON";
-
-		} else if (carrierName.toString().startsWith("K")) {
-
-			return sourceDirived = "KORE";
-		}
-
-		return sourceDirived;
+		return "";
 	}
+	
+	/**
+	 * Method to check if the end point is Provisioning Request
+	 * @param endPoint
+	 * @return
+	 */
 
 	public static boolean isProvisioningMethod(String endPoint) {
 
@@ -108,7 +121,7 @@ public class CommonUtil {
 
 		for (Iterator<String> iterator = endPointList.iterator(); iterator
 				.hasNext();) {
-			String element = (String) iterator.next();
+			String element =  iterator.next();
 
 			if (endPoint.contains(element)) {
 
@@ -121,9 +134,11 @@ public class CommonUtil {
 
 	}
 
-	// Returning the recommended device Identifier such as ESN/MEID/ICCID for
-	// Device Connection and Device Usage Batch Jobs
-
+/**
+ *  Returning the recommended device Identifier such as ESN/MEID/ICCID for Device Connection and Device Usage Batch Jobs
+ * @param devices
+ * @return
+ */
 	public static DeviceId getRecommendedDeviceIdentifier(DeviceId[] devices) {
 
 		log.info("getRecommendedDeviceIdentifier........deviceId..is.......");
@@ -142,15 +157,18 @@ public class CommonUtil {
 
 	}
 
-	// Returning the Sim Number from the DeviceId Array
-	// Device Usage Batch Jobs
 
+/**
+ * Returning the Sim Number from the DeviceId Array Device Usage Batch Jobs
+ * @param devices
+ * @return
+ */
 	public static DeviceId getSimNumber(DeviceId[] devices) {
 
 		log.info("getSimNumber........deviceId..is.......");
 
 		for (DeviceId device : devices) {
-			if (("SIM".equalsIgnoreCase(device.getKind()))) {
+			if ("SIM".equalsIgnoreCase(device.getKind())) {
 
 				return device;
 			}
@@ -160,7 +178,11 @@ public class CommonUtil {
 		return null;
 
 	}
-
+/**
+ * Validate date
+ * @param date
+ * @return
+ */
 	public static boolean isValidDateFormat(String date) {
 
 		if (date == null) {
@@ -187,6 +209,11 @@ public class CommonUtil {
 		}
 	}
 
+	/**
+	 * Validate Job Parameter for Device Usage
+	 * @param jobParameter
+	 * @return
+	 */
 	public static JobinitializedResponse validateJobParameterForDeviceUsage(
 			JobParameter jobParameter) {
 
@@ -207,7 +234,7 @@ public class CommonUtil {
 			return jobinitializedResponse;
 		}
 
-		if (!(carrierName.equals("KORE") || carrierName.equals("VERIZON"))) {
+		if (!(IConstant.BSCARRIER_SERVICE_KORE.equals(carrierName) || IConstant.BSCARRIER_SERVICE_VERIZON.equals(carrierName))) {
 
 			jobinitializedResponse
 					.setMessage("Please provide valid Carrier Name. Allowable Values are KORE and VERIZON");
@@ -225,7 +252,11 @@ public class CommonUtil {
 		return null;
 
 	}
-
+/**
+ * Validate Job Parameter for Device Connection
+ * @param jobParameter
+ * @return
+ */
 	public static JobinitializedResponse validateJobParameterForDeviceConnection(
 			JobParameter jobParameter) {
 
@@ -246,7 +277,7 @@ public class CommonUtil {
 			return jobinitializedResponse;
 		}
 
-		if (!(carrierName.equals("VERIZON"))) {
+		if (!(IConstant.BSCARRIER_SERVICE_VERIZON.equals(carrierName))) {
 
 			jobinitializedResponse
 					.setMessage("Please provide valid Carrier Name. Allowable Value is VERIZON");
@@ -284,7 +315,8 @@ public class CommonUtil {
 	// Creating The bill start date
 	// billingday One oR two character
 	if (billingDay != null && billingDay.length() == 1) {
-		billingDay = "0" + billingDay;
+		String billingDayChanged  = "0" + billingDay;
+		billingDay=billingDayChanged;
 	}
 		
 		try {
@@ -323,7 +355,7 @@ public class CommonUtil {
 
 				}else
 
-				// billing day<= JobDetail Day
+				// billing day is <= JobDetail Day
 				if (Integer.parseInt(billingDay) <= Integer.parseInt(jobDay)) {
 					
 					// current month of data

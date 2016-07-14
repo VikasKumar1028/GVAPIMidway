@@ -21,7 +21,7 @@ public class KoreRestoreDevicePreProcessor implements Processor {
 
 	//Default/no-arg constructor
 	public KoreRestoreDevicePreProcessor() {
-
+		//Empty Constructor
 	}
 
 	//constructor with one parameter

@@ -16,7 +16,7 @@ public class KoreReactivateDevicePostProcessor implements Processor {
 	Logger log = Logger.getLogger(KoreReactivateDevicePostProcessor.class.getName());
 
 	public KoreReactivateDevicePostProcessor() {
-
+		//Empty Constructor
 	}
 	public KoreReactivateDevicePostProcessor(Environment env) {
 	}

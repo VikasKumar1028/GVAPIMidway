@@ -20,7 +20,7 @@ public class KoreActivateDevicePreProcessor implements Processor {
 	Environment newEnv;
 
 	public KoreActivateDevicePreProcessor() {
-
+		//Empty Constructor
 	}
 
 	public KoreActivateDevicePreProcessor(Environment env) {

@@ -31,7 +31,7 @@ public class KoreBatchExceptionProcessor implements Processor {
 	}
 
 	public KoreBatchExceptionProcessor() {
-
+		//Empty Constructor
 	}
 	@Override
 	public void process(Exchange exchange) throws Exception {

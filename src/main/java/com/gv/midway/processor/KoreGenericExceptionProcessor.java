@@ -13,7 +13,6 @@ import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
 import com.gv.midway.pojo.changeDeviceServicePlans.response.ChangeDeviceServicePlansResponse;
-import com.gv.midway.pojo.connectionInformation.ConnectionInformationMidwayResponse;
 import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponse;
 import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
@@ -21,7 +20,6 @@ import com.gv.midway.pojo.kore.KoreErrorResponse;
 import com.gv.midway.pojo.reActivateDevice.response.ReactivateDeviceResponse;
 import com.gv.midway.pojo.restoreDevice.response.RestoreDeviceResponse;
 import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
-import com.gv.midway.pojo.usageInformation.response.UsageInformationMidwayResponse;
 
 public class KoreGenericExceptionProcessor implements Processor {
 
@@ -36,6 +34,7 @@ public class KoreGenericExceptionProcessor implements Processor {
 	}
 
 	public KoreGenericExceptionProcessor() {
+		//Empty Constructor
 	}
 
 	@Override

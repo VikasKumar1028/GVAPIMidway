@@ -23,7 +23,7 @@ public class VerizonAuthorizationTokenProcessor implements Processor {
 	}
 
 	public VerizonAuthorizationTokenProcessor() {
-
+		//Empty Constructor
 	}
 	@Override
 	public void process(Exchange exchange) throws Exception {

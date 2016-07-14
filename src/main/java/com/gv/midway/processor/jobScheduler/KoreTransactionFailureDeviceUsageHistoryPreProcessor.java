@@ -22,7 +22,7 @@ public class KoreTransactionFailureDeviceUsageHistoryPreProcessor implements
 	Environment newEnv;
 
 	public KoreTransactionFailureDeviceUsageHistoryPreProcessor() {
-
+		//Empty Constructor
 	}
 
 	public KoreTransactionFailureDeviceUsageHistoryPreProcessor(Environment env) {

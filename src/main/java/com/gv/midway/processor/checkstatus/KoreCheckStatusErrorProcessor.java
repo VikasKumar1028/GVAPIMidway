@@ -38,7 +38,7 @@ public class KoreCheckStatusErrorProcessor implements Processor {
 	private Environment newEnv;
 
 	public KoreCheckStatusErrorProcessor() {
-
+		//Empty Constructor
 	}
 
 	public KoreCheckStatusErrorProcessor(Environment env) {

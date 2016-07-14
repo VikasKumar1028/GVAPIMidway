@@ -17,7 +17,7 @@ public class KoreDeviceInformationPreProcessor implements Processor {
 	Environment newEnv;
 
 	public KoreDeviceInformationPreProcessor() {
-
+		//Empty Constructor
 	}
 
 	public KoreDeviceInformationPreProcessor(Environment env) {

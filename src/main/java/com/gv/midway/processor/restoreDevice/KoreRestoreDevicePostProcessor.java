@@ -20,7 +20,7 @@ public class KoreRestoreDevicePostProcessor implements Processor {
 
 	// default constructor
 	public KoreRestoreDevicePostProcessor() {
-
+		//Empty Constructor
 	}
 
 	// constructor with one parameter

@@ -2,9 +2,6 @@ package com.gv.midway.processor;
 
 import java.net.ConnectException;
 import java.net.UnknownHostException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -35,6 +32,7 @@ public class VerizonBatchExceptionProcessor implements Processor {
 	}
 
 	public VerizonBatchExceptionProcessor() {
+		//Empty Constructor
 
 	}
 	@Override

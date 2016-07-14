@@ -22,7 +22,7 @@ public class KafkaProcessor implements Processor {
 	private Environment newEnv;
 
 	public KafkaProcessor() {
-
+		//Empty Constructor
 	}
 
 	public KafkaProcessor(Environment env) {

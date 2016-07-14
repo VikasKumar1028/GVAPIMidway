@@ -26,8 +26,8 @@ public class DateValidationProcessor implements Processor {
 		SimpleDateFormat formatter = new SimpleDateFormat(
 				"yyyy-MM-dd'T'HH:mm:ss");
 
-		if (exchange.getFromEndpoint().toString()
-				.equals("Endpoint[direct://retrieveDeviceUsageHistoryCarrier]")) {
+		if (("Endpoint[direct://retrieveDeviceUsageHistoryCarrier]")
+				.equals(exchange.getFromEndpoint().toString())) {
 
 			UsageInformationRequest request = (UsageInformationRequest) exchange
 					.getIn().getBody(UsageInformationRequest.class);
@@ -78,8 +78,8 @@ public class DateValidationProcessor implements Processor {
 
 		}
 
-		if (exchange.getFromEndpoint().toString()
-				.equals("Endpoint[direct://deviceConnectionStatus]"))
+		if (("Endpoint[direct://deviceConnectionStatus]").equals(exchange
+				.getFromEndpoint().toString()))
 
 		{
 
@@ -132,8 +132,8 @@ public class DateValidationProcessor implements Processor {
 
 		}
 
-		if (exchange.getFromEndpoint().toString()
-				.equals("Endpoint[direct://deviceSessionBeginEndInfo]")) {
+		if (("Endpoint[direct://deviceSessionBeginEndInfo]").equals(exchange
+				.getFromEndpoint().toString())) {
 
 			ConnectionInformationRequest request = (ConnectionInformationRequest) exchange
 					.getIn().getBody(ConnectionInformationRequest.class);

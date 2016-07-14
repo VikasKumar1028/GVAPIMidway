@@ -19,7 +19,7 @@ public class KoreCheckStatusPreProcessor implements Processor {
 	private Environment newEnv;
 
 	public KoreCheckStatusPreProcessor() {
-
+		//Empty Constructor
 	}
 
 	public KoreCheckStatusPreProcessor(Environment env) {

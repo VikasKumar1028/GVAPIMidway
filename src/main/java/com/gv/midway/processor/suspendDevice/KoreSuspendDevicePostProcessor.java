@@ -18,7 +18,7 @@ public class KoreSuspendDevicePostProcessor implements Processor {
 			.getName());
 
 	public KoreSuspendDevicePostProcessor() {
-
+		//Empty Constructor
 	}
 
 	Environment newEnv;

@@ -37,6 +37,7 @@ public class HeaderErrorProcessor implements Processor {
 	}
 
 	public HeaderErrorProcessor() {
+		//Empty Constructor
 	}
 
 	@Override

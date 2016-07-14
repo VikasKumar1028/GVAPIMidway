@@ -1,6 +1,5 @@
 package com.gv.midway.processor.deviceInformation;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -34,6 +33,7 @@ public class KoreDeviceInformationPostProcessor implements Processor {
 	}
 
 	public KoreDeviceInformationPostProcessor() {
+		//Empty Constructor
 	}
 	@Override
 	public void process(Exchange exchange) throws Exception {

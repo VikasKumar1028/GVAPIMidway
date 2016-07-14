@@ -21,7 +21,7 @@ public class KoreDeviceUsageHistoryPreProcessor implements Processor {
 	Environment newEnv;
 
 	public KoreDeviceUsageHistoryPreProcessor() {
-
+		//Empty Constructor
 	}
 
 	public KoreDeviceUsageHistoryPreProcessor(Environment env) {

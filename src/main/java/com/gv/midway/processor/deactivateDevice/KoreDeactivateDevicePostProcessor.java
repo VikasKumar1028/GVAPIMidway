@@ -20,7 +20,7 @@ public class KoreDeactivateDevicePostProcessor implements Processor {
 			.getName());
 
 	public KoreDeactivateDevicePostProcessor() {
-
+		//Empty Constructor
 	}
 
 	Environment newEnv;

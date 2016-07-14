@@ -40,6 +40,7 @@ public class VerizonGenericExceptionProcessor implements Processor {
 	}
 
 	public VerizonGenericExceptionProcessor() {
+		//Empty Constructor
 	}
 	@Override
 	public void process(Exchange exchange) throws Exception {

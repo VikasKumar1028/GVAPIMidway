@@ -23,7 +23,7 @@ public class TokenProcessor implements Processor {
 	}
 
 	public TokenProcessor() {
-
+		//Empty Constructor
 	}
 	@Override
 	public void process(Exchange exchange) throws Exception {

@@ -18,6 +18,7 @@ public class KoreActivateDevicePostProcessor implements Processor {
 			.getName());
 
 	public KoreActivateDevicePostProcessor() {
+		//Empty Constructor
 
 	}
 

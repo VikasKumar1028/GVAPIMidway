@@ -20,7 +20,7 @@ public class KoreCustomFieldsPreProcessor implements Processor {
 	Environment newEnv;
 
 	public KoreCustomFieldsPreProcessor() {
-
+		//Empty Constructor
 	}
 
 	public KoreCustomFieldsPreProcessor(Environment env) {
