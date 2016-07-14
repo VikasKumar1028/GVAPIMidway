@@ -100,7 +100,7 @@
 
 
 	<cxf:rsClient id="rsKoreClient"
-		address="https://prismproapi.koretelematics.com/4/TransactionalAPI.svc"
+		address="${kore.restURI}"
 		serviceClass="com.gv.midway.controller.JSONService"
 		loggingFeatureEnabled="true">
 		<cxf:providers>

@@ -117,7 +117,7 @@ import com.gv.midway.service.ISessionService;
 		 		header.setApplicationName("WEB");
 		 		header.setOrganization("Grant Victor");
 		        header.setRegion("USA");
-		        header.setTimestamp("string");
+		        header.setTimestamp("2008-09-29T07:19:45");
 		        req.setHeader(header);
 				
 				ActivateDeviceResponse response = (ActivateDeviceResponse) template.requestBody("direct:activateDevice", req);
@@ -174,13 +174,13 @@ import com.gv.midway.service.ISessionService;
 			 		header.setApplicationName("WEB");
 			 		header.setOrganization("Grant Victor");
 			        header.setRegion("USA");
-			        header.setTimestamp("timestamp");
-			        header.setTransactionId("12345");
+			        header.setTimestamp("2008-09-29T07:19:45");
+			        header.setTransactionId("6758759");
 
 			        req.setHeader(header);
 					ActivateDeviceResponse response = (ActivateDeviceResponse) template.requestBody("direct:activateDevice", req);
 					
-					log.info("Activate Device response is...................:"+(response.getResponse().getResponseCode()));
+					log.info("Activate Device response is...................:"+(response.toString()));
 					
 					 assertEquals(response.getResponse().getResponseCode().toString(),"2000");
 					 assertEquals(response.getResponse().getResponseStatus().toString(),"Success");
@@ -237,16 +237,16 @@ import com.gv.midway.service.ISessionService;
 						 		header.setOrganization("Grant Victor");
 						        header.setRegion("USA");
 						        header.setTimestamp("timestamp");
-						        header.setTransactionId("12345");
+						        header.setTransactionId("2008-09-29T07:19:45");
 
 						        req.setHeader(header);
 								ActivateDeviceResponse response = (ActivateDeviceResponse) template.requestBody("direct:activateDevice", req);
 								
-								log.info("Activate Device response Order No. is...................:"+(response.getDataArea().getOrderNumber()));
+								log.info("Activate Device response Order No. is...................:"+(response.getDataArea()));
 								
-								assertEquals(response.getResponse().getResponseCode().toString(),"400");
+								assertEquals(response.getResponse().getResponseCode().toString(),"1905");
 								assertEquals(response.getResponse().getResponseStatus(),"Error");
-								assertNull(response.getDataArea().getOrderNumber());
+								assertNull(response.getDataArea());
 							}
 	                          	/*..................test cases for Activate Device ends here ..............*/
 		
@@ -290,7 +290,7 @@ import com.gv.midway.service.ISessionService;
  		header.setApplicationName("WEB");
  		header.setOrganization("Grant Victor");
         header.setRegion("USA");
-        header.setTimestamp("timestamp");
+        header.setTimestamp("2008-09-29T07:19:45");
  		req.setFlagScrap(false);
 		
  		deactivateRequest.setHeader(header);
@@ -347,7 +347,7 @@ import com.gv.midway.service.ISessionService;
 		 		header.setApplicationName("WEB");
 		 		header.setOrganization("Grant Victor");
 		        header.setRegion("USA");
-		        header.setTimestamp("string");
+		        header.setTimestamp("2008-09-29T07:19:45");
 		 		
 		 		deactivateRequest.setHeader(header);
 				deactivateRequest.setDataArea(dataArea);
@@ -402,7 +402,7 @@ import com.gv.midway.service.ISessionService;
 		 		header.setApplicationName("WEB");
 		 		header.setOrganization("Grant Victor");
 		        header.setRegion("USA");
-		        header.setTimestamp("string");
+		        header.setTimestamp("2008-09-29T07:19:45");
 		 		
 		 		deactivateRequest.setHeader(header);
 				deactivateRequest.setDataArea(dataArea);
@@ -449,7 +449,7 @@ import com.gv.midway.service.ISessionService;
 		 		header.setApplicationName("WEB");
 		 		header.setOrganization("Grant Victor");
 		        header.setRegion("USA");
-		        header.setTimestamp("string");
+		        header.setTimestamp("2008-09-29T07:19:45");
 		  		req.setHeader(header);
 		  		
 		  		log.info("Request in Junit Test:" + req);
@@ -499,7 +499,7 @@ import com.gv.midway.service.ISessionService;
 				 		header.setApplicationName("WEB");
 				 		header.setOrganization("Grant Victor");
 				        header.setRegion("USA");
-				        header.setTimestamp("string");
+				        header.setTimestamp("2008-09-29T07:19:45");
 				  		req.setHeader(header);		  		
 						
 				  		SuspendDeviceResponse response = (SuspendDeviceResponse) template.requestBody("direct:suspendDevice", req);
@@ -549,7 +549,7 @@ import com.gv.midway.service.ISessionService;
 				 		header.setApplicationName("WEB");
 				 		header.setOrganization("Grant Victor");
 				        header.setRegion("USA");
-				        header.setTimestamp("string");
+				        header.setTimestamp("2008-09-29T07:19:45");
 				  		req.setHeader(header);		  		
 						
 				  		SuspendDeviceResponse response = (SuspendDeviceResponse) template.requestBody("direct:suspendDevice", req);
@@ -598,7 +598,7 @@ import com.gv.midway.service.ISessionService;
 				 		header.setApplicationName("WEB");
 				 		header.setOrganization("Grant Victor");
 				        header.setRegion("USA");
-				        header.setTimestamp("string");
+				        header.setTimestamp("2008-09-29T07:19:45");
 				  		req.setHeader(header);		  		
 						
 				  		SuspendDeviceResponse response = (SuspendDeviceResponse) template.requestBody("direct:suspendDevice", req);
@@ -643,7 +643,7 @@ import com.gv.midway.service.ISessionService;
 					 		header.setApplicationName("WEB");
 					 		header.setOrganization("Grant Victor");
 					        header.setRegion("USA");
-					        header.setTimestamp("string");
+					        header.setTimestamp("2008-09-29T07:19:45");
 					  		req.setHeader(header);
 					  		
 							RestoreDeviceResponse response = (RestoreDeviceResponse) template.requestBody("direct:restoreDevice", req);
@@ -694,7 +694,7 @@ import com.gv.midway.service.ISessionService;
 					 		header.setApplicationName("WEB");
 					 		header.setOrganization("Grant Victor");
 					        header.setRegion("USA");
-					        header.setTimestamp("string");
+					        header.setTimestamp("2008-09-29T07:19:45");
 					  		req.setHeader(header);
 					  		
 					  		log.info("Request in Junit Test:" + req);
@@ -746,17 +746,17 @@ import com.gv.midway.service.ISessionService;
 						 		header.setApplicationName("WEB");
 						 		header.setOrganization("Grant Victor");
 						        header.setRegion("USA");
-						        header.setTimestamp("string");
+						        header.setTimestamp("2008-09-29T07:19:45");
 						  		req.setHeader(header);
 						  		
 						  		log.info("Request in Junit Test:" + req);
 								
 								RestoreDeviceResponse response = (RestoreDeviceResponse) template.requestBody("direct:restoreDevice", req);
 								response.getResponse().getResponseCode();
-								log.info("Response in Junit Test for Rerstore....... :" + response.getResponse().getResponseCode());
+								log.info("Response in Junit Test for Rerstore....... :" + response.toString());
 								assertEquals(response.getResponse().getResponseCode().toString(),"400");
 								assertEquals(response.getResponse().getResponseStatus(),"Error");
-								assertEquals(response.getDataArea().getOrderNumber(),null);
+								assertNull(response.getDataArea().getOrderNumber());
 								
 							}
 							
@@ -794,7 +794,7 @@ import com.gv.midway.service.ISessionService;
 						 		header.setApplicationName("WEB");
 						 		header.setOrganization("Grant Victor");
 						        header.setRegion("USA");
-						        header.setTimestamp("string");
+						        header.setTimestamp("2008-09-29T07:19:45");
 						  		req.setHeader(header);
 						  		
 						  		log.info("Request in Junit Test:" + req);
@@ -848,7 +848,7 @@ import com.gv.midway.service.ISessionService;
 						 		header.setApplicationName("WEB");
 						 		header.setOrganization("Grant Victor");
 						        header.setRegion("USA");
-						        header.setTimestamp("string");
+						        header.setTimestamp("2008-09-29T07:19:45");
 						  		req.setHeader(header);
 						  		
 						  		log.info("Request in Junit Test:" + req);
@@ -902,7 +902,7 @@ import com.gv.midway.service.ISessionService;
 						 		header.setApplicationName("WEB");
 						 		header.setOrganization("Grant Victor");
 						        header.setRegion("USA");
-						        header.setTimestamp("string");
+						        header.setTimestamp("2008-09-29T07:19:45");
 						  		req.setHeader(header);
 						  		log.info("Request in Junit Test:" + req);
 								
@@ -953,7 +953,7 @@ import com.gv.midway.service.ISessionService;
 						 		header.setApplicationName("WEB");
 						 		header.setOrganization("Grant Victor");
 						        header.setRegion("USA");
-						        header.setTimestamp("string");
+						        header.setTimestamp("2008-09-29T07:19:45");
 						  		req.setHeader(header);
 						  		
 						  		log.info("Request in Junit Test:" + req);
@@ -1008,7 +1008,7 @@ import com.gv.midway.service.ISessionService;
 						 		header.setApplicationName("WEB");
 						 		header.setOrganization("Grant Victor");
 						        header.setRegion("USA");
-						        header.setTimestamp("string");
+						        header.setTimestamp("2008-09-29T07:19:45");
 						  		req.setHeader(header);
 						  		
 						  		log.info("Request in Junit Test:" + req);
@@ -1061,7 +1061,7 @@ import com.gv.midway.service.ISessionService;
 						 		header.setApplicationName("WEB");
 						 		header.setOrganization("Grant Victor");
 						        header.setRegion("USA");
-						        header.setTimestamp("string");
+						        header.setTimestamp("2008-09-29T07:19:45");
 						  		req.setHeader(header);
 						  		
 								ChangeDeviceServicePlansResponse response = (ChangeDeviceServicePlansResponse) template.requestBody("direct:changeDeviceServicePlans", req);
