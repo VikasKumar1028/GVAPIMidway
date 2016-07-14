@@ -1,17 +1,18 @@
 package com.gv.midway.processor.deviceInformation;
 
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IResponse;
-import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.Header;
+import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponseDataArea;
@@ -47,6 +48,7 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 	 * 
 	 * @see org.apache.camel.Processor#process(org.apache.camel.Exchange)
 	 */
+	@Override
 	public void process(Exchange exchange) throws Exception {
 
 		log.info("Start:VerizonDeviceInformationPostProcessor");
@@ -75,7 +77,6 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 					.toString());
 	     }
 		
-		//Header responseheader = new Header();
 
 		Response response = new Response();
 		
@@ -83,16 +84,6 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 		response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
 		response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_CARRIER);
 
-		/*responseheader.setApplicationName(exchange.getProperty(IConstant.APPLICATION_NAME).toString());
-		responseheader.setRegion(exchange.getProperty(IConstant.REGION).toString());
-		
-
-		responseheader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT).toString());
-		responseheader.setOrganization(exchange.getProperty(IConstant.ORGANIZATION).toString());
-		responseheader.setSourceName(exchange.getProperty(IConstant.SOURCE_NAME).toString());
-		//String TransactionId = (String) exchange.getProperty(newEnv.getProperty(IConstant.EXCHANEGE_PROPERTY));
-		responseheader.setTransactionId(exchange.getProperty(IConstant.GV_TRANSACTION_ID).toString());
-		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER).toString());*/
 		
 		Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
 
@@ -101,7 +92,6 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 		
 		
 		
-		//DeviceInformation deviceInformation =null;
 
 		/****
 		 * There will be only one element in Array . As we are passing only one device in request.
@@ -132,7 +122,6 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 			deviceInformation.setLastActivationDate(verizonResponse
 					.getDevices()[i].getLastActivationDate());
 
-			//CarrierInformations carrierInformations = new CarrierInformations();
 			CarrierInformations[] carrierInformationsArray = verizonResponse.getDevices()[i].getCarrierInformations();
 			
 			CarrierInformations carrierInformations= carrierInformationsArray[0];
@@ -140,18 +129,6 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 			deviceInformation.setState(carrierInformations.getState());
 			deviceInformation.setCurrentServicePlan(carrierInformations.getServicePlan());
 
-			/*for (int j = 0; j < carrierInformationsArray.length; j++) {
-				carrierInformations
-						.setCarrierName(verizonResponse.getDevices()[i]
-								.getCarrierInformations()[j].getCarrierName());
-				carrierInformations.setState(verizonResponse.getDevices()[i]
-						.getCarrierInformations()[j].getState());
-				carrierInformations
-						.setServicePlan(verizonResponse.getDevices()[i]
-								.getCarrierInformations()[j].getServicePlan());
-			}*/
-
-			//deviceInformation.setCarrierInformations(carrierInformations);
 
 			deviceInformation.setExtendedAttributes(verizonResponse
 					.getDevices()[i].getExtendedAttributes());
@@ -197,13 +174,9 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 
 			}
 
-			//deviceInformationArray[i] = deviceInformation;
 		}
 
 
-		/* SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-		 
-		 deviceInformation.setLastUpdated(sdf.format(new Date()));*/
 		
 		deviceInformation.setLastUpdated(new Date());
 		 

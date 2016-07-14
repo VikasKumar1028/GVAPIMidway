@@ -28,6 +28,7 @@ public class KoreActivateDevicePreProcessor implements Processor {
 		this.newEnv = env;
 	}
 
+	@Override
 	public void process(Exchange exchange) throws Exception {
 		
 

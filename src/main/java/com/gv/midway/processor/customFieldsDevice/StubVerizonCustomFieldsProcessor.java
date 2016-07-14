@@ -16,8 +16,8 @@ public class StubVerizonCustomFieldsProcessor implements Processor {
 	Logger log = Logger.getLogger(KoreActivateDevicePostProcessor.class
 			.getName());
 
+	@Override
 	public void process(Exchange exchange) throws Exception {
-		// TODO Auto-generated method stub
 
 		log.info("Begin::StubVerizonCustomFieldsProcessor");
 

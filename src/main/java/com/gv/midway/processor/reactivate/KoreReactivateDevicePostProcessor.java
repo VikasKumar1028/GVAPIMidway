@@ -20,7 +20,7 @@ public class KoreReactivateDevicePostProcessor implements Processor {
 	}
 	public KoreReactivateDevicePostProcessor(Environment env) {
 	}
-
+	@Override
 	public void process(Exchange exchange) throws Exception {
 
 		log.info("Begin::KoreReactivateDevicePostProcessor");
@@ -29,7 +29,6 @@ public class KoreReactivateDevicePostProcessor implements Processor {
 
 		ReactivateDeviceResponseDataArea reActivateDeviceResponseDataArea = new ReactivateDeviceResponseDataArea();
 
-		//Header responseheader = new Header();
 
 		Response response = new Response();
 
@@ -37,15 +36,7 @@ public class KoreReactivateDevicePostProcessor implements Processor {
 		response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
 		response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
 
-		/*responseheader.setApplicationName(exchange.getProperty(IConstant.APPLICATION_NAME).toString());
-		responseheader.setRegion(exchange.getProperty(IConstant.REGION).toString());
-
-		responseheader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT).toString());
-		responseheader.setOrganization(exchange.getProperty(IConstant.ORGANIZATION).toString());
-
-		responseheader.setSourceName(exchange.getProperty(IConstant.SOURCE_NAME).toString());
-		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER).toString());
-		responseheader.setTransactionId(exchange.getProperty(IConstant.GV_TRANSACTION_ID).toString());*/
+		
 		
 		Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
 

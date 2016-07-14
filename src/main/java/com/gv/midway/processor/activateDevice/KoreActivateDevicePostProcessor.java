@@ -29,6 +29,7 @@ public class KoreActivateDevicePostProcessor implements Processor {
 
 	}
 
+	@Override
 	public void process(Exchange exchange) throws Exception {
 
 		log.info("Begin::KoreActivateDevicePostProcessor");

@@ -2,10 +2,12 @@ package com.gv.midway.processor.connectionInformation.deviceConnectionStatus;
 
 
 import java.util.Map;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IResponse;
@@ -28,14 +30,13 @@ public class VerizonDeviceConnectionStatusPostProcessor implements Processor {
 		this.newEnv = env;
 
 	}
-
+	@Override
 	public void process(Exchange exchange) throws Exception {
 
 		log.info("Start:VerizonDeviceConnectionStatusPostProcessor");
 
 		ConnectionStatusResponse businessResponse = new ConnectionStatusResponse();
 		ConnectionStatusResponseDataArea connectionStatusResponseDataArea = new ConnectionStatusResponseDataArea();
-		//Header responseheader = new Header();
 		Response response = new Response();
 
 		log.info("exchange.getIn().getBody().toString()***************************************"
@@ -94,26 +95,7 @@ public class VerizonDeviceConnectionStatusPostProcessor implements Processor {
 
 		}
 
-		/*responseheader.setApplicationName(exchange.getProperty(
-				IConstant.APPLICATION_NAME).toString());
-		responseheader.setRegion(exchange.getProperty(IConstant.REGION)
-				.toString());
-		responseheader.setOrganization(exchange.getProperty(
-				IConstant.ORGANIZATION).toString());
-
-		
-		 * responseheader.setTimestamp(exchange.getProperty(
-		 * IConstant.DATE_FORMAT).toString());
-		 
-
-		responseheader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT)
-				.toString());
-		responseheader.setSourceName(exchange
-				.getProperty(IConstant.SOURCE_NAME).toString());
-		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
-				.toString());
-		responseheader.setTransactionId(exchange.getProperty(
-				IConstant.GV_TRANSACTION_ID).toString());*/
+	
 		
 		Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
 

@@ -15,6 +15,7 @@ public class StubKoreActivateDeviceProcessor implements Processor {
 	Logger log = Logger.getLogger(StubKoreActivateDeviceProcessor.class
 			.getName());
 
+	@Override
 	public void process(Exchange exchange) throws Exception {
 
 		log.info("Begin:StubKoreDeviceActivateProcessor");

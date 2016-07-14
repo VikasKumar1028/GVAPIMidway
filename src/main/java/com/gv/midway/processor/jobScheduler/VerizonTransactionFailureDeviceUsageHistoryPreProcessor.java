@@ -11,7 +11,6 @@ import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationRequestDataArea;
 import com.gv.midway.pojo.deviceHistory.DeviceUsage;
 import com.gv.midway.pojo.verizon.DeviceId;
-import com.gv.midway.utility.CommonUtil;
 
 public class VerizonTransactionFailureDeviceUsageHistoryPreProcessor implements Processor  {
 	Logger log = Logger
@@ -35,7 +34,6 @@ public class VerizonTransactionFailureDeviceUsageHistoryPreProcessor implements 
 		DeviceId device = new DeviceId();
 		
 		//Fetching Recommended device Identifiers
-		//DeviceId recommendedDeviceId=CommonUtil.getRecommendedDeviceIdentifier(deviceInfo.getDeviceIds());
 				
 		device.setId(deviceInfo.getDeviceId().getId());
 		device.setKind(deviceInfo.getDeviceId().getKind());
@@ -45,11 +43,6 @@ public class VerizonTransactionFailureDeviceUsageHistoryPreProcessor implements 
 		exchange.setProperty("CarrierName", deviceInfo.getCarrierName());
 		exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID, deviceInfo.getNetSuiteId());
 		
-		//exchange.setProperty("ServicePlan", deviceInfo.getCurrentServicePlan());
-/*		exchange.setProperty("BillDay",
-				deviceInfo.getBs_plan().getBill_day());
-		exchange.setProperty("DataAmt",
-				deviceInfo.getBs_plan().getData_amt());*/
 
 		dataArea.setLatest(exchange.getProperty("jobEndTime").toString());
 		dataArea.setEarliest(exchange.getProperty("jobStartTime").toString());

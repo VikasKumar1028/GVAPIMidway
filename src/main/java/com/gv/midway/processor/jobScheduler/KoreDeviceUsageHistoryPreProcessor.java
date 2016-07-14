@@ -48,8 +48,7 @@ public class KoreDeviceUsageHistoryPreProcessor implements Processor {
 
 		UsageInformationKoreRequest usageInformationKoreRequest = new UsageInformationKoreRequest();
 
-		/*usageInformationKoreRequest.setSimNumber(deviceInfo.getDeviceIds()[0]
-				.getId());*/
+
 
 		DeviceId deviceId=CommonUtil.getSimNumber(deviceInfo.getDeviceIds());
 		
@@ -58,7 +57,7 @@ public class KoreDeviceUsageHistoryPreProcessor implements Processor {
 		
 		usageInformationKoreRequest.setSimNumber(simNumber);
 
-		// {"simNumber": "89014103277405945606"}
+	
 
 		String strRequestBody = objectMapper
 				.writeValueAsString(usageInformationKoreRequest);

@@ -8,6 +8,7 @@ import com.gv.midway.pojo.callback.request.CallBackVerizonRequest;
 
 public class CallbackKafkaPreProcessor implements Processor {
 
+	@Override
 	public void process(Exchange exchange) throws Exception {
 
 		/*

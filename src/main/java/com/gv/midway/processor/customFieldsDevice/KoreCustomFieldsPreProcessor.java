@@ -11,7 +11,6 @@ import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.customFieldsDevice.kore.request.CustomFieldsDeviceRequestKore;
 import com.gv.midway.pojo.customFieldsDevice.request.CustomFieldsDeviceRequest;
 import com.gv.midway.pojo.transaction.Transaction;
-import com.gv.midway.pojo.verizon.CustomFields;
 import com.gv.midway.pojo.verizon.CustomFieldsToUpdate;
 
 public class KoreCustomFieldsPreProcessor implements Processor {
@@ -28,9 +27,8 @@ public class KoreCustomFieldsPreProcessor implements Processor {
 		super();
 		this.newEnv = env;
 	}
-
+	@Override
 	public void process(Exchange exchange) throws Exception {
-		// TODO Auto-generated method stub
 
 		log.info("Begin::KoreCustomFieldsPreProcessor");
 
@@ -100,10 +98,7 @@ public class KoreCustomFieldsPreProcessor implements Processor {
 		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.HTTP_METHOD, "POST");
 
-		/*
-		 * message.setHeader("Authorization",
-		 * "Basic Z3JhbnR2aWN0b3JhcGk6akx1Y1dMQ0JxakhQ");
-		 */
+	
 		message.setHeader("Authorization",
 				newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
 		message.setHeader(Exchange.HTTP_PATH, "/json/modifyDeviceCustomInfo");

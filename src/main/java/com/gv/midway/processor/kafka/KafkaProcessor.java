@@ -32,7 +32,6 @@ public class KafkaProcessor implements Processor {
 
 	@Override
 	public void process(Exchange exchange) throws Exception {
-		// TODO Auto-generated method stub
 		
 		Object kafkaObject=exchange.getProperty(IConstant.KAFKA_OBJECT);
 		

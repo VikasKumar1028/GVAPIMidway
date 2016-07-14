@@ -1,6 +1,5 @@
 package com.gv.midway.processor.connectionInformation;
 
-import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -12,13 +11,9 @@ import org.apache.log4j.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
-import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationRequest;
 import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationRequestDataArea;
-import com.gv.midway.pojo.connectionInformation.verizon.response.ConnectionHistory;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.verizon.DeviceId;
-import com.gv.midway.processor.activateDevice.VerizonActivateDevicePreProcessor;
-import com.gv.midway.utility.CommonUtil;
 
 public class CreateDeviceHistoryPayloadProcessor implements Processor {
 
@@ -39,7 +34,6 @@ public class CreateDeviceHistoryPayloadProcessor implements Processor {
 
 		DeviceInformation deviceInfo = (DeviceInformation) exchange.getIn()
 				.getBody();
-		/*ConnectionInformationRequest request = new ConnectionInformationRequest();*/
 		ConnectionInformationRequestDataArea dataArea = new ConnectionInformationRequestDataArea();
 		DeviceId device = new DeviceId();
 		device.setId(deviceInfo.getDeviceIds()[0].getId());
@@ -76,19 +70,12 @@ public class CreateDeviceHistoryPayloadProcessor implements Processor {
 					IConstant.VZ_AUTHORIZATION_TOKEN).toString();
 		}
 		
-		System.out.println("check endpoint -- >> " + exchange.getFromEndpoint().toString());
 		message.setHeader("VZ-M2M-Token", sessionToken);
 		message.setHeader("Authorization", "Bearer " + authorizationToken);
 		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.HTTP_METHOD, "POST");
-	/*	if(exchange.getFromEndpoint().toString()
-		.matches("(.*)DeviceConnectionInformation(.*)")) {
-		message.setHeader(Exchange.HTTP_PATH, "/devices/connections/actions/listHistory");
-		} else if(exchange.getFromEndpoint().toString()
-				.matches("(.*)DeviceUsage	Information(.*)")){
-			message.setHeader(Exchange.HTTP_PATH, "/devices/actions/list"); 	}*/
-		//message.setHeader(Exchange.HTTP_PATH, "/devices/connections/actions/listHistory");
+
 		message.setHeader(Exchange.HTTP_PATH, "/devices/usage/actions/list");
 	
 		

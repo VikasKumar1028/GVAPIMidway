@@ -15,7 +15,6 @@ import com.gv.midway.pojo.deviceHistory.DeviceConnection;
 import com.gv.midway.pojo.deviceHistory.DeviceEvent;
 import com.gv.midway.pojo.job.JobDetail;
 import com.gv.midway.pojo.verizon.DeviceId;
-import com.gv.midway.utility.CommonUtil;
 
 public class VerizonDeviceConnectionHistoryPostProcessor implements Processor {
 
@@ -54,12 +53,10 @@ public class VerizonDeviceConnectionHistoryPostProcessor implements Processor {
 					if (events.getKey().toString()
 							.equalsIgnoreCase("BytesUsed")) {
 						event.setBytesUsed(events.getValue());
-						//deviceEventList.add(event);
 						count++;
 					} else if (events.getKey().toString()
 							.equalsIgnoreCase("Event")) {
 						event.setEventType(events.getValue());
-						//deviceEventList.add(event);
 						count++;
 					}
 					if (count == 2) {
@@ -85,7 +82,6 @@ public class VerizonDeviceConnectionHistoryPostProcessor implements Processor {
 		deviceConnection.setNetSuiteId((Integer)exchange
 				.getProperty(IConstant.MIDWAY_NETSUITE_ID));
 		deviceConnection.setIsValid(true);
-		//deviceConnection.setOccurredAt(connectionResponse.getConnectionHistory()[0].getOccurredAt());
 
 		exchange.getIn().setBody(deviceConnection);
 

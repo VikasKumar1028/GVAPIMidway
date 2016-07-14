@@ -2,13 +2,14 @@ package com.gv.midway.processor.jobScheduler;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Map;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.deviceHistory.DeviceUsage;
@@ -73,8 +74,7 @@ public class KoreDeviceUsageHistoryPostProcessor implements Processor {
 		deviceUsage.setDeviceId((DeviceId) exchange.getProperty("DeviceId"));
 		deviceUsage.setDataUsed(totalBytesUsed);
 		// The Day for which Job Ran
-/*		DateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
-		Date date = (Date) formatter.parse(jobDetail.getDate());*/
+
 		deviceUsage.setDate(jobDetail.getDate());
 		deviceUsage.setTransactionErrorReason(null);
 		deviceUsage

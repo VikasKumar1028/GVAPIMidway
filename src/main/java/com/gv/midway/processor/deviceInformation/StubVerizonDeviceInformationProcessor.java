@@ -19,7 +19,7 @@ public class StubVerizonDeviceInformationProcessor implements Processor {
 
 	Logger log = Logger.getLogger(StubVerizonDeviceInformationProcessor.class
 			.getName());
-
+	@Override
 	public void process(Exchange exchange) throws Exception {
 
 		log.info("StubVerizonDeviceInformationProcessor");

@@ -10,14 +10,12 @@ import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.connectionInformation.deviceSessionBeginEndInfo.response.DeviceSession;
 import com.gv.midway.pojo.connectionInformation.deviceSessionBeginEndInfo.response.SessionBeginEndResponse;
 import com.gv.midway.pojo.connectionInformation.deviceSessionBeginEndInfo.response.SessionBeginEndResponseDataArea;
-import com.gv.midway.pojo.connectionInformation.deviceStatus.response.ConnectionStatusResponse;
-import com.gv.midway.pojo.connectionInformation.deviceStatus.response.ConnectionStatusResponseDataArea;
 
 public class StubVerizonDeviceSessionBeginEndInfoProcessor implements Processor{
 	
 	Logger log = Logger.getLogger(StubVerizonDeviceSessionBeginEndInfoProcessor.class
 			.getName());
-
+	@Override
 	public void process(Exchange exchange) throws Exception {
 		log.info("Begin::StubVerizonDeviceSessionBeginEndInfoProcessor");
 		

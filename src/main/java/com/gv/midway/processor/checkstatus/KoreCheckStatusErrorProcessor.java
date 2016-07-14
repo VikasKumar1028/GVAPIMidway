@@ -48,7 +48,6 @@ public class KoreCheckStatusErrorProcessor implements Processor {
 
 	@Override
 	public void process(Exchange exchange) throws Exception {
-		// TODO Auto-generated method stub
 
 		log.info("kore check status error processor");
 
@@ -92,36 +91,7 @@ public class KoreCheckStatusErrorProcessor implements Processor {
 
 		}
 
-		/*CallbackCommonResponse callbackCommonResponse = new CallbackCommonResponse();
 
-		Header header = (Header) exchange
-				.getProperty(IConstant.MIDWAY_TRANSACTION_REQUEST_HEADER);
-
-		Response response = new Response();
-
-		response.setResponseCode(IResponse.NETSUITE_CALLBACK_ERRORCODE);
-		response.setResponseStatus(IResponse.ERROR_MESSAGE);
-		response.setResponseDescription(errorDescription);
-
-		CallbackCommonResponseDataArea callbackCommonResponseDataArea = new CallbackCommonResponseDataArea();
-
-		callbackCommonResponseDataArea.setRequestId(midWayTransactionId);
-		callbackCommonResponseDataArea.setRequestType(requestType);
-		callbackCommonResponseDataArea.setRequestStatus(false);
-
-		List<DeviceId> deviceIdlist = new ObjectMapper().readValue(
-				midWayTransactionDeviceNumber, TypeFactory.defaultInstance()
-						.constructCollectionType(List.class, DeviceId.class));
-
-		DeviceId[] deviceIds = new DeviceId[deviceIdlist.size()];
-		deviceIds = deviceIdlist.toArray(deviceIds);
-
-		callbackCommonResponseDataArea.setDeviceIds(deviceIds);
-
-		callbackCommonResponse.setHeader(header);
-		callbackCommonResponse.setResponse(response);
-
-		callbackCommonResponse.setDataArea(callbackCommonResponseDataArea);*/
 		
 		KafkaNetSuiteCallBackError netSuiteCallBackError =new KafkaNetSuiteCallBackError();
 		
@@ -180,7 +150,6 @@ public class KoreCheckStatusErrorProcessor implements Processor {
 		
 		NetSuiteCallBackProvisioningRequest netSuiteCallBackProvisioningRequest =new NetSuiteCallBackProvisioningRequest();
 		
-		//netSuiteCallBackProvisioningRequest.setRequestType(requestType);
 		netSuiteCallBackProvisioningRequest.setStatus("fail");
 		netSuiteCallBackProvisioningRequest.setResponse(errorDescription);
 		netSuiteCallBackProvisioningRequest.setCarrierOrderNumber(midWayTransactionId);

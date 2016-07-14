@@ -45,7 +45,6 @@ public class KoreCheckStatusPostProcessor implements Processor {
 
 	@Override
 	public void process(Exchange exchange) throws Exception {
-		// TODO Auto-generated method stub
 
 		log.info("kore check status post processor");
 
@@ -63,80 +62,7 @@ public class KoreCheckStatusPostProcessor implements Processor {
 		RequestType requestType = (RequestType) exchange
 				.getProperty(IConstant.MIDWAY_TRANSACTION_REQUEST_TYPE);
 
-		/*CallbackCommonResponse callbackCommonResponse = new CallbackCommonResponse();
-
-		Header header = (Header) exchange
-				.getProperty(IConstant.MIDWAY_TRANSACTION_REQUEST_HEADER);
-
-		Response response = new Response();
-
-		response.setResponseCode(IResponse.SUCCESS_CODE);
-		response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
-		switch (requestType) {
-		case ACTIVATION:
-
-			response.setResponseDescription("Device Activated Successfully");
-			break;
-
-		case DEACTIVATION:
-
-			response.setResponseDescription("Device DeActivated Successfully");
-
-			break;
-
-		case REACTIVATION:
-
-			response.setResponseDescription("Device ReActivated Successfully");
-
-			break;
-
-		case RESTORE:
-
-			response.setResponseDescription("Device ReStored Successfully");
-
-			break;
-
-		case SUSPEND:
-
-			response.setResponseDescription("Device Suspend Successfully");
-
-			break;
-
-		case CHANGESERVICEPLAN:
-
-			response.setResponseDescription("Device Service Plan Changed Successfully.");
-
-			break;
-
-		case CHANGECUSTOMFIELDS:
-
-			response.setResponseDescription("Device Custom Fields Changed Successfully.");
-
-			break;
-
-		default:
-			break;
-		}
-
-		CallbackCommonResponseDataArea callbackCommonResponseDataArea = new CallbackCommonResponseDataArea();
-
-		callbackCommonResponseDataArea.setRequestId(midWayTransactionId);
-		callbackCommonResponseDataArea.setRequestType(requestType);
-		callbackCommonResponseDataArea.setRequestStatus(true);
-
-		List<DeviceId> deviceIdlist = new ObjectMapper().readValue(
-				midWayTransactionDeviceNumber, TypeFactory.defaultInstance()
-						.constructCollectionType(List.class, DeviceId.class));
-
-		DeviceId[] deviceIds = new DeviceId[deviceIdlist.size()];
-		deviceIds = deviceIdlist.toArray(deviceIds);
-
-		callbackCommonResponseDataArea.setDeviceIds(deviceIds);
-
-		callbackCommonResponse.setHeader(header);
-		callbackCommonResponse.setResponse(response);
-
-		callbackCommonResponse.setDataArea(callbackCommonResponseDataArea);*/
+		
 		
 	    KafkaNetSuiteCallBackEvent netSuiteCallBackEvent =new KafkaNetSuiteCallBackEvent();
 		

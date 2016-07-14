@@ -6,6 +6,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
+
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.ITransaction;
 import com.gv.midway.constant.RequestType;
@@ -25,7 +26,7 @@ public class KoreCheckStatusPreProcessor implements Processor {
 		super();
 		this.newEnv = env;
 	}
-
+	@Override
 	public void process(Exchange exchange) throws Exception {
 
 		log.info("*************Testing**************************************"
@@ -41,7 +42,6 @@ public class KoreCheckStatusPreProcessor implements Processor {
 
 		Object payload = transaction.getDevicePayload();
 
-		//BaseRequest baseRequest = (BaseRequest) payload;
 
 		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_PAYLOAD,
 				payload);

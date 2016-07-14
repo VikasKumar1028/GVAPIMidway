@@ -27,16 +27,11 @@ public class VerizonDeviceConnectionHistoryPreProcessor implements
 				+ exchange.getProperty(IConstant.VZ_SEESION_TOKEN));
 		log.info("Session Parameters  VZAuthorization"
 				+ exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN));
-/*
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-		Calendar cal = Calendar.getInstance();*/
+
 
 		DeviceInformation deviceInfo = (DeviceInformation) exchange.getIn()
 				.getBody();
-		/*
-		 * ConnectionInformationRequest request = new
-		 * ConnectionInformationRequest();
-		 */
+	
 		ConnectionInformationRequestDataArea dataArea = new ConnectionInformationRequestDataArea();
 		DeviceId device = new DeviceId();
 	
@@ -52,9 +47,7 @@ public class VerizonDeviceConnectionHistoryPreProcessor implements
 		exchange.setProperty("CarrierName", deviceInfo.getBs_carrier());
 		exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID, deviceInfo.getNetSuiteId());
 
-/*		dataArea.setLatest(dateFormat.format(cal.getTime()));
-		cal.add(Calendar.HOUR, -24);
-		dataArea.setEarliest(dateFormat.format(cal.getTime()));*/
+
 		
 		dataArea.setLatest(exchange.getProperty("jobEndTime").toString());
 		dataArea.setEarliest(exchange.getProperty("jobStartTime").toString());
@@ -78,10 +71,7 @@ public class VerizonDeviceConnectionHistoryPreProcessor implements
 					IConstant.VZ_AUTHORIZATION_TOKEN).toString();
 		}
 		
-		/*message.setHeader("VZ-M2M-Token",
-	              "1d1f8e7a-c8bb-4f3c-a924-cf612b562425");
-	              message.setHeader("Authorization",
-	              "Bearer 89ba225e1438e95bd05c3cc288d3591");*/
+
 
 		message.setHeader("VZ-M2M-Token", sessionToken);
 		message.setHeader("Authorization", "Bearer " + authorizationToken);

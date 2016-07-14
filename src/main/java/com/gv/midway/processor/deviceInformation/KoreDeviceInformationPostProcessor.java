@@ -34,9 +34,8 @@ public class KoreDeviceInformationPostProcessor implements Processor {
 	}
 
 	public KoreDeviceInformationPostProcessor() {
-		// TODO Auto-generated constructor stub
 	}
-
+	@Override
 	public void process(Exchange exchange) throws Exception {
 
 		log.info("Begin:KoreDeviceInformationPostProcessor");
@@ -64,7 +63,6 @@ public class KoreDeviceInformationPostProcessor implements Processor {
 
 		DeviceInformationResponseDataArea deviceInformationResponseDataArea = new DeviceInformationResponseDataArea();
 
-		//Header responseheader = new Header();
 
 		Response response = new Response();
 
@@ -73,22 +71,7 @@ public class KoreDeviceInformationPostProcessor implements Processor {
 		response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
 		response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_CARRIER);
 
-		/*responseheader.setApplicationName(exchange.getProperty(
-				IConstant.APPLICATION_NAME).toString());
-		responseheader.setRegion(exchange.getProperty(IConstant.REGION)
-				.toString());
-
-		responseheader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT)
-				.toString());
-		responseheader.setOrganization(exchange.getProperty(
-				IConstant.ORGANIZATION).toString());
-		responseheader.setSourceName(exchange
-				.getProperty(IConstant.SOURCE_NAME).toString());
-
-		responseheader.setTransactionId(exchange.getProperty(
-				IConstant.GV_TRANSACTION_ID).toString());
-		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
-				.toString());*/
+		
 		Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
 
 		deviceInformationResponse.setHeader(responseheader);
@@ -107,10 +90,7 @@ public class KoreDeviceInformationPostProcessor implements Processor {
 		deviceInformation.setFutureSMSPlan(koreDeviceInformationResponse.getD()
 				.getFutureSMSPlan());
 
-		/*
-		 * deviceInformation.setIMSIOrMIN(koreDeviceInformationResponse.getD()
-		 * .getIMSIOrMIN());
-		 */
+
 
 		deviceInformation.setLstExtFeatures(koreDeviceInformationResponse
 				.getD().getLstExtFeatures());
@@ -125,30 +105,7 @@ public class KoreDeviceInformationPostProcessor implements Processor {
 		deviceInformation.setMonthlySMSThreshold(koreDeviceInformationResponse
 				.getD().getMonthlySMSThreshold());
 
-		/*
-		 * deviceInformation.setMostRecentAddress(koreDeviceInformationResponse
-		 * .getD().getMostRecentAddress());
-		 * deviceInformation.setMostRecentLatitude(koreDeviceInformationResponse
-		 * .getD().getMostRecentLatitude());
-		 * deviceInformation.setMostRecentLocateDate
-		 * (koreDeviceInformationResponse .getD().getMostRecentLocateDate());
-		 * deviceInformation.setMostRecentLocateId(koreDeviceInformationResponse
-		 * .getD().getMostRecentLocateId());
-		 * deviceInformation.setMostRecentLongitude
-		 * (koreDeviceInformationResponse .getD().getMostRecentLongitude());
-		 * deviceInformation.setMSISDNOrMDN(koreDeviceInformationResponse.getD()
-		 * .getMSISDNOrMDN());
-		 * deviceInformation.setPreviousAddress(koreDeviceInformationResponse
-		 * .getD().getPreviousAddress());
-		 * deviceInformation.setPreviousLocateDate(koreDeviceInformationResponse
-		 * .getD().getPreviousLocateDate());
-		 * deviceInformation.setPreviousLocateId(koreDeviceInformationResponse
-		 * .getD().getPreviousLocateId());
-		 * deviceInformation.setPreviousLatitude(koreDeviceInformationResponse
-		 * .getD().getPreviousLongitude());
-		 * deviceInformation.setStaticIP(koreDeviceInformationResponse.getD()
-		 * .getStaticIP());
-		 */
+	
 
 		deviceInformation.setVoiceDispatchNumber(koreDeviceInformationResponse
 				.getD().getVoiceDispatchNumber());
@@ -226,36 +183,19 @@ public class KoreDeviceInformationPostProcessor implements Processor {
 			deviceIds[i] = deviceIdList.get(i);
 		}
 
-		/* DeviceId[] deviceIds=(DeviceId[])deviceIdList.toArray(); */
 
 		deviceInformation.setDeviceIds(deviceIds);
 
 		deviceInformation.setCustomFields(customeFields);
 
-		/*SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-		deviceInformation.setLastUpdated(sdf.format(new Date()));*/
 		
 		deviceInformation.setLastUpdated(new Date());
 
 		deviceInformation.setState(koreDeviceInformationResponse.getD()
 				.getStatus());
 
-		/*
-		 * deviceInformation.setCustomField1(koreDeviceInformationResponse.getD()
-		 * .getCustomField1());
-		 * deviceInformation.setCustomField2(koreDeviceInformationResponse
-		 * .getD() .getCustomField2());
-		 * deviceInformation.setCustomField3(koreDeviceInformationResponse
-		 * .getD() .getCustomField3());
-		 * deviceInformation.setCustomField4(koreDeviceInformationResponse
-		 * .getD() .getCustomField4());
-		 * deviceInformation.setCustomField5(koreDeviceInformationResponse
-		 * .getD() .getCustomField5());
-		 * deviceInformation.setCustomField6(koreDeviceInformationResponse
-		 * .getD() .getCustomField6());
-		 */
+	
 
-		// deviceInformationArray[0] = deviceInformation;
 		deviceInformationResponseDataArea.setDevices(deviceInformation);
 		deviceInformationResponse
 				.setDataArea(deviceInformationResponseDataArea);

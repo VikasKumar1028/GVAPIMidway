@@ -7,19 +7,15 @@ import org.apache.log4j.Logger;
 import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
-import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
-import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponseDataArea;
 import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponse;
 import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponseDataArea;
-import com.gv.midway.processor.activateDevice.KoreActivateDevicePostProcessor;
 
 public class StubKoreCustomFieldsProcessor implements Processor {
 
 	Logger log = Logger.getLogger(StubKoreCustomFieldsProcessor.class
 			.getName());
-
+	@Override
 	public void process(Exchange exchange) throws Exception {
-		// TODO Auto-generated method stub
 		log.info("Begin::StubKoreCustomFieldsProcessor");
 
 		CustomFieldsDeviceResponse updateCustomeFieldDeviceResponse = new CustomFieldsDeviceResponse();

@@ -18,9 +18,8 @@ public class StubKoreDeactivateDeviceProcessor implements Processor {
 	public StubKoreDeactivateDeviceProcessor() {
 
 	}
-
+	@Override
 	public void process(Exchange exchange) throws Exception {
-		// TODO Auto-generated method stub
 
 		log.info("Begin::StubKoreDeactivateDeviceProcessor");
 		DeactivateDeviceResponse deactivateDeviceResponse = new DeactivateDeviceResponse();

@@ -27,7 +27,7 @@ public class CallbackPostProcessor implements Processor {
 		super();
 		this.newEnv = env;
 	}
-
+	@Override
 	public void process(Exchange exchange) throws Exception {
 		log.info("Inside CallbackPostProcessor process " + exchange.getIn().getBody());
 		
@@ -110,7 +110,7 @@ public class CallbackPostProcessor implements Processor {
   			 oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);
         	
  			break;
- 			
+ 			//not applicable for Verizon
         /* case REACTIVATION:
  			script="532";
   			 oauthHeader=NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, relam, script);

@@ -9,15 +9,13 @@ import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.changeDeviceServicePlans.response.ChangeDeviceServicePlansResponse;
 import com.gv.midway.pojo.changeDeviceServicePlans.response.ChangeDeviceServicePlansResponseDataArea;
-import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponseDataArea;
 
 public class StubKoreChangeDeviceServicePlansProcessor implements Processor {
 
 	Logger log = Logger.getLogger(StubKoreChangeDeviceServicePlansProcessor.class
 			.getName());
-
+	@Override
 	public void process(Exchange exchange) throws Exception {
-		// TODO Auto-generated method stub
 
 		log.info("Begin::StubKoreChangeDeviceServicePlans");
 

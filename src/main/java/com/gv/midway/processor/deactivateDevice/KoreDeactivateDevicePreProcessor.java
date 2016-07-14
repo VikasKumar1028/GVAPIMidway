@@ -6,6 +6,7 @@ import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
+
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.deactivateDevice.kore.request.DeactivateDeviceRequestKore;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
@@ -26,7 +27,7 @@ public class KoreDeactivateDevicePreProcessor implements Processor {
 		super();
 		this.newEnv = env;
 	}
-
+	@Override
 	public void process(Exchange exchange) throws Exception {
 
 		log.info("Begin:KoreDeactivateDevicePreProcessor");

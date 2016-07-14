@@ -29,14 +29,13 @@ public class VerizonDeviceSessionBeginEndInfoPostProcessor implements Processor 
 		this.newEnv = env;
 
 	}
-
+@Override
 	public void process(Exchange exchange) throws Exception {
 
 		log.info("Begin:VerizonDeviceSessionBeginEndInfoPostProcessor");
 
 		SessionBeginEndResponse businessResponse = new SessionBeginEndResponse();
 		SessionBeginEndResponseDataArea sessionBeginEndResponseDataArea = new SessionBeginEndResponseDataArea();
-		//Header responseheader = new Header();
 		Response response = new Response();
 
 		log.info("exchange.getIn().getBody().toString()***************************************"
@@ -55,13 +54,10 @@ public class VerizonDeviceSessionBeginEndInfoPostProcessor implements Processor 
 			int deviceArraySize = ((totalConnectionHistory % 2) == 0) ? (totalConnectionHistory / 2)
 					: ((totalConnectionHistory / 2) + 1);
 			ArrayList<DeviceSession> deviceSessions = new ArrayList<DeviceSession>();
-			// DeviceSession[] deviceSession = new
-			// DeviceSession[deviceArraySize];
 			if (totalConnectionHistory > 0) {
 
 				int newSession = 0;
 				DeviceSession deviceSession = new DeviceSession();
-				// deviceSession[newSession] = new DeviceSession();
 				int eventStatus = 0;
 				for (int i = 0; i < totalConnectionHistory; i++) {
 
@@ -167,21 +163,7 @@ public class VerizonDeviceSessionBeginEndInfoPostProcessor implements Processor 
 
 		}
 
-		/*responseheader.setApplicationName(exchange.getProperty(
-				IConstant.APPLICATION_NAME).toString());
-		responseheader.setRegion(exchange.getProperty(IConstant.REGION)
-				.toString());
-		responseheader.setOrganization(exchange.getProperty(
-				IConstant.ORGANIZATION).toString());
-
-		responseheader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT)
-				.toString());
-		responseheader.setSourceName(exchange
-				.getProperty(IConstant.SOURCE_NAME).toString());
-		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
-				.toString());
-		responseheader.setTransactionId(exchange.getProperty(
-				IConstant.GV_TRANSACTION_ID).toString());*/
+	
 
 		Header responseheader = (Header) exchange.getProperty(IConstant.HEADER); 
 		
