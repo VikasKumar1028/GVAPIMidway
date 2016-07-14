@@ -50,11 +50,11 @@ public class VerizonDeviceConnectionHistoryPostProcessor implements Processor {
 
 					
 
-					if (events.getKey().toString()
+					if (events.getKey()
 							.equalsIgnoreCase("BytesUsed")) {
 						event.setBytesUsed(events.getValue());
 						count++;
-					} else if (events.getKey().toString()
+					} else if (events.getKey()
 							.equalsIgnoreCase("Event")) {
 						event.setEventType(events.getValue());
 						count++;

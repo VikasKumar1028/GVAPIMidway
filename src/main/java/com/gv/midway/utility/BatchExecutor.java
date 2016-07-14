@@ -7,8 +7,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 
-import com.gv.midway.processor.restoreDevice.VerizonRestoreDevicePreProcessor;
-
 public class BatchExecutor {
 	
 	Logger log = Logger.getLogger(BatchExecutor.class

@@ -16,7 +16,7 @@ public class StubVerizonDeactivateDeviceProcessor implements Processor {
 			.getName());
 
 	public StubVerizonDeactivateDeviceProcessor() {
-
+		//Default Constructor
 	}
 
 	public void process(Exchange exchange) throws Exception {

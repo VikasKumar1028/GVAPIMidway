@@ -56,7 +56,7 @@ public class KoreTransactionFailureDeviceUsageHistoryPreProcessor implements
 		String strRequestBody = objectMapper
 				.writeValueAsString(usageInformationKoreRequest);
 
-		log.info("strRequestBody::" + strRequestBody.toString());
+		log.info("strRequestBody::" + strRequestBody);
 		
 		exchange.setProperty("DeviceId", deviceId);
 		exchange.setProperty("CarrierName", deviceInfo.getCarrierName());

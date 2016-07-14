@@ -116,8 +116,7 @@ import com.gv.midway.service.IAuditService;
 import com.gv.midway.service.IDeviceService;
 import com.gv.midway.service.IJobService;
 import com.gv.midway.service.ISchedulerService;
-// this static import is needed for older versions of Camel than 2.5
-// import static org.apache.camel.language.simple.SimpleLanguage.simple;
+
 import com.gv.midway.service.ISessionService;
 import com.gv.midway.service.ITransactionalService;
 
@@ -131,9 +130,6 @@ import com.gv.midway.service.ITransactionalService;
 @Component
 public class CamelRoute extends RouteBuilder {
 
-	/*
-	 * @Autowired private ActivateService activateService;
-	 */
 
 	@Autowired
 	private IDeviceService iDeviceService;
@@ -152,16 +148,14 @@ public class CamelRoute extends RouteBuilder {
 
 	@Autowired
 	private IJobService iJobService;
-	/*
-	 * @Autowired private SessionBean sessionBean;
-	 */
+	
 
 	private String uriRestVerizonEndPoint = "cxfrs://bean://rsVerizonClient";
 	private String uriRestVerizonTokenEndPoint = "cxfrs://bean://rsVerizonTokenClient";
 	private String uriRestKoreEndPoint = "cxfrs://bean://rsKoreClient";
 	private String uriRestNetsuitEndPoint = "cxfrs://bean://rsNetsuitClient";
 
-	Logger log = Logger.getLogger(CamelRoute.class.getName());
+	Logger log = Logger.getLogger(CamelRoute.class);
 
 	@Autowired
 	Environment env;
@@ -1448,7 +1442,6 @@ public class CamelRoute extends RouteBuilder {
 	 * 
 	 * */
 	public void callbacks() {
-		// TODO Auto-generated method stub
 		from("direct:callbacks")
 				.bean(iTransactionalService, "populateCallbackDBPayload")
 				.process(new CallbackPreProcessor(env))

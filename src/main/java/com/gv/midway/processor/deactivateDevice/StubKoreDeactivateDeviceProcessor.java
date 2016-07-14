@@ -16,8 +16,9 @@ public class StubKoreDeactivateDeviceProcessor implements Processor {
 			.getName());
 
 	public StubKoreDeactivateDeviceProcessor() {
-
+		// Default Constructor
 	}
+
 	@Override
 	public void process(Exchange exchange) throws Exception {
 

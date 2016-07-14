@@ -53,4 +53,12 @@ public class KafkaProcessor implements Processor {
 		exchange.getIn().setBody(bytes);
 	}
 
+	public Environment getNewEnv() {
+		return newEnv;
+	}
+
+	public void setNewEnv(Environment newEnv) {
+		this.newEnv = newEnv;
+	}
+
 }

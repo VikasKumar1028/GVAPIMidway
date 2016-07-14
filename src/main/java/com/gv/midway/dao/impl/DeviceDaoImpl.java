@@ -364,7 +364,6 @@ public class DeviceDaoImpl implements IDeviceDao {
 	@Override
 	public ArrayList<DeviceInformation> getAllDevices() {
 
-		ArrayList<DeviceInformation> deviceInfo = new ArrayList<DeviceInformation>();
 		return (ArrayList<DeviceInformation>) mongoTemplate
 				.findAll(DeviceInformation.class);
 

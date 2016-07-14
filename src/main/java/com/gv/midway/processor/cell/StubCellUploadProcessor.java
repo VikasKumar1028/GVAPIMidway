@@ -10,7 +10,6 @@ import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.device.request.DeviceDataArea;
 import com.gv.midway.pojo.device.request.SingleDevice;
 import com.gv.midway.pojo.device.response.UpdateDeviceResponse;
-import com.gv.midway.pojo.deviceInformation.response.Cell;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 
 public class StubCellUploadProcessor implements Processor {
@@ -36,7 +35,6 @@ public class StubCellUploadProcessor implements Processor {
 
 		Response response = new Response();
 
-		Cell cell = new Cell();
 
 		response.setResponseCode(IResponse.SUCCESS_CODE);
 

@@ -76,7 +76,7 @@ public class StubCellBulkUploadProcessor implements Processor {
 		dataArea.setSuccessCount(1);
 		batchDeviceResponse.setDataArea(dataArea);
 
-		deviceInformation1.setNetSuiteId(00001);
+		deviceInformation1.setNetSuiteId(1);
 		cell.setEsn("ESN001");
 		cell.setMdn("MDN001");
 		cell.setSim("SIM001");
@@ -190,7 +190,7 @@ public class StubCellBulkUploadProcessor implements Processor {
 
 		// ........................start
 
-		deviceInformation2.setNetSuiteId(0001);
+		deviceInformation2.setNetSuiteId(1);
 		cell.setEsn("ESN001");
 		cell.setMdn("MDN001");
 		cell.setSim("SIM001");

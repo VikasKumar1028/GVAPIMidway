@@ -49,7 +49,7 @@ public class StubVerizonDeviceInformationProcessor implements Processor {
 		deviceInformationResponse.setHeader(responseheader);
 		deviceInformationResponse.setResponse(response);
 
-		deviceInformation.setNetSuiteId(00001);
+		deviceInformation.setNetSuiteId(1);
 		deviceInformation.setMidwayMasterDeviceId("MMD001");
 		deviceInformation.setAccountName("TestAccount-1");
 		deviceInformation.setBillingCycleEndDate("2015-10-13T20:00:00Z");
@@ -129,7 +129,6 @@ public class StubVerizonDeviceInformationProcessor implements Processor {
 
 		deviceInformation.setCustomFields(arr);
 
-		String[] groupNames = { "BED20141" };
 
 		deviceInformation.setVoiceDispatchNumber("null");
 
