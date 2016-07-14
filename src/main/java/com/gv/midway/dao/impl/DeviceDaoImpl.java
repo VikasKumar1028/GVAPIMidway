@@ -116,6 +116,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 		catch (Exception e) {
 
+			log.error("Exception ex" +e);
 			Header header = device.getHeader();
 
 			Response response = new Response();
@@ -193,7 +194,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 				return deviceInformationResponse;
 			} catch (Exception e) {
-
+				log.error("Exception ex" +e);
 				response.setResponseCode(IResponse.DB_ERROR_CODE);
 				response.setResponseDescription(IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB);
 				response.setResponseStatus(IResponse.ERROR_MESSAGE);
@@ -234,7 +235,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 		}
 
 		catch (Exception e) {
-
+			log.error("Exception ex" +e);
 			log.info("Not able to fetch the data from DB....." + e.getMessage());
 		}
 
@@ -345,7 +346,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 		}
 
 		catch (Exception e) {
-
+			log.error("Exception ex" +e);
 			List<BatchDeviceId> batchDeviceList = (List<BatchDeviceId>) exchange
 					.getProperty(IConstant.BULK_ERROR_LIST);
 			BatchDeviceId errorBatchDeviceId = new BatchDeviceId();
@@ -386,7 +387,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 		log.info("device dao startDate is..." + startDate);
 		log.info("device dao endDate is..." + endDate);
 
-		Float dataUsed = null;
+		Float dataUsed ;
 		UsageInformationMidwayResponse usageInformationMidwayResponse = new UsageInformationMidwayResponse();
 
 		usageInformationMidwayResponse.setHeader(usageInformationMidwayRequest
@@ -442,8 +443,8 @@ public class DeviceDaoImpl implements IDeviceDao {
 		Date endDateValue = null;
 
 		try {
-			startDateValue = (Date) formatter.parse(startDate);
-			endDateValue = (Date) formatter.parse(endDate);
+			startDateValue =  formatter.parse(startDate);
+			endDateValue =  formatter.parse(endDate);
 			log.info("startDateValue..." + startDateValue);
 			log.info("endDateValue..." + endDateValue);
 		} catch (ParseException e1) {
@@ -509,7 +510,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 		} catch (Exception e) {
 
-			e.printStackTrace();
+			log.error("error "+ e);
 			response.setResponseCode(IResponse.DB_ERROR_CODE);
 			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB);
 			response.setResponseStatus(IResponse.ERROR_MESSAGE);
@@ -596,8 +597,8 @@ public class DeviceDaoImpl implements IDeviceDao {
 		Date endDateValue = null;
 
 		try {
-			startDateValue = (Date) formatter.parse(startDate);
-			endDateValue = (Date) formatter.parse(endDate);
+			startDateValue =  formatter.parse(startDate);
+			endDateValue =  formatter.parse(endDate);
 			log.info("startDateValue..." + startDateValue);
 			log.info("endDateValue..." + endDateValue);
 		} catch (ParseException e1) {
@@ -711,7 +712,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 		} catch (Exception e) {
 
-			e.printStackTrace();
+			log.error("Error " +e);
 			response.setResponseCode(IResponse.DB_ERROR_CODE);
 			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB);
 			response.setResponseStatus(IResponse.ERROR_MESSAGE);

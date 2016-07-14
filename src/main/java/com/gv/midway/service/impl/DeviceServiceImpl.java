@@ -51,8 +51,6 @@ public class DeviceServiceImpl implements IDeviceService {
 		log.info("device information is.........."
 				+ deviceInformationRequest.toString());
 
-		Integer netSuiteId = deviceInformationRequest.getDataArea()
-				.getNetSuiteId();
 
 		return iDeviceDao.getDeviceInformationDB(deviceInformationRequest);
 	}

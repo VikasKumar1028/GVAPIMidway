@@ -38,12 +38,12 @@ public class KoreDeviceUsageHistoryPostProcessor implements Processor {
 
 		long totalBytesUsed = 0L;
 
-		String usageDatevalue = null;
+		String usageDatevalue ;
 
 		log.info("usageInformationKoreResponse:::::::::"
 				+ usageResponse.toString());
 
-		if (usageResponse.getD().getUsage() != null && usageResponse.getD().getUsage().size()>0) 
+		if (usageResponse.getD().getUsage() != null && !usageResponse.getD().getUsage().isEmpty()) 
 		{
 
 			for (Usage usage : usageResponse.getD().getUsage()) {

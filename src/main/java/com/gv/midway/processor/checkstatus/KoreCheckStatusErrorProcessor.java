@@ -86,7 +86,7 @@ public class KoreCheckStatusErrorProcessor implements Processor {
 						errorResponseBody, KoreErrorResponse.class);
 				errorDescription = errorResponsePayload.getErrorMessage();
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error("Error ::" +e);
 			}
 
 		}
@@ -186,7 +186,7 @@ public class KoreCheckStatusErrorProcessor implements Processor {
 		String relam = newEnv.getProperty("netSuite.Relam");
 		String endPoint = newEnv.getProperty("netSuite.endPoint");
 		
-		String script=null;
+		String script;
 	    String oauthHeader=null;
 	    
 	    message.setHeader(Exchange.CONTENT_TYPE, "application/json");

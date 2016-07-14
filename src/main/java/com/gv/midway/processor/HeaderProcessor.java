@@ -46,7 +46,7 @@ public class HeaderProcessor implements Processor {
 					"yyyy-MM-dd'T'HH:mm:ss");
 
 			try {
-				Date timestampDate = formatter.parse(exchange.getProperty(
+			 formatter.parse(exchange.getProperty(
 						IConstant.DATE_FORMAT).toString());
 
 			} catch (ParseException e1) {

@@ -64,7 +64,7 @@ public interface IConstant {
 	static String NO_RECORD = "No Record Found";
 	static String EVENT_START = "Start";
 	static String EVENT_STOP = "Stop";
-	
+	static String EVENT = "Event";
 	
 	static String KORE_CHECKSTATUS_PENDING="Pending";
 	static String KORE_CHECKSTATUS_COMPLETED="Completed";

@@ -123,7 +123,6 @@ public class KoreCheckStatusPostProcessor implements Processor {
 		
         NetSuiteCallBackProvisioningRequest netSuiteCallBackProvisioningRequest =new NetSuiteCallBackProvisioningRequest();
 		
-		//netSuiteCallBackProvisioningRequest.setRequestType(requestType);
 		netSuiteCallBackProvisioningRequest.setStatus("success");
 		 
 		
@@ -157,7 +156,7 @@ public class KoreCheckStatusPostProcessor implements Processor {
 		String relam = newEnv.getProperty("netSuite.Relam");
 		String endPoint = newEnv.getProperty("netSuite.endPoint");
 		
-		String script=null;
+		String script;
 	    String oauthHeader=null;
 	    
 	    message.setHeader(Exchange.CONTENT_TYPE, "application/json");

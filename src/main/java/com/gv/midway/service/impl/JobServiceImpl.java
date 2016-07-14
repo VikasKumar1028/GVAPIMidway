@@ -50,10 +50,10 @@ public class JobServiceImpl implements IJobService {
 
 			log.info("currentServerIp:::::::" + currentServerIp);
 
-			ServerDetail serverDetail = null;
+			ServerDetail serverDetail;
 			serverDetail = iJobDao.fetchServerIp(currentServerIp);
 
-			// Send currentServerIp and fetch serverDetail;
+			// Send the currentServerIp and fetch serverDetail
 			// get the jobType of the serverDEtail
 
 			if (serverDetail != null
@@ -81,7 +81,7 @@ public class JobServiceImpl implements IJobService {
 		// To be removed just to populate dummy bulk data in deviceInfo and
 		// device Usage
 
-		// iJobDao.insertBulkRecords();
+		// iJobDao.insertBulkRecords()
 
 	}
 

@@ -73,7 +73,7 @@ public class CallbackPostProcessor implements Processor {
 		
 	  log.info("oauth info is....."+oauthConsumerKey+" "+oauthTokenId+" "+endPoint+" "+oauthTokenSecret+" "+oauthConsumerSecret+" "+relam);
 	  
-      String script=null;
+      String script;
       String oauthHeader=null;
       
       script="539";

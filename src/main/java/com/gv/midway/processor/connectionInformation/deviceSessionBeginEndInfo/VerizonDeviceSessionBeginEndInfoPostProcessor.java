@@ -51,12 +51,9 @@ public class VerizonDeviceSessionBeginEndInfoPostProcessor implements Processor 
 			int totalConnectionHistory = connectionResponse
 					.getConnectionHistory().length;
 
-			int deviceArraySize = ((totalConnectionHistory % 2) == 0) ? (totalConnectionHistory / 2)
-					: ((totalConnectionHistory / 2) + 1);
 			ArrayList<DeviceSession> deviceSessions = new ArrayList<DeviceSession>();
 			if (totalConnectionHistory > 0) {
 
-				int newSession = 0;
 				DeviceSession deviceSession = new DeviceSession();
 				int eventStatus = 0;
 				for (int i = 0; i < totalConnectionHistory; i++) {
@@ -69,7 +66,7 @@ public class VerizonDeviceSessionBeginEndInfoPostProcessor implements Processor 
 
 						if (connectionResponse.getConnectionHistory()[i]
 								.getConnectionEventAttributes()[j].getKey()
-								.equalsIgnoreCase("Event")
+								.equalsIgnoreCase(IConstant.EVENT)
 								&& connectionResponse.getConnectionHistory()[i]
 										.getConnectionEventAttributes()[j]
 										.getValue().equalsIgnoreCase(
@@ -84,7 +81,7 @@ public class VerizonDeviceSessionBeginEndInfoPostProcessor implements Processor 
 
 						} else if (connectionResponse.getConnectionHistory()[i]
 								.getConnectionEventAttributes()[j].getKey()
-								.equalsIgnoreCase("Event")
+								.equalsIgnoreCase(IConstant.EVENT)
 								&& connectionResponse.getConnectionHistory()[i]
 										.getConnectionEventAttributes()[j]
 										.getValue().equalsIgnoreCase(
@@ -99,7 +96,7 @@ public class VerizonDeviceSessionBeginEndInfoPostProcessor implements Processor 
 
 						} else if (connectionResponse.getConnectionHistory()[i]
 								.getConnectionEventAttributes()[j].getKey()
-								.equalsIgnoreCase("Event")
+								.equalsIgnoreCase(IConstant.EVENT)
 								&& connectionResponse.getConnectionHistory()[i]
 										.getConnectionEventAttributes()[j]
 										.getValue().equalsIgnoreCase(
@@ -117,7 +114,7 @@ public class VerizonDeviceSessionBeginEndInfoPostProcessor implements Processor 
 							}
 						} else if (connectionResponse.getConnectionHistory()[i]
 								.getConnectionEventAttributes()[j].getKey()
-								.equalsIgnoreCase("Event")
+								.equalsIgnoreCase(IConstant.EVENT)
 								&& connectionResponse.getConnectionHistory()[i]
 										.getConnectionEventAttributes()[j]
 										.getValue().equalsIgnoreCase(

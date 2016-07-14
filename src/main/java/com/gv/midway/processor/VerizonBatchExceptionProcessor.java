@@ -41,7 +41,7 @@ public class VerizonBatchExceptionProcessor implements Processor {
 		Exception ex = (Exception) exchange
 				.getProperty(Exchange.EXCEPTION_CAUGHT);
 
-		String errorType = "";
+		String errorType ;
 
 		// If Connection Exception
 		if (ex.getCause() instanceof UnknownHostException
