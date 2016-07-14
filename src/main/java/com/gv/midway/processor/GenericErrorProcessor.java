@@ -39,9 +39,8 @@ public class GenericErrorProcessor implements Processor {
 	}
 
 	public GenericErrorProcessor() {
-		// TODO Auto-generated constructor stub
 	}
-
+	@Override
 	public void process(Exchange exchange) throws Exception {
 
 		log.info("----.Generic exchange----------"+exchange.getFromEndpoint().toString());

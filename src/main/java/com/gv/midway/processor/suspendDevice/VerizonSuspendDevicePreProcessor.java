@@ -18,7 +18,7 @@ public class VerizonSuspendDevicePreProcessor implements Processor {
 
 	Logger log = Logger.getLogger(VerizonSuspendDevicePreProcessor.class
 			.getName());
-
+	@Override
 	public void process(Exchange exchange) throws Exception {
 
 		log.info("Begin:VerizonSuspendDevicePreProcessor");
@@ -69,7 +69,6 @@ public class VerizonSuspendDevicePreProcessor implements Processor {
 		businessRequest.setDevices(businessDevicesArray);
 
 		ObjectMapper objectMapper = new ObjectMapper();
-		// objectMapper.getSerializationConfig().withSerializationInclusion(Include.NON_EMPTY);
 
 		String strRequestBody = objectMapper
 				.writeValueAsString(businessRequest);

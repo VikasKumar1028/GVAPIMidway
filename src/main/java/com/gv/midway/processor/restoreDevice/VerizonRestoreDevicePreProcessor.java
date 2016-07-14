@@ -20,6 +20,7 @@ public class VerizonRestoreDevicePreProcessor implements Processor {
 			.getName());
 
 	// method for processing the message exchange for Verizon
+	@Override
 	public void process(Exchange exchange) throws Exception {
 
 		log.info("Begin:VerizonRestoreDevicePreProcessor");
@@ -69,7 +70,6 @@ public class VerizonRestoreDevicePreProcessor implements Processor {
 		businessRequest.setDevices(businessDevicesArray);
 
 		ObjectMapper objectMapper = new ObjectMapper();
-		// objectMapper.getSerializationConfig().withSerializationInclusion(Include.NON_EMPTY);
 
 		String strRequestBody = objectMapper
 				.writeValueAsString(businessRequest);

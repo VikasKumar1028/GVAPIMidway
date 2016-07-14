@@ -34,13 +34,13 @@ public class VerizonRestoreDevicePostProcessor implements Processor {
 	 * @see org.apache.camel.Processor#process(org.apache.camel.Exchange)
 	 */
 	//method for processing the message exchange for Verizon
+	@Override
 	public void process(Exchange exchange) throws Exception {
 
 		log.info("Begin:VerizonRestoreDevicePostProcessor");
 
 		RestoreDeviceResponse restoreDeviceResponse = new RestoreDeviceResponse();
 		RestoreDeviceResponseDataArea restoreDeviceResponseDataArea = new RestoreDeviceResponseDataArea();
-		//Header responseheader = new Header();
 		Response response = new Response();
 		
 
@@ -65,21 +65,7 @@ public class VerizonRestoreDevicePostProcessor implements Processor {
 					.toString());
 	} 
 
-		/*responseheader.setApplicationName(exchange.getProperty(
-				IConstant.APPLICATION_NAME).toString());
-		responseheader.setRegion(exchange.getProperty(IConstant.REGION)
-				.toString());
-		responseheader.setOrganization(exchange.getProperty(
-				IConstant.ORGANIZATION).toString());
-
-		responseheader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT)
-				.toString());
-		responseheader.setSourceName(exchange
-				.getProperty(IConstant.SOURCE_NAME).toString());
-		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
-				.toString());
-		responseheader.setTransactionId(exchange.getProperty(
-				IConstant.GV_TRANSACTION_ID).toString());*/
+		
 		
 		Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
 		

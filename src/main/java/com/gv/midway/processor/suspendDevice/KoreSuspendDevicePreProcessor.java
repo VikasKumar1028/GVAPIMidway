@@ -27,7 +27,7 @@ public class KoreSuspendDevicePreProcessor implements Processor {
 		super();
 		this.newEnv = env;
 	}
-
+	@Override
 	public void process(Exchange exchange) throws Exception {
 		log.info("*************Testing**************************************"
 				+ exchange.getIn().getBody());

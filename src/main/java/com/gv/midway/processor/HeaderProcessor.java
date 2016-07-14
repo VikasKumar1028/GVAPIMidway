@@ -18,6 +18,7 @@ public class HeaderProcessor implements Processor {
 
 	Logger log = Logger.getLogger(HeaderProcessor.class.getName());
 
+	@Override
 	public void process(Exchange exchange) throws Exception {
 
 		log.info("Start:HeaderProcessor");
@@ -32,11 +33,7 @@ public class HeaderProcessor implements Processor {
 
 		Object bs_carrier = exchange.getProperty(IConstant.BSCARRIER);
 		Object sourceName = exchange.getProperty(IConstant.SOURCE_NAME);
-		/*
-		 * Object
-		 * applicationName=exchange.getProperty(IConstant.APPLICATION_NAME);
-		 * Object region=exchange.getProperty(IConstant.REGION);
-		 */
+		
 		Object dateFormat = exchange.getProperty(IConstant.DATE_FORMAT);
 		Object organization = exchange.getProperty(IConstant.ORGANIZATION);
 		Object gv_transactionId = exchange

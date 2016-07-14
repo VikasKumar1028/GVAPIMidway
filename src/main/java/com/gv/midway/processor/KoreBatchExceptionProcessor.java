@@ -5,11 +5,13 @@ import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.component.cxf.CxfOperationException;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
+
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.deviceHistory.DeviceUsage;
 import com.gv.midway.pojo.job.JobDetail;
@@ -31,7 +33,7 @@ public class KoreBatchExceptionProcessor implements Processor {
 	public KoreBatchExceptionProcessor() {
 
 	}
-
+	@Override
 	public void process(Exchange exchange) throws Exception {
 
 		Exception ex = (Exception) exchange

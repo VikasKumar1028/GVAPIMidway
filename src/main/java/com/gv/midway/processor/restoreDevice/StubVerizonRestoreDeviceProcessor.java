@@ -16,6 +16,7 @@ public class StubVerizonRestoreDeviceProcessor implements Processor {
 			.getName());
 
 	// method for processing the message exchange for Verizon Stub
+	@Override
 	public void process(Exchange exchange) throws Exception {
 
 		log.info("Begin:StubVerizonRestoreDeviceProcessor");

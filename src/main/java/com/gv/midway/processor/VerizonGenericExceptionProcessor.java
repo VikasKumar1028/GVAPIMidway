@@ -5,6 +5,7 @@ import org.apache.camel.Processor;
 import org.apache.camel.component.cxf.CxfOperationException;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IResponse;
@@ -39,9 +40,8 @@ public class VerizonGenericExceptionProcessor implements Processor {
 	}
 
 	public VerizonGenericExceptionProcessor() {
-		// TODO Auto-generated constructor stub
 	}
-
+	@Override
 	public void process(Exchange exchange) throws Exception {
 
 		CxfOperationException exception = (CxfOperationException) exchange
@@ -59,7 +59,6 @@ public class VerizonGenericExceptionProcessor implements Processor {
 		Header responseHeader = (Header) exchange.getProperty(IConstant.HEADER);
 		
 		Response response = new Response();
-		// TODO SAME Functionality
 		if (exception.getStatusCode() == 401
 				|| exception
 						.getResponseBody()
@@ -71,7 +70,6 @@ public class VerizonGenericExceptionProcessor implements Processor {
 					"Not able to retrieve  valid authentication token");
 			throw new VerizonSessionTokenExpirationException("401", "401");
 		}
-		// TODO SAME Functionality
 		else {
 
 			ObjectMapper mapper = new ObjectMapper();

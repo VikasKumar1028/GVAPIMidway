@@ -16,7 +16,6 @@ public class NetSuiteIdValidationProcessor implements Processor {
 
 	@Override
 	public void process(Exchange exchange) throws Exception {
-		// TODO Auto-generated method stub
 		
 		DeviceInformationRequest request = (DeviceInformationRequest) exchange
 				.getIn().getBody(DeviceInformationRequest.class);
@@ -36,7 +35,7 @@ public class NetSuiteIdValidationProcessor implements Processor {
 			
 			Integer netSuiteId=deviceInformationRequestDataArea.getNetSuiteId();
 			
-			if(netSuiteId==null/*||netSuiteId.trim().equals("")*/)
+			if(netSuiteId==null)
 			{
 				
 				 missingNetSuiteId(exchange);

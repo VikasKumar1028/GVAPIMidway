@@ -22,8 +22,8 @@ public class BulkDeviceProcessor implements Processor {
 	private Logger log = Logger.getLogger(BulkDeviceProcessor.class
 			.getName());
 
+	@Override
 	public void process(Exchange exchange) throws Exception {
-		// TODO Auto-generated method stub
 		log.info("******************Bulk device Processor invoked********************");
 		
 		List<BatchDeviceId> errorList=(List<BatchDeviceId>) exchange.getProperty(IConstant.BULK_ERROR_LIST);
@@ -31,7 +31,6 @@ public class BulkDeviceProcessor implements Processor {
 		
 		
 		
-		//Header responseheader = new Header();
 
 		Response response = new Response();
 		
@@ -41,15 +40,7 @@ public class BulkDeviceProcessor implements Processor {
 		response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
 		response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_CARRIER);
 
-		/*responseheader.setApplicationName(exchange.getProperty(IConstant.APPLICATION_NAME).toString());
-		responseheader.setRegion(exchange.getProperty(IConstant.REGION).toString());
 		
-		responseheader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT).toString());
-		responseheader.setOrganization(exchange.getProperty(IConstant.ORGANIZATION).toString());
-		responseheader.setSourceName(exchange.getProperty(IConstant.SOURCE_NAME).toString());
-	
-		responseheader.setTransactionId(exchange.getProperty(IConstant.GV_TRANSACTION_ID).toString());
-		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER).toString());*/
 		
 		Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
 		

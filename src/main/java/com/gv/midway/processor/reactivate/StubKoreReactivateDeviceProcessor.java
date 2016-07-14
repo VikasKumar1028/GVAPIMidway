@@ -14,7 +14,7 @@ public class StubKoreReactivateDeviceProcessor implements Processor {
 
 	Logger log = Logger.getLogger(KoreReactivateDevicePreProcessor.class
 			.getName());
-
+	@Override
 	public void process(Exchange exchange) throws Exception {
 
 		log.info("Begin:StubKoreReactivateDeviceProcessor");

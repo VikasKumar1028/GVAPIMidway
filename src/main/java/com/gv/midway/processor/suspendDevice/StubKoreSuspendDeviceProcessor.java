@@ -14,7 +14,7 @@ public class StubKoreSuspendDeviceProcessor implements Processor {
 
 	Logger log = Logger.getLogger(StubKoreSuspendDeviceProcessor.class
 			.getName());
-
+	@Override
 	public void process(Exchange exchange) throws Exception {
 
 		log.info("Begin:StubKoreSuspendDeviceProcessor");

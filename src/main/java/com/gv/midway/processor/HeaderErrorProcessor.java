@@ -37,12 +37,10 @@ public class HeaderErrorProcessor implements Processor {
 	}
 
 	public HeaderErrorProcessor() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void process(Exchange exchange) throws Exception {
-		// TODO Auto-generated method stub
 
 		Response response = new Response();
 

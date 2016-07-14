@@ -14,7 +14,7 @@ public class StubVerizonSuspendDeviceProcessor implements Processor {
 
 	Logger log = Logger.getLogger(StubVerizonSuspendDeviceProcessor.class
 			.getName());
-
+	@Override
 	public void process(Exchange exchange) throws Exception {
 
 		log.info("Begin::StubVerizonSuspendDeviceProcessor");

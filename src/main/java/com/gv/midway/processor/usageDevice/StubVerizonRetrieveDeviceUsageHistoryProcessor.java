@@ -17,6 +17,7 @@ public class StubVerizonRetrieveDeviceUsageHistoryProcessor implements Processor
 	Logger log = Logger.getLogger(StubVerizonActivateDeviceProcessor.class
 			.getName());
 
+	@Override
 	public void process(Exchange exchange) throws Exception {
 
 		log.info("Begin::StubVerizonRetrieveDeviceUsageHistoryProcessor");

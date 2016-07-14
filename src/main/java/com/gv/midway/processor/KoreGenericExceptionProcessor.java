@@ -36,9 +36,9 @@ public class KoreGenericExceptionProcessor implements Processor {
 	}
 
 	public KoreGenericExceptionProcessor() {
-		// TODO Auto-generated constructor stub
 	}
 
+	@Override
 	public void process(Exchange exchange) throws Exception {
 
 		CxfOperationException exception = (CxfOperationException) exchange
@@ -48,24 +48,7 @@ public class KoreGenericExceptionProcessor implements Processor {
 				+ exception.getResponseBody());
 		log.info("----.getStatusCode()----------" + exception.getStatusCode());
 
-		/*
-		 * Header responseHeader = new Header();
-		 * responseHeader.setApplicationName(exchange.getProperty(
-		 * IConstant.APPLICATION_NAME).toString());
-		 * responseHeader.setRegion(exchange.getProperty(IConstant.REGION)
-		 * .toString());
-		 * 
-		 * responseHeader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT
-		 * ) .toString()); responseHeader.setOrganization(exchange.getProperty(
-		 * IConstant.ORGANIZATION).toString());
-		 * responseHeader.setSourceName(exchange
-		 * .getProperty(IConstant.SOURCE_NAME).toString());
-		 * 
-		 * responseHeader.setTransactionId(exchange.getProperty(
-		 * IConstant.GV_TRANSACTION_ID).toString());
-		 * responseHeader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
-		 * .toString());
-		 */
+		
 
 		ObjectMapper mapper = new ObjectMapper();
 
@@ -77,9 +60,7 @@ public class KoreGenericExceptionProcessor implements Processor {
 
 		Response response = new Response();
 
-		/*
-		 * int statusCodeInt = exception.getStatusCode();
-		 */
+	
 		response.setResponseCode(IResponse.INVALID_PAYLOAD);
 
 		response.setResponseStatus(IResponse.ERROR_MESSAGE);

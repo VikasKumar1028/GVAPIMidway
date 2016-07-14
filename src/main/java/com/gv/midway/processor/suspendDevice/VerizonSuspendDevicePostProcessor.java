@@ -6,6 +6,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
+
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.Header;
@@ -33,13 +34,13 @@ public class VerizonSuspendDevicePostProcessor implements Processor {
 	 * 
 	 * @see org.apache.camel.Processor#process(org.apache.camel.Exchange)
 	 */
+	@Override
 	public void process(Exchange exchange) throws Exception {
 
 		log.info("Begin:VerizonSuspendDevicePostProcessor");
 
 		SuspendDeviceResponse suspendDeviceResponse = new SuspendDeviceResponse();
 		SuspendDeviceResponseDataArea suspendDeviceResponseDataArea = new SuspendDeviceResponseDataArea();
-		//Header responseheader = new Header();
 		Response response = new Response();
 
 
@@ -64,26 +65,7 @@ public class VerizonSuspendDevicePostProcessor implements Processor {
 
 		}
 
-		/*responseheader.setApplicationName(exchange.getProperty(
-				IConstant.APPLICATION_NAME).toString());
-		responseheader.setRegion(exchange.getProperty(IConstant.REGION)
-				.toString());
-		responseheader.setOrganization(exchange.getProperty(
-				IConstant.ORGANIZATION).toString());
-
 		
-		 * responseheader.setTimestamp(exchange.getProperty(
-		 * IConstant.DATE_FORMAT).toString());
-		 
-
-		responseheader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT)
-				.toString());
-		responseheader.setSourceName(exchange
-				.getProperty(IConstant.SOURCE_NAME).toString());
-		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER)
-				.toString());
-		responseheader.setTransactionId(exchange.getProperty(
-				IConstant.GV_TRANSACTION_ID).toString());*/
 		
 		Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
 

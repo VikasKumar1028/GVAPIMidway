@@ -25,7 +25,7 @@ public class TokenProcessor implements Processor {
 	public TokenProcessor() {
 
 	}
-
+	@Override
 	public void process(Exchange exchange) throws Exception {
 
 		exchange.getContext().createProducerTemplate()

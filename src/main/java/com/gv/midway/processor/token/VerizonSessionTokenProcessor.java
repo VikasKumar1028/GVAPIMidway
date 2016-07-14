@@ -12,6 +12,7 @@ public class VerizonSessionTokenProcessor implements Processor {
 
 	Logger log = Logger.getLogger(VerizonSessionTokenProcessor.class.getName());
 
+	@Override
 	public void process(Exchange exchange) throws Exception {
 
 		log.info("Start:VerizonSessionTokenProcessor");
@@ -32,13 +33,7 @@ public class VerizonSessionTokenProcessor implements Processor {
 
 		log.info("-----------------authResponse.getAccess_token()---------------"
 				+ authResponse.getAccess_token());
-		// Hard Coded Values
-		/*
-		 * exchange.setProperty(IConstant.VZ_AUTHORIZATION_TOKEN,
-		 * "89ba225e1438e95bd05c3cc288d3591");
-		 * message.setHeader("Authorization",
-		 * "Bearer 89ba225e1438e95bd05c3cc288d3591");
-		 */
+
 
 		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");

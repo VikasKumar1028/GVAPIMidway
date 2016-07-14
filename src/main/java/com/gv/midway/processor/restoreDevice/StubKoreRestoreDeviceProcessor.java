@@ -16,6 +16,7 @@ public class StubKoreRestoreDeviceProcessor implements Processor {
 			.getName());
 
 	// method for processing the message exchange for KORE Stub
+@Override
 	public void process(Exchange exchange) throws Exception {
 
 		log.info("Begin:StubKoreRestoreDeviceProcessor");
