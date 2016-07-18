@@ -27,8 +27,7 @@ public class HeaderProcessor implements Processor {
         exchange.setProperty(IConstant.MIDWAY_TRANSACTION_ID,
                 midwayTransactionID);
 
-        String derivedCarrierName = CommonUtil.getDerivedCarrierName(exchange
-                .getProperty(IConstant.BSCARRIER).toString());
+       
 
         Object bs_carrier = exchange.getProperty(IConstant.BSCARRIER);
         Object sourceName = exchange.getProperty(IConstant.SOURCE_NAME);
@@ -38,14 +37,25 @@ public class HeaderProcessor implements Processor {
         Object gv_transactionId = exchange
                 .getProperty(IConstant.GV_TRANSACTION_ID);
 
-        if (exchange.getProperty(IConstant.DATE_FORMAT) != null)
+        
 
-        {
-            SimpleDateFormat formatter = new SimpleDateFormat(
+        if (bs_carrier == null || sourceName == null || dateFormat == null
+                || organization == null || gv_transactionId == null) {
+
+            exchange.setProperty(IConstant.RESPONSE_CODE, "402");
+            exchange.setProperty(IConstant.RESPONSE_STATUS, "Missing Parameter");
+            exchange.setProperty(IConstant.RESPONSE_DESCRIPTION,
+                    "Pass all the required header parameters. ");
+            throw new MissingParameterException("402",
+                    "Pass all the required header parameters.");
+
+        }
+        
+          SimpleDateFormat formatter = new SimpleDateFormat(
                     "yyyy-MM-dd'T'HH:mm:ss");
 
             try {
-                formatter.parse(exchange.getProperty(IConstant.DATE_FORMAT)
+                formatter.parse(dateFormat
                         .toString());
 
             } catch (ParseException e1) {
@@ -60,19 +70,10 @@ public class HeaderProcessor implements Processor {
                         IResponse.INVALID_PAYLOAD.toString(),
                         IResponse.ERROR_DESCRIPTION_DATE__TIMESTAMP_MIDWAYDB);
             }
-        }
-
-        if (bs_carrier == null || sourceName == null || dateFormat == null
-                || organization == null || gv_transactionId == null) {
-
-            exchange.setProperty(IConstant.RESPONSE_CODE, "402");
-            exchange.setProperty(IConstant.RESPONSE_STATUS, "Missing Parameter");
-            exchange.setProperty(IConstant.RESPONSE_DESCRIPTION,
-                    "Pass all the required header parameters. ");
-            throw new MissingParameterException("402",
-                    "Pass all the required header parameters.");
-
-        }
+       
+        
+        String derivedCarrierName = CommonUtil.getDerivedCarrierName(exchange
+                .getProperty(IConstant.BSCARRIER).toString());
 
         if (derivedCarrierName == null
                 || ((exchange.getFromEndpoint().toString()
@@ -87,7 +88,7 @@ public class HeaderProcessor implements Processor {
                         .matches("(.*)retrieveDeviceUsageHistoryCarrier(.*)") && IConstant.BSCARRIER_SERVICE_KORE
                         .equalsIgnoreCase(derivedCarrierName))
                 || (exchange.getFromEndpoint().toString()
-                        .matches("(.*)getDeviceConnectionHistoryInfoDB(.*)") && IConstant.BSCARRIER_SERVICE_VERIZON
+                        .matches("(.*)getDeviceConnectionHistoryInfoDB(.*)") && IConstant.BSCARRIER_SERVICE_KORE
                         .equalsIgnoreCase(derivedCarrierName))) {
             exchange.setProperty(IConstant.RESPONSE_CODE, "402");
             exchange.setProperty(IConstant.RESPONSE_STATUS, "Invalid Parameter");

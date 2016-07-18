@@ -111,7 +111,7 @@ public class CommonUtil {
             return "KORE";
         }
 
-        return "";
+        return null;
     }
 
     /**
