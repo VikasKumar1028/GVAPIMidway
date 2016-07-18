@@ -30,6 +30,8 @@ public class VerizonDeviceInformationPreProcessor implements Processor {
         exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID, req.getDataArea()
                 .getNetSuiteId());
         DeviceId deviceId = req.getDataArea().getDeviceId();
+        
+        exchange.setProperty(IConstant.MIDWAY_DEVICE_ID, deviceId);
 
         net.sf.json.JSONObject obj = new net.sf.json.JSONObject();
         obj.put("deviceId", deviceId);

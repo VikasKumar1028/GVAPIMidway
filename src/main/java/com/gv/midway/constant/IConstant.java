@@ -32,6 +32,7 @@ public interface IConstant {
     static String MIDWAY_TRANSACTION_REQUEST_HEADER = "midWayTransactionRequestHeader";
     static String MIDWAY_TRANSACTION_PAYLOAD = "midWayTransactionPayload";
     static String MIDWAY_CARRIER_ERROR_DESC = "midWayCarrierErrorDescription";
+    static String MIDWAY_DEVICE_ID="midWayDeviceId";
 
     static String MIDWAY_CALLBACK_CARRIER_STATUS_SUCCESS = "Success";
     static String MIDWAY_CALLBACK_DELIVERED_FAILED = "Fail";

@@ -76,6 +76,11 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
                     IConstant.BSCARRIER).toString());
         }
 
+        /**
+         * If Data is returned from Carrier
+         */
+        if(getDevicelenth>0)
+        {
         Response response = new Response();
 
         response.setResponseCode(IResponse.SUCCESS_CODE);
@@ -169,6 +174,72 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 
             }
 
+        }
+        
+        }
+        
+        /**
+         * If no data found from carrier
+         */
+        else
+        {
+        	 Response response = new Response();
+
+             response.setResponseCode(IResponse.NO_DATA_FOUND_CODE);
+             response.setResponseStatus(IResponse.ERROR_MESSAGE);
+             response.setResponseDescription(IResponse.ERROR_DESCRIPTION_NODATA_DEVCIEINFO_CARRIER);
+
+             Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
+
+             deviceInformationResponse.setHeader(responseheader);
+             deviceInformationResponse.setResponse(response);
+             
+             DeviceId deviceId=(DeviceId) exchange.getProperty(IConstant.MIDWAY_DEVICE_ID);
+             
+        	DeviceId[] deviceIdsPrev=deviceInformation.getDeviceIds();
+        	
+        	if(deviceIdsPrev==null||deviceIdsPrev.length==0){
+        		
+        		DeviceId[] deviceIds=new DeviceId[1];
+        		deviceIds[0]=deviceId;
+        		
+        		deviceInformation.setDeviceIds(deviceIds);
+        	}
+        	
+        	else{
+        		
+        		boolean checkDeviceIds=false;
+        		
+        		for (int i = 0; i < deviceIdsPrev.length; i++) {
+					DeviceId deviceIdPrev=deviceIdsPrev[i];
+					if(deviceIdPrev.getKind().equalsIgnoreCase(deviceId.getKind()))
+					{
+						deviceIdPrev.setId(deviceId.getId());
+						deviceIdsPrev[i]=deviceIdPrev;
+						deviceInformation.setDeviceIds(deviceIdsPrev);
+						checkDeviceIds=true;
+						break;
+					}
+				}
+        		
+        		if(!checkDeviceIds)
+        		{
+        			DeviceId[] deviceIdsNew=new DeviceId[deviceIdsPrev.length+1];
+        			
+        			for (int i = 0; i < deviceIdsPrev.length; i++) {
+						DeviceId deviceIdPrev = deviceIdsPrev[i];
+						deviceIdsNew[i]=deviceIdPrev;
+						
+					}
+        			
+        			deviceIdsNew[deviceIdsNew.length-1]=deviceId;
+        			
+        			deviceInformation.setDeviceIds(deviceIdsNew);
+        			
+        		}
+        		
+        	}
+        	
         }
 
         deviceInformation.setLastUpdated(new Date());
