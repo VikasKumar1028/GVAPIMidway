@@ -161,6 +161,7 @@ public class CamelRoute extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
+        LOGGER.info("CAMEL");
         onException(UnknownHostException.class, ConnectException.class)
                 .routeId("ConnectionExceptionRoute")
                 .handled(true)

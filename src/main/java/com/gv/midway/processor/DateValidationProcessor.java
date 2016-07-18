@@ -22,7 +22,7 @@ public class DateValidationProcessor implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {
-
+        LOGGER.info("DateValidationProcessor");
         SimpleDateFormat formatter = new SimpleDateFormat(
                 "yyyy-MM-dd'T'HH:mm:ss");
 

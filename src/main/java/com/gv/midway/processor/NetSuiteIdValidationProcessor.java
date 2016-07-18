@@ -16,7 +16,7 @@ public class NetSuiteIdValidationProcessor implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {
-
+        LOGGER.info("NetSuiteIdValidationProcessor");
         DeviceInformationRequest request = (DeviceInformationRequest) exchange
                 .getIn().getBody(DeviceInformationRequest.class);
 

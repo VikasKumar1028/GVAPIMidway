@@ -203,55 +203,40 @@ public class KoreCheckStatusErrorProcessor implements Processor {
 
         switch (requestType) {
         case ACTIVATION:
-
             netSuiteCallBackProvisioningRequest
                     .setRequestType(NetSuiteRequestType.ACTIVATION);
             oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
                     oauthConsumerKey, oauthTokenId, oauthTokenSecret,
                     oauthConsumerSecret, relam, script);
-
             break;
-
         case DEACTIVATION:
-
             netSuiteCallBackProvisioningRequest
                     .setRequestType(NetSuiteRequestType.DEACTIVATION);
             oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
                     oauthConsumerKey, oauthTokenId, oauthTokenSecret,
                     oauthConsumerSecret, relam, script);
-
             break;
-
         case REACTIVATION:
-
             netSuiteCallBackProvisioningRequest
                     .setRequestType(NetSuiteRequestType.REACTIVATION);
             oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
                     oauthConsumerKey, oauthTokenId, oauthTokenSecret,
                     oauthConsumerSecret, relam, script);
-
             break;
-
         case RESTORE:
-
             netSuiteCallBackProvisioningRequest
                     .setRequestType(NetSuiteRequestType.RESTORATION);
             oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
                     oauthConsumerKey, oauthTokenId, oauthTokenSecret,
                     oauthConsumerSecret, relam, script);
-
             break;
-
         case SUSPEND:
-
             netSuiteCallBackProvisioningRequest
                     .setRequestType(NetSuiteRequestType.SUSPENSION);
             oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
                     oauthConsumerKey, oauthTokenId, oauthTokenSecret,
                     oauthConsumerSecret, relam, script);
-
             break;
-
         case CHANGESERVICEPLAN:
             ChangeDeviceServicePlansRequest changeDeviceServicePlansRequest = (ChangeDeviceServicePlansRequest) body;
             LOGGER.info("change devcie servcie plan data area...."
@@ -272,16 +257,13 @@ public class KoreCheckStatusErrorProcessor implements Processor {
                     oauthConsumerKey, oauthTokenId, oauthTokenSecret,
                     oauthConsumerSecret, relam, script);
             break;
-
         case CHANGECUSTOMFIELDS:
-
             netSuiteCallBackProvisioningRequest
                     .setRequestType(NetSuiteRequestType.CUSTOM_FIELDS);
             oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
                     oauthConsumerKey, oauthTokenId, oauthTokenSecret,
                     oauthConsumerSecret, relam, script);
             break;
-
         default:
             break;
         }

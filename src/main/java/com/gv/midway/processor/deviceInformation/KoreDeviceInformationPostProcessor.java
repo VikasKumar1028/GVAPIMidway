@@ -55,7 +55,7 @@ public class KoreDeviceInformationPostProcessor implements Processor {
         }
 
         if (deviceInformation.getBs_carrier() == null
-                || deviceInformation.getBs_carrier().trim().equals("")) {
+                || "".equals(deviceInformation.getBs_carrier().trim())) {
             deviceInformation.setBs_carrier(exchange.getProperty(
                     IConstant.BSCARRIER).toString());
         }
@@ -154,14 +154,14 @@ public class KoreDeviceInformationPostProcessor implements Processor {
 
         List<DeviceId> deviceIdList = new ArrayList<DeviceId>();
 
-        if (msisdnOrmdn != null && !msisdnOrmdn.trim().equals("")) {
+        if (msisdnOrmdn != null && !"".equals(msisdnOrmdn.trim())) {
             DeviceId deviceId1 = new DeviceId();
             deviceId1.setKind("mdn");
             deviceId1.setId(msisdnOrmdn);
             deviceIdList.add(deviceId1);
         }
 
-        if (imsiOrMin != null && !imsiOrMin.trim().equals("")) {
+        if (imsiOrMin != null && !"".equals(imsiOrMin.trim())) {
             DeviceId deviceId2 = new DeviceId();
             deviceId2.setKind("min");
             deviceId2.setId(imsiOrMin);

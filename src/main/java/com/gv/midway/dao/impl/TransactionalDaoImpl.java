@@ -677,7 +677,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                     .writeValueAsString(businesscallbackDevices);
         } catch (JsonProcessingException e) {
             LOGGER.error("Error "+e);
-          //  e.printStackTrace();
         }
 
         Query searchUserQuery = new Query(Criteria
@@ -833,42 +832,26 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
             switch (requestType) {
             case ACTIVATION:
-
                 netSuiteCallBackProvisioningRequest
                         .setRequestType(NetSuiteRequestType.ACTIVATION);
-
                 break;
-
             case DEACTIVATION:
-
                 netSuiteCallBackProvisioningRequest
                         .setRequestType(NetSuiteRequestType.DEACTIVATION);
-
                 break;
-
             case REACTIVATION:
-
                 netSuiteCallBackProvisioningRequest
                         .setRequestType(NetSuiteRequestType.REACTIVATION);
-
                 break;
-
             case RESTORE:
-
                 netSuiteCallBackProvisioningRequest
                         .setRequestType(NetSuiteRequestType.RESTORATION);
-
                 break;
-
             case SUSPEND:
-
                 netSuiteCallBackProvisioningRequest
                         .setRequestType(NetSuiteRequestType.SUSPENSION);
-
                 break;
-
             case CHANGESERVICEPLAN:
-
                 ChangeDeviceServicePlansRequest changeDeviceServicePlansRequest = (ChangeDeviceServicePlansRequest) findOne
                         .getDevicePayload();
                 LOGGER.info("change devcie servcie plan data area...."
@@ -887,13 +870,10 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 netSuiteCallBackProvisioningRequest
                         .setNewServicePlan(newServicePlan);
                 break;
-
             case CHANGECUSTOMFIELDS:
-
                 netSuiteCallBackProvisioningRequest
                         .setRequestType(NetSuiteRequestType.CUSTOM_FIELDS);
                 break;
-
             default:
                 break;
             }
@@ -915,51 +895,36 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
             switch (requestType) {
             case ACTIVATION:
-
                 netSuiteCallBackProvisioningRequest
                         .setRequestType(NetSuiteRequestType.ACTIVATION);
                 netSuiteCallBackProvisioningRequest
                         .setResponse("Device successfully activated.");
                 break;
-
             case DEACTIVATION:
-
                 netSuiteCallBackProvisioningRequest
                         .setRequestType(NetSuiteRequestType.DEACTIVATION);
                 netSuiteCallBackProvisioningRequest
                         .setResponse("Device successfully DeActivated.");
-
                 break;
-
             case REACTIVATION:
-
                 netSuiteCallBackProvisioningRequest
                         .setRequestType(NetSuiteRequestType.REACTIVATION);
                 netSuiteCallBackProvisioningRequest
                         .setResponse("Device successfully ReActivated.");
-
                 break;
-
             case RESTORE:
-
                 netSuiteCallBackProvisioningRequest
                         .setRequestType(NetSuiteRequestType.RESTORATION);
                 netSuiteCallBackProvisioningRequest
                         .setResponse("Device successfully ReStored.");
-
                 break;
-
             case SUSPEND:
-
                 netSuiteCallBackProvisioningRequest
                         .setRequestType(NetSuiteRequestType.SUSPENSION);
                 netSuiteCallBackProvisioningRequest
                         .setResponse("Device successfully Suspended.");
-
                 break;
-
             case CHANGESERVICEPLAN:
-
                 ChangeDeviceServicePlansRequest changeDeviceServicePlansRequest = (ChangeDeviceServicePlansRequest) findOne
                         .getDevicePayload();
                 LOGGER.info("change devcie servcie plan data area...."
@@ -983,14 +948,11 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 break;
 
             case CHANGECUSTOMFIELDS:
-
                 netSuiteCallBackProvisioningRequest
                         .setRequestType(NetSuiteRequestType.CUSTOM_FIELDS);
                 netSuiteCallBackProvisioningRequest
                         .setResponse("Device Custom Fields Changed successfully.");
-
                 break;
-
             default:
                 break;
             }
@@ -1073,7 +1035,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 list.add(transaction);
 
             } catch (Exception ex) {
-                LOGGER.error("Exception populateReactivateDBPayload");
+                LOGGER.error("Exception populateReactivateDBPayload"+ex);
             }
 
         }
@@ -1165,7 +1127,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 list.add(transaction);
 
             } catch (Exception ex) {
-                LOGGER.error("Exception populateRestoreDBPayload");
+                LOGGER.error("Exception populateRestoreDBPayload"+ex);
             }
 
         }
@@ -1259,7 +1221,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 list.add(transaction);
 
             } catch (Exception ex) {
-                LOGGER.error("Exception populateCustomeFieldsDBPayload");
+                LOGGER.error("Exception populateCustomeFieldsDBPayload"+ex);
             }
 
         }
@@ -1348,7 +1310,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 list.add(transaction);
 
             } catch (Exception ex) {
-                LOGGER.error("Exception populateChangeDeviceServicePlansDBPayload");
+                LOGGER.error("Exception populateChangeDeviceServicePlansDBPayload"+ex);
 
             }
 
@@ -1358,8 +1320,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
         // be set with arraylist of transaction for Verizon we simply add
         // into database and do not change the exchange body
 
-        if (exchange.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME)
-                .toString().equals("KORE")) {
+        if (IConstant.BSCARRIER_SERVICE_KORE.equals( exchange.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME)
+                .toString())) {
 
             exchange.getIn().setBody(list);
         }
@@ -1464,7 +1426,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 errorResponsePayload = mapper.readValue(errorResponseBody,
                         KoreErrorResponse.class);
             } catch (Exception e) {
-                e.printStackTrace();
+                LOGGER.error("Error ::"+ e);
             }
 
             update.set(ITransaction.CARRIER_ERROR_DESCRIPTION,
@@ -1523,7 +1485,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
         try {
             jsonstring = mapper.writeValueAsString(map);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+           LOGGER.error("Error ::"+ e);
         }
 
         LOGGER.info("is netsuite callback response......."

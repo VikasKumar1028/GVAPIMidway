@@ -29,6 +29,7 @@ public class TokenProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
+        LOGGER.info("TokenProcessor");
         exchange.getContext().createProducerTemplate()
                 .sendBody("direct:tokenGeneration", exchange.getIn().getBody());
 

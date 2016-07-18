@@ -95,92 +95,67 @@ public class VerizonGenericExceptionProcessor implements Processor {
             deviceInformationResponse.setHeader(responseHeader);
             deviceInformationResponse.setResponse(response);
             exchange.getIn().setBody(deviceInformationResponse);
-
             break;
-
         case "Endpoint[direct://activateDevice]":
-
             ActivateDeviceResponse activateDeviceResponse = new ActivateDeviceResponse();
             activateDeviceResponse.setHeader(responseHeader);
             activateDeviceResponse.setResponse(response);
             exchange.getIn().setBody(activateDeviceResponse);
-
             break;
-
         case "Endpoint[direct://deactivateDevice]":
-
             DeactivateDeviceResponse deactivateDeviceResponse = new DeactivateDeviceResponse();
             deactivateDeviceResponse.setHeader(responseHeader);
             deactivateDeviceResponse.setResponse(response);
             exchange.getIn().setBody(deactivateDeviceResponse);
-
             break;
-
         case "Endpoint[direct://suspendDevice]":
-
             SuspendDeviceResponse suspendDeviceResponse = new SuspendDeviceResponse();
             suspendDeviceResponse.setHeader(responseHeader);
             suspendDeviceResponse.setResponse(response);
             exchange.getIn().setBody(suspendDeviceResponse);
-
             break;
-
         case "Endpoint[direct://deviceConnectionStatus]":
             ConnectionStatusResponse connectionStatusResponse = new ConnectionStatusResponse();
             connectionStatusResponse.setHeader(responseHeader);
             connectionStatusResponse.setResponse(response);
             exchange.getIn().setBody(connectionStatusResponse);
-
             break;
-
         case "Endpoint[direct://deviceSessionBeginEndInfo]":
             SessionBeginEndResponse sessionBeginEndResponse = new SessionBeginEndResponse();
             sessionBeginEndResponse.setHeader(responseHeader);
             sessionBeginEndResponse.setResponse(response);
             exchange.getIn().setBody(sessionBeginEndResponse);
-
             break;
-
         case "Endpoint[direct://customeFields]":
             CustomFieldsDeviceResponse customFieldsDeviceResponse = new CustomFieldsDeviceResponse();
             customFieldsDeviceResponse.setHeader(responseHeader);
             customFieldsDeviceResponse.setResponse(response);
             exchange.getIn().setBody(customFieldsDeviceResponse);
-
             break;
-
         case "Endpoint[direct://changeDeviceServicePlans]":
             ChangeDeviceServicePlansResponse changeDeviceServicePlansResponse = new ChangeDeviceServicePlansResponse();
             changeDeviceServicePlansResponse.setHeader(responseHeader);
             changeDeviceServicePlansResponse.setResponse(response);
             exchange.getIn().setBody(changeDeviceServicePlansResponse);
-
             break;
-
         case "Endpoint[direct://reactivateDevice]":
             ReactivateDeviceResponse reactivateDeviceResponse = new ReactivateDeviceResponse();
             reactivateDeviceResponse.setHeader(responseHeader);
             reactivateDeviceResponse.setResponse(response);
             exchange.getIn().setBody(reactivateDeviceResponse);
-
             break;
-
         case "Endpoint[direct://restoreDevice]":
             RestoreDeviceResponse restoreDeviceResponse = new RestoreDeviceResponse();
             restoreDeviceResponse.setHeader(responseHeader);
             restoreDeviceResponse.setResponse(response);
             exchange.getIn().setBody(restoreDeviceResponse);
-
             break;
-
         case "Endpoint[direct://retrieveDeviceUsageHistoryCarrier]":
             UsageInformationResponse usageInformationResponse = new UsageInformationResponse();
             usageInformationResponse.setHeader(responseHeader);
             usageInformationResponse.setResponse(response);
             exchange.getIn().setBody(usageInformationResponse);
-
             break;
-
         default:
             break;
         }

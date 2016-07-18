@@ -31,6 +31,7 @@ public class KoreChangeDeviceServicePlansPostProcessor implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {
+        LOGGER.info("KoreChangeDeviceServicePlansPostProcessor");
 
         ChangeDeviceServicePlansResponse changeDeviceServicePlansResponse = new ChangeDeviceServicePlansResponse();
 

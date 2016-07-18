@@ -172,7 +172,6 @@ public class KoreCheckStatusPostProcessor implements Processor {
 
         switch (requestType) {
         case ACTIVATION:
-
             netSuiteCallBackProvisioningRequest
                     .setResponse("Device successfully activated.");
             netSuiteCallBackProvisioningRequest
@@ -180,11 +179,8 @@ public class KoreCheckStatusPostProcessor implements Processor {
             oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
                     oauthConsumerKey, oauthTokenId, oauthTokenSecret,
                     oauthConsumerSecret, relam, script);
-
             break;
-
         case DEACTIVATION:
-
             netSuiteCallBackProvisioningRequest
                     .setResponse("Device successfully DeActivated.");
             netSuiteCallBackProvisioningRequest
@@ -192,11 +188,8 @@ public class KoreCheckStatusPostProcessor implements Processor {
             oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
                     oauthConsumerKey, oauthTokenId, oauthTokenSecret,
                     oauthConsumerSecret, relam, script);
-
             break;
-
         case REACTIVATION:
-
             netSuiteCallBackProvisioningRequest
                     .setResponse("Device successfully ReActivated.");
             netSuiteCallBackProvisioningRequest
@@ -204,11 +197,8 @@ public class KoreCheckStatusPostProcessor implements Processor {
             oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
                     oauthConsumerKey, oauthTokenId, oauthTokenSecret,
                     oauthConsumerSecret, relam, script);
-
             break;
-
         case RESTORE:
-
             netSuiteCallBackProvisioningRequest
                     .setResponse("Device successfully ReStored.");
             netSuiteCallBackProvisioningRequest
@@ -216,11 +206,8 @@ public class KoreCheckStatusPostProcessor implements Processor {
             oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
                     oauthConsumerKey, oauthTokenId, oauthTokenSecret,
                     oauthConsumerSecret, relam, script);
-
             break;
-
         case SUSPEND:
-
             netSuiteCallBackProvisioningRequest
                     .setResponse("Device successfully Suspended.");
             netSuiteCallBackProvisioningRequest
@@ -228,11 +215,8 @@ public class KoreCheckStatusPostProcessor implements Processor {
             oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
                     oauthConsumerKey, oauthTokenId, oauthTokenSecret,
                     oauthConsumerSecret, relam, script);
-
             break;
-
         case CHANGESERVICEPLAN:
-
             netSuiteCallBackProvisioningRequest
                     .setResponse("Device Service Plan Changed successfully.");
 
@@ -254,11 +238,8 @@ public class KoreCheckStatusPostProcessor implements Processor {
             oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
                     oauthConsumerKey, oauthTokenId, oauthTokenSecret,
                     oauthConsumerSecret, relam, script);
-
             break;
-
         case CHANGECUSTOMFIELDS:
-
             netSuiteCallBackProvisioningRequest
                     .setResponse("Device Custom Fields Changed successfully.");
             netSuiteCallBackProvisioningRequest
@@ -267,7 +248,6 @@ public class KoreCheckStatusPostProcessor implements Processor {
                     oauthConsumerKey, oauthTokenId, oauthTokenSecret,
                     oauthConsumerSecret, relam, script);
             break;
-
         default:
             break;
         }

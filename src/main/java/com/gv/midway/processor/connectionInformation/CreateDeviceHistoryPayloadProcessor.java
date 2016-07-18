@@ -22,7 +22,8 @@ public class CreateDeviceHistoryPayloadProcessor implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {
-
+        LOGGER.info("CreateDeviceHistoryPayloadProcessor");
+        
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         Calendar cal = Calendar.getInstance();
 

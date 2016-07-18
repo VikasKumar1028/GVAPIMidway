@@ -19,6 +19,7 @@ public class SchedulerServiceImpl implements ISchedulerService {
 
     @Override
     public void saveDeviceConnectionHistory(Exchange exchange) {
+        LOGGER.info("SchedulerServiceImpl");
 
         schedulerDao.saveDeviceConnectionHistory((DeviceConnection) exchange
                 .getIn().getBody());
@@ -27,7 +28,7 @@ public class SchedulerServiceImpl implements ISchedulerService {
 
     @Override
     public void saveDeviceUsageHistory(Exchange exchange) {
-
+        LOGGER.info("SchedulerServiceImpl");
         schedulerDao.saveDeviceUsageHistory((DeviceUsage) exchange.getIn()
                 .getBody());
 
