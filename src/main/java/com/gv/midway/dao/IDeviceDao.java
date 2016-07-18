@@ -16,23 +16,23 @@ import com.gv.midway.pojo.usageInformation.response.UsageInformationMidwayRespon
 
 public interface IDeviceDao {
 
-	public UpdateDeviceResponse updateDeviceDetails(SingleDevice device);
+    public UpdateDeviceResponse updateDeviceDetails(SingleDevice device);
 
-	public DeviceInformationResponse getDeviceInformationDB(
-			DeviceInformationRequest deviceInformationRequest);
+    public DeviceInformationResponse getDeviceInformationDB(
+            DeviceInformationRequest deviceInformationRequest);
 
-	public void setDeviceInformationDB(Exchange e);
+    public void setDeviceInformationDB(Exchange e);
 
-	public void updateDeviceInformationDB(Exchange e);
+    public void updateDeviceInformationDB(Exchange e);
 
-	public void bulkOperationDeviceUpload(Exchange exchange);
-	
-	public ArrayList<DeviceInformation> getAllDevices();
-	
-	public UsageInformationMidwayResponse getDeviceUsageInfoDB(
-			UsageInformationMidwayRequest usageInformationMidwayRequest);
-	
-	public ConnectionInformationMidwayResponse getDeviceConnectionHistoryInfoDB(
-			ConnectionInformationMidwayRequest connectionInformationMidwayRequest);
+    public void bulkOperationDeviceUpload(Exchange exchange);
+
+    public ArrayList<DeviceInformation> getAllDevices();
+
+    public UsageInformationMidwayResponse getDeviceUsageInfoDB(
+            UsageInformationMidwayRequest usageInformationMidwayRequest);
+
+    public ConnectionInformationMidwayResponse getDeviceConnectionHistoryInfoDB(
+            ConnectionInformationMidwayRequest connectionInformationMidwayRequest);
 
 }

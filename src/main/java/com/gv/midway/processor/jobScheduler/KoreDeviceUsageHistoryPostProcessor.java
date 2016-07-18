@@ -20,105 +20,109 @@ import com.gv.midway.pojo.verizon.DeviceId;
 
 public class KoreDeviceUsageHistoryPostProcessor implements Processor {
 
-	Logger log = Logger.getLogger(KoreDeviceUsageHistoryPostProcessor.class
-			.getName());
+    private static final Logger LOGGER = Logger.getLogger(KoreDeviceUsageHistoryPostProcessor.class
+            .getName());
 
-	@Override
-	public void process(Exchange exchange) throws Exception {
+    @Override
+    public void process(Exchange exchange) throws Exception {
 
-		log.info("Begin:KoreDeviceUsageHistoryPostProcessor");
-		log.info("exchange::::" + exchange.getIn().getBody());
-		log.info("jobDetailDate ------" + exchange.getProperty("jobDetailDate"));
+        LOGGER.info("Begin:KoreDeviceUsageHistoryPostProcessor");
+        LOGGER.info("exchange::::" + exchange.getIn().getBody());
+        LOGGER.info("jobDetailDate ------" + exchange.getProperty("jobDetailDate"));
 
-		Map map = exchange.getIn().getBody(Map.class);
-		ObjectMapper mapper = new ObjectMapper();
+        Map map = exchange.getIn().getBody(Map.class);
+        ObjectMapper mapper = new ObjectMapper();
 
-		UsageInformationKoreResponse usageResponse = mapper.convertValue(map,
-				UsageInformationKoreResponse.class);
+        UsageInformationKoreResponse usageResponse = mapper.convertValue(map,
+                UsageInformationKoreResponse.class);
 
-		long totalBytesUsed = 0L;
+        long totalBytesUsed = 0L;
 
-		String usageDatevalue ;
+        String usageDatevalue;
 
-		log.info("usageInformationKoreResponse:::::::::"
-				+ usageResponse.toString());
+        LOGGER.info("usageInformationKoreResponse:::::::::"
+                + usageResponse.toString());
 
-		if (usageResponse.getD().getUsage() != null && !usageResponse.getD().getUsage().isEmpty()) 
-		{
+        if (usageResponse.getD().getUsage() != null
+                && !usageResponse.getD().getUsage().isEmpty()) {
 
-			for (Usage usage : usageResponse.getD().getUsage()) {
+            for (Usage usage : usageResponse.getD().getUsage()) {
 
-				usageDatevalue = getKoreDeviceUsageDate(usage);
-				log.info("jobDetailDate::"+exchange.getProperty("jobDetailDate"));
-				
-				
-				if (usageDatevalue!=null && exchange.getProperty("jobDetailDate").equals(usageDatevalue))
-				{
+                usageDatevalue = getKoreDeviceUsageDate(usage);
+                LOGGER.info("jobDetailDate::"
+                        + exchange.getProperty("jobDetailDate"));
 
-					totalBytesUsed = usage.getDataInBytes().longValue()
-							+ totalBytesUsed;
-					log.info("totalBytesUsed:" + totalBytesUsed);
-					
-					break;
-				}
+                if (usageDatevalue != null
+                        && exchange.getProperty("jobDetailDate").equals(
+                                usageDatevalue)) {
 
-			}
-		}
+                    totalBytesUsed = usage.getDataInBytes().longValue()
+                            + totalBytesUsed;
+                    LOGGER.info("totalBytesUsed:" + totalBytesUsed);
 
-		log.info("End of Loop totalBytesUsed:::::::::" + totalBytesUsed);
-		DeviceUsage deviceUsage = new DeviceUsage();
-		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+                    break;
+                }
 
-		deviceUsage
-				.setCarrierName((String) exchange.getProperty("CarrierName"));
-		deviceUsage.setDeviceId((DeviceId) exchange.getProperty("DeviceId"));
-		deviceUsage.setDataUsed(totalBytesUsed);
-		// The Day for which Job Ran
+            }
+        }
 
-		deviceUsage.setDate(jobDetail.getDate());
-		deviceUsage.setTransactionErrorReason(null);
-		deviceUsage
-				.setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_SUCCESS);
-		deviceUsage.setNetSuiteId((Integer) exchange.getProperty(IConstant.MIDWAY_NETSUITE_ID));
-		deviceUsage.setIsValid(true);
-		deviceUsage.setBillCycleComplete(false);
+        LOGGER.info("End of Loop totalBytesUsed:::::::::" + totalBytesUsed);
+        DeviceUsage deviceUsage = new DeviceUsage();
+        JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
 
-		exchange.getIn().setBody(deviceUsage);
+        deviceUsage
+                .setCarrierName((String) exchange.getProperty("CarrierName"));
+        deviceUsage.setDeviceId((DeviceId) exchange.getProperty("DeviceId"));
+        deviceUsage.setDataUsed(totalBytesUsed);
+        // The Day for which Job Ran
 
-		log.info("End:KoreDeviceUsageHistoryPostProcessor");
-	}
+        deviceUsage.setDate(jobDetail.getDate());
+        deviceUsage.setTransactionErrorReason(null);
+        deviceUsage
+                .setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_SUCCESS);
+        deviceUsage.setNetSuiteId((Integer) exchange
+                .getProperty(IConstant.MIDWAY_NETSUITE_ID));
+        deviceUsage.setIsValid(true);
+        deviceUsage.setBillCycleComplete(false);
 
-	private String getKoreDeviceUsageDate(Usage usage) {
+        exchange.getIn().setBody(deviceUsage);
 
-		log.info("Begin:KoreUsageDateFormate()");
+        LOGGER.info("End:KoreDeviceUsageHistoryPostProcessor");
+    }
 
-		String koreUsageDate=usage.getUsageDate();
-			
-        String longValueOfDate=koreUsageDate.substring(koreUsageDate.indexOf("(")+1,koreUsageDate.indexOf("-"));
-		
-        log.info("long value of Date is........."+longValueOfDate);
-		
-		Long valueOfDateInLong = Long.valueOf(longValueOfDate);
-		
-        String timeZoneofDate=koreUsageDate.substring(koreUsageDate.indexOf("-"),koreUsageDate.indexOf(")"));
-		
-		log.info("time zone is......."+timeZoneofDate);
-		
-		DateTimeZone timeZone = DateTimeZone.forID(timeZoneofDate);
-		
-		log.info("****************timeZone ID is" + timeZone);
-		
-		DateTime dateTime = new DateTime(valueOfDateInLong, timeZone);
+    private String getKoreDeviceUsageDate(Usage usage) {
 
-		log.info("****************" + dateTime.toString());
-		
+        LOGGER.info("Begin:KoreUsageDateFormate()");
+
+        String koreUsageDate = usage.getUsageDate();
+
+        String longValueOfDate = koreUsageDate.substring(
+                koreUsageDate.indexOf("(") + 1, koreUsageDate.indexOf("-"));
+
+        LOGGER.info("long value of Date is........." + longValueOfDate);
+
+        Long valueOfDateInLong = Long.valueOf(longValueOfDate);
+
+        String timeZoneofDate = koreUsageDate.substring(
+                koreUsageDate.indexOf("-"), koreUsageDate.indexOf(")"));
+
+        LOGGER.info("time zone is......." + timeZoneofDate);
+
+        DateTimeZone timeZone = DateTimeZone.forID(timeZoneofDate);
+
+        LOGGER.info("****************timeZone ID is" + timeZone);
+
+        DateTime dateTime = new DateTime(valueOfDateInLong, timeZone);
+
+        LOGGER.info("****************" + dateTime.toString());
+
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		
+
         String finalUsageDateformat = df.format(dateTime.toDate());
 
-		log.info("finalUsageDateformat :::::::" + finalUsageDateformat);
+        LOGGER.info("finalUsageDateformat :::::::" + finalUsageDateformat);
 
-		return finalUsageDateformat;
+        return finalUsageDateformat;
 
-	}
+    }
 }

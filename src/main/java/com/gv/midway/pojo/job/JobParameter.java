@@ -5,60 +5,60 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 
 public class JobParameter {
 
-	@ApiModelProperty(value = "Date of Devices Usages identifier.", required = true)
-	private String date;
-	@ApiModelProperty(dataType = "string", allowableValues = "VERIZON,	KORE", value = "description", notes = "notes", required = true)
-	private String carrierName;
+    @ApiModelProperty(value = "Date of Devices Usages identifier.", required = true)
+    private String date;
+    @ApiModelProperty(dataType = "string", allowableValues = "VERIZON,	KORE", value = "description", notes = "notes", required = true)
+    private String carrierName;
 
-	public String getDate() {
-		return date;
-	}
+    public String getDate() {
+        return date;
+    }
 
-	public void setDate(String date) {
-		this.date = date;
-	}
+    public void setDate(String date) {
+        this.date = date;
+    }
 
-	public String getCarrierName() {
-		return carrierName;
-	}
+    public String getCarrierName() {
+        return carrierName;
+    }
 
-	public void setCarrierName(String carrierName) {
-		this.carrierName = carrierName;
-	}
+    public void setCarrierName(String carrierName) {
+        this.carrierName = carrierName;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((carrierName == null) ? 0 : carrierName.hashCode());
-		result = prime * result + ((date == null) ? 0 : date.hashCode());
-		return result;
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result
+                + ((carrierName == null) ? 0 : carrierName.hashCode());
+        result = prime * result + ((date == null) ? 0 : date.hashCode());
+        return result;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		JobParameter other = (JobParameter) obj;
-		if (carrierName != other.carrierName)
-			return false;
-		if (date == null) {
-			if (other.date != null)
-				return false;
-		} else if (!date.equals(other.date))
-			return false;
-		return true;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        JobParameter other = (JobParameter) obj;
+        if (carrierName != other.carrierName)
+            return false;
+        if (date == null) {
+            if (other.date != null)
+                return false;
+        } else if (!date.equals(other.date))
+            return false;
+        return true;
+    }
 
-	@Override
-	public String toString() {
-		return "JobParameter [date=" + date + ", carrierName=" + carrierName
-				+ "]";
-	}
+    @Override
+    public String toString() {
+        return "JobParameter [date=" + date + ", carrierName=" + carrierName
+                + "]";
+    }
 
 }

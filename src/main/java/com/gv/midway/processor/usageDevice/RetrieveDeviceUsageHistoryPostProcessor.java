@@ -1,6 +1,5 @@
 package com.gv.midway.processor.usageDevice;
 
-
 import java.util.Map;
 
 import org.apache.camel.Exchange;
@@ -20,78 +19,69 @@ import com.gv.midway.pojo.usageInformation.verizon.response.VerizonUsageInformat
 
 public class RetrieveDeviceUsageHistoryPostProcessor implements Processor {
 
-	Logger log = Logger.getLogger(RetrieveDeviceUsageHistoryPostProcessor.class
-			.getName());
+    private static final Logger LOGGER = Logger.getLogger(RetrieveDeviceUsageHistoryPostProcessor.class
+            .getName());
 
-	Environment newEnv;
+    Environment newEnv;
 
-	public RetrieveDeviceUsageHistoryPostProcessor(Environment env) {
-		super();
-		this.newEnv = env;
+    public RetrieveDeviceUsageHistoryPostProcessor(Environment env) {
+        super();
+        this.newEnv = env;
 
-	}
+    }
 
-	@Override
-	public void process(Exchange exchange) throws Exception {
-		log.info("Begin::RetrieveDeviceUsageHistoryPostProcessor");
+    @Override
+    public void process(Exchange exchange) throws Exception {
+        LOGGER.info("Begin::RetrieveDeviceUsageHistoryPostProcessor");
 
-		Response response = new Response();
-		
-		
-		long totalBytesUsed = 0L;
-		
-		UsageInformationResponse usageInformationResponse=new UsageInformationResponse();
+        Response response = new Response();
 
-		UsageInformationResponseDataArea usageInformationResponseDataArea = new UsageInformationResponseDataArea();
+        long totalBytesUsed = 0L;
 
-		
-		if (!exchange.getIn().getBody().toString().contains("errorMessage="))
-		{
-			
-			Map map = exchange.getIn().getBody(Map.class);
-			ObjectMapper mapper = new ObjectMapper();
+        UsageInformationResponse usageInformationResponse = new UsageInformationResponse();
 
-			VerizonUsageInformationResponse usageResponse = mapper.convertValue(map,
-					VerizonUsageInformationResponse.class);
-			
-			
-			if (usageResponse.getUsageHistory() != null) {
-				for (UsageHistory history : usageResponse.getUsageHistory()) {
-					totalBytesUsed = history.getBytesUsed() + totalBytesUsed;
-				}
-			}
-			
+        UsageInformationResponseDataArea usageInformationResponseDataArea = new UsageInformationResponseDataArea();
 
-			log.info("RequestID::" + exchange.getIn().getBody().toString());
-			response.setResponseCode(IResponse.SUCCESS_CODE);
-			response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
-			response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVICE_USAGE_MIDWAY);
+        if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
 
-			usageInformationResponseDataArea.setTotalUsages(totalBytesUsed);
-			usageInformationResponse.setDataArea(usageInformationResponseDataArea);
-		}
+            Map map = exchange.getIn().getBody(Map.class);
+            ObjectMapper mapper = new ObjectMapper();
 
+            VerizonUsageInformationResponse usageResponse = mapper
+                    .convertValue(map, VerizonUsageInformationResponse.class);
 
-		
-		else {
+            if (usageResponse.getUsageHistory() != null) {
+                for (UsageHistory history : usageResponse.getUsageHistory()) {
+                    totalBytesUsed = history.getBytesUsed() + totalBytesUsed;
+                }
+            }
 
-			response.setResponseCode(400);
-			response.setResponseStatus(IResponse.ERROR_MESSAGE);
-			response.setResponseDescription(exchange.getIn().getBody()
-					.toString());
+            LOGGER.info("RequestID::" + exchange.getIn().getBody().toString());
+            response.setResponseCode(IResponse.SUCCESS_CODE);
+            response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+            response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVICE_USAGE_MIDWAY);
 
-		}
+            usageInformationResponseDataArea.setTotalUsages(totalBytesUsed);
+            usageInformationResponse
+                    .setDataArea(usageInformationResponseDataArea);
+        }
 
-	
-		
-		Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
+        else {
 
-		usageInformationResponse.setHeader(responseheader);
-		usageInformationResponse.setResponse(response);
-		
+            response.setResponseCode(400);
+            response.setResponseStatus(IResponse.ERROR_MESSAGE);
+            response.setResponseDescription(exchange.getIn().getBody()
+                    .toString());
 
-		exchange.getIn().setBody(usageInformationResponse);
+        }
 
-		log.info("End::RetrieveDeviceUsageHistoryPostProcessor");
-	}
+        Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
+
+        usageInformationResponse.setHeader(responseheader);
+        usageInformationResponse.setResponse(response);
+
+        exchange.getIn().setBody(usageInformationResponse);
+
+        LOGGER.info("End::RetrieveDeviceUsageHistoryPostProcessor");
+    }
 }

@@ -14,50 +14,48 @@ import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponse
 
 public class KoreCustomFieldsPostProcessor implements Processor {
 
-	Logger log = Logger
-			.getLogger(KoreCustomFieldsPostProcessor.class.getName());
+    private static final Logger LOGGER = Logger
+            .getLogger(KoreCustomFieldsPostProcessor.class.getName());
 
-	Environment newEnv;
+    Environment newEnv;
 
-	public KoreCustomFieldsPostProcessor() {
-		//Empty Constructor
-	}
+    public KoreCustomFieldsPostProcessor() {
+        // Empty Constructor
+    }
 
-	public KoreCustomFieldsPostProcessor(Environment env) {
-		super();
-		this.newEnv = env;
-	}
-	@Override
-	public void process(Exchange exchange) throws Exception {
-		log.info("Begin::KoreCustomFieldsPostProcessor");
+    public KoreCustomFieldsPostProcessor(Environment env) {
+        super();
+        this.newEnv = env;
+    }
 
-		CustomFieldsDeviceResponse customFieldsUpdateDeviceResponse = new CustomFieldsDeviceResponse();
+    @Override
+    public void process(Exchange exchange) throws Exception {
+        LOGGER.info("Begin::KoreCustomFieldsPostProcessor");
 
-		CustomFieldsDeviceResponseDataArea customFieldsUpdateDeviceResponseDataArea = new CustomFieldsDeviceResponseDataArea();
+        CustomFieldsDeviceResponse customFieldsUpdateDeviceResponse = new CustomFieldsDeviceResponse();
 
+        CustomFieldsDeviceResponseDataArea customFieldsUpdateDeviceResponseDataArea = new CustomFieldsDeviceResponseDataArea();
 
-		Response response = new Response();
+        Response response = new Response();
 
-		response.setResponseCode(IResponse.SUCCESS_CODE);
-		response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
-		response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
+        response.setResponseCode(IResponse.SUCCESS_CODE);
+        response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+        response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
 
-		
-		
-		Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
+        Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
 
-		customFieldsUpdateDeviceResponse.setHeader(responseheader);
-		customFieldsUpdateDeviceResponse.setResponse(response);
-		customFieldsUpdateDeviceResponseDataArea.setOrderNumber(exchange
-				.getProperty(IConstant.MIDWAY_TRANSACTION_ID).toString());
+        customFieldsUpdateDeviceResponse.setHeader(responseheader);
+        customFieldsUpdateDeviceResponse.setResponse(response);
+        customFieldsUpdateDeviceResponseDataArea.setOrderNumber(exchange
+                .getProperty(IConstant.MIDWAY_TRANSACTION_ID).toString());
 
-		customFieldsUpdateDeviceResponse
-				.setDataArea(customFieldsUpdateDeviceResponseDataArea);
+        customFieldsUpdateDeviceResponse
+                .setDataArea(customFieldsUpdateDeviceResponseDataArea);
 
-		exchange.getIn().setBody(customFieldsUpdateDeviceResponse);
+        exchange.getIn().setBody(customFieldsUpdateDeviceResponse);
 
-		log.info("End::KoreCustomFieldsPostProcessor");
+        LOGGER.info("End::KoreCustomFieldsPostProcessor");
 
-	}
+    }
 
 }

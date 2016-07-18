@@ -7,16 +7,15 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DeviceInformationRequest extends BaseRequest {
 
-	@ApiModelProperty(value = "DataArea for the Device Information Request")
-	private DeviceInformationRequestDataArea dataArea;
+    @ApiModelProperty(value = "DataArea for the Device Information Request")
+    private DeviceInformationRequestDataArea dataArea;
 
-	public DeviceInformationRequestDataArea getDataArea() {
-		return dataArea;
-	}
+    public DeviceInformationRequestDataArea getDataArea() {
+        return dataArea;
+    }
 
-	public void setDataArea(DeviceInformationRequestDataArea dataArea) {
-		this.dataArea = dataArea;
-	}
-
+    public void setDataArea(DeviceInformationRequestDataArea dataArea) {
+        this.dataArea = dataArea;
+    }
 
 }

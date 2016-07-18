@@ -1,7 +1,5 @@
 package com.gv.midway.processor.deactivateDevice;
 
-
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
@@ -16,56 +14,57 @@ import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponseData
 
 public class VerizonDeactivateDevicePostProcessor implements Processor {
 
-	Logger log = Logger.getLogger(VerizonDeactivateDevicePostProcessor.class
-			.getName());
-	Environment newEnv;
+    private static final Logger LOGGER = Logger.getLogger(VerizonDeactivateDevicePostProcessor.class
+            .getName());
+    Environment newEnv;
 
-	public VerizonDeactivateDevicePostProcessor(Environment env) {
-		super();
+    public VerizonDeactivateDevicePostProcessor(Environment env) {
+        super();
 
-		this.newEnv = env;
+        this.newEnv = env;
 
-	}
+    }
 
-	public VerizonDeactivateDevicePostProcessor() {
-		//Empty Constructor
-	}
-	@Override
-	public void process(Exchange exchange) throws Exception {
+    public VerizonDeactivateDevicePostProcessor() {
+        // Empty Constructor
+    }
 
-		log.info("Begin::VerizonDeactivateDevicePostProcessor");
+    @Override
+    public void process(Exchange exchange) throws Exception {
 
-		DeactivateDeviceResponse deactivateDeviceResponse = new DeactivateDeviceResponse();
-		DeactivateDeviceResponseDataArea deactivateDeviceResponseDataArea = new DeactivateDeviceResponseDataArea();
+        LOGGER.info("Begin::VerizonDeactivateDevicePostProcessor");
 
-		Response response = new Response();
+        DeactivateDeviceResponse deactivateDeviceResponse = new DeactivateDeviceResponse();
+        DeactivateDeviceResponseDataArea deactivateDeviceResponseDataArea = new DeactivateDeviceResponseDataArea();
 
-		log.info("exchange.getIn().getBody().toString()***************************************"
-				+ exchange.getIn().getBody().toString());
+        Response response = new Response();
 
-		
-		if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
+        LOGGER.info("exchange.getIn().getBody().toString()***************************************"
+                + exchange.getIn().getBody().toString());
 
-			response.setResponseCode(IResponse.SUCCESS_CODE);
-			response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
-			response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
-			deactivateDeviceResponse.setDataArea(deactivateDeviceResponseDataArea);
+        if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
 
-		} else {
+            response.setResponseCode(IResponse.SUCCESS_CODE);
+            response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+            response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
+            deactivateDeviceResponse
+                    .setDataArea(deactivateDeviceResponseDataArea);
 
-			response.setResponseCode(400);
-			response.setResponseStatus(IResponse.ERROR_MESSAGE);
-			response.setResponseDescription(exchange.getIn().getBody()
-					.toString());
-		}
+        } else {
 
-		Header responseheader=(Header) exchange.getProperty(IConstant.HEADER);
-		deactivateDeviceResponse.setHeader(responseheader);
-		deactivateDeviceResponse.setResponse(response);
-		deactivateDeviceResponseDataArea.setOrderNumber(exchange.getProperty(
-				IConstant.MIDWAY_TRANSACTION_ID).toString());
+            response.setResponseCode(400);
+            response.setResponseStatus(IResponse.ERROR_MESSAGE);
+            response.setResponseDescription(exchange.getIn().getBody()
+                    .toString());
+        }
 
-		exchange.getIn().setBody(deactivateDeviceResponse);
-		log.info("End::VerizonDeactivateDevicePostProcessor");
-	}
+        Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
+        deactivateDeviceResponse.setHeader(responseheader);
+        deactivateDeviceResponse.setResponse(response);
+        deactivateDeviceResponseDataArea.setOrderNumber(exchange.getProperty(
+                IConstant.MIDWAY_TRANSACTION_ID).toString());
+
+        exchange.getIn().setBody(deactivateDeviceResponse);
+        LOGGER.info("End::VerizonDeactivateDevicePostProcessor");
+    }
 }

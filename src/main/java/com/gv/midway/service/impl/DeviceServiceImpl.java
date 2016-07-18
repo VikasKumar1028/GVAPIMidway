@@ -27,95 +27,93 @@ import com.gv.midway.service.IDeviceService;
 @Service
 public class DeviceServiceImpl implements IDeviceService {
 
-	@Autowired
-	private IDeviceDao iDeviceDao;
+    @Autowired
+    private IDeviceDao iDeviceDao;
 
-	private Logger log = Logger.getLogger(DeviceServiceImpl.class.getName());
+   private static final Logger LOGGER = Logger.getLogger(DeviceServiceImpl.class.getName());
 
+    @Override
+    public UpdateDeviceResponse updateDeviceDetails(Exchange exchange) {
 
-	@Override
-	public UpdateDeviceResponse updateDeviceDetails(Exchange exchange) {
+        SingleDevice device = (SingleDevice) exchange.getIn().getBody();
 
-		SingleDevice device = (SingleDevice) exchange.getIn().getBody();
+        return iDeviceDao.updateDeviceDetails(device);
 
-		return iDeviceDao.updateDeviceDetails(device);
+    }
 
-	}
-	@Override
-	public DeviceInformationResponse getDeviceInformationDB(Exchange exchange) {
+    @Override
+    public DeviceInformationResponse getDeviceInformationDB(Exchange exchange) {
 
-		
-		DeviceInformationRequest deviceInformationRequest = (DeviceInformationRequest) exchange
-				.getIn().getBody();
+        DeviceInformationRequest deviceInformationRequest = (DeviceInformationRequest) exchange
+                .getIn().getBody();
 
-		log.info("device information is.........."
-				+ deviceInformationRequest.toString());
+        LOGGER.info("device information is.........."
+                + deviceInformationRequest.toString());
 
+        return iDeviceDao.getDeviceInformationDB(deviceInformationRequest);
+    }
 
-		return iDeviceDao.getDeviceInformationDB(deviceInformationRequest);
-	}
+    @Override
+    public void updateDevicesDetailsBulk(Exchange exchange) {
+        BulkDevices devices = (BulkDevices) exchange.getIn().getBody();
 
-	
-	@Override
-	public void updateDevicesDetailsBulk(Exchange exchange) {
-		BulkDevices devices = (BulkDevices) exchange.getIn().getBody();
+        DeviceInformation[] deviceInformationArr = devices.getDataArea()
+                .getDevices();
 
-		DeviceInformation[] deviceInformationArr = devices.getDataArea()
-				.getDevices();
+        List<DeviceInformation> deviceInformationList = Arrays
+                .asList(deviceInformationArr);
 
-		List<DeviceInformation> deviceInformationList = Arrays
-				.asList(deviceInformationArr);
+        List<BatchDeviceId> successList = new ArrayList<BatchDeviceId>();
 
-		List<BatchDeviceId> successList = new ArrayList<BatchDeviceId>();
+        List<BatchDeviceId> failureList = new ArrayList<BatchDeviceId>();
 
-		List<BatchDeviceId> failureList = new ArrayList<BatchDeviceId>();
+        exchange.setProperty(IConstant.BULK_SUCCESS_LIST, successList);
+        exchange.setProperty(IConstant.BULK_ERROR_LIST, failureList);
 
-		exchange.setProperty(IConstant.BULK_SUCCESS_LIST, successList);
-		exchange.setProperty(IConstant.BULK_ERROR_LIST, failureList);
+        LOGGER.info("******************Before doing bulk insertion using seda***************");
 
-		log.info("******************Before doing bulk insertion using seda***************");
+        exchange.getIn().setBody(deviceInformationList);
 
-		exchange.getIn().setBody(deviceInformationList);
+        LOGGER.info("******************In the end of bulk insert***************");
 
-		log.info("******************In the end of bulk insert***************");
+    }
 
-	}
-	@Override
-	public void setDeviceInformationDB(Exchange exchange) {
-		iDeviceDao.setDeviceInformationDB(exchange);
-	}
-	@Override
-	public void updateDeviceInformationDB(Exchange exchange) {
-		iDeviceDao.updateDeviceInformationDB(exchange);
-	}
-	@Override
-	public void bulkOperationDeviceSyncInDB(Exchange exchange) {
-		iDeviceDao.bulkOperationDeviceUpload(exchange);
-	}
+    @Override
+    public void setDeviceInformationDB(Exchange exchange) {
+        iDeviceDao.setDeviceInformationDB(exchange);
+    }
 
-	@Override
-	public ArrayList<DeviceInformation> getAllDevices() {
+    @Override
+    public void updateDeviceInformationDB(Exchange exchange) {
+        iDeviceDao.updateDeviceInformationDB(exchange);
+    }
 
-		return iDeviceDao.getAllDevices();
-	}
+    @Override
+    public void bulkOperationDeviceSyncInDB(Exchange exchange) {
+        iDeviceDao.bulkOperationDeviceUpload(exchange);
+    }
 
-	@Override
-	public UsageInformationMidwayResponse getDeviceUsageInfoDB(Exchange exchange) {
-		UsageInformationMidwayRequest usageInformationMidwayRequest = (UsageInformationMidwayRequest) exchange
-				.getIn().getBody();
-		return iDeviceDao.getDeviceUsageInfoDB(usageInformationMidwayRequest);
-	}
+    @Override
+    public ArrayList<DeviceInformation> getAllDevices() {
 
-	@Override
-	public ConnectionInformationMidwayResponse getDeviceConnectionHistoryInfoDB(
-			Exchange exchange) {
+        return iDeviceDao.getAllDevices();
+    }
 
-		ConnectionInformationMidwayRequest connectionInformationMidwayRequest = (ConnectionInformationMidwayRequest) exchange
-				.getIn().getBody();
-		return iDeviceDao
-				.getDeviceConnectionHistoryInfoDB(connectionInformationMidwayRequest);
-	}
+    @Override
+    public UsageInformationMidwayResponse getDeviceUsageInfoDB(Exchange exchange) {
+        UsageInformationMidwayRequest usageInformationMidwayRequest = (UsageInformationMidwayRequest) exchange
+                .getIn().getBody();
+        return iDeviceDao.getDeviceUsageInfoDB(usageInformationMidwayRequest);
+    }
 
-	
+    @Override
+    public ConnectionInformationMidwayResponse getDeviceConnectionHistoryInfoDB(
+            Exchange exchange) {
+
+        ConnectionInformationMidwayRequest connectionInformationMidwayRequest = (ConnectionInformationMidwayRequest) exchange
+                .getIn().getBody();
+        return iDeviceDao
+                .getDeviceConnectionHistoryInfoDB(connectionInformationMidwayRequest);
+    }
 
 }

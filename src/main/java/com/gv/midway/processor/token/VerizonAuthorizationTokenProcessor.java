@@ -11,43 +11,44 @@ import com.gv.midway.constant.IConstant;
 
 public class VerizonAuthorizationTokenProcessor implements Processor {
 
-	Logger log = Logger.getLogger(VerizonAuthorizationTokenProcessor.class
-			.getName());
+    private static final Logger LOGGER = Logger.getLogger(VerizonAuthorizationTokenProcessor.class
+            .getName());
 
-	Environment newEnv;
+    Environment newEnv;
 
-	public VerizonAuthorizationTokenProcessor(Environment env) {
-		super();
-		this.newEnv = env;
+    public VerizonAuthorizationTokenProcessor(Environment env) {
+        super();
+        this.newEnv = env;
 
-	}
+    }
 
-	public VerizonAuthorizationTokenProcessor() {
-		//Empty Constructor
-	}
-	@Override
-	public void process(Exchange exchange) throws Exception {
+    public VerizonAuthorizationTokenProcessor() {
+        // Empty Constructor
+    }
 
-		log.info("Begin:VerizonAuthorizationTokenProcessor----------"
-				+ exchange.getPattern());
-		log.info("Authorization:::"
-				+ newEnv.getProperty(IConstant.VERIZON_AUTHENTICATION));
-		Message message = exchange.getIn();
-		message.setHeader("Authorization",
-				newEnv.getProperty(IConstant.VERIZON_AUTHENTICATION));
-		message.setHeader(Exchange.CONTENT_TYPE,
-				"application/x-www-form-urlencoded");
-		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
-		message.setHeader(Exchange.HTTP_METHOD, "POST");
-		message.setHeader(Exchange.HTTP_PATH, "/ts/v1/oauth2/token");
+    @Override
+    public void process(Exchange exchange) throws Exception {
 
-		exchange.getIn().setHeader(Exchange.HTTP_QUERY,
-				"grant_type=client_credentials");
+        LOGGER.info("Begin:VerizonAuthorizationTokenProcessor----------"
+                + exchange.getPattern());
+        LOGGER.info("Authorization:::"
+                + newEnv.getProperty(IConstant.VERIZON_AUTHENTICATION));
+        Message message = exchange.getIn();
+        message.setHeader("Authorization",
+                newEnv.getProperty(IConstant.VERIZON_AUTHENTICATION));
+        message.setHeader(Exchange.CONTENT_TYPE,
+                "application/x-www-form-urlencoded");
+        message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
+        message.setHeader(Exchange.HTTP_METHOD, "POST");
+        message.setHeader(Exchange.HTTP_PATH, "/ts/v1/oauth2/token");
 
-		exchange.setPattern(ExchangePattern.InOut);
+        exchange.getIn().setHeader(Exchange.HTTP_QUERY,
+                "grant_type=client_credentials");
 
-		log.info("End:VerizonAuthorizationTokenProcessor");
+        exchange.setPattern(ExchangePattern.InOut);
 
-	}
+        LOGGER.info("End:VerizonAuthorizationTokenProcessor");
+
+    }
 
 }

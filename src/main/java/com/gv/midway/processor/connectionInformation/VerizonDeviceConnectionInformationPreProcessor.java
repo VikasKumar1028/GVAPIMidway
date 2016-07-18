@@ -10,62 +10,47 @@ import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationRequest;
 import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationRequestDataArea;
 import com.gv.midway.pojo.verizon.DeviceId;
+import com.gv.midway.utility.CommonUtil;
 
 public class VerizonDeviceConnectionInformationPreProcessor implements
-		Processor {
+        Processor {
 
-	Logger log = Logger
-			.getLogger(VerizonDeviceConnectionInformationPreProcessor.class
-					.getName());
-	@Override
-	public void process(Exchange exchange) throws Exception {
+    private static final Logger LOGGER = Logger
+            .getLogger(VerizonDeviceConnectionInformationPreProcessor.class
+                    .getName());
 
-		log.info("Start:VerizonDeviceConnectionInformationPreProcessor");
-		log.info("Session Parameters  VZSessionToken"
-				+ exchange.getProperty(IConstant.VZ_SEESION_TOKEN));
-		log.info("Session Parameters  VZAuthorization"
-				+ exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN));
+    @Override
+    public void process(Exchange exchange) throws Exception {
 
-		ConnectionInformationRequestDataArea businessRequest = new ConnectionInformationRequestDataArea();
-		ConnectionInformationRequest proxyRequest = (ConnectionInformationRequest) exchange
-				.getIn().getBody();
-		businessRequest.setEarliest(proxyRequest.getDataArea().getEarliest());
-		businessRequest.setLatest(proxyRequest.getDataArea().getLatest());
-		DeviceId deviceId = new DeviceId();
-		deviceId.setId(proxyRequest.getDataArea().getDeviceId().getId());
-		deviceId.setKind(proxyRequest.getDataArea().getDeviceId().getKind());
-		businessRequest.setDeviceId(deviceId);
+        LOGGER.info("Start:VerizonDeviceConnectionInformationPreProcessor");
+        LOGGER.info("Session Parameters  VZSessionToken"
+                + exchange.getProperty(IConstant.VZ_SEESION_TOKEN));
+        LOGGER.info("Session Parameters  VZAuthorization"
+                + exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN));
 
-		ObjectMapper objectMapper = new ObjectMapper();
+        ConnectionInformationRequestDataArea businessRequest = new ConnectionInformationRequestDataArea();
+        ConnectionInformationRequest proxyRequest = (ConnectionInformationRequest) exchange
+                .getIn().getBody();
+        businessRequest.setEarliest(proxyRequest.getDataArea().getEarliest());
+        businessRequest.setLatest(proxyRequest.getDataArea().getLatest());
+        DeviceId deviceId = new DeviceId();
+        deviceId.setId(proxyRequest.getDataArea().getDeviceId().getId());
+        deviceId.setKind(proxyRequest.getDataArea().getDeviceId().getKind());
+        businessRequest.setDeviceId(deviceId);
 
-		String strRequestBody = objectMapper
-				.writeValueAsString(businessRequest);
+        ObjectMapper objectMapper = new ObjectMapper();
 
-		exchange.getIn().setBody(strRequestBody);
+        String strRequestBody = objectMapper
+                .writeValueAsString(businessRequest);
 
-		Message message = exchange.getIn();
-		String sessionToken = "";
-		String authorizationToken = "";
+        exchange.getIn().setBody(strRequestBody);
 
-		if (exchange.getProperty(IConstant.VZ_SEESION_TOKEN) != null
-				&& exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN) != null) {
-			sessionToken = exchange.getProperty(IConstant.VZ_SEESION_TOKEN)
-					.toString();
-			authorizationToken = exchange.getProperty(
-					IConstant.VZ_AUTHORIZATION_TOKEN).toString();
-		}
+        Message message = CommonUtil.setMessageHeader(exchange);
+        message.setHeader(Exchange.HTTP_PATH,
+                "/devices/connections/actions/listHistory");
 
+        LOGGER.info("End:VerizonDeviceConnectionStatusPreProcessor");
 
-		message.setHeader("VZ-M2M-Token", sessionToken);
-		message.setHeader("Authorization", "Bearer " + authorizationToken);
-		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
-		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
-		message.setHeader(Exchange.HTTP_METHOD, "POST");
-		message.setHeader(Exchange.HTTP_PATH,
-				"/devices/connections/actions/listHistory");
-
-		log.info("End:VerizonDeviceConnectionStatusPreProcessor");
-
-	}
+    }
 
 }

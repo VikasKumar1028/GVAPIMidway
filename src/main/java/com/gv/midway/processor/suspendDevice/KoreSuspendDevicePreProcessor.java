@@ -14,51 +14,52 @@ import com.gv.midway.pojo.transaction.Transaction;
 
 public class KoreSuspendDevicePreProcessor implements Processor {
 
-	Logger log = Logger
-			.getLogger(KoreSuspendDevicePreProcessor.class.getName());
+    private static final Logger LOGGER = Logger
+            .getLogger(KoreSuspendDevicePreProcessor.class.getName());
 
-	Environment newEnv;
+    Environment newEnv;
 
-	public KoreSuspendDevicePreProcessor() {
-		//Empty Constructor
-	}
+    public KoreSuspendDevicePreProcessor() {
+        // Empty Constructor
+    }
 
-	public KoreSuspendDevicePreProcessor(Environment env) {
-		super();
-		this.newEnv = env;
-	}
-	@Override
-	public void process(Exchange exchange) throws Exception {
-		log.info("*************Testing**************************************"
-				+ exchange.getIn().getBody());
+    public KoreSuspendDevicePreProcessor(Environment env) {
+        super();
+        this.newEnv = env;
+    }
 
-		log.info("Begin:KoreSuspendDevicePreProcessor");
-		Message message = exchange.getIn();
+    @Override
+    public void process(Exchange exchange) throws Exception {
+        LOGGER.info("*************Testing**************************************"
+                + exchange.getIn().getBody());
 
-		Transaction transaction = exchange.getIn().getBody(Transaction.class);
+        LOGGER.info("Begin:KoreSuspendDevicePreProcessor");
+        Message message = exchange.getIn();
 
-		SuspendDeviceRequest suspendDeviceRequest = (SuspendDeviceRequest) transaction
-				.getDevicePayload();
+        Transaction transaction = exchange.getIn().getBody(Transaction.class);
 
-		String deviceId = suspendDeviceRequest.getDataArea().getDevices()[0]
-				.getDeviceIds()[0].getId();
+        SuspendDeviceRequest suspendDeviceRequest = (SuspendDeviceRequest) transaction
+                .getDevicePayload();
 
-		SuspendDeviceRequestKore suspendDeviceRequestKore = new SuspendDeviceRequestKore();
-		suspendDeviceRequestKore.setDeviceNumber(deviceId);
+        String deviceId = suspendDeviceRequest.getDataArea().getDevices()[0]
+                .getDeviceIds()[0].getId();
 
-		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,
-				transaction.getDeviceNumber());
-		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
-		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
-		message.setHeader(Exchange.HTTP_METHOD, "POST");
-		message.setHeader("Authorization",
-				newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
-		message.setHeader(Exchange.HTTP_PATH, "/json/suspendDevice");
+        SuspendDeviceRequestKore suspendDeviceRequestKore = new SuspendDeviceRequestKore();
+        suspendDeviceRequestKore.setDeviceNumber(deviceId);
 
-		message.setBody(suspendDeviceRequestKore);
+        exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,
+                transaction.getDeviceNumber());
+        message.setHeader(Exchange.CONTENT_TYPE, "application/json");
+        message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
+        message.setHeader(Exchange.HTTP_METHOD, "POST");
+        message.setHeader("Authorization",
+                newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
+        message.setHeader(Exchange.HTTP_PATH, "/json/suspendDevice");
 
-		exchange.setPattern(ExchangePattern.InOut);
-		log.info("End:KoreSuspendDevicePreProcessor");
-	}
+        message.setBody(suspendDeviceRequestKore);
+
+        exchange.setPattern(ExchangePattern.InOut);
+        LOGGER.info("End:KoreSuspendDevicePreProcessor");
+    }
 
 }

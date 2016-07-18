@@ -12,39 +12,40 @@ import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponseDataArea;
 
 public class StubVerizonSuspendDeviceProcessor implements Processor {
 
-	Logger log = Logger.getLogger(StubVerizonSuspendDeviceProcessor.class
-			.getName());
-	@Override
-	public void process(Exchange exchange) throws Exception {
+    private static final Logger LOGGER = Logger.getLogger(StubVerizonSuspendDeviceProcessor.class
+            .getName());
 
-		log.info("Begin::StubVerizonSuspendDeviceProcessor");
-		SuspendDeviceResponse suspendDeviceResponse = new SuspendDeviceResponse();
+    @Override
+    public void process(Exchange exchange) throws Exception {
 
-		SuspendDeviceResponseDataArea suspendDeviceResponseDataArea = new SuspendDeviceResponseDataArea();
+        LOGGER.info("Begin::StubVerizonSuspendDeviceProcessor");
+        SuspendDeviceResponse suspendDeviceResponse = new SuspendDeviceResponse();
 
-		Header responseheader = new Header();
+        SuspendDeviceResponseDataArea suspendDeviceResponseDataArea = new SuspendDeviceResponseDataArea();
 
-		Response response = new Response();
+        Header responseheader = new Header();
 
-		response.setResponseCode(IResponse.SUCCESS_CODE);
+        Response response = new Response();
 
-		response.setResponseDescription("Device is suspended successfully");
-		response.setResponseStatus("SUCCESS");
+        response.setResponseCode(IResponse.SUCCESS_CODE);
 
-		responseheader.setApplicationName("WEB");
-		responseheader.setRegion("USA");
-		responseheader.setTimestamp("2016-03-08T21:49:45");
-		responseheader.setOrganization("Grant Victor");
-		responseheader.setSourceName("VERIZON");
-		responseheader.setTransactionId("cde2131ksjd");
-		responseheader.setBsCarrier("VERIZON");
+        response.setResponseDescription("Device is suspended successfully");
+        response.setResponseStatus("SUCCESS");
 
-		suspendDeviceResponse.setHeader(responseheader);
-		suspendDeviceResponse.setResponse(response);
-		suspendDeviceResponseDataArea.setOrderNumber("KR012313512");
-		suspendDeviceResponse.setDataArea(suspendDeviceResponseDataArea);
+        responseheader.setApplicationName("WEB");
+        responseheader.setRegion("USA");
+        responseheader.setTimestamp("2016-03-08T21:49:45");
+        responseheader.setOrganization("Grant Victor");
+        responseheader.setSourceName("VERIZON");
+        responseheader.setTransactionId("cde2131ksjd");
+        responseheader.setBsCarrier("VERIZON");
 
-		exchange.getIn().setBody(suspendDeviceResponse);
-		log.info("End::StubVerizonSuspendDeviceProcessor");
-	}
+        suspendDeviceResponse.setHeader(responseheader);
+        suspendDeviceResponse.setResponse(response);
+        suspendDeviceResponseDataArea.setOrderNumber("KR012313512");
+        suspendDeviceResponse.setDataArea(suspendDeviceResponseDataArea);
+
+        exchange.getIn().setBody(suspendDeviceResponse);
+        LOGGER.info("End::StubVerizonSuspendDeviceProcessor");
+    }
 }

@@ -9,14 +9,14 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BulkDevices extends BaseRequest {
 
-	@ApiModelProperty(value = "Device Information DataArea")
-	private DevicesDataArea dataArea;
+    @ApiModelProperty(value = "Device Information DataArea")
+    private DevicesDataArea dataArea;
 
-	public DevicesDataArea getDataArea() {
-		return dataArea;
-	}
+    public DevicesDataArea getDataArea() {
+        return dataArea;
+    }
 
-	public void setDataArea(DevicesDataArea dataArea) {
-		this.dataArea = dataArea;
-	}
+    public void setDataArea(DevicesDataArea dataArea) {
+        this.dataArea = dataArea;
+    }
 }

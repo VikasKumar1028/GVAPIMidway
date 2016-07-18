@@ -8,22 +8,22 @@ import com.gv.midway.utility.CommonUtil;
 
 public class JobCarrierRouter {
 
-	private Logger log = Logger.getLogger(JobCarrierRouter.class);
+   private static final Logger LOGGER = Logger.getLogger(JobCarrierRouter.class);
 
-	public String routeCarrierJob(DeviceInformation deviceInformation) {
+    public String routeCarrierJob(DeviceInformation deviceInformation) {
 
-		log.info("Inside the Carrier Job Router");
-		if (IConstant.BSCARRIER_SERVICE_KORE.equals(CommonUtil.getDerivedCarrierName(deviceInformation
-				.getBs_carrier()))) {
-			return "seda:processKoreJob";
+        LOGGER.info("Inside the Carrier Job Router");
+        if (IConstant.BSCARRIER_SERVICE_KORE.equals(CommonUtil
+                .getDerivedCarrierName(deviceInformation.getBs_carrier()))) {
+            return "seda:processKoreJob";
 
-		} else if (IConstant.BSCARRIER_SERVICE_VERIZON.equals(CommonUtil
-				.getDerivedCarrierName(deviceInformation.getBs_carrier()))) {
-			return "seda:processVerizonJob";
-		} else {
-			return "";
-		}
+        } else if (IConstant.BSCARRIER_SERVICE_VERIZON.equals(CommonUtil
+                .getDerivedCarrierName(deviceInformation.getBs_carrier()))) {
+            return "seda:processVerizonJob";
+        } else {
+            return "";
+        }
 
-	}
+    }
 
 }

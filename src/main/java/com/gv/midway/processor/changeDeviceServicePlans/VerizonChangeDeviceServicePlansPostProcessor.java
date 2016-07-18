@@ -14,71 +14,67 @@ import com.gv.midway.pojo.changeDeviceServicePlans.response.ChangeDeviceServiceP
 
 public class VerizonChangeDeviceServicePlansPostProcessor implements Processor {
 
-	Logger log = Logger
-			.getLogger(VerizonChangeDeviceServicePlansPostProcessor.class
-					.getName());
+    private static final Logger LOGGER = Logger
+            .getLogger(VerizonChangeDeviceServicePlansPostProcessor.class
+                    .getName());
 
-	Environment newEnv;
+    Environment newEnv;
 
-	public VerizonChangeDeviceServicePlansPostProcessor() {
-		//Empty Constructor
-	}
+    public VerizonChangeDeviceServicePlansPostProcessor() {
+        // Empty Constructor
+    }
 
-	public VerizonChangeDeviceServicePlansPostProcessor(Environment env) {
-		super();
-		this.newEnv = env;
-	}
+    public VerizonChangeDeviceServicePlansPostProcessor(Environment env) {
+        super();
+        this.newEnv = env;
+    }
 
-	@Override
-	public void process(Exchange exchange) throws Exception {
-		log.info("Begin::VerizonChangeDeviceServicePlansPostProcessor");
+    @Override
+    public void process(Exchange exchange) throws Exception {
+        LOGGER.info("Begin::VerizonChangeDeviceServicePlansPostProcessor");
 
-		ChangeDeviceServicePlansResponse changeDeviceServicePlansResponse = new ChangeDeviceServicePlansResponse();
+        ChangeDeviceServicePlansResponse changeDeviceServicePlansResponse = new ChangeDeviceServicePlansResponse();
 
-		ChangeDeviceServicePlansResponseDataArea changeDeviceServicePlansResponseDataArea = new ChangeDeviceServicePlansResponseDataArea();
+        ChangeDeviceServicePlansResponseDataArea changeDeviceServicePlansResponseDataArea = new ChangeDeviceServicePlansResponseDataArea();
 
+        Response response = new Response();
 
-		Response response = new Response();
+        if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
 
-		if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
+            LOGGER.info("RequestID::" + exchange.getIn().getBody().toString());
+            response.setResponseCode(IResponse.SUCCESS_CODE);
+            response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+            response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
+            changeDeviceServicePlansResponseDataArea.setOrderNumber(exchange
+                    .getProperty(IConstant.MIDWAY_TRANSACTION_ID).toString());
 
-			log.info("RequestID::" + exchange.getIn().getBody().toString());
-			response.setResponseCode(IResponse.SUCCESS_CODE);
-			response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
-			response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
-			changeDeviceServicePlansResponseDataArea.setOrderNumber(exchange
-					.getProperty(IConstant.MIDWAY_TRANSACTION_ID).toString());
+        } else {
 
-		} else {
+            response.setResponseCode(400);
+            response.setResponseStatus(IResponse.ERROR_MESSAGE);
+            response.setResponseDescription(exchange.getIn().getBody()
+                    .toString());
 
-			response.setResponseCode(400);
-			response.setResponseStatus(IResponse.ERROR_MESSAGE);
-			response.setResponseDescription(exchange.getIn().getBody()
-					.toString());
+        }
 
-		}
+        response.setResponseCode(IResponse.SUCCESS_CODE);
+        response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+        response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
 
-		response.setResponseCode(IResponse.SUCCESS_CODE);
-		response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
-		response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
+        Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
 
+        changeDeviceServicePlansResponse.setHeader(responseheader);
+        changeDeviceServicePlansResponse.setResponse(response);
+        changeDeviceServicePlansResponseDataArea.setOrderNumber(exchange
+                .getProperty(IConstant.MIDWAY_TRANSACTION_ID).toString());
 
-		
-		Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
+        changeDeviceServicePlansResponse
+                .setDataArea(changeDeviceServicePlansResponseDataArea);
 
-		changeDeviceServicePlansResponse.setHeader(responseheader);
-		changeDeviceServicePlansResponse.setResponse(response);
-		changeDeviceServicePlansResponseDataArea.setOrderNumber(exchange
-				.getProperty(IConstant.MIDWAY_TRANSACTION_ID).toString());
+        exchange.getIn().setBody(changeDeviceServicePlansResponse);
 
-		
-		changeDeviceServicePlansResponse
-				.setDataArea(changeDeviceServicePlansResponseDataArea);
+        LOGGER.info("End::VerizonChangeDeviceServicePlansPostProcessor");
 
-		exchange.getIn().setBody(changeDeviceServicePlansResponse);
-
-		log.info("End::VerizonChangeDeviceServicePlansPostProcessor");
-
-	}
+    }
 
 }

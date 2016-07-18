@@ -7,17 +7,17 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SingleDevice extends BaseRequest{
+public class SingleDevice extends BaseRequest {
 
-	@ApiModelProperty(value = "Device Information DataArea")
-	private DeviceDataArea dataArea;
+    @ApiModelProperty(value = "Device Information DataArea")
+    private DeviceDataArea dataArea;
 
-	public DeviceDataArea getDataArea() {
-		return dataArea;
-	}
+    public DeviceDataArea getDataArea() {
+        return dataArea;
+    }
 
-	public void setDataArea(DeviceDataArea dataArea) {
-		this.dataArea = dataArea;
-	}
+    public void setDataArea(DeviceDataArea dataArea) {
+        this.dataArea = dataArea;
+    }
 
 }

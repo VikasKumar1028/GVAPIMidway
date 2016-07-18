@@ -8,54 +8,53 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 
 public class BatchExecutor {
-	
-	Logger log = Logger.getLogger(BatchExecutor.class
-			.getName());
 
-	private volatile static BatchExecutor batchExecutor;
+    private static final Logger LOGGER = Logger.getLogger(BatchExecutor.class.getName());
 
-	public ExecutorService executorService;
+    private volatile static BatchExecutor batchExecutor;
 
-	private BatchExecutor() {
-		log.info("singelton created");
-		setExecutor();
-	};
+    public ExecutorService executorService;
 
-	public static BatchExecutor getBatchExecutor() {
-		if (batchExecutor == null) {
-			synchronized (BatchExecutor.class) {
-				if (batchExecutor == null) {
-					batchExecutor = new BatchExecutor();
+    private BatchExecutor() {
+        LOGGER.info("singelton created");
+        setExecutor();
+    };
 
-				}
-			}
-		}
-		return batchExecutor;
-	}
+    public static BatchExecutor getBatchExecutor() {
+        if (batchExecutor == null) {
+            synchronized (BatchExecutor.class) {
+                if (batchExecutor == null) {
+                    batchExecutor = new BatchExecutor();
 
-	private void setExecutor() {
+                }
+            }
+        }
+        return batchExecutor;
+    }
 
-		executorService = Executors.newFixedThreadPool(10);
-	}
-	
-	
-	public ExecutorService getExecutorService(){
-		
-		return executorService;
-	}
-	
-	public void shutDown(){
-		
-	   executorService.shutdown();
-		try {
+    private void setExecutor() {
+
+        executorService = Executors.newFixedThreadPool(10);
+    }
+
+    public ExecutorService getExecutorService() {
+
+        return executorService;
+    }
+
+    public void shutDown() {
+
+        executorService.shutdown();
+        try {
             if (!executorService.awaitTermination(10, TimeUnit.SECONDS)) {
-            	log.info("Executor not able to finish task in specified time.");
+                LOGGER.info("Executor not able to finish task in specified time.");
                 List<Runnable> droppedTasks = executorService.shutdownNow();
-                log.info("Executor was abruptly shut down. " + droppedTasks.size() + " tasks will not be executed.");
+                LOGGER.info("Executor was abruptly shut down. "
+                        + droppedTasks.size() + " tasks will not be executed.");
             }
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOGGER.error("ERROR"+e);
         }
-	}
+    }
 
 }

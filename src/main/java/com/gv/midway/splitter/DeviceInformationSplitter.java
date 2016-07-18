@@ -8,12 +8,12 @@ import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 
 public class DeviceInformationSplitter {
 
-	private Logger log = Logger.getLogger(DeviceInformationSplitter.class);
+   private static final Logger LOGGER = Logger.getLogger(DeviceInformationSplitter.class);
 
-	public List<DeviceInformation> split(List<DeviceInformation> deviceList) {
+    public List<DeviceInformation> split(List<DeviceInformation> deviceList) {
 
-		log.info("*****************SPLITTER*********************"
-				+ deviceList.size());
-		return deviceList;
-	}
+        LOGGER.info("*****************SPLITTER*********************"
+                + deviceList.size());
+        return deviceList;
+    }
 }

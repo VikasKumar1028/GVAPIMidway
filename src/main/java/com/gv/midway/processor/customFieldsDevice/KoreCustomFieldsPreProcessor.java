@@ -15,98 +15,97 @@ import com.gv.midway.pojo.verizon.CustomFieldsToUpdate;
 
 public class KoreCustomFieldsPreProcessor implements Processor {
 
-	Logger log = Logger.getLogger(KoreCustomFieldsPreProcessor.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(KoreCustomFieldsPreProcessor.class.getName());
 
-	Environment newEnv;
+    Environment newEnv;
 
-	public KoreCustomFieldsPreProcessor() {
-		//Empty Constructor
-	}
+    public KoreCustomFieldsPreProcessor() {
+        // Empty Constructor
+    }
 
-	public KoreCustomFieldsPreProcessor(Environment env) {
-		super();
-		this.newEnv = env;
-	}
-	@Override
-	public void process(Exchange exchange) throws Exception {
+    public KoreCustomFieldsPreProcessor(Environment env) {
+        super();
+        this.newEnv = env;
+    }
 
-		log.info("Begin::KoreCustomFieldsPreProcessor");
+    @Override
+    public void process(Exchange exchange) throws Exception {
 
-		Message message = exchange.getIn();
+        LOGGER.info("Begin::KoreCustomFieldsPreProcessor");
 
-		Transaction transaction = exchange.getIn().getBody(Transaction.class);
+        Message message = exchange.getIn();
 
-		CustomFieldsDeviceRequest changeDeviceServicePlansRequest = (CustomFieldsDeviceRequest) transaction
-				.getDevicePayload();
+        Transaction transaction = exchange.getIn().getBody(Transaction.class);
 
-		String deviceId = changeDeviceServicePlansRequest.getDataArea()
-				.getDevices()[0].getDeviceIds()[0].getId();
+        CustomFieldsDeviceRequest changeDeviceServicePlansRequest = (CustomFieldsDeviceRequest) transaction
+                .getDevicePayload();
 
-		CustomFieldsDeviceRequestKore customFieldsDeviceRequestKore = new CustomFieldsDeviceRequestKore();
-		customFieldsDeviceRequestKore.setDeviceNumber(deviceId);
+        String deviceId = changeDeviceServicePlansRequest.getDataArea()
+                .getDevices()[0].getDeviceIds()[0].getId();
 
-		CustomFieldsToUpdate[] customFieldsArr = changeDeviceServicePlansRequest
-				.getDataArea().getCustomFieldsToUpdate();
-		
-		if(customFieldsArr!=null)
-		{
-		for (int i = 0; i < customFieldsArr.length; i++) {
-			CustomFieldsToUpdate customField = customFieldsArr[i];
+        CustomFieldsDeviceRequestKore customFieldsDeviceRequestKore = new CustomFieldsDeviceRequestKore();
+        customFieldsDeviceRequestKore.setDeviceNumber(deviceId);
 
-			String key = customField.getKey();
+        CustomFieldsToUpdate[] customFieldsArr = changeDeviceServicePlansRequest
+                .getDataArea().getCustomFieldsToUpdate();
 
-			switch (key) {
-			case "customField1":
-				customFieldsDeviceRequestKore.setCustomField1(customField
-						.getValue());
-				break;
+        if (customFieldsArr != null) {
+            for (int i = 0; i < customFieldsArr.length; i++) {
+                CustomFieldsToUpdate customField = customFieldsArr[i];
 
-			case "customField2":
-				customFieldsDeviceRequestKore.setCustomField2(customField
-						.getValue());
-				break;
+                String key = customField.getKey();
 
-			case "customField3":
-				customFieldsDeviceRequestKore.setCustomField3(customField
-						.getValue());
-				break;
+                switch (key) {
+                case "customField1":
+                    customFieldsDeviceRequestKore.setCustomField1(customField
+                            .getValue());
+                    break;
 
-			case "customField4":
-				customFieldsDeviceRequestKore.setCustomField4(customField
-						.getValue());
-				break;
+                case "customField2":
+                    customFieldsDeviceRequestKore.setCustomField2(customField
+                            .getValue());
+                    break;
 
-			case "customField5":
-				customFieldsDeviceRequestKore.setCustomField5(customField
-						.getValue());
-				break;
-			case "customField6":
-				customFieldsDeviceRequestKore.setCustomField6(customField
-						.getValue());
-				break;
-			default:
-				break;
-			}
-		}
-		
-		}
+                case "customField3":
+                    customFieldsDeviceRequestKore.setCustomField3(customField
+                            .getValue());
+                    break;
 
-		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,
-				transaction.getDeviceNumber());
+                case "customField4":
+                    customFieldsDeviceRequestKore.setCustomField4(customField
+                            .getValue());
+                    break;
 
-		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
-		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
-		message.setHeader(Exchange.HTTP_METHOD, "POST");
+                case "customField5":
+                    customFieldsDeviceRequestKore.setCustomField5(customField
+                            .getValue());
+                    break;
+                case "customField6":
+                    customFieldsDeviceRequestKore.setCustomField6(customField
+                            .getValue());
+                    break;
+                default:
+                    break;
+                }
+            }
 
-	
-		message.setHeader("Authorization",
-				newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
-		message.setHeader(Exchange.HTTP_PATH, "/json/modifyDeviceCustomInfo");
+        }
 
-		message.setBody(customFieldsDeviceRequestKore);
-		exchange.setPattern(ExchangePattern.InOut);
+        exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,
+                transaction.getDeviceNumber());
 
-		log.info("End::KoreCustomFieldsPreProcessor");
-	}
+        message.setHeader(Exchange.CONTENT_TYPE, "application/json");
+        message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
+        message.setHeader(Exchange.HTTP_METHOD, "POST");
+
+        message.setHeader("Authorization",
+                newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
+        message.setHeader(Exchange.HTTP_PATH, "/json/modifyDeviceCustomInfo");
+
+        message.setBody(customFieldsDeviceRequestKore);
+        exchange.setPattern(ExchangePattern.InOut);
+
+        LOGGER.info("End::KoreCustomFieldsPreProcessor");
+    }
 
 }

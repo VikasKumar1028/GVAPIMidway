@@ -20,308 +20,296 @@ import com.gv.midway.pojo.verizon.VerizonErrorResponse;
 @Service
 public class AuditDaoImpl implements IAuditDao {
 
-	Logger log = Logger.getLogger(AuditDaoImpl.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(AuditDaoImpl.class.getName());
 
-	@Autowired
-	MongoTemplate mongoTemplate;
+    @Autowired
+    MongoTemplate mongoTemplate;
 
-	/**
-	 * Method Saves the Audit Object for External Request
-	 */
-	@Override
-	public void auditExternalRequestCall(Exchange exchange) {
-		log.info("Begin-AuditDaoImpl :auditExternalRequestCall"
-				+ exchange.getIn().getBody());
+    /**
+     * Method Saves the Audit Object for External Request
+     */
+    @Override
+    public void auditExternalRequestCall(Exchange exchange) {
+        LOGGER.info("Begin-AuditDaoImpl :auditExternalRequestCall"
+                + exchange.getIn().getBody());
 
-		try {
+        try {
 
-			
-			log.info("auditExternalRequestCall-jsonInString::"
-					+ exchange.getIn().getBody().toString());
+            LOGGER.info("auditExternalRequestCall-jsonInString::"
+                    + exchange.getIn().getBody().toString());
 
-			String requestEndpint = exchange.getFromEndpoint().toString();
-			String requestEndpintSpilt[] = requestEndpint.split("//");
+            String requestEndpint = exchange.getFromEndpoint().toString();
+            String requestEndpintSpilt[] = requestEndpint.split("//");
 
-			log.info("requestEndpintSpilt::"
-					+ requestEndpintSpilt[1].replaceAll("]", " "));
+            LOGGER.info("requestEndpintSpilt::"
+                    + requestEndpintSpilt[1].replaceAll("]", " "));
 
-			String apiOperationName = "GV_"
-					+ requestEndpintSpilt[1].replaceAll("]", "")
-					+ "_BusinessRequest";
-			if (exchange
-					.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER) != null) {
-				apiOperationName = apiOperationName
-						+ "_deviceNumber_"
-						+ exchange.getProperty(
-								IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER)
-								.toString();
-			}
+            String apiOperationName = "GV_"
+                    + requestEndpintSpilt[1].replaceAll("]", "")
+                    + "_BusinessRequest";
+            if (exchange
+                    .getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER) != null) {
+                apiOperationName = apiOperationName
+                        + "_deviceNumber_"
+                        + exchange.getProperty(
+                                IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER)
+                                .toString();
+            }
 
-			log.info("apiOperationName" + apiOperationName);
+            LOGGER.info("apiOperationName" + apiOperationName);
 
-			Audit audit = new Audit();
+            Audit audit = new Audit();
 
-			Date localTime = new Date();
-			
+            Date localTime = new Date();
 
-			audit.setApiOperationName(apiOperationName);
-			audit.setFrom(exchange.getProperty("sourceName").toString());
-			audit.setTo(exchange.getFromEndpoint().toString());
-			audit.setTimeStamp(localTime);
-			audit.setAuditTransactionId(exchange.getProperty(
-					IConstant.AUDIT_TRANSACTION_ID).toString());
+            audit.setApiOperationName(apiOperationName);
+            audit.setFrom(exchange.getProperty("sourceName").toString());
+            audit.setTo(exchange.getFromEndpoint().toString());
+            audit.setTimeStamp(localTime);
+            audit.setAuditTransactionId(exchange.getProperty(
+                    IConstant.AUDIT_TRANSACTION_ID).toString());
 
-			audit.setGvTransactionId(exchange.getProperty(
-					IConstant.GV_TRANSACTION_ID).toString());
-			audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME)
-					.toString());
-			audit.setPayload(exchange.getIn().getBody());
-			mongoTemplate.insert(audit);
+            audit.setGvTransactionId(exchange.getProperty(
+                    IConstant.GV_TRANSACTION_ID).toString());
+            audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME)
+                    .toString());
+            audit.setPayload(exchange.getIn().getBody());
+            mongoTemplate.insert(audit);
 
-		} catch (Exception e) {
-			log.info("auditExternalRequestCall-Exception" + e);
-		}
+        } catch (Exception e) {
+            LOGGER.info("auditExternalRequestCall-Exception" + e);
+        }
 
-		log.info("End-AuditDaoImpl :auditExternalRequestCall");
+        LOGGER.info("End-AuditDaoImpl :auditExternalRequestCall");
 
-	}
+    }
 
-	/**
-	 * Method Saves the Audit Object for External Response
-	 */
-	@Override
-	public void auditExternalResponseCall(Exchange exchange) {
-		
+    /**
+     * Method Saves the Audit Object for External Response
+     */
+    @Override
+    public void auditExternalResponseCall(Exchange exchange) {
 
-		log.info("Start-AuditDaoImpl:auditExternalResponseCall");
+        LOGGER.info("Start-AuditDaoImpl:auditExternalResponseCall");
 
-		try {
+        try {
 
-			
-			String responseEndpint = exchange.getFromEndpoint().toString();
-			String responseEndpintSpilt[] = responseEndpint.split("//");
+            String responseEndpint = exchange.getFromEndpoint().toString();
+            String responseEndpintSpilt[] = responseEndpint.split("//");
 
-			log.info("requestEndpintSpilt::"
-					+ responseEndpintSpilt[1].replaceAll("]", " "));
+            LOGGER.info("requestEndpintSpilt::"
+                    + responseEndpintSpilt[1].replaceAll("]", " "));
 
-			String apiOperationName = "GV_"
-					+ responseEndpintSpilt[1].replaceAll("]", "")
-					+ "_BusinessResponse";
+            String apiOperationName = "GV_"
+                    + responseEndpintSpilt[1].replaceAll("]", "")
+                    + "_BusinessResponse";
 
-			if (exchange
-					.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER) != null) {
-				apiOperationName = apiOperationName
-						+ "_deviceNumber_"
-						+ exchange.getProperty(
-								IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER)
-								.toString();
-			}
-			log.info("apiOperationName" + apiOperationName);
+            if (exchange
+                    .getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER) != null) {
+                apiOperationName = apiOperationName
+                        + "_deviceNumber_"
+                        + exchange.getProperty(
+                                IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER)
+                                .toString();
+            }
+            LOGGER.info("apiOperationName" + apiOperationName);
 
-			Audit audit = new Audit();
+            Audit audit = new Audit();
 
-			Date localTime = new Date();
-		
-			audit.setApiOperationName(apiOperationName);
-			audit.setFrom(exchange.getProperty("sourceName").toString());
-			audit.setTo(exchange.getFromEndpoint().toString());
-			audit.setTimeStamp(localTime);
-			audit.setAuditTransactionId(exchange.getProperty(
-					IConstant.AUDIT_TRANSACTION_ID).toString());
-			audit.setGvTransactionId(exchange.getProperty(
-					IConstant.GV_TRANSACTION_ID).toString());
-			audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME)
-					.toString());
-			
-			log.info("business resposne is.........."
-					+ exchange.getIn().getBody());
+            Date localTime = new Date();
 
-			audit.setPayload(exchange.getIn().getBody());
-			mongoTemplate.insert(audit);
+            audit.setApiOperationName(apiOperationName);
+            audit.setFrom(exchange.getProperty("sourceName").toString());
+            audit.setTo(exchange.getFromEndpoint().toString());
+            audit.setTimeStamp(localTime);
+            audit.setAuditTransactionId(exchange.getProperty(
+                    IConstant.AUDIT_TRANSACTION_ID).toString());
+            audit.setGvTransactionId(exchange.getProperty(
+                    IConstant.GV_TRANSACTION_ID).toString());
+            audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME)
+                    .toString());
 
-			
-		} catch (Exception e) {
-			log.info("auditExternalResponseCall-Exception" + e);
-		}
+            LOGGER.info("business resposne is.........."
+                    + exchange.getIn().getBody());
 
-		log.info("End-AuditDaoImpl:auditExternalResponseCall");
+            audit.setPayload(exchange.getIn().getBody());
+            mongoTemplate.insert(audit);
 
-	}
+        } catch (Exception e) {
+            LOGGER.info("auditExternalResponseCall-Exception" + e);
+        }
 
-	/**
-	 * Method Saves the Audit Object for External Exception
-	 */
-	@Override
-	public void auditExternalExceptionResponseCall(Exchange exchange) {
+        LOGGER.info("End-AuditDaoImpl:auditExternalResponseCall");
 
-		log.info("Begin-AuditDaoImpl:auditExternalExceptionResponseCall");
-		String responseBody = "";
-		//  populate into below object
-		// KoreErrorResponse errorBody
+    }
 
-		CxfOperationException exception ;
+    /**
+     * Method Saves the Audit Object for External Exception
+     */
+    @Override
+    public void auditExternalExceptionResponseCall(Exchange exchange) {
 
-		if (exchange.getProperty(Exchange.EXCEPTION_CAUGHT) != null) {
-			exception = (CxfOperationException) exchange
-					.getProperty(Exchange.EXCEPTION_CAUGHT);
-			responseBody = exception.getResponseBody();
-		}
+        LOGGER.info("Begin-AuditDaoImpl:auditExternalExceptionResponseCall");
+        String responseBody = "";
+        // populate into below object
+        // KoreErrorResponse errorBody
 
-		try {
-			// changes for the audit
+        CxfOperationException exception;
 
-			String responseExceptionEndpint = exchange.getFromEndpoint()
-					.toString();
-			String responseExceptionEndpintSpilt[] = responseExceptionEndpint
-					.split("//");
+        if (exchange.getProperty(Exchange.EXCEPTION_CAUGHT) != null) {
+            exception = (CxfOperationException) exchange
+                    .getProperty(Exchange.EXCEPTION_CAUGHT);
+            responseBody = exception.getResponseBody();
+        }
 
-			log.info("requestEndpintSpilt::"
-					+ responseExceptionEndpintSpilt[1].replaceAll("]", " "));
+        try {
+            // changes for the audit
 
-			String apiOperationName = "GV_"
-					+ responseExceptionEndpintSpilt[1].replaceAll("]", "")
-					+ "_BusinessExternalError";
+            String responseExceptionEndpint = exchange.getFromEndpoint()
+                    .toString();
+            String responseExceptionEndpintSpilt[] = responseExceptionEndpint
+                    .split("//");
 
-			if (exchange
-					.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER) != null) {
-				apiOperationName = apiOperationName
-						+ "_deviceNumber_"
-						+ exchange.getProperty(
-								IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER)
-								.toString();
-			}
+            LOGGER.info("requestEndpintSpilt::"
+                    + responseExceptionEndpintSpilt[1].replaceAll("]", " "));
 
-			log.info("apiOperationName" + apiOperationName);
+            String apiOperationName = "GV_"
+                    + responseExceptionEndpintSpilt[1].replaceAll("]", "")
+                    + "_BusinessExternalError";
 
-			Audit audit = new Audit();
+            if (exchange
+                    .getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER) != null) {
+                apiOperationName = apiOperationName
+                        + "_deviceNumber_"
+                        + exchange.getProperty(
+                                IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER)
+                                .toString();
+            }
 
-			Date localTime = new Date();
-			
-			audit.setApiOperationName(apiOperationName);
-			audit.setFrom(exchange.getProperty("sourceName").toString());
-			audit.setTo(exchange.getFromEndpoint().toString());
-			audit.setTimeStamp(localTime);
-			audit.setAuditTransactionId(exchange.getProperty(
-					IConstant.AUDIT_TRANSACTION_ID).toString());
-			audit.setGvTransactionId(exchange.getProperty(
-					IConstant.GV_TRANSACTION_ID).toString());
-			audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME)
-					.toString());
-					
-			ObjectMapper mapper = new ObjectMapper();
-			
-			
-				try {
-					if ("VERIZON".equals(exchange
-							.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME))) {
-						
-						
-						VerizonErrorResponse responsePayload = mapper.readValue(responseBody,
-							VerizonErrorResponse.class);
-					
-						
-						
-						audit.setErrorDetails(responsePayload.getErrorMessage());
-						audit.setErrorProblem(responsePayload.getErrorCode());
-						//TODO Change the error code
-						audit.setErrorCode(400);					
-						
-						audit.setPayload(responsePayload);
-						
-					}else if ("KORE".equals(exchange
-							.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME))) {
-						KoreErrorResponse responsePayload = mapper.readValue(responseBody,
-								KoreErrorResponse.class);
-					
-						audit.setErrorDetails(responsePayload.getErrorMessage());
-						audit.setErrorProblem(IConstant.CARRIER_TRANSACTION_STATUS_ERROR);	
-						audit.setErrorCode(Integer.parseInt(responsePayload.getErrorCode()));
-						audit.setPayload(responsePayload);
-					}
-					
-					
-				} catch (Exception ex) {
-					log.error("Error in Parsing Json");
-				}
+            LOGGER.info("apiOperationName" + apiOperationName);
 
-			
-			mongoTemplate.save(audit);
+            Audit audit = new Audit();
 
-		} catch (Exception e) {
-			log.info("auditExternalExceptionResponseCall" + e);
-		}
-	}
+            Date localTime = new Date();
 
-	/**
-	 * Method Saves the Audit Object for Connection Error Response
-	 */
-	@Override
-	public void auditExternalConnectionExceptionResponseCall(Exchange exchange) {
+            audit.setApiOperationName(apiOperationName);
+            audit.setFrom(exchange.getProperty("sourceName").toString());
+            audit.setTo(exchange.getFromEndpoint().toString());
+            audit.setTimeStamp(localTime);
+            audit.setAuditTransactionId(exchange.getProperty(
+                    IConstant.AUDIT_TRANSACTION_ID).toString());
+            audit.setGvTransactionId(exchange.getProperty(
+                    IConstant.GV_TRANSACTION_ID).toString());
+            audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME)
+                    .toString());
 
-		log.info("Start-auditExternalConnectionExceptionResponseCall");
-		String responseBody = "";
+            ObjectMapper mapper = new ObjectMapper();
 
+            try {
+                if ("VERIZON".equals(exchange
+                        .getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME))) {
 
-		if (exchange.getProperty(Exchange.EXCEPTION_CAUGHT) != null) {
+                    VerizonErrorResponse responsePayload = mapper.readValue(
+                            responseBody, VerizonErrorResponse.class);
 
-			String str = exchange.getProperty(Exchange.EXCEPTION_CAUGHT)
-					.toString();
-			responseBody = str;
-		}
+                    audit.setErrorDetails(responsePayload.getErrorMessage());
+                    audit.setErrorProblem(responsePayload.getErrorCode());
+                    // TODO Change the error code
+                    audit.setErrorCode(400);
 
-		try {
-			// changes for the audit
+                    audit.setPayload(responsePayload);
 
-			String responseExceptionEndpint = exchange.getFromEndpoint()
-					.toString();
-			String responseExceptionEndpintSpilt[] = responseExceptionEndpint
-					.split("//");
+                } else if ("KORE".equals(exchange
+                        .getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME))) {
+                    KoreErrorResponse responsePayload = mapper.readValue(
+                            responseBody, KoreErrorResponse.class);
 
-			log.info("requestEndpintSpilt::"
-					+ responseExceptionEndpintSpilt[1].replaceAll("]", " "));
+                    audit.setErrorDetails(responsePayload.getErrorMessage());
+                    audit.setErrorProblem(IConstant.CARRIER_TRANSACTION_STATUS_ERROR);
+                    audit.setErrorCode(Integer.parseInt(responsePayload
+                            .getErrorCode()));
+                    audit.setPayload(responsePayload);
+                }
 
-			String apiOperationName = "GV_"
-					+ responseExceptionEndpintSpilt[1].replaceAll("]", "")
-					+ "_BusinessConnectionError";
+            } catch (Exception ex) {
+                LOGGER.error("Error in Parsing Json"+ex);
+            }
 
-			if (exchange
-					.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER) != null) {
-				apiOperationName = apiOperationName
-						+ "_deviceNumber_"
-						+ exchange.getProperty(
-								IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER)
-								.toString();
-			}
+            mongoTemplate.save(audit);
 
-			log.info("apiOperationName" + apiOperationName);
+        } catch (Exception e) {
+            LOGGER.info("auditExternalExceptionResponseCall" + e);
+        }
+    }
 
-			Audit audit = new Audit();
+    /**
+     * Method Saves the Audit Object for Connection Error Response
+     */
+    @Override
+    public void auditExternalConnectionExceptionResponseCall(Exchange exchange) {
 
-			Date localTime = new Date();
-			
+        LOGGER.info("Start-auditExternalConnectionExceptionResponseCall");
+        String responseBody = "";
 
-			audit.setApiOperationName(apiOperationName);
-			audit.setFrom(exchange.getProperty("sourceName").toString());
-			audit.setTo(exchange.getFromEndpoint().toString());
-			audit.setTimeStamp(localTime);
-			audit.setAuditTransactionId(exchange.getProperty(
-					IConstant.AUDIT_TRANSACTION_ID).toString());
-			audit.setGvTransactionId(exchange.getProperty(
-					IConstant.GV_TRANSACTION_ID).toString());
-			audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME)
-					.toString());
-			audit.setErrorDetails(exchange.getProperty(
-					IConstant.RESPONSE_DESCRIPTION).toString());
-			audit.setErrorProblem(exchange.getProperty(
-					IConstant.RESPONSE_STATUS).toString());
-			audit.setErrorCode(IResponse.CONNECTION_ERROR_CODE);
-			audit.setPayload(responseBody);
+        if (exchange.getProperty(Exchange.EXCEPTION_CAUGHT) != null) {
 
-			mongoTemplate.save(audit);
+            String str = exchange.getProperty(Exchange.EXCEPTION_CAUGHT)
+                    .toString();
+            responseBody = str;
+        }
 
-		} catch (Exception e) {
-			log.info("auditExternalConnectionExceptionResponseCall" + e);
-		}
-	}
+        try {
+            // changes for the audit
+
+            String responseExceptionEndpint = exchange.getFromEndpoint()
+                    .toString();
+            String responseExceptionEndpintSpilt[] = responseExceptionEndpint
+                    .split("//");
+
+            LOGGER.info("requestEndpintSpilt::"
+                    + responseExceptionEndpintSpilt[1].replaceAll("]", " "));
+
+            String apiOperationName = "GV_"
+                    + responseExceptionEndpintSpilt[1].replaceAll("]", "")
+                    + "_BusinessConnectionError";
+
+            if (exchange
+                    .getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER) != null) {
+                apiOperationName = apiOperationName
+                        + "_deviceNumber_"
+                        + exchange.getProperty(
+                                IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER)
+                                .toString();
+            }
+
+            LOGGER.info("apiOperationName" + apiOperationName);
+
+            Audit audit = new Audit();
+
+            Date localTime = new Date();
+
+            audit.setApiOperationName(apiOperationName);
+            audit.setFrom(exchange.getProperty("sourceName").toString());
+            audit.setTo(exchange.getFromEndpoint().toString());
+            audit.setTimeStamp(localTime);
+            audit.setAuditTransactionId(exchange.getProperty(
+                    IConstant.AUDIT_TRANSACTION_ID).toString());
+            audit.setGvTransactionId(exchange.getProperty(
+                    IConstant.GV_TRANSACTION_ID).toString());
+            audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME)
+                    .toString());
+            audit.setErrorDetails(exchange.getProperty(
+                    IConstant.RESPONSE_DESCRIPTION).toString());
+            audit.setErrorProblem(exchange.getProperty(
+                    IConstant.RESPONSE_STATUS).toString());
+            audit.setErrorCode(IResponse.CONNECTION_ERROR_CODE);
+            audit.setPayload(responseBody);
+
+            mongoTemplate.save(audit);
+
+        } catch (Exception e) {
+            LOGGER.info("auditExternalConnectionExceptionResponseCall" + e);
+        }
+    }
 
 }

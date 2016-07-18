@@ -12,45 +12,47 @@ import com.gv.midway.pojo.changeDeviceServicePlans.response.ChangeDeviceServiceP
 
 public class StubKoreChangeDeviceServicePlansProcessor implements Processor {
 
-	Logger log = Logger.getLogger(StubKoreChangeDeviceServicePlansProcessor.class
-			.getName());
-	@Override
-	public void process(Exchange exchange) throws Exception {
+    private static final Logger LOGGER = Logger
+            .getLogger(StubKoreChangeDeviceServicePlansProcessor.class
+                    .getName());
 
-		log.info("Begin::StubKoreChangeDeviceServicePlans");
+    @Override
+    public void process(Exchange exchange) throws Exception {
 
-		ChangeDeviceServicePlansResponse changeDeviceServicePlansResponse = new ChangeDeviceServicePlansResponse();
+        LOGGER.info("Begin::StubKoreChangeDeviceServicePlans");
 
-		ChangeDeviceServicePlansResponseDataArea changeDeviceServicePlansResponseDataArea = new ChangeDeviceServicePlansResponseDataArea();
-		Header responseheader = new Header();
+        ChangeDeviceServicePlansResponse changeDeviceServicePlansResponse = new ChangeDeviceServicePlansResponse();
 
-		Response response = new Response();
+        ChangeDeviceServicePlansResponseDataArea changeDeviceServicePlansResponseDataArea = new ChangeDeviceServicePlansResponseDataArea();
+        Header responseheader = new Header();
 
-		response.setResponseCode(IResponse.SUCCESS_CODE);
+        Response response = new Response();
 
-		response.setResponseDescription("ChangeDeviceServicePlans");
-		response.setResponseStatus("SUCCESS");
+        response.setResponseCode(IResponse.SUCCESS_CODE);
 
-		responseheader.setApplicationName("WEB");
-		responseheader.setRegion("USA");
-		responseheader.setTimestamp("2016-03-08T21:49:45");
-		responseheader.setOrganization("Grant Victor");
-		responseheader.setSourceName("KORE");
-		responseheader.setTransactionId("cde2131ksjd");
-		responseheader.setBsCarrier("KORE");
- 
-		changeDeviceServicePlansResponse.setHeader(responseheader);
-		changeDeviceServicePlansResponse.setResponse(response);
-		changeDeviceServicePlansResponseDataArea
-				.setOrderNumber("StubKoreChangeDeviceServicePlansProcessor");
+        response.setResponseDescription("ChangeDeviceServicePlans");
+        response.setResponseStatus("SUCCESS");
 
-		changeDeviceServicePlansResponse
-				.setDataArea(changeDeviceServicePlansResponseDataArea);
+        responseheader.setApplicationName("WEB");
+        responseheader.setRegion("USA");
+        responseheader.setTimestamp("2016-03-08T21:49:45");
+        responseheader.setOrganization("Grant Victor");
+        responseheader.setSourceName("KORE");
+        responseheader.setTransactionId("cde2131ksjd");
+        responseheader.setBsCarrier("KORE");
 
-		exchange.getIn().setBody(changeDeviceServicePlansResponse);
-		
-		log.info("End::StubKoreChangeDeviceServicePlans");
+        changeDeviceServicePlansResponse.setHeader(responseheader);
+        changeDeviceServicePlansResponse.setResponse(response);
+        changeDeviceServicePlansResponseDataArea
+                .setOrderNumber("StubKoreChangeDeviceServicePlansProcessor");
 
-	}
+        changeDeviceServicePlansResponse
+                .setDataArea(changeDeviceServicePlansResponseDataArea);
+
+        exchange.getIn().setBody(changeDeviceServicePlansResponse);
+
+        LOGGER.info("End::StubKoreChangeDeviceServicePlans");
+
+    }
 
 }

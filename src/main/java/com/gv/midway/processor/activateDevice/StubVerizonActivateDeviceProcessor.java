@@ -12,39 +12,40 @@ import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponseDataArea
 
 public class StubVerizonActivateDeviceProcessor implements Processor {
 
-	Logger log = Logger.getLogger(StubVerizonActivateDeviceProcessor.class
-			.getName());
-	@Override
-	public void process(Exchange exchange) throws Exception {
+    private static final Logger LOGGER = Logger.getLogger(StubVerizonActivateDeviceProcessor.class
+            .getName());
 
-		log.info("Begin::StubVerizonActivateDeviceProcessor");
-		ActivateDeviceResponse activateDeviceResponse = new ActivateDeviceResponse();
+    @Override
+    public void process(Exchange exchange) throws Exception {
 
-		ActivateDeviceResponseDataArea activateDeviceResponseDataArea = new ActivateDeviceResponseDataArea();
+        LOGGER.info("Begin::StubVerizonActivateDeviceProcessor");
+        ActivateDeviceResponse activateDeviceResponse = new ActivateDeviceResponse();
 
-		Header responseheader = new Header();
+        ActivateDeviceResponseDataArea activateDeviceResponseDataArea = new ActivateDeviceResponseDataArea();
 
-		Response response = new Response();
+        Header responseheader = new Header();
 
-		response.setResponseCode(IResponse.SUCCESS_CODE);
+        Response response = new Response();
 
-		response.setResponseDescription("Device is activated successfully");
-		response.setResponseStatus("SUCESS");
+        response.setResponseCode(IResponse.SUCCESS_CODE);
 
-		responseheader.setApplicationName("WEB");
-		responseheader.setRegion("USA");
-		responseheader.setTimestamp("2016-03-08T21:49:45");
-		responseheader.setOrganization("Grant Victor");
-		responseheader.setSourceName("VERIZON");
-		responseheader.setTransactionId("cde2131ksjd");
-		responseheader.setBsCarrier("VERIZON");
+        response.setResponseDescription("Device is activated successfully");
+        response.setResponseStatus("SUCESS");
 
-		activateDeviceResponse.setHeader(responseheader);
-		activateDeviceResponse.setResponse(response);
-		activateDeviceResponseDataArea.setOrderNumber("KR012313512");
-		activateDeviceResponse.setDataArea(activateDeviceResponseDataArea);
+        responseheader.setApplicationName("WEB");
+        responseheader.setRegion("USA");
+        responseheader.setTimestamp("2016-03-08T21:49:45");
+        responseheader.setOrganization("Grant Victor");
+        responseheader.setSourceName("VERIZON");
+        responseheader.setTransactionId("cde2131ksjd");
+        responseheader.setBsCarrier("VERIZON");
 
-		exchange.getIn().setBody(activateDeviceResponse);
-		log.info("End::StubVerizonActivateDeviceProcessor");
-	}
+        activateDeviceResponse.setHeader(responseheader);
+        activateDeviceResponse.setResponse(response);
+        activateDeviceResponseDataArea.setOrderNumber("KR012313512");
+        activateDeviceResponse.setDataArea(activateDeviceResponseDataArea);
+
+        exchange.getIn().setBody(activateDeviceResponse);
+        LOGGER.info("End::StubVerizonActivateDeviceProcessor");
+    }
 }

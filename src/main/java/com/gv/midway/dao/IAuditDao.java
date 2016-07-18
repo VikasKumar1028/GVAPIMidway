@@ -4,14 +4,12 @@ import org.apache.camel.Exchange;
 
 public interface IAuditDao {
 
-	public void auditExternalResponseCall(Exchange exchange);
+    public void auditExternalResponseCall(Exchange exchange);
 
-	public void auditExternalExceptionResponseCall(Exchange exchange);
-	
-	public void auditExternalRequestCall(Exchange exchange);
-	
-	public void auditExternalConnectionExceptionResponseCall(Exchange exchange);
-	
-	
+    public void auditExternalExceptionResponseCall(Exchange exchange);
+
+    public void auditExternalRequestCall(Exchange exchange);
+
+    public void auditExternalConnectionExceptionResponseCall(Exchange exchange);
 
 }

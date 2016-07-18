@@ -12,41 +12,41 @@ import com.gv.midway.pojo.restoreDevice.response.RestoreDeviceResponseDataArea;
 
 public class StubVerizonRestoreDeviceProcessor implements Processor {
 
-	Logger log = Logger.getLogger(StubVerizonRestoreDeviceProcessor.class
-			.getName());
+    private static final Logger LOGGER = Logger.getLogger(StubVerizonRestoreDeviceProcessor.class
+            .getName());
 
-	// method for processing the message exchange for Verizon Stub
-	@Override
-	public void process(Exchange exchange) throws Exception {
+    // method for processing the message exchange for Verizon Stub
+    @Override
+    public void process(Exchange exchange) throws Exception {
 
-		log.info("Begin:StubVerizonRestoreDeviceProcessor");
-		RestoreDeviceResponse restoreDeviceResponse = new RestoreDeviceResponse();
+        LOGGER.info("Begin:StubVerizonRestoreDeviceProcessor");
+        RestoreDeviceResponse restoreDeviceResponse = new RestoreDeviceResponse();
 
-		RestoreDeviceResponseDataArea restoreDeviceResponseDataArea = new RestoreDeviceResponseDataArea();
+        RestoreDeviceResponseDataArea restoreDeviceResponseDataArea = new RestoreDeviceResponseDataArea();
 
-		Header responseheader = new Header();
+        Header responseheader = new Header();
 
-		Response response = new Response();
+        Response response = new Response();
 
-		response.setResponseCode(IResponse.SUCCESS_CODE);
+        response.setResponseCode(IResponse.SUCCESS_CODE);
 
-		response.setResponseDescription("Device is restored successfully");
-		response.setResponseStatus("SUCESS");
+        response.setResponseDescription("Device is restored successfully");
+        response.setResponseStatus("SUCESS");
 
-		responseheader.setApplicationName("WEB");
-		responseheader.setRegion("USA");
-		responseheader.setTimestamp("2016-03-08T21:49:45");
-		responseheader.setOrganization("Grant Victor");
-		responseheader.setSourceName("VERIZON");
-		responseheader.setTransactionId("cde2131ksjd");
-		responseheader.setBsCarrier("VERIZON");
+        responseheader.setApplicationName("WEB");
+        responseheader.setRegion("USA");
+        responseheader.setTimestamp("2016-03-08T21:49:45");
+        responseheader.setOrganization("Grant Victor");
+        responseheader.setSourceName("VERIZON");
+        responseheader.setTransactionId("cde2131ksjd");
+        responseheader.setBsCarrier("VERIZON");
 
-		restoreDeviceResponse.setHeader(responseheader);
-		restoreDeviceResponse.setResponse(response);
-		restoreDeviceResponseDataArea.setOrderNumber("VZ0123312313");
-		restoreDeviceResponse.setDataArea(restoreDeviceResponseDataArea);
+        restoreDeviceResponse.setHeader(responseheader);
+        restoreDeviceResponse.setResponse(response);
+        restoreDeviceResponseDataArea.setOrderNumber("VZ0123312313");
+        restoreDeviceResponse.setDataArea(restoreDeviceResponseDataArea);
 
-		exchange.getIn().setBody(restoreDeviceResponse);
-		log.info("End:StubVerizonRestoreDeviceProcessor");
-	}
+        exchange.getIn().setBody(restoreDeviceResponse);
+        LOGGER.info("End:StubVerizonRestoreDeviceProcessor");
+    }
 }

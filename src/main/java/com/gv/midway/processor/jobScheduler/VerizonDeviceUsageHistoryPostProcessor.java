@@ -15,38 +15,39 @@ import com.gv.midway.pojo.verizon.DeviceId;
 
 public class VerizonDeviceUsageHistoryPostProcessor implements Processor {
 
-	@Override
-	public void process(Exchange exchange) throws Exception {
+    @Override
+    public void process(Exchange exchange) throws Exception {
 
-		Map map = exchange.getIn().getBody(Map.class);
-		ObjectMapper mapper = new ObjectMapper();
-		VerizonUsageInformationResponse usageResponse = mapper.convertValue(
-				map, VerizonUsageInformationResponse.class);
-		DeviceUsage deviceUsage = new DeviceUsage();
-		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+        Map map = exchange.getIn().getBody(Map.class);
+        ObjectMapper mapper = new ObjectMapper();
+        VerizonUsageInformationResponse usageResponse = mapper.convertValue(
+                map, VerizonUsageInformationResponse.class);
+        DeviceUsage deviceUsage = new DeviceUsage();
+        JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
 
-		long totalBytesUsed = 0L;
-		if (usageResponse.getUsageHistory() != null) {
-			for (UsageHistory history : usageResponse.getUsageHistory()) {
-				totalBytesUsed = history.getBytesUsed() + totalBytesUsed;
-			}
-		}
-		deviceUsage
-				.setCarrierName((String) exchange.getProperty("CarrierName"));
-		deviceUsage.setDeviceId((DeviceId) exchange.getProperty("DeviceId"));
-		deviceUsage.setDataUsed(totalBytesUsed);
-		// The Day for which Job Ran
+        long totalBytesUsed = 0L;
+        if (usageResponse.getUsageHistory() != null) {
+            for (UsageHistory history : usageResponse.getUsageHistory()) {
+                totalBytesUsed = history.getBytesUsed() + totalBytesUsed;
+            }
+        }
+        deviceUsage
+                .setCarrierName((String) exchange.getProperty("CarrierName"));
+        deviceUsage.setDeviceId((DeviceId) exchange.getProperty("DeviceId"));
+        deviceUsage.setDataUsed(totalBytesUsed);
+        // The Day for which Job Ran
 
-		deviceUsage.setDate(jobDetail.getDate());
-		deviceUsage.setTransactionErrorReason(null);
-		deviceUsage
-				.setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_SUCCESS);
-		deviceUsage.setNetSuiteId((Integer) exchange.getProperty(IConstant.MIDWAY_NETSUITE_ID));
-		deviceUsage.setIsValid(true);
-		deviceUsage.setBillCycleComplete(false);
+        deviceUsage.setDate(jobDetail.getDate());
+        deviceUsage.setTransactionErrorReason(null);
+        deviceUsage
+                .setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_SUCCESS);
+        deviceUsage.setNetSuiteId((Integer) exchange
+                .getProperty(IConstant.MIDWAY_NETSUITE_ID));
+        deviceUsage.setIsValid(true);
+        deviceUsage.setBillCycleComplete(false);
 
-		exchange.getIn().setBody(deviceUsage);
+        exchange.getIn().setBody(deviceUsage);
 
-	}
+    }
 
 }

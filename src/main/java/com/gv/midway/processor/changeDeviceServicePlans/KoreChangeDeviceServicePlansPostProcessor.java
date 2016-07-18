@@ -14,56 +14,67 @@ import com.gv.midway.pojo.changeDeviceServicePlans.response.ChangeDeviceServiceP
 
 public class KoreChangeDeviceServicePlansPostProcessor implements Processor {
 
-	Logger log = Logger.getLogger(KoreChangeDeviceServicePlansPostProcessor.class
-			.getName());
+    private static final Logger LOGGER = Logger
+            .getLogger(KoreChangeDeviceServicePlansPostProcessor.class
+                    .getName());
 
+    Environment newEnv;
 
-	Environment newEnv;
+    public KoreChangeDeviceServicePlansPostProcessor() {
+        // Empty Constructor
+    }
 
-	public KoreChangeDeviceServicePlansPostProcessor() {
-		//Empty Constructor
-	}
+    public KoreChangeDeviceServicePlansPostProcessor(Environment env) {
+        super();
+        this.newEnv = env;
+    }
 
-	public KoreChangeDeviceServicePlansPostProcessor(Environment env) {
-		super();
-		this.newEnv = env;
-	}
-	@Override
-	public void process(Exchange exchange) throws Exception {
-		
-		
-		ChangeDeviceServicePlansResponse changeDeviceServicePlansResponse = new ChangeDeviceServicePlansResponse();
+    @Override
+    public void process(Exchange exchange) throws Exception {
 
-		ChangeDeviceServicePlansResponseDataArea changeDeviceServicePlansResponseDataArea = new ChangeDeviceServicePlansResponseDataArea();
+        ChangeDeviceServicePlansResponse changeDeviceServicePlansResponse = new ChangeDeviceServicePlansResponse();
 
-		//Header responseheader = new Header();
+        ChangeDeviceServicePlansResponseDataArea changeDeviceServicePlansResponseDataArea = new ChangeDeviceServicePlansResponseDataArea();
 
-		Response response = new Response();
+        // Header responseheader = new Header();
 
-		response.setResponseCode(IResponse.SUCCESS_CODE);
-		response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
-		response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
+        Response response = new Response();
 
-		/*responseheader.setApplicationName(exchange.getProperty(IConstant.APPLICATION_NAME).toString());
-		responseheader.setRegion(exchange.getProperty(IConstant.REGION).toString());
+        response.setResponseCode(IResponse.SUCCESS_CODE);
+        response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+        response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
 
-		responseheader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT).toString());
-		responseheader.setOrganization(exchange.getProperty(IConstant.ORGANIZATION).toString());
+        /*
+         * responseheader.setApplicationName(exchange.getProperty(IConstant.
+         * APPLICATION_NAME).toString());
+         * responseheader.setRegion(exchange.getProperty
+         * (IConstant.REGION).toString());
+         * 
+         * responseheader.setTimestamp(exchange.getProperty(IConstant.DATE_FORMAT
+         * ).toString());
+         * responseheader.setOrganization(exchange.getProperty(IConstant
+         * .ORGANIZATION).toString());
+         * 
+         * responseheader.setSourceName(exchange.getProperty(IConstant.SOURCE_NAME
+         * ).toString());
+         * responseheader.setBsCarrier(exchange.getProperty(IConstant
+         * .BSCARRIER).toString());
+         * responseheader.setTransactionId(exchange.getProperty
+         * (IConstant.GV_TRANSACTION_ID).toString());
+         */
 
-		responseheader.setSourceName(exchange.getProperty(IConstant.SOURCE_NAME).toString());
-		responseheader.setBsCarrier(exchange.getProperty(IConstant.BSCARRIER).toString());
-		responseheader.setTransactionId(exchange.getProperty(IConstant.GV_TRANSACTION_ID).toString());*/
-		
-		Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
+        Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
 
-		changeDeviceServicePlansResponse.setHeader(responseheader);
-		changeDeviceServicePlansResponse.setResponse(response);
-		changeDeviceServicePlansResponseDataArea.setOrderNumber(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID).toString());
+        changeDeviceServicePlansResponse.setHeader(responseheader);
+        changeDeviceServicePlansResponse.setResponse(response);
+        changeDeviceServicePlansResponseDataArea.setOrderNumber(exchange
+                .getProperty(IConstant.MIDWAY_TRANSACTION_ID).toString());
 
-		changeDeviceServicePlansResponse.setDataArea(changeDeviceServicePlansResponseDataArea);
+        changeDeviceServicePlansResponse
+                .setDataArea(changeDeviceServicePlansResponseDataArea);
 
-		exchange.getIn().setBody(changeDeviceServicePlansResponse);
+        exchange.getIn().setBody(changeDeviceServicePlansResponse);
 
-	}
+    }
 
 }

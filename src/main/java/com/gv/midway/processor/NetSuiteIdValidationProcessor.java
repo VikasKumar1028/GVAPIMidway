@@ -12,46 +12,48 @@ import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequestData
 
 public class NetSuiteIdValidationProcessor implements Processor {
 
-	Logger log = Logger.getLogger(HeaderErrorProcessor.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(HeaderErrorProcessor.class.getName());
 
-	@Override
-	public void process(Exchange exchange) throws Exception {
-		
-		DeviceInformationRequest request = (DeviceInformationRequest) exchange
-				.getIn().getBody(DeviceInformationRequest.class);
-		
-		DeviceInformationRequestDataArea deviceInformationRequestDataArea=request.getDataArea();
-		
-		if(deviceInformationRequestDataArea==null)
-		
-		{
-			
-			
-		  missingNetSuiteId(exchange);
-		
-		}
-		
-		else{
-			
-			Integer netSuiteId=deviceInformationRequestDataArea.getNetSuiteId();
-			
-			if(netSuiteId==null)
-			{
-				
-				 missingNetSuiteId(exchange);
-			}
-		}
-	}
-	
-	private void missingNetSuiteId(Exchange exchange) throws MissingParameterException
-	{
-		
-		exchange.setProperty(IConstant.RESPONSE_CODE, IResponse.INVALID_PAYLOAD);
-		exchange.setProperty(IConstant.RESPONSE_STATUS, IResponse.ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB);
-		exchange.setProperty(IConstant.RESPONSE_DESCRIPTION,
-				IResponse.ERROR_MESSAGE);
-		throw new MissingParameterException(IResponse.INVALID_PAYLOAD.toString(),
-				IResponse.ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB);
-	}
+    @Override
+    public void process(Exchange exchange) throws Exception {
+
+        DeviceInformationRequest request = (DeviceInformationRequest) exchange
+                .getIn().getBody(DeviceInformationRequest.class);
+
+        DeviceInformationRequestDataArea deviceInformationRequestDataArea = request
+                .getDataArea();
+
+        if (deviceInformationRequestDataArea == null)
+
+        {
+
+            missingNetSuiteId(exchange);
+
+        }
+
+        else {
+
+            Integer netSuiteId = deviceInformationRequestDataArea
+                    .getNetSuiteId();
+
+            if (netSuiteId == null) {
+
+                missingNetSuiteId(exchange);
+            }
+        }
+    }
+
+    private void missingNetSuiteId(Exchange exchange)
+            throws MissingParameterException {
+
+        exchange.setProperty(IConstant.RESPONSE_CODE, IResponse.INVALID_PAYLOAD);
+        exchange.setProperty(IConstant.RESPONSE_STATUS,
+                IResponse.ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB);
+        exchange.setProperty(IConstant.RESPONSE_DESCRIPTION,
+                IResponse.ERROR_MESSAGE);
+        throw new MissingParameterException(
+                IResponse.INVALID_PAYLOAD.toString(),
+                IResponse.ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB);
+    }
 
 }

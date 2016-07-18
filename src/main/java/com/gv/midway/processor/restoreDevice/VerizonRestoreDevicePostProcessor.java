@@ -1,7 +1,5 @@
 package com.gv.midway.processor.restoreDevice;
 
-
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
@@ -16,68 +14,64 @@ import com.gv.midway.pojo.restoreDevice.response.RestoreDeviceResponseDataArea;
 
 public class VerizonRestoreDevicePostProcessor implements Processor {
 
-	Logger log = Logger.getLogger(VerizonRestoreDevicePostProcessor.class
-			.getName());
+    private static final Logger LOGGER = Logger.getLogger(VerizonRestoreDevicePostProcessor.class
+            .getName());
 
-	Environment newEnv;
+    Environment newEnv;
 
-	//constructor with one argument
-	public VerizonRestoreDevicePostProcessor(Environment env) {
-		super();
-		this.newEnv = env;
+    // constructor with one argument
+    public VerizonRestoreDevicePostProcessor(Environment env) {
+        super();
+        this.newEnv = env;
 
-	}
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.apache.camel.Processor#process(org.apache.camel.Exchange)
-	 */
-	//method for processing the message exchange for Verizon
-	@Override
-	public void process(Exchange exchange) throws Exception {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.camel.Processor#process(org.apache.camel.Exchange)
+     */
+    // method for processing the message exchange for Verizon
+    @Override
+    public void process(Exchange exchange) throws Exception {
 
-		log.info("Begin:VerizonRestoreDevicePostProcessor");
+        LOGGER.info("Begin:VerizonRestoreDevicePostProcessor");
 
-		RestoreDeviceResponse restoreDeviceResponse = new RestoreDeviceResponse();
-		RestoreDeviceResponseDataArea restoreDeviceResponseDataArea = new RestoreDeviceResponseDataArea();
-		Response response = new Response();
-		
+        RestoreDeviceResponse restoreDeviceResponse = new RestoreDeviceResponse();
+        RestoreDeviceResponseDataArea restoreDeviceResponseDataArea = new RestoreDeviceResponseDataArea();
+        Response response = new Response();
 
-		log.info("exchange.getIn().getBody().toString()***************************************"+ exchange.getIn().getBody().toString());
+        LOGGER.info("exchange.getIn().getBody().toString()***************************************"
+                + exchange.getIn().getBody().toString());
 
-		
-		if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
+        if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
 
+            LOGGER.info("RequestID::" + exchange.getIn().getBody().toString());
+            response.setResponseCode(IResponse.SUCCESS_CODE);
+            response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+            response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
+            restoreDeviceResponseDataArea.setOrderNumber(exchange.getProperty(
+                    IConstant.MIDWAY_TRANSACTION_ID).toString());
 
-			log.info("RequestID::" + exchange.getIn().getBody().toString());
-			response.setResponseCode(IResponse.SUCCESS_CODE);
-			response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
-			response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
-			restoreDeviceResponseDataArea.setOrderNumber(exchange.getProperty(
-					IConstant.MIDWAY_TRANSACTION_ID).toString());
+        } else {
 
-		} else {
+            response.setResponseCode(400);
+            response.setResponseStatus(IResponse.ERROR_MESSAGE);
+            response.setResponseDescription(exchange.getIn().getBody()
+                    .toString());
+        }
 
-			response.setResponseCode(400);
-			response.setResponseStatus(IResponse.ERROR_MESSAGE);
-			response.setResponseDescription(exchange.getIn().getBody()
-					.toString());
-	} 
+        Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
 
-		
-		
-		Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
-		
-		restoreDeviceResponse.setHeader(responseheader);
-		restoreDeviceResponse.setResponse(response);
+        restoreDeviceResponse.setHeader(responseheader);
+        restoreDeviceResponse.setResponse(response);
 
-		restoreDeviceResponse.setDataArea(restoreDeviceResponseDataArea);
+        restoreDeviceResponse.setDataArea(restoreDeviceResponseDataArea);
 
-		exchange.getIn().setBody(restoreDeviceResponse);
+        exchange.getIn().setBody(restoreDeviceResponse);
 
-		log.info("End:VerizonRestoreDevicePostProcessor");
+        LOGGER.info("End:VerizonRestoreDevicePostProcessor");
 
-	}
+    }
 
 }

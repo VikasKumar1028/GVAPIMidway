@@ -45,223 +45,223 @@ import com.wordnik.swagger.annotations.ApiOperation;
 @Api(value = "/v1", description = "MidWay API Integration")
 public interface IAdaptaionLayerService {
 
-	@PUT
-	@Path("/cell/upload")
-	@Produces("application/json")
-	@ApiOperation(value = "Insert or Update Device Details")
-	UpdateDeviceResponse updateDeviceDetails(SingleDevice device);
+    @PUT
+    @Path("/cell/upload")
+    @Produces("application/json")
+    @ApiOperation(value = "Insert or Update Device Details")
+    UpdateDeviceResponse updateDeviceDetails(SingleDevice device);
 
-	@GET
-	@Path("/cell/info/midway")
-	@Produces("application/json")
-	@ApiOperation(value = "Get Device Details from Midway DB")
-	DeviceInformationResponse getDeviceInfoDB(
-			@QueryParam("region") final String region,
-			@QueryParam("timestamp") final String timestamp,
-			@QueryParam("organization") final String organization,
-			@QueryParam("transactionId") final String transactionId,
-			@QueryParam("sourceName") final String sourceName,
-			@QueryParam("applicationName") final String applicationName,
-			@QueryParam("bsCarrier") final String bsCarrier,
-			@QueryParam("netSuiteId") final Integer netSuiteId);
+    @GET
+    @Path("/cell/info/midway")
+    @Produces("application/json")
+    @ApiOperation(value = "Get Device Details from Midway DB")
+    DeviceInformationResponse getDeviceInfoDB(
+            @QueryParam("region") final String region,
+            @QueryParam("timestamp") final String timestamp,
+            @QueryParam("organization") final String organization,
+            @QueryParam("transactionId") final String transactionId,
+            @QueryParam("sourceName") final String sourceName,
+            @QueryParam("applicationName") final String applicationName,
+            @QueryParam("bsCarrier") final String bsCarrier,
+            @QueryParam("netSuiteId") final Integer netSuiteId);
 
-	@GET
-	@Path("/cell/info/carrier")
-	@Produces("application/json")
-	@ApiOperation(value = "Get Device Details from Carrier")
-	DeviceInformationResponse getDeviceInfoCarrier(
-			@QueryParam("region") final String region,
-			@QueryParam("timestamp") final String timestamp,
-			@QueryParam("organization") final String organization,
-			@QueryParam("transactionId") final String transactionId,
-			@QueryParam("sourceName") final String sourceName,
-			@QueryParam("applicationName") final String applicationName,
-			@QueryParam("bsCarrier") final String bsCarrier,
-			@QueryParam("netSuiteId") final Integer netSuiteId,
-			@QueryParam("deviceId") final String deviceId,
-			@QueryParam("kind") final String kind);
+    @GET
+    @Path("/cell/info/carrier")
+    @Produces("application/json")
+    @ApiOperation(value = "Get Device Details from Carrier")
+    DeviceInformationResponse getDeviceInfoCarrier(
+            @QueryParam("region") final String region,
+            @QueryParam("timestamp") final String timestamp,
+            @QueryParam("organization") final String organization,
+            @QueryParam("transactionId") final String transactionId,
+            @QueryParam("sourceName") final String sourceName,
+            @QueryParam("applicationName") final String applicationName,
+            @QueryParam("bsCarrier") final String bsCarrier,
+            @QueryParam("netSuiteId") final Integer netSuiteId,
+            @QueryParam("deviceId") final String deviceId,
+            @QueryParam("kind") final String kind);
 
-	@POST
-	@Path("/cells/upload/bulk")
-	@Produces("application/json")
-	@Consumes("application/json")
-	@ApiOperation(value = "Insert or Update Device Details in Bulk")
-	BatchDeviceResponse updateDevicesDetailsBulk(BulkDevices device);
+    @POST
+    @Path("/cells/upload/bulk")
+    @Produces("application/json")
+    @Consumes("application/json")
+    @ApiOperation(value = "Insert or Update Device Details in Bulk")
+    BatchDeviceResponse updateDevicesDetailsBulk(BulkDevices device);
 
-	@POST
-	@Path("/device/deactivate")
-	@Produces("application/json")
-	@Consumes("application/json")
-	@ApiOperation(value = "DeactivateDeviceService")
-	DeactivateDeviceResponse deactivateDevice(
-			DeactivateDeviceRequest deactivateDeviceRequest);
+    @POST
+    @Path("/device/deactivate")
+    @Produces("application/json")
+    @Consumes("application/json")
+    @ApiOperation(value = "DeactivateDeviceService")
+    DeactivateDeviceResponse deactivateDevice(
+            DeactivateDeviceRequest deactivateDeviceRequest);
 
-	@POST
-	@Path("/device/activate")
-	@Produces("application/json")
-	@Consumes("application/json")
-	@ApiOperation(value = "ActivateDeviceService")
-	ActivateDeviceResponse activateDevice(
-			ActivateDeviceRequest activateDeviceRequest);
+    @POST
+    @Path("/device/activate")
+    @Produces("application/json")
+    @Consumes("application/json")
+    @ApiOperation(value = "ActivateDeviceService")
+    ActivateDeviceResponse activateDevice(
+            ActivateDeviceRequest activateDeviceRequest);
 
-	@POST
-	@Path("/device/reactivate")
-	@Produces("application/json")
-	@Consumes("application/json")
-	@ApiOperation(value = "ReactivateDeviceService")
-	ReactivateDeviceResponse reactivateDevice(
-			ReactivateDeviceRequest reActivateDeviceRequest);
+    @POST
+    @Path("/device/reactivate")
+    @Produces("application/json")
+    @Consumes("application/json")
+    @ApiOperation(value = "ReactivateDeviceService")
+    ReactivateDeviceResponse reactivateDevice(
+            ReactivateDeviceRequest reActivateDeviceRequest);
 
-	@POST
-	@Path("/device/suspend")
-	@Produces("application/json")
-	@Consumes("application/json")
-	@ApiOperation(value = "SuspendDeviceService")
-	SuspendDeviceResponse suspendDevice(
-			SuspendDeviceRequest suspendDeviceRequest);
+    @POST
+    @Path("/device/suspend")
+    @Produces("application/json")
+    @Consumes("application/json")
+    @ApiOperation(value = "SuspendDeviceService")
+    SuspendDeviceResponse suspendDevice(
+            SuspendDeviceRequest suspendDeviceRequest);
 
-	@POST
-	@Path("/device/customFields")
-	@Produces("application/json")
-	@Consumes("application/json")
-	@ApiOperation(value = "CustomFieldsUpdateService")
-	CustomFieldsDeviceResponse customFieldsUpdateRequest(
-			CustomFieldsDeviceRequest customeFieldDeviceRequest);
+    @POST
+    @Path("/device/customFields")
+    @Produces("application/json")
+    @Consumes("application/json")
+    @ApiOperation(value = "CustomFieldsUpdateService")
+    CustomFieldsDeviceResponse customFieldsUpdateRequest(
+            CustomFieldsDeviceRequest customeFieldDeviceRequest);
 
-	@POST
-	@Path("/device/changeServicePlan")
-	@Produces("application/json")
-	@Consumes("application/json")
-	@ApiOperation(value = "ChangeDeviceServicePlans")
-	ChangeDeviceServicePlansResponse changeDeviceServicePlans(
-			ChangeDeviceServicePlansRequest changeDeviceServicePlansRequest);
+    @POST
+    @Path("/device/changeServicePlan")
+    @Produces("application/json")
+    @Consumes("application/json")
+    @ApiOperation(value = "ChangeDeviceServicePlans")
+    ChangeDeviceServicePlansResponse changeDeviceServicePlans(
+            ChangeDeviceServicePlansRequest changeDeviceServicePlansRequest);
 
-	@POST
-	@Path("/device/callback")
-	@Produces("application/json")
-	@Consumes("application/json")
-	@ApiOperation(value = "Service for Receiving Callback from Verizon")
-	void callbacks(CallBackVerizonRequest activateDeviceRequest);
+    @POST
+    @Path("/device/callback")
+    @Produces("application/json")
+    @Consumes("application/json")
+    @ApiOperation(value = "Service for Receiving Callback from Verizon")
+    void callbacks(CallBackVerizonRequest activateDeviceRequest);
 
-	@GET
-	@Path("/devices/connections/getStatus")
-	@Produces("application/json")
-	@ApiOperation(value = "Service to check Device in Session for Verizon")
-	ConnectionStatusResponse deviceConnectionStatusRequest(
-			@QueryParam("region") final String region,
-			@QueryParam("timestamp") final String timestamp,
-			@QueryParam("organization") final String organization,
-			@QueryParam("transactionId") final String transactionId,
-			@QueryParam("sourceName") final String sourceName,
-			@QueryParam("applicationName") final String applicationName,
-			@QueryParam("bsCarrier") final String bsCarrier,
-			@QueryParam("deviceId") final String deviceId,
-			@QueryParam("kind") final String kind,
-			@QueryParam("earliest") final String earliest,
-			@QueryParam("latest") final String latest);
+    @GET
+    @Path("/devices/connections/getStatus")
+    @Produces("application/json")
+    @ApiOperation(value = "Service to check Device in Session for Verizon")
+    ConnectionStatusResponse deviceConnectionStatusRequest(
+            @QueryParam("region") final String region,
+            @QueryParam("timestamp") final String timestamp,
+            @QueryParam("organization") final String organization,
+            @QueryParam("transactionId") final String transactionId,
+            @QueryParam("sourceName") final String sourceName,
+            @QueryParam("applicationName") final String applicationName,
+            @QueryParam("bsCarrier") final String bsCarrier,
+            @QueryParam("deviceId") final String deviceId,
+            @QueryParam("kind") final String kind,
+            @QueryParam("earliest") final String earliest,
+            @QueryParam("latest") final String latest);
 
-	@POST
-	@Path("/device/restore")
-	@Produces("application/json")
-	@Consumes("application/json")
-	@ApiOperation(value = "RestoreDeviceService")
-	RestoreDeviceResponse restoreDevice(
-			RestoreDeviceRequest restoreDeviceRequest);
+    @POST
+    @Path("/device/restore")
+    @Produces("application/json")
+    @Consumes("application/json")
+    @ApiOperation(value = "RestoreDeviceService")
+    RestoreDeviceResponse restoreDevice(
+            RestoreDeviceRequest restoreDeviceRequest);
 
-	@GET
-	@Path("/device/usage/session")
-	@Produces("application/json")
-	@ApiOperation(value = "Retrieve Device data Usage by start and end Date from Carrier for Verizon Devices.")
-	UsageInformationResponse retrieveDeviceUsageHistoryCarrier(
-			@QueryParam("region") final String region,
-			@QueryParam("timestamp") final String timestamp,
-			@QueryParam("organization") final String organization,
-			@QueryParam("transactionId") final String transactionId,
-			@QueryParam("sourceName") final String sourceName,
-			@QueryParam("applicationName") final String applicationName,
-			@QueryParam("bsCarrier") final String bsCarrier,
-			@QueryParam("deviceId") final String deviceId,
-			@QueryParam("kind") final String kind,
-			@QueryParam("earliest") final String earliest,
-			@QueryParam("latest") final String latest);
+    @GET
+    @Path("/device/usage/session")
+    @Produces("application/json")
+    @ApiOperation(value = "Retrieve Device data Usage by start and end Date from Carrier for Verizon Devices.")
+    UsageInformationResponse retrieveDeviceUsageHistoryCarrier(
+            @QueryParam("region") final String region,
+            @QueryParam("timestamp") final String timestamp,
+            @QueryParam("organization") final String organization,
+            @QueryParam("transactionId") final String transactionId,
+            @QueryParam("sourceName") final String sourceName,
+            @QueryParam("applicationName") final String applicationName,
+            @QueryParam("bsCarrier") final String bsCarrier,
+            @QueryParam("deviceId") final String deviceId,
+            @QueryParam("kind") final String kind,
+            @QueryParam("earliest") final String earliest,
+            @QueryParam("latest") final String latest);
 
-	@GET
-	@Path("/devices/connections/session/info")
-	@Produces("application/json")
-	@ApiOperation(value = "Service to check Device Session Begin and End information for Verizon")
-	SessionBeginEndResponse deviceSessionBeginEndResponse(
-			@QueryParam("region") final String region,
-			@QueryParam("timestamp") final String timestamp,
-			@QueryParam("organization") final String organization,
-			@QueryParam("transactionId") final String transactionId,
-			@QueryParam("sourceName") final String sourceName,
-			@QueryParam("applicationName") final String applicationName,
-			@QueryParam("bsCarrier") final String bsCarrier,
-			@QueryParam("deviceId") final String deviceId,
-			@QueryParam("kind") final String kind,
-			@QueryParam("earliest") final String earliest,
-			@QueryParam("latest") final String latest);
+    @GET
+    @Path("/devices/connections/session/info")
+    @Produces("application/json")
+    @ApiOperation(value = "Service to check Device Session Begin and End information for Verizon")
+    SessionBeginEndResponse deviceSessionBeginEndResponse(
+            @QueryParam("region") final String region,
+            @QueryParam("timestamp") final String timestamp,
+            @QueryParam("organization") final String organization,
+            @QueryParam("transactionId") final String transactionId,
+            @QueryParam("sourceName") final String sourceName,
+            @QueryParam("applicationName") final String applicationName,
+            @QueryParam("bsCarrier") final String bsCarrier,
+            @QueryParam("deviceId") final String deviceId,
+            @QueryParam("kind") final String kind,
+            @QueryParam("earliest") final String earliest,
+            @QueryParam("latest") final String latest);
 
-	@POST
-	@Path("/devices/job/usage/transactionFailure")
-	@Produces("application/json")
-	@Consumes("application/json")
-	@ApiOperation(value = "Transactional Failure Device Usage Job")
-	JobinitializedResponse transactionFailureDeviceUsageJob(
-			JobParameter jobParameter);
+    @POST
+    @Path("/devices/job/usage/transactionFailure")
+    @Produces("application/json")
+    @Consumes("application/json")
+    @ApiOperation(value = "Transactional Failure Device Usage Job")
+    JobinitializedResponse transactionFailureDeviceUsageJob(
+            JobParameter jobParameter);
 
-	@POST
-	@Path("/devices/job/connectionHistory/transactionFailure")
-	@Produces("application/json")
-	@Consumes("application/json")
-	@ApiOperation(value = "Transactional Failure Device Connection History Job")
-	JobinitializedResponse transactionFailureConnectionHistoryJob(
-			JobParameter jobParameter);
+    @POST
+    @Path("/devices/job/connectionHistory/transactionFailure")
+    @Produces("application/json")
+    @Consumes("application/json")
+    @ApiOperation(value = "Transactional Failure Device Connection History Job")
+    JobinitializedResponse transactionFailureConnectionHistoryJob(
+            JobParameter jobParameter);
 
-	@POST
-	@Path("/devices/job/usage/reRun")
-	@Produces("application/json")
-	@Consumes("application/json")
-	@ApiOperation(value = "Rerun Device Usage Job")
-	JobinitializedResponse reRunDeviceUsageJob(JobParameter jobParameter);
+    @POST
+    @Path("/devices/job/usage/reRun")
+    @Produces("application/json")
+    @Consumes("application/json")
+    @ApiOperation(value = "Rerun Device Usage Job")
+    JobinitializedResponse reRunDeviceUsageJob(JobParameter jobParameter);
 
-	@POST
-	@Path("/devices/job/connectionHistory/reRun")
-	@Produces("application/json")
-	@Consumes("application/json")
-	@ApiOperation(value = "Rerun Device Connection History Job")
-	JobinitializedResponse reRunConnectionHistoryJob(JobParameter jobParameter);
+    @POST
+    @Path("/devices/job/connectionHistory/reRun")
+    @Produces("application/json")
+    @Consumes("application/json")
+    @ApiOperation(value = "Rerun Device Connection History Job")
+    JobinitializedResponse reRunConnectionHistoryJob(JobParameter jobParameter);
 
-	@GET
-	@Path("/device/usage")
-	@Produces("application/json")
-	@ApiOperation(value = "Get Device Usage by start and end Date from Midway")
-	UsageInformationMidwayResponse getDeviceUsageInfoDB(
-			@QueryParam("region") final String region,
-			@QueryParam("timestamp") final String timestamp,
-			@QueryParam("organization") final String organization,
-			@QueryParam("transactionId") final String transactionId,
-			@QueryParam("sourceName") final String sourceName,
-			@QueryParam("applicationName") final String applicationName,
-			@QueryParam("bsCarrier") final String bsCarrier,
-			@QueryParam("netSuiteId") final Integer netSuiteId,
-			@QueryParam("startDate") final String startDate,
-			@QueryParam("endDate") final String endDate);
+    @GET
+    @Path("/device/usage")
+    @Produces("application/json")
+    @ApiOperation(value = "Get Device Usage by start and end Date from Midway")
+    UsageInformationMidwayResponse getDeviceUsageInfoDB(
+            @QueryParam("region") final String region,
+            @QueryParam("timestamp") final String timestamp,
+            @QueryParam("organization") final String organization,
+            @QueryParam("transactionId") final String transactionId,
+            @QueryParam("sourceName") final String sourceName,
+            @QueryParam("applicationName") final String applicationName,
+            @QueryParam("bsCarrier") final String bsCarrier,
+            @QueryParam("netSuiteId") final Integer netSuiteId,
+            @QueryParam("startDate") final String startDate,
+            @QueryParam("endDate") final String endDate);
 
-	@GET
-	@Path("/device/connectionHistory")
-	@Produces("application/json")
-	@ApiOperation(value = "Get Device Connection History by start and end Date from Midway for Verizon Devices.")
-	ConnectionInformationMidwayResponse getDeviceConnectionHistoryInfoDB(
-			@QueryParam("region") final String region,
-			@QueryParam("timestamp") final String timestamp,
-			@QueryParam("organization") final String organization,
-			@QueryParam("transactionId") final String transactionId,
-			@QueryParam("sourceName") final String sourceName,
-			@QueryParam("applicationName") final String applicationName,
-			@QueryParam("bsCarrier") final String bsCarrier,
-			@QueryParam("netSuiteId") final Integer netSuiteId,
-			@QueryParam("startDate") final String startDate,
-			@QueryParam("endDate") final String endDate);
+    @GET
+    @Path("/device/connectionHistory")
+    @Produces("application/json")
+    @ApiOperation(value = "Get Device Connection History by start and end Date from Midway for Verizon Devices.")
+    ConnectionInformationMidwayResponse getDeviceConnectionHistoryInfoDB(
+            @QueryParam("region") final String region,
+            @QueryParam("timestamp") final String timestamp,
+            @QueryParam("organization") final String organization,
+            @QueryParam("transactionId") final String transactionId,
+            @QueryParam("sourceName") final String sourceName,
+            @QueryParam("applicationName") final String applicationName,
+            @QueryParam("bsCarrier") final String bsCarrier,
+            @QueryParam("netSuiteId") final Integer netSuiteId,
+            @QueryParam("startDate") final String startDate,
+            @QueryParam("endDate") final String endDate);
 
 }

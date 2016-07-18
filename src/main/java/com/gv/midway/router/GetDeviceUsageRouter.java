@@ -7,17 +7,19 @@ import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 
 public class GetDeviceUsageRouter {
 
-	private Logger log = Logger.getLogger(GetDeviceUsageRouter.class);
+     private static final Logger LOGGER = Logger.getLogger(GetDeviceUsageRouter.class);
 
-	public String getDeviceUsageHistory(DeviceInformation deviceInfo) {
-		log.info("************Device Usage Information ROUTER*************"
-				+ deviceInfo.toString());
+    public String getDeviceUsageHistory(DeviceInformation deviceInfo) {
+        LOGGER.info("************Device Usage Information ROUTER*************"
+                + deviceInfo.toString());
 
-		if (deviceInfo.getBs_carrier().equalsIgnoreCase(IConstant.BSCARRIER_SERVICE_VERIZON))
-			return "seda:getDeviceUsageInformationForVerizon";
-		else if (deviceInfo.getBs_carrier().equalsIgnoreCase(IConstant.BSCARRIER_SERVICE_KORE))
-			return "seda:getDeviceUsageInformationForKore";
+        if (deviceInfo.getBs_carrier().equalsIgnoreCase(
+                IConstant.BSCARRIER_SERVICE_VERIZON))
+            return "seda:getDeviceUsageInformationForVerizon";
+        else if (deviceInfo.getBs_carrier().equalsIgnoreCase(
+                IConstant.BSCARRIER_SERVICE_KORE))
+            return "seda:getDeviceUsageInformationForKore";
 
-		return null;
-	}
+        return null;
+    }
 }

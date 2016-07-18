@@ -8,14 +8,14 @@ import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 
 public class JobSplitter {
 
-	private Logger log = Logger.getLogger(JobSplitter.class);
+   private static final Logger LOGGER = Logger.getLogger(JobSplitter.class);
 
-	public List<DeviceInformation> split(
-			List<DeviceInformation> deviceInformationList) {
+    public List<DeviceInformation> split(
+            List<DeviceInformation> deviceInformationList) {
 
-		log.info("JobSplitter&&&&&&&&&&&&&&&&&&&&&&");
-		
-		return deviceInformationList;
-	}
+        LOGGER.info("JobSplitter&&&&&&&&&&&&&&&&&&&&&&");
+
+        return deviceInformationList;
+    }
 
 }

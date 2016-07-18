@@ -1,6 +1,5 @@
 package com.gv.midway.service.impl;
 
-
 import org.apache.camel.Exchange;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,32 +9,28 @@ import com.gv.midway.pojo.deviceHistory.DeviceConnection;
 import com.gv.midway.pojo.deviceHistory.DeviceUsage;
 import com.gv.midway.service.ISchedulerService;
 
-
 @Service
 public class SchedulerServiceImpl implements ISchedulerService {
 
-	@Autowired
-	ISchedulerDao schedulerDao;
+    @Autowired
+    ISchedulerDao schedulerDao;
 
-	Logger log = Logger.getLogger(SchedulerServiceImpl.class);
+    private static final Logger LOGGER = Logger.getLogger(SchedulerServiceImpl.class);
 
-	@Override
-	public void saveDeviceConnectionHistory(Exchange exchange) {
-		
-		
-		schedulerDao.saveDeviceConnectionHistory((DeviceConnection) exchange
-				.getIn().getBody());
+    @Override
+    public void saveDeviceConnectionHistory(Exchange exchange) {
 
-	}
+        schedulerDao.saveDeviceConnectionHistory((DeviceConnection) exchange
+                .getIn().getBody());
 
-	@Override
-	public void saveDeviceUsageHistory(Exchange exchange) {
+    }
 
-		
-		schedulerDao.saveDeviceUsageHistory((DeviceUsage) exchange.getIn()
-				.getBody());
+    @Override
+    public void saveDeviceUsageHistory(Exchange exchange) {
 
-	}
+        schedulerDao.saveDeviceUsageHistory((DeviceUsage) exchange.getIn()
+                .getBody());
 
+    }
 
 }

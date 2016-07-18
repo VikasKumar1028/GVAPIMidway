@@ -11,27 +11,24 @@ import com.gv.midway.pojo.deviceHistory.DeviceUsage;
 
 @Service
 public class SchedulerDaoImpl implements ISchedulerDao {
-	
-	Logger log = Logger.getLogger(SchedulerDaoImpl.class);
-	
-	@Autowired
-	MongoTemplate mongoTemplate;
 
-	@Override
-	public void saveDeviceConnectionHistory(DeviceConnection deviceConnection) {
-		
-		mongoTemplate.insert(deviceConnection);
-		
-	}
+    private static final Logger LOGGER = Logger.getLogger(SchedulerDaoImpl.class);
 
-	@Override
-	public void saveDeviceUsageHistory(DeviceUsage deviceUsage) {
-		
+    @Autowired
+    MongoTemplate mongoTemplate;
 
-		mongoTemplate.insert(deviceUsage);
-		
-		
-	}
+    @Override
+    public void saveDeviceConnectionHistory(DeviceConnection deviceConnection) {
 
+        mongoTemplate.insert(deviceConnection);
+
+    }
+
+    @Override
+    public void saveDeviceUsageHistory(DeviceUsage deviceUsage) {
+
+        mongoTemplate.insert(deviceUsage);
+
+    }
 
 }

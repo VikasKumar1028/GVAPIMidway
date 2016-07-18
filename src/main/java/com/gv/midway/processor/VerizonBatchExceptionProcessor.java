@@ -19,108 +19,109 @@ import com.gv.midway.pojo.verizon.DeviceId;
 
 public class VerizonBatchExceptionProcessor implements Processor {
 
-	Logger log = Logger.getLogger(VerizonBatchExceptionProcessor.class
-			.getName());
+    private static final Logger LOGGER = Logger.getLogger(VerizonBatchExceptionProcessor.class
+            .getName());
 
-	Environment newEnv;
+    Environment newEnv;
 
-	public VerizonBatchExceptionProcessor(Environment env) {
-		super();
+    public VerizonBatchExceptionProcessor(Environment env) {
+        super();
 
-		this.newEnv = env;
+        this.newEnv = env;
 
-	}
+    }
 
-	public VerizonBatchExceptionProcessor() {
-		//Empty Constructor
+    public VerizonBatchExceptionProcessor() {
+        // Empty Constructor
 
-	}
-	@Override
-	public void process(Exchange exchange) throws Exception {
+    }
 
-		Exception ex = (Exception) exchange
-				.getProperty(Exchange.EXCEPTION_CAUGHT);
+    @Override
+    public void process(Exchange exchange) throws Exception {
 
-		String errorType ;
+        Exception ex = (Exception) exchange
+                .getProperty(Exchange.EXCEPTION_CAUGHT);
 
-		// If Connection Exception
-		if (ex.getCause() instanceof UnknownHostException
-				|| ex.getCause() instanceof ConnectException) {
-			errorType = IConstant.MIDWAY_CONNECTION_ERROR;
+        String errorType;
 
-		}
-		// CXF Exception
-		else {
-			CxfOperationException exception = (CxfOperationException) exchange
-					.getProperty(Exchange.EXCEPTION_CAUGHT);
-			// Token Expiration Exception
-			if (exception.getStatusCode() == 401
-					|| exception
-							.getResponseBody()
-							.contains(
-									"UnifiedWebService.REQUEST_FAILED.SessionToken.Expired")) {
-				exchange.setProperty(IConstant.RESPONSE_CODE, "401");
-				exchange.setProperty(IConstant.RESPONSE_STATUS, "Invalid Token");
-				exchange.setProperty(IConstant.RESPONSE_DESCRIPTION,
-						"Not able to retrieve  valid authentication token");
-				throw new VerizonSessionTokenExpirationException("401", "401");
-			} // Other Cxf Exception
-			else {
-				errorType = exception.getResponseBody();
+        // If Connection Exception
+        if (ex.getCause() instanceof UnknownHostException
+                || ex.getCause() instanceof ConnectException) {
+            errorType = IConstant.MIDWAY_CONNECTION_ERROR;
 
-			}
+        }
+        // CXF Exception
+        else {
+            CxfOperationException exception = (CxfOperationException) exchange
+                    .getProperty(Exchange.EXCEPTION_CAUGHT);
+            // Token Expiration Exception
+            if (exception.getStatusCode() == 401
+                    || exception
+                            .getResponseBody()
+                            .contains(
+                                    "UnifiedWebService.REQUEST_FAILED.SessionToken.Expired")) {
+                exchange.setProperty(IConstant.RESPONSE_CODE, "401");
+                exchange.setProperty(IConstant.RESPONSE_STATUS, "Invalid Token");
+                exchange.setProperty(IConstant.RESPONSE_DESCRIPTION,
+                        "Not able to retrieve  valid authentication token");
+                throw new VerizonSessionTokenExpirationException("401", "401");
+            } // Other Cxf Exception
+            else {
+                errorType = exception.getResponseBody();
 
-		}
+            }
 
-		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+        }
 
-		if (jobDetail.getName().equals(JobName.KORE_DEVICE_USAGE)
-				|| jobDetail.getName().equals(JobName.VERIZON_DEVICE_USAGE)) {
+        JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
 
-			DeviceUsage deviceUsage = new DeviceUsage();
+        if (jobDetail.getName().equals(JobName.KORE_DEVICE_USAGE)
+                || jobDetail.getName().equals(JobName.VERIZON_DEVICE_USAGE)) {
 
-			deviceUsage.setCarrierName((String) exchange
-					.getProperty("CarrierName"));
-			deviceUsage
-					.setDeviceId((DeviceId) exchange.getProperty("DeviceId"));
-			deviceUsage.setDataUsed(0);
-			
-			String date = jobDetail.getDate();
+            DeviceUsage deviceUsage = new DeviceUsage();
 
-			log.info("----------------------D----A-----T-------E-------" + date);
-			deviceUsage.setDate(date);
-			deviceUsage.setTransactionErrorReason(errorType);
-			deviceUsage
-					.setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
-			deviceUsage.setNetSuiteId((Integer) exchange
-					.getProperty(IConstant.MIDWAY_NETSUITE_ID));
-			deviceUsage.setIsValid(true);
+            deviceUsage.setCarrierName((String) exchange
+                    .getProperty("CarrierName"));
+            deviceUsage
+                    .setDeviceId((DeviceId) exchange.getProperty("DeviceId"));
+            deviceUsage.setDataUsed(0);
 
-			exchange.getIn().setBody(deviceUsage);
+            String date = jobDetail.getDate();
 
-		} else {
+            LOGGER.info("----------------------D----A-----T-------E-------" + date);
+            deviceUsage.setDate(date);
+            deviceUsage.setTransactionErrorReason(errorType);
+            deviceUsage
+                    .setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
+            deviceUsage.setNetSuiteId((Integer) exchange
+                    .getProperty(IConstant.MIDWAY_NETSUITE_ID));
+            deviceUsage.setIsValid(true);
 
-			DeviceConnection deviceConnection = new DeviceConnection();
+            exchange.getIn().setBody(deviceUsage);
 
-			deviceConnection.setCarrierName((String) exchange
-					.getProperty("CarrierName"));
-			deviceConnection.setDeviceId((DeviceId) exchange
-					.getProperty("DeviceId"));
+        } else {
 
-			String date = jobDetail.getDate();
+            DeviceConnection deviceConnection = new DeviceConnection();
 
-			log.info("----------------------D----A-----T-------E-------" + date);
-			
-			deviceConnection.setDate(date);
-			deviceConnection.setTransactionErrorReason(errorType);
-			deviceConnection
-					.setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
-			deviceConnection.setNetSuiteId((Integer) exchange
-					.getProperty(IConstant.MIDWAY_NETSUITE_ID));
-			deviceConnection.setIsValid(true);
-			deviceConnection.setEvent(null);
-			exchange.getIn().setBody(deviceConnection);
-		}
+            deviceConnection.setCarrierName((String) exchange
+                    .getProperty("CarrierName"));
+            deviceConnection.setDeviceId((DeviceId) exchange
+                    .getProperty("DeviceId"));
 
-	}
+            String date = jobDetail.getDate();
+
+            LOGGER.info("----------------------D----A-----T-------E-------" + date);
+
+            deviceConnection.setDate(date);
+            deviceConnection.setTransactionErrorReason(errorType);
+            deviceConnection
+                    .setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
+            deviceConnection.setNetSuiteId((Integer) exchange
+                    .getProperty(IConstant.MIDWAY_NETSUITE_ID));
+            deviceConnection.setIsValid(true);
+            deviceConnection.setEvent(null);
+            exchange.getIn().setBody(deviceConnection);
+        }
+
+    }
 }

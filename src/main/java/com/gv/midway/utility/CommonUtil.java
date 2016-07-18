@@ -11,6 +11,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.camel.Exchange;
+import org.apache.camel.Message;
 
 import org.apache.log4j.Logger;
 
@@ -23,355 +25,394 @@ import com.gv.midway.pojo.verizon.DeviceId;
 
 public class CommonUtil {
 
-	private static Logger log = Logger.getLogger(CommonUtil.class);
+    private static final Logger LOGGER = Logger.getLogger(CommonUtil.class);
 
-	public static List<String> endPointList = new ArrayList<String>();
+    public static List<String> endPointList = new ArrayList<String>();
 
-	static {
+    static {
 
-		endPointList.add(IEndPoints.ACTIVATION_ENDPOINT);
-		endPointList.add(IEndPoints.DEACTIVATION_ENDPOINT);
-		endPointList.add(IEndPoints.RESTORE_ENDPOINT);
-		endPointList.add(IEndPoints.SUSPENSION_ENDPOINT);
+        endPointList.add(IEndPoints.ACTIVATION_ENDPOINT);
+        endPointList.add(IEndPoints.DEACTIVATION_ENDPOINT);
+        endPointList.add(IEndPoints.RESTORE_ENDPOINT);
+        endPointList.add(IEndPoints.SUSPENSION_ENDPOINT);
 
-		endPointList.add(IEndPoints.ACTIVATION_SEDA_KORE_ENDPOINT);
-		endPointList.add(IEndPoints.DEACTIVATION_SEDA_KORE_ENDPOINT);
-		endPointList.add(IEndPoints.RESTORE_SEDA_KORE_ENDPOINT);
-		endPointList.add(IEndPoints.SUSPENSION_SEDA_KORE_ENDPOINT);
-		endPointList.add(IEndPoints.REACTIVATION_SEDA_KORE_ENDPOINT);
+        endPointList.add(IEndPoints.ACTIVATION_SEDA_KORE_ENDPOINT);
+        endPointList.add(IEndPoints.DEACTIVATION_SEDA_KORE_ENDPOINT);
+        endPointList.add(IEndPoints.RESTORE_SEDA_KORE_ENDPOINT);
+        endPointList.add(IEndPoints.SUSPENSION_SEDA_KORE_ENDPOINT);
+        endPointList.add(IEndPoints.REACTIVATION_SEDA_KORE_ENDPOINT);
 
-		endPointList.add(IEndPoints.CHANGE_CUSTOMFIELD_ENDPOINT);
-		endPointList.add(IEndPoints.CHANGE_SERVICEPLAN_ENDPOINT);
-		endPointList.add(IEndPoints.CHANGE_SERVICEPLAN_SEDA_KORE_ENDPOINT);
-		endPointList.add(IEndPoints.CHANGE_CUSTOMFIELD_SEDA_KORE_ENDPOINT);
-	}
+        endPointList.add(IEndPoints.CHANGE_CUSTOMFIELD_ENDPOINT);
+        endPointList.add(IEndPoints.CHANGE_SERVICEPLAN_ENDPOINT);
+        endPointList.add(IEndPoints.CHANGE_SERVICEPLAN_SEDA_KORE_ENDPOINT);
+        endPointList.add(IEndPoints.CHANGE_CUSTOMFIELD_SEDA_KORE_ENDPOINT);
+    }
 
-	/**
-	 * Get Current date
-	 * @return
-	 */
-	public static String getCurrentTimeStamp() {
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		Date date = new Date();
+    /**
+     * Get Current date
+     * 
+     * @return
+     */
+    public static String getCurrentTimeStamp() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
 
-		return dateFormat.format(date);
+        return dateFormat.format(date);
 
-	}
+    }
 
-	/**
-	 * Get the IP address of Machine
-	 * @return
-	 */
-	public static String getIpAddress()
+    /**
+     * Get the IP address of Machine
+     * 
+     * @return
+     */
+    public static String getIpAddress()
 
-	{
-		InetAddress ip;
+    {
+        InetAddress ip;
 
-		try {
+        try {
 
-			ip = InetAddress.getLocalHost();
-		} catch (UnknownHostException e) {
-			log.error("Exception ex: "+ e);
-			return "Defulat_IP";
-		}
+            ip = InetAddress.getLocalHost();
+        } catch (UnknownHostException e) {
+            LOGGER.error("Exception ex: " + e);
+            return "Defulat_IP";
+        }
 
-		return ip.toString();
+        return ip.toString();
 
-	}
+    }
 
-	/**
-	 * Generate Midway Transaction Id
-	 * @return
-	 */
-	public static String getMidwayTransactionID() {
-		long timestamp = System.currentTimeMillis();
-		return Long.toString(timestamp);
+    /**
+     * Generate Midway Transaction Id
+     * 
+     * @return
+     */
+    public static String getMidwayTransactionID() {
+        long timestamp = System.currentTimeMillis();
+        return Long.toString(timestamp);
 
-	}
+    }
 
-	/**
-	 * Method to get the carrier Name from the input
-	 * 
-	 * @param carrierName
-	 * @return
-	 */
-	public static String getDerivedCarrierName(String carrierName) {
+    /**
+     * Method to get the carrier Name from the input
+     * 
+     * @param carrierName
+     * @return
+     */
+    public static String getDerivedCarrierName(String carrierName) {
 
-		if (carrierName.equalsIgnoreCase("VERIZON")) {
+        if (carrierName.equalsIgnoreCase("VERIZON")) {
 
-			return "VERIZON";
+            return "VERIZON";
 
-		} else if (carrierName.equalsIgnoreCase("KORE")) {
+        } else if (carrierName.equalsIgnoreCase("KORE")) {
 
-			return "KORE";
-		}
+            return "KORE";
+        }
 
-		return "";
-	}
-	
-	/**
-	 * Method to check if the end point is Provisioning Request
-	 * @param endPoint
-	 * @return
-	 */
+        return "";
+    }
 
-	public static boolean isProvisioningMethod(String endPoint) {
+    /**
+     * Method to check if the end point is Provisioning Request
+     * 
+     * @param endPoint
+     * @return
+     */
 
-		log.info("endpoint is......." + endPoint);
+    public static boolean isProvisioningMethod(String endPoint) {
 
-		for (Iterator<String> iterator = endPointList.iterator(); iterator
-				.hasNext();) {
-			String element =  iterator.next();
+        LOGGER.info("endpoint is......." + endPoint);
 
-			if (endPoint.contains(element)) {
+        for (Iterator<String> iterator = endPointList.iterator(); iterator
+                .hasNext();) {
+            String element = iterator.next();
 
-				return true;
-			}
+            if (endPoint.contains(element)) {
 
-		}
+                return true;
+            }
 
-		return false;
+        }
 
-	}
+        return false;
 
-/**
- *  Returning the recommended device Identifier such as ESN/MEID/ICCID for Device Connection and Device Usage Batch Jobs
- * @param devices
- * @return
- */
-	public static DeviceId getRecommendedDeviceIdentifier(DeviceId[] devices) {
+    }
 
-		log.info("getRecommendedDeviceIdentifier........deviceId..is.......");
+    /**
+     * Returning the recommended device Identifier such as ESN/MEID/ICCID for
+     * Device Connection and Device Usage Batch Jobs
+     * 
+     * @param devices
+     * @return
+     */
+    public static DeviceId getRecommendedDeviceIdentifier(DeviceId[] devices) {
 
-		for (DeviceId device : devices) {
-			if (("ESN".equalsIgnoreCase(device.getKind()))
-					|| ("MEID".equalsIgnoreCase(device.getKind()))
-					|| ("ICCID".equalsIgnoreCase(device.getKind()))) {
+        LOGGER.info("getRecommendedDeviceIdentifier........deviceId..is.......");
 
-				return device;
-			}
+        for (DeviceId device : devices) {
+            if (("ESN".equalsIgnoreCase(device.getKind()))
+                    || ("MEID".equalsIgnoreCase(device.getKind()))
+                    || ("ICCID".equalsIgnoreCase(device.getKind()))) {
 
-		}
+                return device;
+            }
 
-		return devices[0];
+        }
 
-	}
+        return devices[0];
 
+    }
 
-/**
- * Returning the Sim Number from the DeviceId Array Device Usage Batch Jobs
- * @param devices
- * @return
- */
-	public static DeviceId getSimNumber(DeviceId[] devices) {
+    /**
+     * Returning the Sim Number from the DeviceId Array Device Usage Batch Jobs
+     * 
+     * @param devices
+     * @return
+     */
+    public static DeviceId getSimNumber(DeviceId[] devices) {
 
-		log.info("getSimNumber........deviceId..is.......");
+        LOGGER.info("getSimNumber........deviceId..is.......");
 
-		for (DeviceId device : devices) {
-			if ("SIM".equalsIgnoreCase(device.getKind())) {
+        for (DeviceId device : devices) {
+            if ("SIM".equalsIgnoreCase(device.getKind())) {
 
-				return device;
-			}
+                return device;
+            }
 
-		}
+        }
 
-		return null;
+        return null;
 
-	}
-/**
- * Validate date
- * @param date
- * @return
- */
-	public static boolean isValidDateFormat(String date) {
+    }
 
-		if (date == null) {
-			log.info("date is null.....");
-			return false;
-		}
+    /**
+     * Validate date
+     * 
+     * @param date
+     * @return
+     */
+    public static boolean isValidDateFormat(String date) {
 
-		String trimDate = date.trim();
+        if (date == null) {
+            LOGGER.info("date is null.....");
+            return false;
+        }
 
-		String exp = "^([\\d]{4})[-]?(0?[1-9]|1[012])[-]?(0?[1-9]|[12][0-9]|3[01])";
+        String trimDate = date.trim();
 
-		Pattern pattern = Pattern.compile(exp, Pattern.CASE_INSENSITIVE);
+        String exp = "^([\\d]{4})[-]?(0?[1-9]|1[012])[-]?(0?[1-9]|[12][0-9]|3[01])";
 
-		Matcher matcher = pattern.matcher(trimDate);
+        Pattern pattern = Pattern.compile(exp, Pattern.CASE_INSENSITIVE);
 
-		if (matcher.matches()) {
-			log.info("valid date format for....." + trimDate);
+        Matcher matcher = pattern.matcher(trimDate);
 
-			return true;
-		} else {
-			log.info("invalid date format for....." + trimDate);
+        if (matcher.matches()) {
+            LOGGER.info("valid date format for....." + trimDate);
 
-			return false;
-		}
-	}
+            return true;
+        } else {
+            LOGGER.info("invalid date format for....." + trimDate);
 
-	/**
-	 * Validate Job Parameter for Device Usage
-	 * @param jobParameter
-	 * @return
-	 */
-	public static JobinitializedResponse validateJobParameterForDeviceUsage(
-			JobParameter jobParameter) {
+            return false;
+        }
+    }
 
-		JobinitializedResponse jobinitializedResponse = new JobinitializedResponse();
+    /**
+     * Validate Job Parameter for Device Usage
+     * 
+     * @param jobParameter
+     * @return
+     */
+    public static JobinitializedResponse validateJobParameterForDeviceUsage(
+            JobParameter jobParameter) {
 
-		if (jobParameter == null) {
+        JobinitializedResponse jobinitializedResponse = new JobinitializedResponse();
 
-			jobinitializedResponse.setMessage("Please provide job parameters");
+        if (jobParameter == null) {
 
-			return jobinitializedResponse;
-		}
+            jobinitializedResponse.setMessage("Please provide job parameters");
 
-		String carrierName = jobParameter.getCarrierName();
+            return jobinitializedResponse;
+        }
 
-		if (carrierName == null) {
-			jobinitializedResponse
-					.setMessage("Please provide Carrier Name. Allowable Values are KORE and VERIZON");
-			return jobinitializedResponse;
-		}
+        String carrierName = jobParameter.getCarrierName();
 
-		if (!(IConstant.BSCARRIER_SERVICE_KORE.equals(carrierName) || IConstant.BSCARRIER_SERVICE_VERIZON.equals(carrierName))) {
+        if (carrierName == null) {
+            jobinitializedResponse
+                    .setMessage("Please provide Carrier Name. Allowable Values are KORE and VERIZON");
+            return jobinitializedResponse;
+        }
 
-			jobinitializedResponse
-					.setMessage("Please provide valid Carrier Name. Allowable Values are KORE and VERIZON");
-			return jobinitializedResponse;
-		}
+        if (!(IConstant.BSCARRIER_SERVICE_KORE.equals(carrierName) || IConstant.BSCARRIER_SERVICE_VERIZON
+                .equals(carrierName))) {
 
-		String date = jobParameter.getDate();
+            jobinitializedResponse
+                    .setMessage("Please provide valid Carrier Name. Allowable Values are KORE and VERIZON");
+            return jobinitializedResponse;
+        }
 
-		if (!isValidDateFormat(date)) {
+        String date = jobParameter.getDate();
 
-			jobinitializedResponse
-					.setMessage(IResponse.ERROR_DESCRIPTION_DATE_VALIDATE_JOB_MIDWAYDB);
-			return jobinitializedResponse;
-		}
-		return null;
+        if (!isValidDateFormat(date)) {
 
-	}
-/**
- * Validate Job Parameter for Device Connection
- * @param jobParameter
- * @return
- */
-	public static JobinitializedResponse validateJobParameterForDeviceConnection(
-			JobParameter jobParameter) {
+            jobinitializedResponse
+                    .setMessage(IResponse.ERROR_DESCRIPTION_DATE_VALIDATE_JOB_MIDWAYDB);
+            return jobinitializedResponse;
+        }
+        return null;
 
-		JobinitializedResponse jobinitializedResponse = new JobinitializedResponse();
+    }
 
-		if (jobParameter == null) {
+    /**
+     * Validate Job Parameter for Device Connection
+     * 
+     * @param jobParameter
+     * @return
+     */
+    public static JobinitializedResponse validateJobParameterForDeviceConnection(
+            JobParameter jobParameter) {
 
-			jobinitializedResponse.setMessage("Please provide job parameters");
+        JobinitializedResponse jobinitializedResponse = new JobinitializedResponse();
 
-			return jobinitializedResponse;
-		}
+        if (jobParameter == null) {
 
-		String carrierName = jobParameter.getCarrierName();
+            jobinitializedResponse.setMessage("Please provide job parameters");
 
-		if (carrierName == null) {
-			jobinitializedResponse
-					.setMessage("Please provide Carrier Name. Allowable Value is VERIZON");
-			return jobinitializedResponse;
-		}
+            return jobinitializedResponse;
+        }
 
-		if (!(IConstant.BSCARRIER_SERVICE_VERIZON.equals(carrierName))) {
+        String carrierName = jobParameter.getCarrierName();
 
-			jobinitializedResponse
-					.setMessage("Please provide valid Carrier Name. Allowable Value is VERIZON");
-			return jobinitializedResponse;
-		}
+        if (carrierName == null) {
+            jobinitializedResponse
+                    .setMessage("Please provide Carrier Name. Allowable Value is VERIZON");
+            return jobinitializedResponse;
+        }
 
-		String date = jobParameter.getDate();
+        if (!(IConstant.BSCARRIER_SERVICE_VERIZON.equals(carrierName))) {
 
-		if (!isValidDateFormat(date)) {
+            jobinitializedResponse
+                    .setMessage("Please provide valid Carrier Name. Allowable Value is VERIZON");
+            return jobinitializedResponse;
+        }
 
-			jobinitializedResponse
-					.setMessage(IResponse.ERROR_DESCRIPTION_DATE_VALIDATE_JOB_MIDWAYDB);
-			return jobinitializedResponse;
-		}
-		return null;
+        String date = jobParameter.getDate();
 
-	}
+        if (!isValidDateFormat(date)) {
 
-	/**
-	 * Method takes the Billing Day(eg 10 and Creates the billing Start date
-	 * yyyy-MM-dd)
-	 * 
-	 * @param billDay
-	 * @param jobDate
-	 * @return
-	 */
-	public static String getDeviceBillingStartDate(String billingDay,
-			String jobDate) {
+            jobinitializedResponse
+                    .setMessage(IResponse.ERROR_DESCRIPTION_DATE_VALIDATE_JOB_MIDWAYDB);
+            return jobinitializedResponse;
+        }
+        return null;
 
+    }
 
+    /**
+     * Method takes the Billing Day(eg 10 and Creates the billing Start date
+     * yyyy-MM-dd)
+     * 
+     * @param billDay
+     * @param jobDate
+     * @return
+     */
+    public static String getDeviceBillingStartDate(String billingDay,
+            String jobDate) {
 
-	String billingStartDate = null;
-	String jobDay = jobDate.substring(8);
+        String billingStartDate = null;
+        String jobDay = jobDate.substring(8);
 
-	// Creating The bill start date
-	// billingday One oR two character
-	if (billingDay != null && billingDay.length() == 1) {
-		String billingDayChanged  = "0" + billingDay;
-		billingDay=billingDayChanged;
-	}
-		
-		try {
-			if (billingDay != null) {
+        // Creating The bill start date
+        // billingday One oR two character
+        if (billingDay != null && billingDay.length() == 1) {
+            String billingDayChanged = "0" + billingDay;
+            billingDay = billingDayChanged;
+        }
 
-				// billing day>JobDetail Day
-				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(dateFormat.parse(jobDate));
+        try {
+            if (billingDay != null) {
 
-				log.info(billingDay +"::::::::::::::::::::"+jobDay);
-				if (Integer.parseInt(billingDay) > Integer.parseInt(jobDay)) {
-					// previous month data
-				
-					cal.add(Calendar.MONTH, -1);
-						
-					int noOfLastDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-					
-					billingStartDate = dateFormat.format(cal.getTime());
-					
-					log.info(noOfLastDay +":::::::::::::::::::::::"+dateFormat.format(cal.getTime()));
-				
-					
-					int calculatedDay = Integer.parseInt(billingStartDate.substring(8));
-					
-					log.info("CAlculated Day "+ calculatedDay);
-					
-					if ((calculatedDay < noOfLastDay)&&  (Integer.parseInt(billingDay)<noOfLastDay)){
-						
-						cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(billingDay));
-						billingStartDate = dateFormat.format(cal.getTime());
-						
-						log.info("::::::::::::::::"+billingStartDate);
-					}
-				
+                // billing day>JobDetail Day
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(dateFormat.parse(jobDate));
 
-				}else
+                LOGGER.info(billingDay + "::::::::::::::::::::" + jobDay);
+                if (Integer.parseInt(billingDay) > Integer.parseInt(jobDay)) {
+                    // previous month data
 
-				// billing day is <= JobDetail Day
-				if (Integer.parseInt(billingDay) <= Integer.parseInt(jobDay)) {
-					
-					// current month of data
-					cal.set(Calendar.DATE, Integer.parseInt(billingDay));
-					billingStartDate = dateFormat.format(cal.getTime());
+                    cal.add(Calendar.MONTH, -1);
 
-				}
-				log.info("::::::::::::::::"+ billingStartDate);
-				
-			}
+                    int noOfLastDay = cal
+                            .getActualMaximum(Calendar.DAY_OF_MONTH);
 
-		} catch (Exception ex) {
-			log.error("................Error in Setting Job Dates" + ex);
-		}
-		
-		return billingStartDate;
-	}
+                    billingStartDate = dateFormat.format(cal.getTime());
+
+                    LOGGER.info(noOfLastDay + ":::::::::::::::::::::::"
+                            + dateFormat.format(cal.getTime()));
+
+                    int calculatedDay = Integer.parseInt(billingStartDate
+                            .substring(8));
+
+                    LOGGER.info("CAlculated Day " + calculatedDay);
+
+                    if ((calculatedDay < noOfLastDay)
+                            && (Integer.parseInt(billingDay) < noOfLastDay)) {
+
+                        cal.set(Calendar.DAY_OF_MONTH,
+                                Integer.parseInt(billingDay));
+                        billingStartDate = dateFormat.format(cal.getTime());
+
+                        LOGGER.info("::::::::::::::::" + billingStartDate);
+                    }
+
+                } else
+
+                // billing day is <= JobDetail Day
+                if (Integer.parseInt(billingDay) <= Integer.parseInt(jobDay)) {
+
+                    // current month of data
+                    cal.set(Calendar.DATE, Integer.parseInt(billingDay));
+                    billingStartDate = dateFormat.format(cal.getTime());
+
+                }
+                LOGGER.info("::::::::::::::::" + billingStartDate);
+
+            }
+
+        } catch (Exception ex) {
+            LOGGER.error("................Error in Setting Job Dates" + ex);
+        }
+
+        return billingStartDate;
+    }
+
+    /**
+     * Setting Message Header Values in exchange
+     * 
+     */
+
+    public static Message setMessageHeader(Exchange exchange) {
+        Message message = exchange.getIn();
+        String sessionToken = "";
+        String authorizationToken = "";
+
+        if (exchange.getProperty(IConstant.VZ_SEESION_TOKEN) != null
+                && exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN) != null) {
+            sessionToken = exchange.getProperty(IConstant.VZ_SEESION_TOKEN)
+                    .toString();
+            authorizationToken = exchange.getProperty(
+                    IConstant.VZ_AUTHORIZATION_TOKEN).toString();
+        }
+
+        message.setHeader("VZ-M2M-Token", sessionToken);
+        message.setHeader("Authorization", "Bearer " + authorizationToken);
+        message.setHeader(Exchange.CONTENT_TYPE, "application/json");
+        message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
+        message.setHeader(Exchange.HTTP_METHOD, "POST");
+        return message;
+    }
 
 }

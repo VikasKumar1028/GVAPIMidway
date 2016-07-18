@@ -26,182 +26,184 @@ import com.gv.midway.pojo.usageInformation.response.UsageInformationMidwayRespon
 import com.gv.midway.pojo.usageInformation.response.UsageInformationResponse;
 
 public class GenericErrorProcessor implements Processor {
-	
-	Logger log = Logger.getLogger(VerizonGenericExceptionProcessor.class
-			.getName());
 
-	Environment newEnv;
+    private static final Logger LOGGER = Logger.getLogger(VerizonGenericExceptionProcessor.class
+            .getName());
 
-	public GenericErrorProcessor(Environment env) {
-		super();
-		this.newEnv = env;
+    Environment newEnv;
 
-	}
+    public GenericErrorProcessor(Environment env) {
+        super();
+        this.newEnv = env;
 
-	public GenericErrorProcessor() {
-		//Empty Constructor
-	}
-	@Override
-	public void process(Exchange exchange) throws Exception {
+    }
 
-		log.info("----.Generic exchange----------"+exchange.getFromEndpoint().toString());
-	
-		Response response = new Response();
+    public GenericErrorProcessor() {
+        // Empty Constructor
+    }
 
-		Header responseHeader = (Header) exchange.getProperty(IConstant.HEADER);
+    @Override
+    public void process(Exchange exchange) throws Exception {
 
-		if (exchange.getProperty(IConstant.RESPONSE_CODE) != null) {
+        LOGGER.info("----.Generic exchange----------"
+                + exchange.getFromEndpoint().toString());
 
-			response.setResponseCode(Integer.parseInt(exchange.getProperty(
-					IConstant.RESPONSE_CODE).toString()));
-			response.setResponseStatus(exchange.getProperty(
-					IConstant.RESPONSE_STATUS).toString());
-			response.setResponseDescription(exchange.getProperty(
-					IConstant.RESPONSE_DESCRIPTION).toString());
+        Response response = new Response();
 
-		} else {
+        Header responseHeader = (Header) exchange.getProperty(IConstant.HEADER);
 
-			response.setResponseCode(IResponse.CONNECTION_ERROR_CODE);
-			response.setResponseStatus(IResponse.ERROR_MESSAGE);
-			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_CONNECTION_MIDWAYDB);
+        if (exchange.getProperty(IConstant.RESPONSE_CODE) != null) {
 
-		}
+            response.setResponseCode(Integer.parseInt(exchange.getProperty(
+                    IConstant.RESPONSE_CODE).toString()));
+            response.setResponseStatus(exchange.getProperty(
+                    IConstant.RESPONSE_STATUS).toString());
+            response.setResponseDescription(exchange.getProperty(
+                    IConstant.RESPONSE_DESCRIPTION).toString());
 
-		switch (exchange.getFromEndpoint().toString()) {
-		case "Endpoint[direct://deviceInformationCarrier]":
-			DeviceInformationResponse deviceInformationResponse = new DeviceInformationResponse();
-			deviceInformationResponse.setHeader(responseHeader);
-			deviceInformationResponse.setResponse(response);
-			exchange.getIn().setBody(deviceInformationResponse);
+        } else {
 
-			break;
+            response.setResponseCode(IResponse.CONNECTION_ERROR_CODE);
+            response.setResponseStatus(IResponse.ERROR_MESSAGE);
+            response.setResponseDescription(IResponse.ERROR_DESCRIPTION_CONNECTION_MIDWAYDB);
 
-		case "Endpoint[direct://getDeviceInformationDB]":
-			DeviceInformationResponse deviceInformationResponseDB = new DeviceInformationResponse();
-			deviceInformationResponseDB.setHeader(responseHeader);
-			deviceInformationResponseDB.setResponse(response);
-			exchange.getIn().setBody(deviceInformationResponseDB);
+        }
 
-			break;
+        switch (exchange.getFromEndpoint().toString()) {
+        case "Endpoint[direct://deviceInformationCarrier]":
+            DeviceInformationResponse deviceInformationResponse = new DeviceInformationResponse();
+            deviceInformationResponse.setHeader(responseHeader);
+            deviceInformationResponse.setResponse(response);
+            exchange.getIn().setBody(deviceInformationResponse);
 
-		case "Endpoint[direct://updateDevicesDetailsBulk]":
-			BatchDeviceResponse batchDeviceResponse = new BatchDeviceResponse();
-			batchDeviceResponse.setHeader(responseHeader);
-			batchDeviceResponse.setResponse(response);
-			exchange.getIn().setBody(batchDeviceResponse);
+            break;
 
-			break;
+        case "Endpoint[direct://getDeviceInformationDB]":
+            DeviceInformationResponse deviceInformationResponseDB = new DeviceInformationResponse();
+            deviceInformationResponseDB.setHeader(responseHeader);
+            deviceInformationResponseDB.setResponse(response);
+            exchange.getIn().setBody(deviceInformationResponseDB);
 
-		case "Endpoint[direct://updateDeviceDetails]":
-			UpdateDeviceResponse updateDeviceResponse = new UpdateDeviceResponse();
-			updateDeviceResponse.setHeader(responseHeader);
-			updateDeviceResponse.setResponse(response);
-			exchange.getIn().setBody(updateDeviceResponse);
+            break;
 
-			break;
+        case "Endpoint[direct://updateDevicesDetailsBulk]":
+            BatchDeviceResponse batchDeviceResponse = new BatchDeviceResponse();
+            batchDeviceResponse.setHeader(responseHeader);
+            batchDeviceResponse.setResponse(response);
+            exchange.getIn().setBody(batchDeviceResponse);
 
-		case "Endpoint[direct://activateDevice]":
+            break;
 
-			ActivateDeviceResponse activateDeviceResponse = new ActivateDeviceResponse();
-			activateDeviceResponse.setHeader(responseHeader);
-			activateDeviceResponse.setResponse(response);
-			exchange.getIn().setBody(activateDeviceResponse);
+        case "Endpoint[direct://updateDeviceDetails]":
+            UpdateDeviceResponse updateDeviceResponse = new UpdateDeviceResponse();
+            updateDeviceResponse.setHeader(responseHeader);
+            updateDeviceResponse.setResponse(response);
+            exchange.getIn().setBody(updateDeviceResponse);
 
-			break;
+            break;
 
-		case "Endpoint[direct://deactivateDevice]":
+        case "Endpoint[direct://activateDevice]":
 
-			DeactivateDeviceResponse deactivateDeviceResponse = new DeactivateDeviceResponse();
-			deactivateDeviceResponse.setHeader(responseHeader);
-			deactivateDeviceResponse.setResponse(response);
-			exchange.getIn().setBody(deactivateDeviceResponse);
+            ActivateDeviceResponse activateDeviceResponse = new ActivateDeviceResponse();
+            activateDeviceResponse.setHeader(responseHeader);
+            activateDeviceResponse.setResponse(response);
+            exchange.getIn().setBody(activateDeviceResponse);
 
-			break;
+            break;
 
-		case "Endpoint[direct://suspendDevice]":
+        case "Endpoint[direct://deactivateDevice]":
 
-			SuspendDeviceResponse suspendDeviceResponse = new SuspendDeviceResponse();
-			suspendDeviceResponse.setHeader(responseHeader);
-			suspendDeviceResponse.setResponse(response);
-			exchange.getIn().setBody(suspendDeviceResponse);
+            DeactivateDeviceResponse deactivateDeviceResponse = new DeactivateDeviceResponse();
+            deactivateDeviceResponse.setHeader(responseHeader);
+            deactivateDeviceResponse.setResponse(response);
+            exchange.getIn().setBody(deactivateDeviceResponse);
 
-			break;
+            break;
 
-		case "Endpoint[direct://deviceConnectionStatus]":
-			ConnectionStatusResponse connectionStatusResponse = new ConnectionStatusResponse();
-			connectionStatusResponse.setHeader(responseHeader);
-			connectionStatusResponse.setResponse(response);
-			exchange.getIn().setBody(connectionStatusResponse);
+        case "Endpoint[direct://suspendDevice]":
 
-			break;
+            SuspendDeviceResponse suspendDeviceResponse = new SuspendDeviceResponse();
+            suspendDeviceResponse.setHeader(responseHeader);
+            suspendDeviceResponse.setResponse(response);
+            exchange.getIn().setBody(suspendDeviceResponse);
 
-		case "Endpoint[direct://deviceSessionBeginEndInfo]":
-			SessionBeginEndResponse sessionBeginEndResponse = new SessionBeginEndResponse();
-			sessionBeginEndResponse.setHeader(responseHeader);
-			sessionBeginEndResponse.setResponse(response);
-			exchange.getIn().setBody(sessionBeginEndResponse);
+            break;
 
-			break;
+        case "Endpoint[direct://deviceConnectionStatus]":
+            ConnectionStatusResponse connectionStatusResponse = new ConnectionStatusResponse();
+            connectionStatusResponse.setHeader(responseHeader);
+            connectionStatusResponse.setResponse(response);
+            exchange.getIn().setBody(connectionStatusResponse);
 
-		case "Endpoint[direct://customeFields]":
-			CustomFieldsDeviceResponse customFieldsDeviceResponse = new CustomFieldsDeviceResponse();
-			customFieldsDeviceResponse.setHeader(responseHeader);
-			customFieldsDeviceResponse.setResponse(response);
-			exchange.getIn().setBody(customFieldsDeviceResponse);
+            break;
 
-			break;
+        case "Endpoint[direct://deviceSessionBeginEndInfo]":
+            SessionBeginEndResponse sessionBeginEndResponse = new SessionBeginEndResponse();
+            sessionBeginEndResponse.setHeader(responseHeader);
+            sessionBeginEndResponse.setResponse(response);
+            exchange.getIn().setBody(sessionBeginEndResponse);
 
-		case "Endpoint[direct://changeDeviceServicePlans]":
-			ChangeDeviceServicePlansResponse changeDeviceServicePlansResponse = new ChangeDeviceServicePlansResponse();
-			changeDeviceServicePlansResponse.setHeader(responseHeader);
-			changeDeviceServicePlansResponse.setResponse(response);
-			exchange.getIn().setBody(changeDeviceServicePlansResponse);
+            break;
 
-			break;
+        case "Endpoint[direct://customeFields]":
+            CustomFieldsDeviceResponse customFieldsDeviceResponse = new CustomFieldsDeviceResponse();
+            customFieldsDeviceResponse.setHeader(responseHeader);
+            customFieldsDeviceResponse.setResponse(response);
+            exchange.getIn().setBody(customFieldsDeviceResponse);
 
-		case "Endpoint[direct://reactivateDevice]":
-			ReactivateDeviceResponse reactivateDeviceResponse = new ReactivateDeviceResponse();
-			reactivateDeviceResponse.setHeader(responseHeader);
-			reactivateDeviceResponse.setResponse(response);
-			exchange.getIn().setBody(reactivateDeviceResponse);
+            break;
 
-			break;
+        case "Endpoint[direct://changeDeviceServicePlans]":
+            ChangeDeviceServicePlansResponse changeDeviceServicePlansResponse = new ChangeDeviceServicePlansResponse();
+            changeDeviceServicePlansResponse.setHeader(responseHeader);
+            changeDeviceServicePlansResponse.setResponse(response);
+            exchange.getIn().setBody(changeDeviceServicePlansResponse);
 
-		case "Endpoint[direct://restoreDevice]":
-			RestoreDeviceResponse restoreDeviceResponse = new RestoreDeviceResponse();
-			restoreDeviceResponse.setHeader(responseHeader);
-			restoreDeviceResponse.setResponse(response);
-			exchange.getIn().setBody(restoreDeviceResponse);
+            break;
 
-			break;
+        case "Endpoint[direct://reactivateDevice]":
+            ReactivateDeviceResponse reactivateDeviceResponse = new ReactivateDeviceResponse();
+            reactivateDeviceResponse.setHeader(responseHeader);
+            reactivateDeviceResponse.setResponse(response);
+            exchange.getIn().setBody(reactivateDeviceResponse);
 
-		case "Endpoint[direct://retrieveDeviceUsageHistoryCarrier]":
-			UsageInformationResponse usageInformationResponse = new UsageInformationResponse();
-			usageInformationResponse.setHeader(responseHeader);
-			usageInformationResponse.setResponse(response);
-			exchange.getIn().setBody(usageInformationResponse);
+            break;
 
-			break;
+        case "Endpoint[direct://restoreDevice]":
+            RestoreDeviceResponse restoreDeviceResponse = new RestoreDeviceResponse();
+            restoreDeviceResponse.setHeader(responseHeader);
+            restoreDeviceResponse.setResponse(response);
+            exchange.getIn().setBody(restoreDeviceResponse);
 
-		case "Endpoint[direct://getDeviceUsageInfoDB]":
-			UsageInformationMidwayResponse usageInformationMidwayResponse = new UsageInformationMidwayResponse();
-			usageInformationMidwayResponse.setHeader(responseHeader);
-			usageInformationMidwayResponse.setResponse(response);
-			exchange.getIn().setBody(usageInformationMidwayResponse);
+            break;
 
-			break;
+        case "Endpoint[direct://retrieveDeviceUsageHistoryCarrier]":
+            UsageInformationResponse usageInformationResponse = new UsageInformationResponse();
+            usageInformationResponse.setHeader(responseHeader);
+            usageInformationResponse.setResponse(response);
+            exchange.getIn().setBody(usageInformationResponse);
 
-		case "Endpoint[direct://getDeviceConnectionHistoryInfoDB]":
-			ConnectionInformationMidwayResponse connectionInformationMidwayResponse = new ConnectionInformationMidwayResponse();
-			connectionInformationMidwayResponse.setHeader(responseHeader);
-			connectionInformationMidwayResponse.setResponse(response);
-			exchange.getIn().setBody(connectionInformationMidwayResponse);
+            break;
 
-			break;
+        case "Endpoint[direct://getDeviceUsageInfoDB]":
+            UsageInformationMidwayResponse usageInformationMidwayResponse = new UsageInformationMidwayResponse();
+            usageInformationMidwayResponse.setHeader(responseHeader);
+            usageInformationMidwayResponse.setResponse(response);
+            exchange.getIn().setBody(usageInformationMidwayResponse);
 
-		default:
-			break;
-		}
-		
-	}
+            break;
+
+        case "Endpoint[direct://getDeviceConnectionHistoryInfoDB]":
+            ConnectionInformationMidwayResponse connectionInformationMidwayResponse = new ConnectionInformationMidwayResponse();
+            connectionInformationMidwayResponse.setHeader(responseHeader);
+            connectionInformationMidwayResponse.setResponse(response);
+            exchange.getIn().setBody(connectionInformationMidwayResponse);
+
+            break;
+
+        default:
+            break;
+        }
+
+    }
 }

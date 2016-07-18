@@ -40,455 +40,455 @@ import com.mongodb.WriteResult;
 @Service
 public class JobDaoImpl implements IJobDao {
 
-	@Autowired
-	MongoTemplate mongoTemplate;
+    @Autowired
+    MongoTemplate mongoTemplate;
 
-	Logger log = Logger.getLogger(JobDaoImpl.class);
-	static Random r = new Random();
+    private static final Logger LOGGER = Logger.getLogger(JobDaoImpl.class);
+    static Random r = new Random();
 
-	/**
-	 * Fetch all the devices
-	 */
-	@Override
-	public List fetchDevices(Exchange exchange) {
+    /**
+     * Fetch all the devices
+     */
+    @Override
+    public List fetchDevices(Exchange exchange) {
 
-		JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
+        JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
 
-		exchange.setProperty("jobName", jobDetail.getName().toString());
+        exchange.setProperty("jobName", jobDetail.getName().toString());
 
-		List<DeviceInformation> deviceInformationList = null;
+        List<DeviceInformation> deviceInformationList = null;
 
-		try {
+        try {
 
-			String carrierName = jobDetail.getCarrierName();
+            String carrierName = jobDetail.getCarrierName();
 
-			log.info("Carrier Name -----------------" + carrierName);
-			// We have to check bs_carrier with possible reseller values for
-			// that carrier.
-			Query searchDeviceQuery = new Query(Criteria.where("bs_carrier")
-					.is(carrierName));
+            LOGGER.info("Carrier Name -----------------" + carrierName);
+            // We have to check bs_carrier with possible reseller values for
+            // that carrier.
+            Query searchDeviceQuery = new Query(Criteria.where("bs_carrier")
+                    .is(carrierName));
 
-			deviceInformationList = mongoTemplate.find(searchDeviceQuery,
-					DeviceInformation.class);
+            deviceInformationList = mongoTemplate.find(searchDeviceQuery,
+                    DeviceInformation.class);
 
-			log.info("deviceInformationList ------------------"
-					+ deviceInformationList.size());
-		}
+            LOGGER.info("deviceInformationList ------------------"
+                    + deviceInformationList.size());
+        }
 
-		catch (Exception e) {
-			log.error("Error in fetchDevices :" + e);
-		}
+        catch (Exception e) {
+            LOGGER.error("Error in fetchDevices :" + e);
+        }
 
-		return deviceInformationList;
-	}
+        return deviceInformationList;
+    }
 
-	/**
-	 * Fetch only devices with Odd Net Suited ID
-	 */
-	@Override
-	public List fetchOddDevices(Exchange exchange) {
+    /**
+     * Fetch only devices with Odd Net Suited ID
+     */
+    @Override
+    public List fetchOddDevices(Exchange exchange) {
 
-		log.info("fetchOddDevices::::::::");
+        LOGGER.info("fetchOddDevices::::::::");
 
-		JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
+        JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
 
-		exchange.setProperty("jobName", jobDetail.getName().toString());
+        exchange.setProperty("jobName", jobDetail.getName().toString());
 
-		List<DeviceInformation> deviceInformationList = null;
+        List<DeviceInformation> deviceInformationList = null;
 
-		try {
+        try {
 
-			String carrierName = jobDetail.getCarrierName();
+            String carrierName = jobDetail.getCarrierName();
 
-			log.info("Carrier Name -----------------" + carrierName);
-			// We have to check bs_carrier with possible reseller values for
-			// that carrier.
-			Query searchDeviceQuery = new Query(Criteria.where("bs_carrier")
-					.is(carrierName)).addCriteria(Criteria.where("netSuiteId")
-					.mod(2, 1));
+            LOGGER.info("Carrier Name -----------------" + carrierName);
+            // We have to check bs_carrier with possible reseller values for
+            // that carrier.
+            Query searchDeviceQuery = new Query(Criteria.where("bs_carrier")
+                    .is(carrierName)).addCriteria(Criteria.where("netSuiteId")
+                    .mod(2, 1));
 
-			log.info("searchDeviceQuery::::::::::" + searchDeviceQuery);
+            LOGGER.info("searchDeviceQuery::::::::::" + searchDeviceQuery);
 
-			deviceInformationList = mongoTemplate.find(searchDeviceQuery,
-					DeviceInformation.class);
+            deviceInformationList = mongoTemplate.find(searchDeviceQuery,
+                    DeviceInformation.class);
 
-			log.info("deviceInformationList ------------------"
-					+ deviceInformationList.size());
-		}
+            LOGGER.info("deviceInformationList ------------------"
+                    + deviceInformationList.size());
+        }
 
-		catch (Exception e) {
+        catch (Exception e) {
 
-			log.error("Error in fetchOddDevices :" + e);
-		}
+            LOGGER.error("Error in fetchOddDevices :" + e);
+        }
 
-		return deviceInformationList;
-	}
+        return deviceInformationList;
+    }
 
-	/**
-	 * Fetch only devices with Even Net Suited ID
-	 */
-	@Override
-	public List fetchEvenDevices(Exchange exchange) {
+    /**
+     * Fetch only devices with Even Net Suited ID
+     */
+    @Override
+    public List fetchEvenDevices(Exchange exchange) {
 
-		log.info("fetchEvenDevices::::::::");
+        LOGGER.info("fetchEvenDevices::::::::");
 
-		JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
+        JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
 
-		exchange.setProperty("jobName", jobDetail.getName().toString());
+        exchange.setProperty("jobName", jobDetail.getName().toString());
 
-		List<DeviceInformation> deviceInformationList = null;
+        List<DeviceInformation> deviceInformationList = null;
 
-		try {
+        try {
 
-			String carrierName = jobDetail.getCarrierName();
+            String carrierName = jobDetail.getCarrierName();
 
-			log.info("Carrier Name -----------------" + carrierName);
-			// We have to check bs_carrier with possible reseller values for
-			// that carrier.
-			Query searchDeviceQuery = new Query(Criteria.where("bs_carrier")
-					.is(carrierName)).addCriteria(Criteria.where("netSuiteId")
-					.mod(2, 0));
-			;
+            LOGGER.info("Carrier Name -----------------" + carrierName);
+            // We have to check bs_carrier with possible reseller values for
+            // that carrier.
+            Query searchDeviceQuery = new Query(Criteria.where("bs_carrier")
+                    .is(carrierName)).addCriteria(Criteria.where("netSuiteId")
+                    .mod(2, 0));
+            ;
 
-			deviceInformationList = mongoTemplate.find(searchDeviceQuery,
-					DeviceInformation.class);
+            deviceInformationList = mongoTemplate.find(searchDeviceQuery,
+                    DeviceInformation.class);
 
+            LOGGER.info("deviceInformationList ------------------"
+                    + deviceInformationList.size());
+        }
 
-			log.info("deviceInformationList ------------------"
-					+ deviceInformationList.size());
-		}
+        catch (Exception e) {
 
-		catch (Exception e) {
+            LOGGER.error("Error in fetchEvenDevices :" + e);
+        }
 
-			log.error("Error in fetchEvenDevices :" + e);
-		}
+        return deviceInformationList;
+    }
 
-		return deviceInformationList;
-	}
+    /**
+     * Inserting the Job Details and setting date parameters
+     */
+    @Override
+    public void insertJobDetails(Exchange exchange) {
+        JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
 
-	/**
-	 * Inserting the Job Details and setting date parameters
-	 */
-	@Override
-	public void insertJobDetails(Exchange exchange) {
-		JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
+        LOGGER.info("-----------Job Details -------" + jobDetail.toString());
+        jobDetail.setStartTime(new Date().toString());
+        jobDetail.setStatus(IConstant.JOB_STARTED);
+        jobDetail.setIpAddress(CommonUtil.getIpAddress());
+        exchange.setProperty("jobDetail", jobDetail);
+        exchange.setProperty("jobDetailDate", jobDetail.getDate());
 
-		log.info("-----------Job Details -------" + jobDetail.toString());
-		jobDetail.setStartTime(new Date().toString());
-		jobDetail.setStatus(IConstant.JOB_STARTED);
-		jobDetail.setIpAddress(CommonUtil.getIpAddress());
-		exchange.setProperty("jobDetail", jobDetail);
-		exchange.setProperty("jobDetailDate", jobDetail.getDate());
+        // inserting in the database as property
+        mongoTemplate.insert(jobDetail);
+    }
 
-		// inserting in the database as property
-		mongoTemplate.insert(jobDetail);
-	}
+    /**
+     * Updating the Job Details parameters
+     */
+    @Override
+    public void updateJobDetails(Exchange exchange) {
 
-	/**
-	 * Updating the Job Details parameters
-	 */
-	@Override
-	public void updateJobDetails(Exchange exchange) {
+        LOGGER.info("Inside updateJobDetails .....................");
 
-		log.info("Inside updateJobDetails .....................");
+        JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+        try {
 
-		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
-		try {
+            Query searchJobQuery = new Query(Criteria.where("carrierName").is(
+                    jobDetail.getCarrierName()))
+                    .addCriteria(Criteria.where("date").is(jobDetail.getDate()))
+                    .addCriteria(Criteria.where("name").is(jobDetail.getName()))
+                    .addCriteria(Criteria.where("type").is(jobDetail.getType()))
+                    .addCriteria(
+                            Criteria.where("startTime").is(
+                                    jobDetail.getStartTime()));
 
-			Query searchJobQuery = new Query(Criteria.where("carrierName").is(
-					jobDetail.getCarrierName()))
-					.addCriteria(Criteria.where("date").is(jobDetail.getDate()))
-					.addCriteria(Criteria.where("name").is(jobDetail.getName()))
-					.addCriteria(Criteria.where("type").is(jobDetail.getType()))
-					.addCriteria(
-							Criteria.where("startTime").is(
-									jobDetail.getStartTime()));
+            Update update = new Update();
 
-			Update update = new Update();
+            update.set("endTime", new Date().toString());
+            update.set("status", IConstant.JOB_COMPLETED);
 
-			update.set("endTime", new Date().toString());
-			update.set("status", IConstant.JOB_COMPLETED);
+            mongoTemplate.updateFirst(searchJobQuery, update, JobDetail.class);
 
-			mongoTemplate.updateFirst(searchJobQuery, update, JobDetail.class);
+        }
 
-		}
+        catch (Exception e) {
+            LOGGER.info("Error In updateJobDetails-----------------------------"
+                    + e);
+        }
 
-		catch (Exception e) {
-			log.info("Error In updateJobDetails-----------------------------"
-					+ e);
-		}
+    }
 
-	}
+    /**
+     * Soft Delete the Device Usage records in Job Rerun Case
+     */
+    @Override
+    public void deleteDeviceUsageRecords(Exchange exchange) {
 
-	/**
-	 * Soft Delete the Device Usage records in Job Rerun Case
-	 */
-	@Override
-	public void deleteDeviceUsageRecords(Exchange exchange) {
+        LOGGER.info("Inside deleteDeviceUsageRecords .....................");
 
-		log.info("Inside deleteDeviceUsageRecords .....................");
+        JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
 
-		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+        Query searchJobQuery = new Query(Criteria.where("carrierName").is(
+                jobDetail.getCarrierName())).addCriteria(
+                Criteria.where("date").is(jobDetail.getDate())).addCriteria(
+                Criteria.where("isValid").is(true));
 
-		Query searchJobQuery = new Query(Criteria.where("carrierName").is(
-				jobDetail.getCarrierName())).addCriteria(
-				Criteria.where("date").is(jobDetail.getDate())).addCriteria(
-				Criteria.where("isValid").is(true));
+        Update update = new Update();
 
-		Update update = new Update();
+        update.set("isValid", false);
 
-		update.set("isValid", false);
+        WriteResult result = mongoTemplate.updateMulti(searchJobQuery, update,
+                DeviceUsage.class);
 
-		WriteResult result = mongoTemplate.updateMulti(searchJobQuery, update,
-				DeviceUsage.class);
+        LOGGER.info("WriteResult ............." + result);
 
-		log.info("WriteResult ............." + result);
+    }
 
-	}
+    /**
+     * Soft Delete the Device Connection History records in Job Rerun Case
+     */
+    @Override
+    public void deleteDeviceConnectionHistoryRecords(Exchange exchange) {
 
-	/**
-	 * Soft Delete the Device Connection History records in Job Rerun Case
-	 */
-	@Override
-	public void deleteDeviceConnectionHistoryRecords(Exchange exchange) {
+        LOGGER.info("Inside deleteDeviceConnectionRecords .....................");
 
-		log.info("Inside deleteDeviceConnectionRecords .....................");
+        JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+        try {
 
-		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
-		try {
+            Query searchJobQuery = new Query(Criteria.where("carrierName").is(
+                    jobDetail.getCarrierName())).addCriteria(
+                    Criteria.where("date").is(jobDetail.getDate()))
+                    .addCriteria(Criteria.where("isValid").is(true));
 
-			Query searchJobQuery = new Query(Criteria.where("carrierName").is(
-					jobDetail.getCarrierName())).addCriteria(
-					Criteria.where("date").is(jobDetail.getDate()))
-					.addCriteria(Criteria.where("isValid").is(true));
+            Update update = new Update();
 
-			Update update = new Update();
+            update.set("isValid", false);
 
-			update.set("isValid", false);
+            WriteResult result = mongoTemplate.updateMulti(searchJobQuery,
+                    update, DeviceConnection.class);
 
-			WriteResult result = mongoTemplate.updateMulti(searchJobQuery,
-					update, DeviceConnection.class);
+            LOGGER.info("WriteResult *********************" + result);
 
-			log.info("WriteResult *********************" + result);
+        }
 
-		}
+        catch (Exception e) {
+            LOGGER.error("Error In deleteDeviceConnectionHistoryRecords-----------------------------"
+                    + e);
+        }
 
-		catch (Exception e) {
-			log.error("Error In deleteDeviceConnectionHistoryRecords-----------------------------"+e);
-		}
+    }
 
-	}
+    @Override
+    public List fetchTransactionFailureDevices(Exchange exchange) {
+        JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
 
-	@Override
-	public List fetchTransactionFailureDevices(Exchange exchange) {
-		JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
+        exchange.setProperty("jobName", jobDetail.getName().toString());
 
-		exchange.setProperty("jobName", jobDetail.getName().toString());
+        List list = null;
 
-		List list = null;
+        try {
 
-		try {
+            String carrierName = jobDetail.getCarrierName();
 
-			String carrierName = jobDetail.getCarrierName();
+            LOGGER.info("Carrier Name -----------------" + carrierName);
+            // We have to check bs_carrier with possible reseller values for
+            // that carrier.
+            Query searchQuery = new Query(Criteria.where("carrierName").is(
+                    jobDetail.getCarrierName()))
+                    .addCriteria(Criteria.where("date").is(jobDetail.getDate()))
+                    .addCriteria(
+                            Criteria.where("transactionStatus").is(
+                                    IConstant.MIDWAY_TRANSACTION_STATUS_ERROR))
+                    .addCriteria(Criteria.where("isValid").is(true));
 
-			log.info("Carrier Name -----------------" + carrierName);
-			// We have to check bs_carrier with possible reseller values for
-			// that carrier.
-			Query searchQuery = new Query(Criteria.where("carrierName").is(
-					jobDetail.getCarrierName()))
-					.addCriteria(Criteria.where("date").is(jobDetail.getDate()))
-					.addCriteria(
-							Criteria.where("transactionStatus").is(
-									IConstant.MIDWAY_TRANSACTION_STATUS_ERROR))
-					.addCriteria(Criteria.where("isValid").is(true));
+            if (JobName.KORE_DEVICE_USAGE.toString().equalsIgnoreCase(
+                    jobDetail.getName().toString())
+                    || JobName.VERIZON_DEVICE_USAGE.toString()
+                            .equalsIgnoreCase(jobDetail.getName().toString())) {
+                list = mongoTemplate.find(searchQuery, DeviceUsage.class);
+            } else {
+                list = mongoTemplate.find(searchQuery, DeviceConnection.class);
 
-			if (JobName.KORE_DEVICE_USAGE.toString().equalsIgnoreCase(
-					jobDetail.getName().toString())
-					|| JobName.VERIZON_DEVICE_USAGE.toString()
-							.equalsIgnoreCase(jobDetail.getName().toString())) {
-				list = mongoTemplate.find(searchQuery, DeviceUsage.class);
-			} else {
-				list = mongoTemplate.find(searchQuery, DeviceConnection.class);
+            }
 
-			}
+        }
 
-		}
+        catch (Exception e) {
+            LOGGER.error("Error In Fetching Transactioon Failure Device Usage/Device Connection Records-----------------------------"
+                    + e);
+        }
 
-		catch (Exception e) {
-			log.error("Error In Fetching Transactioon Failure Device Usage/Device Connection Records-----------------------------"
-					+ e);
-		}
+        return list;
 
-		return list;
+    }
 
-	}
+    /**
+     * Soft Delete the Transaction Failure records for Device Usage
+     */
 
-	/**
-	 * Soft Delete the Transaction Failure records for Device Usage
-	 */
+    @Override
+    public void deleteTransactionFailureDeviceUsageRecords(Exchange exchange) {
+        LOGGER.info("Inside deleteTransactionFailureDeviceUsageRecords .....................");
 
-	@Override
-	public void deleteTransactionFailureDeviceUsageRecords(Exchange exchange) {
-		log.info("Inside deleteTransactionFailureDeviceUsageRecords .....................");
+        JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+        try {
 
-		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
-		try {
+            Query searchJobQuery = new Query(Criteria.where("carrierName").is(
+                    jobDetail.getCarrierName()))
+                    .addCriteria(Criteria.where("date").is(jobDetail.getDate()))
+                    .addCriteria(
+                            Criteria.where("transactionStatus").is(
+                                    IConstant.MIDWAY_TRANSACTION_STATUS_ERROR))
+                    .addCriteria(Criteria.where("isValid").is(true));
 
-			Query searchJobQuery = new Query(Criteria.where("carrierName").is(
-					jobDetail.getCarrierName()))
-					.addCriteria(Criteria.where("date").is(jobDetail.getDate()))
-					.addCriteria(
-							Criteria.where("transactionStatus").is(
-									IConstant.MIDWAY_TRANSACTION_STATUS_ERROR))
-					.addCriteria(Criteria.where("isValid").is(true));
+            Update update = new Update();
 
-			Update update = new Update();
+            update.set("isValid", false);
 
-			update.set("isValid", false);
+            WriteResult result = mongoTemplate.updateMulti(searchJobQuery,
+                    update, DeviceUsage.class);
 
-			WriteResult result = mongoTemplate.updateMulti(searchJobQuery,
-					update, DeviceUsage.class);
+            LOGGER.info("WriteResult *********************" + result);
 
-			log.info("WriteResult *********************" + result);
+        }
 
-		}
+        catch (Exception e) {
+            LOGGER.error("Error In Deleting Device Usage Records-----------------------------"
+                    + e);
+        }
 
-		catch (Exception e) {
-			log.error("Error In Deleting Device Usage Records-----------------------------"
-					+ e);
-		}
+    }
 
-	}
+    /**
+     * Soft Delete the Transaction Failure records for Device Connection
+     */
+    @Override
+    public void deleteTransactionFailureDeviceConnectionHistoryRecords(
+            Exchange exchange) {
+        LOGGER.info("Inside deleteTransactionFailureDeviceConnectionHistoryRecords .....................");
 
-	/**
-	 * Soft Delete the Transaction Failure records for Device Connection
-	 */
-	@Override
-	public void deleteTransactionFailureDeviceConnectionHistoryRecords(
-			Exchange exchange) {
-		log.info("Inside deleteTransactionFailureDeviceConnectionHistoryRecords .....................");
+        JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+        try {
 
-		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
-		try {
+            Query searchJobQuery = new Query(Criteria.where("carrierName").is(
+                    jobDetail.getCarrierName()))
+                    .addCriteria(Criteria.where("date").is(jobDetail.getDate()))
+                    .addCriteria(
+                            Criteria.where("transactionStatus").is(
+                                    IConstant.MIDWAY_TRANSACTION_STATUS_ERROR))
+                    .addCriteria(Criteria.where("isValid").is(true));
 
-			Query searchJobQuery = new Query(Criteria.where("carrierName").is(
-					jobDetail.getCarrierName()))
-					.addCriteria(Criteria.where("date").is(jobDetail.getDate()))
-					.addCriteria(
-							Criteria.where("transactionStatus").is(
-									IConstant.MIDWAY_TRANSACTION_STATUS_ERROR))
-					.addCriteria(Criteria.where("isValid").is(true));
+            Update update = new Update();
 
-			Update update = new Update();
+            update.set("isValid", false);
 
-			update.set("isValid", false);
+            WriteResult result = mongoTemplate.updateMulti(searchJobQuery,
+                    update, DeviceConnection.class);
 
-			WriteResult result = mongoTemplate.updateMulti(searchJobQuery,
-					update, DeviceConnection.class);
+            LOGGER.info("WriteResult *********************" + result);
 
-			log.info("WriteResult *********************" + result);
+        }
 
-		}
+        catch (Exception e) {
+            LOGGER.error("Error In Saving Job Detail-----------------------------"+e);
+        }
 
-		catch (Exception e) {
-			log.error("Error In Saving Job Detail-----------------------------");
-		}
+    }
 
-	}
+    /**
+     * Fetch the Stored server Ip Address from the Database
+     */
+    @Override
+    public ServerDetail fetchServerIp(String currentServerIp) {
 
-	/**
-	 * Fetch the Stored server Ip Address from the Database
-	 */
-	@Override
-	public ServerDetail fetchServerIp(String currentServerIp) {
+        LOGGER.info("Inside fetchServerIp.....................");
 
-		log.info("Inside fetchServerIp.....................");
+        ServerDetail serverDetail;
 
-		ServerDetail serverDetail;
+        Query searchDeviceQuery = new Query(Criteria.where("ipAddress").is(
+                currentServerIp));
 
-		Query searchDeviceQuery = new Query(Criteria.where("ipAddress").is(
-				currentServerIp));
+        serverDetail = mongoTemplate.findOne(searchDeviceQuery,
+                ServerDetail.class);
 
-		serverDetail = mongoTemplate.findOne(searchDeviceQuery,
-				ServerDetail.class);
+        return serverDetail;
 
-		return serverDetail;
+    }
 
-	}
+    /**
+     * This Method returns the notification if the device Usage exceed the
+     * billing plan
+     */
 
-	/**
-	 * This Method returns the notification if the device Usage exceed the
-	 * billing plan
-	 */
+    @Override
+    public void processDeviceNotification(Exchange exchange) {
 
-	@Override
-	public void processDeviceNotification(Exchange exchange) {
+        DeviceInformation deviceInfo = (DeviceInformation) exchange.getIn()
+                .getBody();
+        List<DeviceOverageNotification> notificationList = (List) exchange
+                .getProperty("NotificationLsit");
+        String billingDay;
+        String billingStartDate;
+        Integer netSuiteId = deviceInfo.getNetSuiteId();
+        if (deviceInfo.getBs_plan() != null) {
 
-		DeviceInformation deviceInfo = (DeviceInformation) exchange.getIn()
-				.getBody();
-		List<DeviceOverageNotification> notificationList = (List) exchange
-				.getProperty("NotificationLsit");
-		String billingDay ;
-		String billingStartDate;
-		Integer netSuiteId = deviceInfo.getNetSuiteId();
-		if (deviceInfo.getBs_plan() != null) {
+            JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+            billingDay = deviceInfo.getBs_plan().getBill_day();
+            billingStartDate = CommonUtil.getDeviceBillingStartDate(billingDay,
+                    jobDetail.getDate());
 
-			JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
-			billingDay = deviceInfo.getBs_plan().getBill_day();
-			billingStartDate = CommonUtil.getDeviceBillingStartDate(billingDay,
-					jobDetail.getDate());
+            Aggregation agg = newAggregation(
+                    match(Criteria.where("netSuiteId").is(netSuiteId)
+                            .and("date").gte(billingStartDate).and("isValid")
+                            .is(true)),
+                    group("netSuiteId").sum("dataUsed").as("dataUsed"),
+                    project("dataUsed").and("netSuiteId").previousOperation());
 
-			Aggregation agg = newAggregation(
-					match(Criteria.where("netSuiteId").is(netSuiteId)
-							.and("date").gte(billingStartDate).and("isValid")
-							.is(true)),
-					group("netSuiteId").sum("dataUsed").as("dataUsed"),
-					project("dataUsed").and("netSuiteId").previousOperation());
+            AggregationResults<DeviceOverageNotification> results = mongoTemplate
+                    .aggregate(agg, DeviceUsage.class,
+                            DeviceOverageNotification.class);
 
-			AggregationResults<DeviceOverageNotification> results = mongoTemplate
-					.aggregate(agg, DeviceUsage.class,
-							DeviceOverageNotification.class);
+            Iterator itr = results.iterator();
+            while (itr.hasNext()) {
+                DeviceOverageNotification element = (DeviceOverageNotification) itr
+                        .next();
+                // setting Billing Date
+                element.setDate(billingStartDate);
+                notificationList.add(element);
+                mongoTemplate.save(element);
+            }
+        }
 
-			Iterator itr = results.iterator();
-			while (itr.hasNext()) {
-				DeviceOverageNotification element = (DeviceOverageNotification) itr
-						.next();
-				// setting Billing Date
-				element.setDate(billingStartDate);
-				notificationList.add(element);
-				mongoTemplate.save(element);
-			}
-		}
+    }
 
-	}
+    /**
+     * Inserting the Dummy Records in Device Usage and DeviceInfo Collection for
+     * Testing
+     */
+    public void insertBulkRecords() {
 
-	/**
-	 * Inserting the Dummy Records in Device Usage and DeviceInfo Collection for
-	 * Testing
-	 */
-	public void insertBulkRecords() {
+        for (int i = 0; i < 1220000; i++) {
+            DeviceUsage deviceUsage = new DeviceUsage();
+            deviceUsage.setCarrierName("VERIZON");
+            deviceUsage.setDataUsed(r.nextInt((100 - 10) + 1) + 10);
+            deviceUsage.setNetSuiteId(new Integer(
+                    (r.nextInt((4000 - 4) + 1) + 4) + ""));
+            deviceUsage.setDate((new Date(new Date().getTime() - 1000 * 60 * 60
+                    * r.nextInt((120 - 90) + 91))).toString());
+            mongoTemplate.save(deviceUsage);
+        }
 
-		for (int i = 0; i < 1220000; i++) {
-			DeviceUsage deviceUsage = new DeviceUsage();
-			deviceUsage.setCarrierName("VERIZON");
-			deviceUsage.setDataUsed(r.nextInt((100 - 10) + 1) + 10);
-			deviceUsage.setNetSuiteId(new Integer(
-					(r.nextInt((4000 - 4) + 1) + 4) + ""));
-			deviceUsage.setDate((new Date(new Date().getTime() - 1000 * 60 * 60
-					* r.nextInt((120 - 90) + 91))).toString());
-			mongoTemplate.save(deviceUsage);
-		}
+        /*
+         * for(int i=0;i<20000;i++){ DeviceInformation deviceUsage=new
+         * DeviceInformation(); deviceUsage.setBs_carrier("VERIZON");
+         * //deviceUsage.setDataUsed(r.nextInt((100 - 10) + 1) + 10);
+         * deviceUsage.setNetSuiteId(new String((r.nextInt((4000 - 4) + 1) +
+         * 4)+"")); //deviceUsage(new Date(new
+         * Date().getTime()-1000*60*60*r.nextInt((30 - 10) ) ));
+         * mongoTemplate.save(deviceUsage); //ystem.out.println(i); }
+         */
 
-		/*
-		 * for(int i=0;i<20000;i++){ DeviceInformation deviceUsage=new
-		 * DeviceInformation(); deviceUsage.setBs_carrier("VERIZON");
-		 * //deviceUsage.setDataUsed(r.nextInt((100 - 10) + 1) + 10);
-		 * deviceUsage.setNetSuiteId(new String((r.nextInt((4000 - 4) + 1) +
-		 * 4)+"")); //deviceUsage(new Date(new
-		 * Date().getTime()-1000*60*60*r.nextInt((30 - 10) ) ));
-		 * mongoTemplate.save(deviceUsage); //ystem.out.println(i); }
-		 */
-
-	}
+    }
 
 }

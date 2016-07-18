@@ -12,41 +12,42 @@ import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponseDataArea;
 
 public class StubKoreSuspendDeviceProcessor implements Processor {
 
-	Logger log = Logger.getLogger(StubKoreSuspendDeviceProcessor.class
-			.getName());
-	@Override
-	public void process(Exchange exchange) throws Exception {
+    private static final Logger LOGGER = Logger.getLogger(StubKoreSuspendDeviceProcessor.class
+            .getName());
 
-		log.info("Begin:StubKoreSuspendDeviceProcessor");
+    @Override
+    public void process(Exchange exchange) throws Exception {
 
-		SuspendDeviceResponse suspendDeviceResponse = new SuspendDeviceResponse();
+        LOGGER.info("Begin:StubKoreSuspendDeviceProcessor");
 
-		SuspendDeviceResponseDataArea suspendDeviceResponseDataArea = new SuspendDeviceResponseDataArea();
-		Header responseheader = new Header();
+        SuspendDeviceResponse suspendDeviceResponse = new SuspendDeviceResponse();
 
-		Response response = new Response();
+        SuspendDeviceResponseDataArea suspendDeviceResponseDataArea = new SuspendDeviceResponseDataArea();
+        Header responseheader = new Header();
 
-		response.setResponseCode(IResponse.SUCCESS_CODE);
+        Response response = new Response();
 
-		response.setResponseDescription("Device is suspended successfully");
-		response.setResponseStatus("SUCCESS");
+        response.setResponseCode(IResponse.SUCCESS_CODE);
 
-		responseheader.setApplicationName("WEB");
-		responseheader.setRegion("USA");
-		responseheader.setTimestamp("2016-03-08T21:49:45");
-		responseheader.setOrganization("Grant Victor");
-		responseheader.setSourceName("KORE");
-		responseheader.setTransactionId("cde2131ksjd");
-		responseheader.setBsCarrier("KORE");
+        response.setResponseDescription("Device is suspended successfully");
+        response.setResponseStatus("SUCCESS");
 
-		suspendDeviceResponse.setHeader(responseheader);
-		suspendDeviceResponse.setResponse(response);
-		suspendDeviceResponseDataArea.setOrderNumber("KR0123312313");
+        responseheader.setApplicationName("WEB");
+        responseheader.setRegion("USA");
+        responseheader.setTimestamp("2016-03-08T21:49:45");
+        responseheader.setOrganization("Grant Victor");
+        responseheader.setSourceName("KORE");
+        responseheader.setTransactionId("cde2131ksjd");
+        responseheader.setBsCarrier("KORE");
 
-		suspendDeviceResponse.setDataArea(suspendDeviceResponseDataArea);
+        suspendDeviceResponse.setHeader(responseheader);
+        suspendDeviceResponse.setResponse(response);
+        suspendDeviceResponseDataArea.setOrderNumber("KR0123312313");
 
-		exchange.getIn().setBody(suspendDeviceResponse);
+        suspendDeviceResponse.setDataArea(suspendDeviceResponseDataArea);
 
-		log.info("End:StubKoreSuspendDeviceProcessor");
-	}
+        exchange.getIn().setBody(suspendDeviceResponse);
+
+        LOGGER.info("End:StubKoreSuspendDeviceProcessor");
+    }
 }

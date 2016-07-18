@@ -1,7 +1,5 @@
 package com.gv.midway.processor.activateDevice;
 
-
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
@@ -16,68 +14,66 @@ import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponseDataArea
 
 public class VerizonActivateDevicePostProcessor implements Processor {
 
-	static int i = 0;
+    static int i = 0;
 
-	Logger log = Logger.getLogger(VerizonActivateDevicePostProcessor.class
-			.getName());
+    private static final Logger LOGGER = Logger.getLogger(VerizonActivateDevicePostProcessor.class
+            .getName());
 
-	Environment newEnv;
+    Environment newEnv;
 
-	public VerizonActivateDevicePostProcessor(Environment env) {
-		super();
-		this.newEnv = env;
+    public VerizonActivateDevicePostProcessor(Environment env) {
+        super();
+        this.newEnv = env;
 
-	}
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.apache.camel.Processor#process(org.apache.camel.Exchange)
-	 */
-	@Override
-	public void process(Exchange exchange) throws Exception {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.camel.Processor#process(org.apache.camel.Exchange)
+     */
+    @Override
+    public void process(Exchange exchange) throws Exception {
 
-		log.info("Begin:VerizonActivateDevicePostProcessor");
+        LOGGER.info("Begin:VerizonActivateDevicePostProcessor");
 
-		ActivateDeviceResponse activateDeviceResponse = new ActivateDeviceResponse();
-		ActivateDeviceResponseDataArea activateDeviceResponseDataArea = new ActivateDeviceResponseDataArea();
-	
-		Response response = new Response();
+        ActivateDeviceResponse activateDeviceResponse = new ActivateDeviceResponse();
+        ActivateDeviceResponseDataArea activateDeviceResponseDataArea = new ActivateDeviceResponseDataArea();
 
-		log.info("exchange.getIn().getBody().toString()***************************************"
-						+ exchange.getIn().getBody().toString());
+        Response response = new Response();
 
-		if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
+        LOGGER.info("exchange.getIn().getBody().toString()***************************************"
+                + exchange.getIn().getBody().toString());
 
-			log.info("RequestID::" + exchange.getIn().getBody().toString());
-			response.setResponseCode(IResponse.SUCCESS_CODE);
-			response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
-			response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
-			activateDeviceResponseDataArea.setOrderNumber(exchange.getProperty(
-					IConstant.MIDWAY_TRANSACTION_ID).toString());
+        if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
 
-		} else {
+            LOGGER.info("RequestID::" + exchange.getIn().getBody().toString());
+            response.setResponseCode(IResponse.SUCCESS_CODE);
+            response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+            response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
+            activateDeviceResponseDataArea.setOrderNumber(exchange.getProperty(
+                    IConstant.MIDWAY_TRANSACTION_ID).toString());
 
-			response.setResponseCode(400);
-			response.setResponseStatus(IResponse.ERROR_MESSAGE);
-			response.setResponseDescription(exchange.getIn().getBody()
-					.toString());
+        } else {
 
-		}
+            response.setResponseCode(400);
+            response.setResponseStatus(IResponse.ERROR_MESSAGE);
+            response.setResponseDescription(exchange.getIn().getBody()
+                    .toString());
 
-		
+        }
 
-		Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
-		
-		activateDeviceResponse.setHeader(responseheader);
-		activateDeviceResponse.setResponse(response);
+        Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
 
-		activateDeviceResponse.setDataArea(activateDeviceResponseDataArea);
+        activateDeviceResponse.setHeader(responseheader);
+        activateDeviceResponse.setResponse(response);
 
-		exchange.getIn().setBody(activateDeviceResponse);
+        activateDeviceResponse.setDataArea(activateDeviceResponseDataArea);
 
-		log.info("End:VerizonActivateDevicePostProcessor");
+        exchange.getIn().setBody(activateDeviceResponse);
 
-	}
+        LOGGER.info("End:VerizonActivateDevicePostProcessor");
+
+    }
 
 }

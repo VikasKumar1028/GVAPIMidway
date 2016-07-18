@@ -12,42 +12,44 @@ import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponse
 
 public class StubKoreCustomFieldsProcessor implements Processor {
 
-	Logger log = Logger.getLogger(StubKoreCustomFieldsProcessor.class
-			.getName());
-	@Override
-	public void process(Exchange exchange) throws Exception {
-		log.info("Begin::StubKoreCustomFieldsProcessor");
+    private static final Logger LOGGER = Logger
+            .getLogger(StubKoreCustomFieldsProcessor.class.getName());
 
-		CustomFieldsDeviceResponse updateCustomeFieldDeviceResponse = new CustomFieldsDeviceResponse();
+    @Override
+    public void process(Exchange exchange) throws Exception {
+        LOGGER.info("Begin::StubKoreCustomFieldsProcessor");
 
-		CustomFieldsDeviceResponseDataArea updateCustomeFieldDeviceResponseDataArea = new CustomFieldsDeviceResponseDataArea();
-		Header responseheader = new Header();
+        CustomFieldsDeviceResponse updateCustomeFieldDeviceResponse = new CustomFieldsDeviceResponse();
 
-		Response response = new Response();
+        CustomFieldsDeviceResponseDataArea updateCustomeFieldDeviceResponseDataArea = new CustomFieldsDeviceResponseDataArea();
+        Header responseheader = new Header();
 
-		response.setResponseCode(IResponse.SUCCESS_CODE);
+        Response response = new Response();
 
-		response.setResponseDescription("UpdateCustomeFieldDevice");
-		response.setResponseStatus("SUCCESS");
+        response.setResponseCode(IResponse.SUCCESS_CODE);
 
-		responseheader.setApplicationName("WEB");
-		responseheader.setRegion("USA");
-		responseheader.setTimestamp("2016-03-08T21:49:45");
-		responseheader.setOrganization("Grant Victor");
-		responseheader.setSourceName("KORE");
-		responseheader.setTransactionId("cde2131ksjd");
-		responseheader.setBsCarrier("KORE");
+        response.setResponseDescription("UpdateCustomeFieldDevice");
+        response.setResponseStatus("SUCCESS");
 
-		updateCustomeFieldDeviceResponse.setHeader(responseheader);
-		updateCustomeFieldDeviceResponse.setResponse(response);
-		updateCustomeFieldDeviceResponseDataArea.setOrderNumber("StubKoreCustomFieldsProcessor");
+        responseheader.setApplicationName("WEB");
+        responseheader.setRegion("USA");
+        responseheader.setTimestamp("2016-03-08T21:49:45");
+        responseheader.setOrganization("Grant Victor");
+        responseheader.setSourceName("KORE");
+        responseheader.setTransactionId("cde2131ksjd");
+        responseheader.setBsCarrier("KORE");
 
-		updateCustomeFieldDeviceResponse
-				.setDataArea(updateCustomeFieldDeviceResponseDataArea);
+        updateCustomeFieldDeviceResponse.setHeader(responseheader);
+        updateCustomeFieldDeviceResponse.setResponse(response);
+        updateCustomeFieldDeviceResponseDataArea
+                .setOrderNumber("StubKoreCustomFieldsProcessor");
 
-		exchange.getIn().setBody(updateCustomeFieldDeviceResponse);
-		log.info("End::StubKoreCustomFieldsProcessor");
+        updateCustomeFieldDeviceResponse
+                .setDataArea(updateCustomeFieldDeviceResponseDataArea);
 
-	}
+        exchange.getIn().setBody(updateCustomeFieldDeviceResponse);
+        LOGGER.info("End::StubKoreCustomFieldsProcessor");
+
+    }
 
 }

@@ -9,22 +9,24 @@ import com.gv.midway.pojo.callback.TargetResponse;
 
 public class CallbackKafkaPostProcessor implements Processor {
 
-	Logger log = Logger.getLogger(CallbackKafkaPostProcessor.class);
+    private static final Logger LOGGER = Logger.getLogger(CallbackKafkaPostProcessor.class);
 
-	/*
-	 * converting target resoponse which is in to bytes in TargetResponse object
-	 */
-	@Override
-	public void process(Exchange exchange) throws Exception {
+    /*
+     * converting target resoponse which is in to bytes in TargetResponse object
+     */
+    @Override
+    public void process(Exchange exchange) throws Exception {
 
-		log.info("Inside CallbackKafkaPostProcessor process " + exchange.getIn().getBody());
-		log.info("Exchange inside ");
+        LOGGER.info("Inside CallbackKafkaPostProcessor process "
+                + exchange.getIn().getBody());
+        LOGGER.info("Exchange inside ");
 
-		byte[] body = (byte[]) exchange.getIn().getBody();
-		ObjectMapper mapper = new ObjectMapper();
-		TargetResponse targetResponse = mapper.readValue(body, TargetResponse.class);
+        byte[] body = (byte[]) exchange.getIn().getBody();
+        ObjectMapper mapper = new ObjectMapper();
+        TargetResponse targetResponse = mapper.readValue(body,
+                TargetResponse.class);
 
-		exchange.getIn().setBody(targetResponse);
-	}
+        exchange.getIn().setBody(targetResponse);
+    }
 
 }

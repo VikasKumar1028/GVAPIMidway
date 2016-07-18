@@ -9,28 +9,29 @@ import org.springframework.core.env.Environment;
 
 public class TokenProcessor implements Processor {
 
-	@EndpointInject(uri = "")
-	ProducerTemplate producer;
+    @EndpointInject(uri = "")
+    ProducerTemplate producer;
 
-	Logger log = Logger.getLogger(TokenProcessor.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(TokenProcessor.class.getName());
 
-	Environment newEnv;
+    Environment newEnv;
 
-	public TokenProcessor(Environment env) {
-		super();
-		this.newEnv = env;
+    public TokenProcessor(Environment env) {
+        super();
+        this.newEnv = env;
 
-	}
+    }
 
-	public TokenProcessor() {
-		//Empty Constructor
-	}
-	@Override
-	public void process(Exchange exchange) throws Exception {
+    public TokenProcessor() {
+        // Empty Constructor
+    }
 
-		exchange.getContext().createProducerTemplate()
-				.sendBody("direct:tokenGeneration", exchange.getIn().getBody());
+    @Override
+    public void process(Exchange exchange) throws Exception {
 
-	}
+        exchange.getContext().createProducerTemplate()
+                .sendBody("direct:tokenGeneration", exchange.getIn().getBody());
+
+    }
 
 }

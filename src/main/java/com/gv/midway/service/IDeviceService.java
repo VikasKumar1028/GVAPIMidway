@@ -12,21 +12,22 @@ import com.gv.midway.pojo.usageInformation.response.UsageInformationMidwayRespon
 
 public interface IDeviceService {
 
-	public UpdateDeviceResponse updateDeviceDetails(Exchange exchange);
+    public UpdateDeviceResponse updateDeviceDetails(Exchange exchange);
 
-	public DeviceInformationResponse getDeviceInformationDB(Exchange exchange);
+    public DeviceInformationResponse getDeviceInformationDB(Exchange exchange);
 
-	public void updateDevicesDetailsBulk(Exchange exchange);
+    public void updateDevicesDetailsBulk(Exchange exchange);
 
-	public void setDeviceInformationDB(Exchange exchange);
+    public void setDeviceInformationDB(Exchange exchange);
 
-	public void updateDeviceInformationDB(Exchange exchange);
+    public void updateDeviceInformationDB(Exchange exchange);
 
-	public void bulkOperationDeviceSyncInDB(Exchange exchange);
-	
-	public ArrayList<DeviceInformation> getAllDevices();
+    public void bulkOperationDeviceSyncInDB(Exchange exchange);
 
-	public UsageInformationMidwayResponse getDeviceUsageInfoDB(Exchange exchange);
-	
-	public ConnectionInformationMidwayResponse getDeviceConnectionHistoryInfoDB(Exchange exchange);
+    public ArrayList<DeviceInformation> getAllDevices();
+
+    public UsageInformationMidwayResponse getDeviceUsageInfoDB(Exchange exchange);
+
+    public ConnectionInformationMidwayResponse getDeviceConnectionHistoryInfoDB(
+            Exchange exchange);
 }

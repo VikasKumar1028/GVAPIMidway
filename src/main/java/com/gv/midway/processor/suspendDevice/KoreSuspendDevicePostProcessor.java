@@ -14,48 +14,46 @@ import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponseDataArea;
 
 public class KoreSuspendDevicePostProcessor implements Processor {
 
-	Logger log = Logger.getLogger(KoreSuspendDevicePostProcessor.class
-			.getName());
+    private static final Logger LOGGER = Logger.getLogger(KoreSuspendDevicePostProcessor.class
+            .getName());
 
-	public KoreSuspendDevicePostProcessor() {
-		//Empty Constructor
-	}
+    public KoreSuspendDevicePostProcessor() {
+        // Empty Constructor
+    }
 
-	Environment newEnv;
+    Environment newEnv;
 
-	public KoreSuspendDevicePostProcessor(Environment env) {
-		super();
-		this.newEnv = env;
+    public KoreSuspendDevicePostProcessor(Environment env) {
+        super();
+        this.newEnv = env;
 
-	}
-	@Override
-	public void process(Exchange exchange) throws Exception {
+    }
 
-		log.info("Begin::KoreSuspendDevicePostProcessor");
+    @Override
+    public void process(Exchange exchange) throws Exception {
 
-		SuspendDeviceResponse SuspendDeviceResponse = new SuspendDeviceResponse();
+        LOGGER.info("Begin::KoreSuspendDevicePostProcessor");
 
-		SuspendDeviceResponseDataArea SuspendDeviceResponseDataArea = new SuspendDeviceResponseDataArea();
+        SuspendDeviceResponse SuspendDeviceResponse = new SuspendDeviceResponse();
 
+        SuspendDeviceResponseDataArea SuspendDeviceResponseDataArea = new SuspendDeviceResponseDataArea();
 
-		Response response = new Response();
+        Response response = new Response();
 
-		response.setResponseCode(IResponse.SUCCESS_CODE);
-		response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
-		response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_SUSPEND_MIDWAY);
+        response.setResponseCode(IResponse.SUCCESS_CODE);
+        response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+        response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_SUSPEND_MIDWAY);
 
-		
-		
-		Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
+        Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
 
-		SuspendDeviceResponse.setHeader(responseheader);
-		SuspendDeviceResponse.setResponse(response);
-		SuspendDeviceResponseDataArea.setOrderNumber(exchange.getProperty(
-				IConstant.MIDWAY_TRANSACTION_ID).toString());
+        SuspendDeviceResponse.setHeader(responseheader);
+        SuspendDeviceResponse.setResponse(response);
+        SuspendDeviceResponseDataArea.setOrderNumber(exchange.getProperty(
+                IConstant.MIDWAY_TRANSACTION_ID).toString());
 
-		SuspendDeviceResponse.setDataArea(SuspendDeviceResponseDataArea);
+        SuspendDeviceResponse.setDataArea(SuspendDeviceResponseDataArea);
 
-		exchange.getIn().setBody(SuspendDeviceResponse);
-		log.info("End::KoreSuspendDevicePostProcessor");
-	}
+        exchange.getIn().setBody(SuspendDeviceResponse);
+        LOGGER.info("End::KoreSuspendDevicePostProcessor");
+    }
 }

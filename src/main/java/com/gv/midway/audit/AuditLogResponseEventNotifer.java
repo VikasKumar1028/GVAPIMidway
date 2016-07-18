@@ -20,84 +20,91 @@ import com.gv.midway.pojo.job.JobinitializedResponse;
 
 public class AuditLogResponseEventNotifer extends EventNotifierSupport {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(AuditLogResponseEventNotifer.class); // Initializing
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger(AuditLogResponseEventNotifer.class); // Initializing
 
-	@Autowired
-	MongoTemplate mongoTemplate;
-	
-	@Override
-	public void notify(EventObject event) throws Exception {
-		if (event instanceof ExchangeCompletedEvent) {
-			ExchangeCompletedEvent create = (ExchangeCompletedEvent) event;
-			Exchange exchange = create.getExchange();
+    @Autowired
+    MongoTemplate mongoTemplate;
 
-			if (exchange.getIn().getBody() instanceof BaseResponse &&  !(exchange.getIn().getBody() instanceof  JobinitializedResponse) ){
-				logger.info("In Audit log Response4");
-				if (!(exchange.getIn().getBody() instanceof TargetResponse)) {
-					BaseResponse baseResponse = (BaseResponse) exchange.getIn()
-							.getBody();
+    @Override
+    public void notify(EventObject event) throws Exception {
+        if (event instanceof ExchangeCompletedEvent) {
+            ExchangeCompletedEvent create = (ExchangeCompletedEvent) event;
+            Exchange exchange = create.getExchange();
 
-					String TransactionId = (String) exchange
-							.getProperty(IConstant.AUDIT_TRANSACTION_ID);
+            if (exchange.getIn().getBody() instanceof BaseResponse
+                    && !(exchange.getIn().getBody() instanceof JobinitializedResponse)) {
+                LOGGER.info("In Audit log Response4");
+                if (!(exchange.getIn().getBody() instanceof TargetResponse)) {
+                    BaseResponse baseResponse = (BaseResponse) exchange.getIn()
+                            .getBody();
 
-					Date localTime = new Date();
-					
+                    String TransactionId = (String) exchange
+                            .getProperty(IConstant.AUDIT_TRANSACTION_ID);
 
-					String responseEndpint = exchange.getFromEndpoint()
-							.toString();
-					String responseEndpintSpilt[] = responseEndpint.split("//");
+                    Date localTime = new Date();
 
-					logger.info("responseEndpintSpilt::"
-							+ responseEndpintSpilt[1].replaceAll("]", " "));
+                    String responseEndpint = exchange.getFromEndpoint()
+                            .toString();
+                    String responseEndpintSpilt[] = responseEndpint.split("//");
 
-					String apiOperationName = "GV_"
-							+ responseEndpintSpilt[1].replaceAll("]", "")
-							+ "_ProxyResponse";
-					logger.info("apiOperationName" + apiOperationName);
+                    LOGGER.info("responseEndpintSpilt::"
+                            + responseEndpintSpilt[1].replaceAll("]", " "));
 
-					Audit audit = new Audit();
-                    
-					if(!("GV_jobResponse_ProxyResponse").equals(apiOperationName))
-					{
-					audit.setApiOperationName(apiOperationName);
-					audit.setFrom(baseResponse.getHeader().getSourceName());
-					audit.setTo(exchange.getFromEndpoint().toString());
-					audit.setTimeStamp(localTime);
-					audit.setAuditTransactionId(TransactionId);
-					audit.setGvTransactionId(exchange.getProperty(IConstant.GV_TRANSACTION_ID).toString());
-					audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME).toString());
-					audit.setPayload(exchange.getIn().getBody());
-					}
-					if (IResponse.SUCCESS_CODE != baseResponse.getResponse()
-							.getResponseCode()) {
-						audit.setErrorDetails(baseResponse.getResponse().getResponseDescription());
-						audit.setErrorProblem(baseResponse.getResponse().getResponseStatus());
-						audit.setErrorCode(baseResponse.getResponse().getResponseCode());
+                    String apiOperationName = "GV_"
+                            + responseEndpintSpilt[1].replaceAll("]", "")
+                            + "_ProxyResponse";
+                    LOGGER.info("apiOperationName" + apiOperationName);
 
-					}
+                    Audit audit = new Audit();
 
-					audit.setPayload(exchange.getIn().getBody());
+                    if (!("GV_jobResponse_ProxyResponse")
+                            .equals(apiOperationName)) {
+                        audit.setApiOperationName(apiOperationName);
+                        audit.setFrom(baseResponse.getHeader().getSourceName());
+                        audit.setTo(exchange.getFromEndpoint().toString());
+                        audit.setTimeStamp(localTime);
+                        audit.setAuditTransactionId(TransactionId);
+                        audit.setGvTransactionId(exchange.getProperty(
+                                IConstant.GV_TRANSACTION_ID).toString());
+                        audit.setHostName(exchange.getProperty(
+                                IConstant.GV_HOSTNAME).toString());
+                        audit.setPayload(exchange.getIn().getBody());
+                    }
+                    if (IResponse.SUCCESS_CODE != baseResponse.getResponse()
+                            .getResponseCode()) {
+                        audit.setErrorDetails(baseResponse.getResponse()
+                                .getResponseDescription());
+                        audit.setErrorProblem(baseResponse.getResponse()
+                                .getResponseStatus());
+                        audit.setErrorCode(baseResponse.getResponse()
+                                .getResponseCode());
 
-					mongoTemplate.save(audit);
+                    }
 
-				}
-			}
-		}
+                    audit.setPayload(exchange.getIn().getBody());
 
-	}
-	
-	@Override
-	public boolean isEnabled(EventObject event) {
-		// we only want the sent events
-		return event instanceof ExchangeCompletedEvent;
-	}
-	@Override
-	protected void doStart() throws Exception {
-		// noop
-	}
-	@Override
-	protected void doStop() throws Exception {
-		// noop
-	}
+                    mongoTemplate.save(audit);
+
+                }
+            }
+        }
+
+    }
+
+    @Override
+    public boolean isEnabled(EventObject event) {
+        // we only want the sent events
+        return event instanceof ExchangeCompletedEvent;
+    }
+
+    @Override
+    protected void doStart() throws Exception {
+        // noop
+    }
+
+    @Override
+    protected void doStop() throws Exception {
+        // noop
+    }
 }

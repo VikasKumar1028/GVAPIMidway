@@ -8,12 +8,12 @@ import com.gv.midway.pojo.transaction.Transaction;
 
 public class CheckStatusSplitter {
 
-	private Logger log = Logger.getLogger(CheckStatusSplitter.class);
+   private static final Logger LOGGER = Logger.getLogger(CheckStatusSplitter.class);
 
-	public List<Transaction> split(List<Transaction> deviceList) {
+    public List<Transaction> split(List<Transaction> deviceList) {
 
-		log.info("*****************SPLITTER*********************"
-				+ deviceList.size());
-		return deviceList;
-	}
+        LOGGER.info("*****************SPLITTER*********************"
+                + deviceList.size());
+        return deviceList;
+    }
 }

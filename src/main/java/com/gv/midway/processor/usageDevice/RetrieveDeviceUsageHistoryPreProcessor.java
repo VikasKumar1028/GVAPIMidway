@@ -7,67 +7,46 @@ import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.usageInformation.request.UsageInformationRequest;
 import com.gv.midway.pojo.usageInformation.request.UsageInformationRequestDataArea;
 import com.gv.midway.pojo.verizon.DeviceId;
+import com.gv.midway.utility.CommonUtil;
 
 public class RetrieveDeviceUsageHistoryPreProcessor implements Processor {
-	Logger log = Logger.getLogger(RetrieveDeviceUsageHistoryPreProcessor.class
-			.getName());
+    private static final Logger LOGGER = Logger.getLogger(RetrieveDeviceUsageHistoryPreProcessor.class
+            .getName());
 
-	@Override
-	public void process(Exchange exchange) throws Exception {
+    @Override
+    public void process(Exchange exchange) throws Exception {
 
-		log.info("Begin::RetrieveDeviceUsageHistoryPreProcessor");
-		log.info("Session Parameters  VZSessionToken"
-				+ exchange.getProperty(IConstant.VZ_SEESION_TOKEN));
-		log.info("Session Parameters  VZAuthorization"
-				+ exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN));
+        LOGGER.info("Begin::RetrieveDeviceUsageHistoryPreProcessor");
 
-		
-		UsageInformationRequest proxyRequest = (UsageInformationRequest) exchange
-				.getIn().getBody();
+        UsageInformationRequest proxyRequest = (UsageInformationRequest) exchange
+                .getIn().getBody();
 
-		UsageInformationRequestDataArea businessRequest =new UsageInformationRequestDataArea();
+        UsageInformationRequestDataArea businessRequest = new UsageInformationRequestDataArea();
 
-		businessRequest.setEarliest(proxyRequest.getDataArea().getEarliest());
-		businessRequest.setLatest(proxyRequest.getDataArea().getLatest());
-		
-		DeviceId deviceId = new DeviceId();
-		deviceId.setId(proxyRequest.getDataArea().getDeviceId().getId());
-		deviceId.setKind(proxyRequest.getDataArea().getDeviceId().getKind());
-		businessRequest.setDeviceId(deviceId);
+        businessRequest.setEarliest(proxyRequest.getDataArea().getEarliest());
+        businessRequest.setLatest(proxyRequest.getDataArea().getLatest());
 
-		ObjectMapper objectMapper = new ObjectMapper();
+        DeviceId deviceId = new DeviceId();
+        deviceId.setId(proxyRequest.getDataArea().getDeviceId().getId());
+        deviceId.setKind(proxyRequest.getDataArea().getDeviceId().getKind());
+        businessRequest.setDeviceId(deviceId);
 
-		String strRequestBody = objectMapper
-				.writeValueAsString(businessRequest);
+        ObjectMapper objectMapper = new ObjectMapper();
 
-		exchange.getIn().setBody(strRequestBody);
+        String strRequestBody = objectMapper
+                .writeValueAsString(businessRequest);
 
-		Message message = exchange.getIn();
-		String sessionToken = "";
-		String authorizationToken = "";
+        exchange.getIn().setBody(strRequestBody);
 
-		if (exchange.getProperty(IConstant.VZ_SEESION_TOKEN) != null
-				&& exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN) != null) {
-			sessionToken = exchange.getProperty(IConstant.VZ_SEESION_TOKEN)
-					.toString();
-			authorizationToken = exchange.getProperty(
-					IConstant.VZ_AUTHORIZATION_TOKEN).toString();
-		}
+        Message message = CommonUtil.setMessageHeader(exchange);
 
-		message.setHeader("VZ-M2M-Token", sessionToken);
-		message.setHeader("Authorization", "Bearer " + authorizationToken);
-		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
-		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
-		message.setHeader(Exchange.HTTP_METHOD, "POST");
+        message.setHeader(Exchange.HTTP_PATH, "/devices/usage/actions/list");
 
-		message.setHeader(Exchange.HTTP_PATH, "/devices/usage/actions/list");
+        exchange.setPattern(ExchangePattern.InOut);
 
-		exchange.setPattern(ExchangePattern.InOut);
-
-		log.info("End::RetrieveDeviceUsageHistoryPreProcessor");
-	}
+        LOGGER.info("End::RetrieveDeviceUsageHistoryPreProcessor");
+    }
 }

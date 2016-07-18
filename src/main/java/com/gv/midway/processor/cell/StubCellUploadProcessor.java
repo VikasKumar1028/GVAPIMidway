@@ -14,46 +14,43 @@ import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 
 public class StubCellUploadProcessor implements Processor {
 
-	Logger log = Logger.getLogger(StubCellUploadProcessor.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(StubCellUploadProcessor.class.getName());
 
-	@Override
-	public void process(Exchange exchange) throws Exception {
+    @Override
+    public void process(Exchange exchange) throws Exception {
 
-		log.info("StubCellUploadProcessor");
-		log.info("StubCellUploadProcessor Called......................");
+        LOGGER.info("StubCellUploadProcessor");
+        LOGGER.info("StubCellUploadProcessor Called......................");
 
-		UpdateDeviceResponse updateDeviceResponse = new UpdateDeviceResponse();
+        UpdateDeviceResponse updateDeviceResponse = new UpdateDeviceResponse();
 
+        DeviceInformation deviceInformation = new DeviceInformation();
 
-		DeviceInformation deviceInformation = new DeviceInformation();
+        DeviceDataArea deviceDataArea = new DeviceDataArea();
+        SingleDevice singleDevice = new SingleDevice();
+        deviceDataArea.setDevices(deviceInformation);
+        singleDevice.setDataArea(deviceDataArea);
+        Header responseheader = new Header();
 
-		DeviceDataArea deviceDataArea = new DeviceDataArea();
-		SingleDevice singleDevice = new SingleDevice();
-		deviceDataArea.setDevices(deviceInformation);
-		singleDevice.setDataArea(deviceDataArea);
-		Header responseheader = new Header();
+        Response response = new Response();
 
-		Response response = new Response();
+        response.setResponseCode(IResponse.SUCCESS_CODE);
 
+        response.setResponseDescription("Record succesfully uploaded in the Midway");
+        response.setResponseStatus("SUCCESS");
 
-		response.setResponseCode(IResponse.SUCCESS_CODE);
+        responseheader.setApplicationName("WEB");
+        responseheader.setRegion("setRegion");
+        responseheader.setTimestamp("2016-03-08T21:49:45");
+        responseheader.setOrganization("Grant Victor");
+        responseheader.setSourceName("VERIZON");
+        responseheader.setTransactionId("cde2131ksjd");
+        responseheader.setBsCarrier("VERIZON");
 
-		response.setResponseDescription("Record succesfully uploaded in the Midway");
-		response.setResponseStatus("SUCCESS");
+        updateDeviceResponse.setHeader(responseheader);
+        updateDeviceResponse.setResponse(response);
 
-		responseheader.setApplicationName("WEB");
-		responseheader.setRegion("setRegion");
-		responseheader.setTimestamp("2016-03-08T21:49:45");
-		responseheader.setOrganization("Grant Victor");
-		responseheader.setSourceName("VERIZON");
-		responseheader.setTransactionId("cde2131ksjd");
-		responseheader.setBsCarrier("VERIZON");
-
-		updateDeviceResponse.setHeader(responseheader);
-		updateDeviceResponse.setResponse(response);
-	
-
-		exchange.getIn().setBody(updateDeviceResponse);
-	}
+        exchange.getIn().setBody(updateDeviceResponse);
+    }
 
 }

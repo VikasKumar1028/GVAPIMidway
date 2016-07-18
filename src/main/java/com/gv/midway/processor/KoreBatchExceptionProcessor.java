@@ -19,63 +19,65 @@ import com.gv.midway.pojo.verizon.DeviceId;
 
 public class KoreBatchExceptionProcessor implements Processor {
 
-	Logger log = Logger.getLogger(KoreBatchExceptionProcessor.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(KoreBatchExceptionProcessor.class.getName());
 
-	Environment newEnv;
+    Environment newEnv;
 
-	public KoreBatchExceptionProcessor(Environment env) {
-		super();
+    public KoreBatchExceptionProcessor(Environment env) {
+        super();
 
-		this.newEnv = env;
+        this.newEnv = env;
 
-	}
+    }
 
-	public KoreBatchExceptionProcessor() {
-		//Empty Constructor
-	}
-	@Override
-	public void process(Exchange exchange) throws Exception {
+    public KoreBatchExceptionProcessor() {
+        // Empty Constructor
+    }
 
-		Exception ex = (Exception) exchange
-				.getProperty(Exchange.EXCEPTION_CAUGHT);
+    @Override
+    public void process(Exchange exchange) throws Exception {
 
-		String errorType ;
+        Exception ex = (Exception) exchange
+                .getProperty(Exchange.EXCEPTION_CAUGHT);
 
-		// If Connection Exception
-		if (ex.getCause() instanceof UnknownHostException
-				|| ex.getCause() instanceof ConnectException) {
-			errorType = IConstant.MIDWAY_CONNECTION_ERROR;
+        String errorType;
 
-		}
-		// CXF Exception
-		else {
-			CxfOperationException exception = (CxfOperationException) exchange
-					.getProperty(Exchange.EXCEPTION_CAUGHT);
-			// Token Expiration Exception
+        // If Connection Exception
+        if (ex.getCause() instanceof UnknownHostException
+                || ex.getCause() instanceof ConnectException) {
+            errorType = IConstant.MIDWAY_CONNECTION_ERROR;
 
-			errorType = exception.getResponseBody();
+        }
+        // CXF Exception
+        else {
+            CxfOperationException exception = (CxfOperationException) exchange
+                    .getProperty(Exchange.EXCEPTION_CAUGHT);
+            // Token Expiration Exception
 
-		}
+            errorType = exception.getResponseBody();
 
-		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+        }
 
-		DeviceUsage deviceUsage = new DeviceUsage();
+        JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
 
-		deviceUsage
-				.setCarrierName((String) exchange.getProperty("CarrierName"));
-		deviceUsage.setDeviceId((DeviceId) exchange.getProperty("DeviceId"));
-		deviceUsage.setDataUsed(0);
-	
-        String date=jobDetail.getDate();
-		log.info("----------------------D----A-----T-------E-------" + date);
-		deviceUsage.setDate(date);
-		deviceUsage.setTransactionErrorReason(errorType);
-		deviceUsage
-				.setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
-		deviceUsage.setNetSuiteId((Integer) exchange.getProperty(IConstant.MIDWAY_NETSUITE_ID));
-		deviceUsage.setIsValid(true);
+        DeviceUsage deviceUsage = new DeviceUsage();
 
-		exchange.getIn().setBody(deviceUsage);
+        deviceUsage
+                .setCarrierName((String) exchange.getProperty("CarrierName"));
+        deviceUsage.setDeviceId((DeviceId) exchange.getProperty("DeviceId"));
+        deviceUsage.setDataUsed(0);
 
-	}
+        String date = jobDetail.getDate();
+        LOGGER.info("----------------------D----A-----T-------E-------" + date);
+        deviceUsage.setDate(date);
+        deviceUsage.setTransactionErrorReason(errorType);
+        deviceUsage
+                .setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
+        deviceUsage.setNetSuiteId((Integer) exchange
+                .getProperty(IConstant.MIDWAY_NETSUITE_ID));
+        deviceUsage.setIsValid(true);
+
+        exchange.getIn().setBody(deviceUsage);
+
+    }
 }

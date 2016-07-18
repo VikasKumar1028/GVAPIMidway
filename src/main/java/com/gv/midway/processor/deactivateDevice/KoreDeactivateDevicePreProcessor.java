@@ -14,58 +14,59 @@ import com.gv.midway.pojo.transaction.Transaction;
 
 public class KoreDeactivateDevicePreProcessor implements Processor {
 
-	Logger log = Logger.getLogger(KoreDeactivateDevicePreProcessor.class
-			.getName());
+    private static final Logger LOGGER = Logger.getLogger(KoreDeactivateDevicePreProcessor.class
+            .getName());
 
-	Environment newEnv;
+    Environment newEnv;
 
-	public KoreDeactivateDevicePreProcessor() {
-		//Empty Constructor
-	}
+    public KoreDeactivateDevicePreProcessor() {
+        // Empty Constructor
+    }
 
-	public KoreDeactivateDevicePreProcessor(Environment env) {
-		super();
-		this.newEnv = env;
-	}
-	@Override
-	public void process(Exchange exchange) throws Exception {
+    public KoreDeactivateDevicePreProcessor(Environment env) {
+        super();
+        this.newEnv = env;
+    }
 
-		log.info("Begin:KoreDeactivateDevicePreProcessor");
-		
-		log.info("*************Testing**************************************"
-				+ exchange.getIn().getBody());
+    @Override
+    public void process(Exchange exchange) throws Exception {
 
-		Message message = exchange.getIn();
-		Transaction transaction = exchange.getIn().getBody(Transaction.class);
+        LOGGER.info("Begin:KoreDeactivateDevicePreProcessor");
 
-		DeactivateDeviceRequest deactivateDeviceRequest = (DeactivateDeviceRequest) transaction
-				.getDevicePayload();
-		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,
-				transaction.getDeviceNumber());
+        LOGGER.info("*************Testing**************************************"
+                + exchange.getIn().getBody());
 
-		String deviceId = deactivateDeviceRequest.getDataArea().getDevices()[0]
-				.getDeviceIds()[0].getId();
+        Message message = exchange.getIn();
+        Transaction transaction = exchange.getIn().getBody(Transaction.class);
 
-		DeactivateDeviceRequestKore deactivationDeviceRequestKore = new DeactivateDeviceRequestKore();
-		deactivationDeviceRequestKore.setDeviceNumber(deviceId);
-		
-		if (deactivateDeviceRequest.getDataArea().getDevices()[0]
-				.getDeviceIds()[0].getFlagScrap() != null) {
-			deactivationDeviceRequestKore.setFlagScrap(deactivateDeviceRequest
-					.getDataArea().getDevices()[0].getDeviceIds()[0]
-					.getFlagScrap());
-		}
+        DeactivateDeviceRequest deactivateDeviceRequest = (DeactivateDeviceRequest) transaction
+                .getDevicePayload();
+        exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,
+                transaction.getDeviceNumber());
 
-		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
-		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
-		message.setHeader(Exchange.HTTP_METHOD, "POST");
-		message.setHeader("Authorization",
-				newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
-		message.setHeader(Exchange.HTTP_PATH, "/json/deactivateDevice");
-		message.setBody(deactivationDeviceRequestKore);
+        String deviceId = deactivateDeviceRequest.getDataArea().getDevices()[0]
+                .getDeviceIds()[0].getId();
 
-		exchange.setPattern(ExchangePattern.InOut);
+        DeactivateDeviceRequestKore deactivationDeviceRequestKore = new DeactivateDeviceRequestKore();
+        deactivationDeviceRequestKore.setDeviceNumber(deviceId);
 
-		log.info("End:KoreDeactivateDevicePreProcessor");
-	}
+        if (deactivateDeviceRequest.getDataArea().getDevices()[0]
+                .getDeviceIds()[0].getFlagScrap() != null) {
+            deactivationDeviceRequestKore.setFlagScrap(deactivateDeviceRequest
+                    .getDataArea().getDevices()[0].getDeviceIds()[0]
+                    .getFlagScrap());
+        }
+
+        message.setHeader(Exchange.CONTENT_TYPE, "application/json");
+        message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
+        message.setHeader(Exchange.HTTP_METHOD, "POST");
+        message.setHeader("Authorization",
+                newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
+        message.setHeader(Exchange.HTTP_PATH, "/json/deactivateDevice");
+        message.setBody(deactivationDeviceRequestKore);
+
+        exchange.setPattern(ExchangePattern.InOut);
+
+        LOGGER.info("End:KoreDeactivateDevicePreProcessor");
+    }
 }

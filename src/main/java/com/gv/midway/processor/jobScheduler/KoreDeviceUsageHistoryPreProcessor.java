@@ -15,75 +15,70 @@ import com.gv.midway.utility.CommonUtil;
 
 public class KoreDeviceUsageHistoryPreProcessor implements Processor {
 
-	Logger log = Logger.getLogger(KoreDeviceUsageHistoryPreProcessor.class
-			.getName());
+    private static final Logger LOGGER = Logger.getLogger(KoreDeviceUsageHistoryPreProcessor.class
+            .getName());
 
-	Environment newEnv;
+    Environment newEnv;
 
-	public KoreDeviceUsageHistoryPreProcessor() {
-		//Empty Constructor
-	}
+    public KoreDeviceUsageHistoryPreProcessor() {
+        // Empty Constructor
+    }
 
-	public KoreDeviceUsageHistoryPreProcessor(Environment env) {
-		super();
-		this.newEnv = env;
-	}
+    public KoreDeviceUsageHistoryPreProcessor(Environment env) {
+        super();
+        this.newEnv = env;
+    }
 
-	@Override
-	public void process(Exchange exchange) throws Exception {
+    @Override
+    public void process(Exchange exchange) throws Exception {
 
-		log.info("*************Testing**************************************"
-				+ exchange.getIn().getBody());
+        LOGGER.info("*************Testing**************************************"
+                + exchange.getIn().getBody());
 
-		log.info("Begin:KoreDeviceUsageHistoryPreProcessor");
-		Message message = exchange.getIn();
-		
-	
-		log.info("jobDetailDate ------" + exchange.getProperty("jobDetailDate"));
+        LOGGER.info("Begin:KoreDeviceUsageHistoryPreProcessor");
+        Message message = exchange.getIn();
 
-		ObjectMapper objectMapper = new ObjectMapper();
+        LOGGER.info("jobDetailDate ------" + exchange.getProperty("jobDetailDate"));
 
-		DeviceInformation deviceInfo = (DeviceInformation) exchange.getIn()
-				.getBody();
+        ObjectMapper objectMapper = new ObjectMapper();
 
-		UsageInformationKoreRequest usageInformationKoreRequest = new UsageInformationKoreRequest();
+        DeviceInformation deviceInfo = (DeviceInformation) exchange.getIn()
+                .getBody();
 
+        UsageInformationKoreRequest usageInformationKoreRequest = new UsageInformationKoreRequest();
 
+        DeviceId deviceId = CommonUtil.getSimNumber(deviceInfo.getDeviceIds());
 
-		DeviceId deviceId=CommonUtil.getSimNumber(deviceInfo.getDeviceIds());
-		
-		String simNumber=deviceId.getId();
-		
-		
-		usageInformationKoreRequest.setSimNumber(simNumber);
+        String simNumber = deviceId.getId();
 
-	
+        usageInformationKoreRequest.setSimNumber(simNumber);
 
-		String strRequestBody = objectMapper
-				.writeValueAsString(usageInformationKoreRequest);
+        String strRequestBody = objectMapper
+                .writeValueAsString(usageInformationKoreRequest);
 
-		log.info("strRequestBody::" + strRequestBody);
-		
-		exchange.setProperty("DeviceId", deviceId);
-		exchange.setProperty("CarrierName", deviceInfo.getBs_carrier());
-		exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID, deviceInfo.getNetSuiteId());
+        LOGGER.info("strRequestBody::" + strRequestBody);
 
-		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
-		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
-		message.setHeader(Exchange.HTTP_METHOD, "POST");
-		message.setHeader("Authorization",
-				newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
+        exchange.setProperty("DeviceId", deviceId);
+        exchange.setProperty("CarrierName", deviceInfo.getBs_carrier());
+        exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID,
+                deviceInfo.getNetSuiteId());
 
-		message.setHeader(Exchange.HTTP_PATH,
-				"/json/queryDeviceUsageBySimNumber");
+        message.setHeader(Exchange.CONTENT_TYPE, "application/json");
+        message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
+        message.setHeader(Exchange.HTTP_METHOD, "POST");
+        message.setHeader("Authorization",
+                newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
 
-		message.setBody(strRequestBody);
+        message.setHeader(Exchange.HTTP_PATH,
+                "/json/queryDeviceUsageBySimNumber");
 
-		exchange.setPattern(ExchangePattern.InOut);
+        message.setBody(strRequestBody);
 
-		log.info("message::" + message.toString());
+        exchange.setPattern(ExchangePattern.InOut);
 
-		log.info("End:KoreDeviceUsageHistoryPreProcessor");
+        LOGGER.info("message::" + message.toString());
 
-	}
+        LOGGER.info("End:KoreDeviceUsageHistoryPreProcessor");
+
+    }
 }

@@ -11,34 +11,37 @@ import com.gv.midway.service.IAuditService;
 @Service
 public class AuditServiceImpl implements IAuditService {
 
-	@Autowired
-	private IAuditDao iAuditDao;
-	Logger log = Logger.getLogger(AuditServiceImpl.class.getName());
-	@Override
-	public void auditExternalRequestCall(Exchange exchange) {
+    @Autowired
+    private IAuditDao iAuditDao;
+    private static final Logger LOGGER = Logger.getLogger(AuditServiceImpl.class.getName());
 
-		log.info("AuditServiceImpl-auditExternalRequestCall");
+    @Override
+    public void auditExternalRequestCall(Exchange exchange) {
 
-		iAuditDao.auditExternalRequestCall(exchange);
+        LOGGER.info("AuditServiceImpl-auditExternalRequestCall");
 
-	}
-	@Override
-	public void auditExternalResponseCall(Exchange exchange) {
+        iAuditDao.auditExternalRequestCall(exchange);
 
-		log.info("AuditServiceImpl-auditExternalResponseCall");
-		iAuditDao.auditExternalResponseCall(exchange);
-	}
+    }
 
-	@Override
-	public void auditExternalExceptionResponseCall(Exchange exchange){
-		
-		log.info("AuditServiceImpl-auditExternalExceptionResponseCall");
-		iAuditDao.auditExternalExceptionResponseCall(exchange);
-	}
-	@Override
-	public void auditExternalConnectionExceptionResponseCall(Exchange exchange){
-		log.info("AuditServiceImpl-auditExternalConnectionExceptionResponseCall");
-		iAuditDao.auditExternalConnectionExceptionResponseCall(exchange);
-	}
-	
+    @Override
+    public void auditExternalResponseCall(Exchange exchange) {
+
+        LOGGER.info("AuditServiceImpl-auditExternalResponseCall");
+        iAuditDao.auditExternalResponseCall(exchange);
+    }
+
+    @Override
+    public void auditExternalExceptionResponseCall(Exchange exchange) {
+
+        LOGGER.info("AuditServiceImpl-auditExternalExceptionResponseCall");
+        iAuditDao.auditExternalExceptionResponseCall(exchange);
+    }
+
+    @Override
+    public void auditExternalConnectionExceptionResponseCall(Exchange exchange) {
+        LOGGER.info("AuditServiceImpl-auditExternalConnectionExceptionResponseCall");
+        iAuditDao.auditExternalConnectionExceptionResponseCall(exchange);
+    }
+
 }

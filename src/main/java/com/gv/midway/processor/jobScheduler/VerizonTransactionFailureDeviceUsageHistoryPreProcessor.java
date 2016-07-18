@@ -11,73 +11,49 @@ import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationRequestDataArea;
 import com.gv.midway.pojo.deviceHistory.DeviceUsage;
 import com.gv.midway.pojo.verizon.DeviceId;
+import com.gv.midway.utility.CommonUtil;
 
-public class VerizonTransactionFailureDeviceUsageHistoryPreProcessor implements Processor  {
-	Logger log = Logger
-			.getLogger(VerizonTransactionFailureDeviceUsageHistoryPreProcessor.class
-					.getName());
+public class VerizonTransactionFailureDeviceUsageHistoryPreProcessor implements
+        Processor {
+    private static final Logger LOGGER = Logger
+            .getLogger(VerizonTransactionFailureDeviceUsageHistoryPreProcessor.class
+                    .getName());
 
-	@Override
-	public void process(Exchange exchange) throws Exception {
+    @Override
+    public void process(Exchange exchange) throws Exception {
 
-		log.info("Session Parameters  VZSessionToken"
-				+ exchange.getProperty(IConstant.VZ_SEESION_TOKEN));
-		log.info("Session Parameters  VZAuthorization"
-				+ exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN));
+        LOGGER.info("Begin:VerizonTransactionFailureDeviceUsageHistoryPreProcessor");
 
-		log.info("Begin:VerizonTransactionFailureDeviceUsageHistoryPreProcessor");
+        DeviceUsage deviceInfo = (DeviceUsage) exchange.getIn().getBody();
 
-		DeviceUsage deviceInfo = (DeviceUsage) exchange.getIn()
-				.getBody();
+        ConnectionInformationRequestDataArea dataArea = new ConnectionInformationRequestDataArea();
+        DeviceId device = new DeviceId();
 
-		ConnectionInformationRequestDataArea dataArea = new ConnectionInformationRequestDataArea();
-		DeviceId device = new DeviceId();
-		
-		//Fetching Recommended device Identifiers
-				
-		device.setId(deviceInfo.getDeviceId().getId());
-		device.setKind(deviceInfo.getDeviceId().getKind());
-		dataArea.setDeviceId(device);
+        // Fetching Recommended device Identifiers
 
-		exchange.setProperty("DeviceId", device);
-		exchange.setProperty("CarrierName", deviceInfo.getCarrierName());
-		exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID, deviceInfo.getNetSuiteId());
-		
+        device.setId(deviceInfo.getDeviceId().getId());
+        device.setKind(deviceInfo.getDeviceId().getKind());
+        dataArea.setDeviceId(device);
 
-		dataArea.setLatest(exchange.getProperty("jobEndTime").toString());
-		dataArea.setEarliest(exchange.getProperty("jobStartTime").toString());
-		
+        exchange.setProperty("DeviceId", device);
+        exchange.setProperty("CarrierName", deviceInfo.getCarrierName());
+        exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID,
+                deviceInfo.getNetSuiteId());
 
-		ObjectMapper objectMapper = new ObjectMapper();
+        dataArea.setLatest(exchange.getProperty("jobEndTime").toString());
+        dataArea.setEarliest(exchange.getProperty("jobStartTime").toString());
 
-		String strRequestBody = objectMapper.writeValueAsString(dataArea);
+        ObjectMapper objectMapper = new ObjectMapper();
 
-		exchange.getIn().setBody(strRequestBody);
+        String strRequestBody = objectMapper.writeValueAsString(dataArea);
 
-		exchange.getIn().setBody(strRequestBody);
+        exchange.getIn().setBody(strRequestBody);
 
-		Message message = exchange.getIn();
-		String sessionToken = "";
-		String authorizationToken = "";
+        Message message = CommonUtil.setMessageHeader(exchange);
 
-		if (exchange.getProperty(IConstant.VZ_SEESION_TOKEN) != null
-				&& exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN) != null) {
-			sessionToken = exchange.getProperty(IConstant.VZ_SEESION_TOKEN)
-					.toString();
-			authorizationToken = exchange.getProperty(
-					IConstant.VZ_AUTHORIZATION_TOKEN).toString();
-		}
+        message.setHeader(Exchange.HTTP_PATH, "/devices/usage/actions/list");
 
-	              
-		message.setHeader("VZ-M2M-Token", sessionToken);
-		message.setHeader("Authorization", "Bearer " + authorizationToken);
-		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
-		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
-		message.setHeader(Exchange.HTTP_METHOD, "POST");
-
-		message.setHeader(Exchange.HTTP_PATH, "/devices/usage/actions/list");
-		
-		exchange.setPattern(ExchangePattern.InOut);
-		log.info("End:VerizonTransactionFailureDeviceUsageHistoryPreProcessor");
-	}
+        exchange.setPattern(ExchangePattern.InOut);
+        LOGGER.info("End:VerizonTransactionFailureDeviceUsageHistoryPreProcessor");
+    }
 }

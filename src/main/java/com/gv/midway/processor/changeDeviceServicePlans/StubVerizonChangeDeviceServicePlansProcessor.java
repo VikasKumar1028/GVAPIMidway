@@ -12,47 +12,49 @@ import com.gv.midway.pojo.changeDeviceServicePlans.response.ChangeDeviceServiceP
 import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponse;
 import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponseDataArea;
 
-public class StubVerizonChangeDeviceServicePlansProcessor  implements Processor{
+public class StubVerizonChangeDeviceServicePlansProcessor implements Processor {
 
-	Logger log = Logger.getLogger(StubVerizonChangeDeviceServicePlansProcessor.class
-			.getName());
-	@Override
-	public void process(Exchange exchange) throws Exception {
-		
-		log.info("Start::StubVerizonChangeDeviceServicePlansProcessor");
+    private static final Logger LOGGER = Logger
+            .getLogger(StubVerizonChangeDeviceServicePlansProcessor.class
+                    .getName());
 
-		ChangeDeviceServicePlansResponse changeDeviceServicePlansResponse = new ChangeDeviceServicePlansResponse();
+    @Override
+    public void process(Exchange exchange) throws Exception {
 
-		ChangeDeviceServicePlansResponseDataArea changeDeviceServicePlansResponseDataArea = new ChangeDeviceServicePlansResponseDataArea();
-		Header responseheader = new Header();
+        LOGGER.info("Start::StubVerizonChangeDeviceServicePlansProcessor");
 
-		Response response = new Response();
+        ChangeDeviceServicePlansResponse changeDeviceServicePlansResponse = new ChangeDeviceServicePlansResponse();
 
-		response.setResponseCode(IResponse.SUCCESS_CODE);
+        ChangeDeviceServicePlansResponseDataArea changeDeviceServicePlansResponseDataArea = new ChangeDeviceServicePlansResponseDataArea();
+        Header responseheader = new Header();
 
-		response.setResponseDescription("ChangeDeviceServicePlans");
-		response.setResponseStatus("SUCCESS");
+        Response response = new Response();
 
-		responseheader.setApplicationName("WEB");
-		responseheader.setRegion("USA");
-		responseheader.setTimestamp("2016-03-08T21:49:45");
-		responseheader.setOrganization("Grant Victor");
-		responseheader.setSourceName("Verizon");
-		responseheader.setTransactionId("cde2131ksjd");
-		responseheader.setBsCarrier("Verizon");
+        response.setResponseCode(IResponse.SUCCESS_CODE);
 
-		changeDeviceServicePlansResponse.setHeader(responseheader);
-		changeDeviceServicePlansResponse.setResponse(response);
-		changeDeviceServicePlansResponseDataArea.setOrderNumber("StubVerizonChangeDeviceServicePlansProcessor");
+        response.setResponseDescription("ChangeDeviceServicePlans");
+        response.setResponseStatus("SUCCESS");
 
-		changeDeviceServicePlansResponse
-				.setDataArea(changeDeviceServicePlansResponseDataArea);
+        responseheader.setApplicationName("WEB");
+        responseheader.setRegion("USA");
+        responseheader.setTimestamp("2016-03-08T21:49:45");
+        responseheader.setOrganization("Grant Victor");
+        responseheader.setSourceName("Verizon");
+        responseheader.setTransactionId("cde2131ksjd");
+        responseheader.setBsCarrier("Verizon");
 
-		exchange.getIn().setBody(changeDeviceServicePlansResponse);
+        changeDeviceServicePlansResponse.setHeader(responseheader);
+        changeDeviceServicePlansResponse.setResponse(response);
+        changeDeviceServicePlansResponseDataArea
+                .setOrderNumber("StubVerizonChangeDeviceServicePlansProcessor");
 
-		log.info("End::StubVerizonChangeDeviceServicePlansProcessor");
+        changeDeviceServicePlansResponse
+                .setDataArea(changeDeviceServicePlansResponseDataArea);
 
+        exchange.getIn().setBody(changeDeviceServicePlansResponse);
 
-	}
+        LOGGER.info("End::StubVerizonChangeDeviceServicePlansProcessor");
+
+    }
 
 }

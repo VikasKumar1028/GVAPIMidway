@@ -1,7 +1,5 @@
 package com.gv.midway.processor.deactivateDevice;
 
-
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
@@ -16,47 +14,47 @@ import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponseData
 
 public class KoreDeactivateDevicePostProcessor implements Processor {
 
-	Logger log = Logger.getLogger(KoreDeactivateDevicePostProcessor.class
-			.getName());
+    private static final Logger LOGGER = Logger.getLogger(KoreDeactivateDevicePostProcessor.class
+            .getName());
 
-	public KoreDeactivateDevicePostProcessor() {
-		//Empty Constructor
-	}
+    public KoreDeactivateDevicePostProcessor() {
+        // Empty Constructor
+    }
 
-	Environment newEnv;
+    Environment newEnv;
 
-	public KoreDeactivateDevicePostProcessor(Environment env) {
-		super();
-		this.newEnv = env;
+    public KoreDeactivateDevicePostProcessor(Environment env) {
+        super();
+        this.newEnv = env;
 
-	}
-	@Override
-	public void process(Exchange exchange) throws Exception {
+    }
 
-		log.info("Begin::KoreDeActivateDevicePostProcessor");
-		
-		DeactivateDeviceResponse deactivateDeviceResponse = new DeactivateDeviceResponse();
-		DeactivateDeviceResponseDataArea deactivateDeviceResponseDataArea = new DeactivateDeviceResponseDataArea();
+    @Override
+    public void process(Exchange exchange) throws Exception {
 
-		Response response = new Response();
+        LOGGER.info("Begin::KoreDeActivateDevicePostProcessor");
 
-		response.setResponseCode(IResponse.SUCCESS_CODE);
-		response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
-		response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
-		
+        DeactivateDeviceResponse deactivateDeviceResponse = new DeactivateDeviceResponse();
+        DeactivateDeviceResponseDataArea deactivateDeviceResponseDataArea = new DeactivateDeviceResponseDataArea();
 
-		Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
+        Response response = new Response();
 
-		deactivateDeviceResponse.setHeader(responseheader);
+        response.setResponseCode(IResponse.SUCCESS_CODE);
+        response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+        response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
 
-		deactivateDeviceResponse.setResponse(response);
-		deactivateDeviceResponseDataArea.setOrderNumber(exchange.getProperty(
-				IConstant.MIDWAY_TRANSACTION_ID).toString());
-		
-		deactivateDeviceResponse.setDataArea(deactivateDeviceResponseDataArea);
+        Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
 
-		exchange.getIn().setBody(deactivateDeviceResponse);
-		
-		log.info("End::KoreDeActivateDevicePostProcessor");
-	}
+        deactivateDeviceResponse.setHeader(responseheader);
+
+        deactivateDeviceResponse.setResponse(response);
+        deactivateDeviceResponseDataArea.setOrderNumber(exchange.getProperty(
+                IConstant.MIDWAY_TRANSACTION_ID).toString());
+
+        deactivateDeviceResponse.setDataArea(deactivateDeviceResponseDataArea);
+
+        exchange.getIn().setBody(deactivateDeviceResponse);
+
+        LOGGER.info("End::KoreDeActivateDevicePostProcessor");
+    }
 }

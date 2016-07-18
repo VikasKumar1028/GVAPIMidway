@@ -18,161 +18,160 @@ import com.gv.midway.pojo.connectionInformation.verizon.response.ConnectionInfor
 
 public class VerizonDeviceSessionBeginEndInfoPostProcessor implements Processor {
 
-	Logger log = Logger
-			.getLogger(VerizonDeviceSessionBeginEndInfoPostProcessor.class
-					.getName());
+    private static final Logger LOGGER = Logger
+            .getLogger(VerizonDeviceSessionBeginEndInfoPostProcessor.class
+                    .getName());
 
-	Environment newEnv;
+    Environment newEnv;
 
-	public VerizonDeviceSessionBeginEndInfoPostProcessor(Environment env) {
-		super();
-		this.newEnv = env;
+    public VerizonDeviceSessionBeginEndInfoPostProcessor(Environment env) {
+        super();
+        this.newEnv = env;
 
-	}
-@Override
-	public void process(Exchange exchange) throws Exception {
+    }
 
-		log.info("Begin:VerizonDeviceSessionBeginEndInfoPostProcessor");
+    @Override
+    public void process(Exchange exchange) throws Exception {
 
-		SessionBeginEndResponse businessResponse = new SessionBeginEndResponse();
-		SessionBeginEndResponseDataArea sessionBeginEndResponseDataArea = new SessionBeginEndResponseDataArea();
-		Response response = new Response();
+        LOGGER.info("Begin:VerizonDeviceSessionBeginEndInfoPostProcessor");
 
-		log.info("exchange.getIn().getBody().toString()***************************************"
-				+ exchange.getIn().getBody().toString());
+        SessionBeginEndResponse businessResponse = new SessionBeginEndResponse();
+        SessionBeginEndResponseDataArea sessionBeginEndResponseDataArea = new SessionBeginEndResponseDataArea();
+        Response response = new Response();
 
-		if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
+        LOGGER.info("exchange.getIn().getBody().toString()***************************************"
+                + exchange.getIn().getBody().toString());
 
-			Map map = exchange.getIn().getBody(Map.class);
-			ObjectMapper mapper = new ObjectMapper(); // jackson's objectmapper
-			ConnectionInformationResponse connectionResponse = mapper
-					.convertValue(map, ConnectionInformationResponse.class);
+        if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
 
-			int totalConnectionHistory = connectionResponse
-					.getConnectionHistory().length;
+            Map map = exchange.getIn().getBody(Map.class);
+            ObjectMapper mapper = new ObjectMapper(); // jackson's objectmapper
+            ConnectionInformationResponse connectionResponse = mapper
+                    .convertValue(map, ConnectionInformationResponse.class);
 
-			ArrayList<DeviceSession> deviceSessions = new ArrayList<DeviceSession>();
-			if (totalConnectionHistory > 0) {
+            int totalConnectionHistory = connectionResponse
+                    .getConnectionHistory().length;
 
-				DeviceSession deviceSession = new DeviceSession();
-				int eventStatus = 0;
-				for (int i = 0; i < totalConnectionHistory; i++) {
+            ArrayList<DeviceSession> deviceSessions = new ArrayList<DeviceSession>();
+            if (totalConnectionHistory > 0) {
 
-					int totalConnectionHistoryEvents = connectionResponse
-							.getConnectionHistory()[i]
-							.getConnectionEventAttributes().length;
+                DeviceSession deviceSession = new DeviceSession();
+                int eventStatus = 0;
+                for (int i = 0; i < totalConnectionHistory; i++) {
 
-					for (int j = 0; j < totalConnectionHistoryEvents; j++) {
+                    int totalConnectionHistoryEvents = connectionResponse
+                            .getConnectionHistory()[i]
+                            .getConnectionEventAttributes().length;
 
-						if (connectionResponse.getConnectionHistory()[i]
-								.getConnectionEventAttributes()[j].getKey()
-								.equalsIgnoreCase(IConstant.EVENT)
-								&& connectionResponse.getConnectionHistory()[i]
-										.getConnectionEventAttributes()[j]
-										.getValue().equalsIgnoreCase(
-												IConstant.EVENT_STOP) && i == 0) {
+                    for (int j = 0; j < totalConnectionHistoryEvents; j++) {
 
-							deviceSession.setEnd(connectionResponse
-									.getConnectionHistory()[i].getOccurredAt());
-							deviceSession.setBegin(null);
-							deviceSessions.add(deviceSession);
-							deviceSession = new DeviceSession();
-							break;
+                        if (connectionResponse.getConnectionHistory()[i]
+                                .getConnectionEventAttributes()[j].getKey()
+                                .equalsIgnoreCase(IConstant.EVENT)
+                                && connectionResponse.getConnectionHistory()[i]
+                                        .getConnectionEventAttributes()[j]
+                                        .getValue().equalsIgnoreCase(
+                                                IConstant.EVENT_STOP) && i == 0) {
 
-						} else if (connectionResponse.getConnectionHistory()[i]
-								.getConnectionEventAttributes()[j].getKey()
-								.equalsIgnoreCase(IConstant.EVENT)
-								&& connectionResponse.getConnectionHistory()[i]
-										.getConnectionEventAttributes()[j]
-										.getValue().equalsIgnoreCase(
-												IConstant.EVENT_START)
-								&& i == (totalConnectionHistory - 1)) {
+                            deviceSession.setEnd(connectionResponse
+                                    .getConnectionHistory()[i].getOccurredAt());
+                            deviceSession.setBegin(null);
+                            deviceSessions.add(deviceSession);
+                            deviceSession = new DeviceSession();
+                            break;
 
-							deviceSession.setEnd(null);
-							deviceSession.setBegin(connectionResponse
-									.getConnectionHistory()[i].getOccurredAt());
-							deviceSessions.add(deviceSession);
-							break;
+                        } else if (connectionResponse.getConnectionHistory()[i]
+                                .getConnectionEventAttributes()[j].getKey()
+                                .equalsIgnoreCase(IConstant.EVENT)
+                                && connectionResponse.getConnectionHistory()[i]
+                                        .getConnectionEventAttributes()[j]
+                                        .getValue().equalsIgnoreCase(
+                                                IConstant.EVENT_START)
+                                && i == (totalConnectionHistory - 1)) {
 
-						} else if (connectionResponse.getConnectionHistory()[i]
-								.getConnectionEventAttributes()[j].getKey()
-								.equalsIgnoreCase(IConstant.EVENT)
-								&& connectionResponse.getConnectionHistory()[i]
-										.getConnectionEventAttributes()[j]
-										.getValue().equalsIgnoreCase(
-												IConstant.EVENT_START)) {
+                            deviceSession.setEnd(null);
+                            deviceSession.setBegin(connectionResponse
+                                    .getConnectionHistory()[i].getOccurredAt());
+                            deviceSessions.add(deviceSession);
+                            break;
 
-							log.info("Exception on " + i);
-							if (eventStatus == 0) {
-								eventStatus = 1;
-								deviceSession.setBegin(connectionResponse
-										.getConnectionHistory()[i]
-										.getOccurredAt());
-								break;
-							} else {
-								break;
-							}
-						} else if (connectionResponse.getConnectionHistory()[i]
-								.getConnectionEventAttributes()[j].getKey()
-								.equalsIgnoreCase(IConstant.EVENT)
-								&& connectionResponse.getConnectionHistory()[i]
-										.getConnectionEventAttributes()[j]
-										.getValue().equalsIgnoreCase(
-												IConstant.EVENT_STOP)) {
+                        } else if (connectionResponse.getConnectionHistory()[i]
+                                .getConnectionEventAttributes()[j].getKey()
+                                .equalsIgnoreCase(IConstant.EVENT)
+                                && connectionResponse.getConnectionHistory()[i]
+                                        .getConnectionEventAttributes()[j]
+                                        .getValue().equalsIgnoreCase(
+                                                IConstant.EVENT_START)) {
 
-							if (eventStatus == 1) {
-								eventStatus = 0;
-								deviceSession.setEnd(connectionResponse
-										.getConnectionHistory()[i]
-										.getOccurredAt());
-								deviceSessions.add(deviceSession);
-								if (i != (totalConnectionHistory - 1))
-									deviceSession = new DeviceSession();
+                            LOGGER.info("Exception on " + i);
+                            if (eventStatus == 0) {
+                                eventStatus = 1;
+                                deviceSession.setBegin(connectionResponse
+                                        .getConnectionHistory()[i]
+                                        .getOccurredAt());
+                                break;
+                            } else {
+                                break;
+                            }
+                        } else if (connectionResponse.getConnectionHistory()[i]
+                                .getConnectionEventAttributes()[j].getKey()
+                                .equalsIgnoreCase(IConstant.EVENT)
+                                && connectionResponse.getConnectionHistory()[i]
+                                        .getConnectionEventAttributes()[j]
+                                        .getValue().equalsIgnoreCase(
+                                                IConstant.EVENT_STOP)) {
 
-								break;
-							} else {
-								break;
-							}
-						}
-					}
+                            if (eventStatus == 1) {
+                                eventStatus = 0;
+                                deviceSession.setEnd(connectionResponse
+                                        .getConnectionHistory()[i]
+                                        .getOccurredAt());
+                                deviceSessions.add(deviceSession);
+                                if (i != (totalConnectionHistory - 1))
+                                    deviceSession = new DeviceSession();
 
-				}
+                                break;
+                            } else {
+                                break;
+                            }
+                        }
+                    }
 
-				log.info("RequestID::" + exchange.getIn().getBody().toString());
-				response.setResponseCode(IResponse.SUCCESS_CODE);
-				response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
-				response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_CONNECTION_STATUS);
+                }
 
-				sessionBeginEndResponseDataArea.setDeviceSession(deviceSessions
-						.toArray(new DeviceSession[deviceSessions.size()]));
+                LOGGER.info("RequestID::" + exchange.getIn().getBody().toString());
+                response.setResponseCode(IResponse.SUCCESS_CODE);
+                response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+                response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_CONNECTION_STATUS);
 
-			} else {
-				response.setResponseCode(IResponse.SUCCESS_CODE);
-				response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
-				response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_CONNECTION_STATUS);
-			}
-		} else {
+                sessionBeginEndResponseDataArea.setDeviceSession(deviceSessions
+                        .toArray(new DeviceSession[deviceSessions.size()]));
 
-			response.setResponseCode(400);
-			response.setResponseStatus(IResponse.ERROR_MESSAGE);
-			response.setResponseDescription(exchange.getIn().getBody()
-					.toString());
+            } else {
+                response.setResponseCode(IResponse.SUCCESS_CODE);
+                response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+                response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_CONNECTION_STATUS);
+            }
+        } else {
 
-		}
+            response.setResponseCode(400);
+            response.setResponseStatus(IResponse.ERROR_MESSAGE);
+            response.setResponseDescription(exchange.getIn().getBody()
+                    .toString());
 
-	
+        }
 
-		Header responseheader = (Header) exchange.getProperty(IConstant.HEADER); 
-		
-		businessResponse.setHeader(responseheader);
-		businessResponse.setResponse(response);
+        Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
 
-		businessResponse.setDataArea(sessionBeginEndResponseDataArea);
+        businessResponse.setHeader(responseheader);
+        businessResponse.setResponse(response);
 
-		exchange.getIn().setBody(businessResponse);
+        businessResponse.setDataArea(sessionBeginEndResponseDataArea);
 
-		log.info("End:VerizonDeviceSessionBeginEndInfoPostProcessor");
+        exchange.getIn().setBody(businessResponse);
 
-	}
+        LOGGER.info("End:VerizonDeviceSessionBeginEndInfoPostProcessor");
+
+    }
 
 }

@@ -14,103 +14,102 @@ import com.gv.midway.pojo.transaction.Transaction;
 
 public class KoreCheckStatusPreProcessor implements Processor {
 
-	Logger log = Logger.getLogger(KoreCheckStatusPreProcessor.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(KoreCheckStatusPreProcessor.class.getName());
 
-	private Environment newEnv;
+    private Environment newEnv;
 
-	public KoreCheckStatusPreProcessor() {
-		//Empty Constructor
-	}
+    public KoreCheckStatusPreProcessor() {
+        // Empty Constructor
+    }
 
-	public KoreCheckStatusPreProcessor(Environment env) {
-		super();
-		this.newEnv = env;
-	}
-	@Override
-	public void process(Exchange exchange) throws Exception {
+    public KoreCheckStatusPreProcessor(Environment env) {
+        super();
+        this.newEnv = env;
+    }
 
-		log.info("*************Testing**************************************"
-				+ exchange.getIn().getBody());
+    @Override
+    public void process(Exchange exchange) throws Exception {
 
-		Message message = exchange.getIn();
+        LOGGER.info("*************Testing**************************************"
+                + exchange.getIn().getBody());
 
-		Transaction transaction = exchange.getIn().getBody(Transaction.class);
+        Message message = exchange.getIn();
 
-		String carrierStatus = transaction.getCarrierStatus();
+        Transaction transaction = exchange.getIn().getBody(Transaction.class);
 
-		RequestType requestType = transaction.getRequestType();
+        String carrierStatus = transaction.getCarrierStatus();
 
-		Object payload = transaction.getDevicePayload();
+        RequestType requestType = transaction.getRequestType();
 
+        Object payload = transaction.getDevicePayload();
 
-		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_PAYLOAD,
-				payload);
+        exchange.setProperty(IConstant.MIDWAY_TRANSACTION_PAYLOAD, payload);
 
-		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,
-				transaction.getDeviceNumber());
+        exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,
+                transaction.getDeviceNumber());
 
-		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_ID,
-				transaction.getMidwayTransactionId());
+        exchange.setProperty(IConstant.MIDWAY_TRANSACTION_ID,
+                transaction.getMidwayTransactionId());
 
-		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_REQUEST_TYPE,
-				requestType);
+        exchange.setProperty(IConstant.MIDWAY_TRANSACTION_REQUEST_TYPE,
+                requestType);
 
-		exchange.setProperty(ITransaction.CARRIER_STATUS, carrierStatus);
+        exchange.setProperty(ITransaction.CARRIER_STATUS, carrierStatus);
 
-		exchange.setProperty(IConstant.MIDWAY_CARRIER_ERROR_DESC,
-				transaction.getCarrierErrorDescription());
-		
-		exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID,
-				transaction.getNetSuiteId());
+        exchange.setProperty(IConstant.MIDWAY_CARRIER_ERROR_DESC,
+                transaction.getCarrierErrorDescription());
 
-		/***
-		 * carrier status as Error . CallBack the Netsuite end point here and
-		 * write it in Kafka Queue.
-		 */
+        exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID,
+                transaction.getNetSuiteId());
 
-		if (carrierStatus.equals(IConstant.CARRIER_TRANSACTION_STATUS_ERROR)) {
-			log.info("carrier status error is........." + carrierStatus);
-			message.setHeader(IConstant.KORE_CHECK_STATUS, "error");
+        /***
+         * carrier status as Error . CallBack the Netsuite end point here and
+         * write it in Kafka Queue.
+         */
 
-		}
+        if (carrierStatus.equals(IConstant.CARRIER_TRANSACTION_STATUS_ERROR)) {
+            LOGGER.info("carrier status error is........." + carrierStatus);
+            message.setHeader(IConstant.KORE_CHECK_STATUS, "error");
 
-		// carrier status as Success and request Type is Change CustomFileds or
-		// Change Service Plans
-		else if (carrierStatus
-				.equals(IConstant.CARRIER_TRANSACTION_STATUS_SUCCESS)) {
+        }
 
-			message.setHeader(IConstant.KORE_CHECK_STATUS, "change");
+        // carrier status as Success and request Type is Change CustomFileds or
+        // Change Service Plans
+        else if (carrierStatus
+                .equals(IConstant.CARRIER_TRANSACTION_STATUS_SUCCESS)) {
 
-		}
+            message.setHeader(IConstant.KORE_CHECK_STATUS, "change");
 
-		/**
-		 * 
-		 * Check the status of Kore Device with tracking number for Activation
-		 * ,DeActivation , Suspend , Restore, ReActivation
-		 */
-		else {
-			log.info("carrier status not error is........." + carrierStatus);
-			message.setHeader(IConstant.KORE_CHECK_STATUS, "forward");
-			String carrierTransationID = transaction.getCarrierTransactionId();
-			exchange.setProperty(IConstant.CARRIER_TRANSACTION_ID,
-					carrierTransationID);
-			net.sf.json.JSONObject obj = new net.sf.json.JSONObject();
-			obj.put("trackingNumber", carrierTransationID);
+        }
 
-			message.setHeader(Exchange.CONTENT_TYPE, "application/json");
-			message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
-			message.setHeader(Exchange.HTTP_METHOD, "POST");
-			message.setHeader("Authorization",
-					newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
-			message.setHeader(Exchange.HTTP_PATH,
-					"/json/queryProvisioningRequestStatus");
+        /**
+         * 
+         * Check the status of Kore Device with tracking number for Activation
+         * ,DeActivation , Suspend , Restore, ReActivation
+         */
+        else {
+            LOGGER.info("carrier status not error is........." + carrierStatus);
+            message.setHeader(IConstant.KORE_CHECK_STATUS, "forward");
+            String carrierTransationID = transaction.getCarrierTransactionId();
+            exchange.setProperty(IConstant.CARRIER_TRANSACTION_ID,
+                    carrierTransationID);
+            net.sf.json.JSONObject obj = new net.sf.json.JSONObject();
+            obj.put("trackingNumber", carrierTransationID);
 
-			message.setBody(obj);
+            message.setHeader(Exchange.CONTENT_TYPE, "application/json");
+            message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
+            message.setHeader(Exchange.HTTP_METHOD, "POST");
+            message.setHeader("Authorization",
+                    newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
+            message.setHeader(Exchange.HTTP_PATH,
+                    "/json/queryProvisioningRequestStatus");
 
-			exchange.setPattern(ExchangePattern.InOut);
+            message.setBody(obj);
 
-		}
+            exchange.setPattern(ExchangePattern.InOut);
 
-	}
+        }
+
+    }
 
 }

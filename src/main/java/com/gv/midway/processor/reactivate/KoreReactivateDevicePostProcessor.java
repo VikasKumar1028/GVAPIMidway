@@ -13,40 +13,41 @@ import com.gv.midway.pojo.reActivateDevice.response.ReactivateDeviceResponse;
 import com.gv.midway.pojo.reActivateDevice.response.ReactivateDeviceResponseDataArea;
 
 public class KoreReactivateDevicePostProcessor implements Processor {
-	Logger log = Logger.getLogger(KoreReactivateDevicePostProcessor.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(KoreReactivateDevicePostProcessor.class
+            .getName());
 
-	public KoreReactivateDevicePostProcessor() {
-		//Empty Constructor
-	}
-	public KoreReactivateDevicePostProcessor(Environment env) {
-	}
-	@Override
-	public void process(Exchange exchange) throws Exception {
+    public KoreReactivateDevicePostProcessor() {
+        // Empty Constructor
+    }
 
-		log.info("Begin::KoreReactivateDevicePostProcessor");
+    public KoreReactivateDevicePostProcessor(Environment env) {
+    }
 
-		ReactivateDeviceResponse reActivateDeviceResponse = new ReactivateDeviceResponse();
+    @Override
+    public void process(Exchange exchange) throws Exception {
 
-		ReactivateDeviceResponseDataArea reActivateDeviceResponseDataArea = new ReactivateDeviceResponseDataArea();
+        LOGGER.info("Begin::KoreReactivateDevicePostProcessor");
 
+        ReactivateDeviceResponse reActivateDeviceResponse = new ReactivateDeviceResponse();
 
-		Response response = new Response();
+        ReactivateDeviceResponseDataArea reActivateDeviceResponseDataArea = new ReactivateDeviceResponseDataArea();
 
-		response.setResponseCode(IResponse.SUCCESS_CODE);
-		response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
-		response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
+        Response response = new Response();
 
-		
-		
-		Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
+        response.setResponseCode(IResponse.SUCCESS_CODE);
+        response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+        response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
 
-		reActivateDeviceResponse.setHeader(responseheader);
-		reActivateDeviceResponse.setResponse(response);
-		reActivateDeviceResponseDataArea.setOrderNumber(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID).toString());
+        Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
 
-		reActivateDeviceResponse.setDataArea(reActivateDeviceResponseDataArea);
+        reActivateDeviceResponse.setHeader(responseheader);
+        reActivateDeviceResponse.setResponse(response);
+        reActivateDeviceResponseDataArea.setOrderNumber(exchange.getProperty(
+                IConstant.MIDWAY_TRANSACTION_ID).toString());
 
-		exchange.getIn().setBody(reActivateDeviceResponse);
-		log.info("End::KoreReactivateDevicePostProcessor");
-	}
+        reActivateDeviceResponse.setDataArea(reActivateDeviceResponseDataArea);
+
+        exchange.getIn().setBody(reActivateDeviceResponse);
+        LOGGER.info("End::KoreReactivateDevicePostProcessor");
+    }
 }

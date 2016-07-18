@@ -12,43 +12,43 @@ import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponseData
 
 public class StubKoreDeactivateDeviceProcessor implements Processor {
 
-	Logger log = Logger.getLogger(StubKoreDeactivateDeviceProcessor.class
-			.getName());
+    private static final Logger LOGGER = Logger.getLogger(StubKoreDeactivateDeviceProcessor.class
+            .getName());
 
-	public StubKoreDeactivateDeviceProcessor() {
-		// Default Constructor
-	}
+    public StubKoreDeactivateDeviceProcessor() {
+        // Default Constructor
+    }
 
-	@Override
-	public void process(Exchange exchange) throws Exception {
+    @Override
+    public void process(Exchange exchange) throws Exception {
 
-		log.info("Begin::StubKoreDeactivateDeviceProcessor");
-		DeactivateDeviceResponse deactivateDeviceResponse = new DeactivateDeviceResponse();
-		Header responseheader = new Header();
-		DeactivateDeviceResponseDataArea deactivateDeviceResponseDataArea = new DeactivateDeviceResponseDataArea();
+        LOGGER.info("Begin::StubKoreDeactivateDeviceProcessor");
+        DeactivateDeviceResponse deactivateDeviceResponse = new DeactivateDeviceResponse();
+        Header responseheader = new Header();
+        DeactivateDeviceResponseDataArea deactivateDeviceResponseDataArea = new DeactivateDeviceResponseDataArea();
 
-		Response response = new Response();
+        Response response = new Response();
 
-		response.setResponseCode(IResponse.SUCCESS_CODE);
+        response.setResponseCode(IResponse.SUCCESS_CODE);
 
-		response.setResponseDescription("Device is deactivate successfully");
-		response.setResponseStatus("SUCESS");
+        response.setResponseDescription("Device is deactivate successfully");
+        response.setResponseStatus("SUCESS");
 
-		responseheader.setApplicationName("WEB");
-		responseheader.setRegion("USA");
-		responseheader.setTimestamp("2016-03-08T21:49:45");
-		responseheader.setOrganization("Grant Victor");
-		responseheader.setSourceName("KORE");
-		responseheader.setTransactionId("cde2131ksjd");
-		responseheader.setBsCarrier("KORE");
+        responseheader.setApplicationName("WEB");
+        responseheader.setRegion("USA");
+        responseheader.setTimestamp("2016-03-08T21:49:45");
+        responseheader.setOrganization("Grant Victor");
+        responseheader.setSourceName("KORE");
+        responseheader.setTransactionId("cde2131ksjd");
+        responseheader.setBsCarrier("KORE");
 
-		deactivateDeviceResponse.setHeader(responseheader);
-		deactivateDeviceResponse.setResponse(response);
-		deactivateDeviceResponseDataArea.setOrderNumber("KR023335545");
+        deactivateDeviceResponse.setHeader(responseheader);
+        deactivateDeviceResponse.setResponse(response);
+        deactivateDeviceResponseDataArea.setOrderNumber("KR023335545");
 
-		deactivateDeviceResponse.setDataArea(deactivateDeviceResponseDataArea);
-		exchange.getIn().setBody(deactivateDeviceResponse);
-		log.info("End::StubKoreDeactivateDeviceProcessor");
-	}
+        deactivateDeviceResponse.setDataArea(deactivateDeviceResponseDataArea);
+        exchange.getIn().setBody(deactivateDeviceResponse);
+        LOGGER.info("End::StubKoreDeactivateDeviceProcessor");
+    }
 
 }

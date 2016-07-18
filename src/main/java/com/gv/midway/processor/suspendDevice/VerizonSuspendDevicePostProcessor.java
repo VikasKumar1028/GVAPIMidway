@@ -1,7 +1,5 @@
 package com.gv.midway.processor.suspendDevice;
 
-
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
@@ -16,68 +14,65 @@ import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponseDataArea;
 
 public class VerizonSuspendDevicePostProcessor implements Processor {
 
-	static int i = 0;
+    static int i = 0;
 
-	Logger log = Logger.getLogger(VerizonSuspendDevicePostProcessor.class
-			.getName());
+    private static final Logger LOGGER = Logger.getLogger(VerizonSuspendDevicePostProcessor.class
+            .getName());
 
-	Environment newEnv;
+    Environment newEnv;
 
-	public VerizonSuspendDevicePostProcessor(Environment env) {
-		super();
-		this.newEnv = env;
+    public VerizonSuspendDevicePostProcessor(Environment env) {
+        super();
+        this.newEnv = env;
 
-	}
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.apache.camel.Processor#process(org.apache.camel.Exchange)
-	 */
-	@Override
-	public void process(Exchange exchange) throws Exception {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.camel.Processor#process(org.apache.camel.Exchange)
+     */
+    @Override
+    public void process(Exchange exchange) throws Exception {
 
-		log.info("Begin:VerizonSuspendDevicePostProcessor");
+        LOGGER.info("Begin:VerizonSuspendDevicePostProcessor");
 
-		SuspendDeviceResponse suspendDeviceResponse = new SuspendDeviceResponse();
-		SuspendDeviceResponseDataArea suspendDeviceResponseDataArea = new SuspendDeviceResponseDataArea();
-		Response response = new Response();
+        SuspendDeviceResponse suspendDeviceResponse = new SuspendDeviceResponse();
+        SuspendDeviceResponseDataArea suspendDeviceResponseDataArea = new SuspendDeviceResponseDataArea();
+        Response response = new Response();
 
+        LOGGER.info("exchange.getIn().getBody().toString()***************************************"
+                + exchange.getIn().getBody().toString());
 
-		log.info("exchange.getIn().getBody().toString()***************************************"
-				+ exchange.getIn().getBody().toString());
+        if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
 
-		if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
+            LOGGER.info("RequestID::" + exchange.getIn().getBody().toString());
+            response.setResponseCode(IResponse.SUCCESS_CODE);
+            response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+            response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_SUSPEND_MIDWAY);
+            suspendDeviceResponseDataArea.setOrderNumber(exchange.getProperty(
+                    IConstant.MIDWAY_TRANSACTION_ID).toString());
 
-			log.info("RequestID::" + exchange.getIn().getBody().toString());
-			response.setResponseCode(IResponse.SUCCESS_CODE);
-			response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
-			response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_SUSPEND_MIDWAY);
-			suspendDeviceResponseDataArea.setOrderNumber(exchange.getProperty(
-					IConstant.MIDWAY_TRANSACTION_ID).toString());
+        } else {
 
-		} else {
+            response.setResponseCode(400);
+            response.setResponseStatus(IResponse.ERROR_MESSAGE);
+            response.setResponseDescription(exchange.getIn().getBody()
+                    .toString());
 
-			response.setResponseCode(400);
-			response.setResponseStatus(IResponse.ERROR_MESSAGE);
-			response.setResponseDescription(exchange.getIn().getBody()
-					.toString());
+        }
 
-		}
+        Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
 
-		
-		
-		Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
+        suspendDeviceResponse.setHeader(responseheader);
+        suspendDeviceResponse.setResponse(response);
 
-		suspendDeviceResponse.setHeader(responseheader);
-		suspendDeviceResponse.setResponse(response);
+        suspendDeviceResponse.setDataArea(suspendDeviceResponseDataArea);
 
-		suspendDeviceResponse.setDataArea(suspendDeviceResponseDataArea);
+        exchange.getIn().setBody(suspendDeviceResponse);
 
-		exchange.getIn().setBody(suspendDeviceResponse);
+        LOGGER.info("End:VerizonSuspendDevicePostProcessor");
 
-		log.info("End:VerizonSuspendDevicePostProcessor");
-
-	}
+    }
 
 }

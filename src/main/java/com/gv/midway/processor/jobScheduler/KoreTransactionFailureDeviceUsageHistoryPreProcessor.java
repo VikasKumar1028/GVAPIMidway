@@ -14,68 +14,64 @@ import com.gv.midway.pojo.usageInformation.kore.request.UsageInformationKoreRequ
 import com.gv.midway.pojo.verizon.DeviceId;
 
 public class KoreTransactionFailureDeviceUsageHistoryPreProcessor implements
-		Processor {
+        Processor {
 
-	Logger log = Logger.getLogger(KoreDeviceUsageHistoryPreProcessor.class
-			.getName());
+    private static final Logger LOGGER = Logger.getLogger(KoreDeviceUsageHistoryPreProcessor.class
+            .getName());
 
-	Environment newEnv;
+    Environment newEnv;
 
-	public KoreTransactionFailureDeviceUsageHistoryPreProcessor() {
-		//Empty Constructor
-	}
+    public KoreTransactionFailureDeviceUsageHistoryPreProcessor() {
+        // Empty Constructor
+    }
 
-	public KoreTransactionFailureDeviceUsageHistoryPreProcessor(Environment env) {
-		super();
-		this.newEnv = env;
-	}
+    public KoreTransactionFailureDeviceUsageHistoryPreProcessor(Environment env) {
+        super();
+        this.newEnv = env;
+    }
 
-	@Override
-	public void process(Exchange exchange) throws Exception {
+    @Override
+    public void process(Exchange exchange) throws Exception {
 
+        LOGGER.info("Begin:KoreTransactionFailureDeviceUsageHistoryPreProcessor");
+        Message message = exchange.getIn();
 
-		log.info("Begin:KoreTransactionFailureDeviceUsageHistoryPreProcessor");
-		Message message = exchange.getIn();
-		
-		DeviceUsage deviceInfo = (DeviceUsage) exchange.getIn()
-				.getBody();
+        DeviceUsage deviceInfo = (DeviceUsage) exchange.getIn().getBody();
 
-		ObjectMapper objectMapper = new ObjectMapper();
-		
-		
-		UsageInformationKoreRequest usageInformationKoreRequest = new UsageInformationKoreRequest();
+        ObjectMapper objectMapper = new ObjectMapper();
 
-		DeviceId deviceId=deviceInfo.getDeviceId();
-		
-		String simNumber=deviceId.getId();
-		
-		
-		usageInformationKoreRequest.setSimNumber(simNumber);
+        UsageInformationKoreRequest usageInformationKoreRequest = new UsageInformationKoreRequest();
 
+        DeviceId deviceId = deviceInfo.getDeviceId();
 
-		String strRequestBody = objectMapper
-				.writeValueAsString(usageInformationKoreRequest);
+        String simNumber = deviceId.getId();
 
-		log.info("strRequestBody::" + strRequestBody);
-		
-		exchange.setProperty("DeviceId", deviceId);
-		exchange.setProperty("CarrierName", deviceInfo.getCarrierName());
-		exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID, deviceInfo.getNetSuiteId());
+        usageInformationKoreRequest.setSimNumber(simNumber);
 
-		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
-		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
-		message.setHeader(Exchange.HTTP_METHOD, "POST");
-		message.setHeader("Authorization",
-				newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
+        String strRequestBody = objectMapper
+                .writeValueAsString(usageInformationKoreRequest);
 
-		message.setHeader(Exchange.HTTP_PATH,
-				"/json/queryDeviceUsageBySimNumber");
-		message.setBody(strRequestBody);
+        LOGGER.info("strRequestBody::" + strRequestBody);
 
-		exchange.setPattern(ExchangePattern.InOut);
+        exchange.setProperty("DeviceId", deviceId);
+        exchange.setProperty("CarrierName", deviceInfo.getCarrierName());
+        exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID,
+                deviceInfo.getNetSuiteId());
 
-		log.info("End:KoreTransactionFailureDeviceUsageHistoryPreProcessor");
+        message.setHeader(Exchange.CONTENT_TYPE, "application/json");
+        message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
+        message.setHeader(Exchange.HTTP_METHOD, "POST");
+        message.setHeader("Authorization",
+                newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
 
-	}
+        message.setHeader(Exchange.HTTP_PATH,
+                "/json/queryDeviceUsageBySimNumber");
+        message.setBody(strRequestBody);
+
+        exchange.setPattern(ExchangePattern.InOut);
+
+        LOGGER.info("End:KoreTransactionFailureDeviceUsageHistoryPreProcessor");
+
+    }
 
 }

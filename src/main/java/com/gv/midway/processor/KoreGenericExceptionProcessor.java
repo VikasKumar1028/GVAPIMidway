@@ -23,130 +23,127 @@ import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
 
 public class KoreGenericExceptionProcessor implements Processor {
 
-	Logger log = Logger
-			.getLogger(KoreGenericExceptionProcessor.class.getName());
+    private static final Logger LOGGER = Logger
+            .getLogger(KoreGenericExceptionProcessor.class.getName());
 
-	Environment newEnv;
+    Environment newEnv;
 
-	public KoreGenericExceptionProcessor(Environment env) {
-		super();
-		this.newEnv = env;
-	}
+    public KoreGenericExceptionProcessor(Environment env) {
+        super();
+        this.newEnv = env;
+    }
 
-	public KoreGenericExceptionProcessor() {
-		//Empty Constructor
-	}
+    public KoreGenericExceptionProcessor() {
+        // Empty Constructor
+    }
 
-	@Override
-	public void process(Exchange exchange) throws Exception {
+    @Override
+    public void process(Exchange exchange) throws Exception {
 
-		CxfOperationException exception = (CxfOperationException) exchange
-				.getProperty(Exchange.EXCEPTION_CAUGHT);
+        CxfOperationException exception = (CxfOperationException) exchange
+                .getProperty(Exchange.EXCEPTION_CAUGHT);
 
-		log.info("----KoreGenericExceptionProcessor----------"
-				+ exception.getResponseBody());
-		log.info("----.getStatusCode()----------" + exception.getStatusCode());
+        LOGGER.info("----KoreGenericExceptionProcessor----------"
+                + exception.getResponseBody());
+        LOGGER.info("----.getStatusCode()----------" + exception.getStatusCode());
 
-		
+        ObjectMapper mapper = new ObjectMapper();
 
-		ObjectMapper mapper = new ObjectMapper();
+        KoreErrorResponse responsePayload = mapper.readValue(
+                exception.getResponseBody(), KoreErrorResponse.class);
 
-		KoreErrorResponse responsePayload = mapper.readValue(
-				exception.getResponseBody(), KoreErrorResponse.class);
+        LOGGER.info("----response payload is----------"
+                + responsePayload.toString());
 
-		log.info("----response payload is----------"
-				+ responsePayload.toString());
+        Response response = new Response();
 
-		Response response = new Response();
+        response.setResponseCode(IResponse.INVALID_PAYLOAD);
 
-	
-		response.setResponseCode(IResponse.INVALID_PAYLOAD);
+        response.setResponseStatus(IResponse.ERROR_MESSAGE);
+        response.setResponseDescription(responsePayload.getErrorMessage());
 
-		response.setResponseStatus(IResponse.ERROR_MESSAGE);
-		response.setResponseDescription(responsePayload.getErrorMessage());
+        Header responseHeader = (Header) exchange.getProperty(IConstant.HEADER);
 
-		Header responseHeader = (Header) exchange.getProperty(IConstant.HEADER);
+        if ("Endpoint[direct://deviceInformationCarrier]".equals(exchange
+                .getFromEndpoint().toString())) {
 
-		if ("Endpoint[direct://deviceInformationCarrier]".equals(exchange
-				.getFromEndpoint().toString())) {
+            DeviceInformationResponse responseObject = new DeviceInformationResponse();
+            responseObject.setHeader(responseHeader);
+            responseObject.setResponse(response);
+            exchange.getIn().setBody(responseObject);
+        }
 
-			DeviceInformationResponse responseObject = new DeviceInformationResponse();
-			responseObject.setHeader(responseHeader);
-			responseObject.setResponse(response);
-			exchange.getIn().setBody(responseObject);
-		}
+        if ("Endpoint[direct://deactivateDevice]".equals(exchange
+                .getFromEndpoint().toString())) {
 
-		if ("Endpoint[direct://deactivateDevice]".equals(exchange
-				.getFromEndpoint().toString())) {
+            DeactivateDeviceResponse responseObject = new DeactivateDeviceResponse();
+            responseObject.setHeader(responseHeader);
+            responseObject.setResponse(response);
+            exchange.getIn().setBody(responseObject);
+        }
 
-			DeactivateDeviceResponse responseObject = new DeactivateDeviceResponse();
-			responseObject.setHeader(responseHeader);
-			responseObject.setResponse(response);
-			exchange.getIn().setBody(responseObject);
-		}
+        if ("Endpoint[direct://activateDevice]".equals(exchange
+                .getFromEndpoint().toString())) {
 
-		if ("Endpoint[direct://activateDevice]".equals(exchange
-				.getFromEndpoint().toString())) {
+            ActivateDeviceResponse responseObject = new ActivateDeviceResponse();
+            responseObject.setHeader(responseHeader);
+            responseObject.setResponse(response);
+            exchange.getIn().setBody(responseObject);
+        }
 
-			ActivateDeviceResponse responseObject = new ActivateDeviceResponse();
-			responseObject.setHeader(responseHeader);
-			responseObject.setResponse(response);
-			exchange.getIn().setBody(responseObject);
-		}
+        if ("Endpoint[direct://suspendDevice]".equals(exchange
+                .getFromEndpoint().toString())) {
 
-		if ("Endpoint[direct://suspendDevice]".equals(exchange
-				.getFromEndpoint().toString())) {
+            SuspendDeviceResponse responseObject = new SuspendDeviceResponse();
+            responseObject.setHeader(responseHeader);
+            responseObject.setResponse(response);
+            exchange.getIn().setBody(responseObject);
+        }
 
-			SuspendDeviceResponse responseObject = new SuspendDeviceResponse();
-			responseObject.setHeader(responseHeader);
-			responseObject.setResponse(response);
-			exchange.getIn().setBody(responseObject);
-		}
+        if ("Endpoint[direct://reactivateDevice]".equals(exchange
+                .getFromEndpoint().toString())) {
 
-		if ("Endpoint[direct://reactivateDevice]".equals(exchange
-				.getFromEndpoint().toString())) {
+            ReactivateDeviceResponse responseObject = new ReactivateDeviceResponse();
+            responseObject.setHeader(responseHeader);
+            responseObject.setResponse(response);
+            exchange.getIn().setBody(responseObject);
+        }
 
-			ReactivateDeviceResponse responseObject = new ReactivateDeviceResponse();
-			responseObject.setHeader(responseHeader);
-			responseObject.setResponse(response);
-			exchange.getIn().setBody(responseObject);
-		}
+        if ("Endpoint[direct://customeFields]".equals(exchange
+                .getFromEndpoint().toString())) {
 
-		if ("Endpoint[direct://customeFields]".equals(exchange
-				.getFromEndpoint().toString())) {
+            CustomFieldsDeviceResponse responseObject = new CustomFieldsDeviceResponse();
+            responseObject.setHeader(responseHeader);
+            responseObject.setResponse(response);
+            exchange.getIn().setBody(responseObject);
+        }
 
-			CustomFieldsDeviceResponse responseObject = new CustomFieldsDeviceResponse();
-			responseObject.setHeader(responseHeader);
-			responseObject.setResponse(response);
-			exchange.getIn().setBody(responseObject);
-		}
+        if ("Endpoint[direct://changeDeviceServicePlans]".equals(exchange
+                .getFromEndpoint().toString())) {
+            ChangeDeviceServicePlansResponse responseObject = new ChangeDeviceServicePlansResponse();
+            responseObject.setHeader(responseHeader);
+            responseObject.setResponse(response);
+            exchange.getIn().setBody(responseObject);
 
-		if ("Endpoint[direct://changeDeviceServicePlans]".equals(exchange
-				.getFromEndpoint().toString())) {
-			ChangeDeviceServicePlansResponse responseObject = new ChangeDeviceServicePlansResponse();
-			responseObject.setHeader(responseHeader);
-			responseObject.setResponse(response);
-			exchange.getIn().setBody(responseObject);
+        }
 
-		}
+        if ("Endpoint[direct://restoreDevice]".equals(exchange
+                .getFromEndpoint().toString())) {
+            RestoreDeviceResponse responseObject = new RestoreDeviceResponse();
+            responseObject.setHeader(responseHeader);
+            responseObject.setResponse(response);
+            exchange.getIn().setBody(responseObject);
 
-		if ("Endpoint[direct://restoreDevice]".equals(exchange
-				.getFromEndpoint().toString())) {
-			RestoreDeviceResponse responseObject = new RestoreDeviceResponse();
-			responseObject.setHeader(responseHeader);
-			responseObject.setResponse(response);
-			exchange.getIn().setBody(responseObject);
+        }
 
-		}
+        if ("Endpoint[direct://reactivateDevice]".equals(exchange
+                .getFromEndpoint().toString())) {
+            ReactivateDeviceResponse responseObject = new ReactivateDeviceResponse();
+            responseObject.setHeader(responseHeader);
+            responseObject.setResponse(response);
+            exchange.getIn().setBody(responseObject);
 
-		if ("Endpoint[direct://reactivateDevice]".equals(exchange
-				.getFromEndpoint().toString())) {
-			ReactivateDeviceResponse responseObject = new ReactivateDeviceResponse();
-			responseObject.setHeader(responseHeader);
-			responseObject.setResponse(response);
-			exchange.getIn().setBody(responseObject);
+        }
 
-		}
-	
-	}
+    }
 }
