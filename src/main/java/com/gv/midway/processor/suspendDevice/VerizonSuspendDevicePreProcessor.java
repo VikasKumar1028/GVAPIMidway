@@ -13,94 +13,73 @@ import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequest;
 import com.gv.midway.pojo.suspendDevice.verizon.request.SuspendDeviceRequestVerizon;
 import com.gv.midway.pojo.verizon.DeviceId;
 import com.gv.midway.pojo.verizon.Devices;
+import com.gv.midway.utility.CommonUtil;
 
 public class VerizonSuspendDevicePreProcessor implements Processor {
 
-	Logger log = Logger.getLogger(VerizonSuspendDevicePreProcessor.class
-			.getName());
-	@Override
-	public void process(Exchange exchange) throws Exception {
+    private static final Logger LOGGER = Logger.getLogger(VerizonSuspendDevicePreProcessor.class
+            .getName());
 
-		log.info("Begin:VerizonSuspendDevicePreProcessor");
+    @Override
+    public void process(Exchange exchange) throws Exception {
 
-		log.info("Session Parameters  VZSessionToken"
-				+ exchange.getProperty(IConstant.VZ_SEESION_TOKEN));
-		log.info("Session Parameters  VZAuthorization"
-				+ exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN));
+        LOGGER.info("Begin:VerizonSuspendDevicePreProcessor");
 
-		SuspendDeviceRequestVerizon businessRequest = new SuspendDeviceRequestVerizon();
-		SuspendDeviceRequest proxyRequest = (SuspendDeviceRequest) exchange
-				.getIn().getBody();
-		businessRequest.setAccountName(proxyRequest.getDataArea()
-				.getAccountName());
-		businessRequest.setCustomFields(proxyRequest.getDataArea()
-				.getCustomFields());
-		businessRequest.setGroupName(proxyRequest.getDataArea().getGroupName());
-		businessRequest.setServicePlan(proxyRequest.getDataArea()
-				.getServicePlan());
+        LOGGER.info("Session Parameters  VZSessionToken"
+                + exchange.getProperty(IConstant.VZ_SEESION_TOKEN));
+        LOGGER.info("Session Parameters  VZAuthorization"
+                + exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN));
 
-	
-		MidWayDevices[] proxyDevicesArray = proxyRequest.getDataArea().getDevices();
-		Devices[] businessDevicesArray = new Devices[proxyDevicesArray.length];
+        SuspendDeviceRequestVerizon businessRequest = new SuspendDeviceRequestVerizon();
+        SuspendDeviceRequest proxyRequest = (SuspendDeviceRequest) exchange
+                .getIn().getBody();
+        businessRequest.setAccountName(proxyRequest.getDataArea()
+                .getAccountName());
+        businessRequest.setCustomFields(proxyRequest.getDataArea()
+                .getCustomFields());
+        businessRequest.setGroupName(proxyRequest.getDataArea().getGroupName());
+        businessRequest.setServicePlan(proxyRequest.getDataArea()
+                .getServicePlan());
 
-		for (int j = 0; j < proxyDevicesArray.length; j++) {
+        MidWayDevices[] proxyDevicesArray = proxyRequest.getDataArea()
+                .getDevices();
+        Devices[] businessDevicesArray = new Devices[proxyDevicesArray.length];
 
-			DeviceId[] businessDeviceIdArray = new DeviceId[proxyDevicesArray[j]
-					.getDeviceIds().length];
-			MidWayDevices proxyDevices = proxyDevicesArray[j];
-			Devices businessDevice = new Devices();
+        for (int j = 0; j < proxyDevicesArray.length; j++) {
 
-			for (int i = 0; i < proxyDevices.getDeviceIds().length; i++) {
-				MidWayDeviceId proxyDeviceId = proxyDevices.getDeviceIds()[i];
+            DeviceId[] businessDeviceIdArray = new DeviceId[proxyDevicesArray[j]
+                    .getDeviceIds().length];
+            MidWayDevices proxyDevices = proxyDevicesArray[j];
+            Devices businessDevice = new Devices();
 
-				DeviceId businessDeviceId = new DeviceId();
-				businessDeviceId.setId(proxyDeviceId.getId());
-				businessDeviceId.setKind(proxyDeviceId.getKind());
+            for (int i = 0; i < proxyDevices.getDeviceIds().length; i++) {
+                MidWayDeviceId proxyDeviceId = proxyDevices.getDeviceIds()[i];
 
-				log.info(proxyDeviceId.getId());
+                DeviceId businessDeviceId = new DeviceId();
+                businessDeviceId.setId(proxyDeviceId.getId());
+                businessDeviceId.setKind(proxyDeviceId.getKind());
 
-				businessDeviceIdArray[i] = businessDeviceId;
+                LOGGER.info(proxyDeviceId.getId());
 
-			}
-			businessDevicesArray[j] = businessDevice;
+                businessDeviceIdArray[i] = businessDeviceId;
 
-			businessDevicesArray[j].setDeviceIds(businessDeviceIdArray);
-		}
-		businessRequest.setDevices(businessDevicesArray);
+            }
+            businessDevicesArray[j] = businessDevice;
 
-		ObjectMapper objectMapper = new ObjectMapper();
+            businessDevicesArray[j].setDeviceIds(businessDeviceIdArray);
+        }
+        businessRequest.setDevices(businessDevicesArray);
 
-		String strRequestBody = objectMapper
-				.writeValueAsString(businessRequest);
+        ObjectMapper objectMapper = new ObjectMapper();
 
-		exchange.getIn().setBody(strRequestBody);
+        String strRequestBody = objectMapper
+                .writeValueAsString(businessRequest);
 
-		Message message = exchange.getIn();
-		String sessionToken = "";
-		String authorizationToken = "";
+        exchange.getIn().setBody(strRequestBody);
 
-		if (exchange.getProperty(IConstant.VZ_SEESION_TOKEN) != null
-				&& exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN) != null) {
-			sessionToken = exchange.getProperty(IConstant.VZ_SEESION_TOKEN)
-					.toString();
-			authorizationToken = exchange.getProperty(
-					IConstant.VZ_AUTHORIZATION_TOKEN).toString();
-		}
+        Message message = CommonUtil.setMessageHeader(exchange);
+        message.setHeader(Exchange.HTTP_PATH, "/devices/actions/suspend");
 
-		/*
-		 * message.setHeader("VZ-M2M-Token",
-		 * "1d1f8e7a-c8bb-4f3c-a924-cf612b562425");
-		 * message.setHeader("Authorization",
-		 * "Bearer 89ba225e1438e95bd05c3cc288d3591");
-		 */
-
-		message.setHeader("VZ-M2M-Token", sessionToken);
-		message.setHeader("Authorization", "Bearer " + authorizationToken);
-		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
-		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
-		message.setHeader(Exchange.HTTP_METHOD, "POST");
-		message.setHeader(Exchange.HTTP_PATH, "/devices/actions/suspend");
-
-	}
+    }
 
 }
