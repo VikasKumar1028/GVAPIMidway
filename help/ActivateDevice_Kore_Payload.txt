@@ -1,33 +1,30 @@
 ************************MidWay Payload
-{  
-   "dataArea":{  
-      "accountName":"0442090022-00001",
-      "servicePlan":"M2MPERMB",
-      "mdnZipCode":"84037",
-	  "eAPCode": "EAP02500797",
-      "devices":[  
-         {  
-            "deviceIds":[  
-               {  
-                  "id":"89014103277405945812",
-                  "kind":""
-               }
-            ],
-			 "netSuiteId": "212974"
-         }
-      ]
-   },
-   "header":{  
-      "region":"USA",
+{
+  "dataArea": {
+    
+     "accountName":"0442090022-00001", 
+    "mdnZipCode": "84339",
+    "devices": {
+      "deviceIds": [
+        {
+          "kind": "",
+          "id": "8901260761246107398"
+        }
+      ],
+      "netSuiteId": 187135,
+      "servicePlan": "EAP025001667"
+    }
+  },
+  "header": {
+    "region":"USA",
       "timestamp":"2016-06-30T09:09:52-04:00",
       "organization":"Grant Victor",
       "transactionId":"gv123666",
-      "sourceName":"VERIZON",
+      "sourceName":"NetSuit",
       "applicationName":"WEB",
       "bsCarrier":"KORE"
-   }
+  }
 }
-
 
 ************************Carrier Request  Payload
 Payload: {"deviceNumber":"89014103277405947099","EAPCode":"EAP02500797"}

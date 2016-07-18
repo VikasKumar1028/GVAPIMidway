@@ -1,34 +1,44 @@
-{ 
-   "dataArea":{ 
-     
-        
-        "customFieldsToUpdate":[ 
-         { 
-            "key":"CustomField1",
-            "value":"string"
-         }
-      ],
-    
-      "devices":[ 
-         { 
-         "netSuiteId": "187135",
-            "deviceIds":[ 
-               { 
-                  "kind":"IMEI",
-                  "id":"353238063289994"
-               }
-            ]
-         }
-     
-      ]
-   },
-   "header":{ 
-      "region":"USA",
-      "timestamp":"string",
+{
+  "dataArea": {
+    "devices": [
+      {
+        "deviceIds": [
+          {
+            "kind": "IMEI",
+          "id": "353238063289994"
+          }
+		  ,
+		 {  
+               "kind":"ICCID",
+               "id":"89148000002377648495"
+            }
+		  
+        ],
+        "netSuiteId": 187135
+      }
+    ],
+     "accountName":"0442090022-00001", 
+    "servicePlan": "M2MPERMB",
+    "customFields": [
+      {
+        "value": "CustomField2",
+        "key": "West Region"
+      }
+    ],
+    "customFieldsToUpdate": [
+      {
+        "key": "CustomField1",
+        "value": "string"
+      }
+    ]
+  },
+  "header": {
+     "region":"USA",
+      "timestamp":"2016-06-30T09:09:52-04:00",
       "organization":"Grant Victor",
       "transactionId":"gv123666",
       "sourceName":"NetSuit",
       "applicationName":"WEB",
       "bsCarrier":"VERIZON"
-   }
+  }
 }

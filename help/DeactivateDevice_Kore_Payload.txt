@@ -1,32 +1,33 @@
 ************************MidWay Payload
-{  
-   "dataArea":{  
-      "accountName":"0442090022-00001",
-      "servicePlan":"M2MPERMB",
-      "mdnZipCode":"38523",
-	  "eAPCode": "EAP02500797",
-      "devices":[  
-         {  
-            "deviceIds":[  
-               {  
-                  "id":"89014103277405945812",
-                  "kind":"",
-                  "flagScrap": false
-               }
-            ],
-            "netSuiteId": "212974"
-         }
-      ]
-   },
-   "header":{  
-      "region":"USA",
+{
+  "dataArea": {
+   
+    "accountName":"0442090022-00001",
+      "reasonCode": "FF",
+	
+    "devices": [
+      {
+        "deviceIds": [
+          {
+            "id": "8901260761246107398",
+            "kind": "",
+            "flagScrap": false
+          }
+        ],
+        "netSuiteId": 220578
+      }
+    ]
+   
+  },
+  "header": {
+    "region":"USA",
       "timestamp":"2016-06-30T09:09:52-04:00",
       "organization":"Grant Victor",
       "transactionId":"gv123666",
-      "sourceName":"VERIZON",
+      "sourceName":"NetSuit",
       "applicationName":"WEB",
       "bsCarrier":"KORE"
-   }
+  }
 }
 
 ************************Carrier Payload

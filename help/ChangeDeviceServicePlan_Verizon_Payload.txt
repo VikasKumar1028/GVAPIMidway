@@ -1,31 +1,37 @@
 *************************MidWay Payload
-{ 
-   "dataArea":{ 
-   
-      "servicePlan":"M2MPERMB",
-    
-         "devices":[ 
-         { 
-         "netSuiteId": 187135,
-            "deviceIds":[ 
-               { 
-                  
-                  "kind":"IMEI",
-					"id":"353238063289994"
-               }
-            ]
-         }
-      ]
-   },
-   "header":{ 
-      "region":"USA",
+{
+  "dataArea": {
+     "accountName": "0442090022-00001",
+    "customFields": [
+      {
+        "value": "string",
+        "key": "string"
+      }
+    ],
+    "devices": [
+      {
+        "deviceIds": [
+          {
+           "kind": "IMEI",
+          "id": "353238063289994"
+          }
+		   
+        ],
+        "netSuiteId": 187135
+      }
+    ],
+    "servicePlan": "M2MPERMB",
+     "currentServicePlan": ""
+  },
+  "header": {
+    "region":"USA",
       "timestamp":"2016-06-30T09:09:52-04:00",
       "organization":"Grant Victor",
       "transactionId":"gv123666",
       "sourceName":"NetSuit",
       "applicationName":"WEB",
-      "bsCarrier":"VERIZON"
-   }
+      "bsCarrier":"Verizon"
+  }
 }
 
 *************************Carrier Payload

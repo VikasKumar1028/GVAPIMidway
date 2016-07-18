@@ -1,45 +1,39 @@
 ************************MidWay Request Payload
-
-{  
-   "dataArea":{  
-     "accountName":"0442090022-00001",
-     "currentServicePlan": "M2MPERMB",
-      "servicePlan":"M2M5MBASH",
-            
-         "devices":[  
-         {  
-         "netSuiteId": 220578,
-            "deviceIds":[  
-               {  
-                  
-                  "kind":"",
-			   "id":"8901260761246107398"
-               }
-            ]
-         },
-		
-         {  
-         "netSuiteId": 220597,
-            "deviceIds":[  
-               {  
-                  "kind":"",
-				  "id":"89014103277405947099"
-
-               }
-            ]
-         }
-      ]
-   },
-   "header":{  
-      "region":"USA",
+{
+  "dataArea": {
+    "accountName": "string",
+    "customFields": [
+      {
+        "value": "string",
+        "key": "string"
+      }
+    ],
+    "devices": [
+      {
+        "deviceIds": [
+          {
+            "id": "8901260761246107398",
+            "kind": ""
+          }
+        ],
+        "netSuiteId": 220578
+      }
+    ],
+    "servicePlan": "M2MPERMB",
+     "currentServicePlan": "M2MPERMB"
+  },
+  "header": {
+    "region":"USA",
       "timestamp":"2016-06-30T09:09:52-04:00",
       "organization":"Grant Victor",
       "transactionId":"gv123666",
       "sourceName":"NetSuit",
       "applicationName":"WEB",
       "bsCarrier":"KORE"
-   }
+  }
 }
+
+
 
 ************************Carrier Request Payload
   

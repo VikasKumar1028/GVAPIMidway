@@ -1,76 +1,37 @@
 ************************MidWay Payload
-
-{  
-   "dataArea":{  
-     "accountName":"0442090022-00001",
-      "servicePlan":"M2MPERMB",
-      "mdnZipCode":"84339",
-      "devices":[  
-         {  
-          "netSuiteId": "187135",
-            "deviceIds":[  
-               {  
-                  
-                  "kind":"IMEI",
-                   "id":"353238063289994"
-               }
-                                       ,
-            {  
+{
+  "dataArea": {
+    
+     "accountName":"0442090022-00001", 
+    "mdnZipCode": "84339",
+    "devices": {
+      "deviceIds": [
+        {
+          "kind": "IMEI",
+          "id": "353238063289994"
+        },
+		 {  
                "kind":"ICCID",
                "id":"89148000002377648495"
             }
-            ]
-         }
-                        
-       
-      ]
-   },
-   "header":{  
-      "region":"USA",
-      "timestamp":"string",
+      ],
+      "netSuiteId": 187135,
+      "servicePlan": "M2MPERMB"
+    }
+  },
+  "header": {
+    "region":"USA",
+      "timestamp":"2016-06-30T09:09:52-04:00",
       "organization":"Grant Victor",
       "transactionId":"gv123666",
       "sourceName":"NetSuit",
       "applicationName":"WEB",
       "bsCarrier":"VERIZON"
-   }
-   }
+  }
+}
+
 *********************************************************
 
-{  
-   "dataArea":{  
-     "accountName":"0442090022-00001",
-      "servicePlan":"M2MPERMB",
-      "mdnZipCode":"84339",
-      "devices":[  
-         {  
-            "deviceIds":[  
-               {  
-                  
-                  "kind":"IMEI",
-                   "id":"353238063289994"
-               }
-                                       ,
-            {  
-               "kind":"ICCID",
-               "id":"89148000002377648495"
-            }
-            ]
-         }
-                        
-       
-      ]
-   },
-   "header":{  
-      "region":"USA",
-      "timestamp":"string",
-      "organization":"Grant Victor",
-      "transactionId":"gv123666",
-      "sourceName":"NetSuit",
-      "applicationName":"WEB",
-      "bsCarrier":"VERIZON"
-   }
-}
 
 
 

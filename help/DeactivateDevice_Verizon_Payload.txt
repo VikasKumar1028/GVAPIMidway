@@ -1,36 +1,35 @@
  *************************MidWay Payload
- {  
-   "dataArea":{  
-   "accountName":"0442090022-00001",
-     "reasonCode":"FF",
-      "devices":[  
-         {  
-         "netSuiteId": "187135",
-            "deviceIds":[  
-               {  
-                  "id":"353238063289994",
-                  "kind":"IMEI",
-				  "flagScrap":"false"
-               }
-            ]
-         }
-      ]
-   },
-   "header":{  
-      "region":"USA",
-      "timestamp":"string",
+ {
+  "dataArea": {
+   
+    "accountName":"0442090022-00001",
+      "reasonCode": "FF",
+    "devices": [
+      {
+        "deviceIds": [
+          {
+            "id": "353238063289994",
+            "kind": "IMEI",
+            "flagScrap": false
+          }
+        ],
+        "netSuiteId": 187135
+      }
+    ]
+   
+  },
+  "header": {
+    "region":"USA",
+      "timestamp":"2016-06-30T09:09:52-04:00",
       "organization":"Grant Victor",
       "transactionId":"gv123666",
       "sourceName":"NetSuit",
       "applicationName":"WEB",
       "bsCarrier":"VERIZON"
-   }
+  }
 }
 
-
- 
- 
-  *************************Carrier Payload
+*************************Carrier Payload
  
  {"accountName":"0442090022-00001","devices":[{"deviceIds":[{"id":"353238063362759","kind":"IMEI"}]},{"deviceIds":[{"id":"89148000002377519373","kind":"ICCID"}]}]}
  
