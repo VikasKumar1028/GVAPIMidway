@@ -29,6 +29,7 @@ public class IResponse {
 
     public static final String ERROR_DESCRIPTION_UPDATE_MIDWAYDB = "Failed to upload record in Midway";
     public static final String ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB = "NetSuite id is missing in Request";
+    public static final String ERROR_DESCRIPTION_CHANGE_SERVICE_PLAN = "Current Service plan or Service plan is missing in Request";
     public static final String ERROR_DESCRIPTION_NODATA_DEVCIEINFO_MIDWAYDB = "No data found in Midway";
     public static final String ERROR_DESCRIPTION_NODATA_DEVCIEINFO_CARRIER = "No Device Information found from Carrier";
     public static final String ERROR_DESCRIPTION_NODATA_UPDATEDEVCIE_MIDWAYDB = "No record found to Update in Midway";

@@ -12,7 +12,7 @@ import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequestData
 
 public class NetSuiteIdValidationProcessor implements Processor {
 
-    private static final Logger LOGGER = Logger.getLogger(HeaderErrorProcessor.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(NetSuiteIdValidationProcessor.class.getName());
 
     @Override
     public void process(Exchange exchange) throws Exception {

@@ -28,6 +28,7 @@ import com.gv.midway.pojo.kore.KoreProvisoningResponse;
 import com.gv.midway.pojo.token.VerizonAuthorizationResponse;
 import com.gv.midway.pojo.token.VerizonSessionLoginResponse;
 import com.gv.midway.processor.BulkDeviceProcessor;
+import com.gv.midway.processor.ChangeDeviceServicePlanValidatorProcessor;
 import com.gv.midway.processor.DateValidationProcessor;
 import com.gv.midway.processor.GenericErrorProcessor;
 import com.gv.midway.processor.HeaderErrorProcessor;
@@ -116,7 +117,6 @@ import com.gv.midway.service.IAuditService;
 import com.gv.midway.service.IDeviceService;
 import com.gv.midway.service.IJobService;
 import com.gv.midway.service.ISchedulerService;
-
 import com.gv.midway.service.ISessionService;
 import com.gv.midway.service.ITransactionalService;
 
@@ -779,7 +779,7 @@ public class CamelRoute extends RouteBuilder {
         // Change Device ServicePlans
 
         from("direct:changeDeviceServicePlans")
-                .process(new HeaderProcessor())
+                .process(new HeaderProcessor()).process(new ChangeDeviceServicePlanValidatorProcessor())
                 .choice()
                 .when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
                 .choice()
