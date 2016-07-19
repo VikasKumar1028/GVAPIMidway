@@ -116,7 +116,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 
         catch (Exception e) {
 
-            LOGGER.error("Exception ex" + e);
+            LOGGER.error("Exception ex" + CommonUtil.getStackTrace(e));
             Header header = device.getHeader();
 
             Response response = new Response();
@@ -194,7 +194,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 
                 return deviceInformationResponse;
             } catch (Exception e) {
-                LOGGER.error("Exception ex" + e);
+            	LOGGER.error("Exception ex" + CommonUtil.getStackTrace(e));
                 response.setResponseCode(IResponse.DB_ERROR_CODE);
                 response.setResponseDescription(IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB);
                 response.setResponseStatus(IResponse.ERROR_MESSAGE);
@@ -235,7 +235,7 @@ public class DeviceDaoImpl implements IDeviceDao {
         }
 
         catch (Exception e) {
-            LOGGER.error("Exception ex" + e);
+        	LOGGER.error("Exception ex" + CommonUtil.getStackTrace(e));
             LOGGER.info("Not able to fetch the data from DB....." + e.getMessage());
         }
 
@@ -313,7 +313,7 @@ public class DeviceDaoImpl implements IDeviceDao {
                 DeviceInformation deviceInformation = (DeviceInformation) mongoTemplate
                         .findOne(searchDeviceQuery, DeviceInformation.class);
 
-                deviceInformation.setLastUpdated(new Date());
+                deviceInformationToUpdate.setLastUpdated(new Date());
 
                 if (deviceInformation == null)
 
@@ -345,7 +345,7 @@ public class DeviceDaoImpl implements IDeviceDao {
         }
 
         catch (Exception e) {
-            LOGGER.error("Exception ex" + e);
+        	LOGGER.error("Exception ex" + CommonUtil.getStackTrace(e));
             List<BatchDeviceId> batchDeviceList = (List<BatchDeviceId>) exchange
                     .getProperty(IConstant.BULK_ERROR_LIST);
             BatchDeviceId errorBatchDeviceId = new BatchDeviceId();
@@ -508,7 +508,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 
         } catch (Exception e) {
 
-            LOGGER.error("error " + e);
+        	LOGGER.error("Exception ex" + CommonUtil.getStackTrace(e));
             response.setResponseCode(IResponse.DB_ERROR_CODE);
             response.setResponseDescription(IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB);
             response.setResponseStatus(IResponse.ERROR_MESSAGE);
@@ -707,7 +707,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 
         } catch (Exception e) {
 
-            LOGGER.error("Error " + e);
+        	LOGGER.error("Exception ex" + CommonUtil.getStackTrace(e));
             response.setResponseCode(IResponse.DB_ERROR_CODE);
             response.setResponseDescription(IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB);
             response.setResponseStatus(IResponse.ERROR_MESSAGE);

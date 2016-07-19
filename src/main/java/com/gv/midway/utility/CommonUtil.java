@@ -1,5 +1,7 @@
 package com.gv.midway.utility;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.DateFormat;
@@ -11,9 +13,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
-
 import org.apache.log4j.Logger;
 
 import com.gv.midway.constant.IConstant;
@@ -414,5 +416,17 @@ public class CommonUtil {
         message.setHeader(Exchange.HTTP_METHOD, "POST");
         return message;
     }
+    
+    /**
+     * Get the Exception stack trace in log file
+     */
 
+    public static String getStackTrace(Exception e){
+    	
+    	StringWriter stack = new StringWriter();
+    	e.printStackTrace(new PrintWriter(stack));
+    	
+    	return stack.toString();
+    	
+    }
 }
