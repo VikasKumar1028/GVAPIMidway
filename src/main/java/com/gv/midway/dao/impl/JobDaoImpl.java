@@ -65,8 +65,7 @@ public class JobDaoImpl implements IJobDao {
             LOGGER.info("Carrier Name -----------------" + carrierName);
             // We have to check bs_carrier with possible reseller values for
             // that carrier.
-            Query searchDeviceQuery = new Query(Criteria.where("bs_carrier")
-                    .is(carrierName));
+            Query searchDeviceQuery = new Query(Criteria.where("bs_carrier").regex(carrierName, "i"));
 
             deviceInformationList = mongoTemplate.find(searchDeviceQuery,
                     DeviceInformation.class);
@@ -103,8 +102,8 @@ public class JobDaoImpl implements IJobDao {
             LOGGER.info("Carrier Name -----------------" + carrierName);
             // We have to check bs_carrier with possible reseller values for
             // that carrier.
-            Query searchDeviceQuery = new Query(Criteria.where("bs_carrier")
-                    .is(carrierName)).addCriteria(Criteria.where("netSuiteId")
+            Query searchDeviceQuery = new Query(Criteria.where("bs_carrier").regex(carrierName, "i"))
+                    .addCriteria(Criteria.where("netSuiteId")
                     .mod(2, 1));
 
             LOGGER.info("searchDeviceQuery::::::::::" + searchDeviceQuery);
@@ -145,8 +144,8 @@ public class JobDaoImpl implements IJobDao {
             LOGGER.info("Carrier Name -----------------" + carrierName);
             // We have to check bs_carrier with possible reseller values for
             // that carrier.
-            Query searchDeviceQuery = new Query(Criteria.where("bs_carrier")
-                    .is(carrierName)).addCriteria(Criteria.where("netSuiteId")
+            Query searchDeviceQuery = new Query(Criteria.where("bs_carrier").regex(carrierName, "i"))
+                    .addCriteria(Criteria.where("netSuiteId")
                     .mod(2, 0));
             ;
 
@@ -229,8 +228,7 @@ public class JobDaoImpl implements IJobDao {
 
         JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
 
-        Query searchJobQuery = new Query(Criteria.where("carrierName").is(
-                jobDetail.getCarrierName())).addCriteria(
+        Query searchJobQuery = new Query(Criteria.where("carrierName").regex(jobDetail.getCarrierName(), "i")).addCriteria(
                 Criteria.where("date").is(jobDetail.getDate())).addCriteria(
                 Criteria.where("isValid").is(true));
 
@@ -256,8 +254,8 @@ public class JobDaoImpl implements IJobDao {
         JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
         try {
 
-            Query searchJobQuery = new Query(Criteria.where("carrierName").is(
-                    jobDetail.getCarrierName())).addCriteria(
+            Query searchJobQuery = new Query(Criteria.where("carrierName").regex(
+                    jobDetail.getCarrierName(),"i")).addCriteria(
                     Criteria.where("date").is(jobDetail.getDate()))
                     .addCriteria(Criteria.where("isValid").is(true));
 
@@ -294,8 +292,8 @@ public class JobDaoImpl implements IJobDao {
             LOGGER.info("Carrier Name -----------------" + carrierName);
             // We have to check bs_carrier with possible reseller values for
             // that carrier.
-            Query searchQuery = new Query(Criteria.where("carrierName").is(
-                    jobDetail.getCarrierName()))
+            Query searchQuery = new Query(Criteria.where("carrierName").regex(
+                    jobDetail.getCarrierName(),"i"))
                     .addCriteria(Criteria.where("date").is(jobDetail.getDate()))
                     .addCriteria(
                             Criteria.where("transactionStatus").is(
@@ -334,8 +332,8 @@ public class JobDaoImpl implements IJobDao {
         JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
         try {
 
-            Query searchJobQuery = new Query(Criteria.where("carrierName").is(
-                    jobDetail.getCarrierName()))
+            Query searchJobQuery = new Query(Criteria.where("carrierName").regex(
+                    jobDetail.getCarrierName(),"i"))
                     .addCriteria(Criteria.where("date").is(jobDetail.getDate()))
                     .addCriteria(
                             Criteria.where("transactionStatus").is(
@@ -371,8 +369,8 @@ public class JobDaoImpl implements IJobDao {
         JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
         try {
 
-            Query searchJobQuery = new Query(Criteria.where("carrierName").is(
-                    jobDetail.getCarrierName()))
+            Query searchJobQuery = new Query(Criteria.where("carrierName").regex(
+                    jobDetail.getCarrierName(),"i"))
                     .addCriteria(Criteria.where("date").is(jobDetail.getDate()))
                     .addCriteria(
                             Criteria.where("transactionStatus").is(
