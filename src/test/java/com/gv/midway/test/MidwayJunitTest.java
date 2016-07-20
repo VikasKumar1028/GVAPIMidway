@@ -1085,8 +1085,10 @@ public class MidwayJunitTest extends Assert {
         dataArea.setDevices(deDevices);
         // dataArea.setAccountName("0442090022-00001");
         dataArea.setServicePlan("121093");
-        // dataArea.setCurrentServicePlan("M2M5MBASH");
+    
+        dataArea.setCurrentServicePlan("M2M5MBASH");
         // dataArea.setPlanCode("121093");
+        
         req.setDataArea(dataArea);
 
         header.setSourceName("NetSuit");
@@ -1105,8 +1107,7 @@ public class MidwayJunitTest extends Assert {
 
         LOGGER.info("Response in Junit Test for Device Change Service Plan....... :"
                 + response.getResponse().getResponseCode());
-        assertEquals(response.getResponse().getResponseCode().toString(),
-                "2000");
+        assertEquals(response.getResponse().getResponseCode().toString(), "2000");
         assertEquals(response.getResponse().getResponseStatus(), "Success");
         assertNotNull(response.getDataArea().getOrderNumber());
     }
