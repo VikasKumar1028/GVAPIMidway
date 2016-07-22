@@ -1,5 +1,5 @@
 *************************MidWay Payload
-	{
+{
   "dataArea": {
     "devices": [
       {

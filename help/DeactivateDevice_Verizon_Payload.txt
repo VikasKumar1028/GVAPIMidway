@@ -12,6 +12,12 @@
             "kind": "IMEI",
             "flagScrap": false
           }
+		    ,
+		 {  
+               "kind":"ICCID",
+               "id":"89148000002377648495",
+			   "flagScrap": false
+            }
         ],
         "netSuiteId": 187135
       }
@@ -28,7 +34,7 @@
       "bsCarrier":"VERIZON"
   }
 }
-
+ 
 *************************Carrier Payload
  
  {"accountName":"0442090022-00001","devices":[{"deviceIds":[{"id":"353238063362759","kind":"IMEI"}]},{"deviceIds":[{"id":"89148000002377519373","kind":"ICCID"}]}]}
