@@ -9,6 +9,7 @@ import org.apache.camel.component.cxf.CxfOperationException;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
 
+import com.esotericsoftware.minlog.Log;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.JobName;
 import com.gv.midway.exception.VerizonSessionTokenExpirationException;
@@ -43,7 +44,7 @@ public class VerizonBatchExceptionProcessor implements Processor {
         Exception ex = (Exception) exchange
                 .getProperty(Exchange.EXCEPTION_CAUGHT);
 
-        String errorType;
+        String errorType=null;
 
         // If Connection Exception
         if (ex.getCause() instanceof UnknownHostException
@@ -65,8 +66,30 @@ public class VerizonBatchExceptionProcessor implements Processor {
                 exchange.setProperty(IConstant.RESPONSE_STATUS, "Invalid Token");
                 exchange.setProperty(IConstant.RESPONSE_DESCRIPTION,
                         "Not able to retrieve  valid authentication token");
+                if(exchange.getProperty(IConstant.VERIZON_BATCH_SESSION_TOKENERROR)==null)
+                {
+                	exchange.setProperty(IConstant.VERIZON_BATCH_SESSION_TOKENERROR, 1);
+                }
+                else
+                {
+                	Integer sessionErrorCount=(Integer)exchange.getProperty(IConstant.VERIZON_BATCH_SESSION_TOKENERROR);
+                	sessionErrorCount=sessionErrorCount+1;
+                	exchange.setProperty(IConstant.VERIZON_BATCH_SESSION_TOKENERROR, sessionErrorCount);
+                	
+                }
+                LOGGER.info("count of retry is........."+exchange.getProperty(IConstant.VERIZON_BATCH_SESSION_TOKENERROR));
+                if((Integer)exchange.getProperty(IConstant.VERIZON_BATCH_SESSION_TOKENERROR)<=2)
+                {
+                	
                 CommonUtil.setTokenGenerationRequired();
                 throw new VerizonSessionTokenExpirationException("401", "401");
+                }
+                
+                else
+                {
+                	errorType = "Not able to retrieve  valid authentication token";
+
+                }
             } // Other Cxf Exception
             else {
                 errorType = exception.getResponseBody();

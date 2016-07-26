@@ -96,5 +96,6 @@ public interface IConstant {
     static String KORE_CHECK_STATUS = "KoreCheckStatusFlow";
 
     static String KORE_PROVISIONING_REQUEST_STATUS = "KoreProvisioningRequestStatus";
+    static String VERIZON_BATCH_SESSION_TOKENERROR = "VerizonBatchSessionTokenError";
 
 }
