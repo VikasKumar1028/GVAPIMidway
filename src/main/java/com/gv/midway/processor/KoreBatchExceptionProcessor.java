@@ -2,16 +2,11 @@ package com.gv.midway.processor;
 
 import java.net.ConnectException;
 import java.net.UnknownHostException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.component.cxf.CxfOperationException;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
-
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.deviceHistory.DeviceUsage;
 import com.gv.midway.pojo.job.JobDetail;
@@ -48,14 +43,22 @@ public class KoreBatchExceptionProcessor implements Processor {
             errorType = IConstant.MIDWAY_CONNECTION_ERROR;
 
         }
+        
         // CXF Exception
-        else {
+        else if(ex.getCause() instanceof CxfOperationException){
             CxfOperationException exception = (CxfOperationException) exchange
                     .getProperty(Exchange.EXCEPTION_CAUGHT);
             // Token Expiration Exception
 
             errorType = exception.getResponseBody();
 
+        }
+        
+        //SIM is missing in DeviceIds , KoreSimMissingException 
+        else
+        {
+        	 errorType = IConstant.KORE_MISSING_SIM_ERROR;
+        	
         }
 
         JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");

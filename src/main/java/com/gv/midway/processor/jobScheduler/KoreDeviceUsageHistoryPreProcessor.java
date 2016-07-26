@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
+import com.gv.midway.exception.KoreSimMissingException;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.usageInformation.kore.request.UsageInformationKoreRequest;
 import com.gv.midway.pojo.verizon.DeviceId;
@@ -49,6 +50,12 @@ public class KoreDeviceUsageHistoryPreProcessor implements Processor {
 
         DeviceId deviceId = CommonUtil.getSimNumber(deviceInfo.getDeviceIds());
 
+        if(deviceId==null)
+        {
+        
+        	throw new KoreSimMissingException("401", IConstant.KORE_MISSING_SIM_ERROR);
+        	
+        }
         String simNumber = deviceId.getId();
 
         usageInformationKoreRequest.setSimNumber(simNumber);

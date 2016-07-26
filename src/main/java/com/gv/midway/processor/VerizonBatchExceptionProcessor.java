@@ -2,14 +2,11 @@ package com.gv.midway.processor;
 
 import java.net.ConnectException;
 import java.net.UnknownHostException;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.component.cxf.CxfOperationException;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
-
-import com.esotericsoftware.minlog.Log;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.JobName;
 import com.gv.midway.exception.VerizonSessionTokenExpirationException;

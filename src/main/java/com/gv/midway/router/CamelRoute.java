@@ -18,6 +18,7 @@ import com.gv.midway.constant.CarrierType;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.JobName;
 import com.gv.midway.exception.InvalidParameterException;
+import com.gv.midway.exception.KoreSimMissingException;
 import com.gv.midway.exception.MissingParameterException;
 import com.gv.midway.exception.VerizonSessionTokenExpirationException;
 import com.gv.midway.pojo.checkstatus.kore.KoreCheckStatusResponse;
@@ -1175,7 +1176,7 @@ public class CamelRoute extends RouteBuilder {
                 .process(new KoreDeviceUsageHistoryPostProcessor())
                 .bean(iSchedulerService, "saveDeviceUsageHistory")
                 .doCatch(CxfOperationException.class,
-                        UnknownHostException.class, ConnectException.class)
+                        UnknownHostException.class, ConnectException.class,KoreSimMissingException.class)
                 .process(new KoreBatchExceptionProcessor(env))
                 .bean(iSchedulerService, "saveDeviceUsageHistory").endDoTry();
 
@@ -1278,7 +1279,7 @@ public class CamelRoute extends RouteBuilder {
                 .process(new KoreDeviceUsageHistoryPostProcessor())
                 .bean(iSchedulerService, "saveDeviceUsageHistory")
                 .doCatch(CxfOperationException.class,
-                        UnknownHostException.class, ConnectException.class)
+                        UnknownHostException.class, ConnectException.class,KoreSimMissingException.class)
                 .process(new KoreBatchExceptionProcessor(env))
                 .bean(iSchedulerService, "saveDeviceUsageHistory").endDoTry();
 
