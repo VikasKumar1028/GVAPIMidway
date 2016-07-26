@@ -470,7 +470,8 @@ public class DeviceDaoImpl implements IDeviceDao {
             Query searchDeviceQuery = new Query(Criteria.where("netSuiteId")
                     .is(netSuiteId)).addCriteria(Criteria.where("date")
                     .gte(startDate)
-                    .orOperator(Criteria.where("date").lte(endDate)));
+                    .orOperator(Criteria.where("date").lte(endDate))).addCriteria(Criteria.where("isValid")
+                    .is(true));
 
             LOGGER.info("searchDeviceQuery::::::::::::::" + searchDeviceQuery);
 
@@ -624,7 +625,8 @@ public class DeviceDaoImpl implements IDeviceDao {
             Query searchDeviceQuery = new Query(Criteria.where("netSuiteId")
                     .is(netSuiteId)).addCriteria(Criteria.where("date")
                     .gte(startDate)
-                    .orOperator(Criteria.where("date").lte(endDate)));
+                    .orOperator(Criteria.where("date").lte(endDate))).addCriteria(Criteria.where("isValid")
+                            .is(true));
 
             LOGGER.info("searchDeviceQuery::::::::::::::" + searchDeviceQuery);
 

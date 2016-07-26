@@ -16,6 +16,7 @@ import com.gv.midway.pojo.deviceHistory.DeviceConnection;
 import com.gv.midway.pojo.deviceHistory.DeviceUsage;
 import com.gv.midway.pojo.job.JobDetail;
 import com.gv.midway.pojo.verizon.DeviceId;
+import com.gv.midway.utility.CommonUtil;
 
 public class VerizonBatchExceptionProcessor implements Processor {
 
@@ -64,6 +65,7 @@ public class VerizonBatchExceptionProcessor implements Processor {
                 exchange.setProperty(IConstant.RESPONSE_STATUS, "Invalid Token");
                 exchange.setProperty(IConstant.RESPONSE_DESCRIPTION,
                         "Not able to retrieve  valid authentication token");
+                CommonUtil.setTokenGenerationRequired();
                 throw new VerizonSessionTokenExpirationException("401", "401");
             } // Other Cxf Exception
             else {

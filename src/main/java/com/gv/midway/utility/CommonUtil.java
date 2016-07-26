@@ -11,6 +11,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,6 +31,10 @@ public class CommonUtil {
     private static final Logger LOGGER = Logger.getLogger(CommonUtil.class);
 
     public static List<String> endPointList = new ArrayList<String>();
+    
+    public static AtomicBoolean isTokenRequired = new AtomicBoolean();
+    
+    public static AtomicBoolean isAlreadyinTokenGeneration=new AtomicBoolean();
 
     static {
 
@@ -427,6 +432,53 @@ public class CommonUtil {
     	e.printStackTrace(new PrintWriter(stack));
     	
     	return stack.toString();
+    	
+    }
+    
+    public static void setTokenGenerationRequired()
+    {
+     
+    	if(isTokenRequired.get()==false){
+    		
+    		isTokenRequired.set(true);
+    		isAlreadyinTokenGeneration.set(true);
+    	}
+    	
+    	
+    }
+    
+    public static AtomicBoolean getTokenRequired()
+    {
+     
+
+      return isTokenRequired;
+    	
+    	
+    }
+    
+    public static AtomicBoolean isAlreadyinTokenGeneration()
+    {
+     
+
+      return isAlreadyinTokenGeneration;
+    	
+    	
+    }
+    
+    public static void setAlreadyInTokenGeneration(boolean isAlreadyInTokenGeneration)
+    {
+     
+
+    	isAlreadyinTokenGeneration.set(isAlreadyInTokenGeneration);
+    	
+    	
+    }
+    
+    public static void setTokenRequired(boolean isTokenRequired)
+    {
+     
+    	CommonUtil.isTokenRequired.set(isTokenRequired);
+    	
     	
     }
 }

@@ -12,6 +12,7 @@ import com.gv.midway.constant.IConstant;
 import com.gv.midway.dao.ISessionDao;
 import com.gv.midway.pojo.session.SessionBean;
 import com.gv.midway.service.ISessionService;
+import com.gv.midway.utility.CommonUtil;
 
 @Service
 public class SessionServiceImpl implements ISessionService, ServletContextAware {
@@ -113,4 +114,11 @@ public class SessionServiceImpl implements ISessionService, ServletContextAware 
         }
 
     }
+
+	@Override
+	public void setTokenRequired() {
+		// TODO Auto-generated method stub
+		
+		CommonUtil.setTokenRequired(false);
+	}
 }

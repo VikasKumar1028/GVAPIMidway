@@ -24,6 +24,7 @@ import com.gv.midway.pojo.restoreDevice.response.RestoreDeviceResponse;
 import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
 import com.gv.midway.pojo.usageInformation.response.UsageInformationResponse;
 import com.gv.midway.pojo.verizon.VerizonErrorResponse;
+import com.gv.midway.utility.CommonUtil;
 
 public class VerizonGenericExceptionProcessor implements Processor {
 
@@ -68,6 +69,7 @@ public class VerizonGenericExceptionProcessor implements Processor {
             exchange.setProperty(IConstant.RESPONSE_STATUS, "Invalid Token");
             exchange.setProperty(IConstant.RESPONSE_DESCRIPTION,
                     "Not able to retrieve  valid authentication token");
+            CommonUtil.setTokenGenerationRequired();
             throw new VerizonSessionTokenExpirationException("401", "401");
         } else {
 

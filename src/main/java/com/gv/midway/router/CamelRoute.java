@@ -208,7 +208,7 @@ public class CamelRoute extends RouteBuilder {
                 endChoice().otherwise().log(LoggingLevel.INFO, "NOT MATCH")
                 .to("log:input").end()
                 // sync DB and session token in the ServletContext
-                .bean(iSessionService, "synchronizeDBContextToken");
+                .bean(iSessionService, "synchronizeDBContextToken").bean(iSessionService, "setTokenRequired");
 
         /** Main Change Device Service Plans Flow **/
 
@@ -1058,7 +1058,7 @@ public class CamelRoute extends RouteBuilder {
                 .modeBeforeConsumer().setBody().body()
                 .process(new BulkDeviceProcessor()).end()
                 .bean(iDeviceService, "updateDevicesDetailsBulk").split()
-                .method("bulkOperationSplitter").recipientList()
+                .method("bulkOperationSplitter").parallelProcessing().recipientList()
                 .method("bulkOperationServiceRouter");
 
         /**
@@ -1150,20 +1150,20 @@ public class CamelRoute extends RouteBuilder {
                 .choice()
                 .when(simple("${exchangeProperty[jobName]} == 'VERIZON_CONNECTION_HISTORY'"))
                 .split()
-                .method("jobSplitter")
+                .method("jobSplitter").parallelProcessing()
                 .to("seda:processVerizonConnectionHistoryJob")
                 .endChoice()
                 .when(simple("${exchangeProperty[jobName]} == 'KORE_DEVICE_USAGE'"))
                 .split()
-                .method("jobSplitter")
+                .method("jobSplitter").parallelProcessing()
                 .to("seda:processKoreDeviceUsageJob")
                 .endChoice()
                 .when(simple("${exchangeProperty[jobName]} == 'VERIZON_DEVICE_USAGE'"))
-                .split().method("jobSplitter")
+                .split().method("jobSplitter").parallelProcessing()
                 .to("seda:processVerizonDeviceUsageJob").endChoice();
 
         // KORE Job-DEVICE USAGE
-        from("seda:processKoreDeviceUsageJob?concurrentConsumers=5")
+        from("seda:processKoreDeviceUsageJob?concurrentConsumers=10")
                 .log("KOREJob-DEVICE USAGE")
 
                 .doTry()
@@ -1180,7 +1180,7 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iSchedulerService, "saveDeviceUsageHistory").endDoTry();
 
         // VERIZON Job-DEVICE USAGE
-        from("seda:processVerizonDeviceUsageJob?concurrentConsumers=4")
+        from("seda:processVerizonDeviceUsageJob?concurrentConsumers=10")
                 .log("VERIZONJob-DEVICE USAGE")
                 .doTry()
                 .bean(iSessionService, "setContextTokenInExchange")
@@ -1196,7 +1196,7 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iSchedulerService, "saveDeviceUsageHistory").endDoTry();
 
         // VERIZON Job CONNECTION HISTORY
-        from("seda:processVerizonConnectionHistoryJob?concurrentConsumers=5")
+        from("seda:processVerizonConnectionHistoryJob?concurrentConsumers=10")
                 .log("VERIZONJob CONNECTION HISTORY")
                 .doTry()
                 .bean(iSessionService, "setContextTokenInExchange")
@@ -1250,22 +1250,22 @@ public class CamelRoute extends RouteBuilder {
                 .choice()
                 .when(simple("${exchangeProperty[jobName]} == 'VERIZON_CONNECTION_HISTORY'"))
                 .split()
-                .method("jobSplitter")
+                .method("jobSplitter").parallelProcessing()
                 .to("seda:processTransactionFailureVerizonConnectionHistoryJob")
                 .endChoice()
                 .when(simple("${exchangeProperty[jobName]} == 'KORE_DEVICE_USAGE'"))
                 .split()
-                .method("jobSplitter")
+                .method("jobSplitter").parallelProcessing()
                 .to("seda:processTransactionFailureKoreDeviceUsageJob")
                 .endChoice()
                 .when(simple("${exchangeProperty[jobName]} == 'VERIZON_DEVICE_USAGE'"))
-                .split().method("jobSplitter")
+                .split().method("jobSplitter").parallelProcessing()
                 .to("seda:processTransactionFailureVerizonDeviceUsageJob")
                 .endChoice();
 
         // KORE Job-DEVICE USAGE
         from(
-                "seda:processTransactionFailureKoreDeviceUsageJob?concurrentConsumers=5")
+                "seda:processTransactionFailureKoreDeviceUsageJob?concurrentConsumers=10")
                 .log("KOREJob-DEVICE USAGE")
 
                 .doTry()
@@ -1284,7 +1284,7 @@ public class CamelRoute extends RouteBuilder {
 
         // VERIZON Job-DEVICE USAGE
         from(
-                "seda:processTransactionFailureVerizonDeviceUsageJob?concurrentConsumers=4")
+                "seda:processTransactionFailureVerizonDeviceUsageJob?concurrentConsumers=10")
                 .log("VERIZONJob-DEVICE USAGE")
                 .doTry()
                 .bean(iSessionService, "setContextTokenInExchange")
@@ -1302,7 +1302,7 @@ public class CamelRoute extends RouteBuilder {
 
         // VERIZON Job CONNECTION HISTORY
         from(
-                "seda:processTransactionFailureVerizonConnectionHistoryJob?concurrentConsumers=5")
+                "seda:processTransactionFailureVerizonConnectionHistoryJob?concurrentConsumers=10")
                 .log("VERIZONJob CONNECTION HISTORY")
                 .doTry()
                 .bean(iSessionService, "setContextTokenInExchange")
@@ -1410,7 +1410,7 @@ public class CamelRoute extends RouteBuilder {
                 .to("seda:processDeviceUsageNotificationJob");
 
         // NOTIFICATION Job-DEVICE USAGE
-        from("seda:processDeviceUsageNotificationJob?concurrentConsumers=4")
+        from("seda:processDeviceUsageNotificationJob?concurrentConsumers=5")
                 .doTry().bean(iJobService, "processDeviceNotification")
                 .doCatch(CxfOperationException.class).endDoTry();
 

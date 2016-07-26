@@ -7,6 +7,8 @@ import org.apache.camel.ProducerTemplate;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
 
+import com.gv.midway.utility.CommonUtil;
+
 public class TokenProcessor implements Processor {
 
     @EndpointInject(uri = "")
@@ -30,8 +32,18 @@ public class TokenProcessor implements Processor {
     public void process(Exchange exchange) throws Exception {
 
         LOGGER.info("TokenProcessor");
+        if(CommonUtil.isTokenRequired.get()==true&&CommonUtil.isAlreadyinTokenGeneration.get()==true)
+        {
+        CommonUtil.setAlreadyInTokenGeneration(false);
         exchange.getContext().createProducerTemplate()
                 .sendBody("direct:tokenGeneration", exchange.getIn().getBody());
+        }
+        
+        else
+        {
+        	  LOGGER.info(exchange.getExchangeId()+"   TokenProcessor exchnage in waiting state......");
+        	Thread.sleep(4000);
+        }
 
     }
 

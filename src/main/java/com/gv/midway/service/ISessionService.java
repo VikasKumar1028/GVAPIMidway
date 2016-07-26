@@ -19,5 +19,7 @@ public interface ISessionService {
     public String checkToken(Exchange exchange);
 
     public void setServletContext(ServletContext servletContext);
+    
+    public void setTokenRequired();
 
 }
