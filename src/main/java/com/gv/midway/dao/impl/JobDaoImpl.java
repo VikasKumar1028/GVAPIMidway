@@ -55,6 +55,10 @@ public class JobDaoImpl implements IJobDao {
         JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
 
         exchange.setProperty("jobName", jobDetail.getName().toString());
+        
+        exchange.setProperty("carrierName", jobDetail.getCarrierName());
+        
+        exchange.setProperty("jobType", jobDetail.getType().toString());
 
         List<DeviceInformation> deviceInformationList = null;
 
@@ -92,6 +96,10 @@ public class JobDaoImpl implements IJobDao {
         JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
 
         exchange.setProperty("jobName", jobDetail.getName().toString());
+        
+        exchange.setProperty("carrierName", jobDetail.getCarrierName());
+        
+        exchange.setProperty("jobType", jobDetail.getType().toString());
 
         List<DeviceInformation> deviceInformationList = null;
 
@@ -134,6 +142,10 @@ public class JobDaoImpl implements IJobDao {
         JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
 
         exchange.setProperty("jobName", jobDetail.getName().toString());
+        
+        exchange.setProperty("carrierName", jobDetail.getCarrierName());
+        
+        exchange.setProperty("jobType", jobDetail.getType().toString());
 
         List<DeviceInformation> deviceInformationList = null;
 

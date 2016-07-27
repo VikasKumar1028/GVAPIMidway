@@ -281,7 +281,7 @@ public class CamelRoute extends RouteBuilder {
         // device Overage Notification Job
         notificationJob();
 
-        deviceUsageNotificationJob();
+        //deviceUsageNotificationJob();
 
         // Verizon Call Back
         callbacks();
@@ -1129,7 +1129,13 @@ public class CamelRoute extends RouteBuilder {
 
         from("direct:processJob")
                 .onCompletion()
-                .bean(iJobService, "updateJobDetails")
+                .bean(iJobService, "updateJobDetails").
+                // Run the Notification Job for Self triggered Batch job of Device Usage
+                 choice()
+                .when(simple("${exchangeProperty[jobName]} == 'KORE_DEVICE_USAGE' || ${exchangeProperty[jobName]} == 'VERIZON_DEVICE_USAGE' && ${exchangeProperty[jobType]} == 'NEW'") ).
+                bean(iJobService,
+                        "setJobDetails(${exchange},${exchangeProperty[carrierName]},"+JobName.DEVICE_USAGE_NOTIFICATION+")")
+                .to("direct:notificationJob").endChoice().end()
                 .end()
                 .bean(iJobService, "insertJobDetails")
                 .bean(iJobService, "setJobStartandEndTime")
@@ -1372,13 +1378,13 @@ public class CamelRoute extends RouteBuilder {
     /**
      * This Method is used to schedule device Overage Notification
      */
-    public void deviceUsageNotificationJob() {
+    /*public void deviceUsageNotificationJob() {
 
         from(
-        /*
+        
          * "quartz2://job/deviceUsageNotifcationTimer?cron=" +
          * IConstant.JOB_TIME_CONFIGURATION)
-         */
+         
         "timer://deviceUsageNotifcationTimer?period=150m")
                 .bean(iJobService,
                         "setJobDetails(${exchange},"
@@ -1386,7 +1392,7 @@ public class CamelRoute extends RouteBuilder {
                                 + JobName.DEVICE_USAGE_NOTIFICATION + ")")
                 .to("direct:notificationJob").end();
 
-    }
+    }*/
 
     /**
      * Notification Job
@@ -1476,7 +1482,7 @@ public class CamelRoute extends RouteBuilder {
         // TODO Auto-generated method stub
         from("timer://koreCheckStatusTimer?period=5m")
                 .bean(iTransactionalService, "populatePendingKoreCheckStatus")
-                .split().method("checkStatusSplitter").recipientList()
+                .split().method("checkStatusSplitter").parallelProcessing().recipientList()
                 .method("koreCheckStatusServiceRouter");
 
         /**
