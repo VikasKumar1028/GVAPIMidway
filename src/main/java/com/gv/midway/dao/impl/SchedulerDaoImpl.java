@@ -19,14 +19,14 @@ public class SchedulerDaoImpl implements ISchedulerDao {
 
     @Override
     public void saveDeviceConnectionHistory(DeviceConnection deviceConnection) {
-        LOGGER.info("saveDeviceConnectionHistory");
+        LOGGER.info("saveDeviceConnectionHistory for Netsuite id......"+deviceConnection.getNetSuiteId());
         mongoTemplate.insert(deviceConnection);
 
     }
 
     @Override
     public void saveDeviceUsageHistory(DeviceUsage deviceUsage) {
-        LOGGER.info("saveDeviceUsageHistory");
+        LOGGER.info("saveDeviceUsageHistory for Netsuite id......"+deviceUsage.getNetSuiteId());
         mongoTemplate.insert(deviceUsage);
 
     }
