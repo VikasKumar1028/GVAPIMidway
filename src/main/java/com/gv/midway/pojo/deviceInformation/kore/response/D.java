@@ -3,6 +3,8 @@ package com.gv.midway.pojo.deviceInformation.kore.response;
 import java.util.Arrays;
 import java.util.Date;
 
+import org.joda.time.DateTime;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -62,7 +64,7 @@ public class D {
 
     private Integer previousLocateId;
 
-    private Date mostRecentLocateDate;
+    private Object mostRecentLocateDate;
 
     private Double mostRecentLatitude;
 
@@ -70,7 +72,7 @@ public class D {
 
     private String mostRecentAddress;
 
-    private Date previousLocateDate;
+    private Object previousLocateDate;
 
     private Double previousLatitude;
 
@@ -364,11 +366,11 @@ public class D {
         this.previousLocateId = previousLocateId;
     }
 
-    public Date getMostRecentLocateDate() {
+    public Object getMostRecentLocateDate() {
         return mostRecentLocateDate;
     }
 
-    public void setMostRecentLocateDate(Date mostRecentLocateDate) {
+    public void setMostRecentLocateDate(Object mostRecentLocateDate) {
         this.mostRecentLocateDate = mostRecentLocateDate;
     }
 
@@ -396,11 +398,11 @@ public class D {
         this.mostRecentAddress = mostRecentAddress;
     }
 
-    public Date getPreviousLocateDate() {
+    public Object getPreviousLocateDate() {
         return previousLocateDate;
     }
 
-    public void setPreviousLocateDate(Date previousLocateDate) {
+    public void setPreviousLocateDate(Object previousLocateDate) {
         this.previousLocateDate = previousLocateDate;
     }
 
