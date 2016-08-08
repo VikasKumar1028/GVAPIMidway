@@ -37,6 +37,7 @@ import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponseDataArea;
 import com.gv.midway.pojo.usageInformation.request.UsageInformationMidwayRequest;
+import com.gv.midway.pojo.usageInformation.response.DeviceUsages;
 import com.gv.midway.pojo.usageInformation.response.UsageInformationMidwayResponse;
 import com.gv.midway.pojo.usageInformation.response.UsageInformationResponseMidwayDataArea;
 import com.gv.midway.utility.CommonUtil;
@@ -44,685 +45,732 @@ import com.gv.midway.utility.CommonUtil;
 @Service
 public class DeviceDaoImpl implements IDeviceDao {
 
-    @Autowired
-    MongoTemplate mongoTemplate;
+	@Autowired
+	MongoTemplate mongoTemplate;
 
-    private static final Logger LOGGER = Logger.getLogger(DeviceDaoImpl.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(DeviceDaoImpl.class
+			.getName());
 
-    @Override
-    public UpdateDeviceResponse updateDeviceDetails(SingleDevice device) {
+	@Override
+	public UpdateDeviceResponse updateDeviceDetails(SingleDevice device) {
 
-        DeviceInformation deviceInfomation = null;
-        try {
+		DeviceInformation deviceInfomation = null;
+		try {
 
-            DeviceInformation deviceInformationToUpdate = device.getDataArea()
-                    .getDevice();
-            Integer netSuiteId = device.getDataArea().getDevice()
-                    .getNetSuiteId();
+			DeviceInformation deviceInformationToUpdate = device.getDataArea()
+					.getDevice();
+			Integer netSuiteId = device.getDataArea().getDevice()
+					.getNetSuiteId();
 
-            if (netSuiteId == null) {
+			if (netSuiteId == null) {
 
-                Header header = device.getHeader();
+				Header header = device.getHeader();
 
-                Response response = new Response();
-                response.setResponseCode(IResponse.INVALID_PAYLOAD);
-                response.setResponseDescription(IResponse.ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB);
-                response.setResponseStatus(IResponse.ERROR_MESSAGE);
+				Response response = new Response();
+				response.setResponseCode(IResponse.INVALID_PAYLOAD);
+				response.setResponseDescription(IResponse.ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB);
+				response.setResponseStatus(IResponse.ERROR_MESSAGE);
 
-                UpdateDeviceResponse updateDeviceResponse = new UpdateDeviceResponse();
-                updateDeviceResponse.setHeader(header);
-                updateDeviceResponse.setResponse(response);
+				UpdateDeviceResponse updateDeviceResponse = new UpdateDeviceResponse();
+				updateDeviceResponse.setHeader(header);
+				updateDeviceResponse.setResponse(response);
 
-                return updateDeviceResponse;
-            }
+				return updateDeviceResponse;
+			}
 
-            Query searchDeviceQuery = new Query(Criteria.where("netSuiteId")
-                    .is(device.getDataArea().getDevice().getNetSuiteId()));
+			Query searchDeviceQuery = new Query(Criteria.where("netSuiteId")
+					.is(device.getDataArea().getDevice().getNetSuiteId()));
 
-            deviceInfomation = (DeviceInformation) mongoTemplate.findOne(
-                    searchDeviceQuery, DeviceInformation.class);
+			deviceInfomation = (DeviceInformation) mongoTemplate.findOne(
+					searchDeviceQuery, DeviceInformation.class);
 
-            deviceInformationToUpdate.setLastUpdated(new Date());
+			deviceInformationToUpdate.setLastUpdated(new Date());
 
-            Header header = device.getHeader();
-            Response response = new Response();
+			Header header = device.getHeader();
+			Response response = new Response();
 
-            response.setResponseCode(IResponse.SUCCESS_CODE);
-            response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_UPDATE_MIDWAYDB);
-            response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+			response.setResponseCode(IResponse.SUCCESS_CODE);
+			response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_UPDATE_MIDWAYDB);
+			response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
 
-            UpdateDeviceResponse updateDeviceResponse = new UpdateDeviceResponse();
-            updateDeviceResponse.setHeader(header);
-            updateDeviceResponse.setResponse(response);
+			UpdateDeviceResponse updateDeviceResponse = new UpdateDeviceResponse();
+			updateDeviceResponse.setHeader(header);
+			updateDeviceResponse.setResponse(response);
 
-            if (deviceInfomation == null) {
+			if (deviceInfomation == null) {
 
-                mongoTemplate.insert(deviceInformationToUpdate);
+				mongoTemplate.insert(deviceInformationToUpdate);
 
-            }
+			}
 
-            else {
-                deviceInformationToUpdate
-                        .setMidwayMasterDeviceId(deviceInfomation
-                                .getMidwayMasterDeviceId());
+			else {
+				deviceInformationToUpdate
+						.setMidwayMasterDeviceId(deviceInfomation
+								.getMidwayMasterDeviceId());
 
-                mongoTemplate.save(deviceInformationToUpdate);
+				mongoTemplate.save(deviceInformationToUpdate);
 
-            }
+			}
 
-            return updateDeviceResponse;
+			return updateDeviceResponse;
 
-        }
+		}
 
-        catch (Exception e) {
+		catch (Exception e) {
 
-            LOGGER.error("Exception ex" + CommonUtil.getStackTrace(e));
-            Header header = device.getHeader();
+			LOGGER.error("Exception ex" + CommonUtil.getStackTrace(e));
+			Header header = device.getHeader();
 
-            Response response = new Response();
-            response.setResponseCode(IResponse.DB_ERROR_CODE);
-            response.setResponseDescription(IResponse.ERROR_DESCRIPTION_UPDATE_MIDWAYDB);
-            response.setResponseStatus(IResponse.ERROR_MESSAGE);
+			Response response = new Response();
+			response.setResponseCode(IResponse.DB_ERROR_CODE);
+			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_UPDATE_MIDWAYDB);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
 
-            UpdateDeviceResponse updateDeviceResponse = new UpdateDeviceResponse();
-            updateDeviceResponse.setHeader(header);
-            updateDeviceResponse.setResponse(response);
+			UpdateDeviceResponse updateDeviceResponse = new UpdateDeviceResponse();
+			updateDeviceResponse.setHeader(header);
+			updateDeviceResponse.setResponse(response);
 
-            return updateDeviceResponse;
+			return updateDeviceResponse;
 
-        }
+		}
 
-    }
+	}
 
-    @Override
-    public DeviceInformationResponse getDeviceInformationDB(
-            DeviceInformationRequest deviceInformationRequest) {
+	@Override
+	public DeviceInformationResponse getDeviceInformationDB(
+			DeviceInformationRequest deviceInformationRequest) {
 
-        Integer netSuiteId = deviceInformationRequest.getDataArea()
-                .getNetSuiteId();
-        LOGGER.info("device dao netsuite id is..." + netSuiteId);
+		Integer netSuiteId = deviceInformationRequest.getDataArea()
+				.getNetSuiteId();
+		LOGGER.info("device dao netsuite id is..." + netSuiteId);
 
-        DeviceInformationResponse deviceInformationResponse = new DeviceInformationResponse();
+		DeviceInformationResponse deviceInformationResponse = new DeviceInformationResponse();
 
-        deviceInformationResponse.setHeader(deviceInformationRequest
-                .getHeader());
-        Response response = new Response();
-        if (netSuiteId == null) {
+		deviceInformationResponse.setHeader(deviceInformationRequest
+				.getHeader());
+		Response response = new Response();
+		if (netSuiteId == null) {
 
-            response.setResponseCode(IResponse.INVALID_PAYLOAD);
-            response.setResponseDescription(IResponse.ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB);
-            response.setResponseStatus(IResponse.ERROR_MESSAGE);
+			response.setResponseCode(IResponse.INVALID_PAYLOAD);
+			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
 
-            deviceInformationResponse.setResponse(response);
+			deviceInformationResponse.setResponse(response);
 
-            return deviceInformationResponse;
-        } else {
-            try {
+			return deviceInformationResponse;
+		} else {
+			try {
 
-                Query searchDeviceQuery = new Query(Criteria
-                        .where("netSuiteId").is(netSuiteId));
+				Query searchDeviceQuery = new Query(Criteria
+						.where("netSuiteId").is(netSuiteId));
 
-                DeviceInformation deviceInformation = (DeviceInformation) mongoTemplate
-                        .findOne(searchDeviceQuery, DeviceInformation.class);
+				DeviceInformation deviceInformation = (DeviceInformation) mongoTemplate
+						.findOne(searchDeviceQuery, DeviceInformation.class);
 
-                if (deviceInformation == null)
+				if (deviceInformation == null)
 
-                {
+				{
 
-                    response.setResponseCode(IResponse.NO_DATA_FOUND_CODE);
-                    response.setResponseDescription(IResponse.ERROR_DESCRIPTION_NODATA_DEVCIEINFO_MIDWAYDB);
-                    response.setResponseStatus(IResponse.ERROR_MESSAGE);
+					response.setResponseCode(IResponse.NO_DATA_FOUND_CODE);
+					response.setResponseDescription(IResponse.ERROR_DESCRIPTION_NODATA_DEVCIEINFO_MIDWAYDB);
+					response.setResponseStatus(IResponse.ERROR_MESSAGE);
 
-                }
+				}
 
-                else {
+				else {
 
-                    response.setResponseCode(IResponse.SUCCESS_CODE);
-                    response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_MIDWAYDB);
-                    response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+					response.setResponseCode(IResponse.SUCCESS_CODE);
+					response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_MIDWAYDB);
+					response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
 
-                }
+				}
 
-                deviceInformationResponse.setResponse(response);
+				deviceInformationResponse.setResponse(response);
 
-                DeviceInformationResponseDataArea deviceInformationResponseDataArea = new DeviceInformationResponseDataArea();
+				DeviceInformationResponseDataArea deviceInformationResponseDataArea = new DeviceInformationResponseDataArea();
 
-                deviceInformationResponseDataArea.setDevices(deviceInformation);
+				deviceInformationResponseDataArea.setDevices(deviceInformation);
 
-                deviceInformationResponse
-                        .setDataArea(deviceInformationResponseDataArea);
+				deviceInformationResponse
+						.setDataArea(deviceInformationResponseDataArea);
 
-                return deviceInformationResponse;
-            } catch (Exception e) {
-            	LOGGER.error("Exception ex" + CommonUtil.getStackTrace(e));
-                response.setResponseCode(IResponse.DB_ERROR_CODE);
-                response.setResponseDescription(IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB);
-                response.setResponseStatus(IResponse.ERROR_MESSAGE);
+				return deviceInformationResponse;
+			} catch (Exception e) {
+				LOGGER.error("Exception ex" + CommonUtil.getStackTrace(e));
+				response.setResponseCode(IResponse.DB_ERROR_CODE);
+				response.setResponseDescription(IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB);
+				response.setResponseStatus(IResponse.ERROR_MESSAGE);
 
-                deviceInformationResponse.setResponse(response);
+				deviceInformationResponse.setResponse(response);
 
-                DeviceInformationResponseDataArea deviceInformationResponseDataArea = new DeviceInformationResponseDataArea();
+				DeviceInformationResponseDataArea deviceInformationResponseDataArea = new DeviceInformationResponseDataArea();
 
-                deviceInformationResponseDataArea.setDevices(null);
+				deviceInformationResponseDataArea.setDevices(null);
 
-                deviceInformationResponse
-                        .setDataArea(deviceInformationResponseDataArea);
+				deviceInformationResponse
+						.setDataArea(deviceInformationResponseDataArea);
 
-                return deviceInformationResponse;
-            }
+				return deviceInformationResponse;
+			}
 
-        }
+		}
 
-    }
+	}
 
-    @Override
-    public void setDeviceInformationDB(Exchange exchange) {
+	@Override
+	public void setDeviceInformationDB(Exchange exchange) {
 
-        Integer netSuiteId = (Integer) exchange
-                .getProperty(IConstant.MIDWAY_NETSUITE_ID);
-        DeviceInformation deviceInformation = null;
-        try {
+		Integer netSuiteId = (Integer) exchange
+				.getProperty(IConstant.MIDWAY_NETSUITE_ID);
+		DeviceInformation deviceInformation = null;
+		try {
 
-            Query searchDeviceQuery = new Query(Criteria.where("netSuiteId")
-                    .is(netSuiteId));
+			Query searchDeviceQuery = new Query(Criteria.where("netSuiteId")
+					.is(netSuiteId));
 
-            deviceInformation = (DeviceInformation) mongoTemplate.findOne(
-                    searchDeviceQuery, DeviceInformation.class);
+			deviceInformation = (DeviceInformation) mongoTemplate.findOne(
+					searchDeviceQuery, DeviceInformation.class);
 
-            exchange.setProperty(IConstant.MIDWAY_DEVICEINFO_DB,
-                    deviceInformation);
+			exchange.setProperty(IConstant.MIDWAY_DEVICEINFO_DB,
+					deviceInformation);
 
-        }
+		}
 
-        catch (Exception e) {
-        	LOGGER.error("Exception ex" + CommonUtil.getStackTrace(e));
-            LOGGER.info("Not able to fetch the data from DB....." + e.getMessage());
-        }
+		catch (Exception e) {
+			LOGGER.error("Exception ex" + CommonUtil.getStackTrace(e));
+			LOGGER.info("Not able to fetch the data from DB....."
+					+ e.getMessage());
+		}
 
-    }
+	}
 
-    @Override
-    public void updateDeviceInformationDB(Exchange exchange) {
-        DeviceInformationResponse deviceInformationResponse = (DeviceInformationResponse) exchange
-                .getIn().getBody();
+	@Override
+	public void updateDeviceInformationDB(Exchange exchange) {
+		DeviceInformationResponse deviceInformationResponse = (DeviceInformationResponse) exchange
+				.getIn().getBody();
 
-        DeviceInformation deviceInformation = deviceInformationResponse
-                .getDataArea().getDevices();
+		DeviceInformation deviceInformation = deviceInformationResponse
+				.getDataArea().getDevices();
 
-        if (exchange.getProperty(IConstant.MIDWAY_DEVICEINFO_DB) != null) {
+		if (exchange.getProperty(IConstant.MIDWAY_DEVICEINFO_DB) != null) {
 
-            LOGGER.info("device info was already in master DB");
+			LOGGER.info("device info was already in master DB");
 
-            LOGGER.info("device info carrier is........."
-                    + deviceInformation.toString());
+			LOGGER.info("device info carrier is........."
+					+ deviceInformation.toString());
 
-            deviceInformation.setMidwayMasterDeviceId(deviceInformation
-                    .getMidwayMasterDeviceId());
+			deviceInformation.setMidwayMasterDeviceId(deviceInformation
+					.getMidwayMasterDeviceId());
 
-            mongoTemplate.save(deviceInformation);
-        }
+			mongoTemplate.save(deviceInformation);
+		}
 
-        else {
-            LOGGER.info("device info was not already in master DB");
+		else {
+			LOGGER.info("device info was not already in master DB");
 
-            Integer netSuiteId = (Integer) exchange
-                    .getProperty(IConstant.MIDWAY_NETSUITE_ID);
+			Integer netSuiteId = (Integer) exchange
+					.getProperty(IConstant.MIDWAY_NETSUITE_ID);
 
-            LOGGER.info("device info to insert for netsuideId " + netSuiteId);
+			LOGGER.info("device info to insert for netsuideId " + netSuiteId);
 
-            deviceInformation.setNetSuiteId(netSuiteId);
+			deviceInformation.setNetSuiteId(netSuiteId);
 
-            mongoTemplate.insert(deviceInformation);
+			mongoTemplate.insert(deviceInformation);
 
-        }
-        DeviceInformationResponseDataArea deviceInformationResponseDataArea = deviceInformationResponse
-                .getDataArea();
-        deviceInformationResponseDataArea.setDevices(deviceInformation);
-        deviceInformationResponse
-                .setDataArea(deviceInformationResponseDataArea);
-        exchange.getIn().setBody(deviceInformationResponse);
-    }
+		}
+		DeviceInformationResponseDataArea deviceInformationResponseDataArea = deviceInformationResponse
+				.getDataArea();
+		deviceInformationResponseDataArea.setDevices(deviceInformation);
+		deviceInformationResponse
+				.setDataArea(deviceInformationResponseDataArea);
+		exchange.getIn().setBody(deviceInformationResponse);
+	}
 
-    @Override
-    public void bulkOperationDeviceUpload(Exchange exchange) {
+	@Override
+	public void bulkOperationDeviceUpload(Exchange exchange) {
 
-        DeviceInformation deviceInformationToUpdate = (DeviceInformation) exchange
-                .getIn().getBody();
+		DeviceInformation deviceInformationToUpdate = (DeviceInformation) exchange
+				.getIn().getBody();
 
-        Integer netSuiteId = deviceInformationToUpdate.getNetSuiteId();
+		Integer netSuiteId = deviceInformationToUpdate.getNetSuiteId();
 
-        try {
+		try {
 
-            if (netSuiteId == null) {
+			if (netSuiteId == null) {
 
-                List<BatchDeviceId> batchDeviceList = (List<BatchDeviceId>) exchange
-                        .getProperty(IConstant.BULK_ERROR_LIST);
-                BatchDeviceId errorBatchDeviceId = new BatchDeviceId();
-                errorBatchDeviceId
-                        .setErrorMessage(IResponse.ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB);
-                batchDeviceList.add(errorBatchDeviceId);
+				List<BatchDeviceId> batchDeviceList = (List<BatchDeviceId>) exchange
+						.getProperty(IConstant.BULK_ERROR_LIST);
+				BatchDeviceId errorBatchDeviceId = new BatchDeviceId();
+				errorBatchDeviceId
+						.setErrorMessage(IResponse.ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB);
+				batchDeviceList.add(errorBatchDeviceId);
 
-                exchange.setProperty(IConstant.BULK_ERROR_LIST, batchDeviceList);
+				exchange.setProperty(IConstant.BULK_ERROR_LIST, batchDeviceList);
 
-            }
+			}
 
-            else {
-                Query searchDeviceQuery = new Query(Criteria
-                        .where("netSuiteId").is(netSuiteId));
+			else {
+				Query searchDeviceQuery = new Query(Criteria
+						.where("netSuiteId").is(netSuiteId));
 
-                DeviceInformation deviceInformation = (DeviceInformation) mongoTemplate
-                        .findOne(searchDeviceQuery, DeviceInformation.class);
+				DeviceInformation deviceInformation = (DeviceInformation) mongoTemplate
+						.findOne(searchDeviceQuery, DeviceInformation.class);
 
-                deviceInformationToUpdate.setLastUpdated(new Date());
+				deviceInformationToUpdate.setLastUpdated(new Date());
 
-                if (deviceInformation == null)
+				if (deviceInformation == null)
 
-                {
+				{
 
-                    mongoTemplate.insert(deviceInformationToUpdate);
+					mongoTemplate.insert(deviceInformationToUpdate);
 
-                }
+				}
 
-                else {
-                    deviceInformationToUpdate
-                            .setMidwayMasterDeviceId(deviceInformation
-                                    .getMidwayMasterDeviceId());
+				else {
+					deviceInformationToUpdate
+							.setMidwayMasterDeviceId(deviceInformation
+									.getMidwayMasterDeviceId());
 
-                    mongoTemplate.save(deviceInformationToUpdate);
+					mongoTemplate.save(deviceInformationToUpdate);
 
-                }
+				}
 
-                List<BatchDeviceId> batchDeviceList = (List<BatchDeviceId>) exchange
-                        .getProperty(IConstant.BULK_SUCCESS_LIST);
-                BatchDeviceId successBatchDeviceId = new BatchDeviceId();
-                successBatchDeviceId.setNetSuiteId("" + netSuiteId);
-                batchDeviceList.add(successBatchDeviceId);
+				List<BatchDeviceId> batchDeviceList = (List<BatchDeviceId>) exchange
+						.getProperty(IConstant.BULK_SUCCESS_LIST);
+				BatchDeviceId successBatchDeviceId = new BatchDeviceId();
+				successBatchDeviceId.setNetSuiteId("" + netSuiteId);
+				batchDeviceList.add(successBatchDeviceId);
 
-                exchange.setProperty(IConstant.BULK_SUCCESS_LIST,
-                        batchDeviceList);
-            }
+				exchange.setProperty(IConstant.BULK_SUCCESS_LIST,
+						batchDeviceList);
+			}
 
-        }
+		}
 
-        catch (Exception e) {
-        	LOGGER.error("Exception ex" + CommonUtil.getStackTrace(e));
-            List<BatchDeviceId> batchDeviceList = (List<BatchDeviceId>) exchange
-                    .getProperty(IConstant.BULK_ERROR_LIST);
-            BatchDeviceId errorBatchDeviceId = new BatchDeviceId();
-            errorBatchDeviceId.setNetSuiteId("" + netSuiteId);
-            errorBatchDeviceId
-                    .setErrorMessage(IResponse.ERROR_DESCRIPTION_UPDATE_MIDWAYDB);
-            batchDeviceList.add(errorBatchDeviceId);
+		catch (Exception e) {
+			LOGGER.error("Exception ex" + CommonUtil.getStackTrace(e));
+			List<BatchDeviceId> batchDeviceList = (List<BatchDeviceId>) exchange
+					.getProperty(IConstant.BULK_ERROR_LIST);
+			BatchDeviceId errorBatchDeviceId = new BatchDeviceId();
+			errorBatchDeviceId.setNetSuiteId("" + netSuiteId);
+			errorBatchDeviceId
+					.setErrorMessage(IResponse.ERROR_DESCRIPTION_UPDATE_MIDWAYDB);
+			batchDeviceList.add(errorBatchDeviceId);
 
-            exchange.setProperty(IConstant.BULK_ERROR_LIST, batchDeviceList);
+			exchange.setProperty(IConstant.BULK_ERROR_LIST, batchDeviceList);
 
-        }
+		}
 
-    }
+	}
 
-    @Override
-    public ArrayList<DeviceInformation> getAllDevices() {
+	@Override
+	public ArrayList<DeviceInformation> getAllDevices() {
 
-        return (ArrayList<DeviceInformation>) mongoTemplate
-                .findAll(DeviceInformation.class);
+		return (ArrayList<DeviceInformation>) mongoTemplate
+				.findAll(DeviceInformation.class);
 
-    }
+	}
 
-    @Override
-    public UsageInformationMidwayResponse getDeviceUsageInfoDB(
-            UsageInformationMidwayRequest usageInformationMidwayRequest) {
+	@Override
+	public UsageInformationMidwayResponse getDeviceUsageInfoDB(
+			UsageInformationMidwayRequest usageInformationMidwayRequest) {
 
-        LOGGER.info("Begin::getDeviceUsageInfoDB");
-        Integer netSuiteId = usageInformationMidwayRequest
-                .getUsageInformationRequestMidwayDataArea().getNetSuiteId();
+		LOGGER.info("Begin::getDeviceUsageInfoDB");
+		Integer netSuiteId = usageInformationMidwayRequest
+				.getUsageInformationRequestMidwayDataArea().getNetSuiteId();
 
-        String startDate = usageInformationMidwayRequest
-                .getUsageInformationRequestMidwayDataArea().getStartDate();
-        String endDate = usageInformationMidwayRequest
-                .getUsageInformationRequestMidwayDataArea().getEndDate();
+		String startDate = usageInformationMidwayRequest
+				.getUsageInformationRequestMidwayDataArea().getStartDate();
+		String endDate = usageInformationMidwayRequest
+				.getUsageInformationRequestMidwayDataArea().getEndDate();
 
-        LOGGER.info("device dao netsuite id is..." + netSuiteId);
-        LOGGER.info("device dao startDate is..." + startDate);
-        LOGGER.info("device dao endDate is..." + endDate);
+		LOGGER.info("device dao netsuite id is..." + netSuiteId);
+		LOGGER.info("device dao startDate is..." + startDate);
+		LOGGER.info("device dao endDate is..." + endDate);
 
-        Float dataUsed;
-        UsageInformationMidwayResponse usageInformationMidwayResponse = new UsageInformationMidwayResponse();
+		Float dataUsed;
+		UsageInformationMidwayResponse usageInformationMidwayResponse = new UsageInformationMidwayResponse();
+		UsageInformationResponseMidwayDataArea usageInformationResponseMidwayDataArea = new UsageInformationResponseMidwayDataArea();
 
-        usageInformationMidwayResponse.setHeader(usageInformationMidwayRequest
-                .getHeader());
-        Response response = new Response();
+		usageInformationMidwayResponse.setHeader(usageInformationMidwayRequest
+				.getHeader());
+		Response response = new Response();
 
-        if (netSuiteId == null) {
+		if (netSuiteId == null) {
 
-            LOGGER.info("Enter netSuiteId..." + netSuiteId);
-            response.setResponseCode(IResponse.INVALID_PAYLOAD);
-            response.setResponseDescription(IResponse.ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB);
-            response.setResponseStatus(IResponse.ERROR_MESSAGE);
+			LOGGER.info("Enter netSuiteId..." + netSuiteId);
+			response.setResponseCode(IResponse.INVALID_PAYLOAD);
+			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
 
-            usageInformationMidwayResponse.setResponse(response);
+			usageInformationMidwayResponse.setResponse(response);
 
-            return usageInformationMidwayResponse;
-        }
+			return usageInformationMidwayResponse;
+		}
 
-        if (startDate != null && endDate != null) {
+		if (startDate != null && endDate != null) {
 
-            if (!(CommonUtil.isValidDateFormat(startDate) && CommonUtil
-                    .isValidDateFormat(endDate))) {
-                LOGGER.info(" Date that you provided is invalid");
-                response.setResponseCode(IResponse.INVALID_PAYLOAD);
-                response.setResponseDescription(IResponse.ERROR_DESCRIPTION_STARTDATE_VALIDATE_MIDWAYDB);
-                response.setResponseStatus(IResponse.ERROR_MESSAGE);
-                usageInformationMidwayResponse.setResponse(response);
-                return usageInformationMidwayResponse;
-            }
+			if (!(CommonUtil.isValidDateFormat(startDate) && CommonUtil
+					.isValidDateFormat(endDate))) {
+				LOGGER.info(" Date that you provided is invalid");
+				response.setResponseCode(IResponse.INVALID_PAYLOAD);
+				response.setResponseDescription(IResponse.ERROR_DESCRIPTION_STARTDATE_VALIDATE_MIDWAYDB);
+				response.setResponseStatus(IResponse.ERROR_MESSAGE);
+				usageInformationMidwayResponse.setResponse(response);
+				return usageInformationMidwayResponse;
+			}
 
-        }
+		}
 
-        if (startDate == null) {
+		if (startDate == null) {
 
-            response.setResponseCode(IResponse.INVALID_PAYLOAD);
-            response.setResponseDescription(IResponse.ERROR_DESCRIPTION_START_DATE_FORMAT_MIDWAYDB);
-            response.setResponseStatus(IResponse.ERROR_MESSAGE);
-            usageInformationMidwayResponse.setResponse(response);
-            return usageInformationMidwayResponse;
+			response.setResponseCode(IResponse.INVALID_PAYLOAD);
+			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_START_DATE_FORMAT_MIDWAYDB);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
+			usageInformationMidwayResponse.setResponse(response);
+			return usageInformationMidwayResponse;
 
-        }
-        if (endDate == null) {
-            response.setResponseCode(IResponse.INVALID_PAYLOAD);
-            response.setResponseDescription(IResponse.ERROR_DESCRIPTION_END_DATE_FORMAT_MIDWAYDB);
-            response.setResponseStatus(IResponse.ERROR_MESSAGE);
-            usageInformationMidwayResponse.setResponse(response);
-            return usageInformationMidwayResponse;
-        }
+		}
+		if (endDate == null) {
+			response.setResponseCode(IResponse.INVALID_PAYLOAD);
+			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_END_DATE_FORMAT_MIDWAYDB);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
+			usageInformationMidwayResponse.setResponse(response);
+			return usageInformationMidwayResponse;
+		}
 
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
-        Date startDateValue = null;
-        Date endDateValue = null;
+		Date startDateValue = null;
+		Date endDateValue = null;
 
-        try {
-            startDateValue = formatter.parse(startDate);
-            endDateValue = formatter.parse(endDate);
-            LOGGER.info("startDateValue..." + startDateValue);
-            LOGGER.info("endDateValue..." + endDateValue);
-        } catch (ParseException e1) {
-            LOGGER.info(" format error while parsing the date");
-            response.setResponseCode(IResponse.INVALID_PAYLOAD);
-            response.setResponseDescription(IResponse.ERROR_DESCRIPTION_STARTDATE_VALIDATE_MIDWAYDB);
-            response.setResponseStatus(IResponse.ERROR_MESSAGE);
-            usageInformationMidwayResponse.setResponse(response);
-            return usageInformationMidwayResponse;
-        }
+		try {
+			startDateValue = formatter.parse(startDate);
+			endDateValue = formatter.parse(endDate);
+			LOGGER.info("startDateValue..." + startDateValue);
+			LOGGER.info("endDateValue..." + endDateValue);
+		} catch (ParseException e1) {
+			LOGGER.info(" format error while parsing the date");
+			response.setResponseCode(IResponse.INVALID_PAYLOAD);
+			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_STARTDATE_VALIDATE_MIDWAYDB);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
+			usageInformationMidwayResponse.setResponse(response);
+			return usageInformationMidwayResponse;
+		}
 
-        if (startDateValue.after(endDateValue)) {
+		if (startDateValue.after(endDateValue)) {
 
-            LOGGER.info("Earliest date should not be greater than Latest date");
-            response.setResponseCode(IResponse.INVALID_PAYLOAD);
-            response.setResponseDescription(IResponse.ERROR_DESCRIPTION_START_END_VALIDATION_MIDWAYDB);
-            response.setResponseStatus(IResponse.ERROR_MESSAGE);
-            usageInformationMidwayResponse.setResponse(response);
-            return usageInformationMidwayResponse;
+			LOGGER.info("Earliest date should not be greater than Latest date");
+			response.setResponseCode(IResponse.INVALID_PAYLOAD);
+			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_START_END_VALIDATION_MIDWAYDB);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
+			usageInformationMidwayResponse.setResponse(response);
+			return usageInformationMidwayResponse;
 
-        }
+		}
 
-        try {
+		try {
 
-            Query searchDeviceQuery = new Query(Criteria.where("netSuiteId")
-                    .is(netSuiteId)).addCriteria(Criteria.where("date")
-                    .gte(startDate)
-                    .orOperator(Criteria.where("date").lte(endDate))).addCriteria(Criteria.where("isValid")
-                    .is(true));
+			Query searchDeviceQuery = new Query(Criteria.where("netSuiteId")
+					.is(netSuiteId)).addCriteria(
+					Criteria.where("date").gte(startDate)
+							.orOperator(Criteria.where("date").lte(endDate)))
+					.addCriteria(Criteria.where("isValid").is(true));
 
-            LOGGER.info("searchDeviceQuery::::::::::::::" + searchDeviceQuery);
+			LOGGER.info("searchDeviceQuery::::::::::::::" + searchDeviceQuery);
 
-            DeviceUsage deviceUsage = (DeviceUsage) mongoTemplate.findOne(
-                    searchDeviceQuery, DeviceUsage.class);
+			List<DeviceUsage> deviceUsage = mongoTemplate.find(
+					searchDeviceQuery, DeviceUsage.class);
+			
+			int deviceUsageSize=0;
+			
+			if(deviceUsage!=null)
+			{
+				
+				deviceUsageSize = deviceUsage.size();
 
-            if (deviceUsage == null)
+				LOGGER.info("deviceUsage size is....."
+						+ deviceUsageSize);	
+				
+			}
 
-            {
+			if (deviceUsageSize == 0)
 
-                response.setResponseCode(IResponse.NO_DATA_FOUND_CODE);
-                response.setResponseDescription(IResponse.ERROR_DESCRIPTION_NODATA_DEVCIEINFO_MIDWAYDB);
-                response.setResponseStatus(IResponse.ERROR_MESSAGE);
-                usageInformationMidwayResponse.setResponse(response);
-            }
+			{
 
-            else {
+				response.setResponseCode(IResponse.NO_DATA_FOUND_CODE);
+				response.setResponseDescription(IResponse.ERROR_DESCRIPTION_NODATA_DEVCIEINFO_MIDWAYDB);
+				response.setResponseStatus(IResponse.ERROR_MESSAGE);
+				usageInformationMidwayResponse.setResponse(response);
+			}
 
-                response.setResponseCode(IResponse.SUCCESS_CODE);
-                response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_MIDWAYDB);
-                response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
-                usageInformationMidwayResponse.setResponse(response);
+			else {
 
-                UsageInformationResponseMidwayDataArea usageInformationResponseMidwayDataArea = new UsageInformationResponseMidwayDataArea();
-                dataUsed = deviceUsage.getDataUsed();
-                LOGGER.info("deviceUsage.getDataUsed() ---------------------------------"
-                        + dataUsed);
-                usageInformationResponseMidwayDataArea.setTotalUsages(dataUsed
-                        .longValue());
-                usageInformationMidwayResponse
-                        .setDataArea(usageInformationResponseMidwayDataArea);
-            }
+				response.setResponseCode(IResponse.SUCCESS_CODE);
+				response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_MIDWAYDB);
+				response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+				usageInformationMidwayResponse.setResponse(response);
 
-            return usageInformationMidwayResponse;
+				LOGGER.info("deviceUsage        " + deviceUsage.size());
+				List<DeviceUsages> deviceDateBasedUasgelist = new ArrayList<DeviceUsages>();
 
-        } catch (Exception e) {
+				for (DeviceUsage deviceUsagevalue : deviceUsage) {
 
-        	LOGGER.error("Exception ex" + CommonUtil.getStackTrace(e));
-            response.setResponseCode(IResponse.DB_ERROR_CODE);
-            response.setResponseDescription(IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB);
-            response.setResponseStatus(IResponse.ERROR_MESSAGE);
+					DeviceUsages deviceDateBasedUasge = new DeviceUsages();
+					deviceDateBasedUasge.setDataUsed(deviceUsagevalue
+							.getDataUsed());
+					deviceDateBasedUasge.setDate(deviceUsagevalue.getDate());
 
-            usageInformationMidwayResponse.setResponse(response);
+					deviceDateBasedUasgelist.add(deviceDateBasedUasge);
+				}
+				
+				
+				// Sort the deviceEventsList on the basis of time event occurred
+				// at
 
-            UsageInformationResponseMidwayDataArea usageInformationResponseMidwayDataArea = new UsageInformationResponseMidwayDataArea();
+				Collections.sort(deviceDateBasedUasgelist,
+						new Comparator<DeviceUsages>() {
+							@Override
+							public int compare(DeviceUsages a, DeviceUsages b) {
 
-            usageInformationMidwayResponse
-                    .setDataArea(usageInformationResponseMidwayDataArea);
+								return a.getDate().compareTo(
+										b.getDate());
+							}
+						});
 
-            return usageInformationMidwayResponse;
-        }
+				usageInformationResponseMidwayDataArea
+						.setDeviceUsages(deviceDateBasedUasgelist);
+				
+				
 
-    }
+			}
 
-    @Override
-    public ConnectionInformationMidwayResponse getDeviceConnectionHistoryInfoDB(
-            ConnectionInformationMidwayRequest connectionInformationMidwayRequest) {
-        LOGGER.info("Begin::getDeviceConnectionHistoryInfoDB");
+			usageInformationMidwayResponse
+					.setDataArea(usageInformationResponseMidwayDataArea);
+			return usageInformationMidwayResponse;
 
-        Integer netSuiteId = connectionInformationMidwayRequest.getDataArea()
-                .getNetSuiteId();
-        String startDate = connectionInformationMidwayRequest.getDataArea()
-                .getStartDate();
-        String endDate = connectionInformationMidwayRequest.getDataArea()
-                .getEndDate();
+		} catch (Exception e) {
 
-        LOGGER.info("device dao netsuite id is..." + netSuiteId);
-        LOGGER.info("device dao startDate is..." + startDate);
-        LOGGER.info("device dao endDate is..." + endDate);
+			LOGGER.error("Exception ex" + CommonUtil.getStackTrace(e));
+			response.setResponseCode(IResponse.DB_ERROR_CODE);
+			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
 
-        ConnectionInformationMidwayResponse connectionInformationMidwayResponse = new ConnectionInformationMidwayResponse();
+			usageInformationMidwayResponse.setResponse(response);
 
-        connectionInformationMidwayResponse
-                .setHeader(connectionInformationMidwayRequest.getHeader());
-        Response response = new Response();
+			UsageInformationResponseMidwayDataArea usageInformationResponseMidwayDataAreas = new UsageInformationResponseMidwayDataArea();
 
-        if (netSuiteId == null) {
+			usageInformationMidwayResponse
+					.setDataArea(usageInformationResponseMidwayDataAreas);
 
-            LOGGER.info("Enter netSuiteId..." + netSuiteId);
-            response.setResponseCode(IResponse.INVALID_PAYLOAD);
-            response.setResponseDescription(IResponse.ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB);
-            response.setResponseStatus(IResponse.ERROR_MESSAGE);
+			return usageInformationMidwayResponse;
+		}
 
-            connectionInformationMidwayResponse.setResponse(response);
+	}
 
-            return connectionInformationMidwayResponse;
-        }
-        if (startDate != null && endDate != null) {
+	@Override
+	public ConnectionInformationMidwayResponse getDeviceConnectionHistoryInfoDB(
+			ConnectionInformationMidwayRequest connectionInformationMidwayRequest) {
+		LOGGER.info("Begin::getDeviceConnectionHistoryInfoDB");
 
-            if (!(CommonUtil.isValidDateFormat(startDate) && CommonUtil
-                    .isValidDateFormat(endDate))) {
-                LOGGER.info(" Date that you provided is invalid");
-                response.setResponseCode(IResponse.INVALID_PAYLOAD);
-                response.setResponseDescription(IResponse.ERROR_DESCRIPTION_STARTDATE_VALIDATE_MIDWAYDB);
-                response.setResponseStatus(IResponse.ERROR_MESSAGE);
-                connectionInformationMidwayResponse.setResponse(response);
-                return connectionInformationMidwayResponse;
-            }
+		Integer netSuiteId = connectionInformationMidwayRequest.getDataArea()
+				.getNetSuiteId();
+		String startDate = connectionInformationMidwayRequest.getDataArea()
+				.getStartDate();
+		String endDate = connectionInformationMidwayRequest.getDataArea()
+				.getEndDate();
 
-        }
+		LOGGER.info("device dao netsuite id is..." + netSuiteId);
+		LOGGER.info("device dao startDate is..." + startDate);
+		LOGGER.info("device dao endDate is..." + endDate);
 
-        if (startDate == null) {
+		ConnectionInformationMidwayResponse connectionInformationMidwayResponse = new ConnectionInformationMidwayResponse();
 
-            response.setResponseCode(IResponse.INVALID_PAYLOAD);
-            response.setResponseDescription(IResponse.ERROR_DESCRIPTION_START_DATE_FORMAT_MIDWAYDB);
-            response.setResponseStatus(IResponse.ERROR_MESSAGE);
-            connectionInformationMidwayResponse.setResponse(response);
-            return connectionInformationMidwayResponse;
+		connectionInformationMidwayResponse
+				.setHeader(connectionInformationMidwayRequest.getHeader());
+		Response response = new Response();
 
-        }
-        if (endDate == null) {
-            response.setResponseCode(IResponse.INVALID_PAYLOAD);
-            response.setResponseDescription(IResponse.ERROR_DESCRIPTION_END_DATE_FORMAT_MIDWAYDB);
-            response.setResponseStatus(IResponse.ERROR_MESSAGE);
-            connectionInformationMidwayResponse.setResponse(response);
-            return connectionInformationMidwayResponse;
-        }
+		if (netSuiteId == null) {
 
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			LOGGER.info("Enter netSuiteId..." + netSuiteId);
+			response.setResponseCode(IResponse.INVALID_PAYLOAD);
+			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
 
-        Date startDateValue = null;
-        Date endDateValue = null;
+			connectionInformationMidwayResponse.setResponse(response);
 
-        try {
-            startDateValue = formatter.parse(startDate);
-            endDateValue = formatter.parse(endDate);
-            LOGGER.info("startDateValue..." + startDateValue);
-            LOGGER.info("endDateValue..." + endDateValue);
-        } catch (ParseException e1) {
-            LOGGER.info(" format error while parsing the date");
-            response.setResponseCode(IResponse.INVALID_PAYLOAD);
-            response.setResponseDescription(IResponse.ERROR_DESCRIPTION_STARTDATE_VALIDATE_MIDWAYDB);
-            response.setResponseStatus(IResponse.ERROR_MESSAGE);
-            connectionInformationMidwayResponse.setResponse(response);
-            return connectionInformationMidwayResponse;
-        }
+			return connectionInformationMidwayResponse;
+		}
+		if (startDate != null && endDate != null) {
 
-        if (startDateValue.after(endDateValue)) {
+			if (!(CommonUtil.isValidDateFormat(startDate) && CommonUtil
+					.isValidDateFormat(endDate))) {
+				LOGGER.info(" Date that you provided is invalid");
+				response.setResponseCode(IResponse.INVALID_PAYLOAD);
+				response.setResponseDescription(IResponse.ERROR_DESCRIPTION_STARTDATE_VALIDATE_MIDWAYDB);
+				response.setResponseStatus(IResponse.ERROR_MESSAGE);
+				connectionInformationMidwayResponse.setResponse(response);
+				return connectionInformationMidwayResponse;
+			}
 
-            LOGGER.info("Earliest date should not be greater than Latest date");
-            response.setResponseCode(IResponse.INVALID_PAYLOAD);
-            response.setResponseDescription(IResponse.ERROR_DESCRIPTION_START_END_VALIDATION_MIDWAYDB);
-            response.setResponseStatus(IResponse.ERROR_MESSAGE);
-            connectionInformationMidwayResponse.setResponse(response);
-            return connectionInformationMidwayResponse;
+		}
 
-        }
+		if (startDate == null) {
 
-        try {
+			response.setResponseCode(IResponse.INVALID_PAYLOAD);
+			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_START_DATE_FORMAT_MIDWAYDB);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
+			connectionInformationMidwayResponse.setResponse(response);
+			return connectionInformationMidwayResponse;
 
-            Query searchDeviceQuery = new Query(Criteria.where("netSuiteId")
-                    .is(netSuiteId)).addCriteria(Criteria.where("date")
-                    .gte(startDate)
-                    .orOperator(Criteria.where("date").lte(endDate))).addCriteria(Criteria.where("isValid")
-                            .is(true));
+		}
+		if (endDate == null) {
+			response.setResponseCode(IResponse.INVALID_PAYLOAD);
+			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_END_DATE_FORMAT_MIDWAYDB);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
+			connectionInformationMidwayResponse.setResponse(response);
+			return connectionInformationMidwayResponse;
+		}
 
-            LOGGER.info("searchDeviceQuery::::::::::::::" + searchDeviceQuery);
+		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
-            List<DeviceConnection> deviceConnectionUsage = mongoTemplate.find(
-                    searchDeviceQuery, DeviceConnection.class);
+		Date startDateValue = null;
+		Date endDateValue = null;
 
-            int deviceConnectionUsageSize = deviceConnectionUsage.size();
+		try {
+			startDateValue = formatter.parse(startDate);
+			endDateValue = formatter.parse(endDate);
+			LOGGER.info("startDateValue..." + startDateValue);
+			LOGGER.info("endDateValue..." + endDateValue);
+		} catch (ParseException e1) {
+			LOGGER.info(" format error while parsing the date");
+			response.setResponseCode(IResponse.INVALID_PAYLOAD);
+			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_STARTDATE_VALIDATE_MIDWAYDB);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
+			connectionInformationMidwayResponse.setResponse(response);
+			return connectionInformationMidwayResponse;
+		}
 
-            LOGGER.info("deviceConnectionUsage szie is....."
-                    + deviceConnectionUsageSize);
+		if (startDateValue.after(endDateValue)) {
 
-            if (deviceConnectionUsageSize == 0)
+			LOGGER.info("Earliest date should not be greater than Latest date");
+			response.setResponseCode(IResponse.INVALID_PAYLOAD);
+			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_START_END_VALIDATION_MIDWAYDB);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
+			connectionInformationMidwayResponse.setResponse(response);
+			return connectionInformationMidwayResponse;
 
-            {
+		}
 
-                response.setResponseCode(IResponse.NO_DATA_FOUND_CODE);
-                response.setResponseDescription(IResponse.ERROR_DESCRIPTION_NODATA_DEVCIEINFO_MIDWAYDB);
-                response.setResponseStatus(IResponse.ERROR_MESSAGE);
-                connectionInformationMidwayResponse.setResponse(response);
-            }
+		try {
 
-            else {
+			Query searchDeviceQuery = new Query(Criteria.where("netSuiteId")
+					.is(netSuiteId)).addCriteria(
+					Criteria.where("date").gte(startDate)
+							.orOperator(Criteria.where("date").lte(endDate)))
+					.addCriteria(Criteria.where("isValid").is(true));
 
-                response.setResponseCode(IResponse.SUCCESS_CODE);
-                response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_MIDWAYDB);
-                response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
-                connectionInformationMidwayResponse.setResponse(response);
+			LOGGER.info("searchDeviceQuery::::::::::::::" + searchDeviceQuery);
 
-                ConnectionInformationResponseMidwayDataArea connectionInformationResponseMidwayDataArea = new ConnectionInformationResponseMidwayDataArea();
+			List<DeviceConnection> deviceConnectionUsage = mongoTemplate.find(
+					searchDeviceQuery, DeviceConnection.class);
+			
+			int deviceConnectionUsageSize=0;
+			
+			if(deviceConnectionUsage!=null)
+			{
 
-                List<DeviceEvents> deviceEventsList = new ArrayList<DeviceEvents>();
+			deviceConnectionUsageSize = deviceConnectionUsage.size();
 
-                for (DeviceConnection deviceConnection : deviceConnectionUsage) {
+			LOGGER.info("deviceConnectionUsage size is....."
+					+ deviceConnectionUsageSize);
+			}
 
-                    if (deviceConnection.getEvent() != null) {
-                        DeviceEvent[] deviceEventArr = deviceConnection
-                                .getEvent();
+			if (deviceConnectionUsageSize == 0)
 
-                        LOGGER.info("device event size for Date "
-                                + deviceConnection.getDate() + " is"
-                                + deviceEventArr.length);
+			{
 
-                        for (DeviceEvent deviceEvent : deviceEventArr) {
-                            String eventType = deviceEvent.getEventType();
-                            String occuredAt = deviceEvent.getOccurredAt();
-                            String byteUsed = deviceEvent.getBytesUsed();
+				response.setResponseCode(IResponse.NO_DATA_FOUND_CODE);
+				response.setResponseDescription(IResponse.ERROR_DESCRIPTION_NODATA_DEVCIEINFO_MIDWAYDB);
+				response.setResponseStatus(IResponse.ERROR_MESSAGE);
+				connectionInformationMidwayResponse.setResponse(response);
+			}
 
-                            DeviceEvents deviceEvents = new DeviceEvents();
-                            deviceEvents.setBytesUsed(byteUsed);
-                            deviceEvents.setEventType(eventType);
-                            deviceEvents.setOccurredAt(occuredAt);
+			else {
 
-                            deviceEventsList.add(deviceEvents);
+				response.setResponseCode(IResponse.SUCCESS_CODE);
+				response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_MIDWAYDB);
+				response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+				connectionInformationMidwayResponse.setResponse(response);
 
-                        }
-                    }
-                }
+				ConnectionInformationResponseMidwayDataArea connectionInformationResponseMidwayDataArea = new ConnectionInformationResponseMidwayDataArea();
 
-                // Sort the deviceEventsList on the basis of time event occurred
-                // at
+				List<DeviceEvents> deviceEventsList = new ArrayList<DeviceEvents>();
 
-                Collections.sort(deviceEventsList,
-                        new Comparator<DeviceEvents>() {
-                            @Override
-                            public int compare(DeviceEvents a, DeviceEvents b) {
+				for (DeviceConnection deviceConnection : deviceConnectionUsage) {
 
-                                return a.getOccurredAt().compareTo(
-                                        b.getOccurredAt());
-                            }
-                        });
+					if (deviceConnection.getEvent() != null) {
+						DeviceEvent[] deviceEventArr = deviceConnection
+								.getEvent();
 
-                connectionInformationResponseMidwayDataArea
-                        .setEvents(deviceEventsList);
+						LOGGER.info("device event size for Date "
+								+ deviceConnection.getDate() + " is"
+								+ deviceEventArr.length);
 
-                connectionInformationMidwayResponse
-                        .setDataArea(connectionInformationResponseMidwayDataArea);
-            }
+						for (DeviceEvent deviceEvent : deviceEventArr) {
+							String eventType = deviceEvent.getEventType();
+							String occuredAt = deviceEvent.getOccurredAt();
+							String byteUsed = deviceEvent.getBytesUsed();
 
-            return connectionInformationMidwayResponse;
+							DeviceEvents deviceEvents = new DeviceEvents();
+							deviceEvents.setBytesUsed(byteUsed);
+							deviceEvents.setEventType(eventType);
+							deviceEvents.setOccurredAt(occuredAt);
 
-        } catch (Exception e) {
+							deviceEventsList.add(deviceEvents);
 
-        	LOGGER.error("Exception ex" + CommonUtil.getStackTrace(e));
-            response.setResponseCode(IResponse.DB_ERROR_CODE);
-            response.setResponseDescription(IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB);
-            response.setResponseStatus(IResponse.ERROR_MESSAGE);
+						}
+					}
+				}
 
-            connectionInformationMidwayResponse.setResponse(response);
+				// Sort the deviceEventsList on the basis of time event occurred
+				// at
 
-            ConnectionInformationResponseMidwayDataArea connectionInformationResponseMidwayDataArea = new ConnectionInformationResponseMidwayDataArea();
+				Collections.sort(deviceEventsList,
+						new Comparator<DeviceEvents>() {
+							@Override
+							public int compare(DeviceEvents a, DeviceEvents b) {
 
-            connectionInformationMidwayResponse
-                    .setDataArea(connectionInformationResponseMidwayDataArea);
+								return a.getOccurredAt().compareTo(
+										b.getOccurredAt());
+							}
+						});
 
-            return connectionInformationMidwayResponse;
-        }
+				connectionInformationResponseMidwayDataArea
+						.setEvents(deviceEventsList);
 
-    }
+				connectionInformationMidwayResponse
+						.setDataArea(connectionInformationResponseMidwayDataArea);
+			}
+
+			return connectionInformationMidwayResponse;
+
+		} catch (Exception e) {
+
+			LOGGER.error("Exception ex" + CommonUtil.getStackTrace(e));
+			response.setResponseCode(IResponse.DB_ERROR_CODE);
+			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
+
+			connectionInformationMidwayResponse.setResponse(response);
+
+			ConnectionInformationResponseMidwayDataArea connectionInformationResponseMidwayDataArea = new ConnectionInformationResponseMidwayDataArea();
+
+			connectionInformationMidwayResponse
+					.setDataArea(connectionInformationResponseMidwayDataArea);
+
+			return connectionInformationMidwayResponse;
+		}
+
+	}
 }

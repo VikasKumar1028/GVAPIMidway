@@ -1,52 +1,52 @@
 package com.gv.midway.pojo.usageInformation.response;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 public class UsageInformationResponseMidwayDataArea {
 
-    public Long getTotalUsages() {
-        return totalUsages;
-    }
+	@Override
+	public String toString() {
+		return "UsageInformationResponseMidwayDataArea [deviceUsages="
+				+ deviceUsages + "]";
+	}
 
-    public void setTotalUsages(Long totalUsages) {
-        this.totalUsages = totalUsages;
-    }
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((deviceUsages == null) ? 0 : deviceUsages.hashCode());
+		return result;
+	}
 
-    @ApiModelProperty(value = "Total Device Usages")
-    @JsonProperty("totalUsages")
-    private Long totalUsages;
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		UsageInformationResponseMidwayDataArea other = (UsageInformationResponseMidwayDataArea) obj;
+		if (deviceUsages == null) {
+			if (other.deviceUsages != null)
+				return false;
+		} else if (!deviceUsages.equals(other.deviceUsages))
+			return false;
+		return true;
+	}
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result
-                + ((totalUsages == null) ? 0 : totalUsages.hashCode());
-        return result;
-    }
+	public List<DeviceUsages> getDeviceUsages() {
+		return deviceUsages;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        UsageInformationResponseMidwayDataArea other = (UsageInformationResponseMidwayDataArea) obj;
-        if (totalUsages == null) {
-            if (other.totalUsages != null)
-                return false;
-        } else if (!totalUsages.equals(other.totalUsages))
-            return false;
-        return true;
-    }
+	public void setDeviceUsages(List<DeviceUsages> deviceUsages) {
+		this.deviceUsages = deviceUsages;
+	}
 
-    @Override
-    public String toString() {
-        return "UsageInformationResponseMidwayDataArea [totalUsages="
-                + totalUsages + "]";
-    }
+	private List<DeviceUsages> deviceUsages;
 
 }
