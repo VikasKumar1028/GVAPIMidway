@@ -41,6 +41,7 @@ import com.gv.midway.processor.KoreBatchExceptionProcessor;
 import com.gv.midway.processor.KoreGenericExceptionProcessor;
 import com.gv.midway.processor.NetSuiteIdValidationProcessor;
 import com.gv.midway.processor.TimeOutErrorProcessor;
+import com.gv.midway.processor.TimeOutTransactionFailureErrorProcessor;
 import com.gv.midway.processor.VerizonBatchExceptionProcessor;
 import com.gv.midway.processor.VerizonGenericExceptionProcessor;
 import com.gv.midway.processor.activateDevice.KoreActivateDevicePostProcessor;
@@ -1240,7 +1241,7 @@ public class CamelRoute extends RouteBuilder {
         // Job Flow-1
 
         from("direct:processTransactionFailureJob").onException(ExchangeTimedOutException.class).handled(true).log(LoggingLevel.INFO,
-                "TimeOut Exception for Batch Jon").process(new TimeOutErrorProcessor(env)).end()
+                "TimeOut Exception for Batch Jon").process(new TimeOutTransactionFailureErrorProcessor(env)).end()
                 .onCompletion().bean(iJobService, "checkTimeOutDevicesTransactionFailure")
                 .bean(iJobService, "updateJobDetails")
                 .end()

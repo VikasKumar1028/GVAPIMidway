@@ -12,7 +12,7 @@ public class VerizonUsageInformationResponse {
 
     private UsageHistory[] usageHistory;
 
-    private String hasMoreData;
+    private Boolean hasMoreData;
 
     public UsageHistory[] getUsageHistory() {
         return usageHistory;
@@ -22,11 +22,11 @@ public class VerizonUsageInformationResponse {
         this.usageHistory = usageHistory;
     }
 
-    public String getHasMoreData() {
+    public Boolean getHasMoreData() {
         return hasMoreData;
     }
 
-    public void setHasMoreData(String hasMoreData) {
+    public void setHasMoreData(Boolean hasMoreData) {
         this.hasMoreData = hasMoreData;
     }
 

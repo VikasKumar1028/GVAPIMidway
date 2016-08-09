@@ -12,7 +12,7 @@ public class ConnectionInformationResponse {
     private ConnectionHistory[] connectionHistory;
 
     @ApiModelProperty(value = "Indicates that there is more data to be retrieved.")
-    private String hasMoreData;
+    private Boolean hasMoreData;
 
     public ConnectionHistory[] getConnectionHistory() {
         return connectionHistory;
@@ -22,11 +22,11 @@ public class ConnectionInformationResponse {
         this.connectionHistory = connectionHistory;
     }
 
-    public String getHasMoreData() {
+    public Boolean getHasMoreData() {
         return hasMoreData;
     }
 
-    public void setHasMoreData(String hasMoreData) {
+    public void setHasMoreData(Boolean hasMoreData) {
         this.hasMoreData = hasMoreData;
     }
 
