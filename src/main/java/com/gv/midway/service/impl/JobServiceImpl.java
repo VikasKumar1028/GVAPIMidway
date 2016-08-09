@@ -17,6 +17,7 @@ import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.JobName;
 import com.gv.midway.constant.JobType;
 import com.gv.midway.dao.IJobDao;
+import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.job.JobDetail;
 import com.gv.midway.pojo.notification.DeviceOverageNotification;
 import com.gv.midway.pojo.server.ServerDetail;
@@ -271,6 +272,74 @@ public class JobServiceImpl implements IJobService {
         LOGGER.info("scheduleJob  :::::::::::::::::: ");
         JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
         producer.requestBody("direct:startJob", jobDetail);
+
+    }
+    
+    
+    @Override
+    public void checkTimeOutDevices(Exchange exchange) {
+
+        LOGGER.info("checkTimeOutDevices  :::::::::::::::::: ");
+        
+       List<DeviceInformation> timeOutDeviceList= (List<DeviceInformation>) exchange.getProperty(IConstant.TIMEOUT_DEVICE_LIST);
+       
+       if(timeOutDeviceList.size()>0)
+       {
+    	   
+    	 String jobName= (String) exchange.getProperty("jobName") ;
+    	 
+    	
+    	 // check for usage and connection History Job
+    	
+    	if(jobName.endsWith("DEVICE_USAGE"))
+    	{
+    		LOGGER.info("insert timeOut devcies in Usage  :::::::::::::::::: ");
+    		iJobDao.insertTimeOutUsageRecords(exchange);
+    	}
+    	
+    	// Connection History Job
+    	else
+    	{
+    		LOGGER.info("insert timeOut devcies in Connection  :::::::::::::::::: ");
+    		iJobDao.insertTimeOutConnectionRecords(exchange);
+    		
+    	}
+    	   
+       }
+      
+
+    }
+    
+    @Override
+    public void checkTimeOutDevicesTransactionFailure(Exchange exchange) {
+
+        LOGGER.info("checkTimeOutDevices for TransactionFailure :::::::::::::::::: ");
+        
+        List<Object> timeOutDeviceList= (List<Object>) exchange.getProperty(IConstant.TIMEOUT_DEVICE_LIST);
+      
+        if(timeOutDeviceList.size()>0)
+        {
+     	   
+     	 String jobName= (String) exchange.getProperty("jobName") ;
+     	 
+     	
+     	 // check for usage and connection History Job
+     	
+     	if(jobName.endsWith("DeviceUsageJob"))
+     	{
+     		LOGGER.info("insert timeOut devcies in TransactionFailure Usage  :::::::::::::::::: ");
+     		iJobDao.insertTimeOutUsageRecordsTransactionFailure(exchange);
+     	}
+     	
+     	// Connection History Job
+     	else
+     	{
+     		LOGGER.info("insert timeOut devcies in TransactionFailure Connection  :::::::::::::::::: ");
+     		iJobDao.insertTimeOutConnectionRecordsTransactionFailure(exchange);
+     		
+     	}
+     	   
+        }
 
     }
 

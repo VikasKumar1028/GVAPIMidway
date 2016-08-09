@@ -1,16 +1,21 @@
 package com.gv.midway.processor;
 
 import java.net.ConnectException;
+import java.net.NoRouteToHostException;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.component.cxf.CxfOperationException;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
+
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.deviceHistory.DeviceUsage;
 import com.gv.midway.pojo.job.JobDetail;
 import com.gv.midway.pojo.verizon.DeviceId;
+import com.gv.midway.utility.CommonUtil;
 
 public class KoreBatchExceptionProcessor implements Processor {
 
@@ -39,7 +44,8 @@ public class KoreBatchExceptionProcessor implements Processor {
 
         // If Connection Exception
         if (ex.getCause() instanceof UnknownHostException
-                || ex.getCause() instanceof ConnectException) {
+                || ex.getCause() instanceof ConnectException || ex.getCause() instanceof NoRouteToHostException || ex.getCause() instanceof SocketTimeoutException) {
+        	LOGGER.info("reason of connection error is......."+CommonUtil.getStackTrace(ex));
             errorType = IConstant.MIDWAY_CONNECTION_ERROR;
 
         }

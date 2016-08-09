@@ -1,9 +1,12 @@
 package com.gv.midway.router;
 
 import java.net.ConnectException;
+import java.net.NoRouteToHostException;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
 import org.apache.camel.Exchange;
+import org.apache.camel.ExchangeTimedOutException;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.cxf.CxfOperationException;
@@ -37,6 +40,7 @@ import com.gv.midway.processor.HeaderProcessor;
 import com.gv.midway.processor.KoreBatchExceptionProcessor;
 import com.gv.midway.processor.KoreGenericExceptionProcessor;
 import com.gv.midway.processor.NetSuiteIdValidationProcessor;
+import com.gv.midway.processor.TimeOutErrorProcessor;
 import com.gv.midway.processor.VerizonBatchExceptionProcessor;
 import com.gv.midway.processor.VerizonGenericExceptionProcessor;
 import com.gv.midway.processor.activateDevice.KoreActivateDevicePostProcessor;
@@ -193,7 +197,8 @@ public class CamelRoute extends RouteBuilder {
                 .log(LoggingLevel.INFO,
                         "Pass all the required header parameters")
                 .process(new HeaderErrorProcessor(env));
-
+        
+    
         from("direct:tokenGeneration").bean(iSessionService, "checkToken")
                 .choice().when(body().contains("true"))
                 .log(LoggingLevel.INFO, "MATCH -REFETCHING ")
@@ -1127,8 +1132,10 @@ public class CamelRoute extends RouteBuilder {
 
         // Job Flow-1
 
-        from("direct:processJob")
-                .onCompletion()
+        from("direct:processJob").
+        onException(ExchangeTimedOutException.class).handled(true).log(LoggingLevel.INFO,
+                "TimeOut Exception for Batch Jon").process(new TimeOutErrorProcessor(env)).end()
+                .onCompletion().bean(iJobService, "checkTimeOutDevices")
                 .bean(iJobService, "updateJobDetails").
                 // Run the Notification Job for Self triggered Batch job of Device Usage
                  choice()
@@ -1182,7 +1189,7 @@ public class CamelRoute extends RouteBuilder {
                 .process(new KoreDeviceUsageHistoryPostProcessor())
                 .bean(iSchedulerService, "saveDeviceUsageHistory")
                 .doCatch(CxfOperationException.class,
-                        UnknownHostException.class, ConnectException.class,KoreSimMissingException.class)
+                        UnknownHostException.class, ConnectException.class,SocketTimeoutException.class,NoRouteToHostException.class,KoreSimMissingException.class)
                 .process(new KoreBatchExceptionProcessor(env))
                 .bean(iSchedulerService, "saveDeviceUsageHistory").endDoTry();
 
@@ -1198,7 +1205,7 @@ public class CamelRoute extends RouteBuilder {
                 .process(new VerizonDeviceUsageHistoryPostProcessor())
                 .bean(iSchedulerService, "saveDeviceUsageHistory")
                 .doCatch(CxfOperationException.class,
-                        UnknownHostException.class, ConnectException.class)
+                        UnknownHostException.class,ConnectException.class,SocketTimeoutException.class,NoRouteToHostException.class)
                 .process(new VerizonBatchExceptionProcessor(env))
                 .bean(iSchedulerService, "saveDeviceUsageHistory").endDoTry();
 
@@ -1214,7 +1221,7 @@ public class CamelRoute extends RouteBuilder {
                 .process(new VerizonDeviceConnectionHistoryPostProcessor())
                 .bean(iSchedulerService, "saveDeviceConnectionHistory")
                 .doCatch(CxfOperationException.class,
-                        UnknownHostException.class, ConnectException.class)
+                        UnknownHostException.class,ConnectException.class,SocketTimeoutException.class,NoRouteToHostException.class)
                 .process(new VerizonBatchExceptionProcessor(env))
                 .bean(iSchedulerService, "saveDeviceConnectionHistory")
                 .endDoTry();
@@ -1232,8 +1239,9 @@ public class CamelRoute extends RouteBuilder {
 
         // Job Flow-1
 
-        from("direct:processTransactionFailureJob")
-                .onCompletion()
+        from("direct:processTransactionFailureJob").onException(ExchangeTimedOutException.class).handled(true).log(LoggingLevel.INFO,
+                "TimeOut Exception for Batch Jon").process(new TimeOutErrorProcessor(env)).end()
+                .onCompletion().bean(iJobService, "checkTimeOutDevicesTransactionFailure")
                 .bean(iJobService, "updateJobDetails")
                 .end()
                 .bean(iJobService, "insertJobDetails")
@@ -1285,7 +1293,7 @@ public class CamelRoute extends RouteBuilder {
                 .process(new KoreDeviceUsageHistoryPostProcessor())
                 .bean(iSchedulerService, "saveDeviceUsageHistory")
                 .doCatch(CxfOperationException.class,
-                        UnknownHostException.class, ConnectException.class,KoreSimMissingException.class)
+                        UnknownHostException.class, ConnectException.class,SocketTimeoutException.class,NoRouteToHostException.class,KoreSimMissingException.class)
                 .process(new KoreBatchExceptionProcessor(env))
                 .bean(iSchedulerService, "saveDeviceUsageHistory").endDoTry();
 
@@ -1303,7 +1311,7 @@ public class CamelRoute extends RouteBuilder {
                 .process(new VerizonDeviceUsageHistoryPostProcessor())
                 .bean(iSchedulerService, "saveDeviceUsageHistory")
                 .doCatch(CxfOperationException.class,
-                        UnknownHostException.class, ConnectException.class)
+                        UnknownHostException.class,ConnectException.class,SocketTimeoutException.class,NoRouteToHostException.class)
                 .process(new VerizonBatchExceptionProcessor(env))
                 .bean(iSchedulerService, "saveDeviceUsageHistory").endDoTry();
 
@@ -1321,7 +1329,7 @@ public class CamelRoute extends RouteBuilder {
                 .process(new VerizonDeviceConnectionHistoryPostProcessor())
                 .bean(iSchedulerService, "saveDeviceConnectionHistory")
                 .doCatch(CxfOperationException.class,
-                        UnknownHostException.class, ConnectException.class)
+                        UnknownHostException.class,ConnectException.class,SocketTimeoutException.class,NoRouteToHostException.class)
                 .process(new VerizonBatchExceptionProcessor(env))
                 .bean(iSchedulerService, "saveDeviceConnectionHistory")
                 .endDoTry();

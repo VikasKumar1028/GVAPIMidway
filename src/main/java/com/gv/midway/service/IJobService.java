@@ -37,5 +37,9 @@ public interface IJobService {
     public void checkNotificationList(Exchange exchange);
 
     public void scheduleJob(Exchange exchange);
+    
+    public void checkTimeOutDevices(Exchange exchange);
+    
+    public void checkTimeOutDevicesTransactionFailure(Exchange exchange);
 
 }

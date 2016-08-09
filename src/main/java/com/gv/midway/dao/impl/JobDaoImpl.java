@@ -8,12 +8,13 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.grou
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
-
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-
+import java.util.Set;
 import org.apache.camel.Exchange;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
-
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.JobName;
 import com.gv.midway.dao.IJobDao;
@@ -59,6 +59,10 @@ public class JobDaoImpl implements IJobDao {
         exchange.setProperty("carrierName", jobDetail.getCarrierName());
         
         exchange.setProperty("jobType", jobDetail.getType().toString());
+        
+        List<DeviceInformation> timeOutDeviceList=new ArrayList<DeviceInformation>();
+        
+        exchange.setProperty(IConstant.TIMEOUT_DEVICE_LIST, timeOutDeviceList );
 
         List<DeviceInformation> deviceInformationList = null;
 
@@ -100,6 +104,10 @@ public class JobDaoImpl implements IJobDao {
         exchange.setProperty("carrierName", jobDetail.getCarrierName());
         
         exchange.setProperty("jobType", jobDetail.getType().toString());
+        
+        List<DeviceInformation> timeOutDeviceList=new ArrayList<DeviceInformation>();
+        
+        exchange.setProperty(IConstant.TIMEOUT_DEVICE_LIST, timeOutDeviceList );
 
         List<DeviceInformation> deviceInformationList = null;
 
@@ -146,6 +154,10 @@ public class JobDaoImpl implements IJobDao {
         exchange.setProperty("carrierName", jobDetail.getCarrierName());
         
         exchange.setProperty("jobType", jobDetail.getType().toString());
+        
+        List<DeviceInformation> timeOutDeviceList=new ArrayList<DeviceInformation>();
+        
+        exchange.setProperty(IConstant.TIMEOUT_DEVICE_LIST, timeOutDeviceList );
 
         List<DeviceInformation> deviceInformationList = null;
 
@@ -316,8 +328,16 @@ public class JobDaoImpl implements IJobDao {
                     jobDetail.getName().toString())
                     || JobName.VERIZON_DEVICE_USAGE.toString()
                             .equalsIgnoreCase(jobDetail.getName().toString())) {
+            	
+            	 List<DeviceUsage> timeOutDeviceList=new ArrayList<DeviceUsage>();
+                 
+                 exchange.setProperty(IConstant.TIMEOUT_DEVICE_LIST, timeOutDeviceList );
+
                 list = mongoTemplate.find(searchQuery, DeviceUsage.class);
             } else {
+                 List<DeviceConnection> timeOutDeviceList=new ArrayList<DeviceConnection>();
+                 
+                 exchange.setProperty(IConstant.TIMEOUT_DEVICE_LIST, timeOutDeviceList );
                 list = mongoTemplate.find(searchQuery, DeviceConnection.class);
 
             }
@@ -500,5 +520,308 @@ public class JobDaoImpl implements IJobDao {
          */
 
     }
+
+    /**
+     * Insert timeOut devices in Usage
+     */
+	@Override
+	public void insertTimeOutUsageRecords(Exchange exchange) {
+		
+		 JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+		 
+		 List<DeviceInformation> timeOutDeviceList= (List<DeviceInformation>) exchange.getProperty(IConstant.TIMEOUT_DEVICE_LIST);
+		 
+		// Add timeOut devices in a Set with NetSuiteId
+
+		Set<Integer> timeOutDeviceSet = new HashSet<Integer>();
+
+		for (DeviceInformation deviceInformation : timeOutDeviceList) {
+			LOGGER.info("timeOut devices ..........."
+					+ deviceInformation.getNetSuiteId());
+			timeOutDeviceSet.add(deviceInformation.getNetSuiteId());
+		}
+		 
+		 String carrierName= (String) exchange.getProperty("carrierName");
+		
+		 
+		 // find  the timeout devices that are in device usage Collection
+		 Query searchJobQuery = new Query(Criteria.where("carrierName").regex(jobDetail.getCarrierName(), "i")).addCriteria(
+	                Criteria.where("date").is(jobDetail.getDate())).addCriteria(
+	                Criteria.where("isValid").is(true)).addCriteria(
+	    	                Criteria.where("netSuiteId").in(timeOutDeviceSet));
+		 
+		 List<DeviceUsage> deviceUsageList=mongoTemplate.find(searchJobQuery, DeviceUsage.class);
+		 
+		 // Add timeOut devices from DB in a Set with NetSuiteId
+		 Set<Integer> timeOutDeviceSetInDB=new HashSet<Integer>();
+		 
+		 for (DeviceUsage deviceUsage : deviceUsageList) 
+		 {
+			 LOGGER.info("timeOut devices in usage..........."+deviceUsage.getNetSuiteId());
+			 timeOutDeviceSetInDB.add(deviceUsage.getNetSuiteId());
+		 } 
+		
+		 // find all timeOut device not in device usage Collection 
+		 List<DeviceUsage> timeOutDevicesNotInUsage=new ArrayList<DeviceUsage>();
+		 for (DeviceInformation deviceInformation : timeOutDeviceList) {
+			 
+			
+			if(!timeOutDeviceSetInDB.contains(deviceInformation.getNetSuiteId()))
+			{
+		    LOGGER.info("timeOut devices Not in usage..........."+deviceInformation.getNetSuiteId());
+			DeviceUsage deviceUsage=new DeviceUsage();
+			deviceUsage.setCarrierName(carrierName);
+	       
+	        deviceUsage.setDataUsed(0);
+	        // The Day for which Job Ran
+
+	        deviceUsage.setDate(jobDetail.getDate());
+	        deviceUsage.setTransactionErrorReason("TimeOut Error");
+	        deviceUsage
+	                .setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
+	        deviceUsage.setNetSuiteId(deviceInformation.getNetSuiteId());
+	        deviceUsage.setIsValid(true);
+	        
+	        if(carrierName.equalsIgnoreCase("KORE")){
+	        	
+	        	
+	        	deviceUsage.setDeviceId(CommonUtil.getSimNumber(deviceInformation.getDeviceIds()));
+	        }
+	        
+	        else
+	        {
+	        	deviceUsage.setDeviceId(CommonUtil.getRecommendedDeviceIdentifier(deviceInformation.getDeviceIds()));
+	        	
+	        }
+	      
+	        timeOutDevicesNotInUsage.add(deviceUsage);
+			}
+		}
+		 // Add all the timeOut Devices that are not in Device Usage Collection
+		 if(timeOutDevicesNotInUsage.size()>0)
+		 {
+			 LOGGER.info("Adding timeOut devices Not in usage..........."+timeOutDevicesNotInUsage.size());
+			 mongoTemplate.insertAll(timeOutDevicesNotInUsage); 
+			 
+		 }
+		 
+	}
+
+	/**
+     * Insert timeOut devices in Connection
+     */
+	@Override
+	public void insertTimeOutConnectionRecords(Exchange exchange) {
+		// TODO Auto-generated method stub
+        JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+		 
+		 List<DeviceInformation> timeOutDeviceList= (List<DeviceInformation>) exchange.getProperty(IConstant.TIMEOUT_DEVICE_LIST);
+		 
+		// Add timeOut devices in a Set with NetSuiteId
+		 
+        Set<Integer> timeOutDeviceSet=new HashSet<Integer>();
+		 
+		 for (DeviceInformation deviceInformation : timeOutDeviceList) 
+		 {
+			 LOGGER.info("timeOut devices ..........."+deviceInformation.getNetSuiteId());
+			 timeOutDeviceSet.add(deviceInformation.getNetSuiteId());
+		 } 
+		 
+		 String carrierName= (String) exchange.getProperty("carrierName");
+		
+		 
+		 // find  the timeout devices that are in device Connection Collection
+		 Query searchJobQuery = new Query(Criteria.where("carrierName").regex(jobDetail.getCarrierName(), "i")).addCriteria(
+	                Criteria.where("date").is(jobDetail.getDate())).addCriteria(
+	                Criteria.where("isValid").is(true)).addCriteria(
+	    	                Criteria.where("netSuiteId").in(timeOutDeviceSet));
+		 
+		 List<DeviceConnection> deviceConnectionList=mongoTemplate.find(searchJobQuery, DeviceConnection.class);
+		 
+		 // Add timeOut devices from DB in a Set with NetSuiteId
+		 Set<Integer> timeOutDeviceSetInDB=new HashSet<Integer>();
+		 
+		 for (DeviceConnection deviceConnection : deviceConnectionList) 
+		 {
+			 LOGGER.info("timeOut devices in Connection..........."+deviceConnection.getNetSuiteId());
+			 timeOutDeviceSetInDB.add(deviceConnection.getNetSuiteId());
+		 } 
+		
+		 // find all timeOut device not in device connection Collection 
+		 List<DeviceConnection> timeOutDevicesNotInConnection=new ArrayList<DeviceConnection>();
+		 for (DeviceInformation deviceInformation : timeOutDeviceList) {
+			 
+			
+			if(!timeOutDeviceSetInDB.contains(deviceInformation.getNetSuiteId()))
+			{
+		    LOGGER.info("timeOut devices Not in Connection..........."+deviceInformation.getNetSuiteId());
+			DeviceConnection deviceConnection=new DeviceConnection();
+			deviceConnection.setCarrierName(carrierName);
+	       
+
+			deviceConnection.setDate(jobDetail.getDate());
+			deviceConnection.setTransactionErrorReason("TimeOut Error");
+	        deviceConnection
+	                .setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
+	        deviceConnection.setNetSuiteId(deviceInformation.getNetSuiteId());
+	        deviceConnection.setIsValid(true);
+	        deviceConnection.setDeviceId(CommonUtil.getRecommendedDeviceIdentifier(deviceInformation.getDeviceIds()));
+	        
+	       
+	      
+	        timeOutDevicesNotInConnection.add(deviceConnection);
+			}
+		}
+		 // Add all the timeOut Devices that are not in Device Connection Collection
+		 if(timeOutDevicesNotInConnection.size()>0)
+		 {
+			 LOGGER.info("Adding timeOut devices Not in Connection..........."+timeOutDevicesNotInConnection.size());
+			 mongoTemplate.insertAll(timeOutDevicesNotInConnection); 
+			 
+		 }
+	}
+
+	/**
+     * Insert TransactionFailure timeOut devices in Usage
+     */
+	@Override
+	public void insertTimeOutUsageRecordsTransactionFailure(Exchange exchange) {
+		// TODO Auto-generated method stub
+		
+        JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+		 
+		 List<DeviceUsage> timeOutDeviceListTransactionFailure= (List<DeviceUsage>) exchange.getProperty(IConstant.TIMEOUT_DEVICE_LIST);
+		 
+		// Add timeOut devices in a Set with NetSuiteId
+
+		Set<Integer> timeOutDeviceSetTransactionFailure = new HashSet<Integer>();
+
+		for (DeviceUsage deviceUsage : timeOutDeviceListTransactionFailure) {
+			LOGGER.info("timeOut devices TransactionFailure ..........."
+					+ deviceUsage.getNetSuiteId());
+			timeOutDeviceSetTransactionFailure.add(deviceUsage.getNetSuiteId());
+		}
+		 
+		 String carrierName= (String) exchange.getProperty("carrierName");
+		
+		 
+		 // find  the TransactionFailure timeout devices that are in device usage Collection
+		 Query searchJobQuery = new Query(Criteria.where("carrierName").regex(jobDetail.getCarrierName(), "i")).addCriteria(
+	                Criteria.where("date").is(jobDetail.getDate())).addCriteria(
+	                Criteria.where("isValid").is(true)).addCriteria(
+	    	                Criteria.where("netSuiteId").in(timeOutDeviceSetTransactionFailure));
+		 
+		 List<DeviceUsage> deviceUsageListTransactionFailure=mongoTemplate.find(searchJobQuery, DeviceUsage.class);
+		 
+		 // Add timeOut devices from DB in a Set with NetSuiteId
+		 Set<Integer> timeOutDeviceSetInDB=new HashSet<Integer>();
+		 
+		 for (DeviceUsage deviceUsage : deviceUsageListTransactionFailure) 
+		 {
+			 LOGGER.info("timeOut devices TransactionFailure in usage..........."+deviceUsage.getNetSuiteId());
+			 timeOutDeviceSetInDB.add(deviceUsage.getNetSuiteId());
+		 } 
+		
+		 // find all timeOut device not in device usage Collection 
+		 List<DeviceUsage> timeOutDevicesNotInUsage=new ArrayList<DeviceUsage>();
+		 for (DeviceUsage deviceUsage : timeOutDeviceListTransactionFailure) {
+			 
+			
+			if(!timeOutDeviceSetInDB.contains(deviceUsage.getNetSuiteId()))
+			{
+		    LOGGER.info("timeOut devices Not in usage TransactionFailure..........."+deviceUsage.getNetSuiteId());
+			
+	       
+	        deviceUsage.setDataUsed(0);
+	       
+	        deviceUsage.setDate(jobDetail.getDate());
+	        deviceUsage.setTransactionErrorReason("TimeOut Error");
+	        deviceUsage
+	                .setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
+	       
+	        deviceUsage.setIsValid(true);
+	        
+	      
+	        timeOutDevicesNotInUsage.add(deviceUsage);
+			}
+		}
+		 // Add all the timeOut Devices that are not in Device Usage Collection
+		 if(timeOutDevicesNotInUsage.size()>0)
+		 {
+			 LOGGER.info("Adding timeOut devices Not in usage..........."+timeOutDevicesNotInUsage.size());
+			 mongoTemplate.insertAll(timeOutDevicesNotInUsage); 
+			 
+		 }
+	}
+
+	/**
+     * Insert TransactionFailure timeOut devices in Connection
+     */
+	@Override
+	public void insertTimeOutConnectionRecordsTransactionFailure(
+			Exchange exchange) {
+		// TODO Auto-generated method stub
+		
+		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+		 
+		 List<DeviceConnection> timeOutDeviceTransactionFailureList= (List<DeviceConnection>) exchange.getProperty(IConstant.TIMEOUT_DEVICE_LIST);
+		 
+		// Add timeOut devices in a Set with NetSuiteId
+		 
+       Set<Integer> timeOutDeviceSetTransactionFailure=new HashSet<Integer>();
+		 
+		 for (DeviceConnection deviceConnection : timeOutDeviceTransactionFailureList) 
+		 {
+			 LOGGER.info("timeOut devices TransactionFailure ..........."+deviceConnection.getNetSuiteId());
+			 timeOutDeviceSetTransactionFailure.add(deviceConnection.getNetSuiteId());
+		 } 
+		 
+		 String carrierName= (String) exchange.getProperty("carrierName");
+		
+		 
+		 // find  the timeout devices that are in device Connection Collection
+		 Query searchJobQuery = new Query(Criteria.where("carrierName").regex(jobDetail.getCarrierName(), "i")).addCriteria(
+	                Criteria.where("date").is(jobDetail.getDate())).addCriteria(
+	                Criteria.where("isValid").is(true)).addCriteria(
+	    	                Criteria.where("netSuiteId").in(timeOutDeviceSetTransactionFailure));
+		 
+		 List<DeviceConnection> deviceConnectionListTransactionFailure=mongoTemplate.find(searchJobQuery, DeviceConnection.class);
+		 
+		 // Add timeOut devices from DB in a Set with NetSuiteId
+		 Set<Integer> timeOutDeviceSetInDB=new HashSet<Integer>();
+		 
+		 for (DeviceConnection deviceConnection : deviceConnectionListTransactionFailure) 
+		 {
+			 LOGGER.info("timeOut devices TransactionFailure in Connection..........."+deviceConnection.getNetSuiteId());
+			 timeOutDeviceSetInDB.add(deviceConnection.getNetSuiteId());
+		 } 
+		
+		 // find all timeOut device not in device connection Collection 
+		 List<DeviceConnection> timeOutDevicesNotInConnection=new ArrayList<DeviceConnection>();
+		 for (DeviceConnection deviceConnection : timeOutDeviceTransactionFailureList) {
+			 
+			
+			if(!timeOutDeviceSetInDB.contains(deviceConnection.getNetSuiteId()))
+			{
+		    LOGGER.info("timeOut devices Not in Connection TransactionFailure..........."+deviceConnection.getNetSuiteId());
+			
+			deviceConnection.setDate(jobDetail.getDate());
+			deviceConnection.setTransactionErrorReason("TimeOut Error");
+	        deviceConnection
+	                .setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
+	       
+	        deviceConnection.setIsValid(true);
+	       
+	        timeOutDevicesNotInConnection.add(deviceConnection);
+			}
+		}
+		 // Add all the timeOut Devices that are not in Device Connection Collection
+		 if(timeOutDevicesNotInConnection.size()>0)
+		 {
+			 LOGGER.info("Adding timeOut devices Not in Connection..........."+timeOutDevicesNotInConnection.size());
+			 mongoTemplate.insertAll(timeOutDevicesNotInConnection); 
+			 
+		 }
+	}
 
 }
