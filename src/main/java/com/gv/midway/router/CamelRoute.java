@@ -4,7 +4,6 @@ import java.net.ConnectException;
 import java.net.NoRouteToHostException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangeTimedOutException;
 import org.apache.camel.LoggingLevel;
@@ -16,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-
 import com.gv.midway.constant.CarrierType;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.JobName;
@@ -41,7 +39,6 @@ import com.gv.midway.processor.KoreBatchExceptionProcessor;
 import com.gv.midway.processor.KoreGenericExceptionProcessor;
 import com.gv.midway.processor.NetSuiteIdValidationProcessor;
 import com.gv.midway.processor.TimeOutErrorProcessor;
-import com.gv.midway.processor.TimeOutTransactionFailureErrorProcessor;
 import com.gv.midway.processor.VerizonBatchExceptionProcessor;
 import com.gv.midway.processor.VerizonGenericExceptionProcessor;
 import com.gv.midway.processor.activateDevice.KoreActivateDevicePostProcessor;
@@ -1241,7 +1238,7 @@ public class CamelRoute extends RouteBuilder {
         // Job Flow-1
 
         from("direct:processTransactionFailureJob").onException(ExchangeTimedOutException.class).handled(true).log(LoggingLevel.INFO,
-                "TimeOut Exception for Batch Jon").process(new TimeOutTransactionFailureErrorProcessor(env)).end()
+                "TimeOut Exception for Batch Jon").process(new TimeOutErrorProcessor(env)).end()
                 .onCompletion().bean(iJobService, "checkTimeOutDevicesTransactionFailure")
                 .bean(iJobService, "updateJobDetails")
                 .end()
