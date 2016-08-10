@@ -282,11 +282,9 @@ public class CamelRoute extends RouteBuilder {
         jobResponse();
 
         // device Overage Notification Job
-        notificationJob();
+       // notificationJob();
 
-        //deviceUsageNotificationJob();
-
-        // Verizon Call Back
+       // Verizon Call Back
         callbacks();
 
         // Kore Check Status Timer
@@ -1135,13 +1133,14 @@ public class CamelRoute extends RouteBuilder {
                 "TimeOut Exception for Batch Jon").process(new TimeOutErrorProcessor(env)).end()
                 .onCompletion().bean(iJobService, "checkTimeOutDevices")
                 .bean(iJobService, "updateJobDetails").
-                // Run the Notification Job for Self triggered Batch job of Device Usage
+                // Notification Not required.
+                /*// Run the Notification Job for Self triggered Batch job of Device Usage
                  choice()
                 .when(simple("${exchangeProperty[jobName]} == 'KORE_DEVICE_USAGE' || ${exchangeProperty[jobName]} == 'VERIZON_DEVICE_USAGE' && ${exchangeProperty[jobType]} == 'NEW'") ).
                 bean(iJobService,
                         "setJobDetails(${exchange},${exchangeProperty[carrierName]},"+JobName.DEVICE_USAGE_NOTIFICATION+")")
-                .to("direct:notificationJob").endChoice().end()
-                .end()
+                .to("direct:notificationJob").endChoice().end().*/
+                 end()
                 .bean(iJobService, "insertJobDetails")
                 .bean(iJobService, "setJobStartandEndTime")
                 .bean(iJobService, "fetchDevices")
@@ -1381,30 +1380,14 @@ public class CamelRoute extends RouteBuilder {
 
     }
 
-    /**
-     * This Method is used to schedule device Overage Notification
-     */
-    /*public void deviceUsageNotificationJob() {
+    
 
-        from(
-        
-         * "quartz2://job/deviceUsageNotifcationTimer?cron=" +
-         * IConstant.JOB_TIME_CONFIGURATION)
-         
-        "timer://deviceUsageNotifcationTimer?period=150m")
-                .bean(iJobService,
-                        "setJobDetails(${exchange},"
-                                + CarrierType.VERIZON.toString() + ", "
-                                + JobName.DEVICE_USAGE_NOTIFICATION + ")")
-                .to("direct:notificationJob").end();
-
-    }*/
-
+    //Not in Use.
     /**
      * Notification Job
      */
 
-    public void notificationJob() {
+   /* public void notificationJob() {
 
         // Job Flow-1
 
@@ -1427,7 +1410,7 @@ public class CamelRoute extends RouteBuilder {
                 .doTry().bean(iJobService, "processDeviceNotification")
                 .doCatch(CxfOperationException.class).endDoTry();
 
-    }
+    }*/
 
     public void jobResponse() {
         from("direct:jobResponse").log("Inside the Job response").process(
