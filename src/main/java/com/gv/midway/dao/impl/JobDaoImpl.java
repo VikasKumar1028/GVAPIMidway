@@ -8,6 +8,7 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.grou
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -15,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+
 import org.apache.camel.Exchange;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.JobName;
 import com.gv.midway.dao.IJobDao;
@@ -201,6 +204,11 @@ public class JobDaoImpl implements IJobDao {
         jobDetail.setIpAddress(CommonUtil.getIpAddress());
         exchange.setProperty("jobDetail", jobDetail);
         exchange.setProperty("jobDetailDate", jobDetail.getDate());
+       
+        //generating the job ID to recognize the job
+        long timestamp = System.currentTimeMillis();
+        String jobId = Long.toString(timestamp);
+        jobDetail.setJobId(jobId);
 
         // inserting in the database as property
         mongoTemplate.insert(jobDetail);
@@ -581,6 +589,7 @@ public class JobDaoImpl implements IJobDao {
 	                .setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
 	        deviceUsage.setNetSuiteId(deviceInformation.getNetSuiteId());
 	        deviceUsage.setIsValid(true);
+	        deviceUsage.setJobId(jobDetail.getJobId());
 	        
 	        if(carrierName.equalsIgnoreCase("KORE")){
 	        	
@@ -665,6 +674,7 @@ public class JobDaoImpl implements IJobDao {
 	                .setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
 	        deviceConnection.setNetSuiteId(deviceInformation.getNetSuiteId());
 	        deviceConnection.setIsValid(true);
+	        deviceConnection.setJobId(jobDetail.getJobId());
 	        deviceConnection.setDeviceId(CommonUtil.getRecommendedDeviceIdentifier(deviceInformation.getDeviceIds()));
 	        
 	       
@@ -740,7 +750,7 @@ public class JobDaoImpl implements IJobDao {
 	                .setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
 	       
 	        deviceUsage.setIsValid(true);
-	        
+	        deviceUsage.setJobId(jobDetail.getJobId());
 	      
 	        timeOutDevicesNotInUsage.add(deviceUsage);
 			}
@@ -811,7 +821,7 @@ public class JobDaoImpl implements IJobDao {
 	                .setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
 	       
 	        deviceConnection.setIsValid(true);
-	       
+	        deviceConnection.setJobId(jobDetail.getJobId());
 	        timeOutDevicesNotInConnection.add(deviceConnection);
 			}
 		}

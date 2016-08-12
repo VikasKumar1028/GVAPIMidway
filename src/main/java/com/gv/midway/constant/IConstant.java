@@ -100,5 +100,7 @@ public interface IConstant {
     static String KORE_MISSING_SIM_ERROR="SIM is missing in deviceIds";
     
     static String TIMEOUT_DEVICE_LIST="timeOutDeviceList";
+    
+    static String JOB_ID="JOBID";
 
 }

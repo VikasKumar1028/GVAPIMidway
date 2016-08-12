@@ -123,7 +123,7 @@ public class VerizonBatchExceptionProcessor implements Processor {
             deviceUsage.setNetSuiteId((Integer) exchange
                     .getProperty(IConstant.MIDWAY_NETSUITE_ID));
             deviceUsage.setIsValid(true);
-
+            deviceUsage.setJobId(jobDetail.getJobId());
             exchange.getIn().setBody(deviceUsage);
 
         } else {
@@ -147,6 +147,7 @@ public class VerizonBatchExceptionProcessor implements Processor {
                     .getProperty(IConstant.MIDWAY_NETSUITE_ID));
             deviceConnection.setIsValid(true);
             deviceConnection.setEvent(null);
+            deviceConnection.setJobId(jobDetail.getJobId());
             exchange.getIn().setBody(deviceConnection);
         }
 

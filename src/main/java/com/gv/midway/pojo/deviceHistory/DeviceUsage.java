@@ -17,15 +17,9 @@ public class DeviceUsage {
     private String transactionErrorReason;
     private Boolean isValid;
     private String carrierName;
-    private Boolean billCycleComplete;
+    private String jobId;
 
-    public Boolean getBillCycleComplete() {
-        return billCycleComplete;
-    }
-
-    public void setBillCycleComplete(Boolean billCycleComplete) {
-        this.billCycleComplete = billCycleComplete;
-    }
+ 
 
     public DeviceId getDeviceId() {
         return deviceId;
@@ -90,17 +84,13 @@ public class DeviceUsage {
                 + ", transactionStatus=" + transactionStatus
                 + ", transactionErrorReason=" + transactionErrorReason
                 + ", isValid=" + isValid + ", carrierName=" + carrierName
-                + ", billCycleComplete=" + billCycleComplete + "]";
+                + ", jobId=" + jobId + "]";
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime
-                * result
-                + ((billCycleComplete == null) ? 0 : billCycleComplete
-                        .hashCode());
         result = prime * result
                 + ((carrierName == null) ? 0 : carrierName.hashCode());
         result = prime * result + Float.floatToIntBits(dataUsed);
@@ -108,6 +98,7 @@ public class DeviceUsage {
         result = prime * result
                 + ((deviceId == null) ? 0 : deviceId.hashCode());
         result = prime * result + ((isValid == null) ? 0 : isValid.hashCode());
+        result = prime * result + ((jobId == null) ? 0 : jobId.hashCode());
         result = prime * result
                 + ((netSuiteId == null) ? 0 : netSuiteId.hashCode());
         result = prime
@@ -130,11 +121,6 @@ public class DeviceUsage {
         if (getClass() != obj.getClass())
             return false;
         DeviceUsage other = (DeviceUsage) obj;
-        if (billCycleComplete == null) {
-            if (other.billCycleComplete != null)
-                return false;
-        } else if (!billCycleComplete.equals(other.billCycleComplete))
-            return false;
         if (carrierName == null) {
             if (other.carrierName != null)
                 return false;
@@ -157,6 +143,11 @@ public class DeviceUsage {
             if (other.isValid != null)
                 return false;
         } else if (!isValid.equals(other.isValid))
+            return false;
+        if (jobId == null) {
+            if (other.jobId != null)
+                return false;
+        } else if (!jobId.equals(other.jobId))
             return false;
         if (netSuiteId == null) {
             if (other.netSuiteId != null)
@@ -182,5 +173,13 @@ public class DeviceUsage {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getJobId() {
+        return jobId;
+    }
+
+    public void setJobId(String jobId) {
+        this.jobId = jobId;
     }
 }

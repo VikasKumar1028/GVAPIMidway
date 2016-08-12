@@ -14,10 +14,12 @@ public class JobDetail {
     private String startTime;
     private String endTime;
     private String status;
+    private String transactionCount;
     private String transactionFailed;
     private String transactionPassed;
     private String carrierName;
     private String ipAddress;
+    private String jobId;
 
     public String getIpAddress() {
         return ipAddress;
@@ -109,10 +111,14 @@ public class JobDetail {
         result = prime * result + ((endTime == null) ? 0 : endTime.hashCode());
         result = prime * result
                 + ((ipAddress == null) ? 0 : ipAddress.hashCode());
+        result = prime * result + ((jobId == null) ? 0 : jobId.hashCode());
         result = prime * result + ((name == null) ? 0 : name.hashCode());
         result = prime * result
                 + ((startTime == null) ? 0 : startTime.hashCode());
         result = prime * result + ((status == null) ? 0 : status.hashCode());
+        result = prime
+                * result
+                + ((transactionCount == null) ? 0 : transactionCount.hashCode());
         result = prime
                 * result
                 + ((transactionFailed == null) ? 0 : transactionFailed
@@ -154,6 +160,11 @@ public class JobDetail {
                 return false;
         } else if (!ipAddress.equals(other.ipAddress))
             return false;
+        if (jobId == null) {
+            if (other.jobId != null)
+                return false;
+        } else if (!jobId.equals(other.jobId))
+            return false;
         if (name != other.name)
             return false;
         if (startTime == null) {
@@ -165,6 +176,11 @@ public class JobDetail {
             if (other.status != null)
                 return false;
         } else if (!status.equals(other.status))
+            return false;
+        if (transactionCount == null) {
+            if (other.transactionCount != null)
+                return false;
+        } else if (!transactionCount.equals(other.transactionCount))
             return false;
         if (transactionFailed == null) {
             if (other.transactionFailed != null)
@@ -185,10 +201,27 @@ public class JobDetail {
     public String toString() {
         return "JobDetail [name=" + name + ", type=" + type + ", date=" + date
                 + ", startTime=" + startTime + ", endTime=" + endTime
-                + ", status=" + status + ", transactionFailed="
-                + transactionFailed + ", transactionPassed="
-                + transactionPassed + ", carrierName=" + carrierName
-                + ", ipAddress=" + ipAddress + "]";
+                + ", status=" + status + ", transactionCount="
+                + transactionCount + ", transactionFailed=" + transactionFailed
+                + ", transactionPassed=" + transactionPassed + ", carrierName="
+                + carrierName + ", ipAddress=" + ipAddress + ", jobId=" + jobId
+                + "]";
+    }
+
+    public String getTransactionCount() {
+        return transactionCount;
+    }
+
+    public void setTransactionCount(String transactionCount) {
+        this.transactionCount = transactionCount;
+    }
+
+    public String getJobId() {
+        return jobId;
+    }
+
+    public void setJobId(String jobId) {
+        this.jobId = jobId;
     }
 
 }

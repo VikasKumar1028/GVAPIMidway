@@ -18,6 +18,7 @@ public class DeviceConnection {
     private Boolean isValid;
     private DeviceEvent[] event;
     private String occurredAt;
+    private String jobId;
 
     public String getOccurredAt() {
         return occurredAt;
@@ -97,15 +98,16 @@ public class DeviceConnection {
         int result = 1;
         result = prime * result
                 + ((carrierName == null) ? 0 : carrierName.hashCode());
+        result = prime * result + ((date == null) ? 0 : date.hashCode());
         result = prime * result
                 + ((deviceId == null) ? 0 : deviceId.hashCode());
         result = prime * result + Arrays.hashCode(event);
         result = prime * result + ((isValid == null) ? 0 : isValid.hashCode());
+        result = prime * result + ((jobId == null) ? 0 : jobId.hashCode());
         result = prime * result
                 + ((netSuiteId == null) ? 0 : netSuiteId.hashCode());
         result = prime * result
                 + ((occurredAt == null) ? 0 : occurredAt.hashCode());
-        result = prime * result + ((date == null) ? 0 : date.hashCode());
         result = prime
                 * result
                 + ((transactionErrorReason == null) ? 0
@@ -131,6 +133,11 @@ public class DeviceConnection {
                 return false;
         } else if (!carrierName.equals(other.carrierName))
             return false;
+        if (date == null) {
+            if (other.date != null)
+                return false;
+        } else if (!date.equals(other.date))
+            return false;
         if (deviceId == null) {
             if (other.deviceId != null)
                 return false;
@@ -143,6 +150,11 @@ public class DeviceConnection {
                 return false;
         } else if (!isValid.equals(other.isValid))
             return false;
+        if (jobId == null) {
+            if (other.jobId != null)
+                return false;
+        } else if (!jobId.equals(other.jobId))
+            return false;
         if (netSuiteId == null) {
             if (other.netSuiteId != null)
                 return false;
@@ -152,11 +164,6 @@ public class DeviceConnection {
             if (other.occurredAt != null)
                 return false;
         } else if (!occurredAt.equals(other.occurredAt))
-            return false;
-        if (date == null) {
-            if (other.date != null)
-                return false;
-        } else if (!date.equals(other.date))
             return false;
         if (transactionErrorReason == null) {
             if (other.transactionErrorReason != null)
@@ -178,7 +185,15 @@ public class DeviceConnection {
                 + carrierName + ", transactionStatus=" + transactionStatus
                 + ", transactionErrorReason=" + transactionErrorReason
                 + ", isValid=" + isValid + ", event=" + Arrays.toString(event)
-                + ", occurredAt=" + occurredAt + "]";
+                + ", occurredAt=" + occurredAt + ", jobId=" + jobId + "]";
+    }
+
+    public String getJobId() {
+        return jobId;
+    }
+
+    public void setJobId(String jobId) {
+        this.jobId = jobId;
     }
 
 }

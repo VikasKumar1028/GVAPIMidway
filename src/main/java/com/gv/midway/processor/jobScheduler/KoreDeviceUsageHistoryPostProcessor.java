@@ -83,7 +83,8 @@ public class KoreDeviceUsageHistoryPostProcessor implements Processor {
         deviceUsage.setNetSuiteId((Integer) exchange
                 .getProperty(IConstant.MIDWAY_NETSUITE_ID));
         deviceUsage.setIsValid(true);
-        deviceUsage.setBillCycleComplete(false);
+        deviceUsage.setJobId( jobDetail.getJobId());
+        
 
         exchange.getIn().setBody(deviceUsage);
 

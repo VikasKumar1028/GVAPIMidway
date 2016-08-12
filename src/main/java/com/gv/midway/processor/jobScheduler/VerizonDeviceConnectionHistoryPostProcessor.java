@@ -75,6 +75,7 @@ public class VerizonDeviceConnectionHistoryPostProcessor implements Processor {
         deviceConnection.setNetSuiteId((Integer) exchange
                 .getProperty(IConstant.MIDWAY_NETSUITE_ID));
         deviceConnection.setIsValid(true);
+        deviceConnection.setJobId( jobDetail.getJobId());
 
         exchange.getIn().setBody(deviceConnection);
 
