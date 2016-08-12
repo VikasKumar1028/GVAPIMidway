@@ -274,6 +274,9 @@ public class CamelRoute extends RouteBuilder {
 
         // Get Connection History from Midway DB
         getDeviceConnectionHistoryInfoDB();
+        
+        // Get Device usage of all the devices by date and carrier from Midway
+        getDevicesUsageByDayAndCarrierInfoDB();
 
         // Start Job
         startJob();
@@ -1417,6 +1420,7 @@ public class CamelRoute extends RouteBuilder {
                 new JobInitializedPostProcessor());
     }
 
+    // Get Device Usage from Midway by start date to end date .
     public void getDeviceUsageInfoDB() {
         from("direct:getDeviceUsageInfoDB")
                 .log("Inside the getDeviceUsageInfoDB")
@@ -1425,12 +1429,23 @@ public class CamelRoute extends RouteBuilder {
 
     }
 
+ // Get Device Connection from Midway by start date to end date .
     public void getDeviceConnectionHistoryInfoDB() {
 
         from("direct:getDeviceConnectionHistoryInfoDB")
                 .process(new HeaderProcessor())
                 .bean(iDeviceService, "getDeviceConnectionHistoryInfoDB").end();
     }
+    
+   // Get Device usage of all the devices by date and carrier from Midway.
+    public void getDevicesUsageByDayAndCarrierInfoDB() {
+        from("direct:getDevicesUsageByDayAndCarrierInfoDB")
+                .log("Inside the getDevicesUsageByDayAndCarrierInfoDB")
+                .process(new HeaderProcessor())
+                .bean(iDeviceService, "getDevicesUsageByDayAndCarrierInfoDB").end();
+
+    }
+
 
     /**
      * saving callbacks from verizon into MongoDB and and sending it to NetSuite

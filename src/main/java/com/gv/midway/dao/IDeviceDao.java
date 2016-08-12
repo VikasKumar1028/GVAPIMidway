@@ -11,7 +11,9 @@ import com.gv.midway.pojo.device.response.UpdateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
+import com.gv.midway.pojo.usageInformation.request.DevicesUsageByDayAndCarrierRequest;
 import com.gv.midway.pojo.usageInformation.request.UsageInformationMidwayRequest;
+import com.gv.midway.pojo.usageInformation.response.DevicesUsageByDayAndCarrierResponse;
 import com.gv.midway.pojo.usageInformation.response.UsageInformationMidwayResponse;
 
 public interface IDeviceDao {
@@ -34,5 +36,8 @@ public interface IDeviceDao {
 
     public ConnectionInformationMidwayResponse getDeviceConnectionHistoryInfoDB(
             ConnectionInformationMidwayRequest connectionInformationMidwayRequest);
+    
+    public DevicesUsageByDayAndCarrierResponse getDevicesUsageByDayAndCarrierInfoDB(
+    		DevicesUsageByDayAndCarrierRequest devicesUsageByDayAndCarrierRequest);
 
 }

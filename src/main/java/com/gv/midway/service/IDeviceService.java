@@ -8,6 +8,7 @@ import com.gv.midway.pojo.connectionInformation.ConnectionInformationMidwayRespo
 import com.gv.midway.pojo.device.response.UpdateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
+import com.gv.midway.pojo.usageInformation.response.DevicesUsageByDayAndCarrierResponse;
 import com.gv.midway.pojo.usageInformation.response.UsageInformationMidwayResponse;
 
 public interface IDeviceService {
@@ -29,5 +30,8 @@ public interface IDeviceService {
     public UsageInformationMidwayResponse getDeviceUsageInfoDB(Exchange exchange);
 
     public ConnectionInformationMidwayResponse getDeviceConnectionHistoryInfoDB(
+            Exchange exchange);
+    
+    public DevicesUsageByDayAndCarrierResponse getDevicesUsageByDayAndCarrierInfoDB(
             Exchange exchange);
 }

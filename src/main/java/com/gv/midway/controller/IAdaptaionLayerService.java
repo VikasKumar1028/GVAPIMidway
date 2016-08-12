@@ -35,6 +35,7 @@ import com.gv.midway.pojo.restoreDevice.response.RestoreDeviceResponse;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequest;
 import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
 import com.gv.midway.pojo.usageInformation.request.UsageInformationRequest;
+import com.gv.midway.pojo.usageInformation.response.DevicesUsageByDayAndCarrierResponse;
 import com.gv.midway.pojo.usageInformation.response.UsageInformationMidwayResponse;
 import com.gv.midway.pojo.usageInformation.response.UsageInformationResponse;
 import com.wordnik.swagger.annotations.Api;
@@ -335,5 +336,31 @@ public interface IAdaptaionLayerService {
             @QueryParam("startDate") final String startDate,
             @ApiParam(value = "end date for which you want connection history records form  Midway.In yyyy-MM-dd format.", required = true) 
             @QueryParam("endDate") final String endDate);
+    
+    @GET
+    @Path("/devices/usageByDay")
+    @Produces("application/json")
+    @ApiOperation(value = "Get Device usage of all the devices by date and carrier from Midway.")
+    DevicesUsageByDayAndCarrierResponse getDevicesUsageByDayAndCarrierInfoDB(
+    		@ApiParam(value = "Region for the request.") 
+            @QueryParam("region") final String region,
+            @ApiParam(value = "Date and time of the request.Format will be yyyy-MM-dd'T'HH:mm:ss", required = true) 
+            @QueryParam("timestamp") final String timestamp,
+            @ApiParam(value = "Organization name of the request.", required = true) 
+            @QueryParam("organization") final String organization,
+            @ApiParam(value = "Unique id of the entire flow for the request.", required = true) 
+            @QueryParam("transactionId") final String transactionId,
+            @ApiParam(value = "Name of the source from where the request is triggered.", required = true) 
+            @QueryParam("sourceName") final String sourceName,
+            @ApiParam(value = "Mode of the request triggered.") 
+            @QueryParam("applicationName") final String applicationName,
+            @ApiParam(value = "Target System of the request.", required = true) 
+            @QueryParam("bsCarrier") final String bsCarrier,
+            @ApiParam(value = "date for which you want usage records form Midway.In yyyy-MM-dd format.", required = true) 
+            @QueryParam("startDate") final String startDate);
 
 }
+
+
+
+

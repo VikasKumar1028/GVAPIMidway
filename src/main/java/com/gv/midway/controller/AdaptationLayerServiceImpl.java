@@ -41,10 +41,13 @@ import com.gv.midway.pojo.restoreDevice.request.RestoreDeviceRequest;
 import com.gv.midway.pojo.restoreDevice.response.RestoreDeviceResponse;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequest;
 import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
+import com.gv.midway.pojo.usageInformation.request.DevicesUsageByDayAndCarrierRequest;
+import com.gv.midway.pojo.usageInformation.request.DevicesUsageByDayAndCarrierRequestDataArea;
 import com.gv.midway.pojo.usageInformation.request.UsageInformationMidwayRequest;
 import com.gv.midway.pojo.usageInformation.request.UsageInformationRequest;
 import com.gv.midway.pojo.usageInformation.request.UsageInformationRequestDataArea;
 import com.gv.midway.pojo.usageInformation.request.UsageInformationRequestMidwayDataArea;
+import com.gv.midway.pojo.usageInformation.response.DevicesUsageByDayAndCarrierResponse;
 import com.gv.midway.pojo.usageInformation.response.UsageInformationMidwayResponse;
 import com.gv.midway.pojo.usageInformation.response.UsageInformationResponse;
 import com.gv.midway.pojo.verizon.DeviceId;
@@ -452,6 +455,32 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
         return response;
     }
 
+    @Override
+	public DevicesUsageByDayAndCarrierResponse getDevicesUsageByDayAndCarrierInfoDB(
+			String region, String timestamp, String organization,
+			String transactionId, String sourceName, String applicationName,
+			String bsCarrier, String startDate) {
+		// TODO Auto-generated method stub
+    	
+    	 Header header = createHeader(region, timestamp, organization,
+                 transactionId, sourceName, applicationName, bsCarrier);
+    	 
+    	 DevicesUsageByDayAndCarrierRequest devicesUsageByDayAndCarrierRequest=new DevicesUsageByDayAndCarrierRequest();
+    	 
+    	 devicesUsageByDayAndCarrierRequest.setHeader(header);
+    	 
+    	 DevicesUsageByDayAndCarrierRequestDataArea devicesUsageByDayAndCarrierRequestDataArea=new DevicesUsageByDayAndCarrierRequestDataArea();
+    	 
+    	 devicesUsageByDayAndCarrierRequestDataArea.setDate(startDate);
+    	 
+    	 devicesUsageByDayAndCarrierRequest.setDateArea(devicesUsageByDayAndCarrierRequestDataArea);
+    	 DevicesUsageByDayAndCarrierResponse response = (DevicesUsageByDayAndCarrierResponse) producer
+                 .requestBody("direct:getDevicesUsageByDayAndCarrierInfoDB",
+                		 devicesUsageByDayAndCarrierRequest);
+
+         return response;
+	}
+    
     private Header createHeader(String region, String timestamp,
             String organization, String transactionId, String sourceName,
             String applicationName, String bsCarrier) {
@@ -468,5 +497,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
         return header;
 
     }
+
+	
 
 }

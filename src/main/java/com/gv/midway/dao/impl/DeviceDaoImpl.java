@@ -1,5 +1,10 @@
 package com.gv.midway.dao.impl;
 
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -7,12 +12,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.camel.Exchange;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -36,8 +44,13 @@ import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponseDataArea;
+import com.gv.midway.pojo.notification.DeviceOverageNotification;
+import com.gv.midway.pojo.usageInformation.request.DevicesUsageByDayAndCarrierRequest;
 import com.gv.midway.pojo.usageInformation.request.UsageInformationMidwayRequest;
 import com.gv.midway.pojo.usageInformation.response.DeviceUsages;
+import com.gv.midway.pojo.usageInformation.response.DevicesUsageByDayAndCarrier;
+import com.gv.midway.pojo.usageInformation.response.DevicesUsageByDayAndCarrierResponse;
+import com.gv.midway.pojo.usageInformation.response.DevicesUsageByDayAndCarrierResponseDataArea;
 import com.gv.midway.pojo.usageInformation.response.UsageInformationMidwayResponse;
 import com.gv.midway.pojo.usageInformation.response.UsageInformationResponseMidwayDataArea;
 import com.gv.midway.utility.CommonUtil;
@@ -772,5 +785,99 @@ public class DeviceDaoImpl implements IDeviceDao {
 			return connectionInformationMidwayResponse;
 		}
 
+	}
+	
+	@Override
+	public DevicesUsageByDayAndCarrierResponse getDevicesUsageByDayAndCarrierInfoDB(
+			DevicesUsageByDayAndCarrierRequest devicesUsageByDayAndCarrierRequest) {
+		
+		String date = devicesUsageByDayAndCarrierRequest.getDateArea().getDate();
+		
+		DevicesUsageByDayAndCarrierResponse devicesUsageByDayAndCarrierResponse = new DevicesUsageByDayAndCarrierResponse();
+
+		devicesUsageByDayAndCarrierResponse
+				.setHeader(devicesUsageByDayAndCarrierRequest.getHeader());
+		Response response = new Response();
+		
+		if (date!=null) {
+
+			if (!(CommonUtil.isValidDateFormat(date))) {
+				LOGGER.info(" Date that you provided is invalid");
+				response.setResponseCode(IResponse.INVALID_PAYLOAD);
+				response.setResponseDescription(IResponse.ERROR_DESCRIPTION_DATE_VALIDATE_JOB_MIDWAYDB);
+				response.setResponseStatus(IResponse.ERROR_MESSAGE);
+				devicesUsageByDayAndCarrierResponse.setResponse(response);
+				return devicesUsageByDayAndCarrierResponse;
+			}
+
+		}
+		
+		try {
+			
+		
+		
+			 Aggregation agg = newAggregation(
+	                    match(Criteria.where("date").is(date)
+	                            .and("carrierName").regex(devicesUsageByDayAndCarrierRequest.getHeader().getBsCarrier(), "i")
+	                            .and("isValid").is(true)
+	                            .and("dataUsed").ne(0)),
+	                    project("dataUsed").and("netSuiteId").as("netSuiteId"));
+			 
+			 AggregationResults<DevicesUsageByDayAndCarrier> results = mongoTemplate
+	                    .aggregate(agg, DeviceUsage.class,
+	                    		DevicesUsageByDayAndCarrier.class);
+
+			
+			 
+			LOGGER.info("aggergation result is......"+results);
+
+			if (results == null || results.getMappedResults().size()==0)
+
+			{
+
+				response.setResponseCode(IResponse.NO_DATA_FOUND_CODE);
+				response.setResponseDescription(IResponse.ERROR_DESCRIPTION_NODATA_DEVCIEINFO_MIDWAYDB);
+				response.setResponseStatus(IResponse.ERROR_MESSAGE);
+				devicesUsageByDayAndCarrierResponse.setResponse(response);
+			}
+
+			else {
+
+				response.setResponseCode(IResponse.SUCCESS_CODE);
+				response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_MIDWAYDB);
+				response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+				devicesUsageByDayAndCarrierResponse.setResponse(response);
+				
+				LOGGER.info("size of result is     ......"+results.getMappedResults().size());
+				
+				
+				DevicesUsageByDayAndCarrierResponseDataArea devicesUsageByDayAndCarrierResponseDataArea = new DevicesUsageByDayAndCarrierResponseDataArea();
+
+				devicesUsageByDayAndCarrierResponseDataArea.setDevices(results.getMappedResults());
+				
+				devicesUsageByDayAndCarrierResponseDataArea.setDate(date);
+				
+				devicesUsageByDayAndCarrierResponse.setDateArea(devicesUsageByDayAndCarrierResponseDataArea);
+
+				
+			}
+
+			return devicesUsageByDayAndCarrierResponse;
+
+		} catch (Exception e) {
+
+			LOGGER.error("Exception ex" + CommonUtil.getStackTrace(e));
+			response.setResponseCode(IResponse.DB_ERROR_CODE);
+			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
+
+			devicesUsageByDayAndCarrierResponse.setResponse(response);
+
+		
+
+			return devicesUsageByDayAndCarrierResponse;
+		}
+
+		
 	}
 }

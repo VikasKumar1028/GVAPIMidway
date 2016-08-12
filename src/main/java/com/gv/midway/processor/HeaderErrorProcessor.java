@@ -21,6 +21,7 @@ import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.reActivateDevice.response.ReactivateDeviceResponse;
 import com.gv.midway.pojo.restoreDevice.response.RestoreDeviceResponse;
 import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
+import com.gv.midway.pojo.usageInformation.response.DevicesUsageByDayAndCarrierResponse;
 import com.gv.midway.pojo.usageInformation.response.UsageInformationMidwayResponse;
 import com.gv.midway.pojo.usageInformation.response.UsageInformationResponse;
 
@@ -156,6 +157,12 @@ public class HeaderErrorProcessor implements Processor {
             connectionInformationMidwayResponse.setHeader(responseHeader);
             connectionInformationMidwayResponse.setResponse(response);
             exchange.getIn().setBody(connectionInformationMidwayResponse);
+            break;
+        case "Endpoint[direct://getDevicesUsageByDayAndCarrierInfoDB]":
+        	DevicesUsageByDayAndCarrierResponse devicesUsageByDayAndCarrierResponse = new DevicesUsageByDayAndCarrierResponse();
+        	devicesUsageByDayAndCarrierResponse.setHeader(responseHeader);
+        	devicesUsageByDayAndCarrierResponse.setResponse(response);
+            exchange.getIn().setBody(devicesUsageByDayAndCarrierResponse);
             break;
         default:
             break;

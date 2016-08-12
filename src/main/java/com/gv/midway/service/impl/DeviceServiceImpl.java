@@ -20,7 +20,9 @@ import com.gv.midway.pojo.device.response.UpdateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
+import com.gv.midway.pojo.usageInformation.request.DevicesUsageByDayAndCarrierRequest;
 import com.gv.midway.pojo.usageInformation.request.UsageInformationMidwayRequest;
+import com.gv.midway.pojo.usageInformation.response.DevicesUsageByDayAndCarrierResponse;
 import com.gv.midway.pojo.usageInformation.response.UsageInformationMidwayResponse;
 import com.gv.midway.service.IDeviceService;
 
@@ -115,5 +117,16 @@ public class DeviceServiceImpl implements IDeviceService {
         return iDeviceDao
                 .getDeviceConnectionHistoryInfoDB(connectionInformationMidwayRequest);
     }
+
+	@Override
+	public DevicesUsageByDayAndCarrierResponse getDevicesUsageByDayAndCarrierInfoDB(
+			Exchange exchange) {
+		// TODO Auto-generated method stub
+		DevicesUsageByDayAndCarrierRequest devicesUsageByDayAndCarrierRequest = (DevicesUsageByDayAndCarrierRequest) exchange
+                .getIn().getBody();
+		
+		return iDeviceDao
+                .getDevicesUsageByDayAndCarrierInfoDB(devicesUsageByDayAndCarrierRequest);
+	}
 
 }
