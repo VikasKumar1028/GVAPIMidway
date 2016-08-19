@@ -28,18 +28,18 @@ public class VerizonChangeDeviceServicePlansPreProcessor implements Processor {
         ChangeDeviceServicePlansRequestVerizon businessRequest = new ChangeDeviceServicePlansRequestVerizon();
         ChangeDeviceServicePlansRequest proxyRequest = (ChangeDeviceServicePlansRequest) exchange
                 .getIn().getBody();
-        businessRequest.setAccountName(proxyRequest.getDataArea()
-                .getAccountName());
-        businessRequest.setCurrentServicePlan(proxyRequest.getDataArea()
-                .getCurrentServicePlan());
-        businessRequest.setCustomFields(proxyRequest.getDataArea()
-                .getCustomFields());
-        businessRequest.setGroupName(proxyRequest.getDataArea().getGroupName());
+       
         businessRequest.setServicePlan(proxyRequest.getDataArea()
                 .getServicePlan());
+        
+        businessRequest.setAccountName(proxyRequest.getDataArea()
+                .getAccountName());
 
         MidWayDevices[] proxyDevicesArray = proxyRequest.getDataArea()
                 .getDevices();
+        // if devices are coming in the request
+        if(proxyDevicesArray!=null)
+        {
         Devices[] businessDevicesArray = new Devices[proxyDevicesArray.length];
 
         for (int j = 0; j < proxyDevicesArray.length; j++) {
@@ -66,6 +66,19 @@ public class VerizonChangeDeviceServicePlansPreProcessor implements Processor {
             businessDevicesArray[j].setDeviceIds(businessDeviceIdArray);
         }
         businessRequest.setDevices(businessDevicesArray);
+        }
+        
+        // If no devices in device list then group, custom fields, service plan.may be defined in the request.
+        else
+        {
+        	
+        	
+             businessRequest.setCurrentServicePlan(proxyRequest.getDataArea()
+                     .getCurrentServicePlan());
+             businessRequest.setCustomFields(proxyRequest.getDataArea()
+                     .getCustomFields());
+             businessRequest.setGroupName(proxyRequest.getDataArea().getGroupName());
+        }
 
         ObjectMapper objectMapper = new ObjectMapper();
 
