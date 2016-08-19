@@ -44,6 +44,21 @@ public class JobServiceImpl implements IJobService {
     @Override
     public List fetchDevices(Exchange exchange) {
 
+        List list = fetchDevicesDependingServerDetails(exchange);
+
+        if (list != null) {
+
+            exchange.setProperty("JobTotalCount", list.size());
+        } else {
+            exchange.setProperty("JobTotalCount", 0);
+        }
+
+        return list;
+
+    }
+
+    public List fetchDevicesDependingServerDetails(Exchange exchange) {
+
         JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
 
         if (jobDetail.getType().toString()
@@ -203,7 +218,17 @@ public class JobServiceImpl implements IJobService {
     @Override
     public List fetchTransactionFailureDevices(Exchange exchange) {
 
-        return iJobDao.fetchTransactionFailureDevices(exchange);
+        List list = iJobDao.fetchTransactionFailureDevices(exchange);
+        
+        if (list != null) {
+
+            exchange.setProperty("JobTotalCount", list.size());
+        } else {
+            exchange.setProperty("JobTotalCount", 0);
+        }
+
+
+        return list;
     }
 
     /**
@@ -274,71 +299,63 @@ public class JobServiceImpl implements IJobService {
         producer.requestBody("direct:startJob", jobDetail);
 
     }
-    
-    
+
     @Override
     public void checkTimeOutDevices(Exchange exchange) {
 
         LOGGER.info("checkTimeOutDevices  :::::::::::::::::: ");
-        
-       List<DeviceInformation> timeOutDeviceList= (List<DeviceInformation>) exchange.getProperty(IConstant.TIMEOUT_DEVICE_LIST);
-       
-       if(timeOutDeviceList.size()>0)
-       {
-    	   
-    	 String jobName= (String) exchange.getProperty("jobName") ;
-    	 
-    	
-    	 // check for usage and connection History Job
-    	
-    	if(jobName.endsWith("DEVICE_USAGE"))
-    	{
-    		LOGGER.info("insert timeOut devcies in Usage  :::::::::::::::::: ");
-    		iJobDao.insertTimeOutUsageRecords(exchange);
-    	}
-    	
-    	// Connection History Job
-    	else
-    	{
-    		LOGGER.info("insert timeOut devcies in Connection  :::::::::::::::::: ");
-    		iJobDao.insertTimeOutConnectionRecords(exchange);
-    		
-    	}
-    	   
-       }
-      
+
+        List<DeviceInformation> timeOutDeviceList = (List<DeviceInformation>) exchange
+                .getProperty(IConstant.TIMEOUT_DEVICE_LIST);
+
+        if (timeOutDeviceList.size() > 0) {
+
+            String jobName = (String) exchange.getProperty("jobName");
+
+            // check for usage and connection History Job
+
+            if (jobName.endsWith("DEVICE_USAGE")) {
+                LOGGER.info("insert timeOut devcies in Usage  :::::::::::::::::: ");
+                iJobDao.insertTimeOutUsageRecords(exchange);
+            }
+
+            // Connection History Job
+            else {
+                LOGGER.info("insert timeOut devcies in Connection  :::::::::::::::::: ");
+                iJobDao.insertTimeOutConnectionRecords(exchange);
+
+            }
+
+        }
 
     }
-    
+
     @Override
     public void checkTimeOutDevicesTransactionFailure(Exchange exchange) {
 
         LOGGER.info("checkTimeOutDevices for TransactionFailure :::::::::::::::::: ");
-        
-        List<Object> timeOutDeviceList= (List<Object>) exchange.getProperty(IConstant.TIMEOUT_DEVICE_LIST);
-      
-        if(timeOutDeviceList.size()>0)
-        {
-     	   
-     	 String jobName= (String) exchange.getProperty("jobName") ;
-     	 
-     	
-     	 // check for usage and connection History Job
-     	
-     	if(jobName.endsWith("DeviceUsageJob"))
-     	{
-     		LOGGER.info("insert timeOut devcies in TransactionFailure Usage  :::::::::::::::::: ");
-     		iJobDao.insertTimeOutUsageRecordsTransactionFailure(exchange);
-     	}
-     	
-     	// Connection History Job
-     	else
-     	{
-     		LOGGER.info("insert timeOut devcies in TransactionFailure Connection  :::::::::::::::::: ");
-     		iJobDao.insertTimeOutConnectionRecordsTransactionFailure(exchange);
-     		
-     	}
-     	   
+
+        List<Object> timeOutDeviceList = (List<Object>) exchange
+                .getProperty(IConstant.TIMEOUT_DEVICE_LIST);
+
+        if (timeOutDeviceList.size() > 0) {
+
+            String jobName = (String) exchange.getProperty("jobName");
+
+            // check for usage and connection History Job
+
+            if (jobName.endsWith("DeviceUsageJob")) {
+                LOGGER.info("insert timeOut devcies in TransactionFailure Usage  :::::::::::::::::: ");
+                iJobDao.insertTimeOutUsageRecordsTransactionFailure(exchange);
+            }
+
+            // Connection History Job
+            else {
+                LOGGER.info("insert timeOut devcies in TransactionFailure Connection  :::::::::::::::::: ");
+                iJobDao.insertTimeOutConnectionRecordsTransactionFailure(exchange);
+
+            }
+
         }
 
     }

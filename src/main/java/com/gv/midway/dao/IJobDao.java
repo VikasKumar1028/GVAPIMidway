@@ -34,13 +34,18 @@ public interface IJobDao {
     public void processDeviceNotification(Exchange exchange);
 
     public void insertBulkRecords();
-    
+
     public void insertTimeOutUsageRecords(Exchange exchange);
-    
+
     public void insertTimeOutConnectionRecords(Exchange exchange);
-    
+
     public void insertTimeOutUsageRecordsTransactionFailure(Exchange exchange);
-    
-    public void insertTimeOutConnectionRecordsTransactionFailure(Exchange exchange);
+
+    public void insertTimeOutConnectionRecordsTransactionFailure(
+            Exchange exchange);
+
+    public void getConnectionHistoryJobCounts(Exchange exchange);
+
+    public void getDeviceUsageJobCounts(Exchange exchange);
 
 }
