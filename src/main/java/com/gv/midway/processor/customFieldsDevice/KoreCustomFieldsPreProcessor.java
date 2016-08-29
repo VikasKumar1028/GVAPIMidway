@@ -56,31 +56,31 @@ public class KoreCustomFieldsPreProcessor implements Processor {
                 String key = customField.getKey();
 
                 switch (key) {
-                case "customField1":
+                case "CustomField1":
                     customFieldsDeviceRequestKore.setCustomField1(customField
                             .getValue());
                     break;
 
-                case "customField2":
+                case "CustomField2":
                     customFieldsDeviceRequestKore.setCustomField2(customField
                             .getValue());
                     break;
 
-                case "customField3":
+                case "CustomField3":
                     customFieldsDeviceRequestKore.setCustomField3(customField
                             .getValue());
                     break;
 
-                case "customField4":
+                case "CustomField4":
                     customFieldsDeviceRequestKore.setCustomField4(customField
                             .getValue());
                     break;
 
-                case "customField5":
+                case "CustomField5":
                     customFieldsDeviceRequestKore.setCustomField5(customField
                             .getValue());
                     break;
-                case "customField6":
+                case "CustomField6":
                     customFieldsDeviceRequestKore.setCustomField6(customField
                             .getValue());
                     break;

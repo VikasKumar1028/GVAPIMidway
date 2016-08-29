@@ -211,7 +211,7 @@ public class JobDaoImpl implements IJobDao {
         // generating the job ID to recognize the job
         long timestamp = System.currentTimeMillis();
         String jobId = Long.toString(timestamp);
-        jobDetail.setJobId(jobId);
+        jobDetail.setJobId(jobDetail.getName()+"_"+jobId);
 
         // inserting in the database as property
         mongoTemplate.insert(jobDetail);
