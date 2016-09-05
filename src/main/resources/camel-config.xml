@@ -17,6 +17,7 @@
 	xmlns:jaxrs="http://cxf.apache.org/jaxrs" xmlns:jee="http://www.springframework.org/schema/jee"
 	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
 	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:jws="http://api.jasperwireless.com/ws/schema" 
 	xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
@@ -32,7 +33,7 @@
 
 	<context:annotation-config />
 
-	<context:component-scan base-package="com.gv.midway" />
+	<context:component-scan base-package="com.gv.midway,com.jasperwireless.api.ws.schema" />
 	
 	<context:property-placeholder location="classpath:env.properties" />
 
@@ -116,6 +117,17 @@
 			<bean class="com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider" />
 		</cxf:providers>
 	</cxf:rsClient>
+	
+	<cxf:cxfEndpoint id="attJasperTerminalEndPoint" wsdlURL="classpath:Terminal.wsdl"
+		address="https://api.jasper.com/ws/service/terminal" 
+		serviceClass="com.gv.midway.attjasper.TerminalPortType"
+		endpointName="jws:TerminalPort" 
+		serviceName="jws:TerminalService" loggingFeatureEnabled="true">
+      <cxf:properties>
+          <entry key="dataFormat" value="POJO"/>
+      </cxf:properties>
+  </cxf:cxfEndpoint>
+
 
 	<!-- END : Defining client endpoint to create cxf-rs URL -->
 	<camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">

@@ -108,6 +108,7 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
                     .getCreatedAt());
             deviceInformation.setIpAddress(verizonResponse.getDevices()[i]
                     .getIpAddress());
+            deviceInformation.setConnected(verizonResponse.getDevices()[i].getConnected());
 
             String[] groupNamesArr = verizonResponse.getDevices()[i]
                     .getGroupNames();

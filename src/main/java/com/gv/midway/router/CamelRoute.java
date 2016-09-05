@@ -4,17 +4,20 @@ import java.net.ConnectException;
 import java.net.NoRouteToHostException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangeTimedOutException;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.cxf.CxfOperationException;
 import org.apache.camel.model.dataformat.JsonLibrary;
+import org.apache.cxf.binding.soap.SoapFault;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+
 import com.gv.midway.constant.CarrierType;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.JobName;
@@ -29,6 +32,7 @@ import com.gv.midway.pojo.kore.DKoreResponseCode;
 import com.gv.midway.pojo.kore.KoreProvisoningResponse;
 import com.gv.midway.pojo.token.VerizonAuthorizationResponse;
 import com.gv.midway.pojo.token.VerizonSessionLoginResponse;
+import com.gv.midway.processor.ATTJasperGenericExceptionProcessor;
 import com.gv.midway.processor.BulkDeviceProcessor;
 import com.gv.midway.processor.ChangeDeviceServicePlanValidatorProcessor;
 import com.gv.midway.processor.DateValidationProcessor;
@@ -77,6 +81,8 @@ import com.gv.midway.processor.deactivateDevice.StubKoreDeactivateDeviceProcesso
 import com.gv.midway.processor.deactivateDevice.StubVerizonDeactivateDeviceProcessor;
 import com.gv.midway.processor.deactivateDevice.VerizonDeactivateDevicePostProcessor;
 import com.gv.midway.processor.deactivateDevice.VerizonDeactivateDevicePreProcessor;
+import com.gv.midway.processor.deviceInformation.ATTJasperDeviceInformationPostProcessor;
+import com.gv.midway.processor.deviceInformation.ATTJasperDeviceInformationPreProcessor;
 import com.gv.midway.processor.deviceInformation.KoreDeviceInformationPostProcessor;
 import com.gv.midway.processor.deviceInformation.KoreDeviceInformationPreProcessor;
 import com.gv.midway.processor.deviceInformation.StubKoreDeviceInformationProcessor;
@@ -155,6 +161,8 @@ public class CamelRoute extends RouteBuilder {
     private String uriRestVerizonTokenEndPoint = "cxfrs://bean://rsVerizonTokenClient";
     private String uriRestKoreEndPoint = "cxfrs://bean://rsKoreClient";
     private String uriRestNetsuitEndPoint = "cxfrs://bean://rsNetsuitClient";
+    
+    private String attJasperTerminalEndPoint = "cxf:bean:attJasperTerminalEndPoint";
 
     private static final Logger LOGGER = Logger.getLogger(CamelRoute.class);
 
@@ -993,10 +1001,23 @@ public class CamelRoute extends RouteBuilder {
                 .doCatch(CxfOperationException.class)
                 .bean(iAuditService, "auditExternalExceptionResponseCall")
                 .process(new KoreGenericExceptionProcessor(env)).endDoTry()
+                .endChoice().
+                
+                 when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
+                .doTry().process(new ATTJasperDeviceInformationPreProcessor(env))
+                .bean(iAuditService, "auditExternalRequestCall").
+                 to(attJasperTerminalEndPoint)
+                 .bean(iAuditService, "auditExternalSOAPResponseCall")
+                 .bean(iDeviceService, "setDeviceInformationDB")
+                 .process(new ATTJasperDeviceInformationPostProcessor())
+                 .bean(iDeviceService, "updateDeviceInformationDB")
+                 .doCatch(SoapFault.class)
+                 .bean(iAuditService, "auditExternalExceptionResponseCall")
+                 .process(new ATTJasperGenericExceptionProcessor(env))
+                  .endDoTry().endChoice()
 
-                .endChoice()
 
-                .when(header("derivedCarrierName").isEqualTo("VERIZON"))
+                 .when(header("derivedCarrierName").isEqualTo("VERIZON"))
                 // will store only one time in Audit even on connection failure
                 .bean(iAuditService, "auditExternalRequestCall")
                 .to("direct:VerizonDeviceInformationCarrierSubProcess")

@@ -1,6 +1,8 @@
 package com.gv.midway.utility;
 
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -15,9 +17,22 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.camel.Exchange;
+import org.apache.camel.ExchangePattern;
 import org.apache.camel.Message;
+import org.apache.cxf.binding.soap.SoapHeader;
+import org.apache.cxf.headers.Header;
+import org.apache.cxf.headers.Header.Direction;
 import org.apache.log4j.Logger;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IEndPoints;
@@ -116,6 +131,11 @@ public class CommonUtil {
         } else if (carrierName.equalsIgnoreCase("KORE")) {
 
             return "KORE";
+        }
+        
+        else if (carrierName.equalsIgnoreCase("ATTJASPER")) {
+
+            return "ATTJASPER";
         }
 
         return null;
@@ -420,6 +440,61 @@ public class CommonUtil {
         message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
         message.setHeader(Exchange.HTTP_METHOD, "POST");
         return message;
+    }
+    
+    /**
+     * 
+     * @param exchange
+     * @return
+     */
+    
+    public static List<SoapHeader> getSOAPHeaders(String username,String password) 
+    {
+    	final String soapHeader = "<wsse:Security xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" "
+				+ "soap:mustUnderstand=\"true\" xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\">"
+				+ "<wsse:UsernameToken xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" wsu:Id=\"UsernameToken-16847597\">"
+				+ "<wsse:Username>"+username+"</wsse:Username>"
+				+ "<wsse:Password Type=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText\">"+password+"</wsse:Password>"
+				+ "</wsse:UsernameToken></wsse:Security>";
+
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder db = null;
+		Element element = null;
+		try {
+			db = dbf.newDocumentBuilder();
+			InputSource is = new InputSource();
+			is.setCharacterStream(new StringReader(soapHeader));
+			try {
+				Document doc = db.parse(is);
+				element = doc.getDocumentElement();
+
+			} catch (SAXException e) {
+				// handle SAXException
+			} catch (IOException e) {
+				// handle IOException
+			}
+		} catch (ParserConfigurationException e1) {
+			// handle ParserConfigurationException
+		}
+
+		List<SoapHeader> soapHeaders = new ArrayList<SoapHeader>();
+
+		try {
+
+			SoapHeader newHeader = new SoapHeader(new QName("soapHeader"),
+					element);
+
+			newHeader.setDirection(Direction.DIRECTION_OUT);
+
+			soapHeaders.add(newHeader);
+
+
+		} catch (Exception e) {
+
+			// log error
+
+		}
+        return soapHeaders;
     }
     
     /**

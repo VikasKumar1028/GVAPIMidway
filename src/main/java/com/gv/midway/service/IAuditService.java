@@ -7,6 +7,8 @@ public interface IAuditService {
     public void auditExternalRequestCall(Exchange exchange);
 
     public void auditExternalResponseCall(Exchange exchange);
+    
+    public void auditExternalSOAPResponseCall(Exchange exchange);
 
     public void auditExternalExceptionResponseCall(Exchange exchange);
 

@@ -30,6 +30,14 @@ public class AuditServiceImpl implements IAuditService {
         LOGGER.info("AuditServiceImpl-auditExternalResponseCall");
         iAuditDao.auditExternalResponseCall(exchange);
     }
+    
+    @Override
+    public void auditExternalSOAPResponseCall(Exchange exchange) {
+
+        LOGGER.info("AuditServiceImpl-auditExternalResponseCall");
+        
+        iAuditDao.auditExternalResponseCall(exchange);
+    }
 
     @Override
     public void auditExternalExceptionResponseCall(Exchange exchange) {
