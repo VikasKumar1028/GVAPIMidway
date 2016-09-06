@@ -1,5 +1,7 @@
 package com.gv.midway.dao.impl;
 
+import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -8,9 +10,19 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.soap.Detail;
+import javax.xml.soap.DetailEntry;
+import javax.xml.soap.MessageFactory;
+import javax.xml.soap.Name;
+import javax.xml.soap.SOAPBody;
+import javax.xml.soap.SOAPEnvelope;
+import javax.xml.soap.SOAPFault;
+import javax.xml.soap.SOAPMessage;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.component.cxf.CxfOperationException;
+import org.apache.cxf.binding.soap.SoapFault;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -18,10 +30,13 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gv.midway.attjasper.EditTerminalResponse;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IResponse;
 import com.gv.midway.constant.ITransaction;
@@ -1581,5 +1596,77 @@ public class TransactionalDaoImpl implements ITransactionalDao {
         mongoTemplate.updateFirst(searchQuery, update, Transaction.class);
 
     }
+
+	@Override
+	public void populateATTJasperTransactionalResponse(Exchange exchange) {
+		// TODO Auto-generated method stub
+		
+		
+		  LOGGER.info("Begin populateATTJasperTransactionalResponse");
+
+		  LOGGER.info("soap object of class type..."+exchange.getIn().getBody().getClass()+" "+exchange.getIn().getBody().toString());
+		  
+		 String soapPayload = CommonUtil.getSOAPResposneFromExchange(exchange);
+					 
+		Query searchQuery = new Query(Criteria.where(
+				ITransaction.MIDWAY_TRANSACTION_ID).is(
+				exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)));
+
+		Update update = new Update();
+
+		try {
+			
+			
+			update.set(ITransaction.CALL_BACK_PAYLOAD, soapPayload);
+			update.set(ITransaction.LAST_TIME_STAMP_UPDATED, new Date());
+
+			update.set(ITransaction.CARRIER_STATUS,
+					IConstant.CARRIER_TRANSACTION_STATUS_SUCCESS);
+			update.set(ITransaction.CARRIER_STATUS,
+					IConstant.CARRIER_TRANSACTION_STATUS_SUCCESS);
+			update.set(ITransaction.CALL_BACK_RECEIVED,
+					IConstant.ATTJASPER_SUCCESS_CALLBACKRECEIVED);
+			
+		
+			
+			 mongoTemplate.updateMulti(searchQuery, update, Transaction.class);
+			
+			  LOGGER.info("End populateATTJasperTransactionalResponse");
+
+		} catch (Exception ex) {
+			LOGGER.error("Error in populateATTJasperTransactionalResponse" + ex);
+		}
+		
+	}
+
+	@Override
+	public void populateATTJasperTransactionalErrorResponse(Exchange exchange) {
+		// TODO Auto-generated method stub
+		LOGGER.info("Begin populateATTJasperTransactionalErrorResponse");
+
+		try {
+			String soapPayload = CommonUtil
+					.getSOAPErrorResposneFromExchange(exchange);
+
+			Query searchQuery = new Query(Criteria.where(
+					ITransaction.MIDWAY_TRANSACTION_ID).is(
+					exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)));
+
+			Update update = new Update();
+			update.set(ITransaction.CARRIER_ERROR_DESCRIPTION, exchange	.getProperty(IConstant.ATTJASPER_SOAP_FAULT_ERRORMESSAGE));
+			update.set(ITransaction.CALL_BACK_PAYLOAD, soapPayload);
+			update.set(ITransaction.MIDWAY_STATUS,IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
+			update.set(ITransaction.CARRIER_STATUS,IConstant.CARRIER_TRANSACTION_STATUS_ERROR);
+			update.set(ITransaction.LAST_TIME_STAMP_UPDATED, new Date());
+			update.set(ITransaction.CALL_BACK_RECEIVED,IConstant.ATTJASPER_SOAP_FAULT_ERRORMESSAGE);
+			
+			mongoTemplate.updateMulti(searchQuery, update, Transaction.class);
+		} catch (Exception ex) {
+			LOGGER.error("Error in populateATTJasperTransactionalErrorResponse"
+					+ ex);
+		}
+
+		LOGGER.info("End populateATTJasperTransactionalErrorResponse");
+	}
 
 }

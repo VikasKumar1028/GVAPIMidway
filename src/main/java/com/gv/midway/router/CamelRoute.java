@@ -75,6 +75,8 @@ import com.gv.midway.processor.customFieldsDevice.StubKoreCustomFieldsProcessor;
 import com.gv.midway.processor.customFieldsDevice.StubVerizonCustomFieldsProcessor;
 import com.gv.midway.processor.customFieldsDevice.VerizonCustomFieldsPostProcessor;
 import com.gv.midway.processor.customFieldsDevice.VerizonCustomFieldsPreProcessor;
+import com.gv.midway.processor.deactivateDevice.ATTJasperDeactivateDevicePostProcessor;
+import com.gv.midway.processor.deactivateDevice.ATTJasperDeactivateDevicePreProcessor;
 import com.gv.midway.processor.deactivateDevice.KoreDeactivateDevicePostProcessor;
 import com.gv.midway.processor.deactivateDevice.KoreDeactivateDevicePreProcessor;
 import com.gv.midway.processor.deactivateDevice.StubKoreDeactivateDeviceProcessor;
@@ -405,7 +407,28 @@ public class CamelRoute extends RouteBuilder {
                 .wireTap("direct:processDeactivateKoreTransaction")
                 .process(new KoreDeactivateDevicePostProcessor(env))
 
-                .endChoice()
+                .endChoice().
+                
+                
+				 when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
+				.doTry()
+				.bean(iTransactionalService, "populateDeactivateDBPayload")
+				.bean(iAuditService, "auditExternalRequestCall")
+						.process(new ATTJasperDeactivateDevicePreProcessor(env))
+				 
+						.to(attJasperTerminalEndPoint)
+						   .bean(iTransactionalService,
+                        "populateATTJasperTransactionalResponse")
+						.bean(iAuditService, "auditExternalSOAPResponseCall")
+				.process(new ATTJasperDeactivateDevicePostProcessor())
+				
+				 .doCatch(SoapFault.class)
+				 .bean(iAuditService, "auditExternalSOAPExceptionResponseCall")
+				 .bean(iTransactionalService,
+                        "populateATTJasperTransactionalErrorResponse")
+				 .process(new ATTJasperGenericExceptionProcessor(env))
+				  .endDoTry().endChoice()
+                
                 .when(header("derivedCarrierName").isEqualTo("VERIZON"))
                 .bean(iSessionService, "setContextTokenInExchange")
                 .bean(iTransactionalService, "populateDeactivateDBPayload")

@@ -1,11 +1,13 @@
 package com.gv.midway.utility;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,6 +26,15 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.soap.Detail;
+import javax.xml.soap.DetailEntry;
+import javax.xml.soap.MessageFactory;
+import javax.xml.soap.Name;
+import javax.xml.soap.SOAPBody;
+import javax.xml.soap.SOAPEnvelope;
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPFault;
+import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -31,6 +42,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
+import org.apache.cxf.binding.soap.SoapFault;
 import org.apache.cxf.binding.soap.SoapHeader;
 import org.apache.cxf.headers.Header.Direction;
 import org.apache.cxf.message.MessageContentsList;
@@ -38,6 +50,7 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -529,6 +542,77 @@ public class CommonUtil {
     	return xmlString;
     }
     
+    
+	public static String getSOAPErrorResposneFromExchange(Exchange exchange) {
+
+		String payload = null;
+
+		SoapFault soapFault = (SoapFault) exchange
+				.getProperty(Exchange.EXCEPTION_CAUGHT);
+
+		String message = soapFault.getMessage();
+
+		LOGGER.info("soap fault code    ------------------" + message);
+
+		try {
+			SOAPMessage soapMessage = MessageFactory.newInstance()
+					.createMessage();
+			SOAPEnvelope envelope = soapMessage.getSOAPPart().getEnvelope();
+
+			SOAPBody soapBody = soapMessage.getSOAPBody();
+
+			SOAPFault fault = soapBody.addFault();
+
+			fault.setFaultCode(soapFault.getFaultCode());
+			fault.setFaultString(soapFault.getMessage());
+			Detail detail = fault.addDetail();
+
+			NodeList nodeList = soapFault.getDetail().getChildNodes();
+
+			String errorDetails = "";
+			for (int i = 0; i < nodeList.getLength(); i++) {
+
+				Node node = nodeList.item(i);
+
+				String nodeName = node.getNodeName();
+
+				String nodeTextContent = node.getTextContent();
+
+				LOGGER.info("-----*************--Node----Name------" + nodeName);
+				LOGGER.info("-----*************--Node-------Text-----"
+						+ nodeTextContent);
+
+				Name entryName = envelope.createName(nodeName);
+
+				DetailEntry entry = detail.addDetailEntry(entryName);
+				entry.addTextNode(nodeTextContent);
+
+				if (nodeName.contains(":error")) {
+
+					errorDetails = nodeTextContent;
+
+					exchange.setProperty(
+							IConstant.ATTJASPER_SOAP_FAULT_ERRORMESSAGE,
+							nodeTextContent);
+				}
+
+			}
+
+			ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+			soapMessage.writeTo(outStream);
+			payload = new String(outStream.toByteArray(),
+					StandardCharsets.UTF_8);
+
+		} catch (SOAPException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return payload;
+	}
  
     public static final String convertSOAPFaulttoString(Node node) {
         try {

@@ -104,5 +104,9 @@ public interface IConstant {
     static String ATTJASPER_SOAP_FAULT_ERRORMESSAGE="attJasperSOAPFaultErrorMessage";
     
     static String JOB_ID="JOBID";
+    
+    static Boolean ATTJASPER_SUCCESS_CALLBACKRECEIVED =true;
+    
+    static Boolean ATTJASPER_ERROR_CALLBACKRECEIVED =false;
 
 }
