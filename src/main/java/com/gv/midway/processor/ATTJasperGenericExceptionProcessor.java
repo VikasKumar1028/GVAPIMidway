@@ -1,15 +1,14 @@
 package com.gv.midway.processor;
 
+
+
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.cxf.binding.soap.SoapFault;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
-import org.w3c.dom.NodeList;
-
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IResponse;
-import com.gv.midway.exception.ATTJasperDetailException;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
@@ -47,53 +46,29 @@ public class ATTJasperGenericExceptionProcessor implements Processor {
 
 		LOGGER.info("------------------------**********------------"
 				+ exchange.getProperty(Exchange.EXCEPTION_CAUGHT).getClass());
-		SoapFault exception = (SoapFault) exchange
+		SoapFault soapFault= (SoapFault) exchange
 				.getProperty(Exchange.EXCEPTION_CAUGHT);
 
 		Header responseHeader = (Header) exchange.getProperty(IConstant.HEADER);
 
-		NodeList nodelist = exception.getDetail().getChildNodes();
-		ATTJasperDetailException detailException = null;
+		String message=soapFault.getMessage();
+		
+		LOGGER.info("MSG    ------------------" +message);
+		
+		 // fault String for the fault code.
+		
+		Integer errorCode = Integer.valueOf(message);
 	
-		for (int i = 0; i < nodelist.getLength(); i++) {
-
-			org.w3c.dom.Node node = nodelist.item(i);
-			detailException = new ATTJasperDetailException();
-			detailException.setError(node.getTextContent());
-			detailException.setException(node.getTextContent());
-			detailException.setMessage(node.getTextContent());
-			detailException.setRequestId(node.getTextContent());
-
-			LOGGER.info("detailException" + detailException.toString());
-			LOGGER.info("-----*************--Node------1------"
-					+ node.getNodeName());
-			LOGGER.info("-----*************--Node-------3-----"
-					+ node.getTextContent());
-
-		}
-
-		LOGGER.info("-----*************------++++-----------2--"
-				+ exception.getDetail().getFirstChild().getTextContent());
-
-		LOGGER.info("EXCP ------------------"
-				+ exchange.getProperty(Exchange.EXCEPTION_CAUGHT,
-						Exception.class));
-		SoapFault faultex = exchange.getProperty(Exchange.EXCEPTION_CAUGHT,
-				SoapFault.class);
-		;
-		LOGGER.info("MSG    ------------------" + faultex.getMessage());
-		LOGGER.info("DETAIL ------------------" + faultex.getDetail());
-
-		Integer errorCode = Integer.valueOf(faultex.getMessage());
-
-		LOGGER.info("-----*************------++++-----------2--"
-				+ exception.getDetail().getFirstChild().getTextContent());
-
+		String resposneDescription=(String) exchange.getProperty(IConstant.ATTJASPER_SOAP_FAULT_ERRORMESSAGE);
+		
+		
+		LOGGER.info("resposneDescription ------------------" +resposneDescription);
+        
 		Response response = new Response();
 
 		response.setResponseCode(errorCode);
 		response.setResponseStatus(IResponse.ERROR_MESSAGE);
-		response.setResponseDescription(detailException.getMessage());
+		response.setResponseDescription(resposneDescription);
 
 		LOGGER.info("exchange endpoint of error........."
 				+ exchange.getFromEndpoint().toString());

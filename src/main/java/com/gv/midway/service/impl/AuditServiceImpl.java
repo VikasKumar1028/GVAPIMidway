@@ -1,10 +1,11 @@
 package com.gv.midway.service.impl;
 
+
+
 import org.apache.camel.Exchange;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.gv.midway.dao.IAuditDao;
 import com.gv.midway.service.IAuditService;
 
@@ -34,9 +35,9 @@ public class AuditServiceImpl implements IAuditService {
     @Override
     public void auditExternalSOAPResponseCall(Exchange exchange) {
 
-        LOGGER.info("AuditServiceImpl-auditExternalResponseCall");
+        LOGGER.info("AuditServiceImpl-auditExternalSOAPResponseCall");
         
-        iAuditDao.auditExternalResponseCall(exchange);
+        iAuditDao.auditExternalSOAPResponseCall(exchange);
     }
 
     @Override
@@ -44,6 +45,13 @@ public class AuditServiceImpl implements IAuditService {
 
         LOGGER.info("AuditServiceImpl-auditExternalExceptionResponseCall");
         iAuditDao.auditExternalExceptionResponseCall(exchange);
+    }
+    
+    @Override
+    public void auditExternalSOAPExceptionResponseCall(Exchange exchange) {
+
+        LOGGER.info("AuditServiceImpl-auditExternalSOAPExceptionResponseCall");
+        iAuditDao.auditExternalSOAPExceptionResponseCall(exchange);
     }
 
     @Override

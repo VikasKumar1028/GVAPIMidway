@@ -11,6 +11,8 @@ public interface IAuditService {
     public void auditExternalSOAPResponseCall(Exchange exchange);
 
     public void auditExternalExceptionResponseCall(Exchange exchange);
+    
+    public void auditExternalSOAPExceptionResponseCall(Exchange exchange);
 
     public void auditExternalConnectionExceptionResponseCall(Exchange exchange);
 

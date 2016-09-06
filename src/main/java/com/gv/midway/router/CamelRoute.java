@@ -1012,7 +1012,7 @@ public class CamelRoute extends RouteBuilder {
                  .process(new ATTJasperDeviceInformationPostProcessor())
                  .bean(iDeviceService, "updateDeviceInformationDB")
                  .doCatch(SoapFault.class)
-                 .bean(iAuditService, "auditExternalExceptionResponseCall")
+                 .bean(iAuditService, "auditExternalSOAPExceptionResponseCall")
                  .process(new ATTJasperGenericExceptionProcessor(env))
                   .endDoTry().endChoice()
 

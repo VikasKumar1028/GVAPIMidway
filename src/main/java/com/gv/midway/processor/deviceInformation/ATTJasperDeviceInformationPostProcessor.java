@@ -1,11 +1,14 @@
 package com.gv.midway.processor.deviceInformation;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
+
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.Header;
@@ -246,6 +249,7 @@ public class ATTJasperDeviceInformationPostProcessor implements Processor {
 	        
 	        deviceInformation.setOpeartorCustomFields(operatorCustomFields);
 		    
+	        deviceInformation.setLastUpdated(new Date());
 		    
 	        response.setResponseCode(IResponse.SUCCESS_CODE);
 	        response.setResponseStatus(IResponse.SUCCESS_MESSAGE);

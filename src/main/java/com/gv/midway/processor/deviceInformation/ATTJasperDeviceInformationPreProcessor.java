@@ -3,6 +3,7 @@ package com.gv.midway.processor.deviceInformation;
 
 import java.util.Date;
 import java.util.List;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.Processor;
@@ -11,7 +12,9 @@ import org.apache.cxf.binding.soap.SoapHeader;
 import org.apache.cxf.headers.Header;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
+
 import com.gv.midway.attjasper.GetTerminalDetailsRequest;
+import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
 import com.gv.midway.utility.CommonUtil;
 
@@ -73,6 +76,9 @@ public class ATTJasperDeviceInformationPreProcessor implements Processor {
 		exchange.getIn()
 				.setHeader("soapAction",
 						"http://api.jasperwireless.com/ws/service/terminal/GetTerminalDetails");
+		
+		exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID, request.getDataArea()
+	                .getNetSuiteId());
 		
 		String username=newEnv.getProperty("attJapser.userName");
 		

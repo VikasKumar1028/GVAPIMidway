@@ -17,20 +17,27 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.apache.camel.Exchange;
-import org.apache.camel.ExchangePattern;
 import org.apache.camel.Message;
 import org.apache.cxf.binding.soap.SoapHeader;
-import org.apache.cxf.headers.Header;
 import org.apache.cxf.headers.Header.Direction;
+import org.apache.cxf.message.MessageContentsList;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -495,6 +502,53 @@ public class CommonUtil {
 
 		}
         return soapHeaders;
+    }
+    
+    public static String getSOAPResposneFromExchange(Exchange exchange)
+    {
+    	
+    	MessageContentsList result = (MessageContentsList)exchange.getIn().getBody();
+    	Object object=result.get(0);
+        LOGGER.info("Received output text: " + result.get(0));
+        
+        JAXBContext context;
+        String xmlString=null;
+		try {
+			context = JAXBContext.newInstance(object.getClass());
+			 StringWriter sw = new StringWriter();
+		     Marshaller jaxbMarshaller = context.createMarshaller();
+		     jaxbMarshaller.marshal(object, sw);
+		     xmlString = sw.toString();
+		     LOGGER.info("resposne body is........"+xmlString);
+		     
+		} catch (JAXBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	return xmlString;
+    }
+    
+ 
+    public static final String convertSOAPFaulttoString(Node node) {
+        try {
+            if (node == null) {
+                return null;
+            }
+
+            TransformerFactory trf=TransformerFactory.newInstance();
+            Transformer tf=trf.newTransformer();
+          
+            StringWriter sw = new StringWriter();
+            StreamResult result = new StreamResult(sw);
+
+            // transform
+            tf.transform(new DOMSource(node), result);
+
+            return sw.getBuffer().toString();
+        } catch (Exception e) {
+            throw new RuntimeException("Could not convert Node to string", e);
+        }
     }
     
     /**

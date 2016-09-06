@@ -101,6 +101,8 @@ public interface IConstant {
     
     static String TIMEOUT_DEVICE_LIST="timeOutDeviceList";
     
+    static String ATTJASPER_SOAP_FAULT_ERRORMESSAGE="attJasperSOAPFaultErrorMessage";
+    
     static String JOB_ID="JOBID";
 
 }
