@@ -414,7 +414,7 @@ public class AuditDaoImpl implements IAuditDao {
 				DetailEntry entry = detail.addDetailEntry(entryName);
 				entry.addTextNode(nodeTextContent);
 				
-				if(nodeName.contains(":message")){
+				if(nodeName.contains(":error")){
 					
 					errorDetails=nodeTextContent;
 					
