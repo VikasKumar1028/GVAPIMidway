@@ -73,6 +73,7 @@ public interface IConstant {
 
 	static String BSCARRIER_SERVICE_VERIZON = "VERIZON";
 	static String BSCARRIER_SERVICE_KORE = "KORE";
+	static String BSCARRIER_SERVICE_ATTJASPER = "ATTJASPER";
 
 	// Job is scheduled to run every day at 2 in the morning.
 	static String JOB_TIME_CONFIGURATION = "0+0+02+*+*+?";

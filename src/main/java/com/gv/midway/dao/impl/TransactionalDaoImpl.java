@@ -539,7 +539,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
         if (CommonUtil.isProvisioningMethod(exchange.getFromEndpoint()
                 .toString())) {
             Query searchQuery;
-            if ("KORE".equals(exchange
+            if (IConstant.BSCARRIER_SERVICE_KORE.equals(exchange
                     .getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME))) {
                 searchQuery = new Query(
                         Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID)
@@ -1596,7 +1596,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			update.set(ITransaction.CALL_BACK_RECEIVED,true);	
 			update.set(ITransaction.LAST_TIME_STAMP_UPDATED, new Date());
 			
-			 mongoTemplate.updateMulti(searchQuery, update, Transaction.class);
+			 mongoTemplate.updateFirst(searchQuery, update, Transaction.class);
 			 LOGGER.info("End populateATTJasperTransactionalResponse");
 
 		} catch (Exception ex) {
@@ -1630,7 +1630,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			update.set(ITransaction.LAST_TIME_STAMP_UPDATED, new Date());
 			update.set(ITransaction.CALL_BACK_RECEIVED, false);
 			
-			mongoTemplate.updateMulti(searchQuery, update, Transaction.class);
+			mongoTemplate.updateFirst(searchQuery, update, Transaction.class);
 		} catch (Exception ex) {
 			LOGGER.error("Error in populateATTJasperTransactionalErrorResponse"
 					+ ex);
