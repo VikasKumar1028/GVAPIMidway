@@ -4,6 +4,7 @@ package com.gv.midway.dao.impl;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.Detail;
 import javax.xml.soap.DetailEntry;
@@ -12,6 +13,7 @@ import javax.xml.soap.Name;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPFault;
 import javax.xml.soap.SOAPMessage;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.component.cxf.CxfOperationException;
 import org.apache.cxf.binding.soap.SoapFault;
@@ -21,6 +23,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IResponse;
@@ -380,53 +383,9 @@ public class AuditDaoImpl implements IAuditDao {
             
             audit.setErrorCode(Integer.parseInt(message));
             
-			SOAPMessage soapMessage = MessageFactory.newInstance()
-					.createMessage();
-			SOAPEnvelope envelope = soapMessage.getSOAPPart().getEnvelope();
-
-			SOAPBody soapBody = soapMessage.getSOAPBody();
-
-			SOAPFault fault = soapBody.addFault();
-
-			fault.setFaultCode(soapFault.getFaultCode());
-			fault.setFaultString(soapFault.getMessage());
-			Detail detail = fault.addDetail();
-
-			NodeList nodeList = soapFault.getDetail().getChildNodes();
-			
-			
-            String errorDetails="";
-			for (int i = 0; i < nodeList.getLength(); i++) {
-
-				Node node = nodeList.item(i);
-				
-				String nodeName=node.getNodeName();
-				
-				String nodeTextContent=node.getTextContent();
-
-				LOGGER.info("-----*************--Node----Name------"
-						+ nodeName);
-				LOGGER.info("-----*************--Node-------Text-----"
-						+ nodeTextContent);
-
-				Name entryName = envelope.createName(nodeName);
-
-				DetailEntry entry = detail.addDetailEntry(entryName);
-				entry.addTextNode(nodeTextContent);
-				
-				if(nodeName.contains(":error")){
-					
-					errorDetails=nodeTextContent;
-					
-					exchange.setProperty(IConstant.ATTJASPER_SOAP_FAULT_ERRORMESSAGE, nodeTextContent);
-				}
-
-			}
-
-			ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-			soapMessage.writeTo(outStream);
-			String payload = new String(outStream.toByteArray(),
-					StandardCharsets.UTF_8);
+            
+            String payload = CommonUtil
+					.getSOAPErrorResposneFromExchange(exchange);
 
 			LOGGER.info("soap fault payload  soap message is ------------------"
 					+ payload);
@@ -434,7 +393,7 @@ public class AuditDaoImpl implements IAuditDao {
 			audit.setPayload(payload);
            
     		
-    		audit.setErrorDetails(errorDetails);
+    		audit.setErrorDetails(exchange.getProperty(IConstant.ATTJASPER_SOAP_FAULT_ERRORMESSAGE).toString());
            
            
             mongoTemplate.save(audit);

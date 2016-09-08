@@ -102,6 +102,10 @@ public interface IConstant {
 	static String TIMEOUT_DEVICE_LIST = "timeOutDeviceList";
 
 	static String ATTJASPER_SOAP_FAULT_ERRORMESSAGE = "attJasperSOAPFaultErrorMessage";
+	
+	static String ATTJASPER_SOAP_RESPONSE_PAYLOAD="attJasperSOAPResponsePayload";
+	
+	static String ATTJASPER_SOAP_FAULT_PAYLOAD="attJasperSOAPFaultPayload";
 
 	static String JOB_ID = "JOBID";
 
@@ -109,6 +113,6 @@ public interface IConstant {
 
 	static String ATTJASPER_ACTIVATED = "ACTIVATED_NAME";
 	
-	static int ATTJASPER_CHANGETYPE = 3;
+	static int ATTJASPER_SIM_CHANGETYPE = 3;
 
 }

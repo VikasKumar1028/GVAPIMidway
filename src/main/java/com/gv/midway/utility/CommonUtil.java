@@ -59,6 +59,7 @@ import com.gv.midway.constant.IEndPoints;
 import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.job.JobParameter;
 import com.gv.midway.pojo.job.JobinitializedResponse;
+import com.gv.midway.pojo.transaction.Transaction;
 import com.gv.midway.pojo.verizon.DeviceId;
 
 public class CommonUtil {
@@ -534,6 +535,10 @@ public class CommonUtil {
 		     xmlString = sw.toString();
 		     LOGGER.info("resposne body is........"+xmlString);
 		     
+		     exchange.setProperty(
+						IConstant.ATTJASPER_SOAP_RESPONSE_PAYLOAD,
+						xmlString);
+		     
 		} catch (JAXBException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -602,6 +607,10 @@ public class CommonUtil {
 			soapMessage.writeTo(outStream);
 			payload = new String(outStream.toByteArray(),
 					StandardCharsets.UTF_8);
+			
+			exchange.setProperty(
+					IConstant.ATTJASPER_SOAP_FAULT_PAYLOAD,
+					payload);
 
 		} catch (SOAPException e) {
 			// TODO Auto-generated catch block
@@ -693,5 +702,20 @@ public class CommonUtil {
     	CommonUtil.isTokenRequired.set(isTokenRequired);
     	
     	
+    }
+    
+  /*For Kore and ATTJasper We Need Wire Tap and SEDA component So the body should
+      be set with array list of transaction for Verizon we simply add into database and do not change the exchange body*/
+    public static void setListInWireTap(Exchange exchange,List<Transaction> list)
+    {
+    	
+    	String carrierName= exchange.getProperty(
+                IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString();
+    	
+    	if (!IConstant.BSCARRIER_SERVICE_VERIZON.equals(carrierName))
+        {
+        	
+            exchange.getIn().setBody(list);
+        }
     }
 }

@@ -4,7 +4,6 @@ import java.net.ConnectException;
 import java.net.NoRouteToHostException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangeTimedOutException;
 import org.apache.camel.LoggingLevel;
@@ -17,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-
 import com.gv.midway.constant.CarrierType;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.JobName;
@@ -45,8 +43,6 @@ import com.gv.midway.processor.NetSuiteIdValidationProcessor;
 import com.gv.midway.processor.TimeOutErrorProcessor;
 import com.gv.midway.processor.VerizonBatchExceptionProcessor;
 import com.gv.midway.processor.VerizonGenericExceptionProcessor;
-import com.gv.midway.processor.activateDevice.ATTJasperActivateDevicePostProcessor;
-import com.gv.midway.processor.activateDevice.ATTJasperActivateDevicePreProcessor;
 import com.gv.midway.processor.activateDevice.KoreActivateDevicePostProcessor;
 import com.gv.midway.processor.activateDevice.KoreActivateDevicePreProcessor;
 import com.gv.midway.processor.activateDevice.StubKoreActivateDeviceProcessor;
@@ -328,29 +324,7 @@ public class CamelRoute extends RouteBuilder {
                 .process(new KoreActivateDevicePostProcessor(env))
                 .endChoice().
                 
-                when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
-				.doTry()
-				.bean(iTransactionalService, "populateActivateDBPayload")
-				.bean(iAuditService, "auditExternalRequestCall")
-						.process(new ATTJasperActivateDevicePreProcessor(env))
-				 
-						.to(attJasperTerminalEndPoint)
-						   .bean(iTransactionalService,
-                        "populateATTJasperTransactionalResponse")
-						.bean(iAuditService, "auditExternalSOAPResponseCall")
-				.process(new ATTJasperActivateDevicePostProcessor())
-				
-				 .doCatch(SoapFault.class)
-				 .bean(iAuditService, "auditExternalSOAPExceptionResponseCall")
-				 .bean(iTransactionalService,
-                        "populateATTJasperTransactionalErrorResponse")
-				 .process(new ATTJasperGenericExceptionProcessor(env))
-				  .endDoTry().endChoice()
-                
-                
-                
-                
-                .when(header("derivedCarrierName").isEqualTo("VERIZON"))
+                when(header("derivedCarrierName").isEqualTo("VERIZON"))
                 .bean(iSessionService, "setContextTokenInExchange")
                 .bean(iTransactionalService, "populateActivateDBPayload")
                 // will store only one time in Audit even on connection failure
@@ -519,16 +493,16 @@ public class CamelRoute extends RouteBuilder {
                 .log("Wire Tap Thread deactivation")
                 .bean(iTransactionalService, "populateDeactivateDBPayload")
                 .split().method("deviceSplitter").recipientList()
-                .method("aTTJasperDeviceServiceRouter");
+                .method("attJasperDeviceServiceRouter");
         
         // ATTJASPER SEDA FLOW
         
         from("seda:attJasperSedaDeactivation?concurrentConsumers=5")
         .onException(SoapFault.class)
         .handled(true)
+        .bean(iAuditService, "auditExternalSOAPExceptionResponseCall")
         .bean(iTransactionalService,
                 "populateATTJasperTransactionalErrorResponse")
-        .bean(iAuditService, "auditExternalSOAPExceptionResponseCall")
         .end()
         .process(new ATTJasperDeactivateDevicePreProcessor(env))
         .bean(iAuditService, "auditExternalRequestCall")

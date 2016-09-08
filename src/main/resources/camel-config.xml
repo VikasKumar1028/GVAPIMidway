@@ -41,7 +41,7 @@
 
 	<bean id="koreDeviceServiceRouter" class="com.gv.midway.router.KoreDeviceServiceRouter" />
 	
-	<bean id="aTTJasperDeviceServiceRouter" class="com.gv.midway.router.ATTJasperDeviceServiceRouter" />
+	<bean id="attJasperDeviceServiceRouter" class="com.gv.midway.router.ATTJasperDeviceServiceRouter" />
 	
 	<bean id="deviceSplitter" class="com.gv.midway.splitter.DeviceSplitter" />
 

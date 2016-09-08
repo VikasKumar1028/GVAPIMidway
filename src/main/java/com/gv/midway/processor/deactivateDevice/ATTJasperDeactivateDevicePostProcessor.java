@@ -32,31 +32,15 @@ public class ATTJasperDeactivateDevicePostProcessor implements Processor {
 	public void process(Exchange exchange) throws Exception {
 		// TODO Auto-generated method stub
 		LOGGER.info("Begin:ATTJasperDeactivateDevicePostProcessor");
-		
 
 		DeactivateDeviceResponse deactivateDeviceResponse = new DeactivateDeviceResponse();
 		DeactivateDeviceResponseDataArea deactivateDeviceResponseDataArea = new DeactivateDeviceResponseDataArea();
 
 		Response response = new Response();
 
-		LOGGER.info("exchange.getIn().getBody().toString()***************************************"
-				+ exchange.getIn().getBody().toString());
-
-		if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
-
-			response.setResponseCode(IResponse.SUCCESS_CODE);
-			response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
-			response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
-			deactivateDeviceResponse
-					.setDataArea(deactivateDeviceResponseDataArea);
-
-		} else {
-
-			response.setResponseCode(400);
-			response.setResponseStatus(IResponse.ERROR_MESSAGE);
-			response.setResponseDescription(exchange.getIn().getBody()
-					.toString());
-		}
+		response.setResponseCode(IResponse.SUCCESS_CODE);
+		response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+		response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY);
 
 		Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
 		deactivateDeviceResponse.setHeader(responseheader);
@@ -64,8 +48,10 @@ public class ATTJasperDeactivateDevicePostProcessor implements Processor {
 		deactivateDeviceResponseDataArea.setOrderNumber(exchange.getProperty(
 				IConstant.MIDWAY_TRANSACTION_ID).toString());
 
+		deactivateDeviceResponse.setDataArea(deactivateDeviceResponseDataArea);
+
 		exchange.getIn().setBody(deactivateDeviceResponse);
-		
+
 		LOGGER.info("End:ATTJasperDeactivateDevicePostProcessor");
 	}
 

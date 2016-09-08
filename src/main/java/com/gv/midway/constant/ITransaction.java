@@ -20,6 +20,7 @@ public class ITransaction {
     public static final String NETSUITE_ID = "netSuiteId";
     public static final String NETSUITE_REQUEST = "netSuiteRequest";
     public static final String NETSUITE_RESPONSE = "netSuiteResponse";
+    public static final String ATTJASPER_EFFECTIVE_DATE = "effectiveDate";
 
     private ITransaction() {
 

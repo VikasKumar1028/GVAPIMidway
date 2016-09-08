@@ -1,5 +1,6 @@
 package com.gv.midway.processor.deactivateDevice;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -53,9 +54,7 @@ public class ATTJasperDeactivateDevicePreProcessor implements Processor {
 				.getDeviceIds()[0].getId();
 
 		LOGGER.info("deviceId::::" + deviceId);
-
-		String effectiveDate = deactivateDeviceRequest.getDataArea()
-				.getEffectiveDate();
+		
 
 		EditTerminalRequest getEditTerminalRequest = new EditTerminalRequest();
 
@@ -63,15 +62,14 @@ public class ATTJasperDeactivateDevicePreProcessor implements Processor {
 
 		String licenseKey = newEnv.getProperty("attJapser.licenseKey");
 
-		getEditTerminalRequest.setChangeType(IConstant.ATTJASPER_CHANGETYPE);
+		getEditTerminalRequest.setChangeType(IConstant.ATTJASPER_SIM_CHANGETYPE);
 		getEditTerminalRequest.setTargetValue(IConstant.ATTJASPER_DEACTIVATED);
-		if (effectiveDate != null) {
-			XMLGregorianCalendar xgc = DatatypeFactory.newInstance()
-					.newXMLGregorianCalendar(effectiveDate);
-			LOGGER.info("effectiveDate::::::" + xgc);
-			getEditTerminalRequest.setEffectiveDate(xgc);
-		}
-
+		
+		LocalDateTime currentUTCTime = LocalDateTime.now(); // using system timezone
+        XMLGregorianCalendar xmlDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(currentUTCTime.toString());
+		
+		getEditTerminalRequest.setEffectiveDate(xmlDate);
+		
 		getEditTerminalRequest.setIccid(deviceId);
 
 		getEditTerminalRequest.setLicenseKey(licenseKey);

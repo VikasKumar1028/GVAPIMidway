@@ -26,17 +26,6 @@ public class DeactivateDeviceRequestDataArea {
 	@ApiModelProperty(value = "All identifiers for the device.", required = true)
 	private DeactivateDevices[] devices;
 
-	@ApiModelProperty(value = "effective date is empty or the current date in this format (YYYY-MM-DDZ).Only for the ATT japser devices.")
-	private String effectiveDate;
-
-	public String getEffectiveDate() {
-		return effectiveDate;
-	}
-
-	public void setEffectiveDate(String effectiveDate) {
-		this.effectiveDate = effectiveDate;
-	}
-
 	public DeactivateDevices[] getDevices() {
 		return devices;
 	}
@@ -105,8 +94,6 @@ public class DeactivateDeviceRequestDataArea {
 		result = prime * result + Arrays.hashCode(customFields);
 		result = prime * result + Arrays.hashCode(devices);
 		result = prime * result
-				+ ((effectiveDate == null) ? 0 : effectiveDate.hashCode());
-		result = prime * result
 				+ ((etfWaiver == null) ? 0 : etfWaiver.hashCode());
 		result = prime * result
 				+ ((groupName == null) ? 0 : groupName.hashCode());
@@ -134,11 +121,6 @@ public class DeactivateDeviceRequestDataArea {
 		if (!Arrays.equals(customFields, other.customFields))
 			return false;
 		if (!Arrays.equals(devices, other.devices))
-			return false;
-		if (effectiveDate == null) {
-			if (other.effectiveDate != null)
-				return false;
-		} else if (!effectiveDate.equals(other.effectiveDate))
 			return false;
 		if (etfWaiver == null) {
 			if (other.etfWaiver != null)
@@ -169,7 +151,7 @@ public class DeactivateDeviceRequestDataArea {
 				+ ", accountName=" + accountName + ", customFields="
 				+ Arrays.toString(customFields) + ", servicePlan="
 				+ servicePlan + ", reasonCode=" + reasonCode + ", devices="
-				+ Arrays.toString(devices) + ", effectiveDate=" + effectiveDate
+				+ Arrays.toString(devices)
 				+ ", etfWaiver=" + etfWaiver + "]";
 	}
 

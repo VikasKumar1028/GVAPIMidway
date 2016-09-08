@@ -28,8 +28,11 @@ public class Transaction {
     private Integer netSuiteId;
     private Object netSuiteRequest;
     private String netSuiteResponse;
+    private Date   effectiveDate;
 
-    public Transaction() {
+   
+
+	public Transaction() {
         super();
     }
 
@@ -185,219 +188,238 @@ public class Transaction {
     public void setNetSuiteId(Integer netSuiteId) {
         this.netSuiteId = netSuiteId;
     }
+    
+    public Date getEffectiveDate() {
+		return effectiveDate;
+	}
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime
-                * result
-                + ((auditTransactionId == null) ? 0 : auditTransactionId
-                        .hashCode());
-        result = prime
-                * result
-                + ((callBackDelivered == null) ? 0 : callBackDelivered
-                        .hashCode());
-        result = prime
-                * result
-                + ((callBackFailureToNetSuiteReason == null) ? 0
-                        : callBackFailureToNetSuiteReason.hashCode());
-        result = prime * result
-                + ((callBackPayload == null) ? 0 : callBackPayload.hashCode());
-        result = prime
-                * result
-                + ((callBackReceived == null) ? 0 : callBackReceived.hashCode());
-        result = prime
-                * result
-                + ((carrierErrorDescription == null) ? 0
-                        : carrierErrorDescription.hashCode());
-        result = prime * result
-                + ((carrierName == null) ? 0 : carrierName.hashCode());
-        result = prime * result
-                + ((carrierStatus == null) ? 0 : carrierStatus.hashCode());
-        result = prime
-                * result
-                + ((carrierTransactionId == null) ? 0 : carrierTransactionId
-                        .hashCode());
-        result = prime * result
-                + ((deviceNumber == null) ? 0 : deviceNumber.hashCode());
-        result = prime * result
-                + ((devicePayload == null) ? 0 : devicePayload.hashCode());
-        result = prime
-                * result
-                + ((lastTimeStampUpdated == null) ? 0 : lastTimeStampUpdated
-                        .hashCode());
-        result = prime * result
-                + ((midwayStatus == null) ? 0 : midwayStatus.hashCode());
-        result = prime
-                * result
-                + ((midwayTransactionId == null) ? 0 : midwayTransactionId
-                        .hashCode());
-        result = prime * result
-                + ((netSuiteId == null) ? 0 : netSuiteId.hashCode());
-        result = prime * result
-                + ((netSuiteRequest == null) ? 0 : netSuiteRequest.hashCode());
-        result = prime
-                * result
-                + ((netSuiteResponse == null) ? 0 : netSuiteResponse.hashCode());
-        result = prime * result
-                + ((requestType == null) ? 0 : requestType.hashCode());
-        result = prime
-                * result
-                + ((timeStampReceived == null) ? 0 : timeStampReceived
-                        .hashCode());
-        return result;
-    }
+	public void setEffectiveDate(Date effectiveDate) {
+		this.effectiveDate = effectiveDate;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Transaction other = (Transaction) obj;
-        if (auditTransactionId == null) {
-            if (other.auditTransactionId != null)
-                return false;
-        } else if (!auditTransactionId.equals(other.auditTransactionId))
-            return false;
-        if (callBackDelivered == null) {
-            if (other.callBackDelivered != null)
-                return false;
-        } else if (!callBackDelivered.equals(other.callBackDelivered))
-            return false;
-        if (callBackFailureToNetSuiteReason == null) {
-            if (other.callBackFailureToNetSuiteReason != null)
-                return false;
-        } else if (!callBackFailureToNetSuiteReason
-                .equals(other.callBackFailureToNetSuiteReason))
-            return false;
-        if (callBackPayload == null) {
-            if (other.callBackPayload != null)
-                return false;
-        } else if (!callBackPayload.equals(other.callBackPayload))
-            return false;
-        if (callBackReceived == null) {
-            if (other.callBackReceived != null)
-                return false;
-        } else if (!callBackReceived.equals(other.callBackReceived))
-            return false;
-        if (carrierErrorDescription == null) {
-            if (other.carrierErrorDescription != null)
-                return false;
-        } else if (!carrierErrorDescription
-                .equals(other.carrierErrorDescription))
-            return false;
-        if (carrierName == null) {
-            if (other.carrierName != null)
-                return false;
-        } else if (!carrierName.equals(other.carrierName))
-            return false;
-        if (carrierStatus == null) {
-            if (other.carrierStatus != null)
-                return false;
-        } else if (!carrierStatus.equals(other.carrierStatus))
-            return false;
-        if (carrierTransactionId == null) {
-            if (other.carrierTransactionId != null)
-                return false;
-        } else if (!carrierTransactionId.equals(other.carrierTransactionId))
-            return false;
-        if (deviceNumber == null) {
-            if (other.deviceNumber != null)
-                return false;
-        } else if (!deviceNumber.equals(other.deviceNumber))
-            return false;
-        if (devicePayload == null) {
-            if (other.devicePayload != null)
-                return false;
-        } else if (!devicePayload.equals(other.devicePayload))
-            return false;
-        if (lastTimeStampUpdated == null) {
-            if (other.lastTimeStampUpdated != null)
-                return false;
-        } else if (!lastTimeStampUpdated.equals(other.lastTimeStampUpdated))
-            return false;
-        if (midwayStatus == null) {
-            if (other.midwayStatus != null)
-                return false;
-        } else if (!midwayStatus.equals(other.midwayStatus))
-            return false;
-        if (midwayTransactionId == null) {
-            if (other.midwayTransactionId != null)
-                return false;
-        } else if (!midwayTransactionId.equals(other.midwayTransactionId))
-            return false;
-        if (netSuiteId == null) {
-            if (other.netSuiteId != null)
-                return false;
-        } else if (!netSuiteId.equals(other.netSuiteId))
-            return false;
-        if (netSuiteRequest == null) {
-            if (other.netSuiteRequest != null)
-                return false;
-        } else if (!netSuiteRequest.equals(other.netSuiteRequest))
-            return false;
-        if (netSuiteResponse == null) {
-            if (other.netSuiteResponse != null)
-                return false;
-        } else if (!netSuiteResponse.equals(other.netSuiteResponse))
-            return false;
-        if (requestType != other.requestType)
-            return false;
-        if (timeStampReceived == null) {
-            if (other.timeStampReceived != null)
-                return false;
-        } else if (!timeStampReceived.equals(other.timeStampReceived))
-            return false;
-        return true;
-    }
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime
+				* result
+				+ ((auditTransactionId == null) ? 0 : auditTransactionId
+						.hashCode());
+		result = prime
+				* result
+				+ ((callBackDelivered == null) ? 0 : callBackDelivered
+						.hashCode());
+		result = prime
+				* result
+				+ ((callBackFailureToNetSuiteReason == null) ? 0
+						: callBackFailureToNetSuiteReason.hashCode());
+		result = prime * result
+				+ ((callBackPayload == null) ? 0 : callBackPayload.hashCode());
+		result = prime
+				* result
+				+ ((callBackReceived == null) ? 0 : callBackReceived.hashCode());
+		result = prime
+				* result
+				+ ((carrierErrorDescription == null) ? 0
+						: carrierErrorDescription.hashCode());
+		result = prime * result
+				+ ((carrierName == null) ? 0 : carrierName.hashCode());
+		result = prime * result
+				+ ((carrierStatus == null) ? 0 : carrierStatus.hashCode());
+		result = prime
+				* result
+				+ ((carrierTransactionId == null) ? 0 : carrierTransactionId
+						.hashCode());
+		result = prime * result
+				+ ((deviceNumber == null) ? 0 : deviceNumber.hashCode());
+		result = prime * result
+				+ ((devicePayload == null) ? 0 : devicePayload.hashCode());
+		result = prime * result
+				+ ((effectiveDate == null) ? 0 : effectiveDate.hashCode());
+		result = prime
+				* result
+				+ ((lastTimeStampUpdated == null) ? 0 : lastTimeStampUpdated
+						.hashCode());
+		result = prime * result
+				+ ((midwayStatus == null) ? 0 : midwayStatus.hashCode());
+		result = prime
+				* result
+				+ ((midwayTransactionId == null) ? 0 : midwayTransactionId
+						.hashCode());
+		result = prime * result
+				+ ((netSuiteId == null) ? 0 : netSuiteId.hashCode());
+		result = prime * result
+				+ ((netSuiteRequest == null) ? 0 : netSuiteRequest.hashCode());
+		result = prime
+				* result
+				+ ((netSuiteResponse == null) ? 0 : netSuiteResponse.hashCode());
+		result = prime * result
+				+ ((requestType == null) ? 0 : requestType.hashCode());
+		result = prime
+				* result
+				+ ((timeStampReceived == null) ? 0 : timeStampReceived
+						.hashCode());
+		return result;
+	}
 
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Transaction [midwayTransactionId=");
-        builder.append(midwayTransactionId);
-        builder.append(", carrierTransactionId=");
-        builder.append(carrierTransactionId);
-        builder.append(", deviceNumber=");
-        builder.append(deviceNumber);
-        builder.append(", devicePayload=");
-        builder.append(devicePayload);
-        builder.append(", midwayStatus=");
-        builder.append(midwayStatus);
-        builder.append(", carrierStatus=");
-        builder.append(carrierStatus);
-        builder.append(", carrierName=");
-        builder.append(carrierName);
-        builder.append(", timeStampReceived=");
-        builder.append(timeStampReceived);
-        builder.append(", lastTimeStampUpdated=");
-        builder.append(lastTimeStampUpdated);
-        builder.append(", carrierErrorDescription=");
-        builder.append(carrierErrorDescription);
-        builder.append(", requestType=");
-        builder.append(requestType);
-        builder.append(", callBackPayload=");
-        builder.append(callBackPayload);
-        builder.append(", callBackDelivered=");
-        builder.append(callBackDelivered);
-        builder.append(", auditTransactionId=");
-        builder.append(auditTransactionId);
-        builder.append(", callBackReceived=");
-        builder.append(callBackReceived);
-        builder.append(", callBackFailureToNetSuiteReason=");
-        builder.append(callBackFailureToNetSuiteReason);
-        builder.append(", netSuiteId=");
-        builder.append(netSuiteId);
-        builder.append(", netSuiteRequest=");
-        builder.append(netSuiteRequest);
-        builder.append(", netSuiteResponse=");
-        builder.append(netSuiteResponse);
-        builder.append("]");
-        return builder.toString();
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Transaction other = (Transaction) obj;
+		if (auditTransactionId == null) {
+			if (other.auditTransactionId != null)
+				return false;
+		} else if (!auditTransactionId.equals(other.auditTransactionId))
+			return false;
+		if (callBackDelivered == null) {
+			if (other.callBackDelivered != null)
+				return false;
+		} else if (!callBackDelivered.equals(other.callBackDelivered))
+			return false;
+		if (callBackFailureToNetSuiteReason == null) {
+			if (other.callBackFailureToNetSuiteReason != null)
+				return false;
+		} else if (!callBackFailureToNetSuiteReason
+				.equals(other.callBackFailureToNetSuiteReason))
+			return false;
+		if (callBackPayload == null) {
+			if (other.callBackPayload != null)
+				return false;
+		} else if (!callBackPayload.equals(other.callBackPayload))
+			return false;
+		if (callBackReceived == null) {
+			if (other.callBackReceived != null)
+				return false;
+		} else if (!callBackReceived.equals(other.callBackReceived))
+			return false;
+		if (carrierErrorDescription == null) {
+			if (other.carrierErrorDescription != null)
+				return false;
+		} else if (!carrierErrorDescription
+				.equals(other.carrierErrorDescription))
+			return false;
+		if (carrierName == null) {
+			if (other.carrierName != null)
+				return false;
+		} else if (!carrierName.equals(other.carrierName))
+			return false;
+		if (carrierStatus == null) {
+			if (other.carrierStatus != null)
+				return false;
+		} else if (!carrierStatus.equals(other.carrierStatus))
+			return false;
+		if (carrierTransactionId == null) {
+			if (other.carrierTransactionId != null)
+				return false;
+		} else if (!carrierTransactionId.equals(other.carrierTransactionId))
+			return false;
+		if (deviceNumber == null) {
+			if (other.deviceNumber != null)
+				return false;
+		} else if (!deviceNumber.equals(other.deviceNumber))
+			return false;
+		if (devicePayload == null) {
+			if (other.devicePayload != null)
+				return false;
+		} else if (!devicePayload.equals(other.devicePayload))
+			return false;
+		if (effectiveDate == null) {
+			if (other.effectiveDate != null)
+				return false;
+		} else if (!effectiveDate.equals(other.effectiveDate))
+			return false;
+		if (lastTimeStampUpdated == null) {
+			if (other.lastTimeStampUpdated != null)
+				return false;
+		} else if (!lastTimeStampUpdated.equals(other.lastTimeStampUpdated))
+			return false;
+		if (midwayStatus == null) {
+			if (other.midwayStatus != null)
+				return false;
+		} else if (!midwayStatus.equals(other.midwayStatus))
+			return false;
+		if (midwayTransactionId == null) {
+			if (other.midwayTransactionId != null)
+				return false;
+		} else if (!midwayTransactionId.equals(other.midwayTransactionId))
+			return false;
+		if (netSuiteId == null) {
+			if (other.netSuiteId != null)
+				return false;
+		} else if (!netSuiteId.equals(other.netSuiteId))
+			return false;
+		if (netSuiteRequest == null) {
+			if (other.netSuiteRequest != null)
+				return false;
+		} else if (!netSuiteRequest.equals(other.netSuiteRequest))
+			return false;
+		if (netSuiteResponse == null) {
+			if (other.netSuiteResponse != null)
+				return false;
+		} else if (!netSuiteResponse.equals(other.netSuiteResponse))
+			return false;
+		if (requestType != other.requestType)
+			return false;
+		if (timeStampReceived == null) {
+			if (other.timeStampReceived != null)
+				return false;
+		} else if (!timeStampReceived.equals(other.timeStampReceived))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Transaction [midwayTransactionId=");
+		builder.append(midwayTransactionId);
+		builder.append(", carrierTransactionId=");
+		builder.append(carrierTransactionId);
+		builder.append(", deviceNumber=");
+		builder.append(deviceNumber);
+		builder.append(", devicePayload=");
+		builder.append(devicePayload);
+		builder.append(", midwayStatus=");
+		builder.append(midwayStatus);
+		builder.append(", carrierStatus=");
+		builder.append(carrierStatus);
+		builder.append(", carrierName=");
+		builder.append(carrierName);
+		builder.append(", timeStampReceived=");
+		builder.append(timeStampReceived);
+		builder.append(", lastTimeStampUpdated=");
+		builder.append(lastTimeStampUpdated);
+		builder.append(", carrierErrorDescription=");
+		builder.append(carrierErrorDescription);
+		builder.append(", requestType=");
+		builder.append(requestType);
+		builder.append(", callBackPayload=");
+		builder.append(callBackPayload);
+		builder.append(", callBackDelivered=");
+		builder.append(callBackDelivered);
+		builder.append(", auditTransactionId=");
+		builder.append(auditTransactionId);
+		builder.append(", callBackReceived=");
+		builder.append(callBackReceived);
+		builder.append(", callBackFailureToNetSuiteReason=");
+		builder.append(callBackFailureToNetSuiteReason);
+		builder.append(", netSuiteId=");
+		builder.append(netSuiteId);
+		builder.append(", netSuiteRequest=");
+		builder.append(netSuiteRequest);
+		builder.append(", netSuiteResponse=");
+		builder.append(netSuiteResponse);
+		builder.append(", effectiveDate=");
+		builder.append(effectiveDate);
+		builder.append("]");
+		return builder.toString();
+	}
+
+    
 
 }

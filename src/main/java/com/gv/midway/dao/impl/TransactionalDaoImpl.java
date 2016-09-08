@@ -1,7 +1,6 @@
 package com.gv.midway.dao.impl;
 
-import java.io.ByteArrayOutputStream;
-import java.nio.charset.StandardCharsets;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -10,19 +9,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.soap.Detail;
-import javax.xml.soap.DetailEntry;
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.Name;
-import javax.xml.soap.SOAPBody;
-import javax.xml.soap.SOAPEnvelope;
-import javax.xml.soap.SOAPFault;
-import javax.xml.soap.SOAPMessage;
+import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.component.cxf.CxfOperationException;
-import org.apache.cxf.binding.soap.SoapFault;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -30,8 +21,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -189,15 +178,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
         }
         mongoTemplate.insertAll(list);
-        // For Kore We Need Wire Tap and SEDA component So the body should
-        // be set with arraylist of transaction for Verizon we simply add
-        // into database and do not change the exchange body
 
-        if (IConstant.BSCARRIER_SERVICE_KORE.equals(exchange.getProperty(
-                IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString())) {
-
-            exchange.getIn().setBody(list);
-        }
+        CommonUtil.setListInWireTap(exchange, list);
     }
 
     @Override
@@ -294,17 +276,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
         }
         mongoTemplate.insertAll(list);
-        // For Kore We Need Wire Tap and SEDA component So the body should
-        // be set with arraylist of transaction for Verizon we simply add
-        // into database and do not change the exchange body
-
-        if (!IConstant.BSCARRIER_SERVICE_VERIZON.equals(exchange.getProperty(
-                IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString()))
-        {
-        	
-
-            exchange.getIn().setBody(list);
-        }
+        
+        CommonUtil.setListInWireTap(exchange, list);
 
     }
 
@@ -382,15 +355,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
         }
         mongoTemplate.insertAll(list);
-        // For Kore We Need Wire Tap and SEDA component So the body should
-        // be set with arraylist of transaction for Verizon we simply add
-        // into database and do not change the exchange body
-
-        if (IConstant.BSCARRIER_SERVICE_KORE.equals(exchange.getProperty(
-                IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString())) {
-
-            exchange.getIn().setBody(list);
-        }
+        
+        CommonUtil.setListInWireTap(exchange, list);
 
     }
 
@@ -1057,15 +1023,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
         }
         mongoTemplate.insertAll(list);
-        // For Kore We Need Wire Tap and SEDA component So the body should
-        // be set with arraylist of transaction for Verizon we simply add
-        // into database and do not change the exchange body
-
-        if (IConstant.BSCARRIER_SERVICE_KORE.equals(exchange.getProperty(
-                IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString())) {
-
-            exchange.getIn().setBody(list);
-        }
+       
+        CommonUtil.setListInWireTap(exchange, list);
 
     }
 
@@ -1149,15 +1108,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
         }
         mongoTemplate.insertAll(list);
-        // For Kore We Need Wire Tap and SEDA component So the body should
-        // be set with arraylist of transaction for Verizon we simply add
-        // into database and do not change the exchange body
-
-        if (IConstant.BSCARRIER_SERVICE_KORE.equals(exchange.getProperty(
-                IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString())) {
-
-            exchange.getIn().setBody(list);
-        }
+        
+        CommonUtil.setListInWireTap(exchange, list);
     }
 
     @Override
@@ -1243,15 +1195,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
         }
         mongoTemplate.insertAll(list);
-        // For Kore We Need Wire Tap and SEDA component So the body should
-        // be set with arraylist of transaction for Verizon we simply add
-        // into database and do not change the exchange body
-
-        if (IConstant.BSCARRIER_SERVICE_KORE.equals(exchange.getProperty(
-                IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString())) {
-
-            exchange.getIn().setBody(list);
-        }
+        
+        CommonUtil.setListInWireTap(exchange, list);
 
     }
 
@@ -1333,15 +1278,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
         }
         mongoTemplate.insertAll(list);
-        // For Kore We Need Wire Tap and SEDA component So the body should
-        // be set with arraylist of transaction for Verizon we simply add
-        // into database and do not change the exchange body
-
-        if (IConstant.BSCARRIER_SERVICE_KORE.equals( exchange.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME)
-                .toString())) {
-
-            exchange.getIn().setBody(list);
-        }
+        
+        CommonUtil.setListInWireTap(exchange, list);
 
     }
 
@@ -1606,11 +1544,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		
 		LOGGER.info("Begin populateATTJasperTransactionalResponse");
 
-		LOGGER.info("soap object of class type..."
-				+ exchange.getIn().getBody().getClass() + " "
-				+ exchange.getIn().getBody().toString());
 
-		String soapPayload = CommonUtil.getSOAPResposneFromExchange(exchange);
+		String soapPayload = (String) exchange.getProperty(IConstant.ATTJASPER_SOAP_RESPONSE_PAYLOAD);
 
 		EditTerminalResponse editTerminalResponse = (EditTerminalResponse) exchange
 				.getIn().getBody(EditTerminalResponse.class);
@@ -1628,26 +1563,38 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 												.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
 
 		Update update = new Update();
+		
+		XMLGregorianCalendar effectiveDate=editTerminalResponse.getEffectiveDate();
 
 		try {
 			
-			if(editTerminalResponse.getEffectiveDate().toString()!=null)
+			
+			
+			if(effectiveDate!=null)
 			{
-			update.set(ITransaction.CALL_BACK_PAYLOAD, soapPayload);
-			update.set(ITransaction.LAST_TIME_STAMP_UPDATED, new Date());
-			update.set(ITransaction.CARRIER_STATUS,IConstant.CARRIER_TRANSACTION_STATUS_SUCCESS);
-			update.set(ITransaction.CALL_BACK_RECEIVED,true);	
+			
+			update.set(ITransaction.CARRIER_STATUS,IConstant.CARRIER_TRANSACTION_STATUS_PENDING);
+			
+			Date date=effectiveDate.toGregorianCalendar().getTime();
+			
+			LOGGER.info("ATTJasper effective Date into java util:::::"+ date);
+			
+			update.set(ITransaction.ATTJASPER_EFFECTIVE_DATE,date);
+			
 			
 			}
 			else
 			{
 		
-			update.set(ITransaction.CALL_BACK_PAYLOAD, soapPayload);
-			update.set(ITransaction.LAST_TIME_STAMP_UPDATED, new Date());
-			update.set(ITransaction.CARRIER_STATUS,IConstant.CARRIER_TRANSACTION_STATUS_PENDING);
-			update.set(ITransaction.CALL_BACK_RECEIVED,false);	
+			
+			update.set(ITransaction.CARRIER_STATUS,IConstant.CARRIER_TRANSACTION_STATUS_SUCCESS);
+			
 				
 			}
+			
+			update.set(ITransaction.CALL_BACK_PAYLOAD, soapPayload);
+			update.set(ITransaction.CALL_BACK_RECEIVED,true);	
+			update.set(ITransaction.LAST_TIME_STAMP_UPDATED, new Date());
 			
 			 mongoTemplate.updateMulti(searchQuery, update, Transaction.class);
 			 LOGGER.info("End populateATTJasperTransactionalResponse");
@@ -1664,8 +1611,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		LOGGER.info("Begin populateATTJasperTransactionalErrorResponse");
 
 		try {
-			String soapPayload = CommonUtil
-					.getSOAPErrorResposneFromExchange(exchange);
+			String soapPayload = (String) exchange.getProperty(IConstant.ATTJASPER_SOAP_FAULT_PAYLOAD);
 
 			Query searchQuery = new Query(
 					Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID)
@@ -1677,17 +1623,13 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 													.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
 
 			Update update = new Update();
-			update.set(ITransaction.CARRIER_ERROR_DESCRIPTION, exchange	.getProperty(IConstant.ATTJASPER_SOAP_FAULT_ERRORMESSAGE));
+			update.set(ITransaction.CARRIER_ERROR_DESCRIPTION, exchange.getProperty(IConstant.ATTJASPER_SOAP_FAULT_ERRORMESSAGE).toString());
 			update.set(ITransaction.CALL_BACK_PAYLOAD, soapPayload);
-			update.set(ITransaction.MIDWAY_STATUS,IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
+			
 			update.set(ITransaction.CARRIER_STATUS,	IConstant.CARRIER_TRANSACTION_STATUS_ERROR);
 			update.set(ITransaction.LAST_TIME_STAMP_UPDATED, new Date());
 			update.set(ITransaction.CALL_BACK_RECEIVED, false);
 			
-
-			exchange.getIn().setBody(SoapFault.class);
-	        
-
 			mongoTemplate.updateMulti(searchQuery, update, Transaction.class);
 		} catch (Exception ex) {
 			LOGGER.error("Error in populateATTJasperTransactionalErrorResponse"
