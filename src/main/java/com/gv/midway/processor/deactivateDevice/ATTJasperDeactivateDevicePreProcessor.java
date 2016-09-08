@@ -3,9 +3,11 @@ package com.gv.midway.processor.deactivateDevice;
 import java.util.Date;
 import java.util.List;
 
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
-import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.camel.component.cxf.common.message.CxfConstants;
 import org.apache.cxf.binding.soap.SoapHeader;
@@ -40,7 +42,6 @@ public class ATTJasperDeactivateDevicePreProcessor implements Processor {
 
 		LOGGER.info("Begin:ATTJasperDeactivateDevicePreProcessor");
 
-		Message message = exchange.getIn();
 		Transaction transaction = exchange.getIn().getBody(Transaction.class);
 
 		DeactivateDeviceRequest deactivateDeviceRequest = (DeactivateDeviceRequest) transaction
@@ -56,8 +57,6 @@ public class ATTJasperDeactivateDevicePreProcessor implements Processor {
 		String effectiveDate = deactivateDeviceRequest.getDataArea()
 				.getEffectiveDate();
 
-		LOGGER.info("deviceId::" + deviceId);
-
 		EditTerminalRequest getEditTerminalRequest = new EditTerminalRequest();
 
 		String version = newEnv.getProperty("attJapser.version");
@@ -66,7 +65,13 @@ public class ATTJasperDeactivateDevicePreProcessor implements Processor {
 
 		getEditTerminalRequest.setChangeType(IConstant.ATTJASPER_CHANGETYPE);
 		getEditTerminalRequest.setTargetValue(IConstant.ATTJASPER_DEACTIVATED);
-		// getEditTerminalRequest.setEffectiveDate(effectiveDate.);
+		if (effectiveDate != null) {
+			XMLGregorianCalendar xgc = DatatypeFactory.newInstance()
+					.newXMLGregorianCalendar(effectiveDate);
+			LOGGER.info("effectiveDate::::::" + xgc);
+			getEditTerminalRequest.setEffectiveDate(xgc);
+		}
+
 		getEditTerminalRequest.setIccid(deviceId);
 
 		getEditTerminalRequest.setLicenseKey(licenseKey);
