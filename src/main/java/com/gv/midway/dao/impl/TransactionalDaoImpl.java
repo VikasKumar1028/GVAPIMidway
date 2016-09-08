@@ -539,7 +539,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
         if (CommonUtil.isProvisioningMethod(exchange.getFromEndpoint()
                 .toString())) {
             Query searchQuery;
-            if (IConstant.BSCARRIER_SERVICE_KORE.equals(exchange
+            if (!IConstant.BSCARRIER_SERVICE_VERIZON.equals(exchange
                     .getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME))) {
                 searchQuery = new Query(
                         Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID)
@@ -568,8 +568,10 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 mongoTemplate.updateFirst(searchQuery, update,
                         Transaction.class);
 
-            } else if (IConstant.BSCARRIER_SERVICE_VERIZON.equals(exchange
-                    .getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME))) {
+            } 
+            
+            else  
+            {
 
                 searchQuery = new Query(Criteria.where(
                         ITransaction.MIDWAY_TRANSACTION_ID).is(
@@ -591,30 +593,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                         Transaction.class);
 
             }
-            else if (IConstant.BSCARRIER_SERVICE_ATTJASPER.equals(exchange
-                    .getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME))) {
-
-                searchQuery = new Query(Criteria.where(
-                        ITransaction.MIDWAY_TRANSACTION_ID).is(
-                        exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)));
-
-                Update update = new Update();
-
-                update.set(ITransaction.MIDWAY_STATUS,
-                        IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
-                update.set(ITransaction.CALL_BACK_PAYLOAD,
-                        IConstant.MIDWAY_CONNECTION_ERROR);
-                update.set(ITransaction.CARRIER_ERROR_DESCRIPTION,
-                        IConstant.MIDWAY_CONNECTION_ERROR);
-                update.set(ITransaction.CARRIER_STATUS,
-                        IConstant.CARRIER_TRANSACTION_STATUS_ERROR);
-
-                update.set(ITransaction.LAST_TIME_STAMP_UPDATED, new Date());
-                mongoTemplate.updateMulti(searchQuery, update,
-                        Transaction.class);
-
-
-        }
+           
         }
         exchange.setProperty(IConstant.RESPONSE_DESCRIPTION,
                 IResponse.ERROR_DESCRIPTION_CONNECTION_MIDWAYDB);

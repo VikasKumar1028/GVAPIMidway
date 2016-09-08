@@ -84,12 +84,14 @@ public class CommonUtil {
         endPointList.add(IEndPoints.RESTORE_SEDA_KORE_ENDPOINT);
         endPointList.add(IEndPoints.SUSPENSION_SEDA_KORE_ENDPOINT);
         endPointList.add(IEndPoints.REACTIVATION_SEDA_KORE_ENDPOINT);
+        
+        endPointList.add(IEndPoints.DEACTIVATION_SEDA_ATTJASPER_ENDPOINT);
 
         endPointList.add(IEndPoints.CHANGE_CUSTOMFIELD_ENDPOINT);
         endPointList.add(IEndPoints.CHANGE_SERVICEPLAN_ENDPOINT);
         endPointList.add(IEndPoints.CHANGE_SERVICEPLAN_SEDA_KORE_ENDPOINT);
-        endPointList.add(IEndPoints.CHANGE_CUSTOMFIELD_SEDA_KORE_ENDPOINT);
-        endPointList.add(IEndPoints.DEACTIVATION_SEDA_ATTJASPER_ENDPOINT);
+        endPointList.add(IEndPoints.CHANGE_CUSTOMFIELD_SEDA_KORE_ENDPOINT); 
+       
     }
 
     /**
