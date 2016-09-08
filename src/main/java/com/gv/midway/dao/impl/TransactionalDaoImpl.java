@@ -298,8 +298,10 @@ public class TransactionalDaoImpl implements ITransactionalDao {
         // be set with arraylist of transaction for Verizon we simply add
         // into database and do not change the exchange body
 
-        if (IConstant.BSCARRIER_SERVICE_KORE.equals(exchange.getProperty(
-                IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString())) {
+        if (!IConstant.BSCARRIER_SERVICE_VERIZON.equals(exchange.getProperty(
+                IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString()))
+        {
+        	
 
             exchange.getIn().setBody(list);
         }
@@ -1602,36 +1604,53 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		// TODO Auto-generated method stub
 		
 		
-		  LOGGER.info("Begin populateATTJasperTransactionalResponse");
+		LOGGER.info("Begin populateATTJasperTransactionalResponse");
 
-		  LOGGER.info("soap object of class type..."+exchange.getIn().getBody().getClass()+" "+exchange.getIn().getBody().toString());
-		  
-		 String soapPayload = CommonUtil.getSOAPResposneFromExchange(exchange);
-					 
-		Query searchQuery = new Query(Criteria.where(
-				ITransaction.MIDWAY_TRANSACTION_ID).is(
-				exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)));
+		LOGGER.info("soap object of class type..."
+				+ exchange.getIn().getBody().getClass() + " "
+				+ exchange.getIn().getBody().toString());
+
+		String soapPayload = CommonUtil.getSOAPResposneFromExchange(exchange);
+
+		EditTerminalResponse editTerminalResponse = (EditTerminalResponse) exchange
+				.getIn().getBody(EditTerminalResponse.class);
+
+		LOGGER.info("editTerminalResponse:::::"
+				+ editTerminalResponse.getEffectiveDate());
+
+		Query searchQuery = new Query(
+				Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID)
+						.is(exchange
+								.getProperty(IConstant.MIDWAY_TRANSACTION_ID))
+						.andOperator(
+								Criteria.where(ITransaction.DEVICE_NUMBER)
+										.is(exchange
+												.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
 
 		Update update = new Update();
 
 		try {
 			
-			
+			if(editTerminalResponse.getEffectiveDate().toString()!=null)
+			{
 			update.set(ITransaction.CALL_BACK_PAYLOAD, soapPayload);
 			update.set(ITransaction.LAST_TIME_STAMP_UPDATED, new Date());
-
-			update.set(ITransaction.CARRIER_STATUS,
-					IConstant.CARRIER_TRANSACTION_STATUS_SUCCESS);
-			update.set(ITransaction.CARRIER_STATUS,
-					IConstant.CARRIER_TRANSACTION_STATUS_SUCCESS);
-			update.set(ITransaction.CALL_BACK_RECEIVED,
-					IConstant.ATTJASPER_SUCCESS_CALLBACKRECEIVED);
+			update.set(ITransaction.CARRIER_STATUS,IConstant.CARRIER_TRANSACTION_STATUS_SUCCESS);
+			update.set(ITransaction.CALL_BACK_RECEIVED,true);	
 			
+			}
+			else
+			{
 		
+			update.set(ITransaction.CALL_BACK_PAYLOAD, soapPayload);
+			update.set(ITransaction.LAST_TIME_STAMP_UPDATED, new Date());
+			update.set(ITransaction.CARRIER_STATUS,IConstant.CARRIER_TRANSACTION_STATUS_PENDING);
+			update.set(ITransaction.CALL_BACK_RECEIVED,false);	
+				
+			}
 			
 			 mongoTemplate.updateMulti(searchQuery, update, Transaction.class);
-			
-			  LOGGER.info("End populateATTJasperTransactionalResponse");
+			 LOGGER.info("End populateATTJasperTransactionalResponse");
 
 		} catch (Exception ex) {
 			LOGGER.error("Error in populateATTJasperTransactionalResponse" + ex);
@@ -1648,18 +1667,27 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 			String soapPayload = CommonUtil
 					.getSOAPErrorResposneFromExchange(exchange);
 
-			Query searchQuery = new Query(Criteria.where(
-					ITransaction.MIDWAY_TRANSACTION_ID).is(
-					exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)));
+			Query searchQuery = new Query(
+					Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID)
+							.is(exchange
+									.getProperty(IConstant.MIDWAY_TRANSACTION_ID))
+							.andOperator(
+									Criteria.where(ITransaction.DEVICE_NUMBER)
+											.is(exchange
+													.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
 
 			Update update = new Update();
 			update.set(ITransaction.CARRIER_ERROR_DESCRIPTION, exchange	.getProperty(IConstant.ATTJASPER_SOAP_FAULT_ERRORMESSAGE));
 			update.set(ITransaction.CALL_BACK_PAYLOAD, soapPayload);
-			update.set(ITransaction.MIDWAY_STATUS,IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
-			update.set(ITransaction.CARRIER_STATUS,IConstant.CARRIER_TRANSACTION_STATUS_ERROR);
+			update.set(ITransaction.MIDWAY_STATUS,IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
+			update.set(ITransaction.CARRIER_STATUS,	IConstant.CARRIER_TRANSACTION_STATUS_ERROR);
 			update.set(ITransaction.LAST_TIME_STAMP_UPDATED, new Date());
-			update.set(ITransaction.CALL_BACK_RECEIVED,IConstant.ATTJASPER_SOAP_FAULT_ERRORMESSAGE);
+			update.set(ITransaction.CALL_BACK_RECEIVED, false);
 			
+
+			exchange.getIn().setBody(SoapFault.class);
+	        
+
 			mongoTemplate.updateMulti(searchQuery, update, Transaction.class);
 		} catch (Exception ex) {
 			LOGGER.error("Error in populateATTJasperTransactionalErrorResponse"

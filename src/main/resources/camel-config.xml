@@ -40,7 +40,9 @@
 	<bean id="camelRoutes" class="com.gv.midway.router.CamelRoute" />
 
 	<bean id="koreDeviceServiceRouter" class="com.gv.midway.router.KoreDeviceServiceRouter" />
-
+	
+	<bean id="aTTJasperDeviceServiceRouter" class="com.gv.midway.router.ATTJasperDeviceServiceRouter" />
+	
 	<bean id="deviceSplitter" class="com.gv.midway.splitter.DeviceSplitter" />
 
 	<bean id="checkStatusSplitter" class="com.gv.midway.splitter.CheckStatusSplitter" />

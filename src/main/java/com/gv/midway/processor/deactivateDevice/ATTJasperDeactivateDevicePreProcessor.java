@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
 
 import com.gv.midway.attjasper.EditTerminalRequest;
+import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
 import com.gv.midway.pojo.transaction.Transaction;
 import com.gv.midway.utility.CommonUtil;
@@ -42,8 +43,10 @@ public class ATTJasperDeactivateDevicePreProcessor implements Processor {
 		Message message = exchange.getIn();
 		Transaction transaction = exchange.getIn().getBody(Transaction.class);
 
-		DeactivateDeviceRequest deactivateDeviceRequest = exchange.getIn()
-				.getBody(DeactivateDeviceRequest.class);
+		DeactivateDeviceRequest deactivateDeviceRequest = (DeactivateDeviceRequest) transaction
+				.getDevicePayload();
+		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,
+				transaction.getDeviceNumber());
 
 		String deviceId = deactivateDeviceRequest.getDataArea().getDevices()[0]
 				.getDeviceIds()[0].getId();
@@ -57,15 +60,12 @@ public class ATTJasperDeactivateDevicePreProcessor implements Processor {
 
 		EditTerminalRequest getEditTerminalRequest = new EditTerminalRequest();
 
-		String targetValue = newEnv
-				.getProperty("attJapser.targetValue.Deactivated");
 		String version = newEnv.getProperty("attJapser.version");
 
 		String licenseKey = newEnv.getProperty("attJapser.licenseKey");
 
-		getEditTerminalRequest.setChangeType(3);
-		getEditTerminalRequest.setTargetValue(targetValue);
-
+		getEditTerminalRequest.setChangeType(IConstant.ATTJASPER_CHANGETYPE);
+		getEditTerminalRequest.setTargetValue(IConstant.ATTJASPER_DEACTIVATED);
 		// getEditTerminalRequest.setEffectiveDate(effectiveDate.);
 		getEditTerminalRequest.setIccid(deviceId);
 
