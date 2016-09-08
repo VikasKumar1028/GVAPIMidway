@@ -27,5 +27,8 @@ public interface IEndPoints {
     public final String CHANGE_SERVICEPLAN_SEDA_KORE_ENDPOINT = "koreSedachangeDeviceServicePlans";
 
     public final String CHANGE_CUSTOMFIELD_SEDA_KORE_ENDPOINT = "koreSedacustomeFields";
+    
+    public final String DEACTIVATION_SEDA_ATTJASPER_ENDPOINT = "attJasperSedaDeactivation";
 
+   
 }
