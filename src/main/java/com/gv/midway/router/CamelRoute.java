@@ -4,6 +4,7 @@ import java.net.ConnectException;
 import java.net.NoRouteToHostException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangeTimedOutException;
 import org.apache.camel.LoggingLevel;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+
 import com.gv.midway.constant.CarrierType;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.JobName;
@@ -32,6 +34,7 @@ import com.gv.midway.pojo.token.VerizonAuthorizationResponse;
 import com.gv.midway.pojo.token.VerizonSessionLoginResponse;
 import com.gv.midway.processor.ATTJasperGenericExceptionProcessor;
 import com.gv.midway.processor.BulkDeviceProcessor;
+import com.gv.midway.processor.CarrierProvisioningDevicePostProcessor;
 import com.gv.midway.processor.ChangeDeviceServicePlanValidatorProcessor;
 import com.gv.midway.processor.DateValidationProcessor;
 import com.gv.midway.processor.GenericErrorProcessor;
@@ -43,21 +46,19 @@ import com.gv.midway.processor.NetSuiteIdValidationProcessor;
 import com.gv.midway.processor.TimeOutErrorProcessor;
 import com.gv.midway.processor.VerizonBatchExceptionProcessor;
 import com.gv.midway.processor.VerizonGenericExceptionProcessor;
-import com.gv.midway.processor.activateDevice.KoreActivateDevicePostProcessor;
+import com.gv.midway.processor.activateDevice.ATTJasperActivateDevicePreProcessor;
 import com.gv.midway.processor.activateDevice.KoreActivateDevicePreProcessor;
+import com.gv.midway.processor.activateDevice.StubATTJasperActivateDeviceProcessor;
 import com.gv.midway.processor.activateDevice.StubKoreActivateDeviceProcessor;
 import com.gv.midway.processor.activateDevice.StubVerizonActivateDeviceProcessor;
-import com.gv.midway.processor.activateDevice.VerizonActivateDevicePostProcessor;
 import com.gv.midway.processor.activateDevice.VerizonActivateDevicePreProcessor;
 import com.gv.midway.processor.callbacks.CallbackPostProcessor;
 import com.gv.midway.processor.callbacks.CallbackPreProcessor;
 import com.gv.midway.processor.cell.StubCellBulkUploadProcessor;
 import com.gv.midway.processor.cell.StubCellUploadProcessor;
-import com.gv.midway.processor.changeDeviceServicePlans.KoreChangeDeviceServicePlansPostProcessor;
 import com.gv.midway.processor.changeDeviceServicePlans.KoreChangeDeviceServicePlansPreProcessor;
 import com.gv.midway.processor.changeDeviceServicePlans.StubKoreChangeDeviceServicePlansProcessor;
 import com.gv.midway.processor.changeDeviceServicePlans.StubVerizonChangeDeviceServicePlansProcessor;
-import com.gv.midway.processor.changeDeviceServicePlans.VerizonChangeDeviceServicePlansPostProcessor;
 import com.gv.midway.processor.changeDeviceServicePlans.VerizonChangeDeviceServicePlansPreProcessor;
 import com.gv.midway.processor.checkstatus.KoreCheckStatusErrorProcessor;
 import com.gv.midway.processor.checkstatus.KoreCheckStatusPostProcessor;
@@ -67,20 +68,15 @@ import com.gv.midway.processor.connectionInformation.deviceConnectionStatus.Stub
 import com.gv.midway.processor.connectionInformation.deviceConnectionStatus.VerizonDeviceConnectionStatusPostProcessor;
 import com.gv.midway.processor.connectionInformation.deviceSessionBeginEndInfo.StubVerizonDeviceSessionBeginEndInfoProcessor;
 import com.gv.midway.processor.connectionInformation.deviceSessionBeginEndInfo.VerizonDeviceSessionBeginEndInfoPostProcessor;
-import com.gv.midway.processor.customFieldsDevice.KoreCustomFieldsPostProcessor;
 import com.gv.midway.processor.customFieldsDevice.KoreCustomFieldsPreProcessor;
 import com.gv.midway.processor.customFieldsDevice.StubKoreCustomFieldsProcessor;
 import com.gv.midway.processor.customFieldsDevice.StubVerizonCustomFieldsProcessor;
-import com.gv.midway.processor.customFieldsDevice.VerizonCustomFieldsPostProcessor;
 import com.gv.midway.processor.customFieldsDevice.VerizonCustomFieldsPreProcessor;
-import com.gv.midway.processor.deactivateDevice.ATTJasperDeactivateDevicePostProcessor;
 import com.gv.midway.processor.deactivateDevice.ATTJasperDeactivateDevicePreProcessor;
-import com.gv.midway.processor.deactivateDevice.KoreDeactivateDevicePostProcessor;
 import com.gv.midway.processor.deactivateDevice.KoreDeactivateDevicePreProcessor;
 import com.gv.midway.processor.deactivateDevice.StubATTJasperDeactivateDeviceProcessor;
 import com.gv.midway.processor.deactivateDevice.StubKoreDeactivateDeviceProcessor;
 import com.gv.midway.processor.deactivateDevice.StubVerizonDeactivateDeviceProcessor;
-import com.gv.midway.processor.deactivateDevice.VerizonDeactivateDevicePostProcessor;
 import com.gv.midway.processor.deactivateDevice.VerizonDeactivateDevicePreProcessor;
 import com.gv.midway.processor.deviceInformation.ATTJasperDeviceInformationPostProcessor;
 import com.gv.midway.processor.deviceInformation.ATTJasperDeviceInformationPreProcessor;
@@ -101,20 +97,15 @@ import com.gv.midway.processor.jobScheduler.VerizonDeviceUsageHistoryPreProcesso
 import com.gv.midway.processor.jobScheduler.VerizonTransactionFailureDeviceConnectionHistoryPreProcessor;
 import com.gv.midway.processor.jobScheduler.VerizonTransactionFailureDeviceUsageHistoryPreProcessor;
 import com.gv.midway.processor.kafka.KafkaProcessor;
-import com.gv.midway.processor.reactivate.KoreReactivateDevicePostProcessor;
 import com.gv.midway.processor.reactivate.KoreReactivateDevicePreProcessor;
 import com.gv.midway.processor.reactivate.StubKoreReactivateDeviceProcessor;
-import com.gv.midway.processor.restoreDevice.KoreRestoreDevicePostProcessor;
 import com.gv.midway.processor.restoreDevice.KoreRestoreDevicePreProcessor;
 import com.gv.midway.processor.restoreDevice.StubKoreRestoreDeviceProcessor;
 import com.gv.midway.processor.restoreDevice.StubVerizonRestoreDeviceProcessor;
-import com.gv.midway.processor.restoreDevice.VerizonRestoreDevicePostProcessor;
 import com.gv.midway.processor.restoreDevice.VerizonRestoreDevicePreProcessor;
-import com.gv.midway.processor.suspendDevice.KoreSuspendDevicePostProcessor;
 import com.gv.midway.processor.suspendDevice.KoreSuspendDevicePreProcessor;
 import com.gv.midway.processor.suspendDevice.StubKoreSuspendDeviceProcessor;
 import com.gv.midway.processor.suspendDevice.StubVerizonSuspendDeviceProcessor;
-import com.gv.midway.processor.suspendDevice.VerizonSuspendDevicePostProcessor;
 import com.gv.midway.processor.suspendDevice.VerizonSuspendDevicePreProcessor;
 import com.gv.midway.processor.token.TokenProcessor;
 import com.gv.midway.processor.token.VerizonAuthorizationTokenProcessor;
@@ -313,15 +304,25 @@ public class CamelRoute extends RouteBuilder {
 
         from("direct:activateDevice").process(new HeaderProcessor()).choice()
                 .when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
+                
                 .choice().when(header("derivedCarrierName").isEqualTo("KORE"))
                 .log("message" + header("derivedSourceName"))
                 .process(new StubKoreActivateDeviceProcessor()).to("log:input")
+                
                 .when(header("derivedCarrierName").isEqualTo("VERIZON"))
                 .process(new StubVerizonActivateDeviceProcessor())
-                .to("log:input").endChoice().otherwise().choice()
+                .to("log:input").
+                
+                 when(header("derivedCarrierName").isEqualTo("ATTJasper"))
+                .process(new StubATTJasperActivateDeviceProcessor())
+                .to("log:input").
+                 endChoice().
+                 
+                 otherwise().choice()
+                 
                 .when(header("derivedCarrierName").isEqualTo("KORE"))
                 .wireTap("direct:processActivateKoreTransaction")
-                .process(new KoreActivateDevicePostProcessor(env))
+                .process(new CarrierProvisioningDevicePostProcessor(env))
                 .endChoice().
                 
                 when(header("derivedCarrierName").isEqualTo("VERIZON"))
@@ -329,8 +330,14 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iTransactionalService, "populateActivateDBPayload")
                 // will store only one time in Audit even on connection failure
                 .bean(iAuditService, "auditExternalRequestCall")
-                .to("direct:VerizonActivationFlow1").endChoice().end()
-                .to("log:input").endChoice().end();
+                .to("direct:VerizonActivationFlow1").endChoice().
+                
+                 when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
+				.wireTap("direct:processActivateATTJasperTransaction")
+				.process(new CarrierProvisioningDevicePostProcessor(env))
+				.endChoice().end().to("log:input").endChoice().end();
+                
+              
 
         // Verizon Flow-1
         from("direct:VerizonActivationFlow1")
@@ -357,7 +364,7 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iTransactionalService,
                         "populateVerizonTransactionalResponse")
                 .bean(iAuditService, "auditExternalResponseCall")
-                .process(new VerizonActivateDevicePostProcessor(env));
+                .process(new CarrierProvisioningDevicePostProcessor(env));
 
         // Kore Flow-1
         from("direct:processActivateKoreTransaction")
@@ -382,6 +389,27 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iTransactionalService,
                         "populateKoreTransactionalResponse")
                 .bean(iAuditService, "auditExternalResponseCall");
+        
+        
+     // ATTJasper Flow-1
+        from("direct:processActivateATTJasperTransaction")
+                .log("Wire Tap Thread activation")
+                .bean(iTransactionalService, "populateActivateDBPayload")
+                .split().method("deviceSplitter").recipientList()
+                .method("attJasperDeviceServiceRouter");
+
+        // ATTJASPER SEDA FLOW
+        from("seda:attJasperSedaActivation?concurrentConsumers=5")
+                .onException(SoapFault.class)
+                .handled(true)
+                .bean(iAuditService, "auditExternalSOAPExceptionResponseCall")
+                .bean(iTransactionalService, "populateATTJasperTransactionalErrorResponse")
+                .end()
+                .process(new ATTJasperActivateDevicePreProcessor(env))
+                .bean(iAuditService, "auditExternalRequestCall")
+                .to(attJasperTerminalEndPoint)
+                .bean(iAuditService, "auditExternalSOAPResponseCall")
+                .bean(iTransactionalService, "populateATTJasperTransactionalResponse");
 
         // End:Activate Devices
     }
@@ -412,12 +440,12 @@ public class CamelRoute extends RouteBuilder {
 					
 					.when(header("derivedCarrierName").isEqualTo("KORE"))
 					.wireTap("direct:processDeactivateKoreTransaction")
-					.process(new KoreDeactivateDevicePostProcessor(env))
+					.process(new CarrierProvisioningDevicePostProcessor(env))
 					.endChoice().
 					              
 					 when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
 					 .wireTap("direct:processDeactivateATTJasperTansaction")
-					 .process(new ATTJasperDeactivateDevicePostProcessor(env))
+					 .process(new CarrierProvisioningDevicePostProcessor(env))
 					.endChoice()	 
 					      
 					.when(header("derivedCarrierName").isEqualTo("VERIZON"))
@@ -457,7 +485,7 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iTransactionalService,
                         "populateVerizonTransactionalResponse")
                 .bean(iAuditService, "auditExternalResponseCall")
-                .process(new VerizonDeactivateDevicePostProcessor(env));
+                .process(new CarrierProvisioningDevicePostProcessor(env));
 
         // Kore Flow-1
 
@@ -534,7 +562,7 @@ public class CamelRoute extends RouteBuilder {
                 .to("log:input").endChoice().otherwise().choice()
                 .when(header("derivedCarrierName").isEqualTo("KORE"))
                 .wireTap("direct:processRestoreKoreTransaction")
-                .process(new KoreRestoreDevicePostProcessor(env))
+                .process(new CarrierProvisioningDevicePostProcessor(env))
                 .endChoice()
                 .when(header("derivedCarrierName").isEqualTo("VERIZON"))
                 .bean(iSessionService, "setContextTokenInExchange")
@@ -571,7 +599,7 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iTransactionalService,
                         "populateVerizonTransactionalResponse")
                 .bean(iAuditService, "auditExternalResponseCall")
-                .process(new VerizonRestoreDevicePostProcessor(env));
+                .process(new CarrierProvisioningDevicePostProcessor(env));
 
         // Kore Flow-1
 
@@ -619,7 +647,7 @@ public class CamelRoute extends RouteBuilder {
                 .to("log:input").endChoice().otherwise().choice()
                 .when(header("derivedCarrierName").isEqualTo("KORE"))
                 .wireTap("direct:processSuspendKoreTransaction")
-                .process(new KoreSuspendDevicePostProcessor(env))
+                .process(new CarrierProvisioningDevicePostProcessor(env))
 
                 .endChoice()
                 .when(header("derivedCarrierName").isEqualTo("VERIZON"))
@@ -660,7 +688,7 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iTransactionalService,
                         "populateVerizonTransactionalResponse")
                 .bean(iAuditService, "auditExternalResponseCall")
-                .process(new VerizonSuspendDevicePostProcessor(env));
+                .process(new CarrierProvisioningDevicePostProcessor(env));
 
         // Kore Flow-1
 
@@ -686,8 +714,7 @@ public class CamelRoute extends RouteBuilder {
                 .json(JsonLibrary.Jackson, KoreProvisoningResponse.class)
                 .bean(iAuditService, "auditExternalResponseCall")
                 .bean(iTransactionalService,
-                        "populateKoreTransactionalResponse")
-                .process(new KoreSuspendDevicePostProcessor());
+                        "populateKoreTransactionalResponse");
 
         // End:Suspend Devices
 
@@ -708,7 +735,7 @@ public class CamelRoute extends RouteBuilder {
                 .to("log:input").endChoice().otherwise().choice()
                 .when(header("derivedCarrierName").isEqualTo("KORE"))
                 .wireTap("direct:processReactivateKoreTransaction")
-                .process(new KoreReactivateDevicePostProcessor(env))
+                .process(new CarrierProvisioningDevicePostProcessor(env))
                 .endChoice().end().to("log:input").endChoice().end();
 
         // Kore Flow-1
@@ -758,7 +785,7 @@ public class CamelRoute extends RouteBuilder {
 
                 .when(header("derivedCarrierName").isEqualTo("KORE"))
                 .wireTap("direct:processcustomeFieldsKoreTransaction")
-                .process(new KoreCustomFieldsPostProcessor(env))
+                .process(new CarrierProvisioningDevicePostProcessor(env))
 
                 .endChoice()
 
@@ -792,7 +819,7 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iTransactionalService,
                         "populateVerizonTransactionalResponse")
                 .bean(iAuditService, "auditExternalResponseCall")
-                .process(new VerizonCustomFieldsPostProcessor(env));
+                .process(new CarrierProvisioningDevicePostProcessor(env));
 
         // Kore Flow-1
 
@@ -853,7 +880,7 @@ public class CamelRoute extends RouteBuilder {
                 .when(header("derivedCarrierName").isEqualTo("KORE"))
                 .wireTap(
                         "direct:processchangeDeviceServicePlansKoreTransaction")
-                .process(new KoreChangeDeviceServicePlansPostProcessor(env))
+                .process(new CarrierProvisioningDevicePostProcessor(env))
                 .endChoice()
 
                 .when(header("derivedCarrierName").isEqualTo("VERIZON"))
@@ -889,7 +916,7 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iTransactionalService,
                         "populateVerizonTransactionalResponse")
                 .bean(iAuditService, "auditExternalResponseCall")
-                .process(new VerizonChangeDeviceServicePlansPostProcessor(env));
+                .process(new CarrierProvisioningDevicePostProcessor(env));
 
         // Kore Flow-1
 

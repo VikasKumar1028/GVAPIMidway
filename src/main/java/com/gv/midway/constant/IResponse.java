@@ -15,6 +15,8 @@ public class IResponse {
 
     public static final String SUCCESS_DESCRIPTION_UPDATE_MIDWAYDB = "Record succesfully uploaded in Midway";
     public static final String SUCCESS_DESCRIPTION_DEVCIEINFO_MIDWAYDB = "Data Succesfully Found from Midway";
+    
+    public static final String SUCCESS_DESCRIPTION_PROVISIONING_MIDWAY = "Data Submitted Successfully";
 
     public static final String SUCCESS_DESCRIPTION_ACTIVATE_MIDWAY = "Data Submitted Successfully";
 
