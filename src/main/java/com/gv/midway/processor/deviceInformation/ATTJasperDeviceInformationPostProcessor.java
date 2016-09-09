@@ -82,6 +82,7 @@ public class ATTJasperDeviceInformationPostProcessor implements Processor {
 		  
 		    deviceInformation.setAccountName(String.valueOf( terminalType.get(0).getAccountId()));
 		    deviceInformation.setState(terminalType.get(0).getStatus());
+		    deviceInformation.setCurrentServicePlan(terminalType.get(0).getRatePlan());
 		   
 		    deviceInformation.setDateActivated(terminalType.get(0).getDateActivated().toString());
 		    deviceInformation.setCreatedAt(terminalType.get(0).getDateAdded().toString());
