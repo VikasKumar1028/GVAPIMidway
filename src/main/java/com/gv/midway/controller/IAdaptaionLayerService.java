@@ -8,6 +8,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
+import com.gv.midway.pojo.CarrierProvisioningDeviceResponse;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
 import com.gv.midway.pojo.callback.request.CallBackVerizonRequest;
@@ -113,7 +114,7 @@ public interface IAdaptaionLayerService {
     @Produces("application/json")
     @Consumes("application/json")
     @ApiOperation(value = "DeactivateDeviceService")
-    DeactivateDeviceResponse deactivateDevice(
+    CarrierProvisioningDeviceResponse deactivateDevice(
             DeactivateDeviceRequest deactivateDeviceRequest);
 
     @POST
@@ -121,7 +122,7 @@ public interface IAdaptaionLayerService {
     @Produces("application/json")
     @Consumes("application/json")
     @ApiOperation(value = "ActivateDeviceService")
-    ActivateDeviceResponse activateDevice(
+    CarrierProvisioningDeviceResponse activateDevice(
             ActivateDeviceRequest activateDeviceRequest);
 
     @POST
@@ -129,7 +130,7 @@ public interface IAdaptaionLayerService {
     @Produces("application/json")
     @Consumes("application/json")
     @ApiOperation(value = "ReactivateDeviceService")
-    ReactivateDeviceResponse reactivateDevice(
+    CarrierProvisioningDeviceResponse reactivateDevice(
             ReactivateDeviceRequest reActivateDeviceRequest);
 
     @POST
@@ -137,7 +138,7 @@ public interface IAdaptaionLayerService {
     @Produces("application/json")
     @Consumes("application/json")
     @ApiOperation(value = "SuspendDeviceService")
-    SuspendDeviceResponse suspendDevice(
+    CarrierProvisioningDeviceResponse suspendDevice(
             SuspendDeviceRequest suspendDeviceRequest);
 
     @POST
@@ -145,7 +146,7 @@ public interface IAdaptaionLayerService {
     @Produces("application/json")
     @Consumes("application/json")
     @ApiOperation(value = "CustomFieldsUpdateService")
-    CustomFieldsDeviceResponse customFieldsUpdateRequest(
+    CarrierProvisioningDeviceResponse customFieldsUpdateRequest(
             CustomFieldsDeviceRequest customeFieldDeviceRequest);
 
     @POST
@@ -153,7 +154,7 @@ public interface IAdaptaionLayerService {
     @Produces("application/json")
     @Consumes("application/json")
     @ApiOperation(value = "ChangeDeviceServicePlans")
-    ChangeDeviceServicePlansResponse changeDeviceServicePlans(
+    CarrierProvisioningDeviceResponse changeDeviceServicePlans(
             ChangeDeviceServicePlansRequest changeDeviceServicePlansRequest);
 
     @POST
@@ -196,7 +197,7 @@ public interface IAdaptaionLayerService {
     @Produces("application/json")
     @Consumes("application/json")
     @ApiOperation(value = "RestoreDeviceService")
-    RestoreDeviceResponse restoreDevice(
+    CarrierProvisioningDeviceResponse restoreDevice(
             RestoreDeviceRequest restoreDeviceRequest);
 
     @GET

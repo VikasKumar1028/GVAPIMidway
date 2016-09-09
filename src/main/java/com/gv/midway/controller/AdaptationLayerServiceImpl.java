@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import com.gv.midway.constant.CarrierType;
 import com.gv.midway.constant.JobName;
 import com.gv.midway.constant.JobType;
+import com.gv.midway.pojo.CarrierProvisioningDeviceResponse;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
@@ -144,37 +145,37 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
         return response;
     }
 
-    public DeactivateDeviceResponse deactivateDevice(
+    public CarrierProvisioningDeviceResponse deactivateDevice(
             DeactivateDeviceRequest deactivateDeviceRequest) {
 
-        return (DeactivateDeviceResponse) producer.requestBody(
+        return (CarrierProvisioningDeviceResponse) producer.requestBody(
                 "direct:deactivateDevice", deactivateDeviceRequest);
     }
 
-    public ActivateDeviceResponse activateDevice(
+    public CarrierProvisioningDeviceResponse activateDevice(
             ActivateDeviceRequest activateDeviceRequest) {
 
-        return (ActivateDeviceResponse) producer.requestBody(
+        return (CarrierProvisioningDeviceResponse) producer.requestBody(
                 "direct:activateDevice", activateDeviceRequest);
     }
 
-    public ReactivateDeviceResponse reactivateDevice(
+    public CarrierProvisioningDeviceResponse reactivateDevice(
             ReactivateDeviceRequest reActivateDeviceRequest) {
-        return (ReactivateDeviceResponse) producer.requestBody(
+        return (CarrierProvisioningDeviceResponse) producer.requestBody(
                 "direct:reactivateDevice", reActivateDeviceRequest);
     }
 
-    public SuspendDeviceResponse suspendDevice(
+    public CarrierProvisioningDeviceResponse suspendDevice(
             SuspendDeviceRequest suspendDeviceRequest) {
 
-        return (SuspendDeviceResponse) producer.requestBody(
+        return (CarrierProvisioningDeviceResponse) producer.requestBody(
                 "direct:suspendDevice", suspendDeviceRequest);
     }
 
-    public CustomFieldsDeviceResponse customFieldsUpdateRequest(
+    public CarrierProvisioningDeviceResponse customFieldsUpdateRequest(
             CustomFieldsDeviceRequest customeFieldDeviceRequest) {
 
-        return (CustomFieldsDeviceResponse) producer.requestBody(
+        return (CarrierProvisioningDeviceResponse) producer.requestBody(
                 "direct:customeFields", customeFieldDeviceRequest);
     }
 
@@ -182,9 +183,9 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
         producer.requestBody("direct:callbacks", callbackRequest);
     }
 
-    public RestoreDeviceResponse restoreDevice(
+    public CarrierProvisioningDeviceResponse restoreDevice(
             RestoreDeviceRequest restoreDeviceRequest) {
-        return (RestoreDeviceResponse) producer.requestBody(
+        return (CarrierProvisioningDeviceResponse) producer.requestBody(
                 "direct:restoreDevice", restoreDeviceRequest);
     }
 
@@ -195,10 +196,10 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
      * "direct:deviceSessionBeginEndInfo", connectionInformationRequest); }
      */
 
-    public ChangeDeviceServicePlansResponse changeDeviceServicePlans(
+    public CarrierProvisioningDeviceResponse changeDeviceServicePlans(
             ChangeDeviceServicePlansRequest changeDeviceServicePlansRequest) {
 
-        return (ChangeDeviceServicePlansResponse) producer.requestBody(
+        return (CarrierProvisioningDeviceResponse) producer.requestBody(
                 "direct:changeDeviceServicePlans",
                 changeDeviceServicePlansRequest);
     }

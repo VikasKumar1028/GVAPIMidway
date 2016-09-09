@@ -4,23 +4,16 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
-
 import com.gv.midway.constant.IConstant;
+import com.gv.midway.pojo.CarrierProvisioningDeviceResponse;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
-import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
-import com.gv.midway.pojo.changeDeviceServicePlans.response.ChangeDeviceServicePlansResponse;
 import com.gv.midway.pojo.connectionInformation.ConnectionInformationMidwayResponse;
 import com.gv.midway.pojo.connectionInformation.deviceSessionBeginEndInfo.response.SessionBeginEndResponse;
 import com.gv.midway.pojo.connectionInformation.deviceStatus.response.ConnectionStatusResponse;
-import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponse;
-import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.pojo.device.response.BatchDeviceResponse;
 import com.gv.midway.pojo.device.response.UpdateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
-import com.gv.midway.pojo.reActivateDevice.response.ReactivateDeviceResponse;
-import com.gv.midway.pojo.restoreDevice.response.RestoreDeviceResponse;
-import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
 import com.gv.midway.pojo.usageInformation.response.DevicesUsageByDayAndCarrierResponse;
 import com.gv.midway.pojo.usageInformation.response.UsageInformationMidwayResponse;
 import com.gv.midway.pojo.usageInformation.response.UsageInformationResponse;
@@ -87,19 +80,19 @@ public class HeaderErrorProcessor implements Processor {
             exchange.getIn().setBody(updateDeviceResponse);
             break;
         case "Endpoint[direct://activateDevice]":
-            ActivateDeviceResponse activateDeviceResponse = new ActivateDeviceResponse();
+        	CarrierProvisioningDeviceResponse activateDeviceResponse = new CarrierProvisioningDeviceResponse();
             activateDeviceResponse.setHeader(responseHeader);
             activateDeviceResponse.setResponse(response);
             exchange.getIn().setBody(activateDeviceResponse);
             break;
         case "Endpoint[direct://deactivateDevice]":
-            DeactivateDeviceResponse deactivateDeviceResponse = new DeactivateDeviceResponse();
+        	CarrierProvisioningDeviceResponse deactivateDeviceResponse = new CarrierProvisioningDeviceResponse();
             deactivateDeviceResponse.setHeader(responseHeader);
             deactivateDeviceResponse.setResponse(response);
             exchange.getIn().setBody(deactivateDeviceResponse);
             break;
         case "Endpoint[direct://suspendDevice]":
-            SuspendDeviceResponse suspendDeviceResponse = new SuspendDeviceResponse();
+        	CarrierProvisioningDeviceResponse suspendDeviceResponse = new CarrierProvisioningDeviceResponse();
             suspendDeviceResponse.setHeader(responseHeader);
             suspendDeviceResponse.setResponse(response);
             exchange.getIn().setBody(suspendDeviceResponse);
@@ -117,25 +110,25 @@ public class HeaderErrorProcessor implements Processor {
             exchange.getIn().setBody(sessionBeginEndResponse);
             break;
         case "Endpoint[direct://customeFields]":
-            CustomFieldsDeviceResponse customFieldsDeviceResponse = new CustomFieldsDeviceResponse();
+        	CarrierProvisioningDeviceResponse customFieldsDeviceResponse = new CarrierProvisioningDeviceResponse();
             customFieldsDeviceResponse.setHeader(responseHeader);
             customFieldsDeviceResponse.setResponse(response);
             exchange.getIn().setBody(customFieldsDeviceResponse);
             break;
         case "Endpoint[direct://changeDeviceServicePlans]":
-            ChangeDeviceServicePlansResponse changeDeviceServicePlansResponse = new ChangeDeviceServicePlansResponse();
+        	CarrierProvisioningDeviceResponse changeDeviceServicePlansResponse = new CarrierProvisioningDeviceResponse();
             changeDeviceServicePlansResponse.setHeader(responseHeader);
             changeDeviceServicePlansResponse.setResponse(response);
             exchange.getIn().setBody(changeDeviceServicePlansResponse);
             break;
         case "Endpoint[direct://reactivateDevice]":
-            ReactivateDeviceResponse reactivateDeviceResponse = new ReactivateDeviceResponse();
+        	CarrierProvisioningDeviceResponse reactivateDeviceResponse = new CarrierProvisioningDeviceResponse();
             reactivateDeviceResponse.setHeader(responseHeader);
             reactivateDeviceResponse.setResponse(response);
             exchange.getIn().setBody(reactivateDeviceResponse);
             break;
         case "Endpoint[direct://restoreDevice]":
-            RestoreDeviceResponse restoreDeviceResponse = new RestoreDeviceResponse();
+        	CarrierProvisioningDeviceResponse restoreDeviceResponse = new CarrierProvisioningDeviceResponse();
             restoreDeviceResponse.setHeader(responseHeader);
             restoreDeviceResponse.setResponse(response);
             exchange.getIn().setBody(restoreDeviceResponse);

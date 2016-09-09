@@ -5,21 +5,15 @@ import org.apache.camel.Processor;
 import org.apache.camel.component.cxf.CxfOperationException;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IResponse;
+import com.gv.midway.pojo.CarrierProvisioningDeviceResponse;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
-import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
-import com.gv.midway.pojo.changeDeviceServicePlans.response.ChangeDeviceServicePlansResponse;
-import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponse;
-import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.kore.KoreErrorResponse;
-import com.gv.midway.pojo.reActivateDevice.response.ReactivateDeviceResponse;
-import com.gv.midway.pojo.restoreDevice.response.RestoreDeviceResponse;
-import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
+
 
 public class KoreGenericExceptionProcessor implements Processor {
 
@@ -63,87 +57,62 @@ public class KoreGenericExceptionProcessor implements Processor {
         response.setResponseDescription(responsePayload.getErrorMessage());
 
         Header responseHeader = (Header) exchange.getProperty(IConstant.HEADER);
+        
+        switch (exchange.getFromEndpoint().toString()) {
 
-        if ("Endpoint[direct://deviceInformationCarrier]".equals(exchange
-                .getFromEndpoint().toString())) {
+		case "Endpoint[direct://deviceInformationCarrier]":
+			DeviceInformationResponse responseObject = new DeviceInformationResponse();
+			responseObject.setHeader(responseHeader);
+			responseObject.setResponse(response);
+			exchange.getIn().setBody(responseObject);
+			break;
+		case "Endpoint[direct://activateDevice]":
+			CarrierProvisioningDeviceResponse activateResposne = new CarrierProvisioningDeviceResponse();
+			activateResposne.setHeader(responseHeader);
+			activateResposne.setResponse(response);
+            exchange.getIn().setBody(activateResposne);
+			break;
+		case "Endpoint[direct://deactivateDevice]":
+			CarrierProvisioningDeviceResponse deactivateDeviceResponse = new CarrierProvisioningDeviceResponse();
+			deactivateDeviceResponse.setHeader(responseHeader);
+			deactivateDeviceResponse.setResponse(response);
+			exchange.getIn().setBody(deactivateDeviceResponse);
+			break;
+		case "Endpoint[direct://suspendDevice]":
+			CarrierProvisioningDeviceResponse suspendDeviceResponse = new CarrierProvisioningDeviceResponse();
+			suspendDeviceResponse.setHeader(responseHeader);
+			suspendDeviceResponse.setResponse(response);
+			exchange.getIn().setBody(suspendDeviceResponse);
+			break;
+		case "Endpoint[direct://customeFields]":
+			CarrierProvisioningDeviceResponse customFieldsDeviceResponse = new CarrierProvisioningDeviceResponse();
+			customFieldsDeviceResponse.setHeader(responseHeader);
+			customFieldsDeviceResponse.setResponse(response);
+			exchange.getIn().setBody(customFieldsDeviceResponse);
+			break;
+		case "Endpoint[direct://changeDeviceServicePlans]":
+			CarrierProvisioningDeviceResponse changeDeviceServicePlansResponse = new CarrierProvisioningDeviceResponse();
+			changeDeviceServicePlansResponse.setHeader(responseHeader);
+			changeDeviceServicePlansResponse.setResponse(response);
+			exchange.getIn().setBody(changeDeviceServicePlansResponse);
+			break;
+		case "Endpoint[direct://reactivateDevice]":
+			CarrierProvisioningDeviceResponse reactivateDeviceResponse = new CarrierProvisioningDeviceResponse();
+			reactivateDeviceResponse.setHeader(responseHeader);
+			reactivateDeviceResponse.setResponse(response);
+			exchange.getIn().setBody(reactivateDeviceResponse);
+			break;
+		case "Endpoint[direct://restoreDevice]":
+			CarrierProvisioningDeviceResponse restoreDeviceResponse = new CarrierProvisioningDeviceResponse();
+			restoreDeviceResponse.setHeader(responseHeader);
+			restoreDeviceResponse.setResponse(response);
+			exchange.getIn().setBody(restoreDeviceResponse);
+			break;
+		default:
+			break;
+		}
 
-            DeviceInformationResponse responseObject = new DeviceInformationResponse();
-            responseObject.setHeader(responseHeader);
-            responseObject.setResponse(response);
-            exchange.getIn().setBody(responseObject);
-        }
-
-        if ("Endpoint[direct://deactivateDevice]".equals(exchange
-                .getFromEndpoint().toString())) {
-
-            DeactivateDeviceResponse responseObject = new DeactivateDeviceResponse();
-            responseObject.setHeader(responseHeader);
-            responseObject.setResponse(response);
-            exchange.getIn().setBody(responseObject);
-        }
-
-        if ("Endpoint[direct://activateDevice]".equals(exchange
-                .getFromEndpoint().toString())) {
-
-            ActivateDeviceResponse responseObject = new ActivateDeviceResponse();
-            responseObject.setHeader(responseHeader);
-            responseObject.setResponse(response);
-            exchange.getIn().setBody(responseObject);
-        }
-
-        if ("Endpoint[direct://suspendDevice]".equals(exchange
-                .getFromEndpoint().toString())) {
-
-            SuspendDeviceResponse responseObject = new SuspendDeviceResponse();
-            responseObject.setHeader(responseHeader);
-            responseObject.setResponse(response);
-            exchange.getIn().setBody(responseObject);
-        }
-
-        if ("Endpoint[direct://reactivateDevice]".equals(exchange
-                .getFromEndpoint().toString())) {
-
-            ReactivateDeviceResponse responseObject = new ReactivateDeviceResponse();
-            responseObject.setHeader(responseHeader);
-            responseObject.setResponse(response);
-            exchange.getIn().setBody(responseObject);
-        }
-
-        if ("Endpoint[direct://customeFields]".equals(exchange
-                .getFromEndpoint().toString())) {
-
-            CustomFieldsDeviceResponse responseObject = new CustomFieldsDeviceResponse();
-            responseObject.setHeader(responseHeader);
-            responseObject.setResponse(response);
-            exchange.getIn().setBody(responseObject);
-        }
-
-        if ("Endpoint[direct://changeDeviceServicePlans]".equals(exchange
-                .getFromEndpoint().toString())) {
-            ChangeDeviceServicePlansResponse responseObject = new ChangeDeviceServicePlansResponse();
-            responseObject.setHeader(responseHeader);
-            responseObject.setResponse(response);
-            exchange.getIn().setBody(responseObject);
-
-        }
-
-        if ("Endpoint[direct://restoreDevice]".equals(exchange
-                .getFromEndpoint().toString())) {
-            RestoreDeviceResponse responseObject = new RestoreDeviceResponse();
-            responseObject.setHeader(responseHeader);
-            responseObject.setResponse(response);
-            exchange.getIn().setBody(responseObject);
-
-        }
-
-        if ("Endpoint[direct://reactivateDevice]".equals(exchange
-                .getFromEndpoint().toString())) {
-            ReactivateDeviceResponse responseObject = new ReactivateDeviceResponse();
-            responseObject.setHeader(responseHeader);
-            responseObject.setResponse(response);
-            exchange.getIn().setBody(responseObject);
-
-        }
+      
 
     }
 }
