@@ -1,51 +1,53 @@
 package com.gv.midway.processor.activateDevice;
 
-import com.gv.midway.constant.IResponse;
-import com.gv.midway.pojo.Header;
-import com.gv.midway.pojo.Response;
-import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
-import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponseDataArea;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 
+import com.gv.midway.constant.IResponse;
+import com.gv.midway.pojo.CarrierProvisioningDeviceResponse;
+import com.gv.midway.pojo.CarrierProvisioningDeviceResponseDataArea;
+import com.gv.midway.pojo.Header;
+import com.gv.midway.pojo.Response;
+
 public class StubATTJasperActivateDeviceProcessor implements Processor {
 
-    private static final Logger LOGGER = Logger.getLogger(StubATTJasperActivateDeviceProcessor.class.getName());
+	private static final Logger LOGGER = Logger
+			.getLogger(StubATTJasperActivateDeviceProcessor.class.getName());
 
-    @Override
-    public void process(Exchange exchange) throws Exception {
+	@Override
+	public void process(Exchange exchange) throws Exception {
 
-        LOGGER.info("Begin:StubATTJasperActivateDeviceProcessor");
+		LOGGER.info("Begin:StubATTJasperActivateDeviceProcessor");
 
-        ActivateDeviceResponse activateDeviceResponse = new ActivateDeviceResponse();
+		CarrierProvisioningDeviceResponse carrierProvisioningDeviceResponse = new CarrierProvisioningDeviceResponse();
+		CarrierProvisioningDeviceResponseDataArea carrierProvisioningDeviceResponseDataArea = new CarrierProvisioningDeviceResponseDataArea();
+		Header responseheader = new Header();
 
-        ActivateDeviceResponseDataArea activateDeviceResponseDataArea = new ActivateDeviceResponseDataArea();
-        Header responseheader = new Header();
+		Response response = new Response();
 
-        Response response = new Response();
+		response.setResponseCode(IResponse.SUCCESS_CODE);
 
-        response.setResponseCode(IResponse.SUCCESS_CODE);
+		response.setResponseDescription("Device is activated successfully");
+		response.setResponseStatus("SUCCESS");
 
-        response.setResponseDescription("Device is activated successfully");
-        response.setResponseStatus("SUCCESS");
+		responseheader.setApplicationName("WEB");
+		responseheader.setRegion("USA");
+		responseheader.setTimestamp("2016-05-09T11:47:15");
+		responseheader.setOrganization("Grant Victor");
+		responseheader.setSourceName("ATTJasper");
+		responseheader.setTransactionId("b4e2231krdd");
+		responseheader.setBsCarrier("ATTJASPER");
 
-        responseheader.setApplicationName("WEB");
-        responseheader.setRegion("USA");
-        responseheader.setTimestamp("2016-05-09T11:47:15");
-        responseheader.setOrganization("Grant Victor");
-        responseheader.setSourceName("ATTJasper");
-        responseheader.setTransactionId("b4e2231krdd");
-        responseheader.setBsCarrier("ATTJASPER");
+		carrierProvisioningDeviceResponse.setHeader(responseheader);
+		carrierProvisioningDeviceResponse.setResponse(response);
+		carrierProvisioningDeviceResponseDataArea.setOrderNumber("AT44436712");
 
-        activateDeviceResponse.setHeader(responseheader);
-        activateDeviceResponse.setResponse(response);
-        activateDeviceResponseDataArea.setOrderNumber("AT44436712");
+		carrierProvisioningDeviceResponse
+				.setDataArea(carrierProvisioningDeviceResponseDataArea);
 
-        activateDeviceResponse.setDataArea(activateDeviceResponseDataArea);
+		exchange.getIn().setBody(carrierProvisioningDeviceResponse);
 
-        exchange.getIn().setBody(activateDeviceResponse);
-
-        LOGGER.info("End:StubATTJasperActivateDeviceProcessor");
-    }
+		LOGGER.info("End:StubATTJasperActivateDeviceProcessor");
+	}
 }

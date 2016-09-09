@@ -43,6 +43,9 @@ public class ATTJasperActivateDevicePreProcessor implements Processor {
         ActivateDeviceRequest activateDeviceRequest = (ActivateDeviceRequest)transaction.getDevicePayload();
 
         String deviceId = activateDeviceRequest.getDataArea().getDevices().getDeviceIds()[0].getId();
+        
+        exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,
+				transaction.getDeviceNumber());
 
         //String EAPCode = activateDeviceRequest.getDataArea().getDevices().getServicePlan();
 

@@ -6,10 +6,10 @@ import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
 
 import com.gv.midway.constant.IResponse;
+import com.gv.midway.pojo.CarrierProvisioningDeviceResponse;
+import com.gv.midway.pojo.CarrierProvisioningDeviceResponseDataArea;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
-import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
-import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponseDataArea;
 
 public class StubATTJasperDeactivateDeviceProcessor implements Processor {
 	private static final Logger LOGGER = Logger
@@ -31,9 +31,11 @@ public class StubATTJasperDeactivateDeviceProcessor implements Processor {
 		// TODO Auto-generated method stub
 
 		LOGGER.info("Begin::StubATTJasperDeactivateDeviceProcessor");
-		DeactivateDeviceResponse deactivateDeviceResponse = new DeactivateDeviceResponse();
+
+		CarrierProvisioningDeviceResponse carrierProvisioningDeviceResponse = new CarrierProvisioningDeviceResponse();
+		CarrierProvisioningDeviceResponseDataArea carrierProvisioningDeviceResponseDataArea = new CarrierProvisioningDeviceResponseDataArea();
+
 		Header responseheader = new Header();
-		DeactivateDeviceResponseDataArea deactivateDeviceResponseDataArea = new DeactivateDeviceResponseDataArea();
 
 		Response response = new Response();
 
@@ -50,12 +52,14 @@ public class StubATTJasperDeactivateDeviceProcessor implements Processor {
 		responseheader.setTransactionId("cde2131ksjd");
 		responseheader.setBsCarrier("ATTJASPER");
 
-		deactivateDeviceResponse.setHeader(responseheader);
-		deactivateDeviceResponse.setResponse(response);
-		deactivateDeviceResponseDataArea.setOrderNumber("ATTJASPER36718236");
+		carrierProvisioningDeviceResponse.setHeader(responseheader);
+		carrierProvisioningDeviceResponse.setResponse(response);
+		carrierProvisioningDeviceResponseDataArea
+				.setOrderNumber("ATTJASPER36718236");
 
-		deactivateDeviceResponse.setDataArea(deactivateDeviceResponseDataArea);
-		exchange.getIn().setBody(deactivateDeviceResponse);
+		carrierProvisioningDeviceResponse
+				.setDataArea(carrierProvisioningDeviceResponseDataArea);
+		exchange.getIn().setBody(carrierProvisioningDeviceResponse);
 
 		LOGGER.info("End:StubATTJasperDeactivateDeviceProcessor");
 	}

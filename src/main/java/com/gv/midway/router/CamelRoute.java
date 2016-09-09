@@ -311,7 +311,7 @@ public class CamelRoute extends RouteBuilder {
                 .process(new StubVerizonActivateDeviceProcessor())
                 .to("log:input").
                 
-                 when(header("derivedCarrierName").isEqualTo("ATTJasper"))
+                 when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
                 .process(new StubATTJasperActivateDeviceProcessor())
                 .to("log:input").
                  endChoice().
