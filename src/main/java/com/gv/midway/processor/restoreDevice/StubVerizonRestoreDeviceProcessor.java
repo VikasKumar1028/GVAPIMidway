@@ -3,12 +3,12 @@ package com.gv.midway.processor.restoreDevice;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
-
 import com.gv.midway.constant.IResponse;
+import com.gv.midway.pojo.CarrierProvisioningDeviceResponse;
+import com.gv.midway.pojo.CarrierProvisioningDeviceResponseDataArea;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
-import com.gv.midway.pojo.restoreDevice.response.RestoreDeviceResponse;
-import com.gv.midway.pojo.restoreDevice.response.RestoreDeviceResponseDataArea;
+
 
 public class StubVerizonRestoreDeviceProcessor implements Processor {
 
@@ -20,9 +20,9 @@ public class StubVerizonRestoreDeviceProcessor implements Processor {
     public void process(Exchange exchange) throws Exception {
 
         LOGGER.info("Begin:StubVerizonRestoreDeviceProcessor");
-        RestoreDeviceResponse restoreDeviceResponse = new RestoreDeviceResponse();
+        CarrierProvisioningDeviceResponse restoreDeviceResponse = new CarrierProvisioningDeviceResponse();
 
-        RestoreDeviceResponseDataArea restoreDeviceResponseDataArea = new RestoreDeviceResponseDataArea();
+        CarrierProvisioningDeviceResponseDataArea restoreDeviceResponseDataArea = new CarrierProvisioningDeviceResponseDataArea();
 
         Header responseheader = new Header();
 

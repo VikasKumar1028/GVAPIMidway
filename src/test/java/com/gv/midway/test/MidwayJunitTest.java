@@ -18,6 +18,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.mock.web.MockServletContext;
 
 import com.gv.midway.constant.IConstant;
+import com.gv.midway.pojo.CarrierProvisioningDeviceResponse;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.MidWayDeviceId;
 import com.gv.midway.pojo.MidWayDevices;
@@ -25,29 +26,22 @@ import com.gv.midway.pojo.activateDevice.request.ActivateDeviceId;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequestDataArea;
 import com.gv.midway.pojo.activateDevice.request.ActivateDevices;
-import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
 import com.gv.midway.pojo.changeDeviceServicePlans.request.ChangeDeviceServicePlansRequest;
 import com.gv.midway.pojo.changeDeviceServicePlans.request.ChangeDeviceServicePlansRequestDataArea;
-import com.gv.midway.pojo.changeDeviceServicePlans.response.ChangeDeviceServicePlansResponse;
 import com.gv.midway.pojo.customFieldsDevice.request.CustomFieldsDeviceRequest;
 import com.gv.midway.pojo.customFieldsDevice.request.CustomFieldsDeviceRequestDataArea;
-import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponse;
 import com.gv.midway.pojo.deactivateDevice.kore.request.DeactivateDeviceRequestKore;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceId;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequestDataArea;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDevices;
-import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
 import com.gv.midway.pojo.deactivateDevice.verizon.request.DeactivateDeviceRequestVerizon;
 import com.gv.midway.pojo.reActivateDevice.request.ReactivateDeviceRequest;
 import com.gv.midway.pojo.reActivateDevice.request.ReactivateDeviceRequestDataArea;
-import com.gv.midway.pojo.reActivateDevice.response.ReactivateDeviceResponse;
 import com.gv.midway.pojo.restoreDevice.request.RestoreDeviceRequest;
 import com.gv.midway.pojo.restoreDevice.request.RestoreDeviceRequestDataArea;
-import com.gv.midway.pojo.restoreDevice.response.RestoreDeviceResponse;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequest;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequestDataArea;
-import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
 import com.gv.midway.pojo.verizon.CustomFieldsToUpdate;
 import com.gv.midway.service.ISessionService;
 
@@ -118,7 +112,7 @@ public class MidwayJunitTest extends Assert {
         header.setTimestamp("2008-09-29T07:19:45");
         req.setHeader(header);
 
-        ActivateDeviceResponse response = (ActivateDeviceResponse) template
+        CarrierProvisioningDeviceResponse response = (CarrierProvisioningDeviceResponse) template
                 .requestBody("direct:activateDevice", req);
 
         LOGGER.info("Activate Device response is...................:"
@@ -183,7 +177,7 @@ public class MidwayJunitTest extends Assert {
         header.setTransactionId("6758759");
 
         req.setHeader(header);
-        ActivateDeviceResponse response = (ActivateDeviceResponse) template
+        CarrierProvisioningDeviceResponse response = (CarrierProvisioningDeviceResponse) template
                 .requestBody("direct:activateDevice", req);
 
         LOGGER.info("Activate Device response is...................:"
@@ -250,7 +244,7 @@ public class MidwayJunitTest extends Assert {
         header.setTransactionId("2008-09-29T07:19:45");
 
         req.setHeader(header);
-        ActivateDeviceResponse response = (ActivateDeviceResponse) template
+        CarrierProvisioningDeviceResponse response = (CarrierProvisioningDeviceResponse) template
                 .requestBody("direct:activateDevice", req);
 
         LOGGER.info("Activate Device response Order No. is...................:"
@@ -311,7 +305,7 @@ public class MidwayJunitTest extends Assert {
 
         deactivateRequest.setHeader(header);
         deactivateRequest.setDataArea(dataArea);
-        DeactivateDeviceResponse response = (DeactivateDeviceResponse) template
+        CarrierProvisioningDeviceResponse response = (CarrierProvisioningDeviceResponse) template
                 .requestBody("direct:deactivateDevice", deactivateRequest);
 
         LOGGER.info("Response in Junit Test for Deactivate....... :"
@@ -371,7 +365,7 @@ public class MidwayJunitTest extends Assert {
 
         deactivateRequest.setHeader(header);
         deactivateRequest.setDataArea(dataArea);
-        DeactivateDeviceResponse response = (DeactivateDeviceResponse) template
+        CarrierProvisioningDeviceResponse response = (CarrierProvisioningDeviceResponse) template
                 .requestBody("direct:deactivateDevice", deactivateRequest);
 
         LOGGER.info("Response in Junit Test for Deactivate :" + response);
@@ -430,7 +424,7 @@ public class MidwayJunitTest extends Assert {
 
         deactivateRequest.setHeader(header);
         deactivateRequest.setDataArea(dataArea);
-        DeactivateDeviceResponse response = (DeactivateDeviceResponse) template
+        CarrierProvisioningDeviceResponse response = (CarrierProvisioningDeviceResponse) template
                 .requestBody("direct:deactivateDevice", deactivateRequest);
 
         LOGGER.info("Response in Junit Test for Deactivate :"
@@ -487,7 +481,7 @@ public class MidwayJunitTest extends Assert {
 
         LOGGER.info("Request in Junit Test:" + req);
 
-        ReactivateDeviceResponse response = (ReactivateDeviceResponse) template
+        CarrierProvisioningDeviceResponse response = (CarrierProvisioningDeviceResponse) template
                 .requestBody("direct:reactivateDevice", req);
 
         LOGGER.info("Response in Junit Test for Reactive....... :"
@@ -543,7 +537,7 @@ public class MidwayJunitTest extends Assert {
         header.setTimestamp("2008-09-29T07:19:45");
         req.setHeader(header);
 
-        SuspendDeviceResponse response = (SuspendDeviceResponse) template
+        CarrierProvisioningDeviceResponse response = (CarrierProvisioningDeviceResponse) template
                 .requestBody("direct:suspendDevice", req);
 
         LOGGER.info("Response in Junit Test for Suspend....... :"
@@ -596,7 +590,7 @@ public class MidwayJunitTest extends Assert {
         header.setTimestamp("2008-09-29T07:19:45");
         req.setHeader(header);
 
-        SuspendDeviceResponse response = (SuspendDeviceResponse) template
+        CarrierProvisioningDeviceResponse response = (CarrierProvisioningDeviceResponse) template
                 .requestBody("direct:suspendDevice", req);
         response.getResponse().getResponseCode();
         LOGGER.info("Response in Junit Test for Suspend....... :"
@@ -650,7 +644,7 @@ public class MidwayJunitTest extends Assert {
         header.setTimestamp("2008-09-29T07:19:45");
         req.setHeader(header);
 
-        SuspendDeviceResponse response = (SuspendDeviceResponse) template
+        CarrierProvisioningDeviceResponse response = (CarrierProvisioningDeviceResponse) template
                 .requestBody("direct:suspendDevice", req);
         response.getResponse().getResponseCode();
         LOGGER.info("Response in Junit Test for Suspend....... :"
@@ -701,7 +695,7 @@ public class MidwayJunitTest extends Assert {
         header.setTimestamp("2008-09-29T07:19:45");
         req.setHeader(header);
 
-        RestoreDeviceResponse response = (RestoreDeviceResponse) template
+        CarrierProvisioningDeviceResponse response = (CarrierProvisioningDeviceResponse) template
                 .requestBody("direct:restoreDevice", req);
         response.getResponse().getResponseCode();
         LOGGER.info("Response in Junit Test for Restore....... :"
@@ -756,7 +750,7 @@ public class MidwayJunitTest extends Assert {
 
         LOGGER.info("Request in Junit Test:" + req);
 
-        RestoreDeviceResponse response = (RestoreDeviceResponse) template
+        CarrierProvisioningDeviceResponse response = (CarrierProvisioningDeviceResponse) template
                 .requestBody("direct:restoreDevice", req);
         response.getResponse().getResponseCode();
         LOGGER.info("Response in Junit Test for Rerstore....... :"
@@ -813,7 +807,7 @@ public class MidwayJunitTest extends Assert {
 
         LOGGER.info("Request in Junit Test:" + req);
 
-        RestoreDeviceResponse response = (RestoreDeviceResponse) template
+        CarrierProvisioningDeviceResponse response = (CarrierProvisioningDeviceResponse) template
                 .requestBody("direct:restoreDevice", req);
         response.getResponse().getResponseCode();
         LOGGER.info("Response in Junit Test for Rerstore....... :"
@@ -867,7 +861,7 @@ public class MidwayJunitTest extends Assert {
 
         LOGGER.info("Request in Junit Test:" + req);
 
-        CustomFieldsDeviceResponse response = (CustomFieldsDeviceResponse) template
+        CarrierProvisioningDeviceResponse response = (CarrierProvisioningDeviceResponse) template
                 .requestBody("direct:customeFields", req);
 
         LOGGER.info("Response in Junit Test for Device Custom Fileds....... :"
@@ -925,7 +919,7 @@ public class MidwayJunitTest extends Assert {
 
         LOGGER.info("Request in Junit Test:" + req);
 
-        CustomFieldsDeviceResponse response = (CustomFieldsDeviceResponse) template
+        CarrierProvisioningDeviceResponse response = (CarrierProvisioningDeviceResponse) template
                 .requestBody("direct:customeFields", req);
         LOGGER.info("Response in Junit Test for Custom Field....... :"
                 + response.getResponse().getResponseCode());
@@ -981,7 +975,7 @@ public class MidwayJunitTest extends Assert {
         req.setHeader(header);
         LOGGER.info("Request in Junit Test:" + req);
 
-        CustomFieldsDeviceResponse response = (CustomFieldsDeviceResponse) template
+        CarrierProvisioningDeviceResponse response = (CarrierProvisioningDeviceResponse) template
                 .requestBody("direct:customeFields", req);
         LOGGER.info("Response in Junit Test for Custom Fields....... :" + response);
         assertEquals(response.getResponse().getResponseCode().toString(),
@@ -1042,7 +1036,7 @@ public class MidwayJunitTest extends Assert {
 
         LOGGER.info("Request in Junit Test:" + req);
 
-        ChangeDeviceServicePlansResponse response = (ChangeDeviceServicePlansResponse) template
+        CarrierProvisioningDeviceResponse response = (CarrierProvisioningDeviceResponse) template
                 .requestBody("direct:changeDeviceServicePlans", req);
 
         LOGGER.info("Response in Junit Test for Device Change Service Plan....... :"
@@ -1102,7 +1096,7 @@ public class MidwayJunitTest extends Assert {
 
         LOGGER.info("Request in Junit Test:" + req);
 
-        ChangeDeviceServicePlansResponse response = (ChangeDeviceServicePlansResponse) template
+        CarrierProvisioningDeviceResponse response = (CarrierProvisioningDeviceResponse) template
                 .requestBody("direct:changeDeviceServicePlans", req);
 
         LOGGER.info("Response in Junit Test for Device Change Service Plan....... :"
@@ -1155,7 +1149,7 @@ public class MidwayJunitTest extends Assert {
         header.setTimestamp("2008-09-29T07:19:45");
         req.setHeader(header);
 
-        ChangeDeviceServicePlansResponse response = (ChangeDeviceServicePlansResponse) template
+        CarrierProvisioningDeviceResponse response = (CarrierProvisioningDeviceResponse) template
                 .requestBody("direct:changeDeviceServicePlans", req);
 
         LOGGER.info("Response in Junit Test for Device Change Service Plan....... :"

@@ -17,7 +17,7 @@ import com.gv.midway.pojo.verizon.Devices;
 public class VerizonChangeDeviceServicePlansPreProcessor implements Processor {
 
     private static final Logger LOGGER = Logger
-            .getLogger(VerizonChangeDeviceServicePlansPostProcessor.class
+            .getLogger(VerizonChangeDeviceServicePlansPreProcessor.class
                     .getName());
 
     @Override

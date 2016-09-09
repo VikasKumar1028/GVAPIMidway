@@ -3,14 +3,12 @@ package com.gv.midway.processor.changeDeviceServicePlans;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
-
 import com.gv.midway.constant.IResponse;
+import com.gv.midway.pojo.CarrierProvisioningDeviceResponse;
+import com.gv.midway.pojo.CarrierProvisioningDeviceResponseDataArea;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
-import com.gv.midway.pojo.changeDeviceServicePlans.response.ChangeDeviceServicePlansResponse;
-import com.gv.midway.pojo.changeDeviceServicePlans.response.ChangeDeviceServicePlansResponseDataArea;
-import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponse;
-import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponseDataArea;
+
 
 public class StubVerizonChangeDeviceServicePlansProcessor implements Processor {
 
@@ -23,9 +21,9 @@ public class StubVerizonChangeDeviceServicePlansProcessor implements Processor {
 
         LOGGER.info("Start::StubVerizonChangeDeviceServicePlansProcessor");
 
-        ChangeDeviceServicePlansResponse changeDeviceServicePlansResponse = new ChangeDeviceServicePlansResponse();
+        CarrierProvisioningDeviceResponse changeDeviceServicePlansResponse = new CarrierProvisioningDeviceResponse();
 
-        ChangeDeviceServicePlansResponseDataArea changeDeviceServicePlansResponseDataArea = new ChangeDeviceServicePlansResponseDataArea();
+        CarrierProvisioningDeviceResponseDataArea changeDeviceServicePlansResponseDataArea = new CarrierProvisioningDeviceResponseDataArea();
         Header responseheader = new Header();
 
         Response response = new Response();

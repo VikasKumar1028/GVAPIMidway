@@ -3,12 +3,12 @@ package com.gv.midway.processor.customFieldsDevice;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
-
 import com.gv.midway.constant.IResponse;
+import com.gv.midway.pojo.CarrierProvisioningDeviceResponse;
+import com.gv.midway.pojo.CarrierProvisioningDeviceResponseDataArea;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
-import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponse;
-import com.gv.midway.pojo.customFieldsDevice.response.CustomFieldsDeviceResponseDataArea;
+
 
 public class StubKoreCustomFieldsProcessor implements Processor {
 
@@ -19,9 +19,9 @@ public class StubKoreCustomFieldsProcessor implements Processor {
     public void process(Exchange exchange) throws Exception {
         LOGGER.info("Begin::StubKoreCustomFieldsProcessor");
 
-        CustomFieldsDeviceResponse updateCustomeFieldDeviceResponse = new CustomFieldsDeviceResponse();
+        CarrierProvisioningDeviceResponse updateCustomeFieldDeviceResponse = new CarrierProvisioningDeviceResponse();
 
-        CustomFieldsDeviceResponseDataArea updateCustomeFieldDeviceResponseDataArea = new CustomFieldsDeviceResponseDataArea();
+        CarrierProvisioningDeviceResponseDataArea updateCustomeFieldDeviceResponseDataArea = new CarrierProvisioningDeviceResponseDataArea();
         Header responseheader = new Header();
 
         Response response = new Response();

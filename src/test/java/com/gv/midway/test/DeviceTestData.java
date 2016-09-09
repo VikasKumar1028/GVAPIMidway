@@ -2,6 +2,7 @@ package com.gv.midway.test;
 
 import org.apache.camel.Exchange;
 
+import com.gv.midway.pojo.CarrierProvisioningDeviceResponse;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.MidWayDeviceId;
 import com.gv.midway.pojo.MidWayDevices;
@@ -9,7 +10,6 @@ import com.gv.midway.pojo.activateDevice.request.ActivateDeviceId;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequestDataArea;
 import com.gv.midway.pojo.activateDevice.request.ActivateDevices;
-import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
 import com.gv.midway.pojo.callback.request.CallBackVerizonRequest;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceId;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
@@ -36,7 +36,7 @@ public class DeviceTestData extends Header {
     protected ActivateDeviceRequest expectedActivateDeviceRequest;
     protected DeviceInformationRequest expectDeviceInfo;
     protected DeactivateDeviceRequest expectDeactiveDevice;
-    protected ActivateDeviceResponse expectedActivateDeviceResponse;
+    protected CarrierProvisioningDeviceResponse expectedActivateDeviceResponse;
     protected CallBackVerizonRequest expectedActivateCallback;
     protected RestoreDeviceRequest expectRestoreDevice;
     protected SuspendDeviceRequest expectSuspendDevice;
@@ -287,14 +287,14 @@ public class DeviceTestData extends Header {
     }
 
     public void setExpectedActivateDeviceResponse(
-            ActivateDeviceResponse activateDeviceResponse) {
+    		CarrierProvisioningDeviceResponse activateDeviceResponse) {
         // TODO Auto-generated method stub
         this.expectedActivateDeviceResponse = activateDeviceResponse;
     }
 
     // test case for Activate Device Response
     public void verifyDeviceActivationResponseData(
-            ActivateDeviceResponse response) {
+    		CarrierProvisioningDeviceResponse response) {
         // TODO Auto-generated method stub
         ActivateDeviceRequest req = new ActivateDeviceRequest();
         ActivateDeviceRequestDataArea dataArea = new ActivateDeviceRequestDataArea();

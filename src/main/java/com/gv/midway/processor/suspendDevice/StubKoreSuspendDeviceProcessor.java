@@ -3,12 +3,12 @@ package com.gv.midway.processor.suspendDevice;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
-
 import com.gv.midway.constant.IResponse;
+import com.gv.midway.pojo.CarrierProvisioningDeviceResponse;
+import com.gv.midway.pojo.CarrierProvisioningDeviceResponseDataArea;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
-import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponse;
-import com.gv.midway.pojo.suspendDevice.response.SuspendDeviceResponseDataArea;
+
 
 public class StubKoreSuspendDeviceProcessor implements Processor {
 
@@ -20,9 +20,10 @@ public class StubKoreSuspendDeviceProcessor implements Processor {
 
         LOGGER.info("Begin:StubKoreSuspendDeviceProcessor");
 
-        SuspendDeviceResponse suspendDeviceResponse = new SuspendDeviceResponse();
+        CarrierProvisioningDeviceResponse suspendDeviceResponse = new CarrierProvisioningDeviceResponse();
 
-        SuspendDeviceResponseDataArea suspendDeviceResponseDataArea = new SuspendDeviceResponseDataArea();
+        CarrierProvisioningDeviceResponseDataArea suspendDeviceResponseDataArea = new CarrierProvisioningDeviceResponseDataArea();
+
         Header responseheader = new Header();
 
         Response response = new Response();

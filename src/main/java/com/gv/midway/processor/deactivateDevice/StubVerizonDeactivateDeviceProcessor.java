@@ -3,12 +3,12 @@ package com.gv.midway.processor.deactivateDevice;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
-
 import com.gv.midway.constant.IResponse;
+import com.gv.midway.pojo.CarrierProvisioningDeviceResponse;
+import com.gv.midway.pojo.CarrierProvisioningDeviceResponseDataArea;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.Header;
-import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponse;
-import com.gv.midway.pojo.deactivateDevice.response.DeactivateDeviceResponseDataArea;
+
 
 public class StubVerizonDeactivateDeviceProcessor implements Processor {
 
@@ -21,8 +21,8 @@ public class StubVerizonDeactivateDeviceProcessor implements Processor {
 
     public void process(Exchange exchange) throws Exception {
         LOGGER.info("Begin::StubVerizonDeactivateDeviceProcessor");
-        DeactivateDeviceResponse deactivateDeviceResponse = new DeactivateDeviceResponse();
-        DeactivateDeviceResponseDataArea deactivateDeviceResponseDataArea = new DeactivateDeviceResponseDataArea();
+        CarrierProvisioningDeviceResponse deactivateDeviceResponse = new CarrierProvisioningDeviceResponse();
+        CarrierProvisioningDeviceResponseDataArea deactivateDeviceResponseDataArea = new CarrierProvisioningDeviceResponseDataArea();
 
         Header responseheader = new Header();
 

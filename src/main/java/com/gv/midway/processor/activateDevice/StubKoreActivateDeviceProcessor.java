@@ -3,12 +3,12 @@ package com.gv.midway.processor.activateDevice;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
-
 import com.gv.midway.constant.IResponse;
+import com.gv.midway.pojo.CarrierProvisioningDeviceResponse;
+import com.gv.midway.pojo.CarrierProvisioningDeviceResponseDataArea;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
-import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponse;
-import com.gv.midway.pojo.activateDevice.response.ActivateDeviceResponseDataArea;
+
 
 public class StubKoreActivateDeviceProcessor implements Processor {
 
@@ -20,9 +20,9 @@ public class StubKoreActivateDeviceProcessor implements Processor {
 
         LOGGER.info("Begin:StubKoreDeviceActivateProcessor");
 
-        ActivateDeviceResponse activateDeviceResponse = new ActivateDeviceResponse();
+        CarrierProvisioningDeviceResponse activateDeviceResponse = new CarrierProvisioningDeviceResponse();
 
-        ActivateDeviceResponseDataArea activateDeviceResponseDataArea = new ActivateDeviceResponseDataArea();
+        CarrierProvisioningDeviceResponseDataArea activateDeviceResponseDataArea = new CarrierProvisioningDeviceResponseDataArea();
         Header responseheader = new Header();
 
         Response response = new Response();
