@@ -67,10 +67,10 @@ public class CommonUtil {
     private static final Logger LOGGER = Logger.getLogger(CommonUtil.class);
 
     public static List<String> endPointList = new ArrayList<String>();
-    
+
     public static AtomicBoolean isTokenRequired = new AtomicBoolean();
-    
-    public static AtomicBoolean isAlreadyinTokenGeneration=new AtomicBoolean();
+
+    public static AtomicBoolean isAlreadyinTokenGeneration = new AtomicBoolean();
 
     static {
 
@@ -84,15 +84,15 @@ public class CommonUtil {
         endPointList.add(IEndPoints.RESTORE_SEDA_KORE_ENDPOINT);
         endPointList.add(IEndPoints.SUSPENSION_SEDA_KORE_ENDPOINT);
         endPointList.add(IEndPoints.REACTIVATION_SEDA_KORE_ENDPOINT);
-        
+
         endPointList.add(IEndPoints.DEACTIVATION_SEDA_ATTJASPER_ENDPOINT);
         endPointList.add(IEndPoints.CHANGE_SERVICEPLAN_SEDA_ATTJASPER_ENDPOINT);
 
         endPointList.add(IEndPoints.CHANGE_CUSTOMFIELD_ENDPOINT);
         endPointList.add(IEndPoints.CHANGE_SERVICEPLAN_ENDPOINT);
         endPointList.add(IEndPoints.CHANGE_SERVICEPLAN_SEDA_KORE_ENDPOINT);
-        endPointList.add(IEndPoints.CHANGE_CUSTOMFIELD_SEDA_KORE_ENDPOINT); 
-       
+        endPointList.add(IEndPoints.CHANGE_CUSTOMFIELD_SEDA_KORE_ENDPOINT);
+
     }
 
     /**
@@ -157,7 +157,7 @@ public class CommonUtil {
 
             return "KORE";
         }
-        
+
         else if (carrierName.equalsIgnoreCase("ATTJASPER")) {
 
             return "ATTJASPER";
@@ -466,176 +466,176 @@ public class CommonUtil {
         message.setHeader(Exchange.HTTP_METHOD, "POST");
         return message;
     }
-    
+
     /**
      * 
      * @param exchange
      * @return
      */
-    
-    public static List<SoapHeader> getSOAPHeaders(String username,String password) 
-    {
-    	final String soapHeader = "<wsse:Security xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" "
-				+ "soap:mustUnderstand=\"true\" xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\">"
-				+ "<wsse:UsernameToken xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" wsu:Id=\"UsernameToken-16847597\">"
-				+ "<wsse:Username>"+username+"</wsse:Username>"
-				+ "<wsse:Password Type=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText\">"+password+"</wsse:Password>"
-				+ "</wsse:UsernameToken></wsse:Security>";
 
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db = null;
-		Element element = null;
-		try {
-			db = dbf.newDocumentBuilder();
-			InputSource is = new InputSource();
-			is.setCharacterStream(new StringReader(soapHeader));
-			try {
-				Document doc = db.parse(is);
-				element = doc.getDocumentElement();
+    public static List<SoapHeader> getSOAPHeaders(String username,
+            String password) {
+        final String soapHeader = "<wsse:Security xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" "
+                + "soap:mustUnderstand=\"true\" xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\">"
+                + "<wsse:UsernameToken xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" wsu:Id=\"UsernameToken-16847597\">"
+                + "<wsse:Username>"
+                + username
+                + "</wsse:Username>"
+                + "<wsse:Password Type=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText\">"
+                + password
+                + "</wsse:Password>"
+                + "</wsse:UsernameToken></wsse:Security>";
 
-			} catch (SAXException e) {
-				// handle SAXException
-			} catch (IOException e) {
-				// handle IOException
-			}
-		} catch (ParserConfigurationException e1) {
-			// handle ParserConfigurationException
-		}
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder db = null;
+        Element element = null;
+        try {
+            db = dbf.newDocumentBuilder();
+            InputSource is = new InputSource();
+            is.setCharacterStream(new StringReader(soapHeader));
+            try {
+                Document doc = db.parse(is);
+                element = doc.getDocumentElement();
 
-		List<SoapHeader> soapHeaders = new ArrayList<SoapHeader>();
+            } catch (SAXException e) {
+                // handle SAXException
+            } catch (IOException e) {
+                // handle IOException
+            }
+        } catch (ParserConfigurationException e1) {
+            // handle ParserConfigurationException
+        }
 
-		try {
+        List<SoapHeader> soapHeaders = new ArrayList<SoapHeader>();
 
-			SoapHeader newHeader = new SoapHeader(new QName("soapHeader"),
-					element);
+        try {
 
-			newHeader.setDirection(Direction.DIRECTION_OUT);
+            SoapHeader newHeader = new SoapHeader(new QName("soapHeader"),
+                    element);
 
-			soapHeaders.add(newHeader);
+            newHeader.setDirection(Direction.DIRECTION_OUT);
 
+            soapHeaders.add(newHeader);
 
-		} catch (Exception e) {
+        } catch (Exception e) {
 
-			// log error
+            // log error
 
-		}
+        }
         return soapHeaders;
     }
-    
-    public static String getSOAPResposneFromExchange(Exchange exchange)
-    {
-    	
-    	MessageContentsList result = (MessageContentsList)exchange.getIn().getBody();
-    	Object object=result.get(0);
+
+    public static String getSOAPResposneFromExchange(Exchange exchange) {
+
+        MessageContentsList result = (MessageContentsList) exchange.getIn()
+                .getBody();
+        Object object = result.get(0);
         LOGGER.info("Received output text: " + result.get(0));
-        
+
         JAXBContext context;
-        String xmlString=null;
-		try {
-			context = JAXBContext.newInstance(object.getClass());
-			 StringWriter sw = new StringWriter();
-		     Marshaller jaxbMarshaller = context.createMarshaller();
-		     jaxbMarshaller.marshal(object, sw);
-		     xmlString = sw.toString();
-		     LOGGER.info("resposne body is........"+xmlString);
-		     
-		     exchange.setProperty(
-						IConstant.ATTJASPER_SOAP_RESPONSE_PAYLOAD,
-						xmlString);
-		     
-		} catch (JAXBException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	
-    	return xmlString;
+        String xmlString = null;
+        try {
+            context = JAXBContext.newInstance(object.getClass());
+            StringWriter sw = new StringWriter();
+            Marshaller jaxbMarshaller = context.createMarshaller();
+            jaxbMarshaller.marshal(object, sw);
+            xmlString = sw.toString();
+            LOGGER.info("resposne body is........" + xmlString);
+
+            exchange.setProperty(IConstant.ATTJASPER_SOAP_RESPONSE_PAYLOAD,
+                    xmlString);
+
+        } catch (JAXBException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return xmlString;
     }
-    
-    
-	public static String getSOAPErrorResposneFromExchange(Exchange exchange) {
 
-		String payload = null;
+    public static String getSOAPErrorResposneFromExchange(Exchange exchange) {
 
-		SoapFault soapFault = (SoapFault) exchange
-				.getProperty(Exchange.EXCEPTION_CAUGHT);
+        String payload = null;
 
-		String message = soapFault.getMessage();
+        SoapFault soapFault = (SoapFault) exchange
+                .getProperty(Exchange.EXCEPTION_CAUGHT);
 
-		LOGGER.info("soap fault code    ------------------" + message);
+        String message = soapFault.getMessage();
 
-		try {
-			SOAPMessage soapMessage = MessageFactory.newInstance()
-					.createMessage();
-			SOAPEnvelope envelope = soapMessage.getSOAPPart().getEnvelope();
+        LOGGER.info("soap fault code    ------------------" + message);
 
-			SOAPBody soapBody = soapMessage.getSOAPBody();
+        try {
+            SOAPMessage soapMessage = MessageFactory.newInstance()
+                    .createMessage();
+            SOAPEnvelope envelope = soapMessage.getSOAPPart().getEnvelope();
 
-			SOAPFault fault = soapBody.addFault();
+            SOAPBody soapBody = soapMessage.getSOAPBody();
 
-			fault.setFaultCode(soapFault.getFaultCode());
-			fault.setFaultString(soapFault.getMessage());
-			Detail detail = fault.addDetail();
+            SOAPFault fault = soapBody.addFault();
 
-			NodeList nodeList = soapFault.getDetail().getChildNodes();
+            fault.setFaultCode(soapFault.getFaultCode());
+            fault.setFaultString(soapFault.getMessage());
+            Detail detail = fault.addDetail();
 
-			String errorDetails = "";
-			for (int i = 0; i < nodeList.getLength(); i++) {
+            NodeList nodeList = soapFault.getDetail().getChildNodes();
 
-				Node node = nodeList.item(i);
+            String errorDetails = "";
+            for (int i = 0; i < nodeList.getLength(); i++) {
 
-				String nodeName = node.getNodeName();
+                Node node = nodeList.item(i);
 
-				String nodeTextContent = node.getTextContent();
+                String nodeName = node.getNodeName();
 
-				LOGGER.info("-----*************--Node----Name------" + nodeName);
-				LOGGER.info("-----*************--Node-------Text-----"
-						+ nodeTextContent);
+                String nodeTextContent = node.getTextContent();
 
-				Name entryName = envelope.createName(nodeName);
+                LOGGER.info("-----*************--Node----Name------" + nodeName);
+                LOGGER.info("-----*************--Node-------Text-----"
+                        + nodeTextContent);
 
-				DetailEntry entry = detail.addDetailEntry(entryName);
-				entry.addTextNode(nodeTextContent);
+                Name entryName = envelope.createName(nodeName);
 
-				if (nodeName.contains(":error")) {
+                DetailEntry entry = detail.addDetailEntry(entryName);
+                entry.addTextNode(nodeTextContent);
 
-					errorDetails = nodeTextContent;
+                if (nodeName.contains(":error")) {
 
-					exchange.setProperty(
-							IConstant.ATTJASPER_SOAP_FAULT_ERRORMESSAGE,
-							nodeTextContent);
-				}
+                    errorDetails = nodeTextContent;
 
-			}
+                    exchange.setProperty(
+                            IConstant.ATTJASPER_SOAP_FAULT_ERRORMESSAGE,
+                            nodeTextContent);
+                }
 
-			ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-			soapMessage.writeTo(outStream);
-			payload = new String(outStream.toByteArray(),
-					StandardCharsets.UTF_8);
-			
-			exchange.setProperty(
-					IConstant.ATTJASPER_SOAP_FAULT_PAYLOAD,
-					payload);
+            }
 
-		} catch (SOAPException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+            ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+            soapMessage.writeTo(outStream);
+            payload = new String(outStream.toByteArray(),
+                    StandardCharsets.UTF_8);
 
-		return payload;
-	}
- 
+            exchange.setProperty(IConstant.ATTJASPER_SOAP_FAULT_PAYLOAD,
+                    payload);
+
+        } catch (SOAPException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return payload;
+    }
+
     public static final String convertSOAPFaulttoString(Node node) {
         try {
             if (node == null) {
                 return null;
             }
 
-            TransformerFactory trf=TransformerFactory.newInstance();
-            Transformer tf=trf.newTransformer();
-          
+            TransformerFactory trf = TransformerFactory.newInstance();
+            Transformer tf = trf.newTransformer();
+
             StringWriter sw = new StringWriter();
             StreamResult result = new StreamResult(sw);
 
@@ -647,79 +647,110 @@ public class CommonUtil {
             throw new RuntimeException("Could not convert Node to string", e);
         }
     }
-    
+
     /**
      * Get the Exception stack trace in log file
      */
 
-    public static String getStackTrace(Exception e){
-    	
-    	StringWriter stack = new StringWriter();
-    	e.printStackTrace(new PrintWriter(stack));
-    	
-    	return stack.toString();
-    	
-    }
-    
-    public static void setTokenGenerationRequired()
-    {
-     
-    	if(isTokenRequired.get()==false){
-    		
-    		isTokenRequired.set(true);
-    		isAlreadyinTokenGeneration.set(true);
-    	}
-    	
-    	
-    }
-    
-    public static AtomicBoolean getTokenRequired()
-    {
-     
+    public static String getStackTrace(Exception e) {
 
-      return isTokenRequired;
-    	
-    	
-    }
-    
-    public static AtomicBoolean isAlreadyinTokenGeneration()
-    {
-     
+        StringWriter stack = new StringWriter();
+        e.printStackTrace(new PrintWriter(stack));
 
-      return isAlreadyinTokenGeneration;
-    	
-    	
-    }
-    
-    public static void setAlreadyInTokenGeneration(boolean isAlreadyInTokenGeneration)
-    {
-     
+        return stack.toString();
 
-    	isAlreadyinTokenGeneration.set(isAlreadyInTokenGeneration);
-    	
-    	
     }
-    
-    public static void setTokenRequired(boolean isTokenRequired)
-    {
-     
-    	CommonUtil.isTokenRequired.set(isTokenRequired);
-    	
-    	
+
+    public static void setTokenGenerationRequired() {
+
+        if (isTokenRequired.get() == false) {
+
+            isTokenRequired.set(true);
+            isAlreadyinTokenGeneration.set(true);
+        }
+
     }
-    
-  /*For Kore and ATTJasper We Need Wire Tap and SEDA component So the body should
-      be set with array list of transaction for Verizon we simply add into database and do not change the exchange body*/
-    public static void setListInWireTap(Exchange exchange,List<Transaction> list)
-    {
-    	
-    	String carrierName= exchange.getProperty(
+
+    public static AtomicBoolean getTokenRequired() {
+
+        return isTokenRequired;
+
+    }
+
+    public static AtomicBoolean isAlreadyinTokenGeneration() {
+
+        return isAlreadyinTokenGeneration;
+
+    }
+
+    public static void setAlreadyInTokenGeneration(
+            boolean isAlreadyInTokenGeneration) {
+
+        isAlreadyinTokenGeneration.set(isAlreadyInTokenGeneration);
+
+    }
+
+    public static void setTokenRequired(boolean isTokenRequired) {
+
+        CommonUtil.isTokenRequired.set(isTokenRequired);
+
+    }
+
+    /*
+     * For Kore and ATTJasper We Need Wire Tap and SEDA component So the body
+     * should be set with array list of transaction for Verizon we simply add
+     * into database and do not change the exchange body
+     */
+    public static void setListInWireTap(Exchange exchange,
+            List<Transaction> list) {
+
+        String carrierName = exchange.getProperty(
                 IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString();
-    	
-    	if (!IConstant.BSCARRIER_SERVICE_VERIZON.equals(carrierName))
-        {
-        	
+
+        if (!IConstant.BSCARRIER_SERVICE_VERIZON.equals(carrierName)) {
+
             exchange.getIn().setBody(list);
         }
     }
+
+    public static int getAttJasperCustomField(String customFiled) {
+
+        switch (customFiled) {
+        case "customField1":
+            return 17;
+
+        case "customField2":
+            return 18;
+
+        case "customField3":
+
+            return 19;
+
+        case "customField4":
+
+            return 73;
+
+        case "customField5":
+            return 74;
+
+        case "customField6":
+            return 75;
+
+        case "customField7":
+            return 76;
+            
+        case "customField8":
+            return 77;
+            
+        case "customField9":
+            return 78;
+            
+        case "customField10":
+            return 79;
+
+        default:
+            return -1;
+        }
+    }
+
 }

@@ -1,6 +1,5 @@
 package com.gv.midway.dao.impl;
 
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -76,7 +75,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
     @Autowired
     MongoTemplate mongoTemplate;
 
-    private static final Logger LOGGER = Logger.getLogger(TransactionalDaoImpl.class);
+    private static final Logger LOGGER = Logger
+            .getLogger(TransactionalDaoImpl.class);
 
     @Override
     public void populateActivateDBPayload(Exchange exchange) {
@@ -175,7 +175,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 list.add(transaction);
 
             } catch (Exception ex) {
-                LOGGER.error("Inside populateActivateDBPayload"+ex);
+                LOGGER.error("Inside populateActivateDBPayload" + ex);
             }
 
         }
@@ -184,16 +184,14 @@ public class TransactionalDaoImpl implements ITransactionalDao {
         CommonUtil.setListInWireTap(exchange, list);
     }
 
-    
-
     /**
-     * Inserting the Kore Custom field data in the Transaction collection
-     * if there are 6 custom fields than 2 records will be inserted
-     * One is the Main Activation Records
-     * and 1 records for one all the custom field
+     * Inserting the Kore Custom field data in the Transaction collection if
+     * there are 6 custom fields than 2 records will be inserted One is the Main
+     * Activation Records and 1 records for one all the custom field
+     * 
      * @param exchange
      */
-    
+
     public void populateKoreActivateCustomFieldDBPayload(Exchange exchange) {
 
         ArrayList<Transaction> list = new ArrayList<Transaction>();
@@ -260,7 +258,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                         .getValue());
                 customFieldsToUpdate[i] = newCustomField;
             }
-            
+
             requestDataArea.setCustomFieldsToUpdate(customFieldsToUpdate);
             requestDataArea.setDevices(businessPayLoadDevicesArray);
             dbPayload.setDataArea(requestDataArea);
@@ -303,10 +301,10 @@ public class TransactionalDaoImpl implements ITransactionalDao {
     }
 
     /**
-     * Inserting the ATT Custom field data in the Transaction collection
-     * if there are 6 custom fields than 7records will be inserted
-     * One is the Main Activation Records
-     * and 6 records for one for each custom field
+     * Inserting the ATT Custom field data in the Transaction collection if
+     * there are 6 custom fields than 7records will be inserted One is the Main
+     * Activation Records and 6 records for one for each custom field
+     * 
      * @param exchange
      */
     public void populateATTActivateCustomFieldDBPayload(Exchange exchange) {
@@ -327,7 +325,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
         if (activateDevices != null) {
             activateDevicesArr[0] = activateDevices;
         }
-
 
         for (ActivateDevices activateDevice : activateDevicesArr) {
 
@@ -418,11 +415,9 @@ public class TransactionalDaoImpl implements ITransactionalDao {
             }
         }
         mongoTemplate.insertAll(list);
-     
+
     }
-    
-    
-    
+
     @Override
     public void populateDeactivateDBPayload(Exchange exchange) {
 
@@ -511,13 +506,13 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 list.add(transaction);
 
             } catch (Exception ex) {
-                LOGGER.error("Inside populateDeactivateDBPayload"+ex);
+                LOGGER.error("Inside populateDeactivateDBPayload" + ex);
 
             }
 
         }
         mongoTemplate.insertAll(list);
-        
+
         CommonUtil.setListInWireTap(exchange, list);
 
     }
@@ -590,13 +585,13 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 list.add(transaction);
 
             } catch (Exception ex) {
-                LOGGER.error("Inside populateSuspendDBPayload"+ex);
+                LOGGER.error("Inside populateSuspendDBPayload" + ex);
 
             }
 
         }
         mongoTemplate.insertAll(list);
-        
+
         CommonUtil.setListInWireTap(exchange, list);
 
     }
@@ -720,7 +715,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
             mongoTemplate.updateMulti(searchQuery, update, Transaction.class);
         } catch (Exception ex) {
-            LOGGER.error("Error in populateVerizonTransactionalErrorResponse"+ex);
+            LOGGER.error("Error in populateVerizonTransactionalErrorResponse"
+                    + ex);
         }
 
     }
@@ -809,10 +805,9 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 mongoTemplate.updateFirst(searchQuery, update,
                         Transaction.class);
 
-            } 
-            
-            else  
-            {
+            }
+
+            else {
 
                 searchQuery = new Query(Criteria.where(
                         ITransaction.MIDWAY_TRANSACTION_ID).is(
@@ -834,7 +829,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                         Transaction.class);
 
             }
-           
+
         }
         exchange.setProperty(IConstant.RESPONSE_DESCRIPTION,
                 IResponse.ERROR_DESCRIPTION_CONNECTION_MIDWAYDB);
@@ -902,7 +897,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
             strDeviceNumber = objectMapper
                     .writeValueAsString(businesscallbackDevices);
         } catch (JsonProcessingException e) {
-            LOGGER.error("Error "+e);
+            LOGGER.error("Error " + e);
         }
 
         Query searchUserQuery = new Query(Criteria
@@ -978,7 +973,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
             strDeviceNumber = objectMapper
                     .writeValueAsString(targetCallbackDevices);
         } catch (JsonProcessingException e) {
-           LOGGER.error(e);
+            LOGGER.error(e);
         }
 
         Query searchUserQuery = new Query(Criteria
@@ -1261,12 +1256,12 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 list.add(transaction);
 
             } catch (Exception ex) {
-                LOGGER.error("Exception populateReactivateDBPayload"+ex);
+                LOGGER.error("Exception populateReactivateDBPayload" + ex);
             }
 
         }
         mongoTemplate.insertAll(list);
-       
+
         CommonUtil.setListInWireTap(exchange, list);
 
     }
@@ -1346,12 +1341,12 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 list.add(transaction);
 
             } catch (Exception ex) {
-                LOGGER.error("Exception populateRestoreDBPayload"+ex);
+                LOGGER.error("Exception populateRestoreDBPayload" + ex);
             }
 
         }
         mongoTemplate.insertAll(list);
-        
+
         CommonUtil.setListInWireTap(exchange, list);
     }
 
@@ -1433,17 +1428,16 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 list.add(transaction);
 
             } catch (Exception ex) {
-                LOGGER.error("Exception populateCustomeFieldsDBPayload"+ex);
+                LOGGER.error("Exception populateCustomeFieldsDBPayload" + ex);
             }
 
         }
         mongoTemplate.insertAll(list);
-        
+
         CommonUtil.setListInWireTap(exchange, list);
 
     }
-    
-    
+
     public void populateATTCustomeFieldsDBPayload(Exchange exchange) {
         LOGGER.info("Inside populateCustomeFieldsDBPayload");
         ArrayList<Transaction> list = new ArrayList<Transaction>();
@@ -1459,7 +1453,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
         for (MidWayDevices customFieldsDevice : customFieldsDevices) {
 
-       
             Integer netSuiteId = customFieldsDevice.getNetSuiteId();
             MidWayDevices[] businessPayLoadDevicesArray = new MidWayDevices[1];
             MidWayDevices businessPayLoadActivateDevices = new MidWayDevices();
@@ -1480,75 +1473,71 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 businessPayloadDeviceId[i] = businessPayLoadActivateDeviceId;
 
             }
-            
-                      
-            
+
             businessPayLoadActivateDevices
                     .setDeviceIds(businessPayloadDeviceId);
             businessPayLoadDevicesArray[0] = businessPayLoadActivateDevices;
-  
+
             for (int i = 0; i < req.getDataArea().getCustomFieldsToUpdate().length; i++) {
-                
+
                 CustomFieldsDeviceRequest dbPayload = new CustomFieldsDeviceRequest();
                 dbPayload.setHeader(req.getHeader());
-                
-                
-                
+
                 CustomFieldsDeviceRequestDataArea requestDataArea = new CustomFieldsDeviceRequestDataArea();
                 CustomFieldsToUpdate[] customFieldsToUpdate = new CustomFieldsToUpdate[1];
                 CustomFieldsToUpdate newCustomField = new CustomFieldsToUpdate();
-                
-                newCustomField.setKey( req.getDataArea().getCustomFieldsToUpdate()[i]
-                        .getKey());
-                newCustomField.setValue( req.getDataArea().getCustomFieldsToUpdate()[i]
-                        .getValue());
+
+                newCustomField.setKey(req.getDataArea()
+                        .getCustomFieldsToUpdate()[i].getKey());
+                newCustomField.setValue(req.getDataArea()
+                        .getCustomFieldsToUpdate()[i].getValue());
                 customFieldsToUpdate[0] = newCustomField;
-            
+
                 requestDataArea.setCustomFieldsToUpdate(customFieldsToUpdate);
                 requestDataArea.setDevices(businessPayLoadDevicesArray);
                 dbPayload.setDataArea(requestDataArea);
-            try {
+                try {
 
-                Transaction transaction = new Transaction();
-                transaction.setMidwayTransactionId(exchange.getProperty(
-                        IConstant.MIDWAY_TRANSACTION_ID).toString());
+                    Transaction transaction = new Transaction();
+                    transaction.setMidwayTransactionId(exchange.getProperty(
+                            IConstant.MIDWAY_TRANSACTION_ID).toString());
 
-                // Sorting the device id by kind and inserting into deviceNumber
-                Arrays.sort(businessPayloadDeviceId, (MidWayDeviceId a,
-                        MidWayDeviceId b) -> a.getKind().compareTo(b.getKind()));
+                    // Sorting the device id by kind and inserting into
+                    // deviceNumber
+                    Arrays.sort(businessPayloadDeviceId,
+                            (MidWayDeviceId a, MidWayDeviceId b) -> a.getKind()
+                                    .compareTo(b.getKind()));
 
-                ObjectMapper obj = new ObjectMapper();
-                String strDeviceNumber = obj
-                        .writeValueAsString(businessPayloadDeviceId);
-                transaction.setDeviceNumber(strDeviceNumber);
-                transaction.setDevicePayload(dbPayload);
-                transaction
-                        .setMidwayStatus(IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
-                transaction.setCarrierName(exchange.getProperty(
-                        IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString());
-                transaction.setTimeStampReceived(new Date());
-                transaction.setAuditTransactionId(exchange.getProperty(
-                        IConstant.AUDIT_TRANSACTION_ID).toString());
-                transaction.setRequestType(RequestType.CHANGECUSTOMFIELDS);
-                transaction.setCallBackReceived(false);
-                transaction.setNetSuiteId(netSuiteId);
-                list.add(transaction);
+                    ObjectMapper obj = new ObjectMapper();
+                    String strDeviceNumber = obj
+                            .writeValueAsString(businessPayloadDeviceId);
+                    transaction.setDeviceNumber(strDeviceNumber);
+                    transaction.setDevicePayload(dbPayload);
+                    transaction
+                            .setMidwayStatus(IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
+                    transaction.setCarrierName(exchange.getProperty(
+                            IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString());
+                    transaction.setTimeStampReceived(new Date());
+                    transaction.setAuditTransactionId(exchange.getProperty(
+                            IConstant.AUDIT_TRANSACTION_ID).toString());
+                    transaction.setRequestType(RequestType.CHANGECUSTOMFIELDS);
+                    transaction.setCallBackReceived(false);
+                    transaction.setNetSuiteId(netSuiteId);
+                    list.add(transaction);
 
-            } catch (Exception ex) {
-                LOGGER.error("Exception populateCustomeFieldsDBPayload"+ex);
-            }
-            
+                } catch (Exception ex) {
+                    LOGGER.error("Exception populateCustomeFieldsDBPayload"
+                            + ex);
+                }
+
             }
 
         }
         mongoTemplate.insertAll(list);
-        
+
         CommonUtil.setListInWireTap(exchange, list);
 
     }
-    
-    
-    
 
     @Override
     public void populateChangeDeviceServicePlansDBPayload(Exchange exchange) {
@@ -1622,13 +1611,14 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 list.add(transaction);
 
             } catch (Exception ex) {
-                LOGGER.error("Exception populateChangeDeviceServicePlansDBPayload"+ex);
+                LOGGER.error("Exception populateChangeDeviceServicePlansDBPayload"
+                        + ex);
 
             }
 
         }
         mongoTemplate.insertAll(list);
-        
+
         CommonUtil.setListInWireTap(exchange, list);
 
     }
@@ -1731,7 +1721,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 errorResponsePayload = mapper.readValue(errorResponseBody,
                         KoreErrorResponse.class);
             } catch (Exception e) {
-                LOGGER.error("Error ::"+ e);
+                LOGGER.error("Error ::" + e);
             }
 
             update.set(ITransaction.CARRIER_ERROR_DESCRIPTION,
@@ -1790,7 +1780,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
         try {
             jsonstring = mapper.writeValueAsString(map);
         } catch (JsonProcessingException e) {
-           LOGGER.error("Error ::"+ e);
+            LOGGER.error("Error ::" + e);
         }
 
         LOGGER.info("is netsuite callback response......."
@@ -1887,106 +1877,112 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
     }
 
-	@Override
-	public void populateATTJasperTransactionalResponse(Exchange exchange) {
-		// TODO Auto-generated method stub
-		
-		
-		LOGGER.info("Begin populateATTJasperTransactionalResponse");
+    @Override
+    public void populateATTJasperTransactionalResponse(Exchange exchange) {
 
+        LOGGER.info("Begin populateATTJasperTransactionalResponse");
 
-		String soapPayload = (String) exchange.getProperty(IConstant.ATTJASPER_SOAP_RESPONSE_PAYLOAD);
+        String soapPayload = (String) exchange
+                .getProperty(IConstant.ATTJASPER_SOAP_RESPONSE_PAYLOAD);
 
-		EditTerminalResponse editTerminalResponse = (EditTerminalResponse) exchange
-				.getIn().getBody(EditTerminalResponse.class);
+        EditTerminalResponse editTerminalResponse = (EditTerminalResponse) exchange
+                .getIn().getBody(EditTerminalResponse.class);
 
-		LOGGER.info("editTerminalResponse:::::"
-				+ editTerminalResponse.getEffectiveDate());
+        LOGGER.info("editTerminalResponse:::::"
+                + editTerminalResponse.getEffectiveDate());
 
-		Query searchQuery = new Query(
-				Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID)
-						.is(exchange
-								.getProperty(IConstant.MIDWAY_TRANSACTION_ID))
-						.andOperator(
-								Criteria.where(ITransaction.DEVICE_NUMBER)
-										.is(exchange
-												.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
+        Query searchQuery = new Query(
+                Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID)
+                        .is(exchange
+                                .getProperty(IConstant.MIDWAY_TRANSACTION_ID))
+                        .andOperator(
+                                Criteria.where(ITransaction.DEVICE_NUMBER)
+                                        .is(exchange
+                                                .getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
 
-		Update update = new Update();
-		
-		XMLGregorianCalendar effectiveDate=editTerminalResponse.getEffectiveDate();
+        // Adding the Search Criteria for custom field of ATT
+        if (exchange.getProperty("CUSTOMFIELDTOUPDATE") != null) {
 
-		try {
-			
-			
-			
-			if(effectiveDate!=null)
-			{
-			
-			update.set(ITransaction.CARRIER_STATUS,IConstant.CARRIER_TRANSACTION_STATUS_PENDING);
-			
-			Date date=effectiveDate.toGregorianCalendar().getTime();
-			
-			LOGGER.info("ATTJasper effective Date into java util:::::"+ date);
-			
-			update.set(ITransaction.ATTJASPER_EFFECTIVE_DATE,date);
-			
-			
-			}
-			else
-			{
-		
-			
-			update.set(ITransaction.CARRIER_STATUS,IConstant.CARRIER_TRANSACTION_STATUS_SUCCESS);
-			
-				
-			}
-			
-			update.set(ITransaction.CALL_BACK_PAYLOAD, soapPayload);
-			update.set(ITransaction.CALL_BACK_RECEIVED,true);	
-			update.set(ITransaction.LAST_TIME_STAMP_UPDATED, new Date());
-			
-			 mongoTemplate.updateFirst(searchQuery, update, Transaction.class);
-			 LOGGER.info("End populateATTJasperTransactionalResponse");
+            searchQuery.addCriteria(Criteria.where(
+                    "devicePayload.dataArea.customFieldsToUpdate.key").is(
+                    exchange.getProperty("CUSTOMFIELDTOUPDATE")));
+        }
 
-		} catch (Exception ex) {
-			LOGGER.error("Error in populateATTJasperTransactionalResponse" + ex);
-		}
-		
-	}
+        Update update = new Update();
 
-	@Override
-	public void populateATTJasperTransactionalErrorResponse(Exchange exchange) {
-		// TODO Auto-generated method stub
-		LOGGER.info("Begin populateATTJasperTransactionalErrorResponse");
+        XMLGregorianCalendar effectiveDate = editTerminalResponse
+                .getEffectiveDate();
 
-		try {
-			String soapPayload = (String) exchange.getProperty(IConstant.ATTJASPER_SOAP_FAULT_PAYLOAD);
+        try {
 
-			Query searchQuery = new Query(
-					Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID)
-							.is(exchange
-									.getProperty(IConstant.MIDWAY_TRANSACTION_ID))
-							.andOperator(
-									Criteria.where(ITransaction.DEVICE_NUMBER)
-											.is(exchange
-													.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
+            if (effectiveDate != null) {
 
-			Update update = new Update();
-			update.set(ITransaction.CARRIER_ERROR_DESCRIPTION, exchange.getProperty(IConstant.ATTJASPER_SOAP_FAULT_ERRORMESSAGE).toString());
-			update.set(ITransaction.CALL_BACK_PAYLOAD, soapPayload);
-			
-			update.set(ITransaction.CARRIER_STATUS,	IConstant.CARRIER_TRANSACTION_STATUS_ERROR);
-			update.set(ITransaction.LAST_TIME_STAMP_UPDATED, new Date());
-			update.set(ITransaction.CALL_BACK_RECEIVED, false);
-			
-			mongoTemplate.updateFirst(searchQuery, update, Transaction.class);
-		} catch (Exception ex) {
-			LOGGER.error("Error in populateATTJasperTransactionalErrorResponse"
-					+ ex);
-		}
+                update.set(ITransaction.CARRIER_STATUS,
+                        IConstant.CARRIER_TRANSACTION_STATUS_PENDING);
 
-		LOGGER.info("End populateATTJasperTransactionalErrorResponse");
-	}
+                Date date = effectiveDate.toGregorianCalendar().getTime();
+
+                LOGGER.info("ATTJasper effective Date into java util:::::"
+                        + date);
+
+                update.set(ITransaction.ATTJASPER_EFFECTIVE_DATE, date);
+
+            } else {
+
+                update.set(ITransaction.CARRIER_STATUS,
+                        IConstant.CARRIER_TRANSACTION_STATUS_SUCCESS);
+
+            }
+
+            update.set(ITransaction.CALL_BACK_PAYLOAD, soapPayload);
+            update.set(ITransaction.CALL_BACK_RECEIVED, true);
+            update.set(ITransaction.LAST_TIME_STAMP_UPDATED, new Date());
+
+            mongoTemplate.updateFirst(searchQuery, update, Transaction.class);
+            LOGGER.info("End populateATTJasperTransactionalResponse");
+
+        } catch (Exception ex) {
+            LOGGER.error("Error in populateATTJasperTransactionalResponse" + ex);
+        }
+
+    }
+
+    @Override
+    public void populateATTJasperTransactionalErrorResponse(Exchange exchange) {
+        // TODO Auto-generated method stub
+        LOGGER.info("Begin populateATTJasperTransactionalErrorResponse");
+
+        try {
+            String soapPayload = (String) exchange
+                    .getProperty(IConstant.ATTJASPER_SOAP_FAULT_PAYLOAD);
+
+            Query searchQuery = new Query(
+                    Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID)
+                            .is(exchange
+                                    .getProperty(IConstant.MIDWAY_TRANSACTION_ID))
+                            .andOperator(
+                                    Criteria.where(ITransaction.DEVICE_NUMBER)
+                                            .is(exchange
+                                                    .getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
+
+            Update update = new Update();
+            update.set(ITransaction.CARRIER_ERROR_DESCRIPTION, exchange
+                    .getProperty(IConstant.ATTJASPER_SOAP_FAULT_ERRORMESSAGE)
+                    .toString());
+            update.set(ITransaction.CALL_BACK_PAYLOAD, soapPayload);
+
+            update.set(ITransaction.CARRIER_STATUS,
+                    IConstant.CARRIER_TRANSACTION_STATUS_ERROR);
+            update.set(ITransaction.LAST_TIME_STAMP_UPDATED, new Date());
+            update.set(ITransaction.CALL_BACK_RECEIVED, false);
+
+            mongoTemplate.updateFirst(searchQuery, update, Transaction.class);
+        } catch (Exception ex) {
+            LOGGER.error("Error in populateATTJasperTransactionalErrorResponse"
+                    + ex);
+        }
+
+        LOGGER.info("End populateATTJasperTransactionalErrorResponse");
+    }
 
 }
