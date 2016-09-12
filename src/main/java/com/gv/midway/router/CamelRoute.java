@@ -70,6 +70,7 @@ import com.gv.midway.processor.connectionInformation.deviceConnectionStatus.Stub
 import com.gv.midway.processor.connectionInformation.deviceConnectionStatus.VerizonDeviceConnectionStatusPostProcessor;
 import com.gv.midway.processor.connectionInformation.deviceSessionBeginEndInfo.StubVerizonDeviceSessionBeginEndInfoProcessor;
 import com.gv.midway.processor.connectionInformation.deviceSessionBeginEndInfo.VerizonDeviceSessionBeginEndInfoPostProcessor;
+import com.gv.midway.processor.customFieldsDevice.ATTJasperCustomFieldDevicePreProcessor;
 import com.gv.midway.processor.customFieldsDevice.KoreCustomFieldsPreProcessor;
 import com.gv.midway.processor.customFieldsDevice.StubKoreCustomFieldsProcessor;
 import com.gv.midway.processor.customFieldsDevice.StubVerizonCustomFieldsProcessor;
@@ -790,6 +791,11 @@ public class CamelRoute extends RouteBuilder {
                 .process(new CarrierProvisioningDevicePostProcessor(env))
 
                 .endChoice()
+                
+                .when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
+                .wireTap("direct:processCustomFieldATTJasperTansaction")
+                .process(new CarrierProvisioningDevicePostProcessor(env))
+                .endChoice()
 
                 .when(header("derivedCarrierName").isEqualTo("VERIZON"))
                 .bean(iSessionService, "setContextTokenInExchange")
@@ -850,6 +856,36 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iAuditService, "auditExternalResponseCall")
                 .bean(iTransactionalService,
                         "populateKoreTransactionalResponse");
+        
+        
+        // ATTJASPER Flow-1       
+
+        from("direct:processCustomFieldATTJasperTansaction")
+                .log("Wire Tap Thread deactivation")
+                .bean(iTransactionalService, "populateATTCustomeFieldsDBPayload")
+                .split().method("deviceSplitter").recipientList()
+                .method("attJasperDeviceServiceRouter");
+        
+        // ATTJASPER SEDA FLOW
+        
+        from("seda:attJasperSedaCustomeFields?concurrentConsumers=5")
+        .onException(SoapFault.class)
+        .handled(true)
+        .bean(iAuditService, "auditExternalSOAPExceptionResponseCall")
+        .bean(iTransactionalService,
+                "populateATTJasperTransactionalErrorResponse")
+        .end()
+        .process(new ATTJasperCustomFieldDevicePreProcessor(env))
+        .bean(iAuditService, "auditExternalRequestCall")
+        .to(attJasperTerminalEndPoint)
+       
+        .bean(iAuditService, "auditExternalSOAPResponseCall")
+        .bean(iTransactionalService,
+                "populateATTJasperTransactionalResponse");
+
+
+        
+        
 
         // End:CustomeFields Devices
 

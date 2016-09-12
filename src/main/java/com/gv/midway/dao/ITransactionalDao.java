@@ -51,5 +51,7 @@ public interface ITransactionalDao {
 	public void populateATTJasperTransactionalResponse(Exchange exchange);
 	
 	public void populateATTJasperTransactionalErrorResponse(Exchange exchange);
+	
+	public void populateATTCustomeFieldsDBPayload(Exchange exchange);
 
 }

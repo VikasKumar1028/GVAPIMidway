@@ -117,5 +117,7 @@ public interface IConstant {
 	static int ATTJASPER_SIM_CHANGETYPE = 3;
 	
 	static int ATTJASPER_RATE_PLAN_CHANGETYPE = 4;
+	
+	static int ATTJASPER_CUSTOMFIELD_CHANGETYPE = 17;
 
 }

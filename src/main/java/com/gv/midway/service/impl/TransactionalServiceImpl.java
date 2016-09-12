@@ -142,4 +142,9 @@ public class TransactionalServiceImpl implements ITransactionalService {
 	public void populateATTJasperTransactionalErrorResponse(Exchange exchange) {
 		transactionalDao.populateATTJasperTransactionalErrorResponse(exchange);
 	}
+	
+	@Override
+	public void populateATTCustomeFieldsDBPayload(Exchange exchange) {
+            transactionalDao.populateATTCustomeFieldsDBPayload(exchange);
+    }
 }
