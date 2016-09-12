@@ -30,6 +30,7 @@ import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IResponse;
 import com.gv.midway.constant.ITransaction;
 import com.gv.midway.constant.NetSuiteRequestType;
+import com.gv.midway.constant.RecordType;
 import com.gv.midway.constant.RequestType;
 import com.gv.midway.dao.ITransactionalDao;
 import com.gv.midway.pojo.BaseRequest;
@@ -40,9 +41,9 @@ import com.gv.midway.pojo.activateDevice.request.ActivateDeviceId;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequestDataArea;
 import com.gv.midway.pojo.activateDevice.request.ActivateDevices;
-import com.gv.midway.pojo.callback.Netsuite.KeyValues;
 import com.gv.midway.pojo.callback.Netsuite.KafkaNetSuiteCallBackError;
 import com.gv.midway.pojo.callback.Netsuite.KafkaNetSuiteCallBackEvent;
+import com.gv.midway.pojo.callback.Netsuite.KeyValues;
 import com.gv.midway.pojo.callback.Netsuite.NetSuiteCallBackProvisioningRequest;
 import com.gv.midway.pojo.callback.request.CallBackVerizonRequest;
 import com.gv.midway.pojo.changeDeviceServicePlans.request.ChangeDeviceServicePlansRequest;
@@ -63,6 +64,7 @@ import com.gv.midway.pojo.restoreDevice.request.RestoreDeviceRequestDataArea;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequest;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequestDataArea;
 import com.gv.midway.pojo.transaction.Transaction;
+import com.gv.midway.pojo.verizon.CustomFieldsToUpdate;
 import com.gv.midway.pojo.verizon.DeviceId;
 import com.gv.midway.pojo.verizon.VerizonErrorResponse;
 import com.gv.midway.pojo.verizon.VerizonProvisoningResponse;
@@ -182,6 +184,271 @@ public class TransactionalDaoImpl implements ITransactionalDao {
         CommonUtil.setListInWireTap(exchange, list);
     }
 
+    
+
+    /**
+     * Inserting the Kore Custom field data in the Transaction collection
+     * if there are 6 custom fields than 2 records will be inserted
+     * One is the Main Activation Records
+     * and 1 records for one all the custom field
+     * @param exchange
+     */
+    
+    public void populateKoreActivateCustomFieldDBPayload(Exchange exchange) {
+
+        ArrayList<Transaction> list = new ArrayList<Transaction>();
+
+        ActivateDeviceRequest req = (ActivateDeviceRequest) exchange.getIn()
+                .getBody();
+
+        ActivateDeviceRequestDataArea activateDeviceRequestDataArea = (ActivateDeviceRequestDataArea) req
+                .getDataArea();
+
+        ActivateDevices activateDevices = activateDeviceRequestDataArea
+                .getDevices();
+
+        ActivateDevices[] activateDevicesArr = new ActivateDevices[1];
+
+        if (activateDevices != null) {
+            activateDevicesArr[0] = activateDevices;
+        }
+
+        ArrayList<Transaction> list1 = new ArrayList<Transaction>();
+
+        CustomFieldsDeviceRequest req1 = new CustomFieldsDeviceRequest();
+
+        CustomFieldsDeviceRequestDataArea customFieldsDeviceRequestDataArea = new CustomFieldsDeviceRequestDataArea();
+
+        MidWayDevices[] customFieldsDevices = customFieldsDeviceRequestDataArea
+                .getDevices();
+
+        for (ActivateDevices activateDevice : activateDevicesArr) {
+
+            CustomFieldsDeviceRequest dbPayload = new CustomFieldsDeviceRequest();
+            dbPayload.setHeader(req.getHeader());
+            Integer netSuiteId = activateDevice.getNetSuiteId();
+            MidWayDevices[] businessPayLoadDevicesArray = new MidWayDevices[1];
+            MidWayDevices businessPayLoadActivateDevices = new MidWayDevices();
+            MidWayDeviceId[] businessPayloadDeviceId = new MidWayDeviceId[activateDevice
+                    .getDeviceIds().length];
+
+            for (int i = 0; i < activateDevice.getDeviceIds().length; i++) {
+                ActivateDeviceId customFieldsDeviceId = activateDevice
+                        .getDeviceIds()[i];
+
+                MidWayDeviceId businessPayLoadActivateDeviceId = new MidWayDeviceId();
+
+                businessPayLoadActivateDeviceId.setId(customFieldsDeviceId
+                        .getId());
+                businessPayLoadActivateDeviceId.setKind(customFieldsDeviceId
+                        .getKind());
+
+                businessPayloadDeviceId[i] = businessPayLoadActivateDeviceId;
+
+            }
+            businessPayLoadActivateDevices
+                    .setDeviceIds(businessPayloadDeviceId);
+            businessPayLoadDevicesArray[0] = businessPayLoadActivateDevices;
+
+            // create custom field logic
+
+            CustomFieldsDeviceRequestDataArea requestDataArea = new CustomFieldsDeviceRequestDataArea();
+
+            CustomFieldsToUpdate[] customFieldsToUpdate = new CustomFieldsToUpdate[activateDevice
+                    .getCustomFields().length];
+
+            // If Kore all the custom fields in one transactiondao records
+            // if AT&T indivisual records for custom file
+
+            for (int i = 0; i < activateDevice.getCustomFields().length; i++) {
+                CustomFieldsToUpdate newCustomField = new CustomFieldsToUpdate();
+
+                newCustomField.setKey(activateDevice.getCustomFields()[i]
+                        .getKey());
+                newCustomField.setValue(activateDevice.getCustomFields()[i]
+                        .getValue());
+
+                customFieldsToUpdate[i] = newCustomField;
+
+            }
+            
+            requestDataArea.setCustomFieldsToUpdate(customFieldsToUpdate);
+           // requestDataArea.newCustomField(customFieldsToUpdate);
+
+            requestDataArea.setDevices(businessPayLoadDevicesArray);
+            dbPayload.setDataArea(requestDataArea);
+
+            try {
+
+                Transaction transaction = new Transaction();
+
+                transaction.setMidwayTransactionId(exchange.getProperty(
+                        IConstant.MIDWAY_TRANSACTION_ID).toString());
+
+                // Sorting the device id by kind and inserting into deviceNumber
+                Arrays.sort(businessPayloadDeviceId, (MidWayDeviceId a,
+                        MidWayDeviceId b) -> a.getKind().compareTo(b.getKind()));
+
+                ObjectMapper obj = new ObjectMapper();
+                String strDeviceNumber = obj
+                        .writeValueAsString(businessPayloadDeviceId);
+                transaction.setDeviceNumber(strDeviceNumber);
+                transaction.setDevicePayload(dbPayload);
+                transaction.setMidwayStatus("WAIT");
+                transaction.setCarrierName(exchange.getProperty(
+                        IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString());
+                transaction.setTimeStampReceived(new Date());
+                transaction.setAuditTransactionId(exchange.getProperty(
+                        IConstant.AUDIT_TRANSACTION_ID).toString());
+                transaction.setRequestType(RequestType.CHANGECUSTOMFIELDS);
+                transaction.setCallBackReceived(false);
+                transaction.setNetSuiteId(netSuiteId);
+                transaction.setRecordType(RecordType.SECONDARY);
+                list.add(transaction);
+
+            } catch (Exception ex) {
+                LOGGER.error("Exception populateCustomeFieldsDBPayload" + ex);
+            }
+
+        }
+        mongoTemplate.insertAll(list);
+
+        CommonUtil.setListInWireTap(exchange, list);
+
+    }
+
+    /**
+     * Inserting the ATT Custom field data in the Transaction collection
+     * if there are 6 custom fields than 7records will be inserted
+     * One is the Main Activation Records
+     * and 6 records for one for each custom field
+     * @param exchange
+     */
+    public void populateATTActivateCustomFieldDBPayload(Exchange exchange) {
+
+        ArrayList<Transaction> list = new ArrayList<Transaction>();
+
+        ActivateDeviceRequest req = (ActivateDeviceRequest) exchange.getIn()
+                .getBody();
+
+        ActivateDeviceRequestDataArea activateDeviceRequestDataArea = (ActivateDeviceRequestDataArea) req
+                .getDataArea();
+
+        ActivateDevices activateDevices = activateDeviceRequestDataArea
+                .getDevices();
+
+        ActivateDevices[] activateDevicesArr = new ActivateDevices[1];
+
+        if (activateDevices != null) {
+            activateDevicesArr[0] = activateDevices;
+        }
+
+        ArrayList<Transaction> list1 = new ArrayList<Transaction>();
+
+        CustomFieldsDeviceRequest req1 = new CustomFieldsDeviceRequest();
+
+        CustomFieldsDeviceRequestDataArea customFieldsDeviceRequestDataArea = new CustomFieldsDeviceRequestDataArea();
+
+        MidWayDevices[] customFieldsDevices = customFieldsDeviceRequestDataArea
+                .getDevices();
+
+        for (ActivateDevices activateDevice : activateDevicesArr) {
+
+            Integer netSuiteId = activateDevice.getNetSuiteId();
+            MidWayDevices[] businessPayLoadDevicesArray = new MidWayDevices[1];
+            MidWayDevices businessPayLoadActivateDevices = new MidWayDevices();
+            MidWayDeviceId[] businessPayloadDeviceId = new MidWayDeviceId[activateDevice
+                    .getDeviceIds().length];
+
+            for (int i = 0; i < activateDevice.getDeviceIds().length; i++) {
+                ActivateDeviceId customFieldsDeviceId = activateDevice
+                        .getDeviceIds()[i];
+
+                MidWayDeviceId businessPayLoadActivateDeviceId = new MidWayDeviceId();
+
+                businessPayLoadActivateDeviceId.setId(customFieldsDeviceId
+                        .getId());
+                businessPayLoadActivateDeviceId.setKind(customFieldsDeviceId
+                        .getKind());
+
+                businessPayloadDeviceId[i] = businessPayLoadActivateDeviceId;
+
+            }
+            businessPayLoadActivateDevices
+                    .setDeviceIds(businessPayloadDeviceId);
+            businessPayLoadDevicesArray[0] = businessPayLoadActivateDevices;
+
+            // create custom field logic
+
+            // If Kore all the custom fields in one transactiondao records
+            // if AT&T indivisual records for custom file
+
+            for (int i = 0; i < activateDevice.getCustomFields().length; i++) {
+
+                CustomFieldsDeviceRequest dbPayload = new CustomFieldsDeviceRequest();
+                dbPayload.setHeader(req.getHeader());
+
+                CustomFieldsDeviceRequestDataArea requestDataArea = new CustomFieldsDeviceRequestDataArea();
+                CustomFieldsToUpdate[] customFieldsToUpdate = new CustomFieldsToUpdate[1];
+                CustomFieldsToUpdate newCustomField = new CustomFieldsToUpdate();
+
+                newCustomField.setKey(activateDevice.getCustomFields()[i]
+                        .getKey());
+                newCustomField.setValue(activateDevice.getCustomFields()[i]
+                        .getValue());
+                customFieldsToUpdate[0] = newCustomField;
+
+                requestDataArea.setCustomFieldsToUpdate(customFieldsToUpdate);
+                //requestDataArea.newCustomField(customFieldsToUpdate);
+
+                requestDataArea.setDevices(businessPayLoadDevicesArray);
+                dbPayload.setDataArea(requestDataArea);
+
+                try {
+
+                    Transaction transaction = new Transaction();
+
+                    transaction.setMidwayTransactionId(exchange.getProperty(
+                            IConstant.MIDWAY_TRANSACTION_ID).toString());
+
+                    // Sorting the device id by kind and inserting into
+                    // deviceNumber
+                    Arrays.sort(businessPayloadDeviceId,
+                            (MidWayDeviceId a, MidWayDeviceId b) -> a.getKind()
+                                    .compareTo(b.getKind()));
+
+                    ObjectMapper obj = new ObjectMapper();
+                    String strDeviceNumber = obj
+                            .writeValueAsString(businessPayloadDeviceId);
+                    transaction.setDeviceNumber(strDeviceNumber);
+                    transaction.setDevicePayload(dbPayload);
+                    transaction.setMidwayStatus("WAIT");
+                    transaction.setCarrierName(exchange.getProperty(
+                            IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString());
+                    transaction.setTimeStampReceived(new Date());
+                    transaction.setAuditTransactionId(exchange.getProperty(
+                            IConstant.AUDIT_TRANSACTION_ID).toString());
+                    transaction.setRequestType(RequestType.CHANGECUSTOMFIELDS);
+                    transaction.setCallBackReceived(false);
+                    transaction.setNetSuiteId(netSuiteId);
+                    transaction.setRecordType(RecordType.SECONDARY);
+                    list.add(transaction);
+
+                } catch (Exception ex) {
+                    LOGGER.error("Exception populateCustomeFieldsDBPayload"
+                            + ex);
+                }
+
+            }
+        }
+        mongoTemplate.insertAll(list);
+
+        CommonUtil.setListInWireTap(exchange, list);
+
+    }
+    
+    
+    
     @Override
     public void populateDeactivateDBPayload(Exchange exchange) {
 
