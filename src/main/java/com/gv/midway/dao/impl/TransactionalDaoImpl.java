@@ -1442,6 +1442,113 @@ public class TransactionalDaoImpl implements ITransactionalDao {
         CommonUtil.setListInWireTap(exchange, list);
 
     }
+    
+    
+    public void populateATTCustomeFieldsDBPayload(Exchange exchange) {
+        LOGGER.info("Inside populateCustomeFieldsDBPayload");
+        ArrayList<Transaction> list = new ArrayList<Transaction>();
+
+        CustomFieldsDeviceRequest req = (CustomFieldsDeviceRequest) exchange
+                .getIn().getBody();
+
+        CustomFieldsDeviceRequestDataArea customFieldsDeviceRequestDataArea = (CustomFieldsDeviceRequestDataArea) req
+                .getDataArea();
+
+        MidWayDevices[] customFieldsDevices = customFieldsDeviceRequestDataArea
+                .getDevices();
+
+        for (MidWayDevices customFieldsDevice : customFieldsDevices) {
+
+       
+            Integer netSuiteId = customFieldsDevice.getNetSuiteId();
+            MidWayDevices[] businessPayLoadDevicesArray = new MidWayDevices[1];
+            MidWayDevices businessPayLoadActivateDevices = new MidWayDevices();
+            MidWayDeviceId[] businessPayloadDeviceId = new MidWayDeviceId[customFieldsDevice
+                    .getDeviceIds().length];
+
+            for (int i = 0; i < customFieldsDevice.getDeviceIds().length; i++) {
+                MidWayDeviceId customFieldsDeviceId = customFieldsDevice
+                        .getDeviceIds()[i];
+
+                MidWayDeviceId businessPayLoadActivateDeviceId = new MidWayDeviceId();
+
+                businessPayLoadActivateDeviceId.setId(customFieldsDeviceId
+                        .getId());
+                businessPayLoadActivateDeviceId.setKind(customFieldsDeviceId
+                        .getKind());
+
+                businessPayloadDeviceId[i] = businessPayLoadActivateDeviceId;
+
+            }
+            
+                      
+            
+            businessPayLoadActivateDevices
+                    .setDeviceIds(businessPayloadDeviceId);
+            businessPayLoadDevicesArray[0] = businessPayLoadActivateDevices;
+  
+            for (int i = 0; i < req.getDataArea().getCustomFieldsToUpdate().length; i++) {
+                
+                CustomFieldsDeviceRequest dbPayload = new CustomFieldsDeviceRequest();
+                dbPayload.setHeader(req.getHeader());
+                
+                
+                
+                CustomFieldsDeviceRequestDataArea requestDataArea = new CustomFieldsDeviceRequestDataArea();
+                CustomFieldsToUpdate[] customFieldsToUpdate = new CustomFieldsToUpdate[1];
+                CustomFieldsToUpdate newCustomField = new CustomFieldsToUpdate();
+                
+                newCustomField.setKey( req.getDataArea().getCustomFieldsToUpdate()[i]
+                        .getKey());
+                newCustomField.setValue( req.getDataArea().getCustomFieldsToUpdate()[i]
+                        .getValue());
+                customFieldsToUpdate[0] = newCustomField;
+            
+                requestDataArea.setCustomFieldsToUpdate(customFieldsToUpdate);
+                requestDataArea.setDevices(businessPayLoadDevicesArray);
+                dbPayload.setDataArea(requestDataArea);
+            try {
+
+                Transaction transaction = new Transaction();
+                transaction.setMidwayTransactionId(exchange.getProperty(
+                        IConstant.MIDWAY_TRANSACTION_ID).toString());
+
+                // Sorting the device id by kind and inserting into deviceNumber
+                Arrays.sort(businessPayloadDeviceId, (MidWayDeviceId a,
+                        MidWayDeviceId b) -> a.getKind().compareTo(b.getKind()));
+
+                ObjectMapper obj = new ObjectMapper();
+                String strDeviceNumber = obj
+                        .writeValueAsString(businessPayloadDeviceId);
+                transaction.setDeviceNumber(strDeviceNumber);
+                transaction.setDevicePayload(dbPayload);
+                transaction
+                        .setMidwayStatus(IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
+                transaction.setCarrierName(exchange.getProperty(
+                        IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString());
+                transaction.setTimeStampReceived(new Date());
+                transaction.setAuditTransactionId(exchange.getProperty(
+                        IConstant.AUDIT_TRANSACTION_ID).toString());
+                transaction.setRequestType(RequestType.CHANGECUSTOMFIELDS);
+                transaction.setCallBackReceived(false);
+                transaction.setNetSuiteId(netSuiteId);
+                list.add(transaction);
+
+            } catch (Exception ex) {
+                LOGGER.error("Exception populateCustomeFieldsDBPayload"+ex);
+            }
+            
+            }
+
+        }
+        mongoTemplate.insertAll(list);
+        
+        CommonUtil.setListInWireTap(exchange, list);
+
+    }
+    
+    
+    
 
     @Override
     public void populateChangeDeviceServicePlansDBPayload(Exchange exchange) {
