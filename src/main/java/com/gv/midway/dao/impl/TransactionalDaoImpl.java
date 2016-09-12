@@ -213,15 +213,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
             activateDevicesArr[0] = activateDevices;
         }
 
-        ArrayList<Transaction> list1 = new ArrayList<Transaction>();
-
-        CustomFieldsDeviceRequest req1 = new CustomFieldsDeviceRequest();
-
-        CustomFieldsDeviceRequestDataArea customFieldsDeviceRequestDataArea = new CustomFieldsDeviceRequestDataArea();
-
-        MidWayDevices[] customFieldsDevices = customFieldsDeviceRequestDataArea
-                .getDevices();
-
         for (ActivateDevices activateDevice : activateDevicesArr) {
 
             CustomFieldsDeviceRequest dbPayload = new CustomFieldsDeviceRequest();
@@ -267,14 +258,10 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                         .getKey());
                 newCustomField.setValue(activateDevice.getCustomFields()[i]
                         .getValue());
-
                 customFieldsToUpdate[i] = newCustomField;
-
             }
             
             requestDataArea.setCustomFieldsToUpdate(customFieldsToUpdate);
-           // requestDataArea.newCustomField(customFieldsToUpdate);
-
             requestDataArea.setDevices(businessPayLoadDevicesArray);
             dbPayload.setDataArea(requestDataArea);
 
@@ -313,8 +300,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
         }
         mongoTemplate.insertAll(list);
 
-        CommonUtil.setListInWireTap(exchange, list);
-
     }
 
     /**
@@ -343,14 +328,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
             activateDevicesArr[0] = activateDevices;
         }
 
-        ArrayList<Transaction> list1 = new ArrayList<Transaction>();
-
-        CustomFieldsDeviceRequest req1 = new CustomFieldsDeviceRequest();
-
-        CustomFieldsDeviceRequestDataArea customFieldsDeviceRequestDataArea = new CustomFieldsDeviceRequestDataArea();
-
-        MidWayDevices[] customFieldsDevices = customFieldsDeviceRequestDataArea
-                .getDevices();
 
         for (ActivateDevices activateDevice : activateDevicesArr) {
 
@@ -399,7 +376,6 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 customFieldsToUpdate[0] = newCustomField;
 
                 requestDataArea.setCustomFieldsToUpdate(customFieldsToUpdate);
-                //requestDataArea.newCustomField(customFieldsToUpdate);
 
                 requestDataArea.setDevices(businessPayLoadDevicesArray);
                 dbPayload.setDataArea(requestDataArea);
@@ -442,9 +418,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
             }
         }
         mongoTemplate.insertAll(list);
-
-        CommonUtil.setListInWireTap(exchange, list);
-
+     
     }
     
     
