@@ -115,5 +115,7 @@ public interface IConstant {
 	static String ATTJASPER_ACTIVATED = "ACTIVATED_NAME";
 	
 	static int ATTJASPER_SIM_CHANGETYPE = 3;
+	
+	static int ATTJASPER_RATE_PLAN_CHANGETYPE = 4;
 
 }

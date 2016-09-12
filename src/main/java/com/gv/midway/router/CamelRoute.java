@@ -4,6 +4,7 @@ import java.net.ConnectException;
 import java.net.NoRouteToHostException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangeTimedOutException;
 import org.apache.camel.LoggingLevel;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+
 import com.gv.midway.constant.CarrierType;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.JobName;
@@ -54,7 +56,9 @@ import com.gv.midway.processor.callbacks.CallbackPostProcessor;
 import com.gv.midway.processor.callbacks.CallbackPreProcessor;
 import com.gv.midway.processor.cell.StubCellBulkUploadProcessor;
 import com.gv.midway.processor.cell.StubCellUploadProcessor;
+import com.gv.midway.processor.changeDeviceServicePlans.ATTJasperChangeDeviceServicePlansPreProcessor;
 import com.gv.midway.processor.changeDeviceServicePlans.KoreChangeDeviceServicePlansPreProcessor;
+import com.gv.midway.processor.changeDeviceServicePlans.StubATTJasperChangeDeviceServicePlansProcessor;
 import com.gv.midway.processor.changeDeviceServicePlans.StubKoreChangeDeviceServicePlansProcessor;
 import com.gv.midway.processor.changeDeviceServicePlans.StubVerizonChangeDeviceServicePlansProcessor;
 import com.gv.midway.processor.changeDeviceServicePlans.VerizonChangeDeviceServicePlansPreProcessor;
@@ -867,7 +871,11 @@ public class CamelRoute extends RouteBuilder {
                 .when(header("derivedCarrierName").isEqualTo("KORE"))
                 .process(new StubKoreChangeDeviceServicePlansProcessor())
                 .to("log:input")
-
+                
+				.when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
+				.process(new StubATTJasperChangeDeviceServicePlansProcessor())
+				.to("log:ATTJASPER")
+                
                 .when(header("derivedCarrierName").isEqualTo("VERIZON"))
                 .process(new StubVerizonChangeDeviceServicePlansProcessor())
                 .to("log:input")
@@ -880,6 +888,11 @@ public class CamelRoute extends RouteBuilder {
                         "direct:processchangeDeviceServicePlansKoreTransaction")
                 .process(new CarrierProvisioningDevicePostProcessor(env))
                 .endChoice()
+                
+				. when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
+				 .wireTap("direct:processChangeDeviceServicePlansATTJasperTansaction")
+				 .process(new CarrierProvisioningDevicePostProcessor(env))
+				.endChoice()	
 
                 .when(header("derivedCarrierName").isEqualTo("VERIZON"))
                 .bean(iSessionService, "setContextTokenInExchange")
@@ -944,6 +957,35 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iAuditService, "auditExternalResponseCall")
                 .bean(iTransactionalService,
                         "populateKoreTransactionalResponse");
+        
+        
+        
+		       	// ATTJASPER Flow-1
+		        
+		
+		        from("direct:processChangeDeviceServicePlansATTJasperTansaction")
+		                .log("Wire Tap Thread deactivation")
+		                .bean(iTransactionalService, "populateChangeDeviceServicePlansDBPayload")
+		                .split().method("deviceSplitter").recipientList()
+		                .method("attJasperDeviceServiceRouter");
+		        
+		        // ATTJASPER SEDA FLOW
+		       
+		        from("seda:attJasperSedaChangeDeviceServicePlans?concurrentConsumers=5")
+		        .onException(SoapFault.class)
+		        .handled(true)
+		        .bean(iAuditService, "auditExternalSOAPExceptionResponseCall")
+		        .bean(iTransactionalService,
+		                "populateATTJasperTransactionalErrorResponse")
+		        .end()
+		        .process(new ATTJasperChangeDeviceServicePlansPreProcessor(env))
+		        .bean(iAuditService, "auditExternalRequestCall")
+		        .to(attJasperTerminalEndPoint)
+		       
+		        .bean(iAuditService, "auditExternalSOAPResponseCall")
+		        .bean(iTransactionalService,
+		                "populateATTJasperTransactionalResponse");
+        
 
         // End: Change Device ServicePlans
 
