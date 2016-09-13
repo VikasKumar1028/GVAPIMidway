@@ -716,36 +716,36 @@ public class CommonUtil {
     public static int getAttJasperCustomField(String customFiled) {
 
         switch (customFiled) {
-        case "customField1":
+        case "CustomField1":
             return 17;
 
-        case "customField2":
+        case "CustomField2":
             return 18;
 
-        case "customField3":
+        case "CustomField3":
 
             return 19;
 
-        case "customField4":
+        case "CustomField4":
 
             return 73;
 
-        case "customField5":
+        case "CustomField5":
             return 74;
 
-        case "customField6":
+        case "CustomField6":
             return 75;
 
-        case "customField7":
+        case "CustomField7":
             return 76;
             
-        case "customField8":
+        case "CustomField8":
             return 77;
             
-        case "customField9":
+        case "CustomField9":
             return 78;
             
-        case "customField10":
+        case "CustomField10":
             return 79;
 
         default:
