@@ -52,6 +52,7 @@ public interface IConstant {
 	static String MIDWAY_TRANSACTION_STATUS_PENDING = "Pending";
 	static String MIDWAY_TRANSACTION_STATUS_ERROR = "Error";
 	static String MIDWAY_TRANSACTION_STATUS_SUCCESS = "Success";
+	static String MIDWAY_TRANSACTION_STATUS_WAIT = "Wait";
 
 	static String CARRIER_TRANSACTION_STATUS_PENDING = "Pending";
 	static String CARRIER_TRANSACTION_STATUS_ERROR = "Error";

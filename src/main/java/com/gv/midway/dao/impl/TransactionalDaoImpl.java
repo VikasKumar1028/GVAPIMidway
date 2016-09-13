@@ -279,7 +279,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                         .writeValueAsString(businessPayloadDeviceId);
                 transaction.setDeviceNumber(strDeviceNumber);
                 transaction.setDevicePayload(dbPayload);
-                transaction.setMidwayStatus("WAIT");
+                transaction.setMidwayStatus(IConstant.MIDWAY_TRANSACTION_STATUS_WAIT);
                 transaction.setCarrierName(exchange.getProperty(
                         IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString());
                 transaction.setTimeStampReceived(new Date());
@@ -395,7 +395,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                             .writeValueAsString(businessPayloadDeviceId);
                     transaction.setDeviceNumber(strDeviceNumber);
                     transaction.setDevicePayload(dbPayload);
-                    transaction.setMidwayStatus("WAIT");
+                    transaction.setMidwayStatus(IConstant.MIDWAY_TRANSACTION_STATUS_WAIT);
                     transaction.setCarrierName(exchange.getProperty(
                             IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString());
                     transaction.setTimeStampReceived(new Date());
