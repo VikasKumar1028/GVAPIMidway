@@ -100,7 +100,9 @@ import com.gv.midway.processor.jobScheduler.VerizonDeviceUsageHistoryPreProcesso
 import com.gv.midway.processor.jobScheduler.VerizonTransactionFailureDeviceConnectionHistoryPreProcessor;
 import com.gv.midway.processor.jobScheduler.VerizonTransactionFailureDeviceUsageHistoryPreProcessor;
 import com.gv.midway.processor.kafka.KafkaProcessor;
+import com.gv.midway.processor.reactivate.ATTJasperReactivateDevicePreProcessor;
 import com.gv.midway.processor.reactivate.KoreReactivateDevicePreProcessor;
+import com.gv.midway.processor.reactivate.StubATTJasperReactivateDeviceProcessor;
 import com.gv.midway.processor.reactivate.StubKoreReactivateDeviceProcessor;
 import com.gv.midway.processor.restoreDevice.KoreRestoreDevicePreProcessor;
 import com.gv.midway.processor.restoreDevice.StubKoreRestoreDeviceProcessor;
@@ -735,11 +737,24 @@ public class CamelRoute extends RouteBuilder {
                 .choice().when(header("derivedCarrierName").isEqualTo("KORE"))
                 .log("message" + header("derivedSourceName"))
                 .process(new StubKoreReactivateDeviceProcessor())
-                .to("log:input").endChoice().otherwise().choice()
+                .to("log:input")
+                
+                .when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
+				.process(new StubATTJasperReactivateDeviceProcessor())
+				.to("log:ATTJASPER")
+                
+                .endChoice().otherwise().choice()
                 .when(header("derivedCarrierName").isEqualTo("KORE"))
                 .wireTap("direct:processReactivateKoreTransaction")
                 .process(new CarrierProvisioningDevicePostProcessor(env))
-                .endChoice().end().to("log:input").endChoice().end();
+                .endChoice().
+                
+				when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
+				.wireTap("direct:processReactivateDeviceATTJasperTansaction")
+				.process(new CarrierProvisioningDevicePostProcessor(env))
+				.endChoice()
+
+				.end().to("log:input").endChoice().end();
 
         // Kore Flow-1
 
@@ -766,6 +781,36 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iTransactionalService,
                         "populateKoreTransactionalResponse")
                 .bean(iAuditService, "auditExternalResponseCall");
+        
+        
+        
+       	// ATTJASPER Flow-1
+        
+
+        from("direct:processReactivateDeviceATTJasperTansaction")
+                .log("Wire Tap Thread reactivation")
+                .bean(iTransactionalService, "populateReactivateDBPayload")
+                .split().method("deviceSplitter").recipientList()
+                .method("attJasperDeviceServiceRouter");
+        
+        // ATTJASPER SEDA FLOW
+        
+        from("seda:attJasperSedaReactivation?concurrentConsumers=5")
+        .onException(SoapFault.class)
+        .handled(true)
+        .bean(iAuditService, "auditExternalSOAPExceptionResponseCall")
+        .bean(iTransactionalService,
+                "populateATTJasperTransactionalErrorResponse")
+        .end()
+        .process(new ATTJasperReactivateDevicePreProcessor(env))
+        .bean(iAuditService, "auditExternalRequestCall")
+        .to(attJasperTerminalEndPoint)
+       
+        .bean(iAuditService, "auditExternalSOAPResponseCall")
+        .bean(iTransactionalService,
+                "populateATTJasperTransactionalResponse");
+
+
 
         // End:Reactivate Devices
 

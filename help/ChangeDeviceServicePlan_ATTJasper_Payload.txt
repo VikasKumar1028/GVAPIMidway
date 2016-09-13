@@ -16,9 +16,18 @@
           }
         ],
         "netSuiteId": 220578
+      },
+	    {
+        "deviceIds": [
+          {
+            "id": "89011702272013902611",
+            "kind": ""
+          }
+        ],
+        "netSuiteId": 220578
       }
     ],
-    "servicePlan": "M2MPERMB",
+      "servicePlan": "Developer Kit Plan - Monthly Plan",
      "currentServicePlan": "M2MPERMB"
   },
   "header": {
