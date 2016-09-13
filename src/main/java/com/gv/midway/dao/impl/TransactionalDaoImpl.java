@@ -610,6 +610,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 transaction.setAuditTransactionId(exchange.getProperty(
                         IConstant.AUDIT_TRANSACTION_ID).toString());
                 transaction.setRequestType(RequestType.SUSPEND);
+                transaction.setCallBackReceived(false);
                 transaction.setNetSuiteId(netSuiteId);
                 list.add(transaction);
 

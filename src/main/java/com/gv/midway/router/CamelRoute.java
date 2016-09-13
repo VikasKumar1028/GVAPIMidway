@@ -104,11 +104,15 @@ import com.gv.midway.processor.reactivate.ATTJasperReactivateDevicePreProcessor;
 import com.gv.midway.processor.reactivate.KoreReactivateDevicePreProcessor;
 import com.gv.midway.processor.reactivate.StubATTJasperReactivateDeviceProcessor;
 import com.gv.midway.processor.reactivate.StubKoreReactivateDeviceProcessor;
+import com.gv.midway.processor.restoreDevice.ATTJasperRestoreDevicePreProcessor;
 import com.gv.midway.processor.restoreDevice.KoreRestoreDevicePreProcessor;
+import com.gv.midway.processor.restoreDevice.StubATTJasperRestoreDeviceProcessor;
 import com.gv.midway.processor.restoreDevice.StubKoreRestoreDeviceProcessor;
 import com.gv.midway.processor.restoreDevice.StubVerizonRestoreDeviceProcessor;
 import com.gv.midway.processor.restoreDevice.VerizonRestoreDevicePreProcessor;
+import com.gv.midway.processor.suspendDevice.ATTJasperSuspendDevicePreProcessor;
 import com.gv.midway.processor.suspendDevice.KoreSuspendDevicePreProcessor;
+import com.gv.midway.processor.suspendDevice.StubATTJasperSuspendDeviceProcessor;
 import com.gv.midway.processor.suspendDevice.StubKoreSuspendDeviceProcessor;
 import com.gv.midway.processor.suspendDevice.StubVerizonSuspendDeviceProcessor;
 import com.gv.midway.processor.suspendDevice.VerizonSuspendDevicePreProcessor;
@@ -564,11 +568,24 @@ public class CamelRoute extends RouteBuilder {
                 .process(new StubKoreRestoreDeviceProcessor()).to("log:input")
                 .when(header("derivedCarrierName").isEqualTo("VERIZON"))
                 .process(new StubVerizonRestoreDeviceProcessor())
-                .to("log:input").endChoice().otherwise().choice()
+                .to("log:input")
+                
+                  
+                .when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
+				.process(new StubATTJasperRestoreDeviceProcessor())
+				.to("log:ATTJASPER")
+                
+                .endChoice().otherwise().choice()
                 .when(header("derivedCarrierName").isEqualTo("KORE"))
                 .wireTap("direct:processRestoreKoreTransaction")
                 .process(new CarrierProvisioningDevicePostProcessor(env))
-                .endChoice()
+                .endChoice().
+                
+                  when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
+				 .wireTap("direct:processRestoreDeviceATTJasperTansaction")
+				 .process(new CarrierProvisioningDevicePostProcessor(env))
+				.endChoice()	
+					
                 .when(header("derivedCarrierName").isEqualTo("VERIZON"))
                 .bean(iSessionService, "setContextTokenInExchange")
                 .bean(iTransactionalService, "populateRestoreDBPayload")
@@ -631,6 +648,32 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iTransactionalService,
                         "populateKoreTransactionalResponse")
                 .bean(iAuditService, "auditExternalResponseCall");
+        
+        
+		// ATTJASPER Flow-1
+		
+	    from("direct:processRestoreDeviceATTJasperTansaction")
+	                .log("Wire Tap Thread deactivation")
+	                .bean(iTransactionalService, "populateRestoreDBPayload")
+	                .split().method("deviceSplitter").recipientList()
+	                .method("attJasperDeviceServiceRouter");
+	        
+	     // ATTJASPER SEDA FLOW
+	        
+	        from("seda:attJasperSedaRestore?concurrentConsumers=5")
+	        .onException(SoapFault.class)
+	        .handled(true)
+	        .bean(iAuditService, "auditExternalSOAPExceptionResponseCall")
+	        .bean(iTransactionalService,
+	                "populateATTJasperTransactionalErrorResponse")
+	        .end()
+	        .process(new ATTJasperRestoreDevicePreProcessor(env))
+	        .bean(iAuditService, "auditExternalRequestCall")
+	        .to(attJasperTerminalEndPoint)
+	       
+	        .bean(iAuditService, "auditExternalSOAPResponseCall")
+	        .bean(iTransactionalService,
+	                "populateATTJasperTransactionalResponse");
 
         // End:Restore Devices
     }
@@ -649,12 +692,24 @@ public class CamelRoute extends RouteBuilder {
                 .process(new StubKoreSuspendDeviceProcessor()).to("log:input")
                 .when(header("derivedCarrierName").isEqualTo("VERIZON"))
                 .process(new StubVerizonSuspendDeviceProcessor())
-                .to("log:input").endChoice().otherwise().choice()
+                .to("log:input")
+                
+                .when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
+				.process(new StubATTJasperSuspendDeviceProcessor())
+				.to("log:ATTJASPER")
+                
+                
+                .endChoice().otherwise().choice()
                 .when(header("derivedCarrierName").isEqualTo("KORE"))
                 .wireTap("direct:processSuspendKoreTransaction")
                 .process(new CarrierProvisioningDevicePostProcessor(env))
-
-                .endChoice()
+                .endChoice().
+                
+                     when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
+					 .wireTap("direct:processSuspendDeviceATTJasperTansaction")
+					 .process(new CarrierProvisioningDevicePostProcessor(env))
+					.endChoice()	 
+                
                 .when(header("derivedCarrierName").isEqualTo("VERIZON"))
                 .bean(iSessionService, "setContextTokenInExchange")
                 .bean(iTransactionalService, "populateSuspendDBPayload")
@@ -720,6 +775,32 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iAuditService, "auditExternalResponseCall")
                 .bean(iTransactionalService,
                         "populateKoreTransactionalResponse");
+        
+        
+				// ATTJASPER Flow-1
+			        		
+			    from("direct:processSuspendDeviceATTJasperTansaction")
+			                .log("Wire Tap Thread deactivation")
+			                .bean(iTransactionalService, "populateSuspendDBPayload")
+			                .split().method("deviceSplitter").recipientList()
+			                .method("attJasperDeviceServiceRouter");
+			        
+			     // ATTJASPER SEDA FLOW
+			        
+			        from("seda:attJasperSedaSuspend?concurrentConsumers=5")
+			        .onException(SoapFault.class)
+			        .handled(true)
+			        .bean(iAuditService, "auditExternalSOAPExceptionResponseCall")
+			        .bean(iTransactionalService,
+			                "populateATTJasperTransactionalErrorResponse")
+			        .end()
+			        .process(new ATTJasperSuspendDevicePreProcessor(env))
+			        .bean(iAuditService, "auditExternalRequestCall")
+			        .to(attJasperTerminalEndPoint)
+			       
+			        .bean(iAuditService, "auditExternalSOAPResponseCall")
+			        .bean(iTransactionalService,
+			                "populateATTJasperTransactionalResponse");
 
         // End:Suspend Devices
 
