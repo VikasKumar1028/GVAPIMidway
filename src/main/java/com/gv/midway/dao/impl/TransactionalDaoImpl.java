@@ -171,6 +171,11 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                         IConstant.AUDIT_TRANSACTION_ID).toString());
                 transaction.setRequestType(RequestType.ACTIVATION);
                 transaction.setCallBackReceived(false);
+                // if activate device request comes with custom fields then set the recordType Field as Primary
+                if(activateDevice.getCustomFields()!=null && activateDevice.getCustomFields().length>0)
+                {
+                	 transaction.setRecordType(RecordType.PRIMARY);
+                }
                 transaction.setNetSuiteId(netSuiteId);
                 list.add(transaction);
 
@@ -180,6 +185,26 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
         }
         mongoTemplate.insertAll(list);
+        
+        String carrierName = exchange.getProperty(
+                IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString();
+        
+        if(activateDevices.getCustomFields()!=null && activateDevices.getCustomFields().length>0)
+        {
+        	
+        	if (IConstant.BSCARRIER_SERVICE_KORE.equals(carrierName)) {
+
+            	populateKoreActivateCustomFieldDBPayload(exchange);
+            }
+            
+            if (IConstant.BSCARRIER_SERVICE_ATTJASPER.equals(carrierName)) {
+
+               populateATTActivateCustomFieldDBPayload(exchange);
+            }
+        	
+        }
+        
+        
 
         CommonUtil.setListInWireTap(exchange, list);
     }
@@ -192,7 +217,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
      * @param exchange
      */
 
-    public void populateKoreActivateCustomFieldDBPayload(Exchange exchange) {
+    private void populateKoreActivateCustomFieldDBPayload(Exchange exchange) {
 
         ArrayList<Transaction> list = new ArrayList<Transaction>();
 
@@ -288,6 +313,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 transaction.setRequestType(RequestType.CHANGECUSTOMFIELDS);
                 transaction.setCallBackReceived(false);
                 transaction.setNetSuiteId(netSuiteId);
+                // Set the Record Type as Secondary for the customeFields transactions records of activate request. In case of Kore it will
+               // one to one mapping of primary and secondary.
                 transaction.setRecordType(RecordType.SECONDARY);
                 list.add(transaction);
 
@@ -307,7 +334,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
      * 
      * @param exchange
      */
-    public void populateATTActivateCustomFieldDBPayload(Exchange exchange) {
+    private void populateATTActivateCustomFieldDBPayload(Exchange exchange) {
 
         ArrayList<Transaction> list = new ArrayList<Transaction>();
 
@@ -404,6 +431,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                     transaction.setRequestType(RequestType.CHANGECUSTOMFIELDS);
                     transaction.setCallBackReceived(false);
                     transaction.setNetSuiteId(netSuiteId);
+                    // Set the Record Type as Secondary for the customeFields transactions records of activate request. In case of ATT jasper it will
+                    // be one to many mapping of primary and secondary. as ATT takes one custom field at a time.
                     transaction.setRecordType(RecordType.SECONDARY);
                     list.add(transaction);
 
