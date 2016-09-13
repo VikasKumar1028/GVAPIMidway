@@ -773,6 +773,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
         LOGGER.info("device number is.........."
                 + exchange
                         .getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER));
+        
         if (CommonUtil.isProvisioningMethod(exchange.getFromEndpoint()
                 .toString())) {
             Query searchQuery;
@@ -787,8 +788,17 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                                                 ITransaction.DEVICE_NUMBER)
                                                 .is(exchange
                                                         .getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
+              
+                //This is applicable for AT&T CUSTOM Field to update 
+                //the status for respective custom field
+                if (exchange.getProperty("CUSTOMFIELDTOUPDATE") != null) {
 
-                LOGGER.info("device number in Kore is.........."
+                    searchQuery.addCriteria(Criteria.where(
+                            "devicePayload.dataArea.customFieldsToUpdate.key").is(
+                            exchange.getProperty("CUSTOMFIELDTOUPDATE")));
+                }
+
+                LOGGER.info("device number in Kore or ATT is.........."
                         + exchange
                                 .getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER));
                 Update update = new Update();
@@ -1949,7 +1959,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
     @Override
     public void populateATTJasperTransactionalErrorResponse(Exchange exchange) {
-        // TODO Auto-generated method stub
+
         LOGGER.info("Begin populateATTJasperTransactionalErrorResponse");
 
         try {
@@ -1964,7 +1974,15 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                                     Criteria.where(ITransaction.DEVICE_NUMBER)
                                             .is(exchange
                                                     .getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
+      
+            // Adding the Search Criteria for custom field of ATT
+            if (exchange.getProperty("CUSTOMFIELDTOUPDATE") != null) {
 
+                searchQuery.addCriteria(Criteria.where(
+                        "devicePayload.dataArea.customFieldsToUpdate.key").is(
+                        exchange.getProperty("CUSTOMFIELDTOUPDATE")));
+            }
+            
             Update update = new Update();
             update.set(ITransaction.CARRIER_ERROR_DESCRIPTION, exchange
                     .getProperty(IConstant.ATTJASPER_SOAP_FAULT_ERRORMESSAGE)

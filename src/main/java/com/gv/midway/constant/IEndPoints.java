@@ -33,5 +33,7 @@ public interface IEndPoints {
     public final String CHANGE_SERVICEPLAN_SEDA_ATTJASPER_ENDPOINT = "attJasperSedaChangeDeviceServicePlans";
 
     public final String REACTIVATION_SEDA_ATTJASPER_ENDPOINT = "attJasperSedaReactivation";
+    
+    public final String CHANGE_CUSTOMFIELD_SEDA_ATTJASPER_ENDPOINT = "attJasperSedaCustomeFields";
    
 }

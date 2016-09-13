@@ -93,6 +93,7 @@ public class CommonUtil {
         endPointList.add(IEndPoints.CHANGE_SERVICEPLAN_ENDPOINT);
         endPointList.add(IEndPoints.CHANGE_SERVICEPLAN_SEDA_KORE_ENDPOINT);
         endPointList.add(IEndPoints.CHANGE_CUSTOMFIELD_SEDA_KORE_ENDPOINT);
+        endPointList.add(IEndPoints.CHANGE_CUSTOMFIELD_SEDA_ATTJASPER_ENDPOINT);
 
     }
 
