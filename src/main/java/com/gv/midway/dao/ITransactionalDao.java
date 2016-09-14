@@ -55,5 +55,7 @@ public interface ITransactionalDao {
 	public void populateATTCustomeFieldsDBPayload(Exchange exchange);
 	
 	public void updateKoreActivationCustomeFieldsDBPayloadError(Exchange exchange);
+	
+	public void updateKoreActivationCustomeFieldsDBPayload(Exchange exchange);
 
 }

@@ -2080,10 +2080,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
     }
 
     /**
-     * Update the Kore Custom field data of activation request in the Transaction collection if
-     * there are 6 custom fields than 2 records will be inserted One is the Main
-     * Activation Records and 1 records for one all the custom field
-     * 
+     * Update the Kore Custom field data of activation request in the Transaction collection for error scenario
+     *
      * @param exchange
      */
 	@Override
@@ -2119,6 +2117,46 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		update.set(ITransaction.CARRIER_STATUS,
 				IConstant.CARRIER_TRANSACTION_STATUS_ERROR);
 
+		update.set(ITransaction.LAST_TIME_STAMP_UPDATED, new Date());
+		mongoTemplate.updateFirst(searchQuery, update, Transaction.class);
+	}
+
+	 /**
+     * Update the Kore Custom field data of activation request in the Transaction collection for success scenario
+     *
+     * @param exchange
+     */
+	@Override
+	public void updateKoreActivationCustomeFieldsDBPayload(Exchange exchange) {
+		// TODO Auto-generated method stub
+		
+		Query searchQuery = new Query(Criteria
+				.where(ITransaction.MIDWAY_STATUS)
+				.is(exchange
+						.getProperty(IConstant.MIDWAY_TRANSACTION_STATUS_WAIT)))
+				.addCriteria(Criteria
+						.where(ITransaction.MIDWAY_TRANSACTION_ID)
+						.is(exchange
+								.getProperty(IConstant.MIDWAY_TRANSACTION_ID))
+						.andOperator(
+								Criteria.where(ITransaction.DEVICE_NUMBER)
+										.is(exchange
+												.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
+
+		
+
+		Update update = new Update();
+
+		
+
+		update.set(ITransaction.MIDWAY_STATUS,
+				IConstant.MIDWAY_TRANSACTION_STATUS_SUCCESS);
+		update.set(ITransaction.CARRIER_STATUS,
+				IConstant.CARRIER_TRANSACTION_STATUS_SUCCESS);
+
+		update.set(ITransaction.CALL_BACK_PAYLOAD, exchange.getIn().getBody());
+        update.set(ITransaction.CALL_BACK_RECEIVED, true);
+         
 		update.set(ITransaction.LAST_TIME_STAMP_UPDATED, new Date());
 		mongoTemplate.updateFirst(searchQuery, update, Transaction.class);
 	}

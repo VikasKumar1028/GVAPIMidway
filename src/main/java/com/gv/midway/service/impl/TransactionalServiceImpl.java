@@ -153,4 +153,10 @@ public class TransactionalServiceImpl implements ITransactionalService {
 			Exchange exchange) {
 		transactionalDao.updateKoreActivationCustomeFieldsDBPayloadError(exchange);
 	}
+
+	@Override
+	public void updateKoreActivationCustomeFieldsDBPayload(Exchange exchange) {
+		// TODO Auto-generated method stub
+		transactionalDao.updateKoreActivationCustomeFieldsDBPayload(exchange);
+	}
 }

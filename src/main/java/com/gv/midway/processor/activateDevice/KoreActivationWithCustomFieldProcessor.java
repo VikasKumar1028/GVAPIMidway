@@ -1,15 +1,20 @@
 package com.gv.midway.processor.activateDevice;
 
+import java.util.Date;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
-import com.gv.midway.pojo.customFieldsDevice.kore.request.CustomFieldsDeviceRequestKore;
-import com.gv.midway.pojo.customFieldsDevice.request.CustomFieldsDeviceRequest;
-import com.gv.midway.pojo.verizon.CustomFieldsToUpdate;
+import com.gv.midway.constant.NetSuiteRequestType;
+import com.gv.midway.constant.RequestType;
+import com.gv.midway.pojo.callback.Netsuite.KafkaNetSuiteCallBackEvent;
+import com.gv.midway.pojo.callback.Netsuite.NetSuiteCallBackProvisioningRequest;
+import com.gv.midway.pojo.verizon.DeviceId;
+import com.gv.midway.pojo.verizon.Devices;
 
 public class KoreActivationWithCustomFieldProcessor implements Processor {
 
@@ -18,8 +23,7 @@ public class KoreActivationWithCustomFieldProcessor implements Processor {
 	 */
 
 	private static final Logger LOGGER = Logger
-			.getLogger(KoreActivationWithCustomFieldProcessor.class
-					.getName());
+			.getLogger(KoreActivationWithCustomFieldProcessor.class.getName());
 
 	private Environment newEnv;
 
@@ -35,77 +39,112 @@ public class KoreActivationWithCustomFieldProcessor implements Processor {
 	@Override
 	public void process(Exchange exchange) throws Exception {
 		// TODO Auto-generated method stub
+
+		LOGGER.info("KoreActivationWithCustomFieldProcessor..........");
+
+		Message message = exchange.getIn();
+
+		String midWayTransactionDeviceNumber = (String) exchange
+				.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER);
+
+		String midWayTransactionId = (String) exchange
+				.getProperty(IConstant.MIDWAY_TRANSACTION_ID);
+
+		Integer netSuiteID = (Integer) exchange
+				.getProperty(IConstant.MIDWAY_NETSUITE_ID);
+
+		KafkaNetSuiteCallBackEvent netSuiteCallBackEvent = (KafkaNetSuiteCallBackEvent) exchange
+				.getProperty(IConstant.KAFKA_OBJECT);
+
+		netSuiteCallBackEvent.setId(RequestType.CHANGECUSTOMFIELDS.toString());
+		netSuiteCallBackEvent.setTimestamp(new Date().getTime());
+
+		String desc = "Succesfull callBack from Kore For "
+				+ midWayTransactionDeviceNumber + ", transactionId "
+				+ midWayTransactionId + "and request Type is "
+				+ RequestType.CHANGECUSTOMFIELDS;
+
+		netSuiteCallBackEvent.setDesc(desc);
+
+		Object body = exchange
+				.getProperty(IConstant.KORE_ACTIVATION_CUSTOMEFIELD_PAYLOAD);
+
+		netSuiteCallBackEvent.setBody(body);
+
+		exchange.setProperty(IConstant.KAFKA_OBJECT, netSuiteCallBackEvent);
+
+		NetSuiteCallBackProvisioningRequest netSuiteCallBackProvisioningRequest = new NetSuiteCallBackProvisioningRequest();
+
+		netSuiteCallBackProvisioningRequest.setStatus("success");
+
+		netSuiteCallBackProvisioningRequest
+				.setCarrierOrderNumber(midWayTransactionId);
+
+		netSuiteCallBackProvisioningRequest.setNetSuiteID("" + netSuiteID);
+
+		StringBuffer deviceIdsArr = new StringBuffer("{\"deviceIds\":");
+
+		deviceIdsArr.append(midWayTransactionDeviceNumber);
+
+		String str = "}";
+
+		deviceIdsArr.append(str);
+
+		ObjectMapper mapper = new ObjectMapper();
+
+		Devices devices = mapper.readValue(deviceIdsArr.toString(),
+				Devices.class);
+
+		DeviceId[] deviceIds = devices.getDeviceIds();
+
+		netSuiteCallBackProvisioningRequest.setDeviceIds(deviceIds);
+
+		netSuiteCallBackProvisioningRequest
+				.setResponse("Device Custom Fields Changed successfully.");
 		
-         LOGGER.info("KoreActivationWithCustomFieldProcessor..........");
-		 
-		 Message message = exchange.getIn();
-	     
-	     CustomFieldsDeviceRequest proxyPayload =(CustomFieldsDeviceRequest)exchange.getProperty(IConstant.KORE_ACTIVATION_CUSTOMEFIELD_PAYLOAD);
-	     
-	     String deviceId = proxyPayload.getDataArea()
-	                .getDevices()[0].getDeviceIds()[0].getId();
+		netSuiteCallBackProvisioningRequest
+				.setRequestType(NetSuiteRequestType.CUSTOM_FIELDS);
 
-		CustomFieldsDeviceRequestKore customFieldsDeviceRequestKore = new CustomFieldsDeviceRequestKore();
-		customFieldsDeviceRequestKore.setDeviceNumber(deviceId);
+		String oauthConsumerKey = newEnv
+				.getProperty("netSuite.oauthConsumerKey");
+		String oauthTokenId = newEnv.getProperty("netSuite.oauthTokenId");
+		String oauthTokenSecret = newEnv
+				.getProperty("netSuite.oauthTokenSecret");
+		String oauthConsumerSecret = newEnv
+				.getProperty("netSuite.oauthConsumerSecret");
+		String relam = newEnv.getProperty("netSuite.Relam");
+		String endPoint = newEnv.getProperty("netSuite.endPoint");
 
-		CustomFieldsToUpdate[] customFieldsArr = proxyPayload.getDataArea()
-				.getCustomFieldsToUpdate();
-		
-		 if (customFieldsArr != null) {
-	            for (int i = 0; i < customFieldsArr.length; i++) {
-	                CustomFieldsToUpdate customField = customFieldsArr[i];
+		String script;
+		String oauthHeader = null;
 
-	                String key = customField.getKey();
+		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
+		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
+		message.setHeader(Exchange.HTTP_METHOD, "POST");
 
-	                switch (key) {
-	                case "CustomField1":
-	                    customFieldsDeviceRequestKore.setCustomField1(customField
-	                            .getValue());
-	                    break;
+		LOGGER.info("request type for NetSuite CallBack error...."
+				+ RequestType.CHANGECUSTOMFIELDS);
 
-	                case "CustomField2":
-	                    customFieldsDeviceRequestKore.setCustomField2(customField
-	                            .getValue());
-	                    break;
+		LOGGER.info("oauth info is....." + oauthConsumerKey + " "
+				+ oauthTokenId + " " + endPoint + " " + oauthTokenSecret + " "
+				+ oauthConsumerSecret + " " + relam);
 
-	                case "CustomField3":
-	                    customFieldsDeviceRequestKore.setCustomField3(customField
-	                            .getValue());
-	                    break;
+		script = "539";
 
-	                case "CustomField4":
-	                    customFieldsDeviceRequestKore.setCustomField4(customField
-	                            .getValue());
-	                    break;
+		exchange.setProperty("script", script);
 
-	                case "CustomField5":
-	                    customFieldsDeviceRequestKore.setCustomField5(customField
-	                            .getValue());
-	                    break;
-	                case "CustomField6":
-	                    customFieldsDeviceRequestKore.setCustomField6(customField
-	                            .getValue());
-	                    break;
-	                default:
-	                    break;
-	                }
-	            }
+		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
+		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
+		message.setHeader(Exchange.HTTP_METHOD, "POST");
 
-	        }
+		message.setHeader("Authorization", oauthHeader);
+		exchange.setProperty("script", script);
+		message.setHeader(Exchange.HTTP_PATH, null);
+		message.setBody(netSuiteCallBackProvisioningRequest);
+		exchange.setPattern(ExchangePattern.InOut);
 
-	      
-	        message.setHeader(Exchange.CONTENT_TYPE, "application/json");
-	        message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
-	        message.setHeader(Exchange.HTTP_METHOD, "POST");
-
-	        message.setHeader("Authorization",
-	                newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
-	        message.setHeader(Exchange.HTTP_PATH, "/json/modifyDeviceCustomInfo");
-
-	        message.setBody(customFieldsDeviceRequestKore);
-	        exchange.setPattern(ExchangePattern.InOut);
-
-	        LOGGER.info("End::KoreActivationWithCustomFieldProcessor");
+		LOGGER.info("successfull callback resposne to Kore for activation with Custom Field..."
+				+ exchange.getIn().getBody());
 
 	}
 
