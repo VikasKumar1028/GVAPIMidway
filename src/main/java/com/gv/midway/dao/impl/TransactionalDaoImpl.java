@@ -2104,16 +2104,15 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 										.is(exchange
 												.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
 
-		KafkaNetSuiteCallBackError netSuiteCallBackError = (KafkaNetSuiteCallBackError) exchange
-				.getProperty(IConstant.KAFKA_OBJECT);
+		
 
 		Update update = new Update();
 
 		update.set(ITransaction.CARRIER_ERROR_DESCRIPTION,
-				netSuiteCallBackError.getException());
+				exchange.getProperty(IConstant.KORE_ACTIVATION_CUSTOMEFIELD_ERROR_DESCRIPTION));
 		
 		update.set(ITransaction.CALL_BACK_PAYLOAD,
-				exchange.getProperty(IConstant.KORE_CHECKSTATUS_ERRORPAYLOAD));
+				exchange.getProperty(IConstant.KORE_ACTIVATION_CUSTOMEFIELD_ERRORPAYLOAD));
 
 		update.set(ITransaction.MIDWAY_STATUS,
 				IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);

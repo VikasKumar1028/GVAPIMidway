@@ -6,15 +6,19 @@ import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
+import org.apache.camel.component.cxf.CxfOperationException;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.NetSuiteRequestType;
 import com.gv.midway.constant.RequestType;
+import com.gv.midway.pojo.BaseRequest;
+import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.callback.Netsuite.KafkaNetSuiteCallBackError;
+import com.gv.midway.pojo.callback.Netsuite.KeyValues;
 import com.gv.midway.pojo.callback.Netsuite.NetSuiteCallBackProvisioningRequest;
+import com.gv.midway.pojo.kore.KoreErrorResponse;
 import com.gv.midway.pojo.verizon.DeviceId;
 import com.gv.midway.pojo.verizon.Devices;
 import com.gv.midway.utility.NetSuiteOAuthUtil;
@@ -56,14 +60,22 @@ public class KoreActivationWithCustomFieldErrorProcessor implements Processor {
 
 	     Integer netSuiteID = (Integer) exchange
 	                .getProperty(IConstant.MIDWAY_NETSUITE_ID);
+	     
+	     String errorDescription=null;
+	     
+	     NetSuiteCallBackProvisioningRequest netSuiteCallBackProvisioningRequest = new NetSuiteCallBackProvisioningRequest();
 
-		 
-		KafkaNetSuiteCallBackError netSuiteCallBackError=(KafkaNetSuiteCallBackError) exchange.getProperty(IConstant.KAFKA_OBJECT);
+	     Object object=exchange.getProperty(IConstant.KAFKA_OBJECT);
+	    
+	    // exception for the activation request So no need to call the custom fields and send the error call back for them
+	    if(object instanceof KafkaNetSuiteCallBackError)
+	    {
+		KafkaNetSuiteCallBackError netSuiteCallBackError=(KafkaNetSuiteCallBackError) object;
 		
 		netSuiteCallBackError.setId(RequestType.CHANGECUSTOMFIELDS.toString());
 		netSuiteCallBackError.setTimestamp(new Date().getTime());
 		
-		String errorDescription = netSuiteCallBackError.getException();
+		 errorDescription = netSuiteCallBackError.getException();
 		
 		String desc = "Error in callBack from Kore For "
 	                + midWayTransactionDeviceNumber + ", transactionId "
@@ -77,11 +89,106 @@ public class KoreActivationWithCustomFieldErrorProcessor implements Processor {
 	    netSuiteCallBackError.setBody(body);
 	    
 	    exchange.setProperty(IConstant.KAFKA_OBJECT, netSuiteCallBackError);
-		
-		NetSuiteCallBackProvisioningRequest netSuiteCallBackProvisioningRequest = new NetSuiteCallBackProvisioningRequest();
 
+	    }
+	    
+	    // exception comes while calling the change custom fields send the error call back for them
+	    else
+	    {
+	    	Exception errorObj = (Exception) exchange
+	                .getProperty(Exchange.EXCEPTION_CAUGHT);
+
+	    	
+	        if (errorObj instanceof CxfOperationException) {
+	        	 LOGGER.info("cxf exception calling the changeCustomFileds");
+	        	 CxfOperationException exception =(CxfOperationException)errorObj;
+	             String errorResponseBody = exception.getResponseBody();
+	             ObjectMapper mapper = new ObjectMapper();
+
+	             try {
+	                 KoreErrorResponse errorResponsePayload = mapper.readValue(
+	                         errorResponseBody, KoreErrorResponse.class);
+	                 errorDescription = errorResponsePayload.getErrorMessage();
+	                 
+	                 exchange.setProperty(IConstant.KORE_ACTIVATION_CUSTOMEFIELD_ERRORPAYLOAD, errorResponsePayload);
+	             } catch (Exception e) {
+	                 LOGGER.error("Error ::" + e);
+	             }
+
+
+	        }
+
+	        else {
+
+	        	errorDescription=errorObj.getMessage();
+
+	        }
+	        
+	        exchange.setProperty(IConstant.KORE_ACTIVATION_CUSTOMEFIELD_ERROR_DESCRIPTION, errorDescription);
+	        
+	    	 KafkaNetSuiteCallBackError netSuiteCallBackError=new KafkaNetSuiteCallBackError();
+	    	 netSuiteCallBackError.setApp("Midway");
+	         netSuiteCallBackError.setCategory("Kore Call Back Error");
+	         netSuiteCallBackError.setId(RequestType.CHANGECUSTOMFIELDS.toString());
+	         netSuiteCallBackError.setLevel("Error");
+	         netSuiteCallBackError.setTimestamp(new Date().getTime());
+	         netSuiteCallBackError.setVersion("1");
+	         netSuiteCallBackError.setException(errorDescription);
+	         netSuiteCallBackError.setMsg("Error in Call Back from Kore.");
+	         
+	         String desc = "Error in callBack from Kore For "
+	                 + midWayTransactionDeviceNumber + ", transactionId "
+	                 + midWayTransactionId + "and request Type is " + RequestType.CHANGECUSTOMFIELDS;
+
+	         netSuiteCallBackError.setDesc(desc);
+
+	         Object body = exchange
+	                 .getProperty(IConstant.KORE_ACTIVATION_CUSTOMEFIELD_PAYLOAD);
+
+	         netSuiteCallBackError.setBody(body);
+
+	         BaseRequest baseRequest = (BaseRequest) body;
+
+	         Header header = baseRequest.getHeader();
+
+	         KeyValues keyValues1 = new KeyValues();
+
+	         keyValues1.setK("transactionId");
+	         keyValues1.setV(header.getTransactionId());
+
+	         KeyValues keyValues2 = new KeyValues();
+
+	         keyValues2.setK("orderNumber");
+	         keyValues2.setV(midWayTransactionId);
+
+	         KeyValues keyValues3 = new KeyValues();
+
+	         keyValues3.setK("deviceIds");
+	         keyValues3.setV(midWayTransactionDeviceNumber.replace("'\'", ""));
+
+	         KeyValues keyValues4 = new KeyValues();
+
+	         keyValues4.setK("netSuiteID");
+	         keyValues4.setV("" + netSuiteID);
+
+	         KeyValues[] keyValuesArr = new KeyValues[4];
+
+	         keyValuesArr[0] = keyValues1;
+	         keyValuesArr[1] = keyValues2;
+	         keyValuesArr[2] = keyValues3;
+	         keyValuesArr[3] = keyValues4;
+
+	         netSuiteCallBackError.setKeyValues(keyValuesArr);
+
+	         exchange.setProperty(IConstant.KAFKA_OBJECT, netSuiteCallBackError);
+	         
+	        
+	    	
+	    }
+	    
+	    netSuiteCallBackProvisioningRequest.setResponse(errorDescription);
+	    
 		netSuiteCallBackProvisioningRequest.setStatus("fail");
-		netSuiteCallBackProvisioningRequest.setResponse(errorDescription);
 		netSuiteCallBackProvisioningRequest
 				.setCarrierOrderNumber(midWayTransactionId);
 		netSuiteCallBackProvisioningRequest.setNetSuiteID("" + netSuiteID);

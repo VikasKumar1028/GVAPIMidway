@@ -49,6 +49,7 @@ import com.gv.midway.processor.VerizonGenericExceptionProcessor;
 import com.gv.midway.processor.activateDevice.ATTJasperActivateDevicePreProcessor;
 import com.gv.midway.processor.activateDevice.KoreActivateDevicePreProcessor;
 import com.gv.midway.processor.activateDevice.KoreActivationWithCustomFieldErrorProcessor;
+import com.gv.midway.processor.activateDevice.KoreActivationWithCustomFieldProcessor;
 import com.gv.midway.processor.activateDevice.StubATTJasperActivateDeviceProcessor;
 import com.gv.midway.processor.activateDevice.StubKoreActivateDeviceProcessor;
 import com.gv.midway.processor.activateDevice.StubVerizonActivateDeviceProcessor;
@@ -1848,22 +1849,8 @@ public class CamelRoute extends RouteBuilder {
                         + ",?topic=midway-app-errors").
                  // Activation  with custom fields error scenario
                  choice()
-                 .when(simple("${exchangeProperty[koreActivationWithCustomField]} == 'true'")).  
-                 bean(iTransactionalService,
-                         "updateKoreActivationCustomeFieldsDBPayloadError").
-                 doTry().
-                 process(new KoreActivationWithCustomFieldErrorProcessor(env))
-                 .bean(iTransactionalService, "updateNetSuiteCallBackRequest")
-                 .setHeader(Exchange.HTTP_QUERY)
-                 .simple("script=${exchangeProperty[script]}&deploy=1")
-                 .to(uriRestNetsuitEndPoint)
-                 .doCatch(Exception.class)
-                 .bean(iTransactionalService, "updateNetSuiteCallBackError")
-                 .doFinally()
-                 .bean(iTransactionalService, "updateNetSuiteCallBackResponse")
-                 .process(new KafkaProcessor(env))
-                 .to("kafka:" + env.getProperty("kafka.endpoint")
-                         + ",?topic=midway-app-errors").   
+                 .when(simple("${exchangeProperty[koreActivationWithCustomField]} == 'true'")).
+                 to("direct:koreActivationCustomFiledsError").endChoice().   
                  end();
 
         from("direct:koreCustomChangeSubProcess")
@@ -1899,7 +1886,39 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iTransactionalService, "updateNetSuiteCallBackResponse")
                 .process(new KafkaProcessor(env))
                 .to("kafka:" + env.getProperty("kafka.endpoint")
-                        + ",?topic=midway-alerts").end();
+                        + ",?topic=midway-alerts").
+                        // Activation  with custom fields error scenario
+               choice()
+               .when(simple("${exchangeProperty[koreActivationWithCustomField]} == 'true'")).
+               // call the change customField for Kore activation request
+               doTry().
+               process(new KoreActivationWithCustomFieldProcessor(env))
+               .to(uriRestKoreEndPoint).unmarshal()
+               .json(JsonLibrary.Jackson, DKoreResponseCode.class).
+                bean(iTransactionalService,
+                       "populateVerizonTransactionalErrorResponse").
+                doCatch(Exception.class).
+                to("direct:koreActivationCustomFiledsError").
+                endDoTry().        
+                        end();
+        
+		// Kore Activation Custom Fields Error Scenario
+		from("direct:koreActivationCustomFiledsError")
+				.doTry()
+				.process(new KoreActivationWithCustomFieldErrorProcessor(env))
+				.bean(iTransactionalService,
+						"updateKoreActivationCustomeFieldsDBPayloadError")
+				.bean(iTransactionalService, "updateNetSuiteCallBackRequest")
+				.setHeader(Exchange.HTTP_QUERY)
+				.simple("script=${exchangeProperty[script]}&deploy=1")
+				.to(uriRestNetsuitEndPoint)
+				.doCatch(Exception.class)
+				.bean(iTransactionalService, "updateNetSuiteCallBackError")
+				.doFinally()
+				.bean(iTransactionalService, "updateNetSuiteCallBackResponse")
+				.process(new KafkaProcessor(env))
+				.to("kafka:" + env.getProperty("kafka.endpoint")
+						+ ",?topic=midway-app-errors").end();
     }
 
 }

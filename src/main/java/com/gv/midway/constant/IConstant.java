@@ -69,8 +69,9 @@ public interface IConstant {
 	static String KORE_CHECKSTATUS_COMPLETED = "Completed";
 	static String KORE_CHECKSTATUS_CONNECTION_ERROR = "KoreCheckStausConnection Error";
 	static String KORE_SIM_NUMBER = "koreSimNumber";
-	static String KORE_CHECKSTATUS_ERRORPAYLOAD = "koreCheckStatusErrorResponsePayload";
+	static String KORE_ACTIVATION_CUSTOMEFIELD_ERRORPAYLOAD = "koreActivationWithCustomFieldPayload";
 	static String KORE_ACTIVATION_CUSTOMEFIELD_PAYLOAD = "koreActivationWithCustomFieldPayLoad";
+	static String KORE_ACTIVATION_CUSTOMEFIELD_ERROR_DESCRIPTION = "koreActivationWithCustomFieldErrorDescription";
 	
 	static String VERIZON_CALLBACK_RESPONE = "VerizonCallBackResponse";
 

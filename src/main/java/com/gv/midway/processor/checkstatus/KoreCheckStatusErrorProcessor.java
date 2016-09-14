@@ -86,7 +86,8 @@ public class KoreCheckStatusErrorProcessor implements Processor {
                 KoreErrorResponse errorResponsePayload = mapper.readValue(
                         errorResponseBody, KoreErrorResponse.class);
                 errorDescription = errorResponsePayload.getErrorMessage();
-                exchange.setProperty(IConstant.KORE_CHECKSTATUS_ERRORPAYLOAD, errorResponsePayload);
+                exchange.setProperty(IConstant.KORE_ACTIVATION_CUSTOMEFIELD_ERROR_DESCRIPTION, errorDescription);
+                exchange.setProperty(IConstant.KORE_ACTIVATION_CUSTOMEFIELD_ERRORPAYLOAD, errorResponsePayload);
             } catch (Exception e) {
                 LOGGER.error("Error ::" + e);
             }
