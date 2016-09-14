@@ -73,6 +73,8 @@ public class KoreCheckStatusErrorProcessor implements Processor {
                 .getProperty(Exchange.EXCEPTION_CAUGHT);
 
         LOGGER.info("cxf operation caught is...........");
+        
+
 
         if (exception != null) {
 
@@ -84,6 +86,7 @@ public class KoreCheckStatusErrorProcessor implements Processor {
                 KoreErrorResponse errorResponsePayload = mapper.readValue(
                         errorResponseBody, KoreErrorResponse.class);
                 errorDescription = errorResponsePayload.getErrorMessage();
+                exchange.setProperty(IConstant.KORE_CHECKSTATUS_ERRORPAYLOAD, errorResponsePayload);
             } catch (Exception e) {
                 LOGGER.error("Error ::" + e);
             }

@@ -54,4 +54,6 @@ public interface ITransactionalService {
 	public void populateATTJasperTransactionalErrorResponse(Exchange exchange);
 	
 	public void populateATTCustomeFieldsDBPayload(Exchange exchange);
+	
+	public void updateKoreActivationCustomeFieldsDBPayloadError(Exchange exchange);
 }

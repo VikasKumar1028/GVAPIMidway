@@ -48,6 +48,7 @@ import com.gv.midway.processor.VerizonBatchExceptionProcessor;
 import com.gv.midway.processor.VerizonGenericExceptionProcessor;
 import com.gv.midway.processor.activateDevice.ATTJasperActivateDevicePreProcessor;
 import com.gv.midway.processor.activateDevice.KoreActivateDevicePreProcessor;
+import com.gv.midway.processor.activateDevice.KoreActivationWithCustomFieldErrorProcessor;
 import com.gv.midway.processor.activateDevice.StubATTJasperActivateDeviceProcessor;
 import com.gv.midway.processor.activateDevice.StubKoreActivateDeviceProcessor;
 import com.gv.midway.processor.activateDevice.StubVerizonActivateDeviceProcessor;
@@ -1844,7 +1845,26 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iTransactionalService, "updateNetSuiteCallBackResponse")
                 .process(new KafkaProcessor(env))
                 .to("kafka:" + env.getProperty("kafka.endpoint")
-                        + ",?topic=midway-app-errors").end();
+                        + ",?topic=midway-app-errors").
+                 // Activation  with custom fields error scenario
+                 choice()
+                 .when(simple("${exchangeProperty[koreActivationWithCustomField]} == 'true'")).  
+                 bean(iTransactionalService,
+                         "updateKoreActivationCustomeFieldsDBPayloadError").
+                 doTry().
+                 process(new KoreActivationWithCustomFieldErrorProcessor(env))
+                 .bean(iTransactionalService, "updateNetSuiteCallBackRequest")
+                 .setHeader(Exchange.HTTP_QUERY)
+                 .simple("script=${exchangeProperty[script]}&deploy=1")
+                 .to(uriRestNetsuitEndPoint)
+                 .doCatch(Exception.class)
+                 .bean(iTransactionalService, "updateNetSuiteCallBackError")
+                 .doFinally()
+                 .bean(iTransactionalService, "updateNetSuiteCallBackResponse")
+                 .process(new KafkaProcessor(env))
+                 .to("kafka:" + env.getProperty("kafka.endpoint")
+                         + ",?topic=midway-app-errors").   
+                 end();
 
         from("direct:koreCustomChangeSubProcess")
                 .bean(iTransactionalService, "populateKoreCustomChangeResponse")

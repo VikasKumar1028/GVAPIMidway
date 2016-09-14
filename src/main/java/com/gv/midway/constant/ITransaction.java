@@ -21,6 +21,7 @@ public class ITransaction {
     public static final String NETSUITE_REQUEST = "netSuiteRequest";
     public static final String NETSUITE_RESPONSE = "netSuiteResponse";
     public static final String ATTJASPER_EFFECTIVE_DATE = "effectiveDate";
+    public static final String RECORD_TYPE = "recordType";
 
     private ITransaction() {
 

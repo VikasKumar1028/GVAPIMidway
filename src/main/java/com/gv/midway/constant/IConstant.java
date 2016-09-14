@@ -69,7 +69,9 @@ public interface IConstant {
 	static String KORE_CHECKSTATUS_COMPLETED = "Completed";
 	static String KORE_CHECKSTATUS_CONNECTION_ERROR = "KoreCheckStausConnection Error";
 	static String KORE_SIM_NUMBER = "koreSimNumber";
-
+	static String KORE_CHECKSTATUS_ERRORPAYLOAD = "koreCheckStatusErrorResponsePayload";
+	static String KORE_ACTIVATION_CUSTOMEFIELD_PAYLOAD = "koreActivationWithCustomFieldPayLoad";
+	
 	static String VERIZON_CALLBACK_RESPONE = "VerizonCallBackResponse";
 
 	static String BSCARRIER_SERVICE_VERIZON = "VERIZON";
@@ -120,5 +122,7 @@ public interface IConstant {
 	static int ATTJASPER_RATE_PLAN_CHANGETYPE = 4;
 	
 	static int ATTJASPER_CUSTOMFIELD_CHANGETYPE = 17;
+	
+	static String ACTVATION_WITH_CUSTOMEFILEDS = "activationWithCustomFields";
 
 }

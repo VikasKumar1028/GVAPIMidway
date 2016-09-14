@@ -191,6 +191,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
         
         if(activateDevices.getCustomFields()!=null && activateDevices.getCustomFields().length>0)
         {
+        	exchange.setProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS, true);
         	
         	if (IConstant.BSCARRIER_SERVICE_KORE.equals(carrierName)) {
 
@@ -262,6 +263,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
             }
             businessPayLoadActivateDevices
                     .setDeviceIds(businessPayloadDeviceId);
+            businessPayLoadActivateDevices.setNetSuiteId(netSuiteId);
             businessPayLoadDevicesArray[0] = businessPayLoadActivateDevices;
 
             // create custom field logic
@@ -698,6 +700,13 @@ public class TransactionalDaoImpl implements ITransactionalDao {
             LOGGER.error("Exception :" + e);
         }
 
+     // If device activation request comes with Custom fields then update only the primary record(Activation record) in transaction
+        
+        if(exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null){
+        	searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
+                        .is(RecordType.PRIMARY));
+        	
+        }
         Update update = new Update();
 
         update.set(ITransaction.CARRIER_ERROR_DESCRIPTION,
@@ -762,6 +771,14 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                                 Criteria.where(ITransaction.DEVICE_NUMBER)
                                         .is(exchange
                                                 .getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
+        
+        // If device activation request comes with Custom fields then update only the primary record(Activation record) in transaction
+        
+        if(exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null){
+        	searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
+                        .is(RecordType.PRIMARY));
+        	
+        }
 
         Update update = new Update();
 
@@ -826,6 +843,14 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                     searchQuery.addCriteria(Criteria.where(
                             "devicePayload.dataArea.customFieldsToUpdate.key").is(
                             exchange.getProperty("CUSTOMFIELDTOUPDATE")));
+                }
+                
+             // If device activation request comes with Custom fields then update only the primary record(Activation record) in transaction
+                
+                if(exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null){
+                	searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
+                                .is(RecordType.PRIMARY));
+                	
                 }
 
                 LOGGER.info("device number in Kore or ATT is.........."
@@ -1835,6 +1860,13 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                                     Criteria.where(ITransaction.DEVICE_NUMBER)
                                             .is(exchange
                                                     .getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
+            
+            if (exchange.getProperty("koreActivationWithCustomField") !=null) 
+            {
+            	searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
+                        .is(RecordType.SECONDARY));
+            	
+            }
 
             Update update = new Update();
 
@@ -1865,6 +1897,13 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                                 Criteria.where(ITransaction.DEVICE_NUMBER)
                                         .is(exchange
                                                 .getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
+        
+        if (exchange.getProperty("koreActivationWithCustomField") !=null) 
+        {
+        	searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
+                    .is(RecordType.SECONDARY));
+        	
+        }
 
         Update update = new Update();
 
@@ -1906,6 +1945,13 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                                 Criteria.where(ITransaction.DEVICE_NUMBER)
                                         .is(exchange
                                                 .getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
+        
+        if (exchange.getProperty("koreActivationWithCustomField") !=null) 
+        {
+        	searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
+                    .is(RecordType.SECONDARY));
+        	
+        }
 
         Update update = new Update();
 
@@ -2032,5 +2078,52 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
         LOGGER.info("End populateATTJasperTransactionalErrorResponse");
     }
+
+    /**
+     * Update the Kore Custom field data of activation request in the Transaction collection if
+     * there are 6 custom fields than 2 records will be inserted One is the Main
+     * Activation Records and 1 records for one all the custom field
+     * 
+     * @param exchange
+     */
+	@Override
+	public void updateKoreActivationCustomeFieldsDBPayloadError(
+			Exchange exchange) {
+		// TODO Auto-generated method stub
+
+		Query searchQuery = new Query(Criteria
+				.where(ITransaction.MIDWAY_STATUS)
+				.is(exchange
+						.getProperty(IConstant.MIDWAY_TRANSACTION_STATUS_WAIT)))
+				.addCriteria(Criteria
+						.where(ITransaction.MIDWAY_TRANSACTION_ID)
+						.is(exchange
+								.getProperty(IConstant.MIDWAY_TRANSACTION_ID))
+						.andOperator(
+								Criteria.where(ITransaction.DEVICE_NUMBER)
+										.is(exchange
+												.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
+
+		KafkaNetSuiteCallBackError netSuiteCallBackError = (KafkaNetSuiteCallBackError) exchange
+				.getProperty(IConstant.KAFKA_OBJECT);
+
+		Update update = new Update();
+
+		update.set(ITransaction.CARRIER_ERROR_DESCRIPTION,
+				netSuiteCallBackError.getException());
+		
+		update.set(ITransaction.CALL_BACK_PAYLOAD,
+				exchange.getProperty(IConstant.KORE_CHECKSTATUS_ERRORPAYLOAD));
+
+		update.set(ITransaction.MIDWAY_STATUS,
+				IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
+		update.set(ITransaction.CARRIER_STATUS,
+				IConstant.CARRIER_TRANSACTION_STATUS_ERROR);
+
+		update.set(ITransaction.LAST_TIME_STAMP_UPDATED, new Date());
+		mongoTemplate.updateFirst(searchQuery, update, Transaction.class);
+	}
+	
+	
 
 }

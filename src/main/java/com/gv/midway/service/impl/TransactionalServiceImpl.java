@@ -147,4 +147,10 @@ public class TransactionalServiceImpl implements ITransactionalService {
 	public void populateATTCustomeFieldsDBPayload(Exchange exchange) {
             transactionalDao.populateATTCustomeFieldsDBPayload(exchange);
     }
+
+	@Override
+	public void updateKoreActivationCustomeFieldsDBPayloadError(
+			Exchange exchange) {
+		transactionalDao.updateKoreActivationCustomeFieldsDBPayloadError(exchange);
+	}
 }
