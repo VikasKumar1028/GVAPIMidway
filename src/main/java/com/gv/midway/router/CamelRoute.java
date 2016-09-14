@@ -1936,7 +1936,7 @@ public class CamelRoute extends RouteBuilder {
 		.bean(iTransactionalService, "updateNetSuiteCallBackResponse")
 		.process(new KafkaProcessor(env))
 		.to("kafka:" + env.getProperty("kafka.endpoint")
-				+ ",?topic=midway-app-errors").end();
+				+ ",?topic=midway-alerts").end();
     }
 
 }
