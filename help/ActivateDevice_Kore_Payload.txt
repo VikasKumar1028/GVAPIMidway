@@ -52,3 +52,47 @@ Payload: {"d":{"__type":"ProvisioningRequestTracking:https:\/\/PRiSMProAPI.koret
    },
    "dataArea": {"orderNumber": "1462262106660"}
 }
+
+***************************************************************************
+Kore Activation Request with Custom Fields.
+
+{
+  "dataArea": {
+    
+     "accountName":"0442090022-00001", 
+    "mdnZipCode": "84339",
+    "devices": {
+      "deviceIds": [
+        {
+          "kind": "",
+          "id": "89014103277405947099"
+        }
+      ],
+      "netSuiteId": 187135,
+	  "customFields": [
+        {
+          "value": "CustomField1",
+          "key": "string1"
+        },
+		{
+          "value": "CustomField2",
+          "key": "string2"
+        },
+		{
+          "value": "CustomField3",
+          "key": "string3"
+        }
+      ],
+      "servicePlan": "EAP02500797"
+    }
+  },
+  "header": {
+    "region":"USA",
+      "timestamp":"2016-06-30T09:09:52-04:00",
+      "organization":"Grant Victor",
+      "transactionId":"gv123666",
+      "sourceName":"NetSuit",
+      "applicationName":"WEB",
+      "bsCarrier":"KORE"
+  }
+}
