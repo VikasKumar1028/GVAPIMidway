@@ -2093,8 +2093,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 		Query searchQuery = new Query(Criteria
 				.where(ITransaction.MIDWAY_STATUS)
-				.is(exchange
-						.getProperty(IConstant.MIDWAY_TRANSACTION_STATUS_WAIT)))
+				.is(IConstant.MIDWAY_TRANSACTION_STATUS_WAIT))
 				.addCriteria(Criteria
 						.where(ITransaction.MIDWAY_TRANSACTION_ID)
 						.is(exchange
@@ -2141,8 +2140,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		
 		Query searchQuery = new Query(Criteria
 				.where(ITransaction.MIDWAY_STATUS)
-				.is(exchange
-						.getProperty(IConstant.MIDWAY_TRANSACTION_STATUS_WAIT)))
+				.is(IConstant.MIDWAY_TRANSACTION_STATUS_WAIT))
 				.addCriteria(Criteria
 						.where(ITransaction.MIDWAY_TRANSACTION_ID)
 						.is(exchange

@@ -136,6 +136,12 @@ public class KoreCheckStatusPreProcessor implements Processor {
             dbPayload.setDataArea(requestDataArea);
             
             exchange.setProperty(IConstant.KORE_ACTIVATION_CUSTOMEFIELD_PAYLOAD, dbPayload);
+            if(transaction.getCarrierErrorDescription()!=null)
+            {
+            	
+            	  exchange.setProperty(IConstant.KORE_ACTIVATION_CUSTOMEFIELD_ERROR_DESCRIPTION, transaction.getCarrierErrorDescription());
+                  exchange.setProperty(IConstant.KORE_ACTIVATION_CUSTOMEFIELD_ERRORPAYLOAD, transaction.getCallBackPayload());	
+            }
         }
 
         /***
