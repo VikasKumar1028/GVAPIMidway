@@ -1861,7 +1861,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                                             .is(exchange
                                                     .getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
             
-            if (exchange.getProperty("koreActivationWithCustomField") !=null) 
+            if (exchange.getProperty(IConstant.KORE_ACTIVATION_CUSTOMEFIELD_SECONDARY) !=null) 
             {
             	searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
                         .is(RecordType.SECONDARY));
@@ -1898,7 +1898,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                                         .is(exchange
                                                 .getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
         
-        if (exchange.getProperty("koreActivationWithCustomField") !=null) 
+        if (exchange.getProperty(IConstant.KORE_ACTIVATION_CUSTOMEFIELD_SECONDARY) !=null) 
         {
         	searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
                     .is(RecordType.SECONDARY));
@@ -1946,7 +1946,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                                         .is(exchange
                                                 .getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
         
-        if (exchange.getProperty("koreActivationWithCustomField") !=null) 
+        if (exchange.getProperty(IConstant.KORE_ACTIVATION_CUSTOMEFIELD_SECONDARY) !=null) 
         {
         	searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
                     .is(RecordType.SECONDARY));
@@ -2088,6 +2088,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 	public void updateKoreActivationCustomeFieldsDBPayloadError(
 			Exchange exchange) {
 		// TODO Auto-generated method stub
+		
+		LOGGER.info("Begin updateKoreActivationCustomeFieldsDBPayloadError");
 
 		Query searchQuery = new Query(Criteria
 				.where(ITransaction.MIDWAY_STATUS)
@@ -2118,7 +2120,12 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 				IConstant.CARRIER_TRANSACTION_STATUS_ERROR);
 
 		update.set(ITransaction.LAST_TIME_STAMP_UPDATED, new Date());
+		
+		exchange.setProperty(IConstant.KORE_ACTIVATION_CUSTOMEFIELD_SECONDARY, true);
+		
 		mongoTemplate.updateFirst(searchQuery, update, Transaction.class);
+		
+		LOGGER.info("End updateKoreActivationCustomeFieldsDBPayloadError");
 	}
 
 	 /**
@@ -2129,6 +2136,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 	@Override
 	public void updateKoreActivationCustomeFieldsDBPayload(Exchange exchange) {
 		// TODO Auto-generated method stub
+		
+		LOGGER.info("Begin updateKoreActivationCustomeFieldsDBPayload");
 		
 		Query searchQuery = new Query(Criteria
 				.where(ITransaction.MIDWAY_STATUS)
@@ -2158,7 +2167,12 @@ public class TransactionalDaoImpl implements ITransactionalDao {
         update.set(ITransaction.CALL_BACK_RECEIVED, true);
          
 		update.set(ITransaction.LAST_TIME_STAMP_UPDATED, new Date());
+		
+		exchange.setProperty(IConstant.KORE_ACTIVATION_CUSTOMEFIELD_SECONDARY, true);
+		
 		mongoTemplate.updateFirst(searchQuery, update, Transaction.class);
+		
+		LOGGER.info("End updateKoreActivationCustomeFieldsDBPayload");
 	}
 	
 	

@@ -72,6 +72,7 @@ public interface IConstant {
 	static String KORE_ACTIVATION_CUSTOMEFIELD_ERRORPAYLOAD = "koreActivationWithCustomFieldPayload";
 	static String KORE_ACTIVATION_CUSTOMEFIELD_PAYLOAD = "koreActivationWithCustomFieldPayLoad";
 	static String KORE_ACTIVATION_CUSTOMEFIELD_ERROR_DESCRIPTION = "koreActivationWithCustomFieldErrorDescription";
+	static String KORE_ACTIVATION_CUSTOMEFIELD_SECONDARY = "koreActivationWithCustomFieldSecondary";
 	
 	static String VERIZON_CALLBACK_RESPONE = "VerizonCallBackResponse";
 
