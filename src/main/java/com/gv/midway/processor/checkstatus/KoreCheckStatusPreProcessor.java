@@ -118,8 +118,8 @@ public class KoreCheckStatusPreProcessor implements Processor {
             CustomFieldsToUpdate[] customFieldsToUpdate = new CustomFieldsToUpdate[activateDevices
                     .getCustomFields().length];
 
-            // If Kore all the custom fields in one transactiondao records
-            // if AT&T indivisual records for custom file
+            // If Kore all the custom fields in one transaction dao records
+            // if AT&T individual records for custom fields
 
             for (int i = 0; i < activateDevices.getCustomFields().length; i++) {
                 CustomFieldsToUpdate newCustomField = new CustomFieldsToUpdate();
