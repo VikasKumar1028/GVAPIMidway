@@ -1993,6 +1993,14 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                     "devicePayload.dataArea.customFieldsToUpdate.key").is(
                     exchange.getProperty("CUSTOMFIELDTOUPDATE")));
         }
+        
+        // If device activation request comes with Custom fields then update only the primary record(Activation record) in transaction
+        
+        if(exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null){
+        	searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
+                        .is(RecordType.PRIMARY));
+        	
+        }
 
         Update update = new Update();
 
@@ -2057,6 +2065,15 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 searchQuery.addCriteria(Criteria.where(
                         "devicePayload.dataArea.customFieldsToUpdate.key").is(
                         exchange.getProperty("CUSTOMFIELDTOUPDATE")));
+            }
+            
+            // If device activation request comes with Custom fields then update only the primary record(Activation record) in transaction
+            
+            if(exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null)
+            {
+            	searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
+                            .is(RecordType.PRIMARY));
+            	
             }
             
             Update update = new Update();
