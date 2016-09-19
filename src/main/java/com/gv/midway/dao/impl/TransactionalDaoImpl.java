@@ -273,8 +273,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
             CustomFieldsToUpdate[] customFieldsToUpdate = new CustomFieldsToUpdate[activateDevice
                     .getCustomFields().length];
 
-            // If Kore all the custom fields in one transactiondao records
-            // if AT&T indivisual records for custom file
+            // If Kore all the custom fields in one transaction dao records
+            // if AT&T individual records for custom file
 
             for (int i = 0; i < activateDevice.getCustomFields().length; i++) {
                 CustomFieldsToUpdate newCustomField = new CustomFieldsToUpdate();
@@ -383,8 +383,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
             // create custom field logic
 
-            // If Kore all the custom fields in one transactiondao records
-            // if AT&T indivisual records for custom file
+            // If Kore all the custom fields in one transaction dao records
+            // if AT&T individual records for custom file
 
             for (int i = 0; i < activateDevice.getCustomFields().length; i++) {
 
