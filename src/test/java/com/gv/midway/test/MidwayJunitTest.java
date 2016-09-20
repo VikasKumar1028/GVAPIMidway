@@ -10,8 +10,10 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.apache.log4j.Logger;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -42,18 +44,22 @@ import com.gv.midway.pojo.restoreDevice.request.RestoreDeviceRequest;
 import com.gv.midway.pojo.restoreDevice.request.RestoreDeviceRequestDataArea;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequest;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequestDataArea;
+import com.gv.midway.pojo.verizon.CustomFields;
 import com.gv.midway.pojo.verizon.CustomFieldsToUpdate;
 import com.gv.midway.service.ISessionService;
 
 public class MidwayJunitTest extends Assert {
-    private AbstractApplicationContext applicationContext;
-    private ProducerTemplate template;
-    private MockServletContext sc;
+    private static AbstractApplicationContext applicationContext;
+    private static ProducerTemplate template;
+    private static MockServletContext sc;
 
     private static final Logger LOGGER = Logger.getLogger(MidwayJunitTest.class.getName());
+    
+  
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeClass
+    public static void setUp() throws Exception {
+    	
         applicationContext = new ClassPathXmlApplicationContext(
                 "camel-config.xml");
         sc = new MockServletContext("camel-config.xml");
@@ -69,6 +75,8 @@ public class MidwayJunitTest extends Assert {
         CamelContext camelContext = getCamelContext();
 
         template = camelContext.createProducerTemplate();
+        
+    	
     }
 
     // 1.Test Activate device API for Kore with correct data.
@@ -431,7 +439,7 @@ public class MidwayJunitTest extends Assert {
                 + response.getDataArea());
         assertEquals(response.getResponse().getResponseCode().toString(), "400");
         assertEquals(response.getResponse().getResponseStatus(), "Error");
-        assertNull(response.getDataArea());
+        assertNull(response.getDataArea().getOrderNumber());
     }
 
     /*
@@ -905,6 +913,12 @@ public class MidwayJunitTest extends Assert {
         customFieldsToUpdateArray[0] = customFieldsToUpdate;
         dataArea.setCustomFieldsToUpdate(customFieldsToUpdateArray);
 
+        CustomFields[] customFieldsArray = new CustomFields[1];
+        CustomFields customFields = new CustomFields();
+        customFields.setKey("CustomField1");
+        customFieldsArray[0] = customFields;
+        dataArea.setCustomFields(customFieldsArray);
+        
         dataArea.setDevices(deDevices);
         req.setDataArea(dataArea);
 
@@ -924,9 +938,9 @@ public class MidwayJunitTest extends Assert {
         LOGGER.info("Response in Junit Test for Custom Field....... :"
                 + response.getResponse().getResponseCode());
         assertEquals(response.getResponse().getResponseCode().toString(),
-                "2000");
-        assertEquals(response.getResponse().getResponseStatus(), "Success");
-        assertNotNull(response.getDataArea().getOrderNumber());
+                "400");
+        assertEquals(response.getResponse().getResponseStatus(), "Error");
+        assertNull(response.getDataArea().getOrderNumber());
     }
 
     // 16.test case for Device Custom Fields for Verizon with Invalid data.
@@ -1165,14 +1179,14 @@ public class MidwayJunitTest extends Assert {
      * ..............
      */
 
-    @After
-    public void tearDown() throws Exception {
+    @AfterClass
+    public static void tearDown() throws Exception {
         if (applicationContext != null) {
             applicationContext.stop();
         }
     }
 
-    protected CamelContext getCamelContext() throws Exception {
+    protected static CamelContext getCamelContext() throws Exception {
 
         return applicationContext.getBean("camel", CamelContext.class);
         // return sc.getBean("camel", CamelContext.class);

@@ -10,6 +10,7 @@ import org.apache.camel.ExchangeTimedOutException;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.cxf.CxfOperationException;
+import org.apache.camel.model.TryDefinition;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.cxf.binding.soap.SoapFault;
 import org.apache.log4j.Logger;
@@ -209,7 +210,9 @@ public class CamelRoute extends RouteBuilder {
                 .process(new HeaderErrorProcessor(env));
         
     
-        from("direct:tokenGeneration").bean(iSessionService, "checkToken")
+                 ((TryDefinition) from("direct:tokenGeneration")
+                 .doTry().
+                 bean(iSessionService, "checkToken")
                 .choice().when(body().contains("true"))
                 .log(LoggingLevel.INFO, "MATCH -REFETCHING ")
                 .process(new VerizonAuthorizationTokenProcessor(env))
@@ -224,7 +227,10 @@ public class CamelRoute extends RouteBuilder {
                 endChoice().otherwise().log(LoggingLevel.INFO, "NOT MATCH")
                 .to("log:input").end()
                 // sync DB and session token in the ServletContext
-                .bean(iSessionService, "synchronizeDBContextToken").bean(iSessionService, "setTokenRequired");
+                .bean(iSessionService, "synchronizeDBContextToken")).
+                 doCatch(Exception.class).log(LoggingLevel.INFO, "Exception while token generation").
+                 doFinally().
+                 bean(iSessionService, "setTokenRequired").end();
 
         /** Main Change Device Service Plans Flow **/
 
