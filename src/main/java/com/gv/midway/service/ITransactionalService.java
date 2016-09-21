@@ -57,5 +57,5 @@ public interface ITransactionalService {
 	
 	public void updateKoreActivationCustomeFieldsDBPayloadError(Exchange exchange);
 	
-	public void updateKoreActivationCustomeFieldsDBPayload(Exchange exchange);
+	public void setActivateCustomFieldListInExchange(Exchange exchange);
 }

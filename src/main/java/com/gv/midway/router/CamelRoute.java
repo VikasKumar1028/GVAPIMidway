@@ -166,7 +166,7 @@ public class CamelRoute extends RouteBuilder {
     private String uriRestVerizonTokenEndPoint = "cxfrs://bean://rsVerizonTokenClient";
     private String uriRestKoreEndPoint = "cxfrs://bean://rsKoreClient";
     private String uriRestNetsuitEndPoint = "cxfrs://bean://rsNetsuitClient";
-    
+
     private String attJasperTerminalEndPoint = "cxf:bean:attJasperTerminalEndPoint";
 
     private static final Logger LOGGER = Logger.getLogger(CamelRoute.class);
@@ -208,12 +208,10 @@ public class CamelRoute extends RouteBuilder {
                 .log(LoggingLevel.INFO,
                         "Pass all the required header parameters")
                 .process(new HeaderErrorProcessor(env));
-        
-    
-                 ((TryDefinition) from("direct:tokenGeneration")
-                 .doTry().
-                 bean(iSessionService, "checkToken")
-                .choice().when(body().contains("true"))
+
+        ((TryDefinition) from("direct:tokenGeneration").doTry()
+                .bean(iSessionService, "checkToken").choice()
+                .when(body().contains("true"))
                 .log(LoggingLevel.INFO, "MATCH -REFETCHING ")
                 .process(new VerizonAuthorizationTokenProcessor(env))
                 .to(uriRestVerizonTokenEndPoint).unmarshal()
@@ -227,10 +225,10 @@ public class CamelRoute extends RouteBuilder {
                 endChoice().otherwise().log(LoggingLevel.INFO, "NOT MATCH")
                 .to("log:input").end()
                 // sync DB and session token in the ServletContext
-                .bean(iSessionService, "synchronizeDBContextToken")).
-                 doCatch(Exception.class).log(LoggingLevel.INFO, "Exception while token generation").
-                 doFinally().
-                 bean(iSessionService, "setTokenRequired").end();
+                .bean(iSessionService, "synchronizeDBContextToken"))
+                .doCatch(Exception.class)
+                .log(LoggingLevel.INFO, "Exception while token generation")
+                .doFinally().bean(iSessionService, "setTokenRequired").end();
 
         /** Main Change Device Service Plans Flow **/
 
@@ -292,7 +290,7 @@ public class CamelRoute extends RouteBuilder {
 
         // Get Connection History from Midway DB
         getDeviceConnectionHistoryInfoDB();
-        
+
         // Get Device usage of all the devices by date and carrier from Midway
         getDevicesUsageByDayAndCarrierInfoDB();
 
@@ -303,9 +301,9 @@ public class CamelRoute extends RouteBuilder {
         jobResponse();
 
         // device Overage Notification Job
-       // notificationJob();
+        // notificationJob();
 
-       // Verizon Call Back
+        // Verizon Call Back
         callbacks();
 
         // Kore Check Status Timer
@@ -322,40 +320,39 @@ public class CamelRoute extends RouteBuilder {
 
         from("direct:activateDevice").process(new HeaderProcessor()).choice()
                 .when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
-                
+
                 .choice().when(header("derivedCarrierName").isEqualTo("KORE"))
                 .log("message" + header("derivedSourceName"))
                 .process(new StubKoreActivateDeviceProcessor()).to("log:input")
-                
+
                 .when(header("derivedCarrierName").isEqualTo("VERIZON"))
                 .process(new StubVerizonActivateDeviceProcessor())
                 .to("log:input").
-                
-                 when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
+
+                when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
                 .process(new StubATTJasperActivateDeviceProcessor())
-                .to("log:input").
-                 endChoice().
-                 
-                 otherwise().choice()
-                 
+                .to("log:input").endChoice().
+
+                otherwise()
+                .choice()
+
                 .when(header("derivedCarrierName").isEqualTo("KORE"))
                 .wireTap("direct:processActivateKoreTransaction")
                 .process(new CarrierProvisioningDevicePostProcessor(env))
-                .endChoice().
-                
+                .endChoice()
+                .
+
                 when(header("derivedCarrierName").isEqualTo("VERIZON"))
                 .bean(iSessionService, "setContextTokenInExchange")
                 .bean(iTransactionalService, "populateActivateDBPayload")
                 // will store only one time in Audit even on connection failure
                 .bean(iAuditService, "auditExternalRequestCall")
                 .to("direct:VerizonActivationFlow1").endChoice().
-                
-                 when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
-				.wireTap("direct:processActivateATTJasperTransaction")
-				.process(new CarrierProvisioningDevicePostProcessor(env))
-				.endChoice().end().to("log:input").endChoice().end();
-                
-              
+
+                when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
+                .wireTap("direct:processActivateATTJasperTransaction")
+                .process(new CarrierProvisioningDevicePostProcessor(env))
+                .endChoice().end().to("log:input").endChoice().end();
 
         // Verizon Flow-1
         from("direct:VerizonActivationFlow1")
@@ -407,9 +404,8 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iTransactionalService,
                         "populateKoreTransactionalResponse")
                 .bean(iAuditService, "auditExternalResponseCall");
-        
-        
-     // ATTJasper Flow-1
+
+        // ATTJasper Flow-1
         from("direct:processActivateATTJasperTransaction")
                 .log("Wire Tap Thread activation")
                 .bean(iTransactionalService, "populateActivateDBPayload")
@@ -421,13 +417,20 @@ public class CamelRoute extends RouteBuilder {
                 .onException(SoapFault.class)
                 .handled(true)
                 .bean(iAuditService, "auditExternalSOAPExceptionResponseCall")
-                .bean(iTransactionalService, "populateATTJasperTransactionalErrorResponse")
+                .bean(iTransactionalService,
+                        "populateATTJasperTransactionalErrorResponse")
                 .end()
                 .process(new ATTJasperActivateDevicePreProcessor(env))
                 .bean(iAuditService, "auditExternalRequestCall")
                 .to(attJasperTerminalEndPoint)
                 .bean(iAuditService, "auditExternalSOAPResponseCall")
-                .bean(iTransactionalService, "populateATTJasperTransactionalResponse");
+                .bean(iTransactionalService,
+                        "populateATTJasperTransactionalResponse")
+                  //sending the request for custom field 
+                .bean(iTransactionalService,
+                        "setActivateCustomFieldListInExchange").split()
+                .method("deviceSplitter").recipientList()
+                .method("attJasperDeviceServiceRouter");
 
         // End:Activate Devices
     }
@@ -442,36 +445,35 @@ public class CamelRoute extends RouteBuilder {
         // Begin:Deactivate Devices
 
         from("direct:deactivateDevice").process(new HeaderProcessor()).choice()
-					.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
-					.choice().when(header("derivedCarrierName").isEqualTo("KORE"))
-					.process(new StubKoreDeactivateDeviceProcessor())
-					.to("log:input")
-					
-					.when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
-					.process(new StubATTJasperDeactivateDeviceProcessor())
-					.to("log:ATTJASPER")
-					
-					.when(header("derivedCarrierName").isEqualTo("VERIZON"))
-					.process(new StubVerizonDeactivateDeviceProcessor())
-					.to("log:input")
-					.endChoice().otherwise().choice()
-					
-					.when(header("derivedCarrierName").isEqualTo("KORE"))
-					.wireTap("direct:processDeactivateKoreTransaction")
-					.process(new CarrierProvisioningDevicePostProcessor(env))
-					.endChoice().
-					              
-					 when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
-					 .wireTap("direct:processDeactivateATTJasperTansaction")
-					 .process(new CarrierProvisioningDevicePostProcessor(env))
-					.endChoice()	 
-					      
-					.when(header("derivedCarrierName").isEqualTo("VERIZON"))
-					.bean(iSessionService, "setContextTokenInExchange")
-					.bean(iTransactionalService, "populateDeactivateDBPayload")
-					.bean(iAuditService, "auditExternalRequestCall")
-					.to("direct:VerizonDeactivationFlow1").endChoice().end()
-					.to("log:input").endChoice().end();
+                .when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
+                .choice().when(header("derivedCarrierName").isEqualTo("KORE"))
+                .process(new StubKoreDeactivateDeviceProcessor())
+                .to("log:input")
+
+                .when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
+                .process(new StubATTJasperDeactivateDeviceProcessor())
+                .to("log:ATTJASPER")
+
+                .when(header("derivedCarrierName").isEqualTo("VERIZON"))
+                .process(new StubVerizonDeactivateDeviceProcessor())
+                .to("log:input").endChoice().otherwise().choice()
+
+                .when(header("derivedCarrierName").isEqualTo("KORE"))
+                .wireTap("direct:processDeactivateKoreTransaction")
+                .process(new CarrierProvisioningDevicePostProcessor(env))
+                .endChoice().
+
+                when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
+                .wireTap("direct:processDeactivateATTJasperTansaction")
+                .process(new CarrierProvisioningDevicePostProcessor(env))
+                .endChoice()
+
+                .when(header("derivedCarrierName").isEqualTo("VERIZON"))
+                .bean(iSessionService, "setContextTokenInExchange")
+                .bean(iTransactionalService, "populateDeactivateDBPayload")
+                .bean(iAuditService, "auditExternalRequestCall")
+                .to("direct:VerizonDeactivationFlow1").endChoice().end()
+                .to("log:input").endChoice().end();
 
         // Verizon Flow-1
 
@@ -530,35 +532,31 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iAuditService, "auditExternalResponseCall")
                 .bean(iTransactionalService,
                         "populateKoreTransactionalResponse");
-        
-        
-       	// ATTJASPER Flow-1
-        
+
+        // ATTJASPER Flow-1
 
         from("direct:processDeactivateATTJasperTansaction")
                 .log("Wire Tap Thread deactivation")
                 .bean(iTransactionalService, "populateDeactivateDBPayload")
                 .split().method("deviceSplitter").recipientList()
                 .method("attJasperDeviceServiceRouter");
-        
+
         // ATTJASPER SEDA FLOW
-        
+
         from("seda:attJasperSedaDeactivation?concurrentConsumers=5")
-        .onException(SoapFault.class)
-        .handled(true)
-        .bean(iAuditService, "auditExternalSOAPExceptionResponseCall")
-        .bean(iTransactionalService,
-                "populateATTJasperTransactionalErrorResponse")
-        .end()
-        .process(new ATTJasperDeactivateDevicePreProcessor(env))
-        .bean(iAuditService, "auditExternalRequestCall")
-        .to(attJasperTerminalEndPoint)
-       
-        .bean(iAuditService, "auditExternalSOAPResponseCall")
-        .bean(iTransactionalService,
-                "populateATTJasperTransactionalResponse");
+                .onException(SoapFault.class)
+                .handled(true)
+                .bean(iAuditService, "auditExternalSOAPExceptionResponseCall")
+                .bean(iTransactionalService,
+                        "populateATTJasperTransactionalErrorResponse")
+                .end()
+                .process(new ATTJasperDeactivateDevicePreProcessor(env))
+                .bean(iAuditService, "auditExternalRequestCall")
+                .to(attJasperTerminalEndPoint)
 
-
+                .bean(iAuditService, "auditExternalSOAPResponseCall")
+                .bean(iTransactionalService,
+                        "populateATTJasperTransactionalResponse");
 
         // End:Deactivate Devices
     }
@@ -578,23 +576,22 @@ public class CamelRoute extends RouteBuilder {
                 .when(header("derivedCarrierName").isEqualTo("VERIZON"))
                 .process(new StubVerizonRestoreDeviceProcessor())
                 .to("log:input")
-                
-                  
+
                 .when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
-				.process(new StubATTJasperRestoreDeviceProcessor())
-				.to("log:ATTJASPER")
-                
+                .process(new StubATTJasperRestoreDeviceProcessor())
+                .to("log:ATTJASPER")
+
                 .endChoice().otherwise().choice()
                 .when(header("derivedCarrierName").isEqualTo("KORE"))
                 .wireTap("direct:processRestoreKoreTransaction")
                 .process(new CarrierProvisioningDevicePostProcessor(env))
                 .endChoice().
-                
-                  when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
-				 .wireTap("direct:processRestoreDeviceATTJasperTansaction")
-				 .process(new CarrierProvisioningDevicePostProcessor(env))
-				.endChoice()	
-					
+
+                when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
+                .wireTap("direct:processRestoreDeviceATTJasperTansaction")
+                .process(new CarrierProvisioningDevicePostProcessor(env))
+                .endChoice()
+
                 .when(header("derivedCarrierName").isEqualTo("VERIZON"))
                 .bean(iSessionService, "setContextTokenInExchange")
                 .bean(iTransactionalService, "populateRestoreDBPayload")
@@ -657,32 +654,31 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iTransactionalService,
                         "populateKoreTransactionalResponse")
                 .bean(iAuditService, "auditExternalResponseCall");
-        
-        
-		// ATTJASPER Flow-1
-		
-	    from("direct:processRestoreDeviceATTJasperTansaction")
-	                .log("Wire Tap Thread deactivation")
-	                .bean(iTransactionalService, "populateRestoreDBPayload")
-	                .split().method("deviceSplitter").recipientList()
-	                .method("attJasperDeviceServiceRouter");
-	        
-	     // ATTJASPER SEDA FLOW
-	        
-	        from("seda:attJasperSedaRestore?concurrentConsumers=5")
-	        .onException(SoapFault.class)
-	        .handled(true)
-	        .bean(iAuditService, "auditExternalSOAPExceptionResponseCall")
-	        .bean(iTransactionalService,
-	                "populateATTJasperTransactionalErrorResponse")
-	        .end()
-	        .process(new ATTJasperRestoreDevicePreProcessor(env))
-	        .bean(iAuditService, "auditExternalRequestCall")
-	        .to(attJasperTerminalEndPoint)
-	       
-	        .bean(iAuditService, "auditExternalSOAPResponseCall")
-	        .bean(iTransactionalService,
-	                "populateATTJasperTransactionalResponse");
+
+        // ATTJASPER Flow-1
+
+        from("direct:processRestoreDeviceATTJasperTansaction")
+                .log("Wire Tap Thread deactivation")
+                .bean(iTransactionalService, "populateRestoreDBPayload")
+                .split().method("deviceSplitter").recipientList()
+                .method("attJasperDeviceServiceRouter");
+
+        // ATTJASPER SEDA FLOW
+
+        from("seda:attJasperSedaRestore?concurrentConsumers=5")
+                .onException(SoapFault.class)
+                .handled(true)
+                .bean(iAuditService, "auditExternalSOAPExceptionResponseCall")
+                .bean(iTransactionalService,
+                        "populateATTJasperTransactionalErrorResponse")
+                .end()
+                .process(new ATTJasperRestoreDevicePreProcessor(env))
+                .bean(iAuditService, "auditExternalRequestCall")
+                .to(attJasperTerminalEndPoint)
+
+                .bean(iAuditService, "auditExternalSOAPResponseCall")
+                .bean(iTransactionalService,
+                        "populateATTJasperTransactionalResponse");
 
         // End:Restore Devices
     }
@@ -702,23 +698,22 @@ public class CamelRoute extends RouteBuilder {
                 .when(header("derivedCarrierName").isEqualTo("VERIZON"))
                 .process(new StubVerizonSuspendDeviceProcessor())
                 .to("log:input")
-                
+
                 .when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
-				.process(new StubATTJasperSuspendDeviceProcessor())
-				.to("log:ATTJASPER")
-                
-                
+                .process(new StubATTJasperSuspendDeviceProcessor())
+                .to("log:ATTJASPER")
+
                 .endChoice().otherwise().choice()
                 .when(header("derivedCarrierName").isEqualTo("KORE"))
                 .wireTap("direct:processSuspendKoreTransaction")
                 .process(new CarrierProvisioningDevicePostProcessor(env))
                 .endChoice().
-                
-                     when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
-					 .wireTap("direct:processSuspendDeviceATTJasperTansaction")
-					 .process(new CarrierProvisioningDevicePostProcessor(env))
-					.endChoice()	 
-                
+
+                when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
+                .wireTap("direct:processSuspendDeviceATTJasperTansaction")
+                .process(new CarrierProvisioningDevicePostProcessor(env))
+                .endChoice()
+
                 .when(header("derivedCarrierName").isEqualTo("VERIZON"))
                 .bean(iSessionService, "setContextTokenInExchange")
                 .bean(iTransactionalService, "populateSuspendDBPayload")
@@ -784,32 +779,31 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iAuditService, "auditExternalResponseCall")
                 .bean(iTransactionalService,
                         "populateKoreTransactionalResponse");
-        
-        
-				// ATTJASPER Flow-1
-			        		
-			    from("direct:processSuspendDeviceATTJasperTansaction")
-			                .log("Wire Tap Thread deactivation")
-			                .bean(iTransactionalService, "populateSuspendDBPayload")
-			                .split().method("deviceSplitter").recipientList()
-			                .method("attJasperDeviceServiceRouter");
-			        
-			     // ATTJASPER SEDA FLOW
-			        
-			        from("seda:attJasperSedaSuspend?concurrentConsumers=5")
-			        .onException(SoapFault.class)
-			        .handled(true)
-			        .bean(iAuditService, "auditExternalSOAPExceptionResponseCall")
-			        .bean(iTransactionalService,
-			                "populateATTJasperTransactionalErrorResponse")
-			        .end()
-			        .process(new ATTJasperSuspendDevicePreProcessor(env))
-			        .bean(iAuditService, "auditExternalRequestCall")
-			        .to(attJasperTerminalEndPoint)
-			       
-			        .bean(iAuditService, "auditExternalSOAPResponseCall")
-			        .bean(iTransactionalService,
-			                "populateATTJasperTransactionalResponse");
+
+        // ATTJASPER Flow-1
+
+        from("direct:processSuspendDeviceATTJasperTansaction")
+                .log("Wire Tap Thread deactivation")
+                .bean(iTransactionalService, "populateSuspendDBPayload")
+                .split().method("deviceSplitter").recipientList()
+                .method("attJasperDeviceServiceRouter");
+
+        // ATTJASPER SEDA FLOW
+
+        from("seda:attJasperSedaSuspend?concurrentConsumers=5")
+                .onException(SoapFault.class)
+                .handled(true)
+                .bean(iAuditService, "auditExternalSOAPExceptionResponseCall")
+                .bean(iTransactionalService,
+                        "populateATTJasperTransactionalErrorResponse")
+                .end()
+                .process(new ATTJasperSuspendDevicePreProcessor(env))
+                .bean(iAuditService, "auditExternalRequestCall")
+                .to(attJasperTerminalEndPoint)
+
+                .bean(iAuditService, "auditExternalSOAPResponseCall")
+                .bean(iTransactionalService,
+                        "populateATTJasperTransactionalResponse");
 
         // End:Suspend Devices
 
@@ -828,23 +822,23 @@ public class CamelRoute extends RouteBuilder {
                 .log("message" + header("derivedSourceName"))
                 .process(new StubKoreReactivateDeviceProcessor())
                 .to("log:input")
-                
+
                 .when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
-				.process(new StubATTJasperReactivateDeviceProcessor())
-				.to("log:ATTJASPER")
-                
+                .process(new StubATTJasperReactivateDeviceProcessor())
+                .to("log:ATTJASPER")
+
                 .endChoice().otherwise().choice()
                 .when(header("derivedCarrierName").isEqualTo("KORE"))
                 .wireTap("direct:processReactivateKoreTransaction")
                 .process(new CarrierProvisioningDevicePostProcessor(env))
                 .endChoice().
-                
-				when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
-				.wireTap("direct:processReactivateDeviceATTJasperTansaction")
-				.process(new CarrierProvisioningDevicePostProcessor(env))
-				.endChoice()
 
-				.end().to("log:input").endChoice().end();
+                when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
+                .wireTap("direct:processReactivateDeviceATTJasperTansaction")
+                .process(new CarrierProvisioningDevicePostProcessor(env))
+                .endChoice()
+
+                .end().to("log:input").endChoice().end();
 
         // Kore Flow-1
 
@@ -871,36 +865,31 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iTransactionalService,
                         "populateKoreTransactionalResponse")
                 .bean(iAuditService, "auditExternalResponseCall");
-        
-        
-        
-       	// ATTJASPER Flow-1
-        
+
+        // ATTJASPER Flow-1
 
         from("direct:processReactivateDeviceATTJasperTansaction")
                 .log("Wire Tap Thread reactivation")
                 .bean(iTransactionalService, "populateReactivateDBPayload")
                 .split().method("deviceSplitter").recipientList()
                 .method("attJasperDeviceServiceRouter");
-        
+
         // ATTJASPER SEDA FLOW
-        
+
         from("seda:attJasperSedaReactivation?concurrentConsumers=5")
-        .onException(SoapFault.class)
-        .handled(true)
-        .bean(iAuditService, "auditExternalSOAPExceptionResponseCall")
-        .bean(iTransactionalService,
-                "populateATTJasperTransactionalErrorResponse")
-        .end()
-        .process(new ATTJasperReactivateDevicePreProcessor(env))
-        .bean(iAuditService, "auditExternalRequestCall")
-        .to(attJasperTerminalEndPoint)
-       
-        .bean(iAuditService, "auditExternalSOAPResponseCall")
-        .bean(iTransactionalService,
-                "populateATTJasperTransactionalResponse");
+                .onException(SoapFault.class)
+                .handled(true)
+                .bean(iAuditService, "auditExternalSOAPExceptionResponseCall")
+                .bean(iTransactionalService,
+                        "populateATTJasperTransactionalErrorResponse")
+                .end()
+                .process(new ATTJasperReactivateDevicePreProcessor(env))
+                .bean(iAuditService, "auditExternalRequestCall")
+                .to(attJasperTerminalEndPoint)
 
-
+                .bean(iAuditService, "auditExternalSOAPResponseCall")
+                .bean(iTransactionalService,
+                        "populateATTJasperTransactionalResponse");
 
         // End:Reactivate Devices
 
@@ -926,7 +915,7 @@ public class CamelRoute extends RouteBuilder {
                 .process(new CarrierProvisioningDevicePostProcessor(env))
 
                 .endChoice()
-                
+
                 .when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
                 .wireTap("direct:processCustomFieldATTJasperTansaction")
                 .process(new CarrierProvisioningDevicePostProcessor(env))
@@ -991,36 +980,32 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iAuditService, "auditExternalResponseCall")
                 .bean(iTransactionalService,
                         "populateKoreTransactionalResponse");
-        
-        
-        // ATTJASPER Flow-1       
+
+        // ATTJASPER Flow-1
 
         from("direct:processCustomFieldATTJasperTansaction")
                 .log("Wire Tap Thread deactivation")
-                .bean(iTransactionalService, "populateATTCustomeFieldsDBPayload")
-                .split().method("deviceSplitter").recipientList()
+                .bean(iTransactionalService,
+                        "populateATTCustomeFieldsDBPayload").split()
+                .method("deviceSplitter").recipientList()
                 .method("attJasperDeviceServiceRouter");
-        
+
         // ATTJASPER SEDA FLOW
-        
+
         from("seda:attJasperSedaCustomeFields?concurrentConsumers=5")
-        .onException(SoapFault.class)
-        .handled(true)
-        .bean(iAuditService, "auditExternalSOAPExceptionResponseCall")
-        .bean(iTransactionalService,
-                "populateATTJasperTransactionalErrorResponse")
-        .end()
-        .process(new ATTJasperCustomFieldDevicePreProcessor(env))
-        .bean(iAuditService, "auditExternalRequestCall")
-        .to(attJasperTerminalEndPoint)
-       
-        .bean(iAuditService, "auditExternalSOAPResponseCall")
-        .bean(iTransactionalService,
-                "populateATTJasperTransactionalResponse");
+                .onException(SoapFault.class)
+                .handled(true)
+                .bean(iAuditService, "auditExternalSOAPExceptionResponseCall")
+                .bean(iTransactionalService,
+                        "populateATTJasperTransactionalErrorResponse")
+                .end()
+                .process(new ATTJasperCustomFieldDevicePreProcessor(env))
+                .bean(iAuditService, "auditExternalRequestCall")
+                .to(attJasperTerminalEndPoint)
 
-
-        
-        
+                .bean(iAuditService, "auditExternalSOAPResponseCall")
+                .bean(iTransactionalService,
+                        "populateATTJasperTransactionalResponse");
 
         // End:CustomeFields Devices
 
@@ -1035,18 +1020,19 @@ public class CamelRoute extends RouteBuilder {
         // Change Device ServicePlans
 
         from("direct:changeDeviceServicePlans")
-                .process(new HeaderProcessor()).process(new ChangeDeviceServicePlanValidatorProcessor())
+                .process(new HeaderProcessor())
+                .process(new ChangeDeviceServicePlanValidatorProcessor())
                 .choice()
                 .when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
                 .choice()
                 .when(header("derivedCarrierName").isEqualTo("KORE"))
                 .process(new StubKoreChangeDeviceServicePlansProcessor())
                 .to("log:input")
-                
-				.when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
-				.process(new StubATTJasperChangeDeviceServicePlansProcessor())
-				.to("log:ATTJASPER")
-                
+
+                .when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
+                .process(new StubATTJasperChangeDeviceServicePlansProcessor())
+                .to("log:ATTJASPER")
+
                 .when(header("derivedCarrierName").isEqualTo("VERIZON"))
                 .process(new StubVerizonChangeDeviceServicePlansProcessor())
                 .to("log:input")
@@ -1059,11 +1045,12 @@ public class CamelRoute extends RouteBuilder {
                         "direct:processchangeDeviceServicePlansKoreTransaction")
                 .process(new CarrierProvisioningDevicePostProcessor(env))
                 .endChoice()
-                
-				. when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
-				 .wireTap("direct:processChangeDeviceServicePlansATTJasperTansaction")
-				 .process(new CarrierProvisioningDevicePostProcessor(env))
-				.endChoice()	
+
+                .when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
+                .wireTap(
+                        "direct:processChangeDeviceServicePlansATTJasperTansaction")
+                .process(new CarrierProvisioningDevicePostProcessor(env))
+                .endChoice()
 
                 .when(header("derivedCarrierName").isEqualTo("VERIZON"))
                 .bean(iSessionService, "setContextTokenInExchange")
@@ -1128,35 +1115,32 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iAuditService, "auditExternalResponseCall")
                 .bean(iTransactionalService,
                         "populateKoreTransactionalResponse");
-        
-        
-        
-		       	// ATTJASPER Flow-1
-		        
-		
-		        from("direct:processChangeDeviceServicePlansATTJasperTansaction")
-		                .log("Wire Tap Thread deactivation")
-		                .bean(iTransactionalService, "populateChangeDeviceServicePlansDBPayload")
-		                .split().method("deviceSplitter").recipientList()
-		                .method("attJasperDeviceServiceRouter");
-		        
-		        // ATTJASPER SEDA FLOW
-		       
-		        from("seda:attJasperSedaChangeDeviceServicePlans?concurrentConsumers=5")
-		        .onException(SoapFault.class)
-		        .handled(true)
-		        .bean(iAuditService, "auditExternalSOAPExceptionResponseCall")
-		        .bean(iTransactionalService,
-		                "populateATTJasperTransactionalErrorResponse")
-		        .end()
-		        .process(new ATTJasperChangeDeviceServicePlansPreProcessor(env))
-		        .bean(iAuditService, "auditExternalRequestCall")
-		        .to(attJasperTerminalEndPoint)
-		       
-		        .bean(iAuditService, "auditExternalSOAPResponseCall")
-		        .bean(iTransactionalService,
-		                "populateATTJasperTransactionalResponse");
-        
+
+        // ATTJASPER Flow-1
+
+        from("direct:processChangeDeviceServicePlansATTJasperTansaction")
+                .log("Wire Tap Thread deactivation")
+                .bean(iTransactionalService,
+                        "populateChangeDeviceServicePlansDBPayload").split()
+                .method("deviceSplitter").recipientList()
+                .method("attJasperDeviceServiceRouter");
+
+        // ATTJASPER SEDA FLOW
+
+        from("seda:attJasperSedaChangeDeviceServicePlans?concurrentConsumers=5")
+                .onException(SoapFault.class)
+                .handled(true)
+                .bean(iAuditService, "auditExternalSOAPExceptionResponseCall")
+                .bean(iTransactionalService,
+                        "populateATTJasperTransactionalErrorResponse")
+                .end()
+                .process(new ATTJasperChangeDeviceServicePlansPreProcessor(env))
+                .bean(iAuditService, "auditExternalRequestCall")
+                .to(attJasperTerminalEndPoint)
+
+                .bean(iAuditService, "auditExternalSOAPResponseCall")
+                .bean(iTransactionalService,
+                        "populateATTJasperTransactionalResponse");
 
         // End: Change Device ServicePlans
 
@@ -1283,22 +1267,22 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iAuditService, "auditExternalExceptionResponseCall")
                 .process(new KoreGenericExceptionProcessor(env)).endDoTry()
                 .endChoice().
-                
-                 when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
-                .doTry().process(new ATTJasperDeviceInformationPreProcessor(env))
-                .bean(iAuditService, "auditExternalRequestCall").
-                 to(attJasperTerminalEndPoint)
-                 .bean(iAuditService, "auditExternalSOAPResponseCall")
-                 .bean(iDeviceService, "setDeviceInformationDB")
-                 .process(new ATTJasperDeviceInformationPostProcessor())
-                 .bean(iDeviceService, "updateDeviceInformationDB")
-                 .doCatch(SoapFault.class)
-                 .bean(iAuditService, "auditExternalSOAPExceptionResponseCall")
-                 .process(new ATTJasperGenericExceptionProcessor(env))
-                  .endDoTry().endChoice()
 
+                when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
+                .doTry()
+                .process(new ATTJasperDeviceInformationPreProcessor(env))
+                .bean(iAuditService, "auditExternalRequestCall")
+                .to(attJasperTerminalEndPoint)
+                .bean(iAuditService, "auditExternalSOAPResponseCall")
+                .bean(iDeviceService, "setDeviceInformationDB")
+                .process(new ATTJasperDeviceInformationPostProcessor())
+                .bean(iDeviceService, "updateDeviceInformationDB")
+                .doCatch(SoapFault.class)
+                .bean(iAuditService, "auditExternalSOAPExceptionResponseCall")
+                .process(new ATTJasperGenericExceptionProcessor(env))
+                .endDoTry().endChoice()
 
-                 .when(header("derivedCarrierName").isEqualTo("VERIZON"))
+                .when(header("derivedCarrierName").isEqualTo("VERIZON"))
                 // will store only one time in Audit even on connection failure
                 .bean(iAuditService, "auditExternalRequestCall")
                 .to("direct:VerizonDeviceInformationCarrierSubProcess")
@@ -1365,8 +1349,8 @@ public class CamelRoute extends RouteBuilder {
                 .modeBeforeConsumer().setBody().body()
                 .process(new BulkDeviceProcessor()).end()
                 .bean(iDeviceService, "updateDevicesDetailsBulk").split()
-                .method("bulkOperationSplitter").parallelProcessing().recipientList()
-                .method("bulkOperationServiceRouter");
+                .method("bulkOperationSplitter").parallelProcessing()
+                .recipientList().method("bulkOperationServiceRouter");
 
         /**
          * Bulk Insert or Update the device in MasterDB using Seda
@@ -1433,19 +1417,27 @@ public class CamelRoute extends RouteBuilder {
 
         // Job Flow-1
 
-        from("direct:processJob").
-        onException(ExchangeTimedOutException.class).handled(true).log(LoggingLevel.INFO,
-                "TimeOut Exception for Batch Jon").process(new TimeOutErrorProcessor(env)).end()
-                .onCompletion().bean(iJobService, "checkTimeOutDevices")
-                .bean(iJobService, "updateJobDetails").
+        from("direct:processJob")
+                .onException(ExchangeTimedOutException.class)
+                .handled(true)
+                .log(LoggingLevel.INFO, "TimeOut Exception for Batch Jon")
+                .process(new TimeOutErrorProcessor(env))
+                .end()
+                .onCompletion()
+                .bean(iJobService, "checkTimeOutDevices")
+                .bean(iJobService, "updateJobDetails")
+                .
                 // Notification Not required.
-                /*// Run the Notification Job for Self triggered Batch job of Device Usage
-                 choice()
-                .when(simple("${exchangeProperty[jobName]} == 'KORE_DEVICE_USAGE' || ${exchangeProperty[jobName]} == 'VERIZON_DEVICE_USAGE' && ${exchangeProperty[jobType]} == 'NEW'") ).
-                bean(iJobService,
-                        "setJobDetails(${exchange},${exchangeProperty[carrierName]},"+JobName.DEVICE_USAGE_NOTIFICATION+")")
-                .to("direct:notificationJob").endChoice().end().*/
-                 end()
+                /*
+                 * // Run the Notification Job for Self triggered Batch job of
+                 * Device Usage choice() .when(simple(
+                 * "${exchangeProperty[jobName]} == 'KORE_DEVICE_USAGE' || ${exchangeProperty[jobName]} == 'VERIZON_DEVICE_USAGE' && ${exchangeProperty[jobType]} == 'NEW'"
+                 * ) ). bean(iJobService,
+                 * "setJobDetails(${exchange},${exchangeProperty[carrierName]},"
+                 * +JobName.DEVICE_USAGE_NOTIFICATION+")")
+                 * .to("direct:notificationJob").endChoice().end().
+                 */
+                end()
                 .bean(iJobService, "insertJobDetails")
                 .bean(iJobService, "setJobStartandEndTime")
                 .bean(iJobService, "fetchDevices")
@@ -1466,12 +1458,14 @@ public class CamelRoute extends RouteBuilder {
                 .choice()
                 .when(simple("${exchangeProperty[jobName]} == 'VERIZON_CONNECTION_HISTORY'"))
                 .split()
-                .method("jobSplitter").parallelProcessing()
+                .method("jobSplitter")
+                .parallelProcessing()
                 .to("seda:processVerizonConnectionHistoryJob")
                 .endChoice()
                 .when(simple("${exchangeProperty[jobName]} == 'KORE_DEVICE_USAGE'"))
                 .split()
-                .method("jobSplitter").parallelProcessing()
+                .method("jobSplitter")
+                .parallelProcessing()
                 .to("seda:processKoreDeviceUsageJob")
                 .endChoice()
                 .when(simple("${exchangeProperty[jobName]} == 'VERIZON_DEVICE_USAGE'"))
@@ -1491,7 +1485,10 @@ public class CamelRoute extends RouteBuilder {
                 .process(new KoreDeviceUsageHistoryPostProcessor())
                 .bean(iSchedulerService, "saveDeviceUsageHistory")
                 .doCatch(CxfOperationException.class,
-                        UnknownHostException.class, ConnectException.class,SocketTimeoutException.class,NoRouteToHostException.class,KoreSimMissingException.class)
+                        UnknownHostException.class, ConnectException.class,
+                        SocketTimeoutException.class,
+                        NoRouteToHostException.class,
+                        KoreSimMissingException.class)
                 .process(new KoreBatchExceptionProcessor(env))
                 .bean(iSchedulerService, "saveDeviceUsageHistory").endDoTry();
 
@@ -1507,7 +1504,9 @@ public class CamelRoute extends RouteBuilder {
                 .process(new VerizonDeviceUsageHistoryPostProcessor())
                 .bean(iSchedulerService, "saveDeviceUsageHistory")
                 .doCatch(CxfOperationException.class,
-                        UnknownHostException.class,ConnectException.class,SocketTimeoutException.class,NoRouteToHostException.class)
+                        UnknownHostException.class, ConnectException.class,
+                        SocketTimeoutException.class,
+                        NoRouteToHostException.class)
                 .process(new VerizonBatchExceptionProcessor(env))
                 .bean(iSchedulerService, "saveDeviceUsageHistory").endDoTry();
 
@@ -1523,7 +1522,9 @@ public class CamelRoute extends RouteBuilder {
                 .process(new VerizonDeviceConnectionHistoryPostProcessor())
                 .bean(iSchedulerService, "saveDeviceConnectionHistory")
                 .doCatch(CxfOperationException.class,
-                        UnknownHostException.class,ConnectException.class,SocketTimeoutException.class,NoRouteToHostException.class)
+                        UnknownHostException.class, ConnectException.class,
+                        SocketTimeoutException.class,
+                        NoRouteToHostException.class)
                 .process(new VerizonBatchExceptionProcessor(env))
                 .bean(iSchedulerService, "saveDeviceConnectionHistory")
                 .endDoTry();
@@ -1541,9 +1542,14 @@ public class CamelRoute extends RouteBuilder {
 
         // Job Flow-1
 
-        from("direct:processTransactionFailureJob").onException(ExchangeTimedOutException.class).handled(true).log(LoggingLevel.INFO,
-                "TimeOut Exception for Batch Jon").process(new TimeOutErrorProcessor(env)).end()
-                .onCompletion().bean(iJobService, "checkTimeOutDevicesTransactionFailure")
+        from("direct:processTransactionFailureJob")
+                .onException(ExchangeTimedOutException.class)
+                .handled(true)
+                .log(LoggingLevel.INFO, "TimeOut Exception for Batch Jon")
+                .process(new TimeOutErrorProcessor(env))
+                .end()
+                .onCompletion()
+                .bean(iJobService, "checkTimeOutDevicesTransactionFailure")
                 .bean(iJobService, "updateJobDetails")
                 .end()
                 .bean(iJobService, "insertJobDetails")
@@ -1567,12 +1573,14 @@ public class CamelRoute extends RouteBuilder {
                 .choice()
                 .when(simple("${exchangeProperty[jobName]} == 'VERIZON_CONNECTION_HISTORY'"))
                 .split()
-                .method("jobSplitter").parallelProcessing()
+                .method("jobSplitter")
+                .parallelProcessing()
                 .to("seda:processTransactionFailureVerizonConnectionHistoryJob")
                 .endChoice()
                 .when(simple("${exchangeProperty[jobName]} == 'KORE_DEVICE_USAGE'"))
                 .split()
-                .method("jobSplitter").parallelProcessing()
+                .method("jobSplitter")
+                .parallelProcessing()
                 .to("seda:processTransactionFailureKoreDeviceUsageJob")
                 .endChoice()
                 .when(simple("${exchangeProperty[jobName]} == 'VERIZON_DEVICE_USAGE'"))
@@ -1595,7 +1603,10 @@ public class CamelRoute extends RouteBuilder {
                 .process(new KoreDeviceUsageHistoryPostProcessor())
                 .bean(iSchedulerService, "saveDeviceUsageHistory")
                 .doCatch(CxfOperationException.class,
-                        UnknownHostException.class, ConnectException.class,SocketTimeoutException.class,NoRouteToHostException.class,KoreSimMissingException.class)
+                        UnknownHostException.class, ConnectException.class,
+                        SocketTimeoutException.class,
+                        NoRouteToHostException.class,
+                        KoreSimMissingException.class)
                 .process(new KoreBatchExceptionProcessor(env))
                 .bean(iSchedulerService, "saveDeviceUsageHistory").endDoTry();
 
@@ -1613,7 +1624,9 @@ public class CamelRoute extends RouteBuilder {
                 .process(new VerizonDeviceUsageHistoryPostProcessor())
                 .bean(iSchedulerService, "saveDeviceUsageHistory")
                 .doCatch(CxfOperationException.class,
-                        UnknownHostException.class,ConnectException.class,SocketTimeoutException.class,NoRouteToHostException.class)
+                        UnknownHostException.class, ConnectException.class,
+                        SocketTimeoutException.class,
+                        NoRouteToHostException.class)
                 .process(new VerizonBatchExceptionProcessor(env))
                 .bean(iSchedulerService, "saveDeviceUsageHistory").endDoTry();
 
@@ -1631,7 +1644,9 @@ public class CamelRoute extends RouteBuilder {
                 .process(new VerizonDeviceConnectionHistoryPostProcessor())
                 .bean(iSchedulerService, "saveDeviceConnectionHistory")
                 .doCatch(CxfOperationException.class,
-                        UnknownHostException.class,ConnectException.class,SocketTimeoutException.class,NoRouteToHostException.class)
+                        UnknownHostException.class, ConnectException.class,
+                        SocketTimeoutException.class,
+                        NoRouteToHostException.class)
                 .process(new VerizonBatchExceptionProcessor(env))
                 .bean(iSchedulerService, "saveDeviceConnectionHistory")
                 .endDoTry();
@@ -1685,37 +1700,35 @@ public class CamelRoute extends RouteBuilder {
 
     }
 
-    
-
-    //Not in Use.
+    // Not in Use.
     /**
      * Notification Job
      */
 
-   /* public void notificationJob() {
-
-        // Job Flow-1
-
-        from("direct:notificationJob").bean(iJobService, "insertJobDetails")
-                .bean(iJobService, "fetchDevices")
-                .bean(iJobService, "addNotificationList").split()
-                .method("jobSplitter")
-                .to("direct:processDeviceUsageNotification");
-
-        from("direct:processDeviceUsageNotification")
-                .onCompletion()
-                // .onWhen(property("CamelSplitComplete").isEqualTo("true"))
-                .onWhen(simple("${exchangeProperty[CamelSplitComplete]} == 'true'"))
-                .bean(iJobService, "updateJobDetails")
-                .bean(iJobService, "checkNotificationList").end()
-                .to("seda:processDeviceUsageNotificationJob");
-
-        // NOTIFICATION Job-DEVICE USAGE
-        from("seda:processDeviceUsageNotificationJob?concurrentConsumers=5")
-                .doTry().bean(iJobService, "processDeviceNotification")
-                .doCatch(CxfOperationException.class).endDoTry();
-
-    }*/
+    /*
+     * public void notificationJob() {
+     * 
+     * // Job Flow-1
+     * 
+     * from("direct:notificationJob").bean(iJobService, "insertJobDetails")
+     * .bean(iJobService, "fetchDevices") .bean(iJobService,
+     * "addNotificationList").split() .method("jobSplitter")
+     * .to("direct:processDeviceUsageNotification");
+     * 
+     * from("direct:processDeviceUsageNotification") .onCompletion() //
+     * .onWhen(property("CamelSplitComplete").isEqualTo("true"))
+     * .onWhen(simple("${exchangeProperty[CamelSplitComplete]} == 'true'"))
+     * .bean(iJobService, "updateJobDetails") .bean(iJobService,
+     * "checkNotificationList").end()
+     * .to("seda:processDeviceUsageNotificationJob");
+     * 
+     * // NOTIFICATION Job-DEVICE USAGE
+     * from("seda:processDeviceUsageNotificationJob?concurrentConsumers=5")
+     * .doTry().bean(iJobService, "processDeviceNotification")
+     * .doCatch(CxfOperationException.class).endDoTry();
+     * 
+     * }
+     */
 
     public void jobResponse() {
         from("direct:jobResponse").log("Inside the Job response").process(
@@ -1731,23 +1744,23 @@ public class CamelRoute extends RouteBuilder {
 
     }
 
- // Get Device Connection from Midway by start date to end date .
+    // Get Device Connection from Midway by start date to end date .
     public void getDeviceConnectionHistoryInfoDB() {
 
         from("direct:getDeviceConnectionHistoryInfoDB")
                 .process(new HeaderProcessor())
                 .bean(iDeviceService, "getDeviceConnectionHistoryInfoDB").end();
     }
-    
-   // Get Device usage of all the devices by date and carrier from Midway.
+
+    // Get Device usage of all the devices by date and carrier from Midway.
     public void getDevicesUsageByDayAndCarrierInfoDB() {
         from("direct:getDevicesUsageByDayAndCarrierInfoDB")
                 .log("Inside the getDevicesUsageByDayAndCarrierInfoDB")
                 .process(new HeaderProcessor())
-                .bean(iDeviceService, "getDevicesUsageByDayAndCarrierInfoDB").end();
+                .bean(iDeviceService, "getDevicesUsageByDayAndCarrierInfoDB")
+                .end();
 
     }
-
 
     /**
      * saving callbacks from verizon into MongoDB and and sending it to NetSuite
@@ -1788,8 +1801,8 @@ public class CamelRoute extends RouteBuilder {
         // TODO Auto-generated method stub
         from("timer://koreCheckStatusTimer?period=5m")
                 .bean(iTransactionalService, "populatePendingKoreCheckStatus")
-                .split().method("checkStatusSplitter").parallelProcessing().recipientList()
-                .method("koreCheckStatusServiceRouter");
+                .split().method("checkStatusSplitter").parallelProcessing()
+                .recipientList().method("koreCheckStatusServiceRouter");
 
         /**
          * Check status of all the Kore devices with carrier status pending or
@@ -1853,12 +1866,12 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iTransactionalService, "updateNetSuiteCallBackResponse")
                 .process(new KafkaProcessor(env))
                 .to("kafka:" + env.getProperty("kafka.endpoint")
-                        + ",?topic=midway-app-errors").
-                 // Activation  with custom fields error scenario
-                 choice()
-                 .when(simple("${exchangeProperty[koreActivationWithCustomField]} == 'true'")).
-                 to("direct:koreActivationCustomFieldsError").endChoice().   
-                 end();
+                        + ",?topic=midway-app-errors")
+                .
+                // Activation with custom fields error scenario
+                choice()
+                .when(simple("${exchangeProperty[koreActivationWithCustomField]} == 'true'"))
+                .to("direct:koreActivationCustomFieldsError").endChoice().end();
 
         from("direct:koreCustomChangeSubProcess")
                 .bean(iTransactionalService, "populateKoreCustomChangeResponse")
@@ -1893,56 +1906,57 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iTransactionalService, "updateNetSuiteCallBackResponse")
                 .process(new KafkaProcessor(env))
                 .to("kafka:" + env.getProperty("kafka.endpoint")
-                        + ",?topic=midway-alerts").
-                        // Activation  with custom fields error scenario
-               choice()
-               .when(simple("${exchangeProperty[koreActivationWithCustomField]} == 'true'")).
-               // call the change customField for Kore activation request
-               doTry().
-               process(new KoreActivationWithCustomFieldPreProcessor(env))
-               .to(uriRestKoreEndPoint).unmarshal()
-               .json(JsonLibrary.Jackson, DKoreResponseCode.class).
-                bean(iTransactionalService,
-                       "updateKoreActivationCustomeFieldsDBPayload").
-                to("direct:koreActivationCustomFieldsSuccess").
-                doCatch(Exception.class).
-                to("direct:koreActivationCustomFieldsError").
-                endDoTry().        
-                        end();
-        
-		// Kore Activation Custom Fields Error Scenario
-		from("direct:koreActivationCustomFieldsError")
-				.doTry()
-				.process(new KoreActivationWithCustomFieldErrorProcessor(env))
-				.bean(iTransactionalService,
-						"updateKoreActivationCustomeFieldsDBPayloadError")
-				.bean(iTransactionalService, "updateNetSuiteCallBackRequest")
-				.setHeader(Exchange.HTTP_QUERY)
-				.simple("script=${exchangeProperty[script]}&deploy=1")
-				.to(uriRestNetsuitEndPoint)
-				.doCatch(Exception.class)
-				.bean(iTransactionalService, "updateNetSuiteCallBackError")
-				.doFinally()
-				.bean(iTransactionalService, "updateNetSuiteCallBackResponse")
-				.process(new KafkaProcessor(env))
-				.to("kafka:" + env.getProperty("kafka.endpoint")
-						+ ",?topic=midway-app-errors").end();
-		
-		// Kore Activation Custom Fields Success Scenario
-		from("direct:koreActivationCustomFieldsSuccess")
-		.doTry()
-		.process(new KoreActivationWithCustomFieldProcessor(env))
-		.bean(iTransactionalService, "updateNetSuiteCallBackRequest")
-		.setHeader(Exchange.HTTP_QUERY)
-		.simple("script=${exchangeProperty[script]}&deploy=1")
-		.to(uriRestNetsuitEndPoint)
-		.doCatch(Exception.class)
-		.bean(iTransactionalService, "updateNetSuiteCallBackError")
-		.doFinally()
-		.bean(iTransactionalService, "updateNetSuiteCallBackResponse")
-		.process(new KafkaProcessor(env))
-		.to("kafka:" + env.getProperty("kafka.endpoint")
-				+ ",?topic=midway-alerts").end();
+                        + ",?topic=midway-alerts")
+                .
+                // Activation with custom fields error scenario
+                choice()
+                .when(simple("${exchangeProperty[koreActivationWithCustomField]} == 'true'"))
+                .
+                // call the change customField for Kore activation request
+                doTry()
+                .process(new KoreActivationWithCustomFieldPreProcessor(env))
+                .to(uriRestKoreEndPoint)
+                .unmarshal()
+                .json(JsonLibrary.Jackson, DKoreResponseCode.class)
+                .bean(iTransactionalService,
+                        "updateKoreActivationCustomeFieldsDBPayload")
+                .to("direct:koreActivationCustomFieldsSuccess")
+                .doCatch(Exception.class)
+                .to("direct:koreActivationCustomFieldsError").endDoTry().end();
+
+        // Kore Activation Custom Fields Error Scenario
+        from("direct:koreActivationCustomFieldsError")
+                .doTry()
+                .process(new KoreActivationWithCustomFieldErrorProcessor(env))
+                .bean(iTransactionalService,
+                        "updateKoreActivationCustomeFieldsDBPayloadError")
+                .bean(iTransactionalService, "updateNetSuiteCallBackRequest")
+                .setHeader(Exchange.HTTP_QUERY)
+                .simple("script=${exchangeProperty[script]}&deploy=1")
+                .to(uriRestNetsuitEndPoint)
+                .doCatch(Exception.class)
+                .bean(iTransactionalService, "updateNetSuiteCallBackError")
+                .doFinally()
+                .bean(iTransactionalService, "updateNetSuiteCallBackResponse")
+                .process(new KafkaProcessor(env))
+                .to("kafka:" + env.getProperty("kafka.endpoint")
+                        + ",?topic=midway-app-errors").end();
+
+        // Kore Activation Custom Fields Success Scenario
+        from("direct:koreActivationCustomFieldsSuccess")
+                .doTry()
+                .process(new KoreActivationWithCustomFieldProcessor(env))
+                .bean(iTransactionalService, "updateNetSuiteCallBackRequest")
+                .setHeader(Exchange.HTTP_QUERY)
+                .simple("script=${exchangeProperty[script]}&deploy=1")
+                .to(uriRestNetsuitEndPoint)
+                .doCatch(Exception.class)
+                .bean(iTransactionalService, "updateNetSuiteCallBackError")
+                .doFinally()
+                .bean(iTransactionalService, "updateNetSuiteCallBackResponse")
+                .process(new KafkaProcessor(env))
+                .to("kafka:" + env.getProperty("kafka.endpoint")
+                        + ",?topic=midway-alerts").end();
     }
 
 }

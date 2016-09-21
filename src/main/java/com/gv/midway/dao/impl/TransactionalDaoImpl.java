@@ -446,6 +446,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
             }
         }
         mongoTemplate.insertAll(list);
+        exchange.setProperty("activationCustomFieldList", list);
 
     }
 
@@ -838,19 +839,26 @@ public class TransactionalDaoImpl implements ITransactionalDao {
               
                 //This is applicable for AT&T CUSTOM Field to update 
                 //the status for respective custom field
+                // Adding the Search Criteria for custom field of ATT
                 if (exchange.getProperty("CUSTOMFIELDTOUPDATE") != null) {
-
-                    searchQuery.addCriteria(Criteria.where(
+                    
+                         searchQuery.addCriteria(Criteria.where(
                             "devicePayload.dataArea.customFieldsToUpdate.key").is(
                             exchange.getProperty("CUSTOMFIELDTOUPDATE")));
+                    
+                    if (exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null)
+                    {
+                    searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
+                            .is(RecordType.SECONDARY));
+                    }
                 }
                 
-             // If device activation request comes with Custom fields then update only the primary record(Activation record) in transaction
+                // If device activation request comes with Custom fields then update only the primary record(Activation record) in transaction
                 
-                if(exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null){
-                	searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
+                if(exchange.getProperty("CUSTOMFIELDTOUPDATE") == null && exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null){
+                        searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
                                 .is(RecordType.PRIMARY));
-                	
+                        
                 }
 
                 LOGGER.info("device number in Kore or ATT is.........."
@@ -1988,15 +1996,21 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
         // Adding the Search Criteria for custom field of ATT
         if (exchange.getProperty("CUSTOMFIELDTOUPDATE") != null) {
-
-            searchQuery.addCriteria(Criteria.where(
+            
+                 searchQuery.addCriteria(Criteria.where(
                     "devicePayload.dataArea.customFieldsToUpdate.key").is(
                     exchange.getProperty("CUSTOMFIELDTOUPDATE")));
+            
+            if (exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null)
+            {
+            searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
+                    .is(RecordType.SECONDARY));
+            }
         }
         
         // If device activation request comes with Custom fields then update only the primary record(Activation record) in transaction
         
-        if(exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null){
+        if(exchange.getProperty("CUSTOMFIELDTOUPDATE") == null && exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null){
         	searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
                         .is(RecordType.PRIMARY));
         	
@@ -2059,22 +2073,32 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                                             .is(exchange
                                                     .getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
       
+         
+            
+            
             // Adding the Search Criteria for custom field of ATT
             if (exchange.getProperty("CUSTOMFIELDTOUPDATE") != null) {
-
-                searchQuery.addCriteria(Criteria.where(
+                
+                     searchQuery.addCriteria(Criteria.where(
                         "devicePayload.dataArea.customFieldsToUpdate.key").is(
                         exchange.getProperty("CUSTOMFIELDTOUPDATE")));
+                
+                if (exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null)
+                {
+                searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
+                        .is(RecordType.SECONDARY));
+                }
             }
             
             // If device activation request comes with Custom fields then update only the primary record(Activation record) in transaction
             
-            if(exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null)
-            {
-            	searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
+            if(exchange.getProperty("CUSTOMFIELDTOUPDATE") == null && exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null){
+                    searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
                             .is(RecordType.PRIMARY));
-            	
+                    
             }
+            
+
             
             Update update = new Update();
             update.set(ITransaction.CARRIER_ERROR_DESCRIPTION, exchange

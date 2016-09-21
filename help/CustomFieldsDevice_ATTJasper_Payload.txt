@@ -1,15 +1,27 @@
 {
   "dataArea": {
-      
-    "devices": {
-      "deviceIds": [
-        {
-          "kind": "",
-          "id": "89011702272013902595"
-        }
-      ],
-      "netSuiteId": 187135,
-         "customFields": [
+    "devices": [
+      {
+        "deviceIds": [
+          {
+            "kind": "",
+          "id": "89011702272013902587"
+          }
+                                
+        ],
+        "netSuiteId": 220578
+      }
+    ],
+     "accountName":"0442090022-00001", 
+    "servicePlan": "M2MPERMB",
+    "customFields": [
+      {
+        "value": "test123",
+        "key": "customField1"
+      }
+       
+    ],
+    "customFieldsToUpdate": [
       {
         "key": "CustomField1",
         "value": "customField1"
@@ -36,15 +48,14 @@
       }
 	  
     ]
-    }
   },
   "header": {
-    "region":"USA",
+     "region":"USA",
       "timestamp":"2016-06-30T09:09:52-04:00",
       "organization":"Grant Victor",
       "transactionId":"gv123666",
       "sourceName":"NetSuit",
       "applicationName":"WEB",
-      "bsCarrier":"ATTJASPER"
+      "bsCarrier":"ATT Jasper"
   }
 }
