@@ -5,14 +5,14 @@ import com.gv.midway.pojo.BaseResponse;
 
 public class DevicesUsageByDayAndCarrierResponse extends BaseResponse{
 	
-	private DevicesUsageByDayAndCarrierResponseDataArea dateArea;
+	private DevicesUsageByDayAndCarrierResponseDataArea dataArea;
 
-	public DevicesUsageByDayAndCarrierResponseDataArea getDateArea() {
-		return dateArea;
+	public DevicesUsageByDayAndCarrierResponseDataArea getDataArea() {
+		return dataArea;
 	}
 
-	public void setDateArea(DevicesUsageByDayAndCarrierResponseDataArea dateArea) {
-		this.dateArea = dateArea;
+	public void setDataArea(DevicesUsageByDayAndCarrierResponseDataArea dateArea) {
+		this.dataArea = dateArea;
 	}
 
 	@Override
@@ -20,7 +20,7 @@ public class DevicesUsageByDayAndCarrierResponse extends BaseResponse{
 		final int prime = 31;
 		int result = super.hashCode();
 		result = prime * result
-				+ ((dateArea == null) ? 0 : dateArea.hashCode());
+				+ ((dataArea == null) ? 0 : dataArea.hashCode());
 		return result;
 	}
 
@@ -33,10 +33,10 @@ public class DevicesUsageByDayAndCarrierResponse extends BaseResponse{
 		if (getClass() != obj.getClass())
 			return false;
 		DevicesUsageByDayAndCarrierResponse other = (DevicesUsageByDayAndCarrierResponse) obj;
-		if (dateArea == null) {
-			if (other.dateArea != null)
+		if (dataArea == null) {
+			if (other.dataArea != null)
 				return false;
-		} else if (!dateArea.equals(other.dateArea))
+		} else if (!dataArea.equals(other.dataArea))
 			return false;
 		return true;
 	}
@@ -44,8 +44,8 @@ public class DevicesUsageByDayAndCarrierResponse extends BaseResponse{
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("DevicesUsageByDayRequest [dateArea=");
-		builder.append(dateArea);
+		builder.append("DevicesUsageByDayRequest [dataArea=");
+		builder.append(dataArea);
 		builder.append("]");
 		return builder.toString();
 	}

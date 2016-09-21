@@ -1,10 +1,9 @@
 package com.gv.midway.dao.impl;
 
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
+
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,9 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-
 import org.apache.camel.Exchange;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +21,6 @@ import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IResponse;
 import com.gv.midway.dao.IDeviceDao;
@@ -44,7 +40,6 @@ import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponseDataArea;
-import com.gv.midway.pojo.notification.DeviceOverageNotification;
 import com.gv.midway.pojo.usageInformation.request.DevicesUsageByDayAndCarrierRequest;
 import com.gv.midway.pojo.usageInformation.request.UsageInformationMidwayRequest;
 import com.gv.midway.pojo.usageInformation.response.DeviceUsages;
@@ -857,7 +852,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 				
 				devicesUsageByDayAndCarrierResponseDataArea.setDate(date);
 				
-				devicesUsageByDayAndCarrierResponse.setDateArea(devicesUsageByDayAndCarrierResponseDataArea);
+				devicesUsageByDayAndCarrierResponse.setDataArea(devicesUsageByDayAndCarrierResponseDataArea);
 
 				
 			}
