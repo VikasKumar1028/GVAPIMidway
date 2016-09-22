@@ -1,18 +1,6 @@
 package com.gv.midway.dao.impl;
 
-
-import java.io.ByteArrayOutputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
-
-import javax.xml.soap.SOAPBody;
-import javax.xml.soap.Detail;
-import javax.xml.soap.DetailEntry;
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.Name;
-import javax.xml.soap.SOAPEnvelope;
-import javax.xml.soap.SOAPFault;
-import javax.xml.soap.SOAPMessage;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.component.cxf.CxfOperationException;
@@ -21,8 +9,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
@@ -54,14 +40,14 @@ public class AuditDaoImpl implements IAuditDao {
             LOGGER.info("auditExternalRequestCall-jsonInString::"
                     + exchange.getIn().getBody().toString());
 
-            String requestEndpint = exchange.getFromEndpoint().toString();
-            String requestEndpintSpilt[] = requestEndpint.split("//");
+            String requestEndpoint = exchange.getFromEndpoint().toString();
+            String requestEndpointSplit[] = requestEndpoint.split("//");
 
-            LOGGER.info("requestEndpintSpilt::"
-                    + requestEndpintSpilt[1].replaceAll("]", " "));
+            LOGGER.info("requestEndpointSplit::"
+                    + requestEndpointSplit[1].replaceAll("]", " "));
 
             String apiOperationName = "GV_"
-                    + requestEndpintSpilt[1].replaceAll("]", "")
+                    + requestEndpointSplit[1].replaceAll("]", "")
                     + "_BusinessRequest";
             if (exchange
                     .getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER) != null) {
@@ -110,14 +96,14 @@ public class AuditDaoImpl implements IAuditDao {
 
         try {
 
-            String responseEndpint = exchange.getFromEndpoint().toString();
-            String responseEndpintSpilt[] = responseEndpint.split("//");
+            String responseEndpoint = exchange.getFromEndpoint().toString();
+            String responseEndpointSplit[] = responseEndpoint.split("//");
 
-            LOGGER.info("requestEndpintSpilt::"
-                    + responseEndpintSpilt[1].replaceAll("]", " "));
+            LOGGER.info("requestEndpointSplit::"
+                    + responseEndpointSplit[1].replaceAll("]", " "));
 
             String apiOperationName = "GV_"
-                    + responseEndpintSpilt[1].replaceAll("]", "")
+                    + responseEndpointSplit[1].replaceAll("]", "")
                     + "_BusinessResponse";
 
             if (exchange
@@ -145,7 +131,7 @@ public class AuditDaoImpl implements IAuditDao {
             audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME)
                     .toString());
 
-            LOGGER.info("business resposne is.........."
+            LOGGER.info("business response is.........."
                     + exchange.getIn().getBody());
 
             audit.setPayload(exchange.getIn().getBody());
@@ -170,13 +156,13 @@ public class AuditDaoImpl implements IAuditDao {
         try {
 
             String responseEndpint = exchange.getFromEndpoint().toString();
-            String responseEndpintSpilt[] = responseEndpint.split("//");
+            String requestEndpointSplit[] = responseEndpint.split("//");
 
-            LOGGER.info("requestEndpintSpilt::"
-                    + responseEndpintSpilt[1].replaceAll("]", " "));
+            LOGGER.info("requestEndpointSplit::"
+                    + requestEndpointSplit[1].replaceAll("]", " "));
 
             String apiOperationName = "GV_"
-                    + responseEndpintSpilt[1].replaceAll("]", "")
+                    + requestEndpointSplit[1].replaceAll("]", "")
                     + "_BusinessResponse";
 
             if (exchange
@@ -244,14 +230,14 @@ public class AuditDaoImpl implements IAuditDao {
 
             String responseExceptionEndpint = exchange.getFromEndpoint()
                     .toString();
-            String responseExceptionEndpintSpilt[] = responseExceptionEndpint
+            String responseExceptionEndpintSplit[] = responseExceptionEndpint
                     .split("//");
 
-            LOGGER.info("requestEndpintSpilt::"
-                    + responseExceptionEndpintSpilt[1].replaceAll("]", " "));
+            LOGGER.info("responseExceptionEndpintSplit::"
+                    + responseExceptionEndpintSplit[1].replaceAll("]", " "));
 
             String apiOperationName = "GV_"
-                    + responseExceptionEndpintSpilt[1].replaceAll("]", "")
+                    + responseExceptionEndpintSplit[1].replaceAll("]", "")
                     + "_BusinessExternalError";
 
             if (exchange
@@ -338,14 +324,14 @@ public class AuditDaoImpl implements IAuditDao {
 
             String responseExceptionEndpint = exchange.getFromEndpoint()
                     .toString();
-            String responseExceptionEndpintSpilt[] = responseExceptionEndpint
+            String responseExceptionEndpintSplit[] = responseExceptionEndpint
                     .split("//");
 
-            LOGGER.info("requestEndpintSpilt::"
-                    + responseExceptionEndpintSpilt[1].replaceAll("]", " "));
+            LOGGER.info("responseExceptionEndpintSplit::"
+                    + responseExceptionEndpintSplit[1].replaceAll("]", " "));
 
             String apiOperationName = "GV_"
-                    + responseExceptionEndpintSpilt[1].replaceAll("]", "")
+                    + responseExceptionEndpintSplit[1].replaceAll("]", "")
                     + "_BusinessExternalError";
 
             if (exchange
@@ -423,16 +409,16 @@ public class AuditDaoImpl implements IAuditDao {
         try {
             // changes for the audit
 
-            String responseExceptionEndpint = exchange.getFromEndpoint()
+            String responseExceptionEndpoint = exchange.getFromEndpoint()
                     .toString();
-            String responseExceptionEndpintSpilt[] = responseExceptionEndpint
+            String responseExceptionEndpointSplit[] = responseExceptionEndpoint
                     .split("//");
 
-            LOGGER.info("requestEndpintSpilt::"
-                    + responseExceptionEndpintSpilt[1].replaceAll("]", " "));
+            LOGGER.info("requestEndpintSplit::"
+                    + responseExceptionEndpointSplit[1].replaceAll("]", " "));
 
             String apiOperationName = "GV_"
-                    + responseExceptionEndpintSpilt[1].replaceAll("]", "")
+                    + responseExceptionEndpointSplit[1].replaceAll("]", "")
                     + "_BusinessConnectionError";
 
             if (exchange

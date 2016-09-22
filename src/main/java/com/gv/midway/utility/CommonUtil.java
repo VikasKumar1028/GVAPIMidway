@@ -10,6 +10,8 @@ import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -22,6 +24,9 @@ import java.util.regex.Pattern;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -757,6 +762,12 @@ public class CommonUtil {
         default:
             return -1;
         }
+    }
+
+    public static XMLGregorianCalendar getCurrentXMLGregorianDateTimeUTC() throws DatatypeConfigurationException {
+        LocalDateTime currentUTCTime = LocalDateTime.now(Clock.systemUTC()); // using UTC timezone
+        XMLGregorianCalendar xmlDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(currentUTCTime.toString());
+        return xmlDate;
     }
 
 }
