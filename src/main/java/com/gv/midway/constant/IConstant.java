@@ -126,5 +126,7 @@ public interface IConstant {
 	static int ATTJASPER_CUSTOMFIELD_CHANGETYPE = 17;
 	
 	static String ACTVATION_WITH_CUSTOMEFILEDS = "activationWithCustomFields";
+	
+	static String ACTVATION_WITH_CUSTOMEFILEDS_LIST = "activationWithCustomFieldsList";
 
 }

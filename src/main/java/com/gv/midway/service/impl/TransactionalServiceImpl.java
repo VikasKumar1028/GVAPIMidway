@@ -6,6 +6,7 @@ import org.apache.camel.Exchange;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.gv.midway.constant.IConstant;
 import com.gv.midway.dao.ITransactionalDao;
 import com.gv.midway.pojo.transaction.Transaction;
 import com.gv.midway.service.ITransactionalService;
@@ -167,6 +168,6 @@ public class TransactionalServiceImpl implements ITransactionalService {
 	public void setActivateCustomFieldListInExchange(Exchange exchange){
 	    
 	    CommonUtil.setListInWireTap( exchange,
-	          (List<Transaction>) exchange.getProperty("activationCustomFieldList"));
+	          (List<Transaction>) exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS_LIST));
 	}
 }

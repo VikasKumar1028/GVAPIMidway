@@ -7,9 +7,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import javax.xml.datatype.XMLGregorianCalendar;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.component.cxf.CxfOperationException;
@@ -20,7 +17,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
-
 import com.esotericsoftware.kryo.Kryo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -446,7 +442,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
             }
         }
         mongoTemplate.insertAll(list);
-        exchange.setProperty("activationCustomFieldList", list);
+        exchange.setProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS_LIST, list);
 
     }
 
