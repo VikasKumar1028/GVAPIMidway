@@ -13,9 +13,6 @@ import org.apache.cxf.binding.soap.SoapHeader;
 import org.apache.cxf.headers.Header;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -47,16 +44,12 @@ public class ATTJasperActivateDevicePreProcessor implements Processor {
         exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,
 				transaction.getDeviceNumber());
 
-        //String EAPCode = activateDeviceRequest.getDataArea().getDevices().getServicePlan();
-
-        //deviceId = "89011702272013902603";
-
         EditTerminalRequest editTerminalRequest = new EditTerminalRequest();
 
         editTerminalRequest.setIccid(deviceId);
-        LocalDateTime currentUTCTime = LocalDateTime.now(); // using system timezone
+       /* LocalDateTime currentUTCTime = LocalDateTime.now(); // using system timezone
         XMLGregorianCalendar xmlDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(currentUTCTime.toString());
-        editTerminalRequest.setEffectiveDate(xmlDate);
+        editTerminalRequest.setEffectiveDate(xmlDate);*/
         editTerminalRequest.setChangeType(IConstant.ATTJASPER_SIM_CHANGETYPE);
         editTerminalRequest.setTargetValue(IConstant.ATTJASPER_ACTIVATED);
 

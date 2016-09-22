@@ -1,12 +1,8 @@
 package com.gv.midway.processor.customFieldsDevice;
 
-import java.time.LocalDateTime;
+
 import java.util.Date;
 import java.util.List;
-
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.Processor;
@@ -15,7 +11,6 @@ import org.apache.cxf.binding.soap.SoapHeader;
 import org.apache.cxf.headers.Header;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
-
 import com.gv.midway.attjasper.EditTerminalRequest;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.customFieldsDevice.request.CustomFieldsDeviceRequest;
@@ -68,10 +63,10 @@ public class ATTJasperCustomFieldDevicePreProcessor implements Processor {
 		
 		exchange.setProperty("CUSTOMFIELDTOUPDATE",customFieldRequest.getDataArea().getCustomFieldsToUpdate()[0].getKey());
 		
-		LocalDateTime currentUTCTime = LocalDateTime.now(); // using system timezone
+		/*LocalDateTime currentUTCTime = LocalDateTime.now(); // using system timezone
                XMLGregorianCalendar xmlDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(currentUTCTime.toString());
 		
-		getEditTerminalRequest.setEffectiveDate(xmlDate);
+		getEditTerminalRequest.setEffectiveDate(xmlDate);*/
 		
 		getEditTerminalRequest.setIccid(deviceId);
 

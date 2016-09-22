@@ -2018,12 +2018,12 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
         Update update = new Update();
 
-        XMLGregorianCalendar effectiveDate = editTerminalResponse
-                .getEffectiveDate();
+       /* XMLGregorianCalendar effectiveDate = editTerminalResponse
+                .getEffectiveDate();*/
 
         try {
 
-            if (effectiveDate != null) {
+            /*if (effectiveDate != null) {
 
                 update.set(ITransaction.CARRIER_STATUS,
                         IConstant.CARRIER_TRANSACTION_STATUS_PENDING);
@@ -2040,7 +2040,10 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 update.set(ITransaction.CARRIER_STATUS,
                         IConstant.CARRIER_TRANSACTION_STATUS_SUCCESS);
 
-            }
+            }*/
+
+           update.set(ITransaction.CARRIER_STATUS,
+                IConstant.CARRIER_TRANSACTION_STATUS_SUCCESS);
 
             update.set(ITransaction.CALL_BACK_PAYLOAD, soapPayload);
             update.set(ITransaction.CALL_BACK_RECEIVED, true);

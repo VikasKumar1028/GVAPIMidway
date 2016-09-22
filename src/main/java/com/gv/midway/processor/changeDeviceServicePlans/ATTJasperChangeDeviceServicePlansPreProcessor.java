@@ -1,12 +1,8 @@
 package com.gv.midway.processor.changeDeviceServicePlans;
 
-import java.time.LocalDateTime;
+
 import java.util.Date;
 import java.util.List;
-
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.Processor;
@@ -15,7 +11,6 @@ import org.apache.cxf.binding.soap.SoapHeader;
 import org.apache.cxf.headers.Header;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
-
 import com.gv.midway.attjasper.EditTerminalRequest;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.changeDeviceServicePlans.request.ChangeDeviceServicePlansRequest;
@@ -70,12 +65,12 @@ public class ATTJasperChangeDeviceServicePlansPreProcessor implements Processor 
 
 		getEditTerminalRequest.setTargetValue(servicePlan);
 
-		LocalDateTime currentUTCTime = LocalDateTime.now(); // using system
+		/*LocalDateTime currentUTCTime = LocalDateTime.now(); // using system
 															// timezone
 		XMLGregorianCalendar xmlDate = DatatypeFactory.newInstance()
 				.newXMLGregorianCalendar(currentUTCTime.toString());
 
-		getEditTerminalRequest.setEffectiveDate(xmlDate);
+		getEditTerminalRequest.setEffectiveDate(xmlDate);*/
 
 		getEditTerminalRequest.setIccid(deviceId);
 
