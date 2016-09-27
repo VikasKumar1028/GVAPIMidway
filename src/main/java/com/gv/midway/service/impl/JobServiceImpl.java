@@ -134,7 +134,7 @@ public class JobServiceImpl implements IJobService {
      */
     @Override
     public void setJobDetails(Exchange exchange, String carrierName,
-            JobName jobName) {
+            JobName jobName,int duration) {
 
         JobDetail jobDetail = new JobDetail();
         jobDetail.setType(JobType.NEW);
@@ -146,7 +146,7 @@ public class JobServiceImpl implements IJobService {
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.HOUR, IConstant.DURATION);
+        cal.add(Calendar.HOUR, duration);
         jobDetail.setDate(dateFormat.format(cal.getTime()));
 
         exchange.getIn().setBody(jobDetail);

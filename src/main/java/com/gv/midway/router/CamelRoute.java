@@ -276,11 +276,15 @@ public class CamelRoute extends RouteBuilder {
 
         // Execution of schduled jobs scheduledJobs
 
-        deviceConnectionHistoryVerizonJob();
+        deviceConnectionHistoryVerizonJob24();
 
-        deviceUsageHistoryVerizonJob();
+        deviceUsageHistoryVerizonJob24();
 
-        deviceUsageHistoryKoreJob();
+        deviceUsageHistoryKoreJob24();
+        
+        deviceUsageHistoryVerizonJob48();
+        
+        deviceUsageHistoryKoreJob48();
 
         // Transaction Failure Job
         transactionFailureJob();
@@ -1360,49 +1364,74 @@ public class CamelRoute extends RouteBuilder {
     }
 
     /**
-     * Method to Schedule the Veriozon Device Connection History Job
+     * Method to Schedule the Verizon Device Connection History Job
      */
-    public void deviceConnectionHistoryVerizonJob() {
+    public void deviceConnectionHistoryVerizonJob24() {
 
-        from(
-                "quartz2://job/deviceDetailsConnectionTimerVerizon?cron="
-                        + IConstant.JOB_TIME_CONFIGURATION)
+        from(env.getProperty(IConstant.VERIZON_CONNECTION_TIMER24))
                 .bean(iJobService,
                         "setJobDetails(${exchange},"
                                 + CarrierType.VERIZON.toString() + ", "
-                                + JobName.VERIZON_CONNECTION_HISTORY + ")")
+                                + JobName.VERIZON_CONNECTION_HISTORY + ","+IConstant.DURATION_24+")")
                 .bean(iJobService, "scheduleJob").end();
 
     }
 
     /**
-     * Method to Schedule the Veriozon Device Usage Job
+     * Method to Schedule the Verizon Device Usage Job for previous day usage
      */
-    public void deviceUsageHistoryVerizonJob() {
+    public void deviceUsageHistoryVerizonJob24() {
 
         from(
-                "quartz2://job/deviceDetailsUsageTimerVerizon?cron="
-                        + IConstant.JOB_TIME_CONFIGURATION)
+                env.getProperty(IConstant.VERIZON_USAGE_TIMER24))
                 .bean(iJobService,
                         "setJobDetails(${exchange},"
                                 + CarrierType.VERIZON.toString() + ", "
-                                + JobName.VERIZON_DEVICE_USAGE + ")")
+                                + JobName.VERIZON_DEVICE_USAGE + ","+IConstant.DURATION_24+")")
                 .bean(iJobService, "scheduleJob").end();
 
     }
 
     /**
-     * Method to Schedule the Kore Device Usage Job
+     * Method to Schedule the Kore Device Usage Job for previous day usage
      */
-    public void deviceUsageHistoryKoreJob() {
+    public void deviceUsageHistoryKoreJob24() {
 
-        from(
-                "quartz2://job/deviceDetailsUsageTimerKore?cron="
-                        + IConstant.JOB_TIME_CONFIGURATION)
+        from(env.getProperty(IConstant.KORE_USAGE_TIMER24))
                 .bean(iJobService,
                         "setJobDetails(${exchange},"
                                 + CarrierType.KORE.toString() + ", "
-                                + JobName.KORE_DEVICE_USAGE + ")")
+                                + JobName.KORE_DEVICE_USAGE + ","+IConstant.DURATION_24+")")
+                .bean(iJobService, "scheduleJob").end();
+
+    }
+    
+    
+    /**
+     * Method to Schedule the Verizon Device Usage Job for 2 days back to get the updated data usage of roaming devices.
+     */
+    public void deviceUsageHistoryVerizonJob48() {
+
+        from(
+                env.getProperty(IConstant.VERIZON_USAGE_TIMER48))
+                .bean(iJobService,
+                        "setJobDetails(${exchange},"
+                                + CarrierType.VERIZON.toString() + ", "
+                                + JobName.VERIZON_DEVICE_USAGE + ","+IConstant.DURATION_48+")")
+                .bean(iJobService, "scheduleJob").end();
+
+    }
+
+    /**
+     * Method to Schedule the Kore Device Usage Job for 2 days back to get the updated data usage of roaming devices.
+     */
+    public void deviceUsageHistoryKoreJob48() {
+
+        from(env.getProperty(IConstant.KORE_USAGE_TIMER48))
+                .bean(iJobService,
+                        "setJobDetails(${exchange},"
+                                + CarrierType.KORE.toString() + ", "
+                                + JobName.KORE_DEVICE_USAGE + ","+IConstant.DURATION_48+")")
                 .bean(iJobService, "scheduleJob").end();
 
     }

@@ -91,7 +91,9 @@ public interface IConstant {
 
 	static String HEADER = "header";
 
-	static int DURATION = -24;
+	static int DURATION_24 = -24;
+	
+	static int DURATION_48 = -48;
 
 	static String JOB_INITIALIZED_MESSAGE = "Job Started Successfully";
 
@@ -128,5 +130,15 @@ public interface IConstant {
 	static String ACTVATION_WITH_CUSTOMEFILEDS = "activationWithCustomFields";
 	
 	static String ACTVATION_WITH_CUSTOMEFILEDS_LIST = "activationWithCustomFieldsList";
+	
+	static String KORE_USAGE_TIMER24 = "kore.usagetimer24";
+	
+	static String VERIZON_USAGE_TIMER24 = "verizon.usagetimer24";
+	
+	static String VERIZON_CONNECTION_TIMER24 = "verizon.connectiontimer24";
+	
+    static String VERIZON_USAGE_TIMER48 = "verizon.usagetimer48";
+	
+	static String KORE_USAGE_TIMER48 = "kore.usagetimer48";
 
 }

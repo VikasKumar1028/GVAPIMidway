@@ -19,7 +19,7 @@ public interface IJobService {
     public void deleteDeviceConnectionHistoryRecords(Exchange exchange);
 
     public void setJobDetails(Exchange exchange, String carrierName,
-            JobName jobName);
+            JobName jobName,int duration);
 
     public void setJobStartandEndTime(Exchange exchange);
 
