@@ -58,4 +58,6 @@ public interface ITransactionalService {
 	public void updateKoreActivationCustomeFieldsDBPayloadError(Exchange exchange);
 	
 	public void setActivateCustomFieldListInExchange(Exchange exchange);
+	
+	public void fetchAttPendingCallback(Exchange exchange);
 }

@@ -66,6 +66,9 @@ import com.gv.midway.processor.changeDeviceServicePlans.StubATTJasperChangeDevic
 import com.gv.midway.processor.changeDeviceServicePlans.StubKoreChangeDeviceServicePlansProcessor;
 import com.gv.midway.processor.changeDeviceServicePlans.StubVerizonChangeDeviceServicePlansProcessor;
 import com.gv.midway.processor.changeDeviceServicePlans.VerizonChangeDeviceServicePlansPreProcessor;
+import com.gv.midway.processor.checkstatus.AttCallBackErrorPostProcessor;
+import com.gv.midway.processor.checkstatus.AttCallBackPreProcessor;
+import com.gv.midway.processor.checkstatus.AttCallBackSuccessPostProcessor;
 import com.gv.midway.processor.checkstatus.KoreCheckStatusErrorProcessor;
 import com.gv.midway.processor.checkstatus.KoreCheckStatusPostProcessor;
 import com.gv.midway.processor.checkstatus.KoreCheckStatusPreProcessor;
@@ -312,6 +315,9 @@ public class CamelRoute extends RouteBuilder {
 
         // Kore Check Status Timer
         koreCheckStatusTimer();
+        
+        //ATT Callback Timer
+       // attCallBackTimer();
     }
 
     /**
@@ -1987,5 +1993,148 @@ public class CamelRoute extends RouteBuilder {
                 .to("kafka:" + env.getProperty("kafka.endpoint")
                         + ",?topic=midway-alerts").end();
     }
+    
+  /*  
+    * Get all the Att devices with carrier status pending or error and Midway
+    * status as Pending from TransactionDB
+    */
+ 
+    public void attCallBackTimer() {
+
+       from("timer://attCallBackTimer?period=5m")
+               .bean(iTransactionalService, "fetchAttPendingCallback").split()
+               .method("attCallBackSplitter").parallelProcessing()
+               .recipientList().method("attCallBackRouter");
+
+       /**
+        * Calling the Kafka and Netsuite end point based on the actual response
+        * received ATT Jasper
+        */
+
+       from("seda:attSedaCallBack?concurrentConsumers=5")
+
+         
+
+               .onException(UnknownHostException.class, ConnectException.class)
+               .handled(true)
+               .bean(iTransactionalService,
+                       "populateKoreCheckStatusConnectionResponse")
+               .end()
+
+               .process(new AttCallBackPreProcessor(env))
+               .choice()
+               
+               /**
+                * Now call the netsuite end point for error and write in Kafka
+                * Queue.
+                */
+               .when(header(IConstant.ATT_CALLBACK_STATUS).isEqualTo("error"))
+               .to("direct:attCallBackErrorSubProcess")
+               .when(header(IConstant.ATT_CALLBACK_STATUS).isEqualTo("success"))
+               .to("direct:attCallBackSuccessSubProcess").
+               /**
+                * Call the ATT Jasper API to check the status of device
+                */
+               /*
+                * when(header(IConstant.KORE_CHECK_STATUS).isEqualTo("forward"))
+                * .to(uriRestKoreEndPoint).unmarshal()
+                * .json(JsonLibrary.Jackson, KoreCheckStatusResponse.class)
+                * .to("direct:koreCheckStatusSubProcess").endChoice();
+                */
+               endChoice();
+
+       from("direct:attCallBackErrorSubProcess")
+               .bean(iTransactionalService,
+                       "populateKoreCheckStatusErrorResponse")
+               .doTry()
+               .process(new AttCallBackErrorPostProcessor(env))
+               .bean(iTransactionalService, "updateNetSuiteCallBackRequest")
+               .setHeader(Exchange.HTTP_QUERY)
+               .simple("script=${exchangeProperty[script]}&deploy=1")
+               .to(uriRestNetsuitEndPoint)
+               .doCatch(Exception.class)
+               .bean(iTransactionalService, "updateNetSuiteCallBackError")
+               .doFinally()
+               .bean(iTransactionalService, "updateNetSuiteCallBackResponse")
+               .process(new KafkaProcessor(env))
+               .to("kafka:" + env.getProperty("kafka.endpoint")
+                       + ",?topic=midway-app-errors")
+               .
+               // Activation with custom fields error scenario
+               choice()
+               .when(simple("${exchangeProperty[koreActivationWithCustomField]} == 'true'"))
+               .to("direct:koreActivationCustomFieldsError").endChoice().end();
+
+       from("direct:attCallBackSuccessSubProcess")
+               .bean(iTransactionalService, "populateKoreCustomChangeResponse")
+               .doTry()
+               .process(new AttCallBackSuccessPostProcessor(env))
+               .bean(iTransactionalService, "updateNetSuiteCallBackRequest")
+               .setHeader(Exchange.HTTP_QUERY)
+               .simple("script=${exchangeProperty[script]}&deploy=1")
+               .to(uriRestNetsuitEndPoint)
+               .doCatch(Exception.class)
+               .bean(iTransactionalService, "updateNetSuiteCallBackError")
+               .doFinally()
+               .bean(iTransactionalService, "updateNetSuiteCallBackResponse")
+               .process(new KafkaProcessor(env))
+               .to("kafka:" + env.getProperty("kafka.endpoint")
+                       + ",?topic=midway-alerts").end();
+
+       /*
+        * from("direct:koreCheckStatusSubProcess") .bean(iTransactionalService,
+        * "populateKoreCheckStatusResponse") .choice()
+        * .when(header(IConstant.KORE_PROVISIONING_REQUEST_STATUS)
+        * .isEqualTo(IConstant.KORE_CHECKSTATUS_COMPLETED)) .doTry()
+        * .process(new KoreCheckStatusPostProcessor(env))
+        * .bean(iTransactionalService, "updateNetSuiteCallBackRequest")
+        * .setHeader(Exchange.HTTP_QUERY)
+        * .simple("script=${exchangeProperty[script]}&deploy=1")
+        * .to(uriRestNetsuitEndPoint) .doCatch(Exception.class)
+        * .bean(iTransactionalService, "updateNetSuiteCallBackError")
+        * .doFinally() .bean(iTransactionalService,
+        * "updateNetSuiteCallBackResponse") .process(new KafkaProcessor(env))
+        * .to("kafka:" + env.getProperty("kafka.endpoint") +
+        * ",?topic=midway-alerts") . // Activation with custom fields error
+        * scenario choice() .when(simple(
+        * "${exchangeProperty[koreActivationWithCustomField]} == 'true'")) . //
+        * call the change customField for Kore activation request doTry()
+        * .process(new KoreActivationWithCustomFieldPreProcessor(env))
+        * .to(uriRestKoreEndPoint) .unmarshal() .json(JsonLibrary.Jackson,
+        * DKoreResponseCode.class) .bean(iTransactionalService,
+        * "updateKoreActivationCustomeFieldsDBPayload")
+        * .to("direct:koreActivationCustomFieldsSuccess")
+        * .doCatch(Exception.class)
+        * .to("direct:koreActivationCustomFieldsError").endDoTry().end();
+        * 
+        * // Kore Activation Custom Fields Error Scenario
+        * from("direct:koreActivationCustomFieldsError") .doTry() .process(new
+        * KoreActivationWithCustomFieldErrorProcessor(env))
+        * .bean(iTransactionalService,
+        * "updateKoreActivationCustomeFieldsDBPayloadError")
+        * .bean(iTransactionalService, "updateNetSuiteCallBackRequest")
+        * .setHeader(Exchange.HTTP_QUERY)
+        * .simple("script=${exchangeProperty[script]}&deploy=1")
+        * .to(uriRestNetsuitEndPoint) .doCatch(Exception.class)
+        * .bean(iTransactionalService, "updateNetSuiteCallBackError")
+        * .doFinally() .bean(iTransactionalService,
+        * "updateNetSuiteCallBackResponse") .process(new KafkaProcessor(env))
+        * .to("kafka:" + env.getProperty("kafka.endpoint") +
+        * ",?topic=midway-app-errors").end();
+        * 
+        * // Kore Activation Custom Fields Success Scenario
+        * from("direct:koreActivationCustomFieldsSuccess") .doTry()
+        * .process(new KoreActivationWithCustomFieldProcessor(env))
+        * .bean(iTransactionalService, "updateNetSuiteCallBackRequest")
+        * .setHeader(Exchange.HTTP_QUERY)
+        * .simple("script=${exchangeProperty[script]}&deploy=1")
+        * .to(uriRestNetsuitEndPoint) .doCatch(Exception.class)
+        * .bean(iTransactionalService, "updateNetSuiteCallBackError")
+        * .doFinally() .bean(iTransactionalService,
+        * "updateNetSuiteCallBackResponse") .process(new KafkaProcessor(env))
+        * .to("kafka:" + env.getProperty("kafka.endpoint") +
+        * ",?topic=midway-alerts").end();
+        */
+   }
 
 }

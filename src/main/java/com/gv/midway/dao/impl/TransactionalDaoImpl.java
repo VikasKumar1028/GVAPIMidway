@@ -2213,6 +2213,33 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 		LOGGER.info("End updateKoreActivationCustomeFieldsDBPayload");
 	}
 	
-	
+	public void fetchAttPendingCallback(Exchange exchange){
+	    
+	    
+	     Query searchPendingCheckStatusQuery = new Query(Criteria
+	                .where(ITransaction.CARRIER_NAME)
+	                .is("ATTJASPER")
+	                .andOperator(
+	                        Criteria.where(ITransaction.MIDWAY_STATUS).is(
+	                                IConstant.MIDWAY_TRANSACTION_STATUS_PENDING)));
+
+	        List<Transaction> transactionWithPendingStatusList = mongoTemplate.find(
+	                searchPendingCheckStatusQuery, Transaction.class);
+
+	        Collections.sort(transactionWithPendingStatusList,
+	                new Comparator<Transaction>() {
+	                    @Override
+	                    public int compare(Transaction a, Transaction b) {
+
+	                        return a.getTimeStampReceived().compareTo(
+	                                b.getTimeStampReceived());
+	                    }
+	                });
+
+	        LOGGER.info("size of pending device list for ATT JASPER............."
+	                + transactionWithPendingStatusList.size());
+	        exchange.getIn().setBody(transactionWithPendingStatusList);
+	    
+	}
 
 }

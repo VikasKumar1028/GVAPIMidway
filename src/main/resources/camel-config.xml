@@ -72,6 +72,10 @@
 	<bean id="jobSplitter" class="com.gv.midway.splitter.JobSplitter" />
 
 	<bean id="jobCarrierRouter" class="com.gv.midway.router.JobCarrierRouter" />
+	
+	<bean id="attCallBackSplitter" class="com.gv.midway.splitter.AttCallBackSplitter" />
+
+	<bean id="attCallBackRouter" class="com.gv.midway.router.AttCallBackRouter" />
 
 	<jaxrs:server id="GVJax" address="/">
 		<jaxrs:serviceBeans>

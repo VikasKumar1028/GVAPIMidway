@@ -58,5 +58,7 @@ public interface ITransactionalDao {
 	
 	public void updateKoreActivationCustomeFieldsDBPayload(Exchange exchange);
 	
+	public void fetchAttPendingCallback(Exchange exchange);
+	
 
 }

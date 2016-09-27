@@ -161,7 +161,6 @@ public class TransactionalServiceImpl implements ITransactionalService {
 
 	
 	public void updateKoreActivationCustomeFieldsDBPayload(Exchange exchange) {
-		// TODO Auto-generated method stub
 		transactionalDao.updateKoreActivationCustomeFieldsDBPayload(exchange);
 	}
 	@Override
@@ -170,4 +169,10 @@ public class TransactionalServiceImpl implements ITransactionalService {
 	    CommonUtil.setListInWireTap( exchange,
 	          (List<Transaction>) exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS_LIST));
 	}
+	
+	@Override
+	public void fetchAttPendingCallback(Exchange exchange){
+	    transactionalDao.fetchAttPendingCallback(exchange);
+	}
+	
 }
