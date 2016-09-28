@@ -2304,14 +2304,9 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                     .is("ATTJASPER")
                     .andOperator(
                             Criteria.where(ITransaction.MIDWAY_STATUS).is(
-                                    IConstant.MIDWAY_TRANSACTION_STATUS_PENDING))
-                      .andOperator(
-                            Criteria.where(ITransaction.REQUEST_TYPE).is(RequestType.ACTIVATION.toString()))              
- 
-                      .andOperator(
-                            Criteria.where(ITransaction.RECORD_TYPE).is(RecordType.PRIMARY.toString()))  
-                                 
-                           .andOperator(
+                                    IConstant.MIDWAY_TRANSACTION_STATUS_PENDING),
+                            Criteria.where(ITransaction.REQUEST_TYPE).is(RequestType.ACTIVATION.toString()),
+                            Criteria.where(ITransaction.RECORD_TYPE).is(RecordType.PRIMARY.toString()),
                             Criteria.where(ITransaction.CARRIER_STATUS).is(IConstant.CARRIER_TRANSACTION_STATUS_ERROR))
                             
                             );
@@ -2330,12 +2325,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                         .is("ATTJASPER")
                         
                           .andOperator(
-                                Criteria.where(ITransaction.REQUEST_TYPE).is(RequestType.CHANGECUSTOMFIELDS.toString()))              
-     
-                          .andOperator(
-                                Criteria.where(ITransaction.RECORD_TYPE).is(RecordType.SECONDARY.toString()))  
-                                     
-                               .andOperator(
+                                Criteria.where(ITransaction.REQUEST_TYPE).is(RequestType.CHANGECUSTOMFIELDS.toString()),
+                                Criteria.where(ITransaction.RECORD_TYPE).is(RecordType.SECONDARY.toString()),
                                 Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID).is(primaryActivation.getMidwayTransactionId()))
                                 
                                 );
