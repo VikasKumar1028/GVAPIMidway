@@ -2002,7 +2002,9 @@ public class CamelRoute extends RouteBuilder {
     public void attCallBackTimer() {
 
        from("timer://attCallBackTimer?period=5m")
-               .bean(iTransactionalService, "fetchAttPendingCallback").split()
+               .bean(iTransactionalService, "updateCallBackStatusOfSecondaryCustomField")
+               .bean(iTransactionalService, "fetchAttPendingCallback")
+               .split()
                .method("attCallBackSplitter").parallelProcessing()
                .recipientList().method("attCallBackRouter");
 
