@@ -5,8 +5,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.component.cxf.CxfOperationException;
@@ -17,6 +20,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+
 import com.esotericsoftware.kryo.Kryo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -2231,14 +2235,64 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 	                    @Override
 	                    public int compare(Transaction a, Transaction b) {
 
-	                        return a.getTimeStampReceived().compareTo(
-	                                b.getTimeStampReceived());
+	                        return a.getMidwayTransactionId().compareTo(
+	                                b.getMidwayTransactionId());
 	                    }
 	                });
+	        
+	               List<Transaction> newList= new ArrayList();
+	               
+	        
+	        Iterator<Transaction> itr= transactionWithPendingStatusList.iterator();
+	        
+	        HashMap map =new HashMap();
+	        
+	        
+	        while(itr.hasNext()){
+	            Transaction trans= itr.next();
+	           
+	            if(trans.getRequestType().toString().equals("CHANGECUSTOMFIELDS"))
+	                
+	            {
+	                
+	                String custKey=((CustomFieldsDeviceRequest)trans.getDevicePayload()).getDataArea().getCustomFieldsToUpdate()[0].getKey();
+                        String custValue=trans.getCarrierStatus();
+                        CustomFieldsToUpdate custfield=    new CustomFieldsToUpdate();
+                        custfield.setKey(custKey);
+                        custfield.setValue(custValue);
+	                
+	                //Add to the map
+	                String key= trans.getMidwayTransactionId()+"_"+trans.getDeviceNumber()+"_"+trans.getRequestType();
+	                Transaction transInter=(Transaction)map.get(key);
+	                   if (transInter==null){
+	                       ArrayList<CustomFieldsToUpdate>custList= new ArrayList();
+	                     //Add cust field to call back payload 
+	                       custList.add(custfield);
+	                       trans.setCallBackPayload(custList);
+	                       map.put(key, trans);
+	                    
+	                   }
+	                       else {
+	                           List list=(List)transInter.getCallBackPayload();
+	                         //Add cust field to call back payload   
+	                           list.add(custfield);
+	                       }
+	            }
+	            else{
+	                newList.add(trans);
+	            }
+	        }
+	        LOGGER.info("size of callback list for ATT JASPER............."
+                        + newList.size());
+
+	        newList.addAll(map.values());
 
 	        LOGGER.info("size of pending device list for ATT JASPER............."
 	                + transactionWithPendingStatusList.size());
-	        exchange.getIn().setBody(transactionWithPendingStatusList);
+	        
+	        LOGGER.info("size of callback list for ATT JASPER............."
+                        + newList.size());
+	        exchange.getIn().setBody(newList);
 	    
 	}
 
