@@ -2352,6 +2352,86 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
             
         }
+        
+        
+        @Override
+        public void updateAttNetSuiteCallBackError(Exchange exchange) {
+
+            LOGGER.info("net suite call back error.............");
+
+            Query searchQuery = new Query(
+                    Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID)
+                            .is(exchange
+                                    .getProperty(IConstant.MIDWAY_TRANSACTION_ID))
+                            .andOperator(
+                                    Criteria.where(ITransaction.DEVICE_NUMBER)
+                                            .is(exchange
+                                                    .getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER)),
+                                     Criteria.where(ITransaction.REQUEST_TYPE)
+                                               .is(exchange
+                                                   .getProperty(IConstant.MIDWAY_TRANSACTION_REQUEST_TYPE))                
+                                    
+                                    ));
+            
+   
+            Update update = new Update();
+
+            Exception exception = (Exception) exchange
+                    .getProperty(Exchange.EXCEPTION_CAUGHT);
+
+            if (exception instanceof CxfOperationException) {
+                CxfOperationException cxfOperationException = (CxfOperationException) exception;
+                update.set(ITransaction.CALL_BACK_FAILURE_TO_NETSUITE_REASON,
+                        cxfOperationException.getResponseBody());
+
+            }
+
+            else {
+
+                update.set(ITransaction.CALL_BACK_FAILURE_TO_NETSUITE_REASON,
+                        exception.getMessage());
+
+            }
+
+            update.set(ITransaction.CALL_BACK_DELIVERED, false);
+            update.set(ITransaction.LAST_TIME_STAMP_UPDATED, new Date());
+            mongoTemplate.updateFirst(searchQuery, update, Transaction.class);
+
+            exchange.setProperty("isNetSuiteCallBackError", true);
+
+        }
+
+        @Override
+        public void updateAttNetSuiteCallBackRequest(Exchange exchange) {
+
+            LOGGER.info("net suite call back request.............");
+
+            Query searchQuery = new Query(
+                    Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID)
+                            .is(exchange
+                                    .getProperty(IConstant.MIDWAY_TRANSACTION_ID))
+                            .andOperator(
+                                    Criteria.where(ITransaction.DEVICE_NUMBER)
+                                            .is(exchange
+                                            .getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER)),
+                                     Criteria.where(ITransaction.REQUEST_TYPE)
+                                             .is(exchange
+                                              .getProperty(IConstant.MIDWAY_TRANSACTION_REQUEST_TYPE))                
+                                    ));
+            
+  
+
+            Update update = new Update();
+
+            update.set(ITransaction.NETSUITE_REQUEST, exchange.getIn().getBody());
+
+            update.set(ITransaction.LAST_TIME_STAMP_UPDATED, new Date());
+
+            mongoTemplate.updateFirst(searchQuery, update, Transaction.class);
+
+        }
+        
+        
 	
 	
 }

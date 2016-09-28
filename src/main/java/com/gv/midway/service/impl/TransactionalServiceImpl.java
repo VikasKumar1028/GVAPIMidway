@@ -179,4 +179,12 @@ public class TransactionalServiceImpl implements ITransactionalService {
 	 public void updateCallBackStatusOfSecondaryCustomField(Exchange exchange){
 	    transactionalDao.updateCallBackStatusOfSecondaryCustomField(exchange);
 	 };
+	 
+	 
+	 public void updateAttNetSuiteCallBackError(Exchange exchange){
+	     transactionalDao.updateAttNetSuiteCallBackError(exchange);
+	 }
+	 public void updateAttNetSuiteCallBackRequest(Exchange exchange){
+	     transactionalDao.updateAttNetSuiteCallBackRequest(exchange);
+	 }
 }

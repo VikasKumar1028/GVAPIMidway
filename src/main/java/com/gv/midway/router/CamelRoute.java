@@ -317,7 +317,7 @@ public class CamelRoute extends RouteBuilder {
         koreCheckStatusTimer();
         
         //ATT Callback Timer
-       // attCallBackTimer();
+        //attCallBackTimer();
     }
 
     /**
@@ -2055,9 +2055,9 @@ public class CamelRoute extends RouteBuilder {
                .simple("script=${exchangeProperty[script]}&deploy=1")
                .to(uriRestNetsuitEndPoint)
                .doCatch(Exception.class)
-               .bean(iTransactionalService, "updateNetSuiteCallBackError")
+               .bean(iTransactionalService, "updateAttNetSuiteCallBackError")
                .doFinally()
-               .bean(iTransactionalService, "updateNetSuiteCallBackResponse")
+               .bean(iTransactionalService, "updateAttNetSuiteCallBackRequest")
                .process(new KafkaProcessor(env))
                .to("kafka:" + env.getProperty("kafka.endpoint")
                        + ",?topic=midway-app-errors")
@@ -2076,9 +2076,9 @@ public class CamelRoute extends RouteBuilder {
                .simple("script=${exchangeProperty[script]}&deploy=1")
                .to(uriRestNetsuitEndPoint)
                .doCatch(Exception.class)
-               .bean(iTransactionalService, "updateNetSuiteCallBackError")
+               .bean(iTransactionalService, "updateAttNetSuiteCallBackError")
                .doFinally()
-               .bean(iTransactionalService, "updateNetSuiteCallBackResponse")
+               .bean(iTransactionalService, "updateAttNetSuiteCallBackRequest")
                .process(new KafkaProcessor(env))
                .to("kafka:" + env.getProperty("kafka.endpoint")
                        + ",?topic=midway-alerts").end();

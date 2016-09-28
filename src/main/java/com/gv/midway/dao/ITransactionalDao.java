@@ -61,6 +61,10 @@ public interface ITransactionalDao {
 	public void fetchAttPendingCallback(Exchange exchange);
 	
 	 public void updateCallBackStatusOfSecondaryCustomField(Exchange exchange);
+	 
+	 public void updateAttNetSuiteCallBackError(Exchange exchange);
+	 
+	 public void updateAttNetSuiteCallBackRequest(Exchange exchange);
 	
 
 }
