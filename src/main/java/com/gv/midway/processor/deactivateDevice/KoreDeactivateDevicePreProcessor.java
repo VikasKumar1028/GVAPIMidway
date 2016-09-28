@@ -56,6 +56,11 @@ public class KoreDeactivateDevicePreProcessor implements Processor {
                     .getDataArea().getDevices()[0].getDeviceIds()[0]
                     .getFlagScrap());
         }
+        
+        else{
+        	 deactivationDeviceRequestKore.setFlagScrap(false);
+        	
+        }
 
         message.setHeader(Exchange.CONTENT_TYPE, "application/json");
         message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");

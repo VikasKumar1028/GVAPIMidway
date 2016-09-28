@@ -61,7 +61,7 @@ public class ATTJasperCustomFieldDevicePreProcessor implements Processor {
 		getEditTerminalRequest.setChangeType(CommonUtil.getAttJasperCustomField(customFieldRequest.getDataArea().getCustomFieldsToUpdate()[0].getKey()));
 		getEditTerminalRequest.setTargetValue(customFieldRequest.getDataArea().getCustomFieldsToUpdate()[0].getValue());
 		
-		exchange.setProperty("CUSTOMFIELDTOUPDATE",customFieldRequest.getDataArea().getCustomFieldsToUpdate()[0].getKey());
+		exchange.setProperty(IConstant.ATT_CUSTOMFIELD_TO_UPDATE,customFieldRequest.getDataArea().getCustomFieldsToUpdate()[0].getKey());
 		
 		/*LocalDateTime currentUTCTime = LocalDateTime.now(); // using system timezone
                XMLGregorianCalendar xmlDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(currentUTCTime.toString());

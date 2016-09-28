@@ -167,7 +167,7 @@ public class TransactionalServiceImpl implements ITransactionalService {
 	public void setActivateCustomFieldListInExchange(Exchange exchange){
 	    
 	    CommonUtil.setListInWireTap( exchange,
-	          (List<Transaction>) exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS_LIST));
+	          (List<Transaction>) exchange.getProperty(IConstant.ATT_ACTVATION_WITH_CUSTOMEFILEDS_LIST));
 	}
 	
 	@Override

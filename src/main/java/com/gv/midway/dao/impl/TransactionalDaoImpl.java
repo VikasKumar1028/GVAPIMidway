@@ -446,7 +446,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
             }
         }
         mongoTemplate.insertAll(list);
-        exchange.setProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS_LIST, list);
+        exchange.setProperty(IConstant.ATT_ACTVATION_WITH_CUSTOMEFILEDS_LIST, list);
 
     }
 
@@ -840,11 +840,11 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 //This is applicable for AT&T CUSTOM Field to update 
                 //the status for respective custom field
                 // Adding the Search Criteria for custom field of ATT
-                if (exchange.getProperty("CUSTOMFIELDTOUPDATE") != null) {
+                if (exchange.getProperty(IConstant.ATT_CUSTOMFIELD_TO_UPDATE) != null) {
                     
                          searchQuery.addCriteria(Criteria.where(
                             "devicePayload.dataArea.customFieldsToUpdate.key").is(
-                            exchange.getProperty("CUSTOMFIELDTOUPDATE")));
+                            exchange.getProperty(IConstant.ATT_CUSTOMFIELD_TO_UPDATE)));
                     
                     if (exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null)
                     {
@@ -855,7 +855,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 
                 // If device activation request comes with Custom fields then update only the primary record(Activation record) in transaction
                 
-                if(exchange.getProperty("CUSTOMFIELDTOUPDATE") == null && exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null){
+                if(exchange.getProperty(IConstant.ATT_CUSTOMFIELD_TO_UPDATE) == null && exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null){
                         searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
                                 .is(RecordType.PRIMARY));
                         
@@ -1995,11 +1995,11 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                                                 .getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
 
         // Adding the Search Criteria for custom field of ATT
-        if (exchange.getProperty("CUSTOMFIELDTOUPDATE") != null) {
+        if (exchange.getProperty(IConstant.ATT_CUSTOMFIELD_TO_UPDATE) != null) {
             
                  searchQuery.addCriteria(Criteria.where(
                     "devicePayload.dataArea.customFieldsToUpdate.key").is(
-                    exchange.getProperty("CUSTOMFIELDTOUPDATE")));
+                    exchange.getProperty(IConstant.ATT_CUSTOMFIELD_TO_UPDATE)));
             
             if (exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null)
             {
@@ -2010,7 +2010,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
         
         // If device activation request comes with Custom fields then update only the primary record(Activation record) in transaction
         
-        if(exchange.getProperty("CUSTOMFIELDTOUPDATE") == null && exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null){
+        if(exchange.getProperty(IConstant.ATT_CUSTOMFIELD_TO_UPDATE) == null && exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null){
         	searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
                         .is(RecordType.PRIMARY));
         	
@@ -2080,11 +2080,11 @@ public class TransactionalDaoImpl implements ITransactionalDao {
             
             
             // Adding the Search Criteria for custom field of ATT
-            if (exchange.getProperty("CUSTOMFIELDTOUPDATE") != null) {
+            if (exchange.getProperty(IConstant.ATT_CUSTOMFIELD_TO_UPDATE) != null) {
                 
                      searchQuery.addCriteria(Criteria.where(
                         "devicePayload.dataArea.customFieldsToUpdate.key").is(
-                        exchange.getProperty("CUSTOMFIELDTOUPDATE")));
+                        exchange.getProperty(IConstant.ATT_CUSTOMFIELD_TO_UPDATE)));
                 
                 if (exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null)
                 {
@@ -2095,7 +2095,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
             
             // If device activation request comes with Custom fields then update only the primary record(Activation record) in transaction
             
-            if(exchange.getProperty("CUSTOMFIELDTOUPDATE") == null && exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null){
+            if(exchange.getProperty(IConstant.ATT_CUSTOMFIELD_TO_UPDATE) == null && exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null){
                     searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
                             .is(RecordType.PRIMARY));
                     
