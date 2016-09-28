@@ -60,4 +60,6 @@ public interface ITransactionalService {
 	public void setActivateCustomFieldListInExchange(Exchange exchange);
 	
 	public void fetchAttPendingCallback(Exchange exchange);
+	
+	 public void updateCallBackStatusOfSecondaryCustomField(Exchange exchange);
 }

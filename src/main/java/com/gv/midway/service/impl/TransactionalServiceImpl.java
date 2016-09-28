@@ -175,4 +175,8 @@ public class TransactionalServiceImpl implements ITransactionalService {
 	    transactionalDao.fetchAttPendingCallback(exchange);
 	}
 	
+	@Override
+	 public void updateCallBackStatusOfSecondaryCustomField(Exchange exchange){
+	    transactionalDao.updateCallBackStatusOfSecondaryCustomField(exchange);
+	 };
 }

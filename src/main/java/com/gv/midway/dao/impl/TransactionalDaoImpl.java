@@ -2220,7 +2220,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 	public void fetchAttPendingCallback(Exchange exchange){
 	    
 	    
-	     Query searchPendingCheckStatusQuery = new Query(Criteria
+	     Query searchPendingCallBack = new Query(Criteria
 	                .where(ITransaction.CARRIER_NAME)
 	                .is("ATTJASPER")
 	                .andOperator(
@@ -2228,7 +2228,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 	                                IConstant.MIDWAY_TRANSACTION_STATUS_PENDING)));
 
 	        List<Transaction> transactionWithPendingStatusList = mongoTemplate.find(
-	                searchPendingCheckStatusQuery, Transaction.class);
+	                searchPendingCallBack, Transaction.class);
 
 	        Collections.sort(transactionWithPendingStatusList,
 	                new Comparator<Transaction>() {
@@ -2296,4 +2296,64 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 	    
 	}
 
+	//Setting the custom fields to Error if the Primary Activation is error
+        public void updateCallBackStatusOfSecondaryCustomField(Exchange exchange){
+            
+            Query searchPrimaryActivationWithError = new Query(Criteria
+                    .where(ITransaction.CARRIER_NAME)
+                    .is("ATTJASPER")
+                    .andOperator(
+                            Criteria.where(ITransaction.MIDWAY_STATUS).is(
+                                    IConstant.MIDWAY_TRANSACTION_STATUS_PENDING))
+                      .andOperator(
+                            Criteria.where(ITransaction.REQUEST_TYPE).is(RequestType.ACTIVATION.toString()))              
+ 
+                      .andOperator(
+                            Criteria.where(ITransaction.RECORD_TYPE).is(RecordType.PRIMARY.toString()))  
+                                 
+                           .andOperator(
+                            Criteria.where(ITransaction.CARRIER_STATUS).is(IConstant.CARRIER_TRANSACTION_STATUS_ERROR))
+                            
+                            );
+            
+            
+            List<Transaction> primaryActivationList = mongoTemplate.find(
+                    searchPrimaryActivationWithError, Transaction.class);
+            
+            for(int i=0; i<primaryActivationList.size();i++)
+            {
+                Transaction primaryActivation=primaryActivationList.get(i);
+                
+                
+                Query searchSecondaryCustomFieldWithError = new Query(Criteria
+                        .where(ITransaction.CARRIER_NAME)
+                        .is("ATTJASPER")
+                        
+                          .andOperator(
+                                Criteria.where(ITransaction.REQUEST_TYPE).is(RequestType.CHANGECUSTOMFIELDS.toString()))              
+     
+                          .andOperator(
+                                Criteria.where(ITransaction.RECORD_TYPE).is(RecordType.SECONDARY.toString()))  
+                                     
+                               .andOperator(
+                                Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID).is(primaryActivation.getMidwayTransactionId()))
+                                
+                                );
+                
+                
+                Update update = new Update();
+                update.set(ITransaction.CARRIER_STATUS, IConstant.CARRIER_TRANSACTION_STATUS_ERROR);
+                update.set(ITransaction.CARRIER_ERROR_DESCRIPTION, "ACTIVATION FAILED");
+                update.set(ITransaction.MIDWAY_STATUS,IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
+                
+                mongoTemplate.updateMulti(searchSecondaryCustomFieldWithError, update, Transaction.class);
+                
+                
+                
+            }
+
+            
+        }
+	
+	
 }
