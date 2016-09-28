@@ -2400,7 +2400,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
             update.set(ITransaction.CALL_BACK_DELIVERED, false);
             update.set(ITransaction.LAST_TIME_STAMP_UPDATED, new Date());
-            mongoTemplate.updateFirst(searchQuery, update, Transaction.class);
+            mongoTemplate.updateMulti(searchQuery, update, Transaction.class);
 
             exchange.setProperty("isNetSuiteCallBackError", true);
 
@@ -2432,7 +2432,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
             update.set(ITransaction.LAST_TIME_STAMP_UPDATED, new Date());
 
-            mongoTemplate.updateFirst(searchQuery, update, Transaction.class);
+            mongoTemplate.updateMulti(searchQuery, update, Transaction.class);
 
         }
         
