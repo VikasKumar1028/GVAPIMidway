@@ -77,7 +77,12 @@ public class AttCallBackErrorPostProcessor implements Processor {
         netSuiteCallBackError.setLevel("Error");
         netSuiteCallBackError.setTimestamp(new Date().getTime());
         netSuiteCallBackError.setVersion("1");
+        if (requestType.toString().equals(RequestType.CHANGECUSTOMFIELDS.toString()))
+        {
+            netSuiteCallBackError.setException( exchange.getProperty(IConstant.ATTJASPER_CUSTOM_FIELD_DEC).toString() ); 
+        }else{            
         netSuiteCallBackError.setException(errorDescription);
+        }
         netSuiteCallBackError.setMsg("Error in Call Back from ATT Jasper.");
 
         String desc = "Error in callBack from ATT Jasper For "
@@ -129,7 +134,15 @@ public class AttCallBackErrorPostProcessor implements Processor {
         NetSuiteCallBackProvisioningRequest netSuiteCallBackProvisioningRequest = new NetSuiteCallBackProvisioningRequest();
 
         netSuiteCallBackProvisioningRequest.setStatus("fail");
-        netSuiteCallBackProvisioningRequest.setResponse(errorDescription);
+        
+        if (requestType.toString().equals(RequestType.CHANGECUSTOMFIELDS.toString()))
+        {
+            netSuiteCallBackProvisioningRequest.setResponse( exchange.getProperty(IConstant.ATTJASPER_CUSTOM_FIELD_DEC).toString() ); 
+        }else{            
+            netSuiteCallBackProvisioningRequest.setResponse(errorDescription);
+        }       
+        
+        //netSuiteCallBackProvisioningRequest.setResponse(errorDescription);
         netSuiteCallBackProvisioningRequest
                 .setCarrierOrderNumber(midWayTransactionId);
         netSuiteCallBackProvisioningRequest.setNetSuiteID("" + netSuiteID);

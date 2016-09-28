@@ -1,24 +1,16 @@
 package com.gv.midway.processor.checkstatus;
 
-import org.apache.camel.ExchangePattern;
-import org.apache.camel.Processor;
+import java.util.ArrayList;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
+import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
 
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.ITransaction;
-import com.gv.midway.constant.RecordType;
 import com.gv.midway.constant.RequestType;
-import com.gv.midway.pojo.MidWayDeviceId;
-import com.gv.midway.pojo.MidWayDevices;
-import com.gv.midway.pojo.activateDevice.request.ActivateDeviceId;
-import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
-import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequestDataArea;
-import com.gv.midway.pojo.activateDevice.request.ActivateDevices;
-import com.gv.midway.pojo.customFieldsDevice.request.CustomFieldsDeviceRequest;
-import com.gv.midway.pojo.customFieldsDevice.request.CustomFieldsDeviceRequestDataArea;
 import com.gv.midway.pojo.transaction.Transaction;
 import com.gv.midway.pojo.verizon.CustomFieldsToUpdate;
 
@@ -52,6 +44,21 @@ public class AttCallBackPreProcessor implements Processor {
         RequestType requestType = transaction.getRequestType();
 
         Object payload = transaction.getDevicePayload();
+        
+        String customFieldDetails="";
+        if (transaction.getRequestType().toString().equals(RequestType.CHANGECUSTOMFIELDS.toString()))
+            {
+            ArrayList list=(ArrayList)transaction.getCallBackPayload();
+         
+            for(int i=0; i<list.size(); i++){
+                CustomFieldsToUpdate custField=(CustomFieldsToUpdate) list.get(i);
+                customFieldDetails=customFieldDetails+custField.getKey()+"-"+custField.getValue() +",";
+           }
+            exchange.setProperty(IConstant.ATTJASPER_CUSTOM_FIELD_DEC, customFieldDetails);
+            
+            }
+            
+        
 
         exchange.setProperty(IConstant.MIDWAY_TRANSACTION_PAYLOAD, payload);
 
@@ -66,6 +73,7 @@ public class AttCallBackPreProcessor implements Processor {
 
         exchange.setProperty(ITransaction.CARRIER_STATUS, carrierStatus);
 
+        
         exchange.setProperty(IConstant.MIDWAY_CARRIER_ERROR_DESC,
                 transaction.getCarrierErrorDescription());
 

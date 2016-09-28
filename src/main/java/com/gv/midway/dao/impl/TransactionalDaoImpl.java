@@ -2274,6 +2274,13 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 	                   }
 	                       else {
 	                           List list=(List)transInter.getCallBackPayload();
+	                           
+	                           //If any of the custom field is error then transaction carrier status should be error
+	                          if( trans.getCarrierStatus().equals(IConstant.ATTJASPER_CUSTOM_FIELD_DEC))
+	                           {
+	                              transInter.setCarrierStatus(IConstant.ATTJASPER_CUSTOM_FIELD_DEC); 
+	                           }
+	                           
 	                         //Add cust field to call back payload   
 	                           list.add(custfield);
 	                       }

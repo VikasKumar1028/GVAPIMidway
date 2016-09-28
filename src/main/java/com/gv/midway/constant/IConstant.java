@@ -143,4 +143,5 @@ public interface IConstant {
 
     static String ATT_CALLBACK_STATUS = "attCallBackStatus";
 
+    static String ATTJASPER_CUSTOM_FIELD_DEC = "attJasperCustomFieldDescription";
 }
