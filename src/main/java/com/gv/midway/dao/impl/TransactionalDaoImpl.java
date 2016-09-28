@@ -1993,6 +1993,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                                 Criteria.where(ITransaction.DEVICE_NUMBER)
                                         .is(exchange
                                                 .getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
+        
+        Update update = new Update();
 
         // Adding the Search Criteria for custom field of ATT
         if (exchange.getProperty(IConstant.ATT_CUSTOMFIELD_TO_UPDATE) != null) {
@@ -2005,6 +2007,9 @@ public class TransactionalDaoImpl implements ITransactionalDao {
             {
             searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
                     .is(RecordType.SECONDARY));
+            
+            update.set(ITransaction.MIDWAY_STATUS, IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
+            
             }
         }
         
@@ -2016,7 +2021,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
         	
         }
 
-        Update update = new Update();
+       
 
        /* XMLGregorianCalendar effectiveDate = editTerminalResponse
                 .getEffectiveDate();*/
@@ -2276,9 +2281,9 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 	                           List list=(List)transInter.getCallBackPayload();
 	                           
 	                           //If any of the custom field is error then transaction carrier status should be error
-	                          if( trans.getCarrierStatus().equals(IConstant.ATTJASPER_CUSTOM_FIELD_DEC))
+	                          if( trans.getCarrierStatus().equals(IConstant.CARRIER_TRANSACTION_STATUS_ERROR))
 	                           {
-	                              transInter.setCarrierStatus(IConstant.ATTJASPER_CUSTOM_FIELD_DEC); 
+	                              transInter.setCarrierStatus(IConstant.CARRIER_TRANSACTION_STATUS_ERROR); 
 	                           }
 	                           
 	                         //Add cust field to call back payload   
