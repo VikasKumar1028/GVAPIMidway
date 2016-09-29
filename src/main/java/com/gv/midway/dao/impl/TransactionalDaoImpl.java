@@ -2428,7 +2428,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
   
 
             Update update = new Update();
-
+            
+            update.set(ITransaction.MIDWAY_STATUS, exchange.getIn().getHeader(IConstant.ATT_CALLBACK_STATUS));
             update.set(ITransaction.NETSUITE_REQUEST, exchange.getIn().getBody());
 
             update.set(ITransaction.LAST_TIME_STAMP_UPDATED, new Date());
