@@ -29,7 +29,6 @@ public class Transaction {
     private Integer netSuiteId;
     private Object netSuiteRequest;
     private String netSuiteResponse;
-    private Date   effectiveDate;
     private RecordType recordType;
 
    
@@ -191,13 +190,7 @@ public class Transaction {
         this.netSuiteId = netSuiteId;
     }
     
-    public Date getEffectiveDate() {
-		return effectiveDate;
-	}
-
-	public void setEffectiveDate(Date effectiveDate) {
-		this.effectiveDate = effectiveDate;
-	}
+   
 
 	@Override
     public int hashCode() {
@@ -236,8 +229,6 @@ public class Transaction {
                 + ((deviceNumber == null) ? 0 : deviceNumber.hashCode());
         result = prime * result
                 + ((devicePayload == null) ? 0 : devicePayload.hashCode());
-        result = prime * result
-                + ((effectiveDate == null) ? 0 : effectiveDate.hashCode());
         result = prime
                 * result
                 + ((lastTimeStampUpdated == null) ? 0 : lastTimeStampUpdated
@@ -332,11 +323,6 @@ public class Transaction {
                 return false;
         } else if (!devicePayload.equals(other.devicePayload))
             return false;
-        if (effectiveDate == null) {
-            if (other.effectiveDate != null)
-                return false;
-        } else if (!effectiveDate.equals(other.effectiveDate))
-            return false;
         if (lastTimeStampUpdated == null) {
             if (other.lastTimeStampUpdated != null)
                 return false;
@@ -396,8 +382,7 @@ public class Transaction {
                 + ", callBackFailureToNetSuiteReason="
                 + callBackFailureToNetSuiteReason + ", netSuiteId="
                 + netSuiteId + ", netSuiteRequest=" + netSuiteRequest
-                + ", netSuiteResponse=" + netSuiteResponse + ", effectiveDate="
-                + effectiveDate + ", recordType=" + recordType + "]";
+                + ", netSuiteResponse=" + netSuiteResponse +", recordType=" + recordType + "]";
     }
 
     public RecordType getRecordType() {

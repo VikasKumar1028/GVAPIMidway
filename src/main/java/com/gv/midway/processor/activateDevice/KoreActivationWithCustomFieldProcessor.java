@@ -118,7 +118,6 @@ public class KoreActivationWithCustomFieldProcessor implements Processor {
 		String realm = newEnv.getProperty("netSuite.realm");
 		String endPoint = newEnv.getProperty("netSuite.endPoint");
 
-		String script = "539";
 		
 		LOGGER.info("request type for NetSuite CallBack success is..."
 				+ RequestType.CHANGECUSTOMFIELDS);
@@ -127,24 +126,20 @@ public class KoreActivationWithCustomFieldProcessor implements Processor {
 				+ oauthTokenId + " " + endPoint + " " + oauthTokenSecret + " "
 				+ oauthConsumerSecret + " " + realm);
 		
+		String script = "539";
+		
 		String oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
                 oauthConsumerKey, oauthTokenId, oauthTokenSecret,
                 oauthConsumerSecret, realm, script);
+		
+		exchange.setProperty("script", script);
 
 		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.HTTP_METHOD, "POST");
 
 		
-
-		exchange.setProperty("script", script);
-
-		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
-		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
-		message.setHeader(Exchange.HTTP_METHOD, "POST");
-
 		message.setHeader("Authorization", oauthHeader);
-		exchange.setProperty("script", script);
 		message.setHeader(Exchange.HTTP_PATH, null);
 		message.setBody(netSuiteCallBackProvisioningRequest);
 		exchange.setPattern(ExchangePattern.InOut);

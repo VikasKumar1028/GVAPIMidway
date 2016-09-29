@@ -224,7 +224,7 @@ public class KoreActivationWithCustomFieldErrorProcessor implements Processor {
 		String realm = newEnv.getProperty("netSuite.realm");
 		String endPoint = newEnv.getProperty("netSuite.endPoint");
 
-		String script = "539";
+		
 		
 		LOGGER.info("request type for NetSuite CallBack error...."
 				+RequestType.CHANGECUSTOMFIELDS);
@@ -232,6 +232,8 @@ public class KoreActivationWithCustomFieldErrorProcessor implements Processor {
 		LOGGER.info("oauth info is....." + oauthConsumerKey + " "
 				+ oauthTokenId + " " + endPoint + " " + oauthTokenSecret + " "
 				+ oauthConsumerSecret + " " + realm);
+		
+		String script = "539";
 		
 		String oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
                  oauthConsumerKey, oauthTokenId, oauthTokenSecret,
@@ -245,7 +247,6 @@ public class KoreActivationWithCustomFieldErrorProcessor implements Processor {
 		message.setHeader(Exchange.HTTP_METHOD, "POST");
 		
 		message.setHeader("Authorization", oauthHeader);
-		exchange.setProperty("script", script);
 		message.setHeader(Exchange.HTTP_PATH, null);
 		message.setBody(netSuiteCallBackProvisioningRequest);
 		exchange.setPattern(ExchangePattern.InOut);
