@@ -2399,6 +2399,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
             }
 
             update.set(ITransaction.CALL_BACK_DELIVERED, false);
+            
             update.set(ITransaction.LAST_TIME_STAMP_UPDATED, new Date());
             mongoTemplate.updateMulti(searchQuery, update, Transaction.class);
 
@@ -2436,7 +2437,60 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
         }
         
-        
+        @Override
+        public void updateAttNetSuiteCallBackResponse(Exchange exchange) {
+            LOGGER.info("is netsuite callback error......."
+                    + exchange.getProperty("isNetSuiteCallBackError"));
+
+            Map map = exchange.getIn().getBody(Map.class);
+
+            ObjectMapper mapper = new ObjectMapper();
+
+            String jsonstring = null;
+
+            try {
+                jsonstring = mapper.writeValueAsString(map);
+            } catch (JsonProcessingException e) {
+                LOGGER.error("Error ::" + e);
+            }
+
+            LOGGER.info("is netsuite callback response......."
+                    + exchange.getIn().getBody().toString() + "   " + jsonstring);
+
+            if (exchange.getProperty("isNetSuiteCallBackError") == null) {
+                Query searchQuery = new Query(
+                        Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID)
+                                .is(exchange
+                                        .getProperty(IConstant.MIDWAY_TRANSACTION_ID))
+                                .andOperator(
+                                        Criteria.where(ITransaction.DEVICE_NUMBER)
+                                                .is(exchange
+                                                        .getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER)),
+                                                        
+                                                        Criteria.where(ITransaction.REQUEST_TYPE)
+                                                        .is(exchange
+                                                         .getProperty(IConstant.MIDWAY_TRANSACTION_REQUEST_TYPE))                
+                                               ));
+                       
+                                      
+
+
+                Update update = new Update();
+
+                update.set(ITransaction.CALL_BACK_DELIVERED, true);
+                update.set(ITransaction.NETSUITE_RESPONSE, jsonstring);
+                update.set(ITransaction.LAST_TIME_STAMP_UPDATED, new Date());
+                mongoTemplate.updateMulti(searchQuery, update, Transaction.class);
+
+            }
+
+            else {
+                LOGGER.info("error while sending callback to Netsuite");
+
+            }
+
+        }
+
 	
 	
 }

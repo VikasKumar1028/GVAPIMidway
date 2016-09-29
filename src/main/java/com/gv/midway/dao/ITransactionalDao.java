@@ -65,6 +65,8 @@ public interface ITransactionalDao {
 	 public void updateAttNetSuiteCallBackError(Exchange exchange);
 	 
 	 public void updateAttNetSuiteCallBackRequest(Exchange exchange);
+	 
+	 public void updateAttNetSuiteCallBackResponse(Exchange exchange);
 	
 
 }
