@@ -1,12 +1,14 @@
 package com.gv.midway.processor.activateDevice;
 
 import java.util.Date;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.NetSuiteRequestType;
@@ -15,6 +17,7 @@ import com.gv.midway.pojo.callback.Netsuite.KafkaNetSuiteCallBackEvent;
 import com.gv.midway.pojo.callback.Netsuite.NetSuiteCallBackProvisioningRequest;
 import com.gv.midway.pojo.verizon.DeviceId;
 import com.gv.midway.pojo.verizon.Devices;
+import com.gv.midway.utility.NetSuiteOAuthUtil;
 
 public class KoreActivationWithCustomFieldProcessor implements Processor {
 
@@ -112,24 +115,27 @@ public class KoreActivationWithCustomFieldProcessor implements Processor {
 				.getProperty("netSuite.oauthTokenSecret");
 		String oauthConsumerSecret = newEnv
 				.getProperty("netSuite.oauthConsumerSecret");
-		String relam = newEnv.getProperty("netSuite.Relam");
+		String realm = newEnv.getProperty("netSuite.realm");
 		String endPoint = newEnv.getProperty("netSuite.endPoint");
 
-		String script;
-		String oauthHeader = null;
+		String script = "539";
+		
+		LOGGER.info("request type for NetSuite CallBack success is..."
+				+ RequestType.CHANGECUSTOMFIELDS);
+		
+		LOGGER.info("oauth info is....." + oauthConsumerKey + " "
+				+ oauthTokenId + " " + endPoint + " " + oauthTokenSecret + " "
+				+ oauthConsumerSecret + " " + realm);
+		
+		String oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
+                oauthConsumerKey, oauthTokenId, oauthTokenSecret,
+                oauthConsumerSecret, realm, script);
 
 		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.HTTP_METHOD, "POST");
 
-		LOGGER.info("request type for NetSuite CallBack error...."
-				+ RequestType.CHANGECUSTOMFIELDS);
-
-		LOGGER.info("oauth info is....." + oauthConsumerKey + " "
-				+ oauthTokenId + " " + endPoint + " " + oauthTokenSecret + " "
-				+ oauthConsumerSecret + " " + relam);
-
-		script = "539";
+		
 
 		exchange.setProperty("script", script);
 

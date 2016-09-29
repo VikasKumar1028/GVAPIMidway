@@ -70,14 +70,14 @@ public class CallbackPostProcessor implements Processor {
                 .getProperty("netSuite.oauthTokenSecret");
         String oauthConsumerSecret = newEnv
                 .getProperty("netSuite.oauthConsumerSecret");
-        String relam = newEnv.getProperty("netSuite.Relam");
+        String realm = newEnv.getProperty("netSuite.realm");
         String endPoint = newEnv.getProperty("netSuite.endPoint");
 
         LOGGER.info("request type for NetSuite CallBack error...." + requestType);
 
         LOGGER.info("oauth info is....." + oauthConsumerKey + " " + oauthTokenId
                 + " " + endPoint + " " + oauthTokenSecret + " "
-                + oauthConsumerSecret + " " + relam);
+                + oauthConsumerSecret + " " + realm);
 
         String script;
         String oauthHeader = null;
@@ -90,7 +90,7 @@ public class CallbackPostProcessor implements Processor {
 
             oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
                     oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                    oauthConsumerSecret, relam, script);
+                    oauthConsumerSecret, realm, script);
 
             break;
 
@@ -98,7 +98,7 @@ public class CallbackPostProcessor implements Processor {
 
             oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
                     oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                    oauthConsumerSecret, relam, script);
+                    oauthConsumerSecret, realm, script);
 
             break;
 
@@ -106,7 +106,7 @@ public class CallbackPostProcessor implements Processor {
 
             oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
                     oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                    oauthConsumerSecret, relam, script);
+                    oauthConsumerSecret, realm, script);
 
             break;
 
@@ -114,7 +114,7 @@ public class CallbackPostProcessor implements Processor {
 
             oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
                     oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                    oauthConsumerSecret, relam, script);
+                    oauthConsumerSecret, realm, script);
 
             break;
         // not applicable for Verizon
@@ -132,7 +132,7 @@ public class CallbackPostProcessor implements Processor {
 
             oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
                     oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                    oauthConsumerSecret, relam, script);
+                    oauthConsumerSecret, realm, script);
 
             break;
 
@@ -142,7 +142,7 @@ public class CallbackPostProcessor implements Processor {
 
             oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
                     oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                    oauthConsumerSecret, relam, script);
+                    oauthConsumerSecret, realm, script);
 
             break;
 

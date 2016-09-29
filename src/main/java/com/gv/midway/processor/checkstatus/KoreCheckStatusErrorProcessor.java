@@ -186,7 +186,7 @@ public class KoreCheckStatusErrorProcessor implements Processor {
                 .getProperty("netSuite.oauthTokenSecret");
         String oauthConsumerSecret = newEnv
                 .getProperty("netSuite.oauthConsumerSecret");
-        String relam = newEnv.getProperty("netSuite.Relam");
+        String realm = newEnv.getProperty("netSuite.realm");
         String endPoint = newEnv.getProperty("netSuite.endPoint");
 
         String script;
@@ -200,7 +200,7 @@ public class KoreCheckStatusErrorProcessor implements Processor {
 
         LOGGER.info("oauth info is....." + oauthConsumerKey + " " + oauthTokenId
                 + " " + endPoint + " " + oauthTokenSecret + " "
-                + oauthConsumerSecret + " " + relam);
+                + oauthConsumerSecret + " " + realm);
 
         script = "539";
         exchange.setProperty("script", script);
@@ -211,35 +211,35 @@ public class KoreCheckStatusErrorProcessor implements Processor {
                     .setRequestType(NetSuiteRequestType.ACTIVATION);
             oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
                     oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                    oauthConsumerSecret, relam, script);
+                    oauthConsumerSecret, realm, script);
             break;
         case DEACTIVATION:
             netSuiteCallBackProvisioningRequest
                     .setRequestType(NetSuiteRequestType.DEACTIVATION);
             oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
                     oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                    oauthConsumerSecret, relam, script);
+                    oauthConsumerSecret, realm, script);
             break;
         case REACTIVATION:
             netSuiteCallBackProvisioningRequest
                     .setRequestType(NetSuiteRequestType.REACTIVATION);
             oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
                     oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                    oauthConsumerSecret, relam, script);
+                    oauthConsumerSecret, realm, script);
             break;
         case RESTORE:
             netSuiteCallBackProvisioningRequest
                     .setRequestType(NetSuiteRequestType.RESTORATION);
             oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
                     oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                    oauthConsumerSecret, relam, script);
+                    oauthConsumerSecret, realm, script);
             break;
         case SUSPEND:
             netSuiteCallBackProvisioningRequest
                     .setRequestType(NetSuiteRequestType.SUSPENSION);
             oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
                     oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                    oauthConsumerSecret, relam, script);
+                    oauthConsumerSecret, realm, script);
             break;
         case CHANGESERVICEPLAN:
             ChangeDeviceServicePlansRequest changeDeviceServicePlansRequest = (ChangeDeviceServicePlansRequest) body;
@@ -259,14 +259,14 @@ public class KoreCheckStatusErrorProcessor implements Processor {
                     .setNewServicePlan(newServicePlan);
             oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
                     oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                    oauthConsumerSecret, relam, script);
+                    oauthConsumerSecret, realm, script);
             break;
         case CHANGECUSTOMFIELDS:
             netSuiteCallBackProvisioningRequest
                     .setRequestType(NetSuiteRequestType.CUSTOM_FIELDS);
             oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
                     oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                    oauthConsumerSecret, relam, script);
+                    oauthConsumerSecret, realm, script);
             break;
         default:
             break;

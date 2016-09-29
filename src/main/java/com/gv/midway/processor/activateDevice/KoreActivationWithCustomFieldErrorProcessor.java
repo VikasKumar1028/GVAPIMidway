@@ -221,7 +221,7 @@ public class KoreActivationWithCustomFieldErrorProcessor implements Processor {
 				.getProperty("netSuite.oauthTokenSecret");
 		String oauthConsumerSecret = newEnv
 				.getProperty("netSuite.oauthConsumerSecret");
-		String relam = newEnv.getProperty("netSuite.Relam");
+		String realm = newEnv.getProperty("netSuite.realm");
 		String endPoint = newEnv.getProperty("netSuite.endPoint");
 
 		String script = "539";
@@ -231,13 +231,11 @@ public class KoreActivationWithCustomFieldErrorProcessor implements Processor {
 
 		LOGGER.info("oauth info is....." + oauthConsumerKey + " "
 				+ oauthTokenId + " " + endPoint + " " + oauthTokenSecret + " "
-				+ oauthConsumerSecret + " " + relam);
-		
-		script = "539";
+				+ oauthConsumerSecret + " " + realm);
 		
 		String oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
                  oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                 oauthConsumerSecret, relam, script);
+                 oauthConsumerSecret, realm, script);
 
 		
 		exchange.setProperty("script", script);

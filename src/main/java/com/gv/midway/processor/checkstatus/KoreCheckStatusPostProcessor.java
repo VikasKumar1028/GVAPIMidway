@@ -150,7 +150,7 @@ public class KoreCheckStatusPostProcessor implements Processor {
                 .getProperty("netSuite.oauthTokenSecret");
         String oauthConsumerSecret = newEnv
                 .getProperty("netSuite.oauthConsumerSecret");
-        String relam = newEnv.getProperty("netSuite.Relam");
+        String realm = newEnv.getProperty("netSuite.realm");
         String endPoint = newEnv.getProperty("netSuite.endPoint");
 
         String script;
@@ -164,7 +164,7 @@ public class KoreCheckStatusPostProcessor implements Processor {
 
         LOGGER.info("oauth info is....." + oauthConsumerKey + " " + oauthTokenId
                 + " " + endPoint + " " + oauthTokenSecret + " "
-                + oauthConsumerSecret + " " + relam);
+                + oauthConsumerSecret + " " + realm);
 
         script = "539";
 
@@ -178,7 +178,7 @@ public class KoreCheckStatusPostProcessor implements Processor {
                     .setRequestType(NetSuiteRequestType.ACTIVATION);
             oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
                     oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                    oauthConsumerSecret, relam, script);
+                    oauthConsumerSecret, realm, script);
             break;
         case DEACTIVATION:
             netSuiteCallBackProvisioningRequest
@@ -187,7 +187,7 @@ public class KoreCheckStatusPostProcessor implements Processor {
                     .setRequestType(NetSuiteRequestType.DEACTIVATION);
             oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
                     oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                    oauthConsumerSecret, relam, script);
+                    oauthConsumerSecret, realm, script);
             break;
         case REACTIVATION:
             netSuiteCallBackProvisioningRequest
@@ -196,7 +196,7 @@ public class KoreCheckStatusPostProcessor implements Processor {
                     .setRequestType(NetSuiteRequestType.REACTIVATION);
             oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
                     oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                    oauthConsumerSecret, relam, script);
+                    oauthConsumerSecret, realm, script);
             break;
         case RESTORE:
             netSuiteCallBackProvisioningRequest
@@ -205,7 +205,7 @@ public class KoreCheckStatusPostProcessor implements Processor {
                     .setRequestType(NetSuiteRequestType.RESTORATION);
             oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
                     oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                    oauthConsumerSecret, relam, script);
+                    oauthConsumerSecret, realm, script);
             break;
         case SUSPEND:
             netSuiteCallBackProvisioningRequest
@@ -214,7 +214,7 @@ public class KoreCheckStatusPostProcessor implements Processor {
                     .setRequestType(NetSuiteRequestType.SUSPENSION);
             oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
                     oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                    oauthConsumerSecret, relam, script);
+                    oauthConsumerSecret, realm, script);
             break;
         case CHANGESERVICEPLAN:
             netSuiteCallBackProvisioningRequest
@@ -237,7 +237,7 @@ public class KoreCheckStatusPostProcessor implements Processor {
                     .setNewServicePlan(newServicePlan);
             oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
                     oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                    oauthConsumerSecret, relam, script);
+                    oauthConsumerSecret, realm, script);
             break;
         case CHANGECUSTOMFIELDS:
             netSuiteCallBackProvisioningRequest
@@ -246,7 +246,7 @@ public class KoreCheckStatusPostProcessor implements Processor {
                     .setRequestType(NetSuiteRequestType.CUSTOM_FIELDS);
             oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
                     oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                    oauthConsumerSecret, relam, script);
+                    oauthConsumerSecret, realm, script);
             break;
         default:
             break;
