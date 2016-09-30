@@ -75,6 +75,9 @@ import com.gv.midway.processor.checkstatus.KoreCheckStatusPreProcessor;
 import com.gv.midway.processor.connectionInformation.VerizonDeviceConnectionInformationPreProcessor;
 import com.gv.midway.processor.connectionInformation.deviceConnectionStatus.StubVerizonDeviceConnectionStatusProcessor;
 import com.gv.midway.processor.connectionInformation.deviceConnectionStatus.VerizonDeviceConnectionStatusPostProcessor;
+import com.gv.midway.processor.connectionInformation.deviceSessionBeginEndInfo.ATTJasperDeviceSessionBeginEndInfoPostProcessor;
+import com.gv.midway.processor.connectionInformation.deviceSessionBeginEndInfo.ATTJasperDeviceSessionBeginEndInfoPreProcessor;
+import com.gv.midway.processor.connectionInformation.deviceSessionBeginEndInfo.StubATTJasperDeviceSessionBeginEndInfoProcessor;
 import com.gv.midway.processor.connectionInformation.deviceSessionBeginEndInfo.StubVerizonDeviceSessionBeginEndInfoProcessor;
 import com.gv.midway.processor.connectionInformation.deviceSessionBeginEndInfo.VerizonDeviceSessionBeginEndInfoPostProcessor;
 import com.gv.midway.processor.customFieldsDevice.ATTJasperCustomFieldDevicePreProcessor;
@@ -1211,41 +1214,67 @@ public class CamelRoute extends RouteBuilder {
 
         // Begin: Device Session Begin End
 
-        from("direct:deviceSessionBeginEndInfo").process(new HeaderProcessor())
-                .process(new DateValidationProcessor()).choice()
-                .when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
-                .process(new StubVerizonDeviceSessionBeginEndInfoProcessor())
-                .to("log:input").endChoice().otherwise().choice()
-                .when(header("derivedCarrierName").isEqualTo("VERIZON"))
-                .bean(iSessionService, "setContextTokenInExchange")
-                .bean(iAuditService, "auditExternalRequestCall")
-                .to("direct:DeviceSessionBeginEndInfoFlow1").endChoice().end();
+		from("direct:deviceSessionBeginEndInfo").process(new HeaderProcessor())
+				.process(new DateValidationProcessor()).choice()
+				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
+				.choice()
+				.when(header("derivedCarrierName").isEqualTo("VERIZON"))
+				.process(new StubVerizonDeviceSessionBeginEndInfoProcessor())
+				.to("log:input")
+				.when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
+				.process(new StubATTJasperDeviceSessionBeginEndInfoProcessor())
+				.to("log:input").endChoice().otherwise().choice()
+				.when(header("derivedCarrierName").isEqualTo("VERIZON"))
+				.bean(iSessionService, "setContextTokenInExchange")
+				.bean(iAuditService, "auditExternalRequestCall")
+				.to("direct:DeviceSessionBeginEndInfoFlow1").endChoice()
+				.when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
+				.bean(iAuditService, "auditExternalRequestCall")
+				.to("direct:ATTJasperDeviceSessionBeginEndInfoFlow1")
+				.endChoice().end();
 
-        // Verizon Flow-1
-        from("direct:DeviceSessionBeginEndInfoFlow1").doTry()
-                .to("direct:DeviceSessionBeginEndInfoFlow2")
-                .doCatch(CxfOperationException.class)
-                .bean(iAuditService, "auditExternalExceptionResponseCall")
-                .process(new VerizonGenericExceptionProcessor(env)).endDoTry()
-                .end();
-        // Verizon Flow-2
-        from("direct:DeviceSessionBeginEndInfoFlow2")
-                .errorHandler(noErrorHandler())
-                // REMOVED Audit will store record 3 times in case of failure
-                // (see onException for connection.class above)
-                // .bean(iAuditService, "auditExternalRequestCall")
-                .bean(iSessionService, "setContextTokenInExchange")
-                .process(new VerizonDeviceConnectionInformationPreProcessor())
-                // Audit will store record 3 times in case of failure (see
-                // onException for connection.class above)
-                // .bean(iAuditService, "auditExternalRequestCall")
-                .to(uriRestVerizonEndPoint)
-                .unmarshal()
-                .json(JsonLibrary.Jackson)
-                .bean(iAuditService, "auditExternalResponseCall")
-                .process(new VerizonDeviceSessionBeginEndInfoPostProcessor(env));
+		// Verizon Flow-1
+		from("direct:DeviceSessionBeginEndInfoFlow1").doTry()
+				.to("direct:DeviceSessionBeginEndInfoFlow2")
+				.doCatch(CxfOperationException.class)
+				.bean(iAuditService, "auditExternalExceptionResponseCall")
+				.process(new VerizonGenericExceptionProcessor(env)).endDoTry()
+				.end();
+		// Verizon Flow-2
+		from("direct:DeviceSessionBeginEndInfoFlow2")
+				.errorHandler(noErrorHandler())
+				// REMOVED Audit will store record 3 times in case of failure
+				// (see onException for connection.class above)
+				// .bean(iAuditService, "auditExternalRequestCall")
+				.bean(iSessionService, "setContextTokenInExchange")
+				.process(new VerizonDeviceConnectionInformationPreProcessor())
+				// Audit will store record 3 times in case of failure (see
+				// onException for connection.class above)
+				// .bean(iAuditService, "auditExternalRequestCall")
+				.to(uriRestVerizonEndPoint)
+				.unmarshal()
+				.json(JsonLibrary.Jackson)
+				.bean(iAuditService, "auditExternalResponseCall")
+				.process(new VerizonDeviceSessionBeginEndInfoPostProcessor(env));
 
-        // End: Device Session Begin End
+		// ATTJASPER Flow-1
+		from("direct:ATTJasperDeviceSessionBeginEndInfoFlow1").doTry()
+				.to("direct:ATTJasperDeviceSessionBeginEndInfoFlow2")
+				.doCatch(SoapFault.class)
+				.bean(iAuditService, "auditExternalSOAPExceptionResponseCall")
+				.process(new ATTJasperGenericExceptionProcessor(env))
+				.endDoTry().end();
+		// ATTJASPER Flow-2
+		from("direct:ATTJasperDeviceSessionBeginEndInfoFlow2")
+				.errorHandler(noErrorHandler())
+				.process(
+						new ATTJasperDeviceSessionBeginEndInfoPreProcessor(env))
+				.to(attJasperTerminalEndPoint)
+				.bean(iAuditService, "auditExternalSOAPResponseCall")
+				.process(
+						new ATTJasperDeviceSessionBeginEndInfoPostProcessor(env));
+
+		// End: Device Session Begin End
     }
 
     /**
