@@ -319,7 +319,7 @@ public class CamelRoute extends RouteBuilder {
         // Kore Check Status Timer
         koreCheckStatusTimer();
         
-        //ATT Callback Timer
+        //ATT Timer for invoking Callback to NetSuite
         //attCallBackTimer();
     }
 
