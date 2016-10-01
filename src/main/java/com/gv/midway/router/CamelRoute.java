@@ -319,8 +319,10 @@ public class CamelRoute extends RouteBuilder {
         // Kore Check Status Timer
         koreCheckStatusTimer();
         
+
         //ATT Timer for invoking Callback to NetSuite
         //attCallBackTimer();
+
     }
 
     /**
@@ -2075,18 +2077,18 @@ public class CamelRoute extends RouteBuilder {
                endChoice();
 
        from("direct:attCallBackErrorSubProcess")
-               .bean(iTransactionalService,
-                       "populateKoreCheckStatusErrorResponse")
+            /*   .bean(iTransactionalService,
+                       "populateKoreCheckStatusErrorResponse")*/
                .doTry()
                .process(new AttCallBackErrorPostProcessor(env))
-               .bean(iTransactionalService, "updateNetSuiteCallBackRequest")
+               .bean(iTransactionalService, "updateAttNetSuiteCallBackRequest")
                .setHeader(Exchange.HTTP_QUERY)
                .simple("script=${exchangeProperty[script]}&deploy=1")
                .to(uriRestNetsuitEndPoint)
                .doCatch(Exception.class)
                .bean(iTransactionalService, "updateAttNetSuiteCallBackError")
                .doFinally()
-               .bean(iTransactionalService, "updateAttNetSuiteCallBackRequest")
+               .bean(iTransactionalService, "updateAttNetSuiteCallBackResponse")
                .process(new KafkaProcessor(env))
                .to("kafka:" + env.getProperty("kafka.endpoint")
                        + ",?topic=midway-app-errors")
@@ -2097,17 +2099,17 @@ public class CamelRoute extends RouteBuilder {
                .to("direct:koreActivationCustomFieldsError").endChoice().end();
 
        from("direct:attCallBackSuccessSubProcess")
-               .bean(iTransactionalService, "populateKoreCustomChangeResponse")
+              /* .bean(iTransactionalService, "populateKoreCustomChangeResponse")*/
                .doTry()
                .process(new AttCallBackSuccessPostProcessor(env))
-               .bean(iTransactionalService, "updateNetSuiteCallBackRequest")
+               .bean(iTransactionalService, "updateAttNetSuiteCallBackRequest")
                .setHeader(Exchange.HTTP_QUERY)
                .simple("script=${exchangeProperty[script]}&deploy=1")
                .to(uriRestNetsuitEndPoint)
                .doCatch(Exception.class)
                .bean(iTransactionalService, "updateAttNetSuiteCallBackError")
                .doFinally()
-               .bean(iTransactionalService, "updateAttNetSuiteCallBackRequest")
+               .bean(iTransactionalService, "updateAttNetSuiteCallBackResponse")
                .process(new KafkaProcessor(env))
                .to("kafka:" + env.getProperty("kafka.endpoint")
                        + ",?topic=midway-alerts").end();
