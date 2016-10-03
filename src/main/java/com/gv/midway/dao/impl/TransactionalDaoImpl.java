@@ -2234,18 +2234,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
 	        List<Transaction> transactionWithPendingStatusList = mongoTemplate.find(
 	                searchPendingCallBack, Transaction.class);
-
-	        Collections.sort(transactionWithPendingStatusList,
-	                new Comparator<Transaction>() {
-	                    @Override
-	                    public int compare(Transaction a, Transaction b) {
-
-	                        return a.getTimeStampReceived().compareTo(
-	                                b.getTimeStampReceived());
-	                    }
-	                });
 	        
-	       List<Transaction> newList= new ArrayList();
+	       List<Transaction> newList= new ArrayList<Transaction>();
 	               
 	        
 	        Iterator<Transaction> itr= transactionWithPendingStatusList.iterator();
@@ -2304,6 +2294,18 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 	        
 	        LOGGER.info("size of callback list for ATT JASPER............."
                         + newList.size());
+	        
+	        Collections.sort(newList,
+	                new Comparator<Transaction>() {
+	                    @Override
+	                    public int compare(Transaction a, Transaction b) {
+
+	                        return a.getTimeStampReceived().compareTo(
+	                                b.getTimeStampReceived());
+	                    }
+	                });
+	        
+	        
 	        exchange.getIn().setBody(newList);
 	    
 	}
