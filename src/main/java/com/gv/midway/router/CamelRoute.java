@@ -73,6 +73,8 @@ import com.gv.midway.processor.checkstatus.KoreCheckStatusErrorProcessor;
 import com.gv.midway.processor.checkstatus.KoreCheckStatusPostProcessor;
 import com.gv.midway.processor.checkstatus.KoreCheckStatusPreProcessor;
 import com.gv.midway.processor.connectionInformation.VerizonDeviceConnectionInformationPreProcessor;
+import com.gv.midway.processor.connectionInformation.deviceConnectionStatus.ATTJasperDeviceConnectionStatusPostProcessor;
+import com.gv.midway.processor.connectionInformation.deviceConnectionStatus.StubATTJasperDeviceConnectionStatusProcessor;
 import com.gv.midway.processor.connectionInformation.deviceConnectionStatus.StubVerizonDeviceConnectionStatusProcessor;
 import com.gv.midway.processor.connectionInformation.deviceConnectionStatus.VerizonDeviceConnectionStatusPostProcessor;
 import com.gv.midway.processor.connectionInformation.deviceSessionBeginEndInfo.ATTJasperDeviceSessionBeginEndInfoPostProcessor;
@@ -1172,12 +1174,25 @@ public class CamelRoute extends RouteBuilder {
         from("direct:deviceConnectionStatus").process(new HeaderProcessor())
                 .process(new DateValidationProcessor()).choice()
                 .when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
+                .choice()
+               	.when(header("derivedCarrierName").isEqualTo("VERIZON"))
                 .process(new StubVerizonDeviceConnectionStatusProcessor())
-                .to("log:input").endChoice().otherwise().choice()
+                
+                .to("log:input")
+                .when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
+                .process(new StubATTJasperDeviceConnectionStatusProcessor())
+				.to("log:input")
+                .endChoice().otherwise().choice()
                 .when(header("derivedCarrierName").isEqualTo("VERIZON"))
                 .bean(iSessionService, "setContextTokenInExchange")
                 .bean(iAuditService, "auditExternalRequestCall")
-                .to("direct:DeviceConnectionStatusFlow1").endChoice().end();
+                .to("direct:DeviceConnectionStatusFlow1").endChoice()
+                
+                .when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
+				.bean(iAuditService, "auditExternalRequestCall")
+				.to("direct:ATTJasperDeviceConnectionStatusFlow1")
+				.endChoice()           
+                .end();
 
         // Verizon Flow-1
 
@@ -1204,8 +1219,27 @@ public class CamelRoute extends RouteBuilder {
                 .json(JsonLibrary.Jackson)
                 .bean(iAuditService, "auditExternalResponseCall")
                 .process(new VerizonDeviceConnectionStatusPostProcessor(env));
+        
+		// ATTJasper Flow-1
 
-        // End:Device Connection Status
+		from("direct:ATTJasperDeviceConnectionStatusFlow1").doTry()
+				.to("direct:ATTJasperDeviceConnectionStatusFlow2")
+				.doCatch(SoapFault.class)
+				.bean(iAuditService, "auditExternalSOAPExceptionResponseCall")
+				.process(new ATTJasperGenericExceptionProcessor(env))
+				.endDoTry().end();
+
+		// ATTJasper Flow-2
+
+		from("direct:ATTJasperDeviceConnectionStatusFlow2")
+				.errorHandler(noErrorHandler())
+				.process(
+						new ATTJasperDeviceSessionBeginEndInfoPreProcessor(env))
+				.to(attJasperTerminalEndPoint)
+				.bean(iAuditService, "auditExternalSOAPResponseCall")
+				.process(new ATTJasperDeviceConnectionStatusPostProcessor(env));
+
+		// End:Device Connection Status
 
     }
 
