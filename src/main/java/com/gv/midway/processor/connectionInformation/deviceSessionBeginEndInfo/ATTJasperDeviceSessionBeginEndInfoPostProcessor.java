@@ -49,9 +49,9 @@ public class ATTJasperDeviceSessionBeginEndInfoPostProcessor implements
 		GetSessionInfoResponse.SessionInfo sessionInfo = getSessionInfoResponse
 				.getSessionInfo();
 
-		if (sessionInfo != null) {
+		List<SessionInfoType> getsessionInfoType = sessionInfo.getSession();
 
-			List<SessionInfoType> getsessionInfoType = sessionInfo.getSession();
+		if (!(getsessionInfoType.size() == 0)) {
 
 			for (int i = 0; i < getsessionInfoType.size(); i++) {
 
@@ -72,9 +72,9 @@ public class ATTJasperDeviceSessionBeginEndInfoPostProcessor implements
 			response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_CONNECTION_STATUS);
 
 		} else {
-			response.setResponseCode(IResponse.SUCCESS_CODE);
-			response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
-			response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_CONNECTION_STATUS);
+			response.setResponseCode(IResponse.NO_DATA_FOUND_CODE);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
+			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_NODATA_DEVICESESSIONBEGINENDINFO_CARRIER);
 		}
 
 		Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);

@@ -46,6 +46,7 @@ public class IResponse {
     public static final String ERROR_DESCRIPTION_START_END_VALIDATION_MIDWAYDB = "Earliest date should not be greater than Latest date";
 
     public static final String SUCCESS_DESCRIPTION_JOB_INITIALIZED = "Job Started Successfully";
+    public static final String ERROR_DESCRIPTION_NODATA_DEVICESESSIONBEGINENDINFO_CARRIER = "No Device Session Information found from Carrier";
 
     private IResponse() {
 

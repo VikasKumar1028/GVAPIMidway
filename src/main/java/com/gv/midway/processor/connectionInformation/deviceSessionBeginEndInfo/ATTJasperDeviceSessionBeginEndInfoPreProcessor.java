@@ -16,7 +16,6 @@ import org.springframework.core.env.Environment;
 import com.gv.midway.attjasper.GetSessionInfoRequest;
 import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationRequest;
 import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationRequestDataArea;
-import com.gv.midway.pojo.transaction.Transaction;
 import com.gv.midway.pojo.verizon.DeviceId;
 import com.gv.midway.utility.CommonUtil;
 
@@ -34,28 +33,21 @@ public class ATTJasperDeviceSessionBeginEndInfoPreProcessor implements
 	}
 
 	public ATTJasperDeviceSessionBeginEndInfoPreProcessor() {
-		// Empty ConstructorATT_JasperDeviceInformationPostProcessor
+
 	}
 
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		Transaction transaction = exchange.getIn().getBody(Transaction.class);
+		LOGGER.info("Begin:ATTJasperDeviceSessionBeginEndInfoPreProcessor");
 
 		ConnectionInformationRequestDataArea businessRequest = new ConnectionInformationRequestDataArea();
 		ConnectionInformationRequest proxyRequest = (ConnectionInformationRequest) exchange
 				.getIn().getBody();
-		businessRequest.setEarliest(proxyRequest.getDataArea().getEarliest());
-		businessRequest.setLatest(proxyRequest.getDataArea().getLatest());
 		DeviceId deviceId = new DeviceId();
 		deviceId.setId(proxyRequest.getDataArea().getDeviceId().getId());
 		deviceId.setKind(proxyRequest.getDataArea().getDeviceId().getKind());
 		businessRequest.setDeviceId(deviceId);
-
-		/*
-		 * exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,
-		 * transaction.getDeviceNumber());
-		 */
 
 		GetSessionInfoRequest getSessionInfoRequest = new GetSessionInfoRequest();
 
@@ -87,11 +79,6 @@ public class ATTJasperDeviceSessionBeginEndInfoPreProcessor implements
 				.setHeader("soapAction",
 						"http://api.jasperwireless.com/ws/service/terminal/GetSessionInfo");
 
-		/*
-		 * exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID,
-		 * transaction.getNetSuiteId());
-		 */
-
 		String username = newEnv.getProperty("attJapser.userName");
 
 		String password = newEnv.getProperty("attJapser.password");
@@ -102,6 +89,6 @@ public class ATTJasperDeviceSessionBeginEndInfoPreProcessor implements
 		exchange.getIn().setHeader(Header.HEADER_LIST, soapHeaders);
 		exchange.setPattern(ExchangePattern.InOut);
 
-		LOGGER.info("End:VerizonDeviceConnectionStatusPreProcessor");
+		LOGGER.info("End:ATTJasperDeviceSessionBeginEndInfoPreProcessor");
 	}
 }

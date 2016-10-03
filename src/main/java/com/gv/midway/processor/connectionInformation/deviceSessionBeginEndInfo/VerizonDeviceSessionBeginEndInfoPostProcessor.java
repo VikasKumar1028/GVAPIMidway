@@ -147,12 +147,13 @@ public class VerizonDeviceSessionBeginEndInfoPostProcessor implements Processor 
                 sessionBeginEndResponseDataArea.setDeviceSession(deviceSessions
                         .toArray(new DeviceSession[deviceSessions.size()]));
 
-            } else {
-                response.setResponseCode(IResponse.SUCCESS_CODE);
-                response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
-                response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_CONNECTION_STATUS);
-            }
-        } else {
+			} else {
+				response.setResponseCode(IResponse.NO_DATA_FOUND_CODE);
+				response.setResponseStatus(IResponse.ERROR_MESSAGE);
+				response.setResponseDescription(IResponse.ERROR_DESCRIPTION_NODATA_DEVICESESSIONBEGINENDINFO_CARRIER);
+
+			}
+		} else {
 
             response.setResponseCode(400);
             response.setResponseStatus(IResponse.ERROR_MESSAGE);
