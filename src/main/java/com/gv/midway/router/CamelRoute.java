@@ -2080,14 +2080,6 @@ public class CamelRoute extends RouteBuilder {
 
        from("seda:attSedaCallBack?concurrentConsumers=5")
 
-         
-
-               .onException(UnknownHostException.class, ConnectException.class)
-               .handled(true)
-               .bean(iTransactionalService,
-                       "populateKoreCheckStatusConnectionResponse")
-               .end()
-
                .process(new AttCallBackPreProcessor(env))
                .choice()
                
@@ -2099,20 +2091,9 @@ public class CamelRoute extends RouteBuilder {
                .to("direct:attCallBackErrorSubProcess")
                .when(header(IConstant.ATT_CALLBACK_STATUS).isEqualTo("success"))
                .to("direct:attCallBackSuccessSubProcess").
-               /**
-                * Call the ATT Jasper API to check the status of device
-                */
-               /*
-                * when(header(IConstant.KORE_CHECK_STATUS).isEqualTo("forward"))
-                * .to(uriRestKoreEndPoint).unmarshal()
-                * .json(JsonLibrary.Jackson, KoreCheckStatusResponse.class)
-                * .to("direct:koreCheckStatusSubProcess").endChoice();
-                */
                endChoice();
 
        from("direct:attCallBackErrorSubProcess")
-            /*   .bean(iTransactionalService,
-                       "populateKoreCheckStatusErrorResponse")*/
                .doTry()
                .process(new AttCallBackErrorPostProcessor(env))
                .bean(iTransactionalService, "updateAttNetSuiteCallBackRequest")
@@ -2125,15 +2106,9 @@ public class CamelRoute extends RouteBuilder {
                .bean(iTransactionalService, "updateAttNetSuiteCallBackResponse")
                .process(new KafkaProcessor(env))
                .to("kafka:" + env.getProperty("kafka.endpoint")
-                       + ",?topic=midway-app-errors")
-               .
-               // Activation with custom fields error scenario
-               choice()
-               .when(simple("${exchangeProperty[koreActivationWithCustomField]} == 'true'"))
-               .to("direct:koreActivationCustomFieldsError").endChoice().end();
+                       + ",?topic=midway-app-errors");
 
        from("direct:attCallBackSuccessSubProcess")
-              /* .bean(iTransactionalService, "populateKoreCustomChangeResponse")*/
                .doTry()
                .process(new AttCallBackSuccessPostProcessor(env))
                .bean(iTransactionalService, "updateAttNetSuiteCallBackRequest")
@@ -2148,60 +2123,7 @@ public class CamelRoute extends RouteBuilder {
                .to("kafka:" + env.getProperty("kafka.endpoint")
                        + ",?topic=midway-alerts").end();
 
-       /*
-        * from("direct:koreCheckStatusSubProcess") .bean(iTransactionalService,
-        * "populateKoreCheckStatusResponse") .choice()
-        * .when(header(IConstant.KORE_PROVISIONING_REQUEST_STATUS)
-        * .isEqualTo(IConstant.KORE_CHECKSTATUS_COMPLETED)) .doTry()
-        * .process(new KoreCheckStatusPostProcessor(env))
-        * .bean(iTransactionalService, "updateNetSuiteCallBackRequest")
-        * .setHeader(Exchange.HTTP_QUERY)
-        * .simple("script=${exchangeProperty[script]}&deploy=1")
-        * .to(uriRestNetsuitEndPoint) .doCatch(Exception.class)
-        * .bean(iTransactionalService, "updateNetSuiteCallBackError")
-        * .doFinally() .bean(iTransactionalService,
-        * "updateNetSuiteCallBackResponse") .process(new KafkaProcessor(env))
-        * .to("kafka:" + env.getProperty("kafka.endpoint") +
-        * ",?topic=midway-alerts") . // Activation with custom fields error
-        * scenario choice() .when(simple(
-        * "${exchangeProperty[koreActivationWithCustomField]} == 'true'")) . //
-        * call the change customField for Kore activation request doTry()
-        * .process(new KoreActivationWithCustomFieldPreProcessor(env))
-        * .to(uriRestKoreEndPoint) .unmarshal() .json(JsonLibrary.Jackson,
-        * DKoreResponseCode.class) .bean(iTransactionalService,
-        * "updateKoreActivationCustomeFieldsDBPayload")
-        * .to("direct:koreActivationCustomFieldsSuccess")
-        * .doCatch(Exception.class)
-        * .to("direct:koreActivationCustomFieldsError").endDoTry().end();
-        * 
-        * // Kore Activation Custom Fields Error Scenario
-        * from("direct:koreActivationCustomFieldsError") .doTry() .process(new
-        * KoreActivationWithCustomFieldErrorProcessor(env))
-        * .bean(iTransactionalService,
-        * "updateKoreActivationCustomeFieldsDBPayloadError")
-        * .bean(iTransactionalService, "updateNetSuiteCallBackRequest")
-        * .setHeader(Exchange.HTTP_QUERY)
-        * .simple("script=${exchangeProperty[script]}&deploy=1")
-        * .to(uriRestNetsuitEndPoint) .doCatch(Exception.class)
-        * .bean(iTransactionalService, "updateNetSuiteCallBackError")
-        * .doFinally() .bean(iTransactionalService,
-        * "updateNetSuiteCallBackResponse") .process(new KafkaProcessor(env))
-        * .to("kafka:" + env.getProperty("kafka.endpoint") +
-        * ",?topic=midway-app-errors").end();
-        * 
-        * // Kore Activation Custom Fields Success Scenario
-        * from("direct:koreActivationCustomFieldsSuccess") .doTry()
-        * .process(new KoreActivationWithCustomFieldProcessor(env))
-        * .bean(iTransactionalService, "updateNetSuiteCallBackRequest")
-        * .setHeader(Exchange.HTTP_QUERY)
-        * .simple("script=${exchangeProperty[script]}&deploy=1")
-        * .to(uriRestNetsuitEndPoint) .doCatch(Exception.class)
-        * .bean(iTransactionalService, "updateNetSuiteCallBackError")
-        * .doFinally() .bean(iTransactionalService,
-        * "updateNetSuiteCallBackResponse") .process(new KafkaProcessor(env))
-        * .to("kafka:" + env.getProperty("kafka.endpoint") +
-        * ",?topic=midway-alerts").end();
-        */
+     
    }
 
 }

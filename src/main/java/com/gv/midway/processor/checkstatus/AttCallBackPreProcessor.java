@@ -1,6 +1,7 @@
 package com.gv.midway.processor.checkstatus;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
@@ -46,9 +47,9 @@ public class AttCallBackPreProcessor implements Processor {
         Object payload = transaction.getDevicePayload();
         
         String customFieldDetails="";
-        if (transaction.getRequestType().toString().equals(RequestType.CHANGECUSTOMFIELDS.toString()))
+        if (transaction.getRequestType().equals(RequestType.CHANGECUSTOMFIELDS))
             {
-            ArrayList list=(ArrayList)transaction.getCallBackPayload();
+            List<CustomFieldsToUpdate> list=(ArrayList<CustomFieldsToUpdate>)transaction.getCallBackPayload();
          
             for(int i=0; i<list.size(); i++){
                 CustomFieldsToUpdate custField=(CustomFieldsToUpdate) list.get(i);
