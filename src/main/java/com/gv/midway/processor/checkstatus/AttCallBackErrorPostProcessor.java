@@ -135,7 +135,7 @@ public class AttCallBackErrorPostProcessor implements Processor {
 
         netSuiteCallBackProvisioningRequest.setStatus("fail");
         
-        if (requestType.toString().equals(RequestType.CHANGECUSTOMFIELDS.toString()))
+        if (requestType.equals(RequestType.CHANGECUSTOMFIELDS))
         {
             netSuiteCallBackProvisioningRequest.setResponse( exchange.getProperty(IConstant.ATTJASPER_CUSTOM_FIELD_DEC).toString() ); 
         }else{            
@@ -197,37 +197,27 @@ public class AttCallBackErrorPostProcessor implements Processor {
         case ACTIVATION:
             netSuiteCallBackProvisioningRequest
                     .setRequestType(NetSuiteRequestType.ACTIVATION);
-            oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
-                    oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                    oauthConsumerSecret, realm, script);
+       
             break;
         case DEACTIVATION:
             netSuiteCallBackProvisioningRequest
                     .setRequestType(NetSuiteRequestType.DEACTIVATION);
-            oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
-                    oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                    oauthConsumerSecret, realm, script);
+          
             break;
         case REACTIVATION:
             netSuiteCallBackProvisioningRequest
                     .setRequestType(NetSuiteRequestType.REACTIVATION);
-            oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
-                    oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                    oauthConsumerSecret, realm, script);
+          
             break;
         case RESTORE:
             netSuiteCallBackProvisioningRequest
                     .setRequestType(NetSuiteRequestType.RESTORATION);
-            oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
-                    oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                    oauthConsumerSecret, realm, script);
+         
             break;
         case SUSPEND:
             netSuiteCallBackProvisioningRequest
                     .setRequestType(NetSuiteRequestType.SUSPENSION);
-            oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
-                    oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                    oauthConsumerSecret, realm, script);
+          
             break;
         case CHANGESERVICEPLAN:
             ChangeDeviceServicePlansRequest changeDeviceServicePlansRequest = (ChangeDeviceServicePlansRequest) body;
@@ -245,21 +235,21 @@ public class AttCallBackErrorPostProcessor implements Processor {
                     .setOldServicePlan(oldServicePlan);
             netSuiteCallBackProvisioningRequest
                     .setNewServicePlan(newServicePlan);
-            oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
-                    oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                    oauthConsumerSecret, realm, script);
+          
             break;
         case CHANGECUSTOMFIELDS:
             netSuiteCallBackProvisioningRequest
                     .setRequestType(NetSuiteRequestType.CUSTOM_FIELDS);
-            oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
-                    oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                    oauthConsumerSecret, realm, script);
+           
             break;
         default:
             break;
         }
 
+        oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
+                oauthConsumerKey, oauthTokenId, oauthTokenSecret,
+                oauthConsumerSecret, realm, script);
+        
         message.setHeader("Authorization", oauthHeader);
         exchange.setProperty("script", script);
         message.setHeader(Exchange.HTTP_PATH, null);

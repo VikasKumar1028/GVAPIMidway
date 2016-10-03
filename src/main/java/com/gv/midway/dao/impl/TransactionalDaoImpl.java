@@ -917,7 +917,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
         Query searchPendingCheckStatusQuery = new Query(Criteria
                 .where(ITransaction.CARRIER_NAME)
-                .is("KORE")
+                .is(IConstant.BSCARRIER_SERVICE_KORE)
                 .andOperator(
                         Criteria.where(ITransaction.MIDWAY_STATUS).is(
                                 IConstant.MIDWAY_TRANSACTION_STATUS_PENDING)));
@@ -2227,7 +2227,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 	    
 	     Query searchPendingCallBack = new Query(Criteria
 	                .where(ITransaction.CARRIER_NAME)
-	                .is("ATTJASPER")
+	                .is(IConstant.BSCARRIER_SERVICE_ATTJASPER)
 	                .andOperator(
 	                        Criteria.where(ITransaction.MIDWAY_STATUS).is(
 	                                IConstant.MIDWAY_TRANSACTION_STATUS_PENDING)));
@@ -2240,23 +2240,23 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 	                    @Override
 	                    public int compare(Transaction a, Transaction b) {
 
-	                        return a.getMidwayTransactionId().compareTo(
-	                                b.getMidwayTransactionId());
+	                        return a.getTimeStampReceived().compareTo(
+	                                b.getTimeStampReceived());
 	                    }
 	                });
 	        
-	               List<Transaction> newList= new ArrayList();
+	       List<Transaction> newList= new ArrayList();
 	               
 	        
 	        Iterator<Transaction> itr= transactionWithPendingStatusList.iterator();
 	        
-	        HashMap map =new HashMap();
+	        Map<String,Transaction> map =new HashMap<String,Transaction>();
 	        
 	        
 	        while(itr.hasNext()){
 	            Transaction trans= itr.next();
 	           
-	            if(trans.getRequestType().toString().equals("CHANGECUSTOMFIELDS"))
+	            if(trans.getRequestType().equals(RequestType.CHANGECUSTOMFIELDS))
 	                
 	            {
 	                
@@ -2270,7 +2270,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 	                String key= trans.getMidwayTransactionId()+"_"+trans.getDeviceNumber()+"_"+trans.getRequestType();
 	                Transaction transInter=(Transaction)map.get(key);
 	                   if (transInter==null){
-	                       ArrayList<CustomFieldsToUpdate>custList= new ArrayList();
+	                      List<CustomFieldsToUpdate>custList= new ArrayList<CustomFieldsToUpdate>();
 	                     //Add cust field to call back payload 
 	                       custList.add(custfield);
 	                       trans.setCallBackPayload(custList);
@@ -2278,7 +2278,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 	                    
 	                   }
 	                       else {
-	                           List list=(List)transInter.getCallBackPayload();
+	                           List<CustomFieldsToUpdate> list=(List<CustomFieldsToUpdate>)transInter.getCallBackPayload();
 	                           
 	                           //If any of the custom field is error then transaction carrier status should be error
 	                          if( trans.getCarrierStatus().equals(IConstant.CARRIER_TRANSACTION_STATUS_ERROR))
@@ -2313,7 +2313,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
             
             Query searchPrimaryActivationWithError = new Query(Criteria
                     .where(ITransaction.CARRIER_NAME)
-                    .is("ATTJASPER")
+                    .is(IConstant.BSCARRIER_SERVICE_ATTJASPER)
                     .andOperator(
                             Criteria.where(ITransaction.MIDWAY_STATUS).is(
                                     IConstant.MIDWAY_TRANSACTION_STATUS_PENDING),
@@ -2334,7 +2334,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 
                 Query searchSecondaryCustomFieldWithError = new Query(Criteria
                         .where(ITransaction.CARRIER_NAME)
-                        .is("ATTJASPER")
+                        .is(IConstant.BSCARRIER_SERVICE_ATTJASPER)
                         
                           .andOperator(
                                 Criteria.where(ITransaction.REQUEST_TYPE).is(RequestType.CHANGECUSTOMFIELDS.toString()),
@@ -2346,7 +2346,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 
                 Update update = new Update();
                 update.set(ITransaction.CARRIER_STATUS, IConstant.CARRIER_TRANSACTION_STATUS_ERROR);
-                update.set(ITransaction.CARRIER_ERROR_DESCRIPTION, "ACTIVATION FAILED");
+                update.set(ITransaction.CARRIER_ERROR_DESCRIPTION, "ACTIVATION FAILED due to "+primaryActivation.getCarrierErrorDescription());
                 update.set(ITransaction.MIDWAY_STATUS,IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
                 
                 mongoTemplate.updateMulti(searchSecondaryCustomFieldWithError, update, Transaction.class);
