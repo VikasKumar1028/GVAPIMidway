@@ -6,7 +6,6 @@ import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceId;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDeviceRequest;
 import com.gv.midway.pojo.deactivateDevice.request.DeactivateDevices;

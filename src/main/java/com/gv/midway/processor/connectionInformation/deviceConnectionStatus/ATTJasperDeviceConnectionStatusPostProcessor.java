@@ -6,13 +6,13 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
+
 import com.gv.midway.attjasper.GetSessionInfoResponse;
 import com.gv.midway.attjasper.SessionInfoType;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
-import com.gv.midway.pojo.connectionInformation.deviceSessionBeginEndInfo.response.DeviceSession;
 import com.gv.midway.pojo.connectionInformation.deviceStatus.response.ConnectionStatusResponse;
 import com.gv.midway.pojo.connectionInformation.deviceStatus.response.ConnectionStatusResponseDataArea;
 
@@ -37,7 +37,6 @@ public class ATTJasperDeviceConnectionStatusPostProcessor implements Processor {
 		ConnectionStatusResponse businessResponse = new ConnectionStatusResponse();
 		ConnectionStatusResponseDataArea connectionStatusResponseDataArea = new ConnectionStatusResponseDataArea();
 		Response response = new Response();
-		DeviceSession deviceSession = new DeviceSession();
 
 		GetSessionInfoResponse getSessionInfoResponse = (GetSessionInfoResponse) exchange
 				.getIn().getBody(GetSessionInfoResponse.class);
