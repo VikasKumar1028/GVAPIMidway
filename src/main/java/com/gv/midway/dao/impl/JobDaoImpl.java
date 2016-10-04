@@ -28,7 +28,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
-import com.esotericsoftware.minlog.Log;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.JobName;
 import com.gv.midway.dao.IJobDao;
@@ -39,6 +38,8 @@ import com.gv.midway.pojo.job.JobDetail;
 import com.gv.midway.pojo.job.JobStatus;
 import com.gv.midway.pojo.notification.DeviceOverageNotification;
 import com.gv.midway.pojo.server.ServerDetail;
+import com.gv.midway.pojo.usageView.DeviceUsageView;
+import com.gv.midway.pojo.usageView.DeviceUsageViewElement;
 import com.gv.midway.utility.CommonUtil;
 import com.mongodb.WriteResult;
 
@@ -989,5 +990,59 @@ public class JobDaoImpl implements IJobDao {
 
         }
     }
+    
+    
+    public void updateDeviceUsageView(Exchange exchange) {
+
+        LOGGER.info("Inside getDeviceUsageJobCounts .....................");
+
+        JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+        try {
+
+            Query searchJobQuery = new Query(Criteria.where("carrierName").regex(
+                    jobDetail.getCarrierName(), "i"))
+                    .addCriteria(Criteria.where("date").is(jobDetail.getDate()))
+                    .addCriteria(Criteria.where("isValid").is(true))
+                    .addCriteria(Criteria.where("transactionStatus").is("Success"))
+                    .addCriteria(
+                            Criteria.where("jobId").in(
+                                    jobDetail.getJobId()));
+
+            List<DeviceUsage> deviceUsageListTransactionFailure = mongoTemplate
+                    .find(searchJobQuery, DeviceUsage.class);
+            
+            
+            DeviceUsageView view = new DeviceUsageView();
+            view.setDate(jobDetail.getDate());
+            view.setCarrierName(jobDetail.getCarrierName());
+
+            ArrayList list=new ArrayList();
+            Iterator itr = deviceUsageListTransactionFailure.iterator();
+            while (itr.hasNext()) {
+                DeviceUsage element = (DeviceUsage) itr.next();
+                DeviceUsageViewElement viewElement= new DeviceUsageViewElement();
+                
+                viewElement.setDeviceId(element.getDeviceId());
+                viewElement.setNetSuiteId(element.getNetSuiteId());
+                viewElement.setDataUsed(element.getDataUsed());
+                viewElement.setIsUpdatedElement(Boolean.FALSE);
+                viewElement.setJobId(jobDetail.getJobId());
+                viewElement.setLastTimeStampUpdated(new Date());
+                list.add(element);
+
+            }
+            view.setElements((DeviceUsageViewElement[])list.toArray());
+
+            mongoTemplate.save(view);
+        }
+
+        catch (Exception e) {
+            LOGGER.info("Error In updateJobDetails-----------------------------"
+                    + e);
+        }
+
+    }
+  
+    
 
 }

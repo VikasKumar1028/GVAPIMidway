@@ -47,5 +47,8 @@ public interface IJobDao {
     public void getConnectionHistoryJobCounts(Exchange exchange);
 
     public void getDeviceUsageJobCounts(Exchange exchange);
+    
+    public void updateDeviceUsageView(Exchange exchange);
+    
 
 }

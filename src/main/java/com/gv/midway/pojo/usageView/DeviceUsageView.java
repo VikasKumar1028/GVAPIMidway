@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "deviceUsage")
+@Document(collection = "deviceUsageView")
 public class DeviceUsageView {
 
 

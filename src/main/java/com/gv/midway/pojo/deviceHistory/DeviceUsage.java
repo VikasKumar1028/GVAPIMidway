@@ -1,7 +1,5 @@
 package com.gv.midway.pojo.deviceHistory;
 
-import java.util.Date;
-
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.gv.midway.pojo.verizon.DeviceId;
