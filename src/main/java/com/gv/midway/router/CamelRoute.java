@@ -323,7 +323,7 @@ public class CamelRoute extends RouteBuilder {
         
 
         //ATT Timer for invoking Callback to NetSuite
-        //attCallBackTimer();
+         attCallBackTimer();
 
     }
 
