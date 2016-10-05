@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.camel.EndpointInject;
@@ -134,10 +135,10 @@ public class JobServiceImpl implements IJobService {
      */
     @Override
     public void setJobDetails(Exchange exchange, String carrierName,
-            JobName jobName,int duration) {
+            JobName jobName,int duration,JobType jobType) {
 
         JobDetail jobDetail = new JobDetail();
-        jobDetail.setType(JobType.NEW);
+        jobDetail.setType(jobType);
         jobDetail.setCarrierName(carrierName);
         jobDetail.setName(jobName);
 
@@ -200,8 +201,10 @@ public class JobServiceImpl implements IJobService {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Calendar cal = Calendar.getInstance();
             cal.setTime(dateFormat.parse(jobDetail.getDate()));
+            Date jobStartTime=cal.getTime();
+            jobStartTime.setSeconds(1);
             exchange.setProperty("jobStartTime",
-                    verizondateFormat.format(cal.getTime()));
+                    verizondateFormat.format(jobStartTime));
             cal.add(Calendar.HOUR, 24);
             exchange.setProperty("jobEndTime",
                     verizondateFormat.format(cal.getTime()));

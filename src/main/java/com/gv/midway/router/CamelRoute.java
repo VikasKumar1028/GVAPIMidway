@@ -22,6 +22,7 @@ import org.springframework.stereotype.Component;
 import com.gv.midway.constant.CarrierType;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.JobName;
+import com.gv.midway.constant.JobType;
 import com.gv.midway.exception.InvalidParameterException;
 import com.gv.midway.exception.KoreSimMissingException;
 import com.gv.midway.exception.MissingParameterException;
@@ -1455,7 +1456,7 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iJobService,
                         "setJobDetails(${exchange},"
                                 + CarrierType.VERIZON.toString() + ", "
-                                + JobName.VERIZON_CONNECTION_HISTORY + ","+IConstant.DURATION_24+")")
+                                + JobName.VERIZON_CONNECTION_HISTORY + ","+IConstant.DURATION_24+","+JobType.NEW+")")
                 .bean(iJobService, "scheduleJob").end();
 
     }
@@ -1470,7 +1471,7 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iJobService,
                         "setJobDetails(${exchange},"
                                 + CarrierType.VERIZON.toString() + ", "
-                                + JobName.VERIZON_DEVICE_USAGE + ","+IConstant.DURATION_24+")")
+                                + JobName.VERIZON_DEVICE_USAGE + ","+IConstant.DURATION_24+","+JobType.NEW+")")
                 .bean(iJobService, "scheduleJob").end();
 
     }
@@ -1484,7 +1485,7 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iJobService,
                         "setJobDetails(${exchange},"
                                 + CarrierType.KORE.toString() + ", "
-                                + JobName.KORE_DEVICE_USAGE + ","+IConstant.DURATION_24+")")
+                                + JobName.KORE_DEVICE_USAGE + ","+IConstant.DURATION_24+","+JobType.NEW+")")
                 .bean(iJobService, "scheduleJob").end();
 
     }
@@ -1500,7 +1501,7 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iJobService,
                         "setJobDetails(${exchange},"
                                 + CarrierType.VERIZON.toString() + ", "
-                                + JobName.VERIZON_DEVICE_USAGE + ","+IConstant.DURATION_48+")")
+                                + JobName.VERIZON_DEVICE_USAGE + ","+IConstant.DURATION_48+","+JobType.RERUN+")")
                 .bean(iJobService, "scheduleJob").end();
 
     }
@@ -1514,7 +1515,7 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iJobService,
                         "setJobDetails(${exchange},"
                                 + CarrierType.KORE.toString() + ", "
-                                + JobName.KORE_DEVICE_USAGE + ","+IConstant.DURATION_48+")")
+                                + JobName.KORE_DEVICE_USAGE + ","+IConstant.DURATION_48+","+JobType.RERUN+")")
                 .bean(iJobService, "scheduleJob").end();
 
     }
