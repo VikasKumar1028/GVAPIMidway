@@ -212,7 +212,7 @@ public class JobDaoImpl implements IJobDao {
         // generating the job ID to recognize the job
         long timestamp = System.currentTimeMillis();
         String jobId = Long.toString(timestamp);
-        jobDetail.setJobId(jobDetail.getName()+"_"+jobId);
+        jobDetail.setJobId(jobDetail.getName() + "_" + jobId);
 
         // inserting in the database as property
         mongoTemplate.insert(jobDetail);
@@ -254,11 +254,11 @@ public class JobDaoImpl implements IJobDao {
             update.set("endTime", new Date().toString());
             update.set("status", IConstant.JOB_COMPLETED);
 
-            //checking total count
+            // checking total count
             update.set("transactionCount",
                     exchange.getProperty("JobTotalCount"));
-          
-            //checking Error Cont
+
+            // checking Error Cont
             if (exchange.getProperty("JobErrorCount") != null) {
                 update.set("transactionFailed",
                         exchange.getProperty("JobErrorCount"));
@@ -266,7 +266,7 @@ public class JobDaoImpl implements IJobDao {
                 update.set("transactionFailed", "0");
             }
 
-            //checking Successful count
+            // checking Successful count
             if (exchange.getProperty("JobSuccessCount") != null) {
                 update.set("transactionPassed",
                         exchange.getProperty("JobSuccessCount"));
@@ -990,8 +990,8 @@ public class JobDaoImpl implements IJobDao {
 
         }
     }
-    
-    
+
+    @Override
     public void updateDeviceUsageView(Exchange exchange) {
 
         LOGGER.info("Inside getDeviceUsageJobCounts .....................");
@@ -999,39 +999,41 @@ public class JobDaoImpl implements IJobDao {
         JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
         try {
 
-            Query searchJobQuery = new Query(Criteria.where("carrierName").regex(
-                    jobDetail.getCarrierName(), "i"))
+            Query searchJobQuery = new Query(Criteria.where("carrierName")
+                    .regex(jobDetail.getCarrierName(), "i"))
                     .addCriteria(Criteria.where("date").is(jobDetail.getDate()))
                     .addCriteria(Criteria.where("isValid").is(true))
-                    .addCriteria(Criteria.where("transactionStatus").is("Success"))
                     .addCriteria(
-                            Criteria.where("jobId").in(
-                                    jobDetail.getJobId()));
+                            Criteria.where("transactionStatus").is("Success"))
+                    .addCriteria(
+                            Criteria.where("jobId").in(jobDetail.getJobId()));
 
             List<DeviceUsage> deviceUsageListTransactionFailure = mongoTemplate
                     .find(searchJobQuery, DeviceUsage.class);
-            
-            
+
             DeviceUsageView view = new DeviceUsageView();
             view.setDate(jobDetail.getDate());
             view.setCarrierName(jobDetail.getCarrierName());
 
-            ArrayList list=new ArrayList();
+            ArrayList<DeviceUsageViewElement> list = new ArrayList<DeviceUsageViewElement>();
             Iterator itr = deviceUsageListTransactionFailure.iterator();
             while (itr.hasNext()) {
                 DeviceUsage element = (DeviceUsage) itr.next();
-                DeviceUsageViewElement viewElement= new DeviceUsageViewElement();
-                
+                DeviceUsageViewElement viewElement = new DeviceUsageViewElement();
+
                 viewElement.setDeviceId(element.getDeviceId());
                 viewElement.setNetSuiteId(element.getNetSuiteId());
                 viewElement.setDataUsed(element.getDataUsed());
                 viewElement.setIsUpdatedElement(Boolean.FALSE);
                 viewElement.setJobId(jobDetail.getJobId());
                 viewElement.setLastTimeStampUpdated(new Date());
-                list.add(element);
+                list.add(viewElement);
 
             }
-            view.setElements((DeviceUsageViewElement[])list.toArray());
+            DeviceUsageViewElement[] elements = list
+                    .toArray(new DeviceUsageViewElement[list.size()]);
+
+            view.setElements(elements);
 
             mongoTemplate.save(view);
         }
@@ -1042,7 +1044,5 @@ public class JobDaoImpl implements IJobDao {
         }
 
     }
-  
-    
 
 }

@@ -362,5 +362,10 @@ public class JobServiceImpl implements IJobService {
         }
 
     }
+    
+    @Override
+    public void updateDeviceUsageView(Exchange exchange){
+        iJobDao.updateDeviceUsageView( exchange);
+    }
 
 }

@@ -42,5 +42,7 @@ public interface IJobService {
     public void checkTimeOutDevices(Exchange exchange);
     
     public void checkTimeOutDevicesTransactionFailure(Exchange exchange);
+    
+    public void updateDeviceUsageView(Exchange exchange);
 
 }
