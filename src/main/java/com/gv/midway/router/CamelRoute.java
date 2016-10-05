@@ -84,6 +84,7 @@ import com.gv.midway.processor.connectionInformation.deviceSessionBeginEndInfo.S
 import com.gv.midway.processor.connectionInformation.deviceSessionBeginEndInfo.VerizonDeviceSessionBeginEndInfoPostProcessor;
 import com.gv.midway.processor.customFieldsDevice.ATTJasperCustomFieldDevicePreProcessor;
 import com.gv.midway.processor.customFieldsDevice.KoreCustomFieldsPreProcessor;
+import com.gv.midway.processor.customFieldsDevice.StubATTJasperCustomFieldsProcessor;
 import com.gv.midway.processor.customFieldsDevice.StubKoreCustomFieldsProcessor;
 import com.gv.midway.processor.customFieldsDevice.StubVerizonCustomFieldsProcessor;
 import com.gv.midway.processor.customFieldsDevice.VerizonCustomFieldsPreProcessor;
@@ -97,6 +98,7 @@ import com.gv.midway.processor.deviceInformation.ATTJasperDeviceInformationPostP
 import com.gv.midway.processor.deviceInformation.ATTJasperDeviceInformationPreProcessor;
 import com.gv.midway.processor.deviceInformation.KoreDeviceInformationPostProcessor;
 import com.gv.midway.processor.deviceInformation.KoreDeviceInformationPreProcessor;
+import com.gv.midway.processor.deviceInformation.StubATTJasperInformationProcessor;
 import com.gv.midway.processor.deviceInformation.StubKoreDeviceInformationProcessor;
 import com.gv.midway.processor.deviceInformation.StubVerizonDeviceInformationProcessor;
 import com.gv.midway.processor.deviceInformation.VerizonDeviceInformationPostProcessor;
@@ -920,12 +922,16 @@ public class CamelRoute extends RouteBuilder {
         // Begin:CustomeFields Devices
 
         from("direct:customeFields").process(new HeaderProcessor()).choice()
-                .when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
-                .choice().when(header("derivedCarrierName").isEqualTo("KORE"))
-                .process(new StubKoreCustomFieldsProcessor()).to("log:input")
-                .when(header("derivedCarrierName").isEqualTo("VERIZON"))
-                .process(new StubVerizonCustomFieldsProcessor())
-                .to("log:input").endChoice().otherwise().choice()
+				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
+				.choice().when(header("derivedCarrierName").isEqualTo("KORE"))
+				.process(new StubKoreCustomFieldsProcessor()).to("log:input")
+				.when(header("derivedCarrierName").isEqualTo("VERIZON"))
+				.process(new StubVerizonCustomFieldsProcessor())
+				.to("log:input")
+				.when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
+				.process(new StubATTJasperCustomFieldsProcessor())
+				.to("log:input")
+				.endChoice().otherwise().choice()
 
                 .when(header("derivedCarrierName").isEqualTo("KORE"))
                 .wireTap("direct:processcustomeFieldsKoreTransaction")
@@ -1327,7 +1333,13 @@ public class CamelRoute extends RouteBuilder {
                 .to("log:input")
                 .when(header("derivedCarrierName").isEqualTo("VERIZON"))
                 .process(new StubVerizonDeviceInformationProcessor())
-                .to("log:input").endChoice().otherwise().choice()
+                .to("log:input")
+                
+                 .when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
+                .process(new StubATTJasperInformationProcessor())
+                .to("log:input")
+                
+                .endChoice().otherwise().choice()
 
                 .when(header("derivedCarrierName").isEqualTo("KORE")).doTry()
                 .process(new KoreDeviceInformationPreProcessor(env))
@@ -2125,5 +2137,6 @@ public class CamelRoute extends RouteBuilder {
 
      
    }
+
 
 }
