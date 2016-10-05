@@ -10,7 +10,7 @@ public class DeviceUsage {
     private DeviceId deviceId;
     private Integer netSuiteId;
     private String date;
-    private float dataUsed;
+    private long dataUsed;
     private String transactionStatus;
     private String transactionErrorReason;
     private Boolean isValid;
@@ -35,11 +35,11 @@ public class DeviceUsage {
         this.netSuiteId = netSuiteId;
     }
 
-    public float getDataUsed() {
+    public long getDataUsed() {
         return dataUsed;
     }
 
-    public void setDataUsed(float dataUsed) {
+    public void setDataUsed(long dataUsed) {
         this.dataUsed = dataUsed;
     }
 
