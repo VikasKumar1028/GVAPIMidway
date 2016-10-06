@@ -1,0 +1,14 @@
+************************Actual_GetSessionInfomartion_Request_Payload********************************************
+
+{  
+   "deviceId":{  
+      "id":"89148000002034195203",
+      "kind":"ICCID"
+   },
+   "earliest":"2016-05-05T03:00:00Z",
+   "latest":"2016-06-06T02:24:01Z"
+}
+
+
+
+************************Actual_GetSessionInfomartion_Response_Payload********************************************

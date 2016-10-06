@@ -1,0 +1,24 @@
+************************Actual_DeactivateDevice_Request_Payload********************************************
+
+{  
+   "accountName":"0442090022-00001",
+   "reasonCode":"FF",
+   "devices":[  
+      {  
+         "deviceIds":[  
+            {  
+               "id":"353238063289994",
+               "kind":"IMEI"
+            },
+            {  
+               "id":"89148000002377648495",
+               "kind":"ICCID"
+            }
+         ]
+      }
+   ]
+}
+
+
+
+************************Actual_DeactivateDevice_Response_Payload********************************************

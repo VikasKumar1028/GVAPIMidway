@@ -1,0 +1,15 @@
+************************Actual_CustomFieldsDevice_Request_Payload********************************************
+
+{  
+   "deviceNumber":"89014103277405947099",
+   "customField1":null,
+   "customField2":null,
+   "customField3":null,
+   "customField4":null,
+   "customField5":null,
+   "customField6":null
+}
+
+
+
+************************Actual_CustomFieldsDeviceResponse_Payload********************************************

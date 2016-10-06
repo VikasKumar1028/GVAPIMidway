@@ -1,0 +1,36 @@
+************************Actual_CustomFieldsDevice_Request_Payload********************************************
+
+
+{  
+   "accountName":"0442090022-00001",
+   "customFields":[  
+      {  
+         "value":"CustomField2",
+         "key":"West Region"
+      }
+   ],
+   "devices":[  
+      {  
+         "deviceIds":[  
+            {  
+               "id":"353238063289994",
+               "kind":"IMEI"
+            },
+            {  
+               "id":"89148000002377648495",
+               "kind":"ICCID"
+            }
+         ]
+      }
+   ],
+   "servicePlan":"M2MPERMB",
+   "customFieldsToUpdate":[  
+      {  
+         "key":"CustomField1",
+         "value":"string"
+      }
+   ]
+}
+
+
+************************Actual_CustomFieldsDeviceResponse_Payload********************************************

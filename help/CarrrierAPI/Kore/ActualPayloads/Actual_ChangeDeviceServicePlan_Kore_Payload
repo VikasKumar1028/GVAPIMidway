@@ -1,0 +1,10 @@
+************************Actual_ChangeDeviceServicePlan_Request_Payload********************************************
+
+
+{  
+   "deviceNumber":"8901260761246107398",
+   "planCode":"M2MPERMB"
+}
+
+
+************************Actual_ChangeDeviceServicePlan_Response_Payload********************************************

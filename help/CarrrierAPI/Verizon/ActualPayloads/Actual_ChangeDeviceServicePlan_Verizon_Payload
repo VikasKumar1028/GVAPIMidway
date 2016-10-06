@@ -1,0 +1,19 @@
+************************Actual_ChangeDeviceServicePlan_Request__Payload********************************************
+
+{  
+   "accountName":"0442090022-00001",
+   "devices":[  
+      {  
+         "deviceIds":[  
+            {  
+               "id":"353238063289994",
+               "kind":"IMEI"
+            }
+         ]
+      }
+   ],
+   "servicePlan":"M2MPERMB"
+}
+
+
+************************Actual_ChangeDeviceServicePlan_Response_Payload********************************************

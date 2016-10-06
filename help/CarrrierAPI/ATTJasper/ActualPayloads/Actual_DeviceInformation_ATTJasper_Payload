@@ -1,0 +1,29 @@
+************************Actual_DeviceInformation_Request_Payload********************************************
+
+
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sch="http://api.jasperwireless.com/ws/schema">
+  <soapenv:Header>
+      <wsse:Security soapenv:mustUnderstand="1" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+         <wsse:UsernameToken wsu:Id="UsernameToken-16847597" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+            <wsse:Username>vinaykumar</wsse:Username>
+            <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">Tech@001</wsse:Password>
+         </wsse:UsernameToken>
+      </wsse:Security>
+     </soapenv:Header>
+   <soapenv:Body>
+      <sch:GetTerminalDetailsRequest>
+         <sch:messageId>12345</sch:messageId>
+         <sch:version>5.90</sch:version>
+         <sch:licenseKey>a56f59ce-5ec7-4001-8cf3-cc493a3efb5e</sch:licenseKey>
+         <sch:iccids>
+            <!--1 or more repetitions:-->
+            <sch:iccid>89011702272013902603</sch:iccid>
+         </sch:iccids>
+      </sch:GetTerminalDetailsRequest>
+   </soapenv:Body>
+</soapenv:Envelope>
+
+
+
+
+************************Actual_DeviceInformation_Response_Payload********************************************

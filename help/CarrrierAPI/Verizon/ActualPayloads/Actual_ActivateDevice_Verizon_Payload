@@ -1,0 +1,29 @@
+************************Actual_ActivateDevice_Request_Payload********************************************
+
+{  
+   "accountName":"0442090022-00001",
+   "servicePlan":"M2MPERMB",
+   "mdnZipCode":"84037",
+   "devices":[  
+      {  
+         "deviceIds":[  
+            {  
+               "id":"353238061040837",
+               "kind":"IMEI"
+            }
+         ]
+      },
+      {  
+         "deviceIds":[  
+            {  
+               "id":"89148000002034203015",
+               "kind":"ICCID"
+            }
+         ]
+      }
+   ]
+}
+
+
+
+************************Actual_ActivateDevice_Response_Payload********************************************

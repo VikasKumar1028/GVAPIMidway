@@ -1,0 +1,11 @@
+************************Actual_DeactivateDevice_Request_Payload********************************************
+
+{  
+   "deviceNumber":"11111222223333344444",
+   "flagScrap":"true"
+}
+
+
+************************Carrier Response
+
+

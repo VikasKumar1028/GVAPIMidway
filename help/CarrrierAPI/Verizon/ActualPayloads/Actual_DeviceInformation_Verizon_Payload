@@ -1,0 +1,11 @@
+************************Actual_DeviceInformation_Request_Payload********************************************
+
+{  
+   "deviceId":{  
+      "id":"89148000002377648495",
+      "kind":"ICCID"
+   }
+}
+
+
+************************Actual_DeviceInformation_Response_Payload********************************************

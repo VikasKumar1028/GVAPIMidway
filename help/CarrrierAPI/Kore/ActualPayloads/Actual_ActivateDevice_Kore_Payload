@@ -1,0 +1,12 @@
+************************Actual_ActivateDevice_Request_Payload********************************************
+
+{  
+   "deviceNumber":"89014103277405947099",
+   "EAPCode":"EAP02500797"
+}
+
+
+************************Actual_ActivateDevice_Response_Payload********************************************
+
+Payload: {"d":{"__type":"ProvisioningRequestTracking:https:\/\/PRiSMProAPI.koretelematics.com\/types","requestStatus":0,"trackingNumber":"2862469070"}}
+
