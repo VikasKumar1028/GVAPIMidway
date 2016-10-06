@@ -36,7 +36,7 @@ public class StubATTJasperSuspendDeviceProcessor implements Processor {
 		responseheader.setRegion("USA");
 		responseheader.setTimestamp("2016-03-08T21:49:45");
 		responseheader.setOrganization("Grant Victor");
-		responseheader.setSourceName("ATTJASPER");
+		responseheader.setSourceName("NetSuit");
 		responseheader.setTransactionId("cde2131ksjd");
 		responseheader.setBsCarrier("ATTJASPER");
 
