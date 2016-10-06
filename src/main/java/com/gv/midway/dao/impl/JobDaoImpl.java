@@ -10,12 +10,16 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.newA
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.camel.Exchange;
 import org.apache.log4j.Logger;
@@ -994,7 +998,9 @@ public class JobDaoImpl implements IJobDao {
     @Override
     public void updateDeviceUsageView(Exchange exchange) {
 
-        LOGGER.info("Inside getDeviceUsageJobCounts .....................");
+        LOGGER.info("Inside updateDeviceUsageView .....................");
+
+        Map<Integer, DeviceUsageViewElement> existingRecords = fetchExistingDeviceUsageView(exchange);
 
         JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
         try {
@@ -1008,40 +1014,141 @@ public class JobDaoImpl implements IJobDao {
                     .addCriteria(
                             Criteria.where("jobId").in(jobDetail.getJobId()));
 
-            List<DeviceUsage> deviceUsageListTransactionFailure = mongoTemplate
-                    .find(searchJobQuery, DeviceUsage.class);
+            List<DeviceUsage> deviceUsageList = mongoTemplate.find(
+                    searchJobQuery, DeviceUsage.class);
 
             DeviceUsageView view = new DeviceUsageView();
             view.setDate(jobDetail.getDate());
             view.setCarrierName(jobDetail.getCarrierName());
 
             ArrayList<DeviceUsageViewElement> list = new ArrayList<DeviceUsageViewElement>();
-            Iterator itr = deviceUsageListTransactionFailure.iterator();
-            while (itr.hasNext()) {
-                DeviceUsage element = (DeviceUsage) itr.next();
-                DeviceUsageViewElement viewElement = new DeviceUsageViewElement();
+            Iterator itr = deviceUsageList.iterator();
 
-                viewElement.setDeviceId(element.getDeviceId());
-                viewElement.setNetSuiteId(element.getNetSuiteId());
-                viewElement.setDataUsed(element.getDataUsed());
-                viewElement.setIsUpdatedElement(Boolean.FALSE);
-                viewElement.setJobId(jobDetail.getJobId());
-                viewElement.setLastTimeStampUpdated(new Date());
-                list.add(viewElement);
+            // if the map is empty -then insert all the elements with updated as
+            // false
+            // if map has same value as fetched object then keep the updated as
+            // false /No Change
+            // if the map does not have that element then insert in map with
+            // updated as true
+            // if map has different value as fetched object then update map
+            // object and set the updated as true
+
+            
+            if (existingRecords.isEmpty()) {
+                while (itr.hasNext()) {
+                    DeviceUsage element = (DeviceUsage) itr.next();
+                    DeviceUsageViewElement viewElement = new DeviceUsageViewElement();
+
+                    viewElement.setDeviceId(element.getDeviceId());
+                    viewElement.setNetSuiteId(element.getNetSuiteId());
+                    viewElement.setDataUsed(element.getDataUsed());
+                    viewElement.setIsUpdatedElement(Boolean.FALSE);
+                    viewElement.setJobId(jobDetail.getJobId());
+                    viewElement.setLastTimeStampUpdated(new Date());
+                    list.add(viewElement);
+
+                }
+                DeviceUsageViewElement[] elements = list
+                        .toArray(new DeviceUsageViewElement[list.size()]);
+
+                view.setElements(elements);
+
+                mongoTemplate.save(view);
+            } else {
+
+                // do logic
+
+                while (itr.hasNext()) {
+                    DeviceUsage deviceUsageElement = (DeviceUsage) itr.next();
+                    DeviceUsageViewElement newViewElement = new DeviceUsageViewElement();
+
+                    DeviceUsageViewElement mapElement = existingRecords
+                            .get(deviceUsageElement.getNetSuiteId());
+                    // if Element not present adding the element to the hashmap                    
+                    
+                    if (mapElement == null) {
+                        
+                        newViewElement.setDeviceId(deviceUsageElement.getDeviceId());
+                        newViewElement.setNetSuiteId(deviceUsageElement.getNetSuiteId());
+                        newViewElement.setDataUsed(deviceUsageElement.getDataUsed());
+                        newViewElement.setIsUpdatedElement(Boolean.TRUE);
+                        newViewElement.setJobId(deviceUsageElement.getJobId());
+                        newViewElement.setLastTimeStampUpdated(new Date());
+
+                        existingRecords.put(deviceUsageElement.getNetSuiteId(),
+                                newViewElement);
+
+                    }
+                    // if the map Element has different value than view element
+                    else if (mapElement.getDataUsed() != deviceUsageElement
+                            .getDataUsed()) {
+                        mapElement.setDataUsed(deviceUsageElement.getDataUsed());
+                        mapElement.setJobId(deviceUsageElement.getJobId());
+                        mapElement.setIsUpdatedElement(Boolean.TRUE);
+                        mapElement.setLastTimeStampUpdated(new Date());
+                    }
+                    
+
+                }
+
+                DeviceUsageViewElement[] updatedElements = existingRecords
+                        .values().toArray(
+                                new DeviceUsageViewElement[existingRecords
+                                        .values().size()]);
+
+                view.setElements(updatedElements);
+
+                mongoTemplate.save(view);
 
             }
-            DeviceUsageViewElement[] elements = list
-                    .toArray(new DeviceUsageViewElement[list.size()]);
 
-            view.setElements(elements);
-
-            mongoTemplate.save(view);
         }
 
         catch (Exception e) {
-            LOGGER.info("Error In updateJobDetails-----------------------------"
+            LOGGER.info("Error In updateDeviceUsageView-----------------------------"
                     + e);
         }
+
+    }
+
+    public Map<Integer, DeviceUsageViewElement> fetchExistingDeviceUsageView(
+            Exchange exchange) {
+
+        LOGGER.info("Inside fetchExistingDeviceUsageView .....................");
+
+        Map<Integer, DeviceUsageViewElement> deviceUsageViewMap = new HashMap();
+
+        JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+        try {
+
+            Query searchJobQuery = new Query(Criteria.where("carrierName")
+                    .regex(jobDetail.getCarrierName(), "i"))
+                    .addCriteria(Criteria.where("date").is(jobDetail.getDate()));
+
+            List<DeviceUsageView> deviceUsageViewList = mongoTemplate.find(
+                    searchJobQuery, DeviceUsageView.class);
+
+            if (deviceUsageViewList.size() > 0) {
+                ArrayList<DeviceUsageViewElement> list = new ArrayList<DeviceUsageViewElement>();
+
+                DeviceUsageView view = deviceUsageViewList.get(0);
+
+                DeviceUsageViewElement[] elements = view.getElements();
+
+                deviceUsageViewMap = Arrays
+                        .asList(elements)
+                        .stream()
+                        .collect(
+                                Collectors.toMap(x -> x.getNetSuiteId(), x -> x));
+            }
+
+        }
+
+        catch (Exception e) {
+            LOGGER.info("Error In fetchExistingDeviceUsageView-----------------------------"
+                    + e);
+        }
+        return deviceUsageViewMap;
 
     }
 
