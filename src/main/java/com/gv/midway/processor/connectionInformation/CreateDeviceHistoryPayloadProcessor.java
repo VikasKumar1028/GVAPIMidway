@@ -17,40 +17,42 @@ import com.gv.midway.utility.CommonUtil;
 
 public class CreateDeviceHistoryPayloadProcessor implements Processor {
 
-    private static final Logger LOGGER = Logger.getLogger(CreateDeviceHistoryPayloadProcessor.class
-            .getName());
+	private static final Logger LOGGER = Logger
+			.getLogger(CreateDeviceHistoryPayloadProcessor.class.getName());
 
-    @Override
-    public void process(Exchange exchange) throws Exception {
-        LOGGER.info("CreateDeviceHistoryPayloadProcessor");
-        
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-        Calendar cal = Calendar.getInstance();
+	@Override
+	public void process(Exchange exchange) throws Exception {
 
-        DeviceInformation deviceInfo = (DeviceInformation) exchange.getIn()
-                .getBody();
-        ConnectionInformationRequestDataArea dataArea = new ConnectionInformationRequestDataArea();
-        DeviceId device = new DeviceId();
-        device.setId(deviceInfo.getDeviceIds()[0].getId());
-        device.setKind(deviceInfo.getDeviceIds()[0].getKind());
-        dataArea.setDeviceId(device);
+		LOGGER.info("Begin:CreateDeviceHistoryPayloadProcessor");
 
-        exchange.setProperty("DeviceId", device);
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+		Calendar cal = Calendar.getInstance();
 
-        dataArea.setLatest(dateFormat.format(cal.getTime()));
-        cal.add(Calendar.HOUR, -1);
-        dataArea.setEarliest(dateFormat.format(cal.getTime()));
+		DeviceInformation deviceInfo = (DeviceInformation) exchange.getIn()
+				.getBody();
+		ConnectionInformationRequestDataArea dataArea = new ConnectionInformationRequestDataArea();
+		DeviceId device = new DeviceId();
+		device.setId(deviceInfo.getDeviceIds()[0].getId());
+		device.setKind(deviceInfo.getDeviceIds()[0].getKind());
+		dataArea.setDeviceId(device);
 
-        ObjectMapper objectMapper = new ObjectMapper();
+		exchange.setProperty("DeviceId", device);
 
-        String strRequestBody = objectMapper.writeValueAsString(dataArea);
+		dataArea.setLatest(dateFormat.format(cal.getTime()));
+		cal.add(Calendar.HOUR, -1);
+		dataArea.setEarliest(dateFormat.format(cal.getTime()));
 
-        exchange.getIn().setBody(strRequestBody);
+		ObjectMapper objectMapper = new ObjectMapper();
 
-        Message message = CommonUtil.setMessageHeader(exchange);
+		String strRequestBody = objectMapper.writeValueAsString(dataArea);
 
-        message.setHeader(Exchange.HTTP_PATH, "/devices/usage/actions/list");
+		exchange.getIn().setBody(strRequestBody);
 
-    }
+		Message message = CommonUtil.setMessageHeader(exchange);
+
+		message.setHeader(Exchange.HTTP_PATH, "/devices/usage/actions/list");
+
+		LOGGER.info("End:CreateDeviceHistoryPayloadProcessor");
+	}
 
 }

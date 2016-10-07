@@ -93,6 +93,6 @@ public class ATTJasperCustomFieldDevicePreProcessor implements Processor {
 		exchange.getIn().setHeader(Header.HEADER_LIST, soapHeaders);
 		exchange.setPattern(ExchangePattern.InOut);
 
-		LOGGER.info("End:ATTJasperDeactivateDevicePreProcessor");
+		LOGGER.info("End:ATTJasperCustomFieldDevicePreProcessor");
 	}
 }

@@ -43,7 +43,7 @@ public class KoreActivationWithCustomFieldProcessor implements Processor {
 	public void process(Exchange exchange) throws Exception {
 		// TODO Auto-generated method stub
 
-		LOGGER.info("KoreActivationWithCustomFieldProcessor..........");
+		LOGGER.info("Begin:KoreActivationWithCustomFieldProcessor");
 
 		Message message = exchange.getIn();
 
@@ -147,6 +147,7 @@ public class KoreActivationWithCustomFieldProcessor implements Processor {
 		LOGGER.info("successfull callback resposne to Kore for activation with Custom Field..."
 				+ exchange.getIn().getBody());
 
+		 LOGGER.info("End:KoreActivationWithCustomFieldProcessor");
 	}
 
 }

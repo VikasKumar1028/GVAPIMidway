@@ -45,6 +45,7 @@ public class KoreCheckStatusPostProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
+      	LOGGER.info("Begin:KoreCheckStatusPostProcessor");
         LOGGER.info("kore check status post processor");
 
         Message message = exchange.getIn();
@@ -246,6 +247,7 @@ public class KoreCheckStatusPostProcessor implements Processor {
         LOGGER.info("success callback response for Kore..."
                 + exchange.getIn().getBody());
 
+        LOGGER.info("End:KoreCheckStatusPostProcessor");
     }
 
 }

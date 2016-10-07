@@ -27,8 +27,7 @@ public class StubCellBulkUploadProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        LOGGER.info("StubCellBulkUploadProcessor");
-        LOGGER.info("StubCellBulkUploadProcessor Called......................");
+    	LOGGER.info("Begin:StubCellBulkUploadProcessor");
 
         DevicesDataArea deviceDataArea = new DevicesDataArea();
 
@@ -291,6 +290,8 @@ public class StubCellBulkUploadProcessor implements Processor {
         deviceDataArea.setDevices(DeviceInformationArray);
         exchange.getIn().setBody(batchDeviceResponse);
         LOGGER.info("Exchange Result is..........." + (batchDeviceResponse));
+        
+    	LOGGER.info("End:StubCellBulkUploadProcessor");
     }
 
 }

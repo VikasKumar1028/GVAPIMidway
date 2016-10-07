@@ -20,6 +20,8 @@ public class VerizonDeviceUsageHistoryPreProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
+
+		LOGGER.info("Begin:VerizonDeviceUsageHistoryPreProcessor");
         LOGGER.info("Session Parameters  VZSessionToken"
                 + exchange.getProperty(IConstant.VZ_SEESION_TOKEN));
         LOGGER.info("Session Parameters  VZAuthorization"
@@ -59,6 +61,8 @@ public class VerizonDeviceUsageHistoryPreProcessor implements Processor {
         message.setHeader(Exchange.HTTP_PATH, "/devices/usage/actions/list");
 
         exchange.setPattern(ExchangePattern.InOut);
+        
+		LOGGER.info("End:VerizonDeviceUsageHistoryPreProcessor");
 
     }
 }

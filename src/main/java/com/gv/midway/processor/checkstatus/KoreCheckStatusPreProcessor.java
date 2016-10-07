@@ -39,6 +39,8 @@ public class KoreCheckStatusPreProcessor implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {
+    	
+    	LOGGER.info("Begin:KoreCheckStatusPreProcessor");
 
         LOGGER.info("*************Testing**************************************"
                 + exchange.getIn().getBody());
@@ -191,6 +193,8 @@ public class KoreCheckStatusPreProcessor implements Processor {
             exchange.setPattern(ExchangePattern.InOut);
 
         }
+        LOGGER.info("End:KoreCheckStatusPreProcessor");
+
 
     }
 

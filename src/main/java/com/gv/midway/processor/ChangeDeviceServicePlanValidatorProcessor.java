@@ -11,51 +11,54 @@ import com.gv.midway.pojo.changeDeviceServicePlans.request.ChangeDeviceServicePl
 
 public class ChangeDeviceServicePlanValidatorProcessor implements Processor {
 
-    private static final Logger LOGGER = Logger.getLogger(ChangeDeviceServicePlanValidatorProcessor.class.getName());
+	private static final Logger LOGGER = Logger
+			.getLogger(ChangeDeviceServicePlanValidatorProcessor.class
+					.getName());
 
-    @Override
-    public void process(Exchange exchange) throws Exception {
-        LOGGER.info("ChangeDeviceServicePlanValidator Processor");
-        ChangeDeviceServicePlansRequest request = (ChangeDeviceServicePlansRequest) exchange
-                .getIn().getBody(ChangeDeviceServicePlansRequest.class);
+	@Override
+	public void process(Exchange exchange) throws Exception {
+		LOGGER.info("Begin:ChangeDeviceServicePlanValidatorProcessor");
+		ChangeDeviceServicePlansRequest request = (ChangeDeviceServicePlansRequest) exchange
+				.getIn().getBody(ChangeDeviceServicePlansRequest.class);
 
-        ChangeDeviceServicePlansRequestDataArea changeDeviceServicePlansRequestDataArea = request
-                .getDataArea();
+		ChangeDeviceServicePlansRequestDataArea changeDeviceServicePlansRequestDataArea = request
+				.getDataArea();
 
-        if (changeDeviceServicePlansRequestDataArea == null)
+		if (changeDeviceServicePlansRequestDataArea == null)
 
-        {
+		{
 
-        	missingServicePlan(exchange);
+			missingServicePlan(exchange);
 
-        }
+		}
 
-        else {
+		else {
 
-            String currentServicePlan = changeDeviceServicePlansRequestDataArea
-                    .getCurrentServicePlan();
-            
-            String servicePlan = changeDeviceServicePlansRequestDataArea
-                    .getServicePlan();
+			String currentServicePlan = changeDeviceServicePlansRequestDataArea
+					.getCurrentServicePlan();
 
-            if (currentServicePlan == null||servicePlan==null) {
+			String servicePlan = changeDeviceServicePlansRequestDataArea
+					.getServicePlan();
 
-            	missingServicePlan(exchange);
-            }
-        }
-    }
+			if (currentServicePlan == null || servicePlan == null) {
 
-    private void missingServicePlan(Exchange exchange)
-            throws MissingParameterException {
+				missingServicePlan(exchange);
+			}
+		}
+		LOGGER.info("End:ChangeDeviceServicePlanValidatorProcessor");
+	}
 
-        exchange.setProperty(IConstant.RESPONSE_CODE, IResponse.INVALID_PAYLOAD);
-        exchange.setProperty(IConstant.RESPONSE_STATUS,
-                IResponse.ERROR_DESCRIPTION_CHANGE_SERVICE_PLAN);
-        exchange.setProperty(IConstant.RESPONSE_DESCRIPTION,
-                IResponse.ERROR_MESSAGE);
-        throw new MissingParameterException(
-                IResponse.INVALID_PAYLOAD.toString(),
-                IResponse.ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB);
-    }
+	private void missingServicePlan(Exchange exchange)
+			throws MissingParameterException {
+
+		exchange.setProperty(IConstant.RESPONSE_CODE, IResponse.INVALID_PAYLOAD);
+		exchange.setProperty(IConstant.RESPONSE_STATUS,
+				IResponse.ERROR_DESCRIPTION_CHANGE_SERVICE_PLAN);
+		exchange.setProperty(IConstant.RESPONSE_DESCRIPTION,
+				IResponse.ERROR_MESSAGE);
+		throw new MissingParameterException(
+				IResponse.INVALID_PAYLOAD.toString(),
+				IResponse.ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB);
+	}
 
 }

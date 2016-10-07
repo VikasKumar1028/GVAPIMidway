@@ -131,6 +131,8 @@ public class StubKoreDeviceInformationProcessor implements Processor {
                 .setDataArea(deviceInformationResponseDataArea);
 
         exchange.getIn().setBody(deviceInformationResponse);
+        
+        LOGGER.info("End:StubKoreDeviceInformationProcessor");
 
     }
 }

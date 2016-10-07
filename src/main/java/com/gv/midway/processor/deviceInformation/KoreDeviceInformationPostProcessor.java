@@ -193,7 +193,7 @@ public class KoreDeviceInformationPostProcessor implements Processor {
                 .setDataArea(deviceInformationResponseDataArea);
 
         exchange.getIn().setBody(deviceInformationResponse);
-        LOGGER.info("end:KoreDeviceInformationPostProcessor..............."
+        LOGGER.info("End:KoreDeviceInformationPostProcessor..............."
                 + deviceInformation.toString());
     }
 

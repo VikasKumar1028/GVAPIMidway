@@ -14,46 +14,46 @@ import com.gv.midway.pojo.verizon.DeviceId;
 import com.gv.midway.utility.CommonUtil;
 
 public class VerizonTransactionFailureDeviceUsageHistoryPreProcessor implements
-        Processor {
-    private static final Logger LOGGER = Logger
-            .getLogger(VerizonTransactionFailureDeviceUsageHistoryPreProcessor.class
-                    .getName());
+		Processor {
+	private static final Logger LOGGER = Logger
+			.getLogger(VerizonTransactionFailureDeviceUsageHistoryPreProcessor.class
+					.getName());
 
-    @Override
-    public void process(Exchange exchange) throws Exception {
+	@Override
+	public void process(Exchange exchange) throws Exception {
 
-        LOGGER.info("Begin:VerizonTransactionFailureDeviceUsageHistoryPreProcessor");
+		LOGGER.info("Begin:VerizonTransactionFailureDeviceUsageHistoryPreProcessor");
 
-        DeviceUsage deviceInfo = (DeviceUsage) exchange.getIn().getBody();
+		DeviceUsage deviceInfo = (DeviceUsage) exchange.getIn().getBody();
 
-        ConnectionInformationRequestDataArea dataArea = new ConnectionInformationRequestDataArea();
-        DeviceId device = new DeviceId();
+		ConnectionInformationRequestDataArea dataArea = new ConnectionInformationRequestDataArea();
+		DeviceId device = new DeviceId();
 
-        // Fetching Recommended device Identifiers
+		// Fetching Recommended device Identifiers
 
-        device.setId(deviceInfo.getDeviceId().getId());
-        device.setKind(deviceInfo.getDeviceId().getKind());
-        dataArea.setDeviceId(device);
+		device.setId(deviceInfo.getDeviceId().getId());
+		device.setKind(deviceInfo.getDeviceId().getKind());
+		dataArea.setDeviceId(device);
 
-        exchange.setProperty("DeviceId", device);
-        exchange.setProperty("CarrierName", deviceInfo.getCarrierName());
-        exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID,
-                deviceInfo.getNetSuiteId());
+		exchange.setProperty("DeviceId", device);
+		exchange.setProperty("CarrierName", deviceInfo.getCarrierName());
+		exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID,
+				deviceInfo.getNetSuiteId());
 
-        dataArea.setLatest(exchange.getProperty("jobEndTime").toString());
-        dataArea.setEarliest(exchange.getProperty("jobStartTime").toString());
+		dataArea.setLatest(exchange.getProperty("jobEndTime").toString());
+		dataArea.setEarliest(exchange.getProperty("jobStartTime").toString());
 
-        ObjectMapper objectMapper = new ObjectMapper();
+		ObjectMapper objectMapper = new ObjectMapper();
 
-        String strRequestBody = objectMapper.writeValueAsString(dataArea);
+		String strRequestBody = objectMapper.writeValueAsString(dataArea);
 
-        exchange.getIn().setBody(strRequestBody);
+		exchange.getIn().setBody(strRequestBody);
 
-        Message message = CommonUtil.setMessageHeader(exchange);
+		Message message = CommonUtil.setMessageHeader(exchange);
 
-        message.setHeader(Exchange.HTTP_PATH, "/devices/usage/actions/list");
+		message.setHeader(Exchange.HTTP_PATH, "/devices/usage/actions/list");
 
-        exchange.setPattern(ExchangePattern.InOut);
-        LOGGER.info("End:VerizonTransactionFailureDeviceUsageHistoryPreProcessor");
-    }
+		exchange.setPattern(ExchangePattern.InOut);
+		LOGGER.info("End:VerizonTransactionFailureDeviceUsageHistoryPreProcessor");
+	}
 }

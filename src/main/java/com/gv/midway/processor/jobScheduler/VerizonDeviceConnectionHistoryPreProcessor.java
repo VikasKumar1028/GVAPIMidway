@@ -15,52 +15,54 @@ import com.gv.midway.utility.CommonUtil;
 
 public class VerizonDeviceConnectionHistoryPreProcessor implements Processor {
 
-    private static final Logger LOGGER = Logger
-            .getLogger(VerizonDeviceConnectionHistoryPreProcessor.class
-                    .getName());
+	private static final Logger LOGGER = Logger
+			.getLogger(VerizonDeviceConnectionHistoryPreProcessor.class
+					.getName());
 
-    @Override
-    public void process(Exchange exchange) throws Exception {
+	@Override
+	public void process(Exchange exchange) throws Exception {
 
-        LOGGER.info("Session Parameters  VZSessionToken"
-                + exchange.getProperty(IConstant.VZ_SEESION_TOKEN));
-        LOGGER.info("Session Parameters  VZAuthorization"
-                + exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN));
+		LOGGER.info("Begin:VerizonDeviceConnectionHistoryPreProcessor");
+		LOGGER.info("Session Parameters  VZSessionToken"
+				+ exchange.getProperty(IConstant.VZ_SEESION_TOKEN));
+		LOGGER.info("Session Parameters  VZAuthorization"
+				+ exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN));
 
-        DeviceInformation deviceInfo = (DeviceInformation) exchange.getIn()
-                .getBody();
+		DeviceInformation deviceInfo = (DeviceInformation) exchange.getIn()
+				.getBody();
 
-        ConnectionInformationRequestDataArea dataArea = new ConnectionInformationRequestDataArea();
-        DeviceId device = new DeviceId();
+		ConnectionInformationRequestDataArea dataArea = new ConnectionInformationRequestDataArea();
+		DeviceId device = new DeviceId();
 
-        // Fetching Recommended device Identifiers
-        DeviceId recommendedDeviceId = CommonUtil
-                .getRecommendedDeviceIdentifier(deviceInfo.getDeviceIds());
+		// Fetching Recommended device Identifiers
+		DeviceId recommendedDeviceId = CommonUtil
+				.getRecommendedDeviceIdentifier(deviceInfo.getDeviceIds());
 
-        device.setId(recommendedDeviceId.getId());
-        device.setKind(recommendedDeviceId.getKind());
-        dataArea.setDeviceId(device);
+		device.setId(recommendedDeviceId.getId());
+		device.setKind(recommendedDeviceId.getKind());
+		dataArea.setDeviceId(device);
 
-        exchange.setProperty("DeviceId", device);
-        exchange.setProperty("CarrierName", deviceInfo.getBs_carrier());
-        exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID,
-                deviceInfo.getNetSuiteId());
+		exchange.setProperty("DeviceId", device);
+		exchange.setProperty("CarrierName", deviceInfo.getBs_carrier());
+		exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID,
+				deviceInfo.getNetSuiteId());
 
-        dataArea.setLatest(exchange.getProperty("jobEndTime").toString());
-        dataArea.setEarliest(exchange.getProperty("jobStartTime").toString());
+		dataArea.setLatest(exchange.getProperty("jobEndTime").toString());
+		dataArea.setEarliest(exchange.getProperty("jobStartTime").toString());
 
-        ObjectMapper objectMapper = new ObjectMapper();
+		ObjectMapper objectMapper = new ObjectMapper();
 
-        String strRequestBody = objectMapper.writeValueAsString(dataArea);
+		String strRequestBody = objectMapper.writeValueAsString(dataArea);
 
-        exchange.getIn().setBody(strRequestBody);
+		exchange.getIn().setBody(strRequestBody);
 
-        Message message = CommonUtil.setMessageHeader(exchange);
-        message.setHeader(Exchange.HTTP_PATH,
-                "/devices/connections/actions/listHistory");
+		Message message = CommonUtil.setMessageHeader(exchange);
+		message.setHeader(Exchange.HTTP_PATH,
+				"/devices/connections/actions/listHistory");
 
-        exchange.setPattern(ExchangePattern.InOut);
+		exchange.setPattern(ExchangePattern.InOut);
 
-    }
+		LOGGER.info("End:VerizonDeviceConnectionHistoryPreProcessor");
+	}
 
 }

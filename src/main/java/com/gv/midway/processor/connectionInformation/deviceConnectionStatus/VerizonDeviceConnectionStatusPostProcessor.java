@@ -33,7 +33,7 @@ public class VerizonDeviceConnectionStatusPostProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        LOGGER.info("Start:VerizonDeviceConnectionStatusPostProcessor");
+        LOGGER.info("Begin:VerizonDeviceConnectionStatusPostProcessor");
 
         ConnectionStatusResponse businessResponse = new ConnectionStatusResponse();
         ConnectionStatusResponseDataArea connectionStatusResponseDataArea = new ConnectionStatusResponseDataArea();

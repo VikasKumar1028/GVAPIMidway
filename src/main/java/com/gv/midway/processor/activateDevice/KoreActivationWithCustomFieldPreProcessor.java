@@ -36,7 +36,7 @@ public class KoreActivationWithCustomFieldPreProcessor implements Processor {
 	public void process(Exchange exchange) throws Exception {
 		// TODO Auto-generated method stub
 		
-         LOGGER.info("KoreActivationWithCustomFieldPreProcessor..........");
+         LOGGER.info("Begin:KoreActivationWithCustomFieldPreProcessor.");
 		 
 		 Message message = exchange.getIn();
 	     
@@ -105,7 +105,7 @@ public class KoreActivationWithCustomFieldPreProcessor implements Processor {
 	        message.setBody(customFieldsDeviceRequestKore);
 	        exchange.setPattern(ExchangePattern.InOut);
 
-	        LOGGER.info("End::KoreActivationWithCustomFieldPreProcessor");
+	        LOGGER.info("End:KoreActivationWithCustomFieldPreProcessor");
 
 	}
 

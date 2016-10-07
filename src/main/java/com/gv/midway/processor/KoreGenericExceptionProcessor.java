@@ -34,6 +34,7 @@ public class KoreGenericExceptionProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
+    	LOGGER.info("Begin:KoreGenericExceptionProcessor");
         CxfOperationException exception = (CxfOperationException) exchange
                 .getProperty(Exchange.EXCEPTION_CAUGHT);
 
@@ -112,7 +113,7 @@ public class KoreGenericExceptionProcessor implements Processor {
 			break;
 		}
 
-      
+     	LOGGER.info("End:KoreGenericExceptionProcessor");
 
     }
 }

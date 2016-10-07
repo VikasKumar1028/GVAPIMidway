@@ -14,64 +14,65 @@ import com.gv.midway.pojo.usageInformation.kore.request.UsageInformationKoreRequ
 import com.gv.midway.pojo.verizon.DeviceId;
 
 public class KoreTransactionFailureDeviceUsageHistoryPreProcessor implements
-        Processor {
+		Processor {
 
-    private static final Logger LOGGER = Logger.getLogger(KoreDeviceUsageHistoryPreProcessor.class
-            .getName());
+	private static final Logger LOGGER = Logger
+			.getLogger(KoreTransactionFailureDeviceUsageHistoryPreProcessor.class
+					.getName());
 
-    Environment newEnv;
+	Environment newEnv;
 
-    public KoreTransactionFailureDeviceUsageHistoryPreProcessor() {
-        // Empty Constructor
-    }
+	public KoreTransactionFailureDeviceUsageHistoryPreProcessor() {
+		// Empty Constructor
+	}
 
-    public KoreTransactionFailureDeviceUsageHistoryPreProcessor(Environment env) {
-        super();
-        this.newEnv = env;
-    }
+	public KoreTransactionFailureDeviceUsageHistoryPreProcessor(Environment env) {
+		super();
+		this.newEnv = env;
+	}
 
-    @Override
-    public void process(Exchange exchange) throws Exception {
+	@Override
+	public void process(Exchange exchange) throws Exception {
 
-        LOGGER.info("Begin:KoreTransactionFailureDeviceUsageHistoryPreProcessor");
-        Message message = exchange.getIn();
+		LOGGER.info("Begin:KoreTransactionFailureDeviceUsageHistoryPreProcessor");
+		Message message = exchange.getIn();
 
-        DeviceUsage deviceInfo = (DeviceUsage) exchange.getIn().getBody();
+		DeviceUsage deviceInfo = (DeviceUsage) exchange.getIn().getBody();
 
-        ObjectMapper objectMapper = new ObjectMapper();
+		ObjectMapper objectMapper = new ObjectMapper();
 
-        UsageInformationKoreRequest usageInformationKoreRequest = new UsageInformationKoreRequest();
+		UsageInformationKoreRequest usageInformationKoreRequest = new UsageInformationKoreRequest();
 
-        DeviceId deviceId = deviceInfo.getDeviceId();
+		DeviceId deviceId = deviceInfo.getDeviceId();
 
-        String simNumber = deviceId.getId();
+		String simNumber = deviceId.getId();
 
-        usageInformationKoreRequest.setSimNumber(simNumber);
+		usageInformationKoreRequest.setSimNumber(simNumber);
 
-        String strRequestBody = objectMapper
-                .writeValueAsString(usageInformationKoreRequest);
+		String strRequestBody = objectMapper
+				.writeValueAsString(usageInformationKoreRequest);
 
-        LOGGER.info("strRequestBody::" + strRequestBody);
+		LOGGER.info("strRequestBody::" + strRequestBody);
 
-        exchange.setProperty("DeviceId", deviceId);
-        exchange.setProperty("CarrierName", deviceInfo.getCarrierName());
-        exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID,
-                deviceInfo.getNetSuiteId());
+		exchange.setProperty("DeviceId", deviceId);
+		exchange.setProperty("CarrierName", deviceInfo.getCarrierName());
+		exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID,
+				deviceInfo.getNetSuiteId());
 
-        message.setHeader(Exchange.CONTENT_TYPE, "application/json");
-        message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
-        message.setHeader(Exchange.HTTP_METHOD, "POST");
-        message.setHeader("Authorization",
-                newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
+		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
+		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
+		message.setHeader(Exchange.HTTP_METHOD, "POST");
+		message.setHeader("Authorization",
+				newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
 
-        message.setHeader(Exchange.HTTP_PATH,
-                "/json/queryDeviceUsageBySimNumber");
-        message.setBody(strRequestBody);
+		message.setHeader(Exchange.HTTP_PATH,
+				"/json/queryDeviceUsageBySimNumber");
+		message.setBody(strRequestBody);
 
-        exchange.setPattern(ExchangePattern.InOut);
+		exchange.setPattern(ExchangePattern.InOut);
 
-        LOGGER.info("End:KoreTransactionFailureDeviceUsageHistoryPreProcessor");
+		LOGGER.info("End:KoreTransactionFailureDeviceUsageHistoryPreProcessor");
 
-    }
+	}
 
 }

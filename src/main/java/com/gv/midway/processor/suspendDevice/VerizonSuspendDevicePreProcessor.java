@@ -17,69 +17,71 @@ import com.gv.midway.utility.CommonUtil;
 
 public class VerizonSuspendDevicePreProcessor implements Processor {
 
-    private static final Logger LOGGER = Logger.getLogger(VerizonSuspendDevicePreProcessor.class
-            .getName());
+	private static final Logger LOGGER = Logger
+			.getLogger(VerizonSuspendDevicePreProcessor.class.getName());
 
-    @Override
-    public void process(Exchange exchange) throws Exception {
+	@Override
+	public void process(Exchange exchange) throws Exception {
 
-        LOGGER.info("Begin:VerizonSuspendDevicePreProcessor");
+		LOGGER.info("Begin:VerizonSuspendDevicePreProcessor");
 
-        LOGGER.info("Session Parameters  VZSessionToken"
-                + exchange.getProperty(IConstant.VZ_SEESION_TOKEN));
-        LOGGER.info("Session Parameters  VZAuthorization"
-                + exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN));
+		LOGGER.info("Session Parameters  VZSessionToken"
+				+ exchange.getProperty(IConstant.VZ_SEESION_TOKEN));
+		LOGGER.info("Session Parameters  VZAuthorization"
+				+ exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN));
 
-        SuspendDeviceRequestVerizon businessRequest = new SuspendDeviceRequestVerizon();
-        SuspendDeviceRequest proxyRequest = (SuspendDeviceRequest) exchange
-                .getIn().getBody();
-        businessRequest.setAccountName(proxyRequest.getDataArea()
-                .getAccountName());
-        businessRequest.setCustomFields(proxyRequest.getDataArea()
-                .getCustomFields());
-        businessRequest.setGroupName(proxyRequest.getDataArea().getGroupName());
-        businessRequest.setServicePlan(proxyRequest.getDataArea()
-                .getServicePlan());
+		SuspendDeviceRequestVerizon businessRequest = new SuspendDeviceRequestVerizon();
+		SuspendDeviceRequest proxyRequest = (SuspendDeviceRequest) exchange
+				.getIn().getBody();
+		businessRequest.setAccountName(proxyRequest.getDataArea()
+				.getAccountName());
+		businessRequest.setCustomFields(proxyRequest.getDataArea()
+				.getCustomFields());
+		businessRequest.setGroupName(proxyRequest.getDataArea().getGroupName());
+		businessRequest.setServicePlan(proxyRequest.getDataArea()
+				.getServicePlan());
 
-        MidWayDevices[] proxyDevicesArray = proxyRequest.getDataArea()
-                .getDevices();
-        Devices[] businessDevicesArray = new Devices[proxyDevicesArray.length];
+		MidWayDevices[] proxyDevicesArray = proxyRequest.getDataArea()
+				.getDevices();
+		Devices[] businessDevicesArray = new Devices[proxyDevicesArray.length];
 
-        for (int j = 0; j < proxyDevicesArray.length; j++) {
+		for (int j = 0; j < proxyDevicesArray.length; j++) {
 
-            DeviceId[] businessDeviceIdArray = new DeviceId[proxyDevicesArray[j]
-                    .getDeviceIds().length];
-            MidWayDevices proxyDevices = proxyDevicesArray[j];
-            Devices businessDevice = new Devices();
+			DeviceId[] businessDeviceIdArray = new DeviceId[proxyDevicesArray[j]
+					.getDeviceIds().length];
+			MidWayDevices proxyDevices = proxyDevicesArray[j];
+			Devices businessDevice = new Devices();
 
-            for (int i = 0; i < proxyDevices.getDeviceIds().length; i++) {
-                MidWayDeviceId proxyDeviceId = proxyDevices.getDeviceIds()[i];
+			for (int i = 0; i < proxyDevices.getDeviceIds().length; i++) {
+				MidWayDeviceId proxyDeviceId = proxyDevices.getDeviceIds()[i];
 
-                DeviceId businessDeviceId = new DeviceId();
-                businessDeviceId.setId(proxyDeviceId.getId());
-                businessDeviceId.setKind(proxyDeviceId.getKind());
+				DeviceId businessDeviceId = new DeviceId();
+				businessDeviceId.setId(proxyDeviceId.getId());
+				businessDeviceId.setKind(proxyDeviceId.getKind());
 
-                LOGGER.info(proxyDeviceId.getId());
+				LOGGER.info(proxyDeviceId.getId());
 
-                businessDeviceIdArray[i] = businessDeviceId;
+				businessDeviceIdArray[i] = businessDeviceId;
 
-            }
-            businessDevicesArray[j] = businessDevice;
+			}
+			businessDevicesArray[j] = businessDevice;
 
-            businessDevicesArray[j].setDeviceIds(businessDeviceIdArray);
-        }
-        businessRequest.setDevices(businessDevicesArray);
+			businessDevicesArray[j].setDeviceIds(businessDeviceIdArray);
+		}
+		businessRequest.setDevices(businessDevicesArray);
 
-        ObjectMapper objectMapper = new ObjectMapper();
+		ObjectMapper objectMapper = new ObjectMapper();
 
-        String strRequestBody = objectMapper
-                .writeValueAsString(businessRequest);
+		String strRequestBody = objectMapper
+				.writeValueAsString(businessRequest);
 
-        exchange.getIn().setBody(strRequestBody);
+		exchange.getIn().setBody(strRequestBody);
 
-        Message message = CommonUtil.setMessageHeader(exchange);
-        message.setHeader(Exchange.HTTP_PATH, "/devices/actions/suspend");
+		Message message = CommonUtil.setMessageHeader(exchange);
+		message.setHeader(Exchange.HTTP_PATH, "/devices/actions/suspend");
 
-    }
+		LOGGER.info("End:VerizonSuspendDevicePreProcessor");
+
+	}
 
 }

@@ -21,139 +21,141 @@ import com.gv.midway.utility.CommonUtil;
 
 public class VerizonGenericExceptionProcessor implements Processor {
 
-    private static final Logger LOGGER = Logger.getLogger(VerizonGenericExceptionProcessor.class
-            .getName());
+	private static final Logger LOGGER = Logger
+			.getLogger(VerizonGenericExceptionProcessor.class.getName());
 
-    Environment newEnv;
+	Environment newEnv;
 
-    public VerizonGenericExceptionProcessor(Environment env) {
-        super();
+	public VerizonGenericExceptionProcessor(Environment env) {
+		super();
 
-        this.newEnv = env;
+		this.newEnv = env;
 
-    }
+	}
 
-    public VerizonGenericExceptionProcessor() {
-        // Empty Constructor
-    }
+	public VerizonGenericExceptionProcessor() {
+		// Empty Constructor
+	}
 
-    @Override
-    public void process(Exchange exchange) throws Exception {
+	@Override
+	public void process(Exchange exchange) throws Exception {
 
-        CxfOperationException exception = (CxfOperationException) exchange
-                .getProperty(Exchange.EXCEPTION_CAUGHT);
+		LOGGER.info("Begin:VerizonGenericExceptionProcessor");
+		CxfOperationException exception = (CxfOperationException) exchange
+				.getProperty(Exchange.EXCEPTION_CAUGHT);
 
-        LOGGER.info("----VerizonGenericExceptionProcessor----------"
-                + exception.getResponseBody());
-        LOGGER.info("----.getStatusCode()----------" + exception.getStatusCode());
+		LOGGER.info("----VerizonGenericExceptionProcessor----------"
+				+ exception.getResponseBody());
+		LOGGER.info("----.getStatusCode()----------"
+				+ exception.getStatusCode());
 
-        LOGGER.info("----.exchange----------"
-                + exchange.getFromEndpoint().toString());
+		LOGGER.info("----.exchange----------"
+				+ exchange.getFromEndpoint().toString());
 
-        Header responseHeader = (Header) exchange.getProperty(IConstant.HEADER);
+		Header responseHeader = (Header) exchange.getProperty(IConstant.HEADER);
 
-        Response response = new Response();
-        if (exception.getStatusCode() == 401
-                || exception
-                        .getResponseBody()
-                        .contains(
-                                "UnifiedWebService.REQUEST_FAILED.SessionToken.Expired")) {
-            exchange.setProperty(IConstant.RESPONSE_CODE, "401");
-            exchange.setProperty(IConstant.RESPONSE_STATUS, "Invalid Token");
-            exchange.setProperty(IConstant.RESPONSE_DESCRIPTION,
-                    "Not able to retrieve  valid authentication token");
-            CommonUtil.setTokenGenerationRequired();
-            throw new VerizonSessionTokenExpirationException("401", "401");
-        } else {
+		Response response = new Response();
+		if (exception.getStatusCode() == 401
+				|| exception
+						.getResponseBody()
+						.contains(
+								"UnifiedWebService.REQUEST_FAILED.SessionToken.Expired")) {
+			exchange.setProperty(IConstant.RESPONSE_CODE, "401");
+			exchange.setProperty(IConstant.RESPONSE_STATUS, "Invalid Token");
+			exchange.setProperty(IConstant.RESPONSE_DESCRIPTION,
+					"Not able to retrieve  valid authentication token");
+			CommonUtil.setTokenGenerationRequired();
+			throw new VerizonSessionTokenExpirationException("401", "401");
+		} else {
 
-            ObjectMapper mapper = new ObjectMapper();
+			ObjectMapper mapper = new ObjectMapper();
 
-            VerizonErrorResponse responsePayload = mapper.readValue(
-                    exception.getResponseBody(), VerizonErrorResponse.class);
+			VerizonErrorResponse responsePayload = mapper.readValue(
+					exception.getResponseBody(), VerizonErrorResponse.class);
 
-            LOGGER.info("----response payload is----------"
-                    + responsePayload.toString());
+			LOGGER.info("----response payload is----------"
+					+ responsePayload.toString());
 
-            response.setResponseCode(IResponse.INVALID_PAYLOAD);
-            response.setResponseStatus(IResponse.ERROR_MESSAGE);
-            response.setResponseDescription(responsePayload.getErrorMessage());
+			response.setResponseCode(IResponse.INVALID_PAYLOAD);
+			response.setResponseStatus(IResponse.ERROR_MESSAGE);
+			response.setResponseDescription(responsePayload.getErrorMessage());
 
-        }
+		}
 
-        LOGGER.info("exchange endpoint of error........."
-                + exchange.getFromEndpoint().toString());
+		LOGGER.info("exchange endpoint of error........."
+				+ exchange.getFromEndpoint().toString());
 
-        switch (exchange.getFromEndpoint().toString()) {
+		switch (exchange.getFromEndpoint().toString()) {
 
-        case "Endpoint[direct://deviceInformationCarrier]":
-            DeviceInformationResponse deviceInformationResponse = new DeviceInformationResponse();
-            deviceInformationResponse.setHeader(responseHeader);
-            deviceInformationResponse.setResponse(response);
-            exchange.getIn().setBody(deviceInformationResponse);
-            break;
-        case "Endpoint[direct://activateDevice]":
-            CarrierProvisioningDeviceResponse activateDeviceResponse = new CarrierProvisioningDeviceResponse();
-            activateDeviceResponse.setHeader(responseHeader);
-            activateDeviceResponse.setResponse(response);
-            exchange.getIn().setBody(activateDeviceResponse);
-            break;
-        case "Endpoint[direct://deactivateDevice]":
-        	CarrierProvisioningDeviceResponse deactivateDeviceResponse = new CarrierProvisioningDeviceResponse();
-            deactivateDeviceResponse.setHeader(responseHeader);
-            deactivateDeviceResponse.setResponse(response);
-            exchange.getIn().setBody(deactivateDeviceResponse);
-            break;
-        case "Endpoint[direct://suspendDevice]":
-        	CarrierProvisioningDeviceResponse suspendDeviceResponse = new CarrierProvisioningDeviceResponse();
-            suspendDeviceResponse.setHeader(responseHeader);
-            suspendDeviceResponse.setResponse(response);
-            exchange.getIn().setBody(suspendDeviceResponse);
-            break;
-        case "Endpoint[direct://deviceConnectionStatus]":
-            ConnectionStatusResponse connectionStatusResponse = new ConnectionStatusResponse();
-            connectionStatusResponse.setHeader(responseHeader);
-            connectionStatusResponse.setResponse(response);
-            exchange.getIn().setBody(connectionStatusResponse);
-            break;
-        case "Endpoint[direct://deviceSessionBeginEndInfo]":
-            SessionBeginEndResponse sessionBeginEndResponse = new SessionBeginEndResponse();
-            sessionBeginEndResponse.setHeader(responseHeader);
-            sessionBeginEndResponse.setResponse(response);
-            exchange.getIn().setBody(sessionBeginEndResponse);
-            break;
-        case "Endpoint[direct://customeFields]":
-        	CarrierProvisioningDeviceResponse customFieldsDeviceResponse = new CarrierProvisioningDeviceResponse();
-            customFieldsDeviceResponse.setHeader(responseHeader);
-            customFieldsDeviceResponse.setResponse(response);
-            exchange.getIn().setBody(customFieldsDeviceResponse);
-            break;
-        case "Endpoint[direct://changeDeviceServicePlans]":
-        	CarrierProvisioningDeviceResponse changeDeviceServicePlansResponse = new CarrierProvisioningDeviceResponse();
-            changeDeviceServicePlansResponse.setHeader(responseHeader);
-            changeDeviceServicePlansResponse.setResponse(response);
-            exchange.getIn().setBody(changeDeviceServicePlansResponse);
-            break;
-        case "Endpoint[direct://reactivateDevice]":
-        	CarrierProvisioningDeviceResponse reactivateDeviceResponse = new CarrierProvisioningDeviceResponse();
-            reactivateDeviceResponse.setHeader(responseHeader);
-            reactivateDeviceResponse.setResponse(response);
-            exchange.getIn().setBody(reactivateDeviceResponse);
-            break;
-        case "Endpoint[direct://restoreDevice]":
-        	CarrierProvisioningDeviceResponse restoreDeviceResponse = new CarrierProvisioningDeviceResponse();
-            restoreDeviceResponse.setHeader(responseHeader);
-            restoreDeviceResponse.setResponse(response);
-            exchange.getIn().setBody(restoreDeviceResponse);
-            break;
-        case "Endpoint[direct://retrieveDeviceUsageHistoryCarrier]":
-            UsageInformationResponse usageInformationResponse = new UsageInformationResponse();
-            usageInformationResponse.setHeader(responseHeader);
-            usageInformationResponse.setResponse(response);
-            exchange.getIn().setBody(usageInformationResponse);
-            break;
-        default:
-            break;
-        }
-
-    }
+		case "Endpoint[direct://deviceInformationCarrier]":
+			DeviceInformationResponse deviceInformationResponse = new DeviceInformationResponse();
+			deviceInformationResponse.setHeader(responseHeader);
+			deviceInformationResponse.setResponse(response);
+			exchange.getIn().setBody(deviceInformationResponse);
+			break;
+		case "Endpoint[direct://activateDevice]":
+			CarrierProvisioningDeviceResponse activateDeviceResponse = new CarrierProvisioningDeviceResponse();
+			activateDeviceResponse.setHeader(responseHeader);
+			activateDeviceResponse.setResponse(response);
+			exchange.getIn().setBody(activateDeviceResponse);
+			break;
+		case "Endpoint[direct://deactivateDevice]":
+			CarrierProvisioningDeviceResponse deactivateDeviceResponse = new CarrierProvisioningDeviceResponse();
+			deactivateDeviceResponse.setHeader(responseHeader);
+			deactivateDeviceResponse.setResponse(response);
+			exchange.getIn().setBody(deactivateDeviceResponse);
+			break;
+		case "Endpoint[direct://suspendDevice]":
+			CarrierProvisioningDeviceResponse suspendDeviceResponse = new CarrierProvisioningDeviceResponse();
+			suspendDeviceResponse.setHeader(responseHeader);
+			suspendDeviceResponse.setResponse(response);
+			exchange.getIn().setBody(suspendDeviceResponse);
+			break;
+		case "Endpoint[direct://deviceConnectionStatus]":
+			ConnectionStatusResponse connectionStatusResponse = new ConnectionStatusResponse();
+			connectionStatusResponse.setHeader(responseHeader);
+			connectionStatusResponse.setResponse(response);
+			exchange.getIn().setBody(connectionStatusResponse);
+			break;
+		case "Endpoint[direct://deviceSessionBeginEndInfo]":
+			SessionBeginEndResponse sessionBeginEndResponse = new SessionBeginEndResponse();
+			sessionBeginEndResponse.setHeader(responseHeader);
+			sessionBeginEndResponse.setResponse(response);
+			exchange.getIn().setBody(sessionBeginEndResponse);
+			break;
+		case "Endpoint[direct://customeFields]":
+			CarrierProvisioningDeviceResponse customFieldsDeviceResponse = new CarrierProvisioningDeviceResponse();
+			customFieldsDeviceResponse.setHeader(responseHeader);
+			customFieldsDeviceResponse.setResponse(response);
+			exchange.getIn().setBody(customFieldsDeviceResponse);
+			break;
+		case "Endpoint[direct://changeDeviceServicePlans]":
+			CarrierProvisioningDeviceResponse changeDeviceServicePlansResponse = new CarrierProvisioningDeviceResponse();
+			changeDeviceServicePlansResponse.setHeader(responseHeader);
+			changeDeviceServicePlansResponse.setResponse(response);
+			exchange.getIn().setBody(changeDeviceServicePlansResponse);
+			break;
+		case "Endpoint[direct://reactivateDevice]":
+			CarrierProvisioningDeviceResponse reactivateDeviceResponse = new CarrierProvisioningDeviceResponse();
+			reactivateDeviceResponse.setHeader(responseHeader);
+			reactivateDeviceResponse.setResponse(response);
+			exchange.getIn().setBody(reactivateDeviceResponse);
+			break;
+		case "Endpoint[direct://restoreDevice]":
+			CarrierProvisioningDeviceResponse restoreDeviceResponse = new CarrierProvisioningDeviceResponse();
+			restoreDeviceResponse.setHeader(responseHeader);
+			restoreDeviceResponse.setResponse(response);
+			exchange.getIn().setBody(restoreDeviceResponse);
+			break;
+		case "Endpoint[direct://retrieveDeviceUsageHistoryCarrier]":
+			UsageInformationResponse usageInformationResponse = new UsageInformationResponse();
+			usageInformationResponse.setHeader(responseHeader);
+			usageInformationResponse.setResponse(response);
+			exchange.getIn().setBody(usageInformationResponse);
+			break;
+		default:
+			break;
+		}
+		LOGGER.info("End:VerizonGenericExceptionProcessor");
+	}
 }

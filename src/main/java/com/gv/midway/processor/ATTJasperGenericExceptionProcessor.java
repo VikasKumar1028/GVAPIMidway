@@ -1,7 +1,5 @@
 package com.gv.midway.processor;
 
-
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.cxf.binding.soap.SoapFault;
@@ -16,7 +14,6 @@ import com.gv.midway.pojo.connectionInformation.deviceSessionBeginEndInfo.respon
 import com.gv.midway.pojo.connectionInformation.deviceStatus.response.ConnectionStatusResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.usageInformation.response.UsageInformationResponse;
-
 
 public class ATTJasperGenericExceptionProcessor implements Processor {
 	private static final Logger LOGGER = Logger
@@ -38,26 +35,29 @@ public class ATTJasperGenericExceptionProcessor implements Processor {
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
+		LOGGER.info("Begin:ATTJasperGenericExceptionProcessor");
+
 		LOGGER.info("------------------------**********------------"
 				+ exchange.getProperty(Exchange.EXCEPTION_CAUGHT).getClass());
-		SoapFault soapFault= (SoapFault) exchange
+		SoapFault soapFault = (SoapFault) exchange
 				.getProperty(Exchange.EXCEPTION_CAUGHT);
 
 		Header responseHeader = (Header) exchange.getProperty(IConstant.HEADER);
 
-		String message=soapFault.getMessage();
-		
-		LOGGER.info("MSG    ------------------" +message);
-		
-		 // fault String for the fault code.
-		
+		String message = soapFault.getMessage();
+
+		LOGGER.info("MSG    ------------------" + message);
+
+		// fault String for the fault code.
+
 		Integer errorCode = Integer.valueOf(message);
-	
-		String resposneDescription=(String) exchange.getProperty(IConstant.ATTJASPER_SOAP_FAULT_ERRORMESSAGE);
-		
-		
-		LOGGER.info("resposneDescription ------------------" +resposneDescription);
-        
+
+		String resposneDescription = (String) exchange
+				.getProperty(IConstant.ATTJASPER_SOAP_FAULT_ERRORMESSAGE);
+
+		LOGGER.info("resposneDescription ------------------"
+				+ resposneDescription);
+
 		Response response = new Response();
 
 		response.setResponseCode(errorCode);
@@ -139,5 +139,6 @@ public class ATTJasperGenericExceptionProcessor implements Processor {
 			break;
 		}
 
+		LOGGER.info("End:ATTJasperGenericExceptionProcessor");
 	}
 }

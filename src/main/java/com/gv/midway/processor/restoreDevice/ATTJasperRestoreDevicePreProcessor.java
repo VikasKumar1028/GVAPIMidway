@@ -1,6 +1,5 @@
 package com.gv.midway.processor.restoreDevice;
 
-
 import java.util.Date;
 import java.util.List;
 import org.apache.camel.Exchange;
@@ -20,7 +19,7 @@ import com.gv.midway.utility.CommonUtil;
 
 public class ATTJasperRestoreDevicePreProcessor implements Processor {
 	private static final Logger LOGGER = Logger
-			.getLogger(ATTJasperActivateDevicePreProcessor.class.getName());
+			.getLogger(ATTJasperRestoreDevicePreProcessor.class.getName());
 
 	Environment newEnv;
 
@@ -48,11 +47,13 @@ public class ATTJasperRestoreDevicePreProcessor implements Processor {
 		EditTerminalRequest editTerminalRequest = new EditTerminalRequest();
 
 		editTerminalRequest.setIccid(deviceId);
-		/*LocalDateTime currentUTCTime = LocalDateTime.now(); // using system
-															// timezone
-		XMLGregorianCalendar xmlDate = DatatypeFactory.newInstance()
-				.newXMLGregorianCalendar(currentUTCTime.toString());
-		editTerminalRequest.setEffectiveDate(xmlDate);*/
+		/*
+		 * LocalDateTime currentUTCTime = LocalDateTime.now(); // using system
+		 * // timezone XMLGregorianCalendar xmlDate =
+		 * DatatypeFactory.newInstance()
+		 * .newXMLGregorianCalendar(currentUTCTime.toString());
+		 * editTerminalRequest.setEffectiveDate(xmlDate);
+		 */
 		editTerminalRequest.setChangeType(IConstant.ATTJASPER_SIM_CHANGETYPE);
 		editTerminalRequest.setTargetValue(IConstant.ATTJASPER_ACTIVATED);
 

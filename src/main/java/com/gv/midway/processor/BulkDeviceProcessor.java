@@ -17,73 +17,78 @@ import com.gv.midway.pojo.device.response.BatchDeviceResponseDataArea;
 
 public class BulkDeviceProcessor implements Processor {
 
-   private static final Logger LOGGER = Logger.getLogger(BulkDeviceProcessor.class.getName());
+	private static final Logger LOGGER = Logger
+			.getLogger(BulkDeviceProcessor.class.getName());
 
-    @Override
-    public void process(Exchange exchange) throws Exception {
-        LOGGER.info("******************Bulk device Processor invoked********************");
+	@Override
+	public void process(Exchange exchange) throws Exception {
 
-        List<BatchDeviceId> errorList = (List<BatchDeviceId>) exchange
-                .getProperty(IConstant.BULK_ERROR_LIST);
-        List<BatchDeviceId> successList = (List<BatchDeviceId>) exchange
-                .getProperty(IConstant.BULK_SUCCESS_LIST);
+		LOGGER.info("Begin:BulkDeviceProcessor");
 
-        Response response = new Response();
+		List<BatchDeviceId> errorList = (List<BatchDeviceId>) exchange
+				.getProperty(IConstant.BULK_ERROR_LIST);
+		List<BatchDeviceId> successList = (List<BatchDeviceId>) exchange
+				.getProperty(IConstant.BULK_SUCCESS_LIST);
 
-        response.setResponseCode(IResponse.SUCCESS_CODE);
+		Response response = new Response();
 
-        response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
-        response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_CARRIER);
+		response.setResponseCode(IResponse.SUCCESS_CODE);
 
-        Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
+		response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
+		response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_CARRIER);
 
-        BatchDeviceResponse batchDeviceResponse = new BatchDeviceResponse();
+		Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
 
-        batchDeviceResponse.setHeader(responseheader);
-        batchDeviceResponse.setResponse(response);
+		BatchDeviceResponse batchDeviceResponse = new BatchDeviceResponse();
 
-        BatchDeviceResponseDataArea batchDeviceResponseDataArea = new BatchDeviceResponseDataArea();
+		batchDeviceResponse.setHeader(responseheader);
+		batchDeviceResponse.setResponse(response);
 
-        batchDeviceResponseDataArea.setFailedCount(errorList.size());
-        batchDeviceResponseDataArea.setSuccessCount(successList.size());
+		BatchDeviceResponseDataArea batchDeviceResponseDataArea = new BatchDeviceResponseDataArea();
 
-        BatchDeviceId succesArr[] = new BatchDeviceId[successList.size()];
+		batchDeviceResponseDataArea.setFailedCount(errorList.size());
+		batchDeviceResponseDataArea.setSuccessCount(successList.size());
 
-        BatchDeviceId[] succesArr1 = successList.toArray(succesArr);
+		BatchDeviceId succesArr[] = new BatchDeviceId[successList.size()];
 
-        batchDeviceResponseDataArea.setSuccessDevices(succesArr1);
+		BatchDeviceId[] succesArr1 = successList.toArray(succesArr);
 
-        BatchDeviceId failedArr[] = new BatchDeviceId[errorList.size()];
+		batchDeviceResponseDataArea.setSuccessDevices(succesArr1);
 
-        BatchDeviceId[] failedArr1 = errorList.toArray(failedArr);
+		BatchDeviceId failedArr[] = new BatchDeviceId[errorList.size()];
 
-        batchDeviceResponseDataArea.setFailedDevices(failedArr1);
+		BatchDeviceId[] failedArr1 = errorList.toArray(failedArr);
 
-        batchDeviceResponse.setDataArea(batchDeviceResponseDataArea);
+		batchDeviceResponseDataArea.setFailedDevices(failedArr1);
 
-        LOGGER.info("batch device resposne value is........" + response.toString());
+		batchDeviceResponse.setDataArea(batchDeviceResponseDataArea);
 
-        LOGGER.info("batch device resposne header value is........"
-                + responseheader.toString());
+		LOGGER.info("batch device resposne value is........"
+				+ response.toString());
 
-        LOGGER.info("batch device resposne is........"
-                + batchDeviceResponse.toString());
+		LOGGER.info("batch device resposne header value is........"
+				+ responseheader.toString());
 
-        LOGGER.info("batch device resposne  resposne value is........"
-                + batchDeviceResponse.getHeader().toString());
+		LOGGER.info("batch device resposne is........"
+				+ batchDeviceResponse.toString());
 
-        LOGGER.info("batch device resposne header header value is........"
-                + batchDeviceResponse.getResponse().toString());
+		LOGGER.info("batch device resposne  resposne value is........"
+				+ batchDeviceResponse.getHeader().toString());
 
-        LOGGER.info("******************Bulk device Processor body before********************"
-                + exchange.getIn().getBody());
+		LOGGER.info("batch device resposne header header value is........"
+				+ batchDeviceResponse.getResponse().toString());
 
-        exchange.getIn().setBody(batchDeviceResponse);
+		LOGGER.info("******************Bulk device Processor body before********************"
+				+ exchange.getIn().getBody());
 
-        exchange.setPattern(ExchangePattern.InOut);
+		exchange.getIn().setBody(batchDeviceResponse);
 
-        LOGGER.info("******************Bulk device Processor body after********************"
-                + exchange.getIn().getBody());
-    }
+		exchange.setPattern(ExchangePattern.InOut);
+
+		LOGGER.info("******************Bulk device Processor body after********************"
+				+ exchange.getIn().getBody());
+
+		LOGGER.info("End:BulkDeviceProcessor");
+	}
 
 }

@@ -14,54 +14,55 @@ import com.gv.midway.pojo.transaction.Transaction;
 
 public class KoreRestoreDevicePreProcessor implements Processor {
 
-    private static final Logger LOGGER = Logger
-            .getLogger(KoreRestoreDevicePreProcessor.class.getName());
+	private static final Logger LOGGER = Logger
+			.getLogger(KoreRestoreDevicePreProcessor.class.getName());
 
-    Environment newEnv;
+	Environment newEnv;
 
-    // Default/no-arg constructor
-    public KoreRestoreDevicePreProcessor() {
-        // Empty Constructor
-    }
+	// Default/no-arg constructor
+	public KoreRestoreDevicePreProcessor() {
+		// Empty Constructor
+	}
 
-    // constructor with one parameter
-    public KoreRestoreDevicePreProcessor(Environment env) {
-        super();
-        this.newEnv = env;
-    }
+	// constructor with one parameter
+	public KoreRestoreDevicePreProcessor(Environment env) {
+		super();
+		this.newEnv = env;
+	}
 
-    // method for Processing the message exchange for Kore
-    @Override
-    public void process(Exchange exchange) throws Exception {
-        LOGGER.info("Begin:KoreRestoreDevicePreProcessor.."
-                + exchange.getIn().getBody());
+	// method for Processing the message exchange for Kore
+	@Override
+	public void process(Exchange exchange) throws Exception {
 
-        Message message = exchange.getIn();
+		LOGGER.info("Begin:KoreRestoreDevicePreProcessor.."
+				+ exchange.getIn().getBody());
 
-        Transaction transaction = exchange.getIn().getBody(Transaction.class);
+		Message message = exchange.getIn();
 
-        RestoreDeviceRequest restoreDeviceRequest = (RestoreDeviceRequest) transaction
-                .getDevicePayload();
+		Transaction transaction = exchange.getIn().getBody(Transaction.class);
 
-        String deviceId = restoreDeviceRequest.getDataArea().getDevices()[0]
-                .getDeviceIds()[0].getId();
+		RestoreDeviceRequest restoreDeviceRequest = (RestoreDeviceRequest) transaction
+				.getDevicePayload();
 
-        RestoreDeviceRequestKore restoreDeviceRequestKore = new RestoreDeviceRequestKore();
-        restoreDeviceRequestKore.setDeviceNumber(deviceId);
+		String deviceId = restoreDeviceRequest.getDataArea().getDevices()[0]
+				.getDeviceIds()[0].getId();
 
-        exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,
-                transaction.getDeviceNumber());
-        message.setHeader(Exchange.CONTENT_TYPE, "application/json");
-        message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
-        message.setHeader(Exchange.HTTP_METHOD, "POST");
-        message.setHeader("Authorization",
-                newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
-        message.setHeader(Exchange.HTTP_PATH, "/json/restoreDevice");
+		RestoreDeviceRequestKore restoreDeviceRequestKore = new RestoreDeviceRequestKore();
+		restoreDeviceRequestKore.setDeviceNumber(deviceId);
 
-        message.setBody(restoreDeviceRequestKore);
-        exchange.setPattern(ExchangePattern.InOut);
+		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,
+				transaction.getDeviceNumber());
+		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
+		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
+		message.setHeader(Exchange.HTTP_METHOD, "POST");
+		message.setHeader("Authorization",
+				newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
+		message.setHeader(Exchange.HTTP_PATH, "/json/restoreDevice");
 
-        LOGGER.info("End:KoreRestoreDevicePreProcessor");
-    }
+		message.setBody(restoreDeviceRequestKore);
+		exchange.setPattern(ExchangePattern.InOut);
+
+		LOGGER.info("End:KoreRestoreDevicePreProcessor");
+	}
 
 }

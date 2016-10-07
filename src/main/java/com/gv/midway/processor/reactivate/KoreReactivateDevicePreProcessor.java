@@ -13,54 +13,55 @@ import com.gv.midway.pojo.reActivateDevice.request.ReactivateDeviceRequestKore;
 import com.gv.midway.pojo.transaction.Transaction;
 
 public class KoreReactivateDevicePreProcessor implements Processor {
-    private static final Logger LOGGER = Logger.getLogger(KoreReactivateDevicePreProcessor.class
-            .getName());
+	private static final Logger LOGGER = Logger
+			.getLogger(KoreReactivateDevicePreProcessor.class.getName());
 
-    Environment newEnv;
+	Environment newEnv;
 
-    public KoreReactivateDevicePreProcessor() {
-        // Empty Constructor
-    }
+	public KoreReactivateDevicePreProcessor() {
+		// Empty Constructor
+	}
 
-    public KoreReactivateDevicePreProcessor(Environment env) {
-        this.newEnv = env;
-    }
+	public KoreReactivateDevicePreProcessor(Environment env) {
+		this.newEnv = env;
+	}
 
-    @Override
-    public void process(Exchange exchange) throws Exception {
-        LOGGER.info("*************Testing********" + exchange.getIn().getBody());
+	@Override
+	public void process(Exchange exchange) throws Exception {
 
-        LOGGER.info("Begin:KoreReActivateDevicePreProcessor");
-        Message message = exchange.getIn();
+		LOGGER.info("Begin:KoreReActivateDevicePreProcessor");
+		LOGGER.info("*************Testing********" + exchange.getIn().getBody());
 
-        Transaction transaction = exchange.getIn().getBody(Transaction.class);
+		Message message = exchange.getIn();
 
-        ReactivateDeviceRequest reActivateDeviceRequest = (ReactivateDeviceRequest) transaction
-                .getDevicePayload();
+		Transaction transaction = exchange.getIn().getBody(Transaction.class);
 
-        String deviceId = reActivateDeviceRequest.getDataArea().getDevices()[0]
-                .getDeviceIds()[0].getId();
+		ReactivateDeviceRequest reActivateDeviceRequest = (ReactivateDeviceRequest) transaction
+				.getDevicePayload();
 
-        ReactivateDeviceRequestKore reActicationDeviceRequestKore = new ReactivateDeviceRequestKore();
-        reActicationDeviceRequestKore.setDeviceNumber(deviceId);
+		String deviceId = reActivateDeviceRequest.getDataArea().getDevices()[0]
+				.getDeviceIds()[0].getId();
 
-        exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,
-                transaction.getDeviceNumber());
+		ReactivateDeviceRequestKore reActicationDeviceRequestKore = new ReactivateDeviceRequestKore();
+		reActicationDeviceRequestKore.setDeviceNumber(deviceId);
 
-        message.setHeader(Exchange.CONTENT_TYPE, "application/json");
-        message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
-        message.setHeader(Exchange.HTTP_METHOD, "POST");
-        message.setHeader("Authorization",
-                newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
-        message.setHeader(Exchange.HTTP_PATH, "/json/reactivateDevice");
-        exchange.setPattern(ExchangePattern.InOut);
+		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,
+				transaction.getDeviceNumber());
 
-        message.setBody(reActicationDeviceRequestKore);
+		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
+		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
+		message.setHeader(Exchange.HTTP_METHOD, "POST");
+		message.setHeader("Authorization",
+				newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
+		message.setHeader(Exchange.HTTP_PATH, "/json/reactivateDevice");
+		exchange.setPattern(ExchangePattern.InOut);
 
-        exchange.setPattern(ExchangePattern.InOut);
+		message.setBody(reActicationDeviceRequestKore);
 
-        LOGGER.info("End:KoreReactivateDevicePreProcessor");
+		exchange.setPattern(ExchangePattern.InOut);
 
-    }
+		LOGGER.info("End:KoreReactivateDevicePreProcessor");
+
+	}
 
 }

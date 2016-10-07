@@ -18,7 +18,7 @@ import com.gv.midway.pojo.verizon.DeviceId;
 public class StubATTJasperInformationProcessor implements Processor {
 
 	private static final Logger LOGGER = Logger
-			.getLogger(StubVerizonDeviceInformationProcessor.class.getName());
+			.getLogger(StubATTJasperInformationProcessor.class.getName());
 
 	@Override
 	public void process(Exchange exchange) throws Exception {

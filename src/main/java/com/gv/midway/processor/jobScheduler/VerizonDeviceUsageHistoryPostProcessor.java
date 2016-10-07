@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
+import org.apache.log4j.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
@@ -15,9 +16,13 @@ import com.gv.midway.pojo.verizon.DeviceId;
 
 public class VerizonDeviceUsageHistoryPostProcessor implements Processor {
 
+	private static final Logger LOGGER = Logger
+			.getLogger(VerizonDeviceUsageHistoryPostProcessor.class
+					.getName());
     @Override
     public void process(Exchange exchange) throws Exception {
 
+    	LOGGER.info("Begin:VerizonDeviceUsageHistoryPostProcessor");
         Map map = exchange.getIn().getBody(Map.class);
         ObjectMapper mapper = new ObjectMapper();
         VerizonUsageInformationResponse usageResponse = mapper.convertValue(
@@ -48,6 +53,7 @@ public class VerizonDeviceUsageHistoryPostProcessor implements Processor {
 
         exchange.getIn().setBody(deviceUsage);
 
+    	LOGGER.info("End:VerizonDeviceUsageHistoryPostProcessor");
     }
 
 }

@@ -105,7 +105,7 @@ public class VerizonChangeDeviceServicePlansPreProcessor implements Processor {
         message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
         message.setHeader(Exchange.HTTP_METHOD, "PUT");
         message.setHeader(Exchange.HTTP_PATH, "/devices/actions/plan");
-        LOGGER.info("Start::VerizonChangeDeviceServicePlansPreProcessor");
+        LOGGER.info("End::VerizonChangeDeviceServicePlansPreProcessor");
 
     }
 

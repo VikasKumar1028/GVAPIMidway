@@ -32,6 +32,8 @@ public class AttCallBackPreProcessor implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {
+    	
+    	LOGGER.info("Begin:AttCallBackPreProcessor");
 
         LOGGER.info("*******************"
                 + exchange.getIn().getBody());
@@ -97,7 +99,7 @@ public class AttCallBackPreProcessor implements Processor {
 
         }
 
-
+        LOGGER.info("End:AttCallBackPreProcessor");
     }
 
 }

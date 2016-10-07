@@ -12,7 +12,7 @@ import com.gv.midway.pojo.Response;
 
 public class StubATTJasperCustomFieldsProcessor implements Processor {
 	private static final Logger LOGGER = Logger
-			.getLogger(StubVerizonCustomFieldsProcessor.class.getName());
+			.getLogger(StubATTJasperCustomFieldsProcessor.class.getName());
 
 	@Override
 	public void process(Exchange exchange) throws Exception {

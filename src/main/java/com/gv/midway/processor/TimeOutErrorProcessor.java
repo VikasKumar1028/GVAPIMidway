@@ -30,6 +30,7 @@ public class TimeOutErrorProcessor implements Processor {
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
+		LOGGER.info("Begin:TimeOutErrorProcessor");
 		LOGGER.info("TimeOut exception occured................"
 				+ exchange.getIn().getBody().toString());
 
@@ -92,7 +93,7 @@ public class TimeOutErrorProcessor implements Processor {
 		default:
 			break;
 		}
-
+		LOGGER.info("End:TimeOutErrorProcessor");
 	}
 
 }

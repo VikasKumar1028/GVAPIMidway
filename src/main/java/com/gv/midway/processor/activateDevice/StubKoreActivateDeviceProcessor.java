@@ -48,6 +48,6 @@ public class StubKoreActivateDeviceProcessor implements Processor {
 
         exchange.getIn().setBody(activateDeviceResponse);
 
-        LOGGER.info("End:StubKoreDeviceActivateProcessor");
+        LOGGER.info("End:StubKoreActivateDeviceProcessor");
     }
 }

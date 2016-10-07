@@ -136,6 +136,8 @@ public class VerizonActivateDevicePreProcessor implements Processor {
         Message message = CommonUtil.setMessageHeader(exchange);
 
         message.setHeader(Exchange.HTTP_PATH, "/devices/actions/activate");
+        
+        LOGGER.info("End:VerizonActivateDevicePreProcessor");
 
     }
 

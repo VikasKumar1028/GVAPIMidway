@@ -9,45 +9,45 @@ import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.usageInformation.response.UsageInformationResponse;
 import com.gv.midway.pojo.usageInformation.response.UsageInformationResponseDataArea;
-import com.gv.midway.processor.activateDevice.StubVerizonActivateDeviceProcessor;
 
 public class StubVerizonRetrieveDeviceUsageHistoryProcessor implements
-        Processor {
+		Processor {
 
-    private static final Logger LOGGER = Logger.getLogger(StubVerizonActivateDeviceProcessor.class
-            .getName());
+	private static final Logger LOGGER = Logger
+			.getLogger(StubVerizonRetrieveDeviceUsageHistoryProcessor.class
+					.getName());
 
-    @Override
-    public void process(Exchange exchange) throws Exception {
+	@Override
+	public void process(Exchange exchange) throws Exception {
 
-        LOGGER.info("Begin::StubVerizonRetrieveDeviceUsageHistoryProcessor");
-        UsageInformationResponse usageInformationResponse = new UsageInformationResponse();
+		LOGGER.info("Begin::StubVerizonRetrieveDeviceUsageHistoryProcessor");
+		UsageInformationResponse usageInformationResponse = new UsageInformationResponse();
 
-        UsageInformationResponseDataArea usageInformationResponseDataArea = new UsageInformationResponseDataArea();
+		UsageInformationResponseDataArea usageInformationResponseDataArea = new UsageInformationResponseDataArea();
 
-        Header responseheader = new Header();
+		Header responseheader = new Header();
 
-        Response response = new Response();
+		Response response = new Response();
 
-        response.setResponseCode(IResponse.SUCCESS_CODE);
+		response.setResponseCode(IResponse.SUCCESS_CODE);
 
-        response.setResponseDescription("Retrieve Device Usage History");
-        response.setResponseStatus("SUCESS");
+		response.setResponseDescription("Retrieve Device Usage History");
+		response.setResponseStatus("SUCESS");
 
-        responseheader.setApplicationName("WEB");
-        responseheader.setRegion("USA");
-        responseheader.setTimestamp("2016-03-08T21:49:45");
-        responseheader.setOrganization("Grant Victor");
-        responseheader.setSourceName("VERIZON");
-        responseheader.setTransactionId("cde2131ksjd");
-        responseheader.setBsCarrier("VERIZON");
+		responseheader.setApplicationName("WEB");
+		responseheader.setRegion("USA");
+		responseheader.setTimestamp("2016-03-08T21:49:45");
+		responseheader.setOrganization("Grant Victor");
+		responseheader.setSourceName("VERIZON");
+		responseheader.setTransactionId("cde2131ksjd");
+		responseheader.setBsCarrier("VERIZON");
 
-        usageInformationResponse.setHeader(responseheader);
-        usageInformationResponse.setResponse(response);
-        usageInformationResponseDataArea.setTotalUsages(12314517L);
-        usageInformationResponse.setDataArea(usageInformationResponseDataArea);
+		usageInformationResponse.setHeader(responseheader);
+		usageInformationResponse.setResponse(response);
+		usageInformationResponseDataArea.setTotalUsages(12314517L);
+		usageInformationResponse.setDataArea(usageInformationResponseDataArea);
 
-        exchange.getIn().setBody(usageInformationResponse);
-        LOGGER.info("End::StubVerizonRetrieveDeviceUsageHistoryProcessor");
-    }
+		exchange.getIn().setBody(usageInformationResponse);
+		LOGGER.info("End::StubVerizonRetrieveDeviceUsageHistoryProcessor");
+	}
 }

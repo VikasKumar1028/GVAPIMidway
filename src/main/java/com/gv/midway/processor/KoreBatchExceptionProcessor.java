@@ -37,6 +37,7 @@ public class KoreBatchExceptionProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
+    	LOGGER.info("Begin:KoreBatchExceptionProcessor");
         Exception ex = (Exception) exchange
                 .getProperty(Exchange.EXCEPTION_CAUGHT);
 
@@ -88,6 +89,8 @@ public class KoreBatchExceptionProcessor implements Processor {
         deviceUsage.setJobId(jobDetail.getJobId());
 
         exchange.getIn().setBody(deviceUsage);
+        
+    	LOGGER.info("End:KoreBatchExceptionProcessor");
 
     }
 }

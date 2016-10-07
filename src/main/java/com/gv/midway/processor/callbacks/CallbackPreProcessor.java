@@ -30,7 +30,7 @@ public class CallbackPreProcessor implements Processor {
          * 
          * 
          * */
-        LOGGER.info(" Inside CallbackPreProcessor ");
+        LOGGER.info("Begin:CallbackPreProcessor");
         CallBackVerizonRequest req = (CallBackVerizonRequest) exchange.getIn()
                 .getBody(CallBackVerizonRequest.class);
 
@@ -79,6 +79,8 @@ public class CallbackPreProcessor implements Processor {
         }
 
         exchange.getIn().setBody(netSuiteCallBackProvisioningRequest);
+        
+        LOGGER.info("End:CallbackPreProcessor");
     }
 
 }

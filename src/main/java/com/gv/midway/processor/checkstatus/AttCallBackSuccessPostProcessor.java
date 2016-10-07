@@ -45,6 +45,7 @@ public class AttCallBackSuccessPostProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
+    	LOGGER.info("Begin:AttCallBackSuccessPostProcessor");
         LOGGER.info("ATT Jasper CallBack Success post processor");
 
         Message message = exchange.getIn();
@@ -248,6 +249,8 @@ public class AttCallBackSuccessPostProcessor implements Processor {
         
         LOGGER.info("success callback response for ATT Jasper..."
                 + exchange.getIn().getBody());
+        
+    	LOGGER.info("End:AttCallBackSuccessPostProcessor");
 
     }
 
