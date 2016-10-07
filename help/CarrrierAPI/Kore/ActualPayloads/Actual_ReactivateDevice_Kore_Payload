@@ -1,3 +1,9 @@
+*****************Header Informtion**********************************************************************
+
+Authorization:-Basic Z3JhbnR2aWN0b3JhcGk6akx1Y1dMQ0JxakhQ
+Header :-application/json
+ACCEPT_CONTENT_TYPE:-application/json
+
 ************************Actual_ReactivateDevice_Request_Payload********************************************
 {  
    "deviceNumber":"89014103277405945812"
