@@ -159,7 +159,7 @@ public interface IAdaptaionLayerService {
     @GET
     @Path("/devices/connections/getStatus")
     @Produces("application/json")
-    @ApiOperation(value = "Service to check Device in Session for Verizon")
+    @ApiOperation(value = "Service to check Device in Session for Verizon and AT&T Jasper")
     ConnectionStatusResponse deviceConnectionStatusRequest(
     		@ApiParam(value = "Region for the request.") 
             @QueryParam("region") final String region,
@@ -223,7 +223,7 @@ public interface IAdaptaionLayerService {
     @GET
     @Path("/devices/connections/session/info")
     @Produces("application/json")
-    @ApiOperation(value = "Service to check Device Session Begin and End information for Verizon")
+    @ApiOperation(value = "Service to check Device Session Begin and End information for Verizon and AT&T Jasper")
     SessionBeginEndResponse deviceSessionBeginEndResponse(
     		@ApiParam(value = "Region for the request.")
             @QueryParam("region") final String region,

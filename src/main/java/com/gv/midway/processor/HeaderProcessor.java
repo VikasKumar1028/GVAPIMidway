@@ -85,7 +85,7 @@ public class HeaderProcessor implements Processor {
                         .matches("(.*)reactivateDevice(.*)") && IConstant.BSCARRIER_SERVICE_VERIZON
                         .equalsIgnoreCase(derivedCarrierName))
                 || (exchange.getFromEndpoint().toString()
-                        .matches("(.*)retrieveDeviceUsageHistoryCarrier(.*)") && IConstant.BSCARRIER_SERVICE_KORE
+                        .matches("(.*)retrieveDeviceUsageHistoryCarrier(.*)") &&! IConstant.BSCARRIER_SERVICE_VERIZON
                         .equalsIgnoreCase(derivedCarrierName))
                 || (exchange.getFromEndpoint().toString()
                         .matches("(.*)getDeviceConnectionHistoryInfoDB(.*)") && IConstant.BSCARRIER_SERVICE_KORE
