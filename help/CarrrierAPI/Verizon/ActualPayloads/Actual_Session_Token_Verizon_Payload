@@ -1,0 +1,20 @@
+*****************Header Informtion**********************************************************************
+
+Authorization-Bearer 89ba225e1438e95bd05c3cc288d3591
+header: application/json
+
+
+************************Actual_Session_Token_Request_Payload********************************************
+
+{  
+   "username":"OPTCONNECTNUM2",
+   "password":"E5Vj!86c"
+}
+
+
+************************Actual_Session_Token_Response_Payload********************************************
+
+
+{"sessionToken": "95d56c9a-8d8b-45fc-a37b-b1d1b8658c39"}
+
+

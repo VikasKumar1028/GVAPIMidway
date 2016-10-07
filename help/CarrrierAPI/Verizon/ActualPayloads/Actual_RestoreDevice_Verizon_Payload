@@ -2,6 +2,7 @@
 
 Authorization-Bearer 89ba225e1438e95bd05c3cc288d3591
 header: application/json
+VZ-M2M-Token:
 
 ************************Actual_RestoreDevice_Request_Payload********************************************
 
