@@ -1005,8 +1005,8 @@ public class JobDaoImpl implements IJobDao {
         JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
         try {
 
-            Query searchJobQuery = new Query(Criteria.where("carrierName")
-                    .regex(jobDetail.getCarrierName(), "i"))
+            Query searchDeviceUsageQuery = new Query(Criteria.where(
+                    "carrierName").regex(jobDetail.getCarrierName(), "i"))
                     .addCriteria(Criteria.where("date").is(jobDetail.getDate()))
                     .addCriteria(Criteria.where("isValid").is(true))
                     .addCriteria(
@@ -1015,7 +1015,7 @@ public class JobDaoImpl implements IJobDao {
                             Criteria.where("jobId").in(jobDetail.getJobId()));
 
             List<DeviceUsage> deviceUsageList = mongoTemplate.find(
-                    searchJobQuery, DeviceUsage.class);
+                    searchDeviceUsageQuery, DeviceUsage.class);
 
             DeviceUsageView view = new DeviceUsageView();
             view.setDate(jobDetail.getDate());
@@ -1033,8 +1033,8 @@ public class JobDaoImpl implements IJobDao {
             // if map has different value as fetched object then update map
             // object and set the updated as true
 
-            
             if (existingRecords.isEmpty()) {
+
                 while (itr.hasNext()) {
                     DeviceUsage element = (DeviceUsage) itr.next();
                     DeviceUsageViewElement viewElement = new DeviceUsageViewElement();
@@ -1053,10 +1053,7 @@ public class JobDaoImpl implements IJobDao {
 
                 view.setElements(elements);
 
-                mongoTemplate.save(view);
             } else {
-
-                // do logic
 
                 while (itr.hasNext()) {
                     DeviceUsage deviceUsageElement = (DeviceUsage) itr.next();
@@ -1064,13 +1061,16 @@ public class JobDaoImpl implements IJobDao {
 
                     DeviceUsageViewElement mapElement = existingRecords
                             .get(deviceUsageElement.getNetSuiteId());
-                    // if Element not present adding the element to the hashmap                    
-                    
+                    // if Element not present adding the element to the hashmap
+
                     if (mapElement == null) {
-                        
-                        newViewElement.setDeviceId(deviceUsageElement.getDeviceId());
-                        newViewElement.setNetSuiteId(deviceUsageElement.getNetSuiteId());
-                        newViewElement.setDataUsed(deviceUsageElement.getDataUsed());
+
+                        newViewElement.setDeviceId(deviceUsageElement
+                                .getDeviceId());
+                        newViewElement.setNetSuiteId(deviceUsageElement
+                                .getNetSuiteId());
+                        newViewElement.setDataUsed(deviceUsageElement
+                                .getDataUsed());
                         newViewElement.setIsUpdatedElement(Boolean.TRUE);
                         newViewElement.setJobId(deviceUsageElement.getJobId());
                         newViewElement.setLastTimeStampUpdated(new Date());
@@ -1082,12 +1082,12 @@ public class JobDaoImpl implements IJobDao {
                     // if the map Element has different value than view element
                     else if (mapElement.getDataUsed() != deviceUsageElement
                             .getDataUsed()) {
-                        mapElement.setDataUsed(deviceUsageElement.getDataUsed());
+                        mapElement
+                                .setDataUsed(deviceUsageElement.getDataUsed());
                         mapElement.setJobId(deviceUsageElement.getJobId());
                         mapElement.setIsUpdatedElement(Boolean.TRUE);
                         mapElement.setLastTimeStampUpdated(new Date());
                     }
-                    
 
                 }
 
@@ -1098,9 +1098,24 @@ public class JobDaoImpl implements IJobDao {
 
                 view.setElements(updatedElements);
 
-                mongoTemplate.save(view);
+                // mongoTemplate.save(view);
+
+
 
             }
+            Query searchDeviceUsageViewQuery = new Query(Criteria.where(
+                    "carrierName").regex(jobDetail.getCarrierName(), "i"))
+                    .addCriteria(Criteria.where("date").is(
+                            jobDetail.getDate()));
+
+            Update update = new Update();
+
+            update.set("elements", view.getElements());
+            update.set("carrierName",jobDetail.getCarrierName() );
+            update.set("date",jobDetail.getDate());
+
+            mongoTemplate.upsert(searchDeviceUsageViewQuery, update,
+                    DeviceUsageView.class);
 
         }
 
@@ -1151,5 +1166,7 @@ public class JobDaoImpl implements IJobDao {
         return deviceUsageViewMap;
 
     }
+
+  
 
 }
