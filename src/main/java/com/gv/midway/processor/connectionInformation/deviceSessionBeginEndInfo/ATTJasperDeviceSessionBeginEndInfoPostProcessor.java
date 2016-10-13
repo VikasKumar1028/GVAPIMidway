@@ -57,8 +57,10 @@ public class ATTJasperDeviceSessionBeginEndInfoPostProcessor implements
 
 				deviceSession.setBegin(getsessionInfoType.get(i)
 						.getDateSessionStarted().toString());
-				deviceSession.setEnd(getsessionInfoType.get(i)
-						.getDateSessionEnded().toString());
+				if (getsessionInfoType.get(i).getDateSessionEnded()!=null) {
+					deviceSession.setEnd(getsessionInfoType.get(i)
+							.getDateSessionEnded().toString());
+				}
 
 			}
 			deviceSessions.add(deviceSession);
