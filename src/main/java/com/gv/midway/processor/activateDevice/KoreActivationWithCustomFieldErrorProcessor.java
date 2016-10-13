@@ -254,5 +254,7 @@ public class KoreActivationWithCustomFieldErrorProcessor implements Processor {
 	    LOGGER.info("error callback resposne to Kore for activation with Custom Field..."
 	                + exchange.getIn().getBody());
 	    
+	    LOGGER.info("End:KoreActivationWithCustomFieldErrorProcessor");
+	    
 	}
 }

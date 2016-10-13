@@ -180,18 +180,7 @@ public class KoreCheckStatusErrorProcessor implements Processor {
         LOGGER.info("body set for netSuiteCallBack........."
                 + exchange.getIn().getBody());
 
-        String oauthConsumerKey = newEnv
-                .getProperty("netSuite.oauthConsumerKey");
-        String oauthTokenId = newEnv.getProperty("netSuite.oauthTokenId");
-        String oauthTokenSecret = newEnv
-                .getProperty("netSuite.oauthTokenSecret");
-        String oauthConsumerSecret = newEnv
-                .getProperty("netSuite.oauthConsumerSecret");
-        String realm = newEnv.getProperty("netSuite.realm");
-        String endPoint = newEnv.getProperty("netSuite.endPoint");
-
-        String script;
-        String oauthHeader = null;
+       
 
         message.setHeader(Exchange.CONTENT_TYPE, "application/json");
         message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
@@ -199,48 +188,33 @@ public class KoreCheckStatusErrorProcessor implements Processor {
 
         LOGGER.info("request type for NetSuite CallBack error...." + requestType);
 
-        LOGGER.info("oauth info is....." + oauthConsumerKey + " " + oauthTokenId
-                + " " + endPoint + " " + oauthTokenSecret + " "
-                + oauthConsumerSecret + " " + realm);
-
-        script = "539";
-        exchange.setProperty("script", script);
+       
 
         switch (requestType) {
         case ACTIVATION:
             netSuiteCallBackProvisioningRequest
                     .setRequestType(NetSuiteRequestType.ACTIVATION);
-            oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
-                    oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                    oauthConsumerSecret, realm, script);
+           
             break;
         case DEACTIVATION:
             netSuiteCallBackProvisioningRequest
                     .setRequestType(NetSuiteRequestType.DEACTIVATION);
-            oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
-                    oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                    oauthConsumerSecret, realm, script);
+           
             break;
         case REACTIVATION:
             netSuiteCallBackProvisioningRequest
                     .setRequestType(NetSuiteRequestType.REACTIVATION);
-            oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
-                    oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                    oauthConsumerSecret, realm, script);
+          
             break;
         case RESTORE:
             netSuiteCallBackProvisioningRequest
                     .setRequestType(NetSuiteRequestType.RESTORATION);
-            oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
-                    oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                    oauthConsumerSecret, realm, script);
+           
             break;
         case SUSPEND:
             netSuiteCallBackProvisioningRequest
                     .setRequestType(NetSuiteRequestType.SUSPENSION);
-            oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
-                    oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                    oauthConsumerSecret, realm, script);
+          
             break;
         case CHANGESERVICEPLAN:
             ChangeDeviceServicePlansRequest changeDeviceServicePlansRequest = (ChangeDeviceServicePlansRequest) body;
@@ -258,25 +232,46 @@ public class KoreCheckStatusErrorProcessor implements Processor {
                     .setOldServicePlan(oldServicePlan);
             netSuiteCallBackProvisioningRequest
                     .setNewServicePlan(newServicePlan);
-            oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
-                    oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                    oauthConsumerSecret, realm, script);
+          
             break;
         case CHANGECUSTOMFIELDS:
             netSuiteCallBackProvisioningRequest
                     .setRequestType(NetSuiteRequestType.CUSTOM_FIELDS);
-            oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
-                    oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                    oauthConsumerSecret, realm, script);
+           
             break;
         default:
             break;
         }
 
+       
+        
+        String oauthConsumerKey = newEnv
+                .getProperty("netSuite.oauthConsumerKey");
+        String oauthTokenId = newEnv.getProperty("netSuite.oauthTokenId");
+        String oauthTokenSecret = newEnv
+                .getProperty("netSuite.oauthTokenSecret");
+        String oauthConsumerSecret = newEnv
+                .getProperty("netSuite.oauthConsumerSecret");
+        String realm = newEnv.getProperty("netSuite.realm");
+        String endPoint = newEnv.getProperty("netSuite.endPoint");
+
+        String script="539";
+        
+        LOGGER.info("oauth info is....." + oauthConsumerKey + " " + oauthTokenId
+                + " " + endPoint + " " + oauthTokenSecret + " "
+                + oauthConsumerSecret + " " + realm);
+        
+        
+        String oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
+                oauthConsumerKey, oauthTokenId, oauthTokenSecret,
+                oauthConsumerSecret, realm, script);
+         
         message.setHeader("Authorization", oauthHeader);
         exchange.setProperty("script", script);
         message.setHeader(Exchange.HTTP_PATH, null);
         message.setBody(netSuiteCallBackProvisioningRequest);
+        
+        exchange.setProperty("script", script);
         exchange.setPattern(ExchangePattern.InOut);
         LOGGER.info("error callback resposne for Kore..."
                 + exchange.getIn().getBody());

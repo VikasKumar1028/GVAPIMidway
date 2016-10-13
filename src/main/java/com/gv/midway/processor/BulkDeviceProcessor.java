@@ -63,19 +63,19 @@ public class BulkDeviceProcessor implements Processor {
 
 		batchDeviceResponse.setDataArea(batchDeviceResponseDataArea);
 
-		LOGGER.info("batch device resposne value is........"
+		LOGGER.info("batch device response value is........"
 				+ response.toString());
 
-		LOGGER.info("batch device resposne header value is........"
+		LOGGER.info("batch device response header value is........"
 				+ responseheader.toString());
 
 		LOGGER.info("batch device resposne is........"
 				+ batchDeviceResponse.toString());
 
-		LOGGER.info("batch device resposne  resposne value is........"
+		LOGGER.info("batch device response  response value is........"
 				+ batchDeviceResponse.getHeader().toString());
 
-		LOGGER.info("batch device resposne header header value is........"
+		LOGGER.info("batch device response header header value is........"
 				+ batchDeviceResponse.getResponse().toString());
 
 		LOGGER.info("******************Bulk device Processor body before********************"
