@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.camel.Exchange;
 
 import com.gv.midway.pojo.server.ServerDetail;
+import com.gv.midway.pojo.usageInformation.response.DevicesUsageByDayAndCarrier;
 
 public interface IJobDao {
 
@@ -50,5 +51,6 @@ public interface IJobDao {
     
     public void updateDeviceUsageView(Exchange exchange);
     
+    public List<DevicesUsageByDayAndCarrier> fetchDeviceUsageView(Exchange exchange);
 
 }

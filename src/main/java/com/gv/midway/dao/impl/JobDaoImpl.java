@@ -39,9 +39,12 @@ import com.gv.midway.pojo.deviceHistory.DeviceConnection;
 import com.gv.midway.pojo.deviceHistory.DeviceUsage;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.job.JobDetail;
+import com.gv.midway.pojo.job.JobParameter;
 import com.gv.midway.pojo.job.JobStatus;
 import com.gv.midway.pojo.notification.DeviceOverageNotification;
 import com.gv.midway.pojo.server.ServerDetail;
+import com.gv.midway.pojo.usageInformation.request.DevicesUsageByDayAndCarrierRequest;
+import com.gv.midway.pojo.usageInformation.response.DevicesUsageByDayAndCarrier;
 import com.gv.midway.pojo.usageView.DeviceUsageView;
 import com.gv.midway.pojo.usageView.DeviceUsageViewElement;
 import com.gv.midway.utility.CommonUtil;
@@ -1166,6 +1169,79 @@ public class JobDaoImpl implements IJobDao {
         return deviceUsageViewMap;
 
     }
+
+    @Override
+	public List<DevicesUsageByDayAndCarrier> fetchDeviceUsageView(
+			Exchange exchange) {
+		// TODO Auto-generated method stub
+
+		DevicesUsageByDayAndCarrierRequest devicesUsageByDayAndCarrierRequest = new DevicesUsageByDayAndCarrierRequest();
+
+		Boolean isUpdatedElementfalse = false;
+		Boolean isUpdatedElementtrue = true;
+
+		LOGGER.info("Inside fetchDeviceUsageView .....................");
+		DevicesUsageByDayAndCarrier deviceUsageResponse = null;
+
+		List<DevicesUsageByDayAndCarrier> deviceUsagelist = new ArrayList<DevicesUsageByDayAndCarrier>();
+
+		JobParameter req = (JobParameter) exchange.getIn().getBody();
+
+		List<DeviceUsageView> deviceUsageViewList = null;
+
+		try {
+
+			Query searchJobQuery = new Query(Criteria.where("carrierName").is(
+					req.getCarrierName())).addCriteria(Criteria.where("date")
+					.is(req.getDate()));
+
+			deviceUsageViewList = mongoTemplate.find(searchJobQuery,
+					DeviceUsageView.class);
+
+			if (deviceUsageViewList.size() != 0) {
+
+				deviceUsageResponse = new DevicesUsageByDayAndCarrier();
+
+				ArrayList<DeviceUsageViewElement> list = new ArrayList<DeviceUsageViewElement>();
+
+				DeviceUsageView deviceUasgesview = deviceUsageViewList.get(0);
+
+				DeviceUsageViewElement[] elements = deviceUasgesview
+						.getElements();
+
+				LOGGER.info("elements:" + elements.length);
+
+				for (int i = 0; i < elements.length; i++)
+
+				{
+					// request parameter is false
+					// add all
+					// if request paramter is true
+					// fetch with updated flag as true
+
+					if (elements[i].getIsUpdatedElement() == isUpdatedElementfalse) {
+
+						deviceUsageResponse.setDataUsed(elements[i]
+								.getDataUsed());
+						deviceUsageResponse.setNetSuiteId(elements[i]
+								.getNetSuiteId());
+						deviceUsagelist.add(deviceUsageResponse);
+					}
+
+				}
+
+			}
+
+		}
+		
+		catch (Exception e) {
+			LOGGER.info("Error In fetchDeviceUsageView-----------------------------"
+					+ e);
+
+		}
+		return deviceUsagelist;
+
+	}
 
   
 

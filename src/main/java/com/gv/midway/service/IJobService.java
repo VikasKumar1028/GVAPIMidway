@@ -6,6 +6,7 @@ import org.apache.camel.Exchange;
 
 import com.gv.midway.constant.JobName;
 import com.gv.midway.constant.JobType;
+import com.gv.midway.pojo.usageInformation.response.DevicesUsageByDayAndCarrier;
 
 public interface IJobService {
 
@@ -44,5 +45,7 @@ public interface IJobService {
     public void checkTimeOutDevicesTransactionFailure(Exchange exchange);
     
     public void updateDeviceUsageView(Exchange exchange);
+    
+    public List<DevicesUsageByDayAndCarrier> fetchDeviceUsageView(Exchange exchange);
 
 }

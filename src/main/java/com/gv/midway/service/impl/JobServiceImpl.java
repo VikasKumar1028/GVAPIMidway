@@ -22,6 +22,7 @@ import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.job.JobDetail;
 import com.gv.midway.pojo.notification.DeviceOverageNotification;
 import com.gv.midway.pojo.server.ServerDetail;
+import com.gv.midway.pojo.usageInformation.response.DevicesUsageByDayAndCarrier;
 import com.gv.midway.service.IJobService;
 import com.gv.midway.utility.CommonUtil;
 
@@ -367,5 +368,12 @@ public class JobServiceImpl implements IJobService {
     public void updateDeviceUsageView(Exchange exchange){
         iJobDao.updateDeviceUsageView( exchange);
     }
+
+	@Override
+	public List<DevicesUsageByDayAndCarrier> fetchDeviceUsageView(
+			Exchange exchange) {
+		return iJobDao.fetchDeviceUsageView(exchange);
+
+	}
 
 }
