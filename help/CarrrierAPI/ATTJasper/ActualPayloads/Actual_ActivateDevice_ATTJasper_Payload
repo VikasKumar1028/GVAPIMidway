@@ -1,3 +1,6 @@
+*********************Target URL*************************************************************************
+
+
 ************************Actual_ActivateDevice_Request_Payload********************************************
 
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sch="http://api.jasperwireless.com/ws/schema">
