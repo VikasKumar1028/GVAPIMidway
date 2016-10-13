@@ -1,7 +1,8 @@
 *********************Target URL*************************************************************************
-
+https://api.jasper.com/ws/service/terminal
 
 ************************Actual_CustomFieldsDevice_Request_Payload********************************************
+
 
 
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sch="http://api.jasperwireless.com/ws/schema">
@@ -18,15 +19,16 @@
          <sch:messageId>1234</sch:messageId>
          <sch:version>59.2</sch:version>
          <sch:licenseKey>a56f59ce-5ec7-4001-8cf3-cc493a3efb5e</sch:licenseKey>
-         <sch:iccid>89011702272013902595</sch:iccid>
+         <sch:iccid>89011702272013902587</sch:iccid>
          <!--Optional:-->
         
          <!--Optional:-->
-         <sch:targetValue>17</sch:targetValue>
-         <sch:changeType>CustomField1</sch:changeType>
+         <sch:targetValue>customField1</sch:targetValue>
+         <sch:changeType>17</sch:changeType>
       </sch:EditTerminalRequest>
    </soapenv:Body>
 </soapenv:Envelope>
+e>
 
 
 ************************Actual_CustomFieldsDeviceResponse_Payload********************************************
