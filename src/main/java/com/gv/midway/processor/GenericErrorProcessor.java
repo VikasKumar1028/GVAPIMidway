@@ -3,7 +3,6 @@ package com.gv.midway.processor;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
-
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.CarrierProvisioningDeviceResponse;
@@ -22,9 +21,8 @@ import com.gv.midway.pojo.usageInformation.response.UsageInformationResponse;
 public class GenericErrorProcessor implements Processor {
 
 	private static final Logger LOGGER = Logger
-			.getLogger(VerizonGenericExceptionProcessor.class.getName());
+			.getLogger(GenericErrorProcessor.class.getName());
 
-	
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
@@ -33,7 +31,6 @@ public class GenericErrorProcessor implements Processor {
 				+ exchange.getFromEndpoint().toString());
 
 		Response response = new Response();
-
 
 		if (exchange.getProperty(IConstant.RESPONSE_CODE) != null) {
 
@@ -59,7 +56,7 @@ public class GenericErrorProcessor implements Processor {
 		}
 
 		LOGGER.info("endpoint is......" + exchange.getFromEndpoint().toString());
-	        
+
 		switch (exchange.getFromEndpoint().toString()) {
 		case "Endpoint[direct://deviceInformationCarrier]":
 			DeviceInformationResponse deviceInformationResponse = new DeviceInformationResponse();
@@ -158,12 +155,12 @@ public class GenericErrorProcessor implements Processor {
 			connectionInformationMidwayResponse.setResponse(response);
 			exchange.getIn().setBody(connectionInformationMidwayResponse);
 			break;
-		 case "Endpoint[direct://getDevicesUsageByDayAndCarrierInfoDB]":
-             DevicesUsageByDayAndCarrierResponse devicesUsageByDayAndCarrierResponse = new DevicesUsageByDayAndCarrierResponse();
-             devicesUsageByDayAndCarrierResponse.setHeader(responseHeader);
-             devicesUsageByDayAndCarrierResponse.setResponse(response);
-             exchange.getIn().setBody(devicesUsageByDayAndCarrierResponse);
-             break;
+		case "Endpoint[direct://getDevicesUsageByDayAndCarrierInfoDB]":
+			DevicesUsageByDayAndCarrierResponse devicesUsageByDayAndCarrierResponse = new DevicesUsageByDayAndCarrierResponse();
+			devicesUsageByDayAndCarrierResponse.setHeader(responseHeader);
+			devicesUsageByDayAndCarrierResponse.setResponse(response);
+			exchange.getIn().setBody(devicesUsageByDayAndCarrierResponse);
+			break;
 		default:
 			break;
 		}
