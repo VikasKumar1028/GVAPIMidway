@@ -62,7 +62,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 	@Override
 	public UpdateDeviceResponse updateDeviceDetails(SingleDevice device) {
 
-		DeviceInformation deviceInfomation = null;
+		DeviceInformation deviceInformation = null;
 		try {
 
 			DeviceInformation deviceInformationToUpdate = device.getDataArea()
@@ -89,8 +89,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 			Query searchDeviceQuery = new Query(Criteria.where("netSuiteId")
 					.is(device.getDataArea().getDevice().getNetSuiteId()));
 
-			deviceInfomation = (DeviceInformation) mongoTemplate.findOne(
-					searchDeviceQuery, DeviceInformation.class);
+			deviceInformation = mongoTemplate.findOne(searchDeviceQuery, DeviceInformation.class);
 
 			deviceInformationToUpdate.setLastUpdated(new Date());
 
@@ -105,7 +104,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 			updateDeviceResponse.setHeader(header);
 			updateDeviceResponse.setResponse(response);
 
-			if (deviceInfomation == null) {
+			if (deviceInformation == null) {
 
 				mongoTemplate.insert(deviceInformationToUpdate);
 
@@ -113,7 +112,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 			else {
 				deviceInformationToUpdate
-						.setMidwayMasterDeviceId(deviceInfomation
+						.setMidwayMasterDeviceId(deviceInformation
 								.getMidwayMasterDeviceId());
 
 				mongoTemplate.save(deviceInformationToUpdate);
@@ -492,8 +491,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 			
 			int deviceUsageSize=0;
 			
-			if(deviceUsage!=null)
-			{
+			if (deviceUsage != null) {
 				
 				deviceUsageSize = deviceUsage.size();
 
@@ -502,17 +500,13 @@ public class DeviceDaoImpl implements IDeviceDao {
 				
 			}
 
-			if (deviceUsageSize == 0)
-
-			{
+			if (deviceUsageSize == 0) {
 
 				response.setResponseCode(IResponse.NO_DATA_FOUND_CODE);
 				response.setResponseDescription(IResponse.ERROR_DESCRIPTION_NODATA_DEVCIEINFO_MIDWAYDB);
 				response.setResponseStatus(IResponse.ERROR_MESSAGE);
 				usageInformationMidwayResponse.setResponse(response);
-			}
-
-			else {
+			} else {
 
 				response.setResponseCode(IResponse.SUCCESS_CODE);
 				response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_MIDWAYDB);
@@ -520,23 +514,23 @@ public class DeviceDaoImpl implements IDeviceDao {
 				usageInformationMidwayResponse.setResponse(response);
 
 				LOGGER.info("deviceUsage        " + deviceUsage.size());
-				List<DeviceUsages> deviceDateBasedUasgelist = new ArrayList<DeviceUsages>();
+				List<DeviceUsages> deviceDateBasedUsageList = new ArrayList<DeviceUsages>();
 
-				for (DeviceUsage deviceUsagevalue : deviceUsage) {
+				for (DeviceUsage deviceUsageValue : deviceUsage) {
 
-					DeviceUsages deviceDateBasedUasge = new DeviceUsages();
-					deviceDateBasedUasge.setDataUsed(deviceUsagevalue
+					DeviceUsages deviceDateBasedUsage = new DeviceUsages();
+					deviceDateBasedUsage.setDataUsed(deviceUsageValue
 							.getDataUsed());
-					deviceDateBasedUasge.setDate(deviceUsagevalue.getDate());
+					deviceDateBasedUsage.setDate(deviceUsageValue.getDate());
 
-					deviceDateBasedUasgelist.add(deviceDateBasedUasge);
+					deviceDateBasedUsageList.add(deviceDateBasedUsage);
 				}
 				
 				
 				// Sort the deviceEventsList on the basis of time event occurred
 				// at
 
-				Collections.sort(deviceDateBasedUasgelist,
+				Collections.sort(deviceDateBasedUsageList,
 						new Comparator<DeviceUsages>() {
 							@Override
 							public int compare(DeviceUsages a, DeviceUsages b) {
@@ -547,7 +541,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 						});
 
 				usageInformationResponseMidwayDataArea
-						.setDeviceUsages(deviceDateBasedUasgelist);
+						.setDeviceUsages(deviceDateBasedUsageList);
 				
 				
 
@@ -559,7 +553,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 		} catch (Exception e) {
 
-			LOGGER.error("Exception ex" + CommonUtil.getStackTrace(e));
+			LOGGER.error("Exception ex " + CommonUtil.getStackTrace(e));
 			response.setResponseCode(IResponse.DB_ERROR_CODE);
 			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB);
 			response.setResponseStatus(IResponse.ERROR_MESSAGE);
@@ -568,8 +562,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 			UsageInformationResponseMidwayDataArea usageInformationResponseMidwayDataAreas = new UsageInformationResponseMidwayDataArea();
 
-			usageInformationMidwayResponse
-					.setDataArea(usageInformationResponseMidwayDataAreas);
+			usageInformationMidwayResponse.setDataArea(usageInformationResponseMidwayDataAreas);
 
 			return usageInformationMidwayResponse;
 		}
@@ -722,18 +715,18 @@ public class DeviceDaoImpl implements IDeviceDao {
 								.getEvent();
 
 						LOGGER.info("device event size for Date "
-								+ deviceConnection.getDate() + " is"
+								+ deviceConnection.getDate() + " is "
 								+ deviceEventArr.length);
 
 						for (DeviceEvent deviceEvent : deviceEventArr) {
 							String eventType = deviceEvent.getEventType();
-							String occuredAt = deviceEvent.getOccurredAt();
+							String occurredAt = deviceEvent.getOccurredAt();
 							String byteUsed = deviceEvent.getBytesUsed();
 
 							DeviceEvents deviceEvents = new DeviceEvents();
 							deviceEvents.setBytesUsed(byteUsed);
 							deviceEvents.setEventType(eventType);
-							deviceEvents.setOccurredAt(occuredAt);
+							deviceEvents.setOccurredAt(occurredAt);
 
 							deviceEventsList.add(deviceEvents);
 
@@ -765,7 +758,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 		} catch (Exception e) {
 
-			LOGGER.error("Exception ex" + CommonUtil.getStackTrace(e));
+			LOGGER.error("Exception ex " + CommonUtil.getStackTrace(e));
 			response.setResponseCode(IResponse.DB_ERROR_CODE);
 			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB);
 			response.setResponseStatus(IResponse.ERROR_MESSAGE);
@@ -794,7 +787,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 				.setHeader(devicesUsageByDayAndCarrierRequest.getHeader());
 		Response response = new Response();
 		
-		if (date!=null) {
+		if (date != null) {
 
 			if (!(CommonUtil.isValidDateFormat(date))) {
 				LOGGER.info(" Date that you provided is invalid");
@@ -824,7 +817,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 			
 			 
-			LOGGER.info("aggergation result is......"+results);
+			LOGGER.info("aggregation result is......" + results);
 
 			if (results == null || results.getMappedResults().size()==0)
 
@@ -843,7 +836,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 				response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
 				devicesUsageByDayAndCarrierResponse.setResponse(response);
 				
-				LOGGER.info("size of result is     ......"+results.getMappedResults().size());
+				LOGGER.info("size of result is     ......" + results.getMappedResults().size());
 				
 				
 				DevicesUsageByDayAndCarrierResponseDataArea devicesUsageByDayAndCarrierResponseDataArea = new DevicesUsageByDayAndCarrierResponseDataArea();
@@ -861,7 +854,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 		} catch (Exception e) {
 
-			LOGGER.error("Exception ex" + CommonUtil.getStackTrace(e));
+			LOGGER.error("Exception ex " + CommonUtil.getStackTrace(e));
 			response.setResponseCode(IResponse.DB_ERROR_CODE);
 			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB);
 			response.setResponseStatus(IResponse.ERROR_MESSAGE);

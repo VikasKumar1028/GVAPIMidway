@@ -1,5 +1,6 @@
 package com.gv.midway.router;
 
+import com.gv.midway.exception.InvalidParameterException;
 import org.apache.log4j.Logger;
 
 import com.gv.midway.constant.IConstant;
@@ -10,7 +11,7 @@ public class JobCarrierRouter {
 
    private static final Logger LOGGER = Logger.getLogger(JobCarrierRouter.class);
 
-    public String routeCarrierJob(DeviceInformation deviceInformation) {
+    public String routeCarrierJob(DeviceInformation deviceInformation) throws InvalidParameterException {
 
         LOGGER.info("Inside the Carrier Job Router");
         if (IConstant.BSCARRIER_SERVICE_KORE.equals(CommonUtil
@@ -23,7 +24,6 @@ public class JobCarrierRouter {
         } else {
             return "";
         }
-
     }
 
 }

@@ -144,6 +144,8 @@ public interface IConstant {
     static String KORE_USAGE_TIMER48 = "kore.usagetimer48";
 
     static String ATT_CALLBACK_STATUS = "attCallBackStatus";
+    
+    static String NETSUITE_CALLBACK_TIMER= "callBack.CronTimer";
 
     static String ATTJASPER_CUSTOM_FIELD_DEC = "attJasperCustomFieldDescription";
 }

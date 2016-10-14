@@ -7,13 +7,13 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 
 public class ActivateDevices {
 
-    @ApiModelProperty(value = "Having type and value of device identifier", required = true)
+	@ApiModelProperty(value = "Having type and value of device identifier.", required = true)
     private ActivateDeviceId[] deviceIds;
 
-    @ApiModelProperty(value = "Device NetSuite Id", required = true)
+    @ApiModelProperty(value = "Device NetSuite Id.", required = true)
     private Integer netSuiteId;
 
-    @ApiModelProperty(value = "Service Plan that that device belongs to.In Case of Verizon or EAP code for Kore", required = true)
+    @ApiModelProperty(value = "Service Plan that that device belongs to in Case of Verizon or EAP code for Kore.", required = true)
     private String servicePlan;
 
     @ApiModelProperty(value = "The custom fields and values that have been set for the device.")

@@ -10,23 +10,16 @@ import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.Clock;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -44,7 +37,9 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.cxf.binding.soap.SoapFault;
@@ -58,16 +53,16 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IEndPoints;
 import com.gv.midway.constant.IResponse;
+import com.gv.midway.exception.InvalidParameterException;
 import com.gv.midway.pojo.job.JobParameter;
 import com.gv.midway.pojo.job.JobinitializedResponse;
 import com.gv.midway.pojo.transaction.Transaction;
 import com.gv.midway.pojo.verizon.DeviceId;
 
-public class CommonUtil {
+public class CommonUtil<J extends JsonSerialize> {
 
     private static final Logger LOGGER = Logger.getLogger(CommonUtil.class);
 
@@ -134,7 +129,7 @@ public class CommonUtil {
             ip = InetAddress.getLocalHost();
         } catch (UnknownHostException e) {
             LOGGER.error("Exception ex: " + e);
-            return "Defulat_IP";
+            return "Default_IP";
         }
 
         return ip.toString();
@@ -158,7 +153,7 @@ public class CommonUtil {
      * @param carrierName
      * @return
      */
-    public static String getDerivedCarrierName(String carrierName) {
+    public static String getDerivedCarrierName(String carrierName) throws InvalidParameterException {
 
         if (carrierName.equalsIgnoreCase("VERIZON")) {
 
@@ -173,8 +168,7 @@ public class CommonUtil {
 
             return "ATTJASPER";
         }
-
-        return null;
+        throw new InvalidParameterException("402", "Unsupported bsCarrier field value.  Must pass [Verizon, Kore, or AttJasper].");
     }
 
     /**
@@ -188,19 +182,12 @@ public class CommonUtil {
 
         LOGGER.info("endpoint is......." + endPoint);
 
-        for (Iterator<String> iterator = endPointList.iterator(); iterator
-                .hasNext();) {
-            String element = iterator.next();
-
+        for (String element : endPointList) {
             if (endPoint.contains(element)) {
-
                 return true;
             }
-
         }
-
         return false;
-
     }
 
     /**
@@ -377,7 +364,7 @@ public class CommonUtil {
      * Method takes the Billing Day(eg 10 and Creates the billing Start date
      * yyyy-MM-dd)
      * 
-     * @param billDay
+     * @param billingDay
      * @param jobDate
      * @return
      */
@@ -419,7 +406,7 @@ public class CommonUtil {
                     int calculatedDay = Integer.parseInt(billingStartDate
                             .substring(8));
 
-                    LOGGER.info("CAlculated Day " + calculatedDay);
+                    LOGGER.info("Calculated Day " + calculatedDay);
 
                     if ((calculatedDay < noOfLastDay)
                             && (Integer.parseInt(billingDay) < noOfLastDay)) {
@@ -446,7 +433,7 @@ public class CommonUtil {
             }
 
         } catch (Exception ex) {
-            LOGGER.error("................Error in Setting Job Dates" + ex);
+            LOGGER.error("................Error in Setting Job Dates. Cause: " + ex);
         }
 
         return billingStartDate;
@@ -479,8 +466,9 @@ public class CommonUtil {
     }
 
     /**
-     * 
-     * @param exchange
+     *
+     * @param username
+     * @param password
      * @return
      */
 
@@ -764,10 +752,9 @@ public class CommonUtil {
         }
     }
 
-    public static XMLGregorianCalendar getCurrentXMLGregorianDateTimeUTC() throws DatatypeConfigurationException {
-        LocalDateTime currentUTCTime = LocalDateTime.now(Clock.systemUTC()); // using UTC timezone
-        XMLGregorianCalendar xmlDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(currentUTCTime.toString());
-        return xmlDate;
+    public static String toJsonString(Object objectWithJsonSerializeAnnotation) throws Exception {
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        return ow.writeValueAsString(objectWithJsonSerializeAnnotation);
     }
 
 }

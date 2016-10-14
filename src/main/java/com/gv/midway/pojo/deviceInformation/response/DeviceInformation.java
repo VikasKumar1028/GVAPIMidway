@@ -17,36 +17,36 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 @Document(collection = "deviceInfo")
 public class DeviceInformation {
 
-    @ApiModelProperty(value = "An unique identifier (Primary key) for device in Midway")
+    @ApiModelProperty(value = "An unique identifier (Primary key) for device in Midway.")
     @JsonIgnore
     @Id
     private String midwayMasterDeviceId;
 
-    @ApiModelProperty(value = "An identifier from NetSuite system")
+    @ApiModelProperty(value = "An identifier from NetSuite system.")
     private Integer netSuiteId;
 
-    @ApiModelProperty(value = "value of the device identifer.Cell information")
+    @ApiModelProperty(value = "Value of the device identifier. Cell information.")
     private Cell cell;
 
-    @ApiModelProperty(value = "Bs Id of the device")
+    @ApiModelProperty(value = "Bs Id of the device.")
     private String bs_id;
 
-    @ApiModelProperty(value = "serial number of the device")
+    @ApiModelProperty(value = "Serial number of the device.")
     private String serial_num;
 
-    @ApiModelProperty(value = "mac address of the device")
+    @ApiModelProperty(value = "Mac address of the device.")
     private String mac;
 
-    @ApiModelProperty(value = "business carrier reseller information of the device")
+    @ApiModelProperty(value = "Business carrier reseller information of the device.")
     private String bs_carrier;
 
-    @ApiModelProperty(value = "business service plan of the device for end customer.")
+    @ApiModelProperty(value = "Business service plan of the device for end customer.")
     private Bs_plan bs_plan;
 
-    @ApiModelProperty(value = "TimeStamp for latest devcie Information updated.")
+    @ApiModelProperty(value = "TimeStamp for latest device Information updated.")
     private Date lastUpdated;
 
-    @ApiModelProperty(value = "State of the device.like active,suspended,deactivate,restore")
+    @ApiModelProperty(value = "State of the device. i.e. Active, Suspended, Deactivate, Restore")
     private String state;
 
     @ApiModelProperty(value = "The current service plan of the device.")
@@ -61,82 +61,82 @@ public class DeviceInformation {
     @ApiModelProperty(value = "All identifiers for the device.")
     private DeviceId[] deviceIds;
 
-    @ApiModelProperty(value = "Any extended attributes for the device, as Key .It will only in case of Verizon")
+    @ApiModelProperty(value = "Any extended attributes for the device, as Key. It will only in case of Verizon.")
     private ExtendedAttributes[] extendedAttributes;
 
-    @ApiModelProperty(value = "The billing account for which a list of devices will be returned.It will only in case of Verizon")
+    @ApiModelProperty(value = "The billing account for which a list of devices will be returned. It will only in case of Verizon.")
     private String accountName;
 
-    @ApiModelProperty(value = "The date that the device's current billing cycle ends.It will only in case of Verizon")
+    @ApiModelProperty(value = "The date that the device's current billing cycle ends. It will only in case of Verizon.")
     private String billingCycleEndDate;
 
-    @ApiModelProperty(value = "The device group that the device belongs to.It will only in case of Verizon")
+    @ApiModelProperty(value = "The device group that the device belongs to. It will only in case of Verizon.")
     private String groupName;
 
-    @ApiModelProperty(value = "True if the device is connected; false if it is not.It will only in case of Verizon")
+    @ApiModelProperty(value = "True if the device is connected; false if it is not. It will only in case of Verizon.")
     private Boolean isConnected;
 
-	@ApiModelProperty(value = "The date and time that the device was added to the system.It will only in case of Verizon")
+	@ApiModelProperty(value = "The date and time that the device was added to the system. It will only in case of Verizon.")
     private String createdAt;
 
-    @ApiModelProperty(value = "The user who last activated the device.It will only in case of Verizon")
+    @ApiModelProperty(value = "The user who last activated the device. It will only in case of Verizon.")
     private String lastActivationBy;
 
-    @ApiModelProperty(value = "The date and time that the device was last activated.It will only in case of Verizon")
+    @ApiModelProperty(value = "The date and time that the device was last activated. It will only in case of Verizon.")
     private String lastActivationDate;
 
-    @ApiModelProperty(value = "If the device is not connected, this indicates the last known connection date.It will only in case of Verizon")
+    @ApiModelProperty(value = "If the device is not connected, this indicates the last known connection date. It will only in case of Verizon.")
     private String lastConnectionDate;
 
-    @ApiModelProperty(value = "Voice dispatch number.It will be only in case of Kore")
+    @ApiModelProperty(value = "Voice dispatch number. It will be only in case of Kore.")
     private String voiceDispatchNumber;
 
-    @ApiModelProperty(value = "currentSMSPlan for the device.It will be only in case of Kore")
+    @ApiModelProperty(value = "CurrentSMSPlan for the device. It will be only in case of Kore.")
     private String currentSMSPlan;
 
-    @ApiModelProperty(value = "futureSMSPlan for the device.It will be only in case of Kore")
+    @ApiModelProperty(value = "futureSMSPlan for the device. It will be only in case of Kore.")
     private String futureSMSPlan;
 
-    @ApiModelProperty(value = "FutureDataPlan of the device.It will be only in case of Kore")
+    @ApiModelProperty(value = "FutureDataPlan of the device. It will be only in case of Kore.")
     private String futureDataPlan;
 
-    @ApiModelProperty(value = "dailySMSThreshold for the device.It will be only in case of Kore")
+    @ApiModelProperty(value = "The dailySMSThreshold for the device. It will be only in case of Kore.")
     private Integer dailySMSThreshold;
 
-    @ApiModelProperty(value = "Daily Data Threshold of the device.It will be only in case of Kore")
+    @ApiModelProperty(value = "Daily Data Threshold of the device. It will be only in case of Kore.")
     private Integer dailyDataThreshold;
 
-    @ApiModelProperty(value = "monthly SMS Threshold of the device.It will be only in case of Kore")
+    @ApiModelProperty(value = "Monthly SMS Threshold of the device. It will be only in case of Kore.")
     private Integer monthlySMSThreshold;
 
-    @ApiModelProperty(value = "monthly Data Threshold of the device.It will be only in case of Kore")
+    @ApiModelProperty(value = "Monthly Data Threshold of the device. It will be only in case of Kore.")
     private Integer monthlyDataThreshold;
 
-    @ApiModelProperty(value = "Last year history details for the device.It will be only in case of Kore")
+    @ApiModelProperty(value = "Last year history details for the device. It will be only in case of Kore.")
     private String[] lstHistoryOverLastYear;
 
-    @ApiModelProperty(value = "last Features of the device.It will be only in case of Kore")
+    @ApiModelProperty(value = "Last Features of the device. It will be only in case of Kore.")
     private String[] lstFeatures;
 
     @ApiModelProperty(value = "Last Extended Features of the device.")
     private String[] lstExtFeatures;
     
-    @ApiModelProperty(value = "month to date Data usage.Only for the ATT japser devices.")
+    @ApiModelProperty(value = "Month to date Data usage. Only for the ATT jasper devices.")
     private String monthToDateDataUsage; 
    
-	@ApiModelProperty(value = "month to date Voice usage.Only for the ATT japser devices.")
+	@ApiModelProperty(value = "Month to date Voice usage. Only for the ATT jasper devices.")
     private String monthToDateVoiceUsage;
 	
-	@ApiModelProperty(value = "The opeartor custom fields and values.Only for the ATT japser devices.")
-	private CustomFields[] opeartorCustomFields;
+	@ApiModelProperty(value = "The operator custom fields and values.Only for the ATT jasper devices.")
+	private CustomFields[] operatorCustomFields;
 	
-	@ApiModelProperty(value = "The customer custom fields and values.Only for the ATT japser devices.")
+	@ApiModelProperty(value = "The customer custom fields and values.Only for the ATT jasper devices.")
 	private CustomFields[] customerCustomFields;
 	
-	@ApiModelProperty(value = "Date when device was activated.Only for the ATT japser devices.")
+	@ApiModelProperty(value = "Date when device was activated.Only for the ATT jasper devices.")
 	private String dateActivated;
 
-	@ApiModelProperty(value = "Date when device is modified.Only for the ATT japser devices.")
+	@ApiModelProperty(value = "Date when device is modified.Only for the ATT jasper devices.")
 	private String dateModified;
 	
 	public String getDateActivated() {
@@ -155,12 +155,12 @@ public class DeviceInformation {
 		this.dateModified = dateModified;
 	}
     
-	public CustomFields[] getOpeartorCustomFields() {
-		return opeartorCustomFields;
+	public CustomFields[] getOperatorCustomFields() {
+		return operatorCustomFields;
 	}
 
-	public void setOpeartorCustomFields(CustomFields[] opeartorCustomFields) {
-		this.opeartorCustomFields = opeartorCustomFields;
+	public void setOpeartorCustomFields(CustomFields[] operatorCustomFields) {
+		this.operatorCustomFields = operatorCustomFields;
 	}
 
 	public CustomFields[] getCustomerCustomFields() {
@@ -556,7 +556,7 @@ public class DeviceInformation {
 						.hashCode());
 		result = prime * result
 				+ ((netSuiteId == null) ? 0 : netSuiteId.hashCode());
-		result = prime * result + Arrays.hashCode(opeartorCustomFields);
+		result = prime * result + Arrays.hashCode(operatorCustomFields);
 		result = prime * result
 				+ ((serial_num == null) ? 0 : serial_num.hashCode());
 		result = prime * result + ((state == null) ? 0 : state.hashCode());
@@ -736,7 +736,7 @@ public class DeviceInformation {
 				return false;
 		} else if (!netSuiteId.equals(other.netSuiteId))
 			return false;
-		if (!Arrays.equals(opeartorCustomFields, other.opeartorCustomFields))
+		if (!Arrays.equals(operatorCustomFields, other.operatorCustomFields))
 			return false;
 		if (serial_num == null) {
 			if (other.serial_num != null)
@@ -831,8 +831,8 @@ public class DeviceInformation {
 		builder.append(monthToDateDataUsage);
 		builder.append(", monthToDateVoiceUsage=");
 		builder.append(monthToDateVoiceUsage);
-		builder.append(", opeartorCustomFields=");
-		builder.append(Arrays.toString(opeartorCustomFields));
+		builder.append(", operatorCustomFields=");
+		builder.append(Arrays.toString(operatorCustomFields));
 		builder.append(", customerCustomFields=");
 		builder.append(Arrays.toString(customerCustomFields));
 		builder.append(", dateActivated=");

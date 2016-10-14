@@ -9,10 +9,8 @@ public class InvalidParameterException extends Exception {
     private String code;
     private String reason;
 
-    InvalidParameterException() {
-    }
-
     public InvalidParameterException(String code, String reason) {
+        super(reason);
         this.code = code;
         this.reason = reason;
     }

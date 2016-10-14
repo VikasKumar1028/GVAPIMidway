@@ -18,6 +18,7 @@ import com.gv.midway.pojo.usageInformation.response.DevicesUsageByDayAndCarrierR
 import com.gv.midway.pojo.usageInformation.response.UsageInformationMidwayResponse;
 import com.gv.midway.pojo.usageInformation.response.UsageInformationResponse;
 
+@Deprecated
 public class HeaderErrorProcessor implements Processor {
 
 	private static final Logger LOGGER = Logger

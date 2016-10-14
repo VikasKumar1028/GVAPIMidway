@@ -44,14 +44,14 @@ public class AuditLogRequestEventNotifer extends EventNotifierSupport {
 
                 Date localTime = new Date();
 
-                String requestEndpint = exchange.getFromEndpoint().toString();
-                String requestEndpintSpilt[] = requestEndpint.split("//");
+                String requestEndpoint = exchange.getFromEndpoint().toString();
+                String requestEndpointSplit[] = requestEndpoint.split("//");
 
-                LOGGER.info("requestEndpintSpilt::"
-                        + requestEndpintSpilt[1].replaceAll("]", " "));
+                LOGGER.info("requestEndpointSplit::"
+                        + requestEndpointSplit[1].replaceAll("]", " "));
 
                 String apiOperationName = "GV_"
-                        + requestEndpintSpilt[1].replaceAll("]", "")
+                        + requestEndpointSplit[1].replaceAll("]", "")
                         + "_ProxyRequest";
                 LOGGER.info("apiOperationName" + apiOperationName);
 

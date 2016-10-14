@@ -3,7 +3,7 @@ package com.gv.midway.processor;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
-import org.springframework.core.env.Environment;
+
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.CarrierProvisioningDeviceResponse;
@@ -15,6 +15,7 @@ import com.gv.midway.pojo.connectionInformation.deviceStatus.response.Connection
 import com.gv.midway.pojo.device.response.BatchDeviceResponse;
 import com.gv.midway.pojo.device.response.UpdateDeviceResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
+import com.gv.midway.pojo.usageInformation.response.DevicesUsageByDayAndCarrierResponse;
 import com.gv.midway.pojo.usageInformation.response.UsageInformationMidwayResponse;
 import com.gv.midway.pojo.usageInformation.response.UsageInformationResponse;
 
@@ -23,18 +24,7 @@ public class GenericErrorProcessor implements Processor {
 	private static final Logger LOGGER = Logger
 			.getLogger(VerizonGenericExceptionProcessor.class.getName());
 
-	Environment newEnv;
-
-	public GenericErrorProcessor(Environment env) {
-		super();
-		this.newEnv = env;
-
-	}
-
-	public GenericErrorProcessor() {
-		// Empty Constructor
-	}
-
+	
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
@@ -44,7 +34,6 @@ public class GenericErrorProcessor implements Processor {
 
 		Response response = new Response();
 
-		Header responseHeader = (Header) exchange.getProperty(IConstant.HEADER);
 
 		if (exchange.getProperty(IConstant.RESPONSE_CODE) != null) {
 
@@ -63,6 +52,14 @@ public class GenericErrorProcessor implements Processor {
 
 		}
 
+		Header responseHeader = new Header();
+
+		if (exchange.getProperty(IConstant.HEADER) != null) {
+			responseHeader = (Header) exchange.getProperty(IConstant.HEADER);
+		}
+
+		LOGGER.info("endpoint is......" + exchange.getFromEndpoint().toString());
+	        
 		switch (exchange.getFromEndpoint().toString()) {
 		case "Endpoint[direct://deviceInformationCarrier]":
 			DeviceInformationResponse deviceInformationResponse = new DeviceInformationResponse();
@@ -161,6 +158,12 @@ public class GenericErrorProcessor implements Processor {
 			connectionInformationMidwayResponse.setResponse(response);
 			exchange.getIn().setBody(connectionInformationMidwayResponse);
 			break;
+		 case "Endpoint[direct://getDevicesUsageByDayAndCarrierInfoDB]":
+             DevicesUsageByDayAndCarrierResponse devicesUsageByDayAndCarrierResponse = new DevicesUsageByDayAndCarrierResponse();
+             devicesUsageByDayAndCarrierResponse.setHeader(responseHeader);
+             devicesUsageByDayAndCarrierResponse.setResponse(response);
+             exchange.getIn().setBody(devicesUsageByDayAndCarrierResponse);
+             break;
 		default:
 			break;
 		}

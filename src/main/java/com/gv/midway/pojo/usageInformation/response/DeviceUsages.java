@@ -11,7 +11,7 @@ public class DeviceUsages {
 
 	@ApiModelProperty(value = "dataUsed")
 	@JsonProperty("dataUsed")
-	private float dataUsed;
+	private long dataUsed;
 
 	@Override
 	public int hashCode() {
@@ -54,7 +54,7 @@ public class DeviceUsages {
 		return dataUsed;
 	}
 
-	public void setDataUsed(float dataUsed) {
+	public void setDataUsed(long dataUsed) {
 		this.dataUsed = dataUsed;
 	}
 

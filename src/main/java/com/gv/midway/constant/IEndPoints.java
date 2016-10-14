@@ -42,4 +42,11 @@ public interface IEndPoints {
 
 	public final String SUSPENSION_SEDA_ATTJASPER_ENDPOINT = "attJasperSedaSuspend";
 
+    public final String URI_REST_VERIZON_ENDPOINT = "cxfrs://bean://rsVerizonClient";
+    public final String URI_REST_VERIZON_TOKEN_ENDPOINT = "cxfrs://bean://rsVerizonTokenClient";
+    public final String URI_REST_KORE_ENDPOINT = "cxfrs://bean://rsKoreClient";
+    public final String URI_REST_NETSUITE_ENDPOINT = "cxfrs://bean://rsNetsuitClient";
+
+    public final String URI_SOAP_ATTJASPER_TERMINAL_ENDPOINT = "cxf://bean://attJasperTerminalEndPoint";
+
 }

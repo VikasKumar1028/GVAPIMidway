@@ -63,8 +63,24 @@
             window.SwaggerTranslator.translate();
           }
 
+          //Copy to clipboard contents of swagger section on click of the header
+          $('h4').on("click",function() {
+            var blockParent = $(this).next();
+            var block = blockParent.find("pre");
+            if (block.find("code").size() == 1) {
+              block = block.find("code");
+            }
+            if (block.size() > 0) {
+              block.attr('contentEditable','true');
+              block.focus();
+              document.execCommand("SelectAll");
+              document.execCommand("copy");
+              alert($(this).text() + " copied to clipboard!");
+            }
+          });
+
           $('pre code').each(function(i, e) {
-            hljs.highlightBlock(e)
+            hljs.highlightBlock(e);
           });
 
           addApiKeyAuthorization();

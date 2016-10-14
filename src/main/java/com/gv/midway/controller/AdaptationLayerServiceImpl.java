@@ -453,8 +453,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 			String region, String timestamp, String organization,
 			String transactionId, String sourceName, String applicationName,
 			String bsCarrier, String startDate) {
-		// TODO Auto-generated method stub
-    	
+		    	
     	 Header header = createHeader(region, timestamp, organization,
                  transactionId, sourceName, applicationName, bsCarrier);
     	 

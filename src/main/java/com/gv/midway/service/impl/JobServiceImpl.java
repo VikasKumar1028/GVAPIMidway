@@ -74,7 +74,7 @@ public class JobServiceImpl implements IJobService {
             serverDetail = iJobDao.fetchServerIp(currentServerIp);
 
             // Send the currentServerIp and fetch serverDetail
-            // get the jobType of the serverDEtail
+            // get the jobType of the serverDetail
 
             if (serverDetail != null
                     && IConstant.JOB_TYPE_ODD.equalsIgnoreCase(serverDetail
