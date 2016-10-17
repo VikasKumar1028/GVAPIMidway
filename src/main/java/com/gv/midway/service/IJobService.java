@@ -6,11 +6,12 @@ import org.apache.camel.Exchange;
 
 import com.gv.midway.constant.JobName;
 import com.gv.midway.constant.JobType;
+import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.usageInformation.response.DevicesUsageByDayAndCarrier;
 
 public interface IJobService {
 
-    public List fetchDevices(Exchange exchange);
+    public List<DeviceInformation> fetchDevices(Exchange exchange);
 
     public void insertJobDetails(Exchange exchange);
 

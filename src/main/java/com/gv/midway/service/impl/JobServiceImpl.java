@@ -44,9 +44,9 @@ public class JobServiceImpl implements IJobService {
      * list
      */
     @Override
-    public List fetchDevices(Exchange exchange) {
+    public List<DeviceInformation> fetchDevices(Exchange exchange) {
 
-        List list = fetchDevicesDependingServerDetails(exchange);
+        List<DeviceInformation> list =  iJobDao.fetchDevices(exchange);
 
         if (list != null) {
 
@@ -59,7 +59,7 @@ public class JobServiceImpl implements IJobService {
 
     }
 
-    public List fetchDevicesDependingServerDetails(Exchange exchange) {
+    public List<DeviceInformation> fetchDevicesDependingServerDetails(Exchange exchange) {
 
         JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
 

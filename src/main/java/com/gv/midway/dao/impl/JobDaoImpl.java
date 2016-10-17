@@ -63,7 +63,7 @@ public class JobDaoImpl implements IJobDao {
      * Fetch all the devices
      */
     @Override
-    public List fetchDevices(Exchange exchange) {
+    public List<DeviceInformation> fetchDevices(Exchange exchange) {
 
         JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
 
@@ -107,7 +107,7 @@ public class JobDaoImpl implements IJobDao {
      * Fetch only devices with Odd Net Suited ID
      */
     @Override
-    public List fetchOddDevices(Exchange exchange) {
+    public List<DeviceInformation> fetchOddDevices(Exchange exchange) {
 
         LOGGER.info("fetchOddDevices::::::::");
 
@@ -157,7 +157,7 @@ public class JobDaoImpl implements IJobDao {
      * Fetch only devices with Even Net Suited ID
      */
     @Override
-    public List fetchEvenDevices(Exchange exchange) {
+    public List<DeviceInformation> fetchEvenDevices(Exchange exchange) {
 
         LOGGER.info("fetchEvenDevices::::::::");
 
