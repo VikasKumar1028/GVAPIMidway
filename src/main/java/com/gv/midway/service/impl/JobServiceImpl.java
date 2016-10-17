@@ -37,12 +37,7 @@ public class JobServiceImpl implements IJobService {
     @EndpointInject(uri = "")
     ProducerTemplate producer;
 
-    /**
-     * Fetching the Device List , In Case of New Job it will look for server
-     * details collection and fetch devices with odd /Even Netsuite Id In Case
-     * if the Server Details are missing then it will return complete device
-     * list
-     */
+   
     @Override
     public List<DeviceInformation> fetchDevices(Exchange exchange) {
 
@@ -59,6 +54,12 @@ public class JobServiceImpl implements IJobService {
 
     }
 
+    /**
+     * Fetching the Device List , In Case of New Job it will look for server
+     * details collection and fetch devices with odd /Even Netsuite Id In Case
+     * if the Server Details are missing then it will return complete device
+     * list
+     */
     public List<DeviceInformation> fetchDevicesDependingServerDetails(Exchange exchange) {
 
         JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
@@ -94,6 +95,7 @@ public class JobServiceImpl implements IJobService {
 
     }
 
+   
     @Override
     public void insertJobDetails(Exchange exchange) {
         iJobDao.insertJobDetails(exchange);
