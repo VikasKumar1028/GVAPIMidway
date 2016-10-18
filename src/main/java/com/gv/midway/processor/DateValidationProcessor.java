@@ -2,7 +2,6 @@ package com.gv.midway.processor;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -18,172 +17,56 @@ import com.gv.midway.pojo.usageInformation.request.UsageInformationRequestDataAr
 
 public class DateValidationProcessor implements Processor {
 
-	private static final Logger LOGGER = Logger
-			.getLogger(DateValidationProcessor.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(DateValidationProcessor.class.getName());
 
 	@Override
 	public void process(Exchange exchange) throws Exception {
 		LOGGER.info("Begin:DateValidationProcessor");
-		SimpleDateFormat formatter = new SimpleDateFormat(
-				"yyyy-MM-dd'T'HH:mm:ss");
 
-		if (("Endpoint[direct://retrieveDeviceUsageHistoryCarrier]")
-				.equals(exchange.getFromEndpoint().toString())) {
+		final String endpoint = exchange.getFromEndpoint().toString();
+		if (("Endpoint[direct://retrieveDeviceUsageHistoryCarrier]").equals(endpoint)) {
+			final UsageInformationRequest request = exchange.getIn().getBody(UsageInformationRequest.class);
+			final UsageInformationRequestDataArea usageInformationRequestDataArea = request.getDataArea();
 
-			UsageInformationRequest request = (UsageInformationRequest) exchange
-					.getIn().getBody(UsageInformationRequest.class);
-
-			UsageInformationRequestDataArea usageInformationRequestDataArea = request
-					.getDataArea();
-
-			try {
-
-				if (usageInformationRequestDataArea.getEarliest() == null
-						&& usageInformationRequestDataArea.getLatest() == null)
-
-				{
-					exchange.setProperty(IConstant.RESPONSE_CODE,
-							IResponse.INVALID_PAYLOAD);
-					exchange.setProperty(IConstant.RESPONSE_STATUS,
-							IResponse.ERROR_MESSAGE);
-					exchange.setProperty(IConstant.RESPONSE_DESCRIPTION,
-							IResponse.ERROR_DESCRIPTION_DATE_MIDWAYDB);
-					throw new MissingParameterException(
-							IResponse.INVALID_PAYLOAD.toString(),
-							IResponse.ERROR_DESCRIPTION_DATE_MIDWAYDB);
-
-				} else if (usageInformationRequestDataArea.getEarliest() != null
-						&& usageInformationRequestDataArea.getLatest() != null) {
-					Date earliestDate = formatter
-							.parse(usageInformationRequestDataArea
-									.getEarliest());
-					Date latestDate = formatter
-							.parse(usageInformationRequestDataArea.getLatest());
-
-				}
-
-			}
-
-			catch (ParseException e1) {
-
-				exchange.setProperty(IConstant.RESPONSE_CODE,
-						IResponse.INVALID_PAYLOAD);
-				exchange.setProperty(IConstant.RESPONSE_STATUS,
-						IResponse.ERROR_MESSAGE);
-				exchange.setProperty(IConstant.RESPONSE_DESCRIPTION,
-						IResponse.ERROR_DESCRIPTION_DATE_MIDWAYDB);
-				throw new MissingParameterException(
-						IResponse.INVALID_PAYLOAD.toString(),
-						IResponse.ERROR_DESCRIPTION_DATE_MIDWAYDB);
-			}
-
+			nullCheckEarliestAndLatest(exchange, usageInformationRequestDataArea.getEarliest(), usageInformationRequestDataArea.getLatest());
 		}
 
-		if (("Endpoint[direct://deviceConnectionStatus]").equals(exchange
-				.getFromEndpoint().toString()))
+		if (("Endpoint[direct://deviceConnectionStatus]").equals(endpoint)) {
+			final ConnectionInformationRequest request = exchange.getIn().getBody(ConnectionInformationRequest.class);
+			final ConnectionInformationRequestDataArea connectionInformationRequestDataArea = request.getDataArea();
 
-		{
-
-			ConnectionInformationRequest request = (ConnectionInformationRequest) exchange
-					.getIn().getBody(ConnectionInformationRequest.class);
-
-			ConnectionInformationRequestDataArea connectionInformationRequestDataArea = request
-					.getDataArea();
-
-			try {
-
-				if (connectionInformationRequestDataArea.getEarliest() == null
-						&& connectionInformationRequestDataArea.getLatest() == null)
-
-				{
-					exchange.setProperty(IConstant.RESPONSE_CODE,
-							IResponse.INVALID_PAYLOAD);
-					exchange.setProperty(IConstant.RESPONSE_STATUS,
-							IResponse.ERROR_MESSAGE);
-					exchange.setProperty(IConstant.RESPONSE_DESCRIPTION,
-							IResponse.ERROR_DESCRIPTION_DATE_MIDWAYDB);
-					throw new MissingParameterException(
-							IResponse.INVALID_PAYLOAD.toString(),
-							IResponse.ERROR_DESCRIPTION_DATE_MIDWAYDB);
-
-				} else if (connectionInformationRequestDataArea.getEarliest() != null
-						&& connectionInformationRequestDataArea.getLatest() != null) {
-					Date earliestDate = formatter
-							.parse(connectionInformationRequestDataArea
-									.getEarliest());
-					Date latestDate = formatter
-							.parse(connectionInformationRequestDataArea
-									.getLatest());
-				}
-
-			}
-
-			catch (ParseException e1) {
-
-				exchange.setProperty(IConstant.RESPONSE_CODE,
-						IResponse.INVALID_PAYLOAD);
-				exchange.setProperty(IConstant.RESPONSE_STATUS,
-						IResponse.ERROR_MESSAGE);
-				exchange.setProperty(IConstant.RESPONSE_DESCRIPTION,
-						IResponse.ERROR_DESCRIPTION_DATE_MIDWAYDB);
-				throw new MissingParameterException(
-						IResponse.INVALID_PAYLOAD.toString(),
-						IResponse.ERROR_DESCRIPTION_DATE_MIDWAYDB);
-			}
-
+			nullCheckEarliestAndLatest(exchange, connectionInformationRequestDataArea.getEarliest(), connectionInformationRequestDataArea.getLatest());
 		}
 
-		if (("Endpoint[direct://deviceSessionBeginEndInfo]").equals(exchange
-				.getFromEndpoint().toString())) {
+		if (("Endpoint[direct://deviceSessionBeginEndInfo]").equals(endpoint)) {
+			final ConnectionInformationRequest request = exchange.getIn().getBody(ConnectionInformationRequest.class);
+			final ConnectionInformationRequestDataArea connectionInformationRequestDataArea = request.getDataArea();
 
-			ConnectionInformationRequest request = (ConnectionInformationRequest) exchange
-					.getIn().getBody(ConnectionInformationRequest.class);
-
-			ConnectionInformationRequestDataArea connectionInformationRequestDataArea = request
-					.getDataArea();
-
-			try {
-
-				if (connectionInformationRequestDataArea.getEarliest() == null
-						&& connectionInformationRequestDataArea.getLatest() == null)
-
-				{
-					exchange.setProperty(IConstant.RESPONSE_CODE,
-							IResponse.INVALID_PAYLOAD);
-					exchange.setProperty(IConstant.RESPONSE_STATUS,
-							IResponse.ERROR_MESSAGE);
-					exchange.setProperty(IConstant.RESPONSE_DESCRIPTION,
-							IResponse.ERROR_DESCRIPTION_DATE_MIDWAYDB);
-					throw new MissingParameterException(
-							IResponse.INVALID_PAYLOAD.toString(),
-							IResponse.ERROR_DESCRIPTION_DATE_MIDWAYDB);
-
-				} else if (connectionInformationRequestDataArea.getEarliest() != null
-						&& connectionInformationRequestDataArea.getLatest() != null) {
-					Date earliestDate = formatter
-							.parse(connectionInformationRequestDataArea
-									.getEarliest());
-					Date latestDate = formatter
-							.parse(connectionInformationRequestDataArea
-									.getLatest());
-				}
-
-			}
-
-			catch (ParseException e1) {
-
-				exchange.setProperty(IConstant.RESPONSE_CODE,
-						IResponse.INVALID_PAYLOAD);
-				exchange.setProperty(IConstant.RESPONSE_STATUS,
-						IResponse.ERROR_MESSAGE);
-				exchange.setProperty(IConstant.RESPONSE_DESCRIPTION,
-						IResponse.ERROR_DESCRIPTION_DATE_MIDWAYDB);
-				throw new MissingParameterException(
-						IResponse.INVALID_PAYLOAD.toString(),
-						IResponse.ERROR_DESCRIPTION_DATE_MIDWAYDB);
-			}
-
+			nullCheckEarliestAndLatest(exchange, connectionInformationRequestDataArea.getEarliest(), connectionInformationRequestDataArea.getLatest());
 		}
 		LOGGER.info("End:DateValidationProcessor");
+	}
+
+	private void nullCheckEarliestAndLatest(Exchange exchange, String earliest, String latest) throws MissingParameterException {
+		try {
+			if (earliest == null && latest == null) {
+				blowUp(exchange);
+
+			} else if (earliest != null && latest != null) {
+				final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+				formatter.parse(earliest);
+				formatter.parse(latest);
+			}
+		}
+		catch (ParseException e1) {
+			blowUp(exchange);
+		}
+	}
+
+	private void blowUp(Exchange exchange) throws MissingParameterException {
+		exchange.setProperty(IConstant.RESPONSE_CODE, IResponse.INVALID_PAYLOAD);
+		exchange.setProperty(IConstant.RESPONSE_STATUS, IResponse.ERROR_MESSAGE);
+		exchange.setProperty(IConstant.RESPONSE_DESCRIPTION, IResponse.ERROR_DESCRIPTION_DATE_MIDWAYDB);
+		throw new MissingParameterException(IResponse.INVALID_PAYLOAD.toString(), IResponse.ERROR_DESCRIPTION_DATE_MIDWAYDB);
 	}
 }

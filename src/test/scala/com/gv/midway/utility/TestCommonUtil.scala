@@ -1,5 +1,6 @@
 package com.gv.midway.utility
 
+import com.gv.midway.TestMocks
 import com.gv.midway.constant.IConstant
 import com.gv.midway.exception.InvalidParameterException
 import com.gv.midway.pojo.job.{JobParameter, JobinitializedResponse}
@@ -9,14 +10,12 @@ import org.apache.camel.{Exchange, Message}
 import org.apache.cxf.binding.soap.SoapHeader
 import org.apache.cxf.headers.Header.Direction
 import org.joda.time.LocalDate
-import org.scalatest.FunSuite
 import org.mockito.Mockito._
-import org.scalatest.mockito.MockitoSugar
 import org.w3c.dom.Element
 
 import collection.JavaConversions._
 
-class TestCommonUtil extends FunSuite with MockitoSugar {
+class TestCommonUtil extends TestMocks {
 
   val VALID_CARRIERS = List(IConstant.BSCARRIER_SERVICE_KORE, IConstant.BSCARRIER_SERVICE_ATTJASPER, IConstant.BSCARRIER_SERVICE_VERIZON)
 
@@ -60,7 +59,7 @@ class TestCommonUtil extends FunSuite with MockitoSugar {
     , "1234-123-12"
     , "1234-13-12"
     , "1234-00-12"
-//    , "2111111"  TODO According to the API, this shouldn't be allowed, but it is passing as a valid format
+//    , "2111111"  //TODO According to the API, this shouldn't be allowed, but it is passing as a valid format
   ).foreach { invalidDate =>
 
     test(s"isValidDateFormat($invalidDate) === false") {
@@ -217,8 +216,36 @@ class TestCommonUtil extends FunSuite with MockitoSugar {
     }
   }
 
-  test("setMessageHeader") {
-    pending
+  test("setMessageHeader - non Verizon") {
+    withMockExchangeAndMessage { (exchange, message) =>
+
+      CommonUtil.setMessageHeader(exchange)
+
+      verify(message, times(1)).setHeader("VZ-M2M-Token", "")
+      verify(message, times(1)).setHeader("Authorization", "Bearer ")
+      verify(message, times(1)).setHeader(Exchange.CONTENT_TYPE, "application/json")
+      verify(message, times(1)).setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json")
+      verify(message, times(1)).setHeader(Exchange.HTTP_METHOD, "POST")
+    }
+  }
+
+  test("setMessageHeader - Verizon") {
+    withMockExchangeAndMessage { (exchange, message) =>
+
+      val sessionToken = "sessionToken"
+      val authToken = "authToken"
+
+      when(exchange.getProperty(IConstant.VZ_SEESION_TOKEN)).thenReturn(sessionToken, Nil: _*)
+      when(exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN)).thenReturn(authToken, Nil: _*)
+
+      CommonUtil.setMessageHeader(exchange)
+
+      verify(message, times(1)).setHeader("VZ-M2M-Token", sessionToken)
+      verify(message, times(1)).setHeader("Authorization", s"Bearer $authToken")
+      verify(message, times(1)).setHeader(Exchange.CONTENT_TYPE, "application/json")
+      verify(message, times(1)).setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json")
+      verify(message, times(1)).setHeader(Exchange.HTTP_METHOD, "POST")
+    }
   }
 
   test("getSOAPHeaders") {
@@ -248,11 +275,6 @@ class TestCommonUtil extends FunSuite with MockitoSugar {
   }
 
   test("getSOAPErrorResposneFromExchange") {
-    pending
-  }
-
-  test("convertSOAPFaulttoString") {
-    //TODO Don't see any uses of this anywhere
     pending
   }
 
@@ -309,7 +331,6 @@ class TestCommonUtil extends FunSuite with MockitoSugar {
     val transaction = mock[Transaction]
     val transactions: java.util.List[Transaction] = List(transaction)
 
-    //Weird Scala/Java interop thing here. http://stackoverflow.com/a/13361530
     when(exchange.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME)).thenReturn(carrier, Nil: _*)
     when(exchange.getIn).thenReturn(message)
 

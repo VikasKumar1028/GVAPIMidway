@@ -75,14 +75,14 @@ class TestVerizonBatchExceptionProcessor extends TestMocks {
 
       verify(exchange, times(1)).setProperty(IConstant.RESPONSE_CODE, "401")
       verify(exchange, times(1)).setProperty(IConstant.RESPONSE_STATUS, "Invalid Token")
-      verify(exchange, times(1)).setProperty(IConstant.RESPONSE_DESCRIPTION, "Not able to retrieve  valid authentication token")
+      verify(exchange, times(1)).setProperty(IConstant.RESPONSE_DESCRIPTION, "Not able to retrieve valid authentication token")
       verify(message, times(1)).setBody(captor.capture())
 
       val conn = captor.getValue
       assert(conn.getCarrierName === IConstant.BSCARRIER_SERVICE_VERIZON)
       assert(conn.getDeviceId === deviceId)
       assert(conn.getDate === date)
-      assert(conn.getTransactionErrorReason === "Not able to retrieve  valid authentication token")
+      assert(conn.getTransactionErrorReason === "Not able to retrieve valid authentication token")
       assert(conn.getTransactionStatus === IConstant.MIDWAY_TRANSACTION_STATUS_ERROR)
       assert(conn.getNetSuiteId === netSuiteId)
       assert(conn.getIsValid)

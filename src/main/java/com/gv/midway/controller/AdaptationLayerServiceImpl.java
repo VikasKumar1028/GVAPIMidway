@@ -46,139 +46,113 @@ import com.gv.midway.pojo.usageInformation.response.UsageInformationResponse;
 import com.gv.midway.pojo.verizon.DeviceId;
 import com.gv.midway.utility.CommonUtil;
 
-@SuppressWarnings("all")
 public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 
-    private static final Logger LOGGER = LoggerFactory
-            .getLogger(AdaptationLayerServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AdaptationLayerServiceImpl.class);
 
+    @SuppressWarnings("DefaultAnnotationParam")
     @EndpointInject(uri = "")
     ProducerTemplate producer;
 
     public UpdateDeviceResponse updateDeviceDetails(SingleDevice device) {
-        // TODO Auto-generated method stub
-
         LOGGER.info("device info to update is...." + device.toString());
 
-        UpdateDeviceResponse response = (UpdateDeviceResponse) producer
-                .requestBody("direct:updateDeviceDetails", device);
+        final UpdateDeviceResponse response = (UpdateDeviceResponse) producer.requestBody("direct:updateDeviceDetails", device);
 
-        LOGGER.info("updateDeviceDetails respsone is ........" + response);
+        LOGGER.info("updateDeviceDetails response is ........" + response);
 
         return response;
     }
 
-    public DeviceInformationResponse getDeviceInfoDB(String region,
-            String timestamp, String organization, String transactionId,
-            String sourceName, String applicationName, String bsCarrier,
-            Integer netSuiteId) {
-        // TODO Auto-generated method stub
+    public DeviceInformationResponse getDeviceInfoDB(
+            String region
+            , String timestamp
+            , String organization
+            , String transactionId
+            , String sourceName
+            , String applicationName
+            , String bsCarrier
+            , Integer netSuiteId) {
+        final Header header = createHeader(region, timestamp, organization, transactionId, sourceName, applicationName, bsCarrier);
 
-        DeviceInformationRequest deviceInformationRequest = new DeviceInformationRequest();
-
-        Header header = createHeader(region, timestamp, organization,
-                transactionId, sourceName, applicationName, bsCarrier);
-
-        DeviceInformationRequestDataArea dataArea = new DeviceInformationRequestDataArea();
+        final DeviceInformationRequestDataArea dataArea = new DeviceInformationRequestDataArea();
         dataArea.setNetSuiteId(netSuiteId);
 
+        final DeviceInformationRequest deviceInformationRequest = new DeviceInformationRequest();
         deviceInformationRequest.setHeader(header);
         deviceInformationRequest.setDataArea(dataArea);
 
-        DeviceInformationResponse response = (DeviceInformationResponse) producer
-                .requestBody("direct:getDeviceInformationDB",
-                        deviceInformationRequest);
-
-        return response;
+        return (DeviceInformationResponse) producer.requestBody("direct:getDeviceInformationDB", deviceInformationRequest);
     }
 
-    public DeviceInformationResponse getDeviceInfoCarrier(String region,
-            String timestamp, String organization, String transactionId,
-            String sourceName, String applicationName, String bsCarrier,
-            Integer netSuiteId, String deviceId, String kind) {
-        // TODO Auto-generated method stub
+    public DeviceInformationResponse getDeviceInfoCarrier(
+            String region
+            , String timestamp
+            , String organization
+            , String transactionId
+            , String sourceName
+            , String applicationName
+            , String bsCarrier
+            , Integer netSuiteId
+            , String deviceId
+            , String kind) {
+        final Header header = createHeader(region, timestamp, organization, transactionId, sourceName, applicationName, bsCarrier);
 
-        DeviceInformationRequest deviceInformationRequest = new DeviceInformationRequest();
-
-        Header header = createHeader(region, timestamp, organization,
-                transactionId, sourceName, applicationName, bsCarrier);
-
-        DeviceInformationRequestDataArea dataArea = new DeviceInformationRequestDataArea();
-        dataArea.setNetSuiteId(netSuiteId);
-        DeviceId deviceIdObj = new DeviceId();
+        final DeviceId deviceIdObj = new DeviceId();
         deviceIdObj.setId(deviceId);
         deviceIdObj.setKind(kind);
+
+        final DeviceInformationRequestDataArea dataArea = new DeviceInformationRequestDataArea();
+        dataArea.setNetSuiteId(netSuiteId);
         dataArea.setDeviceId(deviceIdObj);
 
+        final DeviceInformationRequest deviceInformationRequest = new DeviceInformationRequest();
         deviceInformationRequest.setHeader(header);
         deviceInformationRequest.setDataArea(dataArea);
 
-        DeviceInformationResponse response = (DeviceInformationResponse) producer
-                .requestBody("direct:deviceInformationCarrier",
-                        deviceInformationRequest);
-
-        return response;
+        return (DeviceInformationResponse) producer.requestBody("direct:deviceInformationCarrier", deviceInformationRequest);
     }
 
     public BatchDeviceResponse updateDevicesDetailsBulk(BulkDevices devices) {
-        // TODO Auto-generated method stub
         LOGGER.info("devices info is...." + devices.toString());
 
-        Object responseActual = producer.requestBody(
-                "direct:updateDevicesDetailsBulk", devices);
+        final Object responseActual = producer.requestBody("direct:updateDevicesDetailsBulk", devices);
 
-        LOGGER.info("resposne actual is........" + responseActual.toString());
+        LOGGER.info("response actual is........" + responseActual.toString());
 
-        BatchDeviceResponse response = (BatchDeviceResponse) responseActual;
+        final BatchDeviceResponse response = (BatchDeviceResponse) responseActual;
 
-        LOGGER.info(" direct:updateDevicesDetails in Batch respsone is ........"
-                + response);
+        LOGGER.info(" direct:updateDevicesDetails in Batch response is ........" + response);
 
         return response;
     }
 
-    public CarrierProvisioningDeviceResponse deactivateDevice(
-            DeactivateDeviceRequest deactivateDeviceRequest) {
-
-        return (CarrierProvisioningDeviceResponse) producer.requestBody(
-                "direct:deactivateDevice", deactivateDeviceRequest);
+    public CarrierProvisioningDeviceResponse deactivateDevice(DeactivateDeviceRequest deactivateDeviceRequest) {
+        return (CarrierProvisioningDeviceResponse) producer.requestBody("direct:deactivateDevice", deactivateDeviceRequest);
     }
 
-    public CarrierProvisioningDeviceResponse activateDevice(
-            ActivateDeviceRequest activateDeviceRequest) {
-
-        return (CarrierProvisioningDeviceResponse) producer.requestBody(
-                "direct:activateDevice", activateDeviceRequest);
+    public CarrierProvisioningDeviceResponse activateDevice(ActivateDeviceRequest activateDeviceRequest) {
+        return (CarrierProvisioningDeviceResponse) producer.requestBody("direct:activateDevice", activateDeviceRequest);
     }
 
-    public CarrierProvisioningDeviceResponse reactivateDevice(
-            ReactivateDeviceRequest reActivateDeviceRequest) {
-        return (CarrierProvisioningDeviceResponse) producer.requestBody(
-                "direct:reactivateDevice", reActivateDeviceRequest);
+    public CarrierProvisioningDeviceResponse reactivateDevice(ReactivateDeviceRequest reActivateDeviceRequest) {
+        return (CarrierProvisioningDeviceResponse) producer.requestBody("direct:reactivateDevice", reActivateDeviceRequest);
     }
 
-    public CarrierProvisioningDeviceResponse suspendDevice(
-            SuspendDeviceRequest suspendDeviceRequest) {
-
-        return (CarrierProvisioningDeviceResponse) producer.requestBody(
-                "direct:suspendDevice", suspendDeviceRequest);
+    public CarrierProvisioningDeviceResponse suspendDevice(SuspendDeviceRequest suspendDeviceRequest) {
+        return (CarrierProvisioningDeviceResponse) producer.requestBody("direct:suspendDevice", suspendDeviceRequest);
     }
 
-    public CarrierProvisioningDeviceResponse customFieldsUpdateRequest(
-            CustomFieldsDeviceRequest customeFieldDeviceRequest) {
-
-        return (CarrierProvisioningDeviceResponse) producer.requestBody(
-                "direct:customeFields", customeFieldDeviceRequest);
+    public CarrierProvisioningDeviceResponse customFieldsUpdateRequest(CustomFieldsDeviceRequest customFieldDeviceRequest) {
+        return (CarrierProvisioningDeviceResponse) producer.requestBody("direct:customeFields", customFieldDeviceRequest);
     }
 
     public void callbacks(CallBackVerizonRequest callbackRequest) {
         producer.requestBody("direct:callbacks", callbackRequest);
     }
 
-    public CarrierProvisioningDeviceResponse restoreDevice(
-            RestoreDeviceRequest restoreDeviceRequest) {
-        return (CarrierProvisioningDeviceResponse) producer.requestBody(
-                "direct:restoreDevice", restoreDeviceRequest);
+    public CarrierProvisioningDeviceResponse restoreDevice(RestoreDeviceRequest restoreDeviceRequest) {
+        return (CarrierProvisioningDeviceResponse) producer.requestBody("direct:restoreDevice", restoreDeviceRequest);
     }
 
     /*
@@ -188,27 +162,23 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
      * "direct:deviceSessionBeginEndInfo", connectionInformationRequest); }
      */
 
-    public CarrierProvisioningDeviceResponse changeDeviceServicePlans(
-            ChangeDeviceServicePlansRequest changeDeviceServicePlansRequest) {
-
-        return (CarrierProvisioningDeviceResponse) producer.requestBody(
-                "direct:changeDeviceServicePlans",
-                changeDeviceServicePlansRequest);
+    public CarrierProvisioningDeviceResponse changeDeviceServicePlans(ChangeDeviceServicePlansRequest changeDeviceServicePlansRequest) {
+        return (CarrierProvisioningDeviceResponse) producer.requestBody("direct:changeDeviceServicePlans", changeDeviceServicePlansRequest);
     }
 
     @Override
-    public JobinitializedResponse transactionFailureDeviceUsageJob(
-            JobParameter jobParameter) {
+    public JobinitializedResponse transactionFailureDeviceUsageJob(JobParameter jobParameter) {
 
-        JobinitializedResponse jobinitializedResponse = CommonUtil
-                .validateJobParameterForDeviceUsage(jobParameter);
+        JobinitializedResponse jobinitializedResponse = CommonUtil.validateJobParameterForDeviceUsage(jobParameter);
+
         if (jobinitializedResponse != null) {
-
             return jobinitializedResponse;
         }
+
         JobDetail jobDetail = new JobDetail();
         jobDetail.setType(JobType.TRANSACTION_FAILURE);
         jobDetail.setDate(jobParameter.getDate());
+
         if ("KORE".equals(jobParameter.getCarrierName())) {
             jobDetail.setName(JobName.KORE_DEVICE_USAGE);
             jobDetail.setCarrierName(CarrierType.KORE.toString());
@@ -217,267 +187,259 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
             jobDetail.setCarrierName(CarrierType.VERIZON.toString());
         }
 
-        producer.asyncRequestBody("direct:startTransactionFailureJob",
-                jobDetail);
-        return (JobinitializedResponse) producer.requestBody(
-                "direct:jobResponse", jobDetail);
-
+        producer.asyncRequestBody("direct:startTransactionFailureJob", jobDetail);
+        return (JobinitializedResponse) producer.requestBody("direct:jobResponse", jobDetail);
     }
 
     @Override
-    public JobinitializedResponse transactionFailureConnectionHistoryJob(
-            JobParameter jobParameter) {
+    public JobinitializedResponse transactionFailureConnectionHistoryJob(JobParameter jobParameter) {
 
-        JobinitializedResponse jobinitializedResponse = CommonUtil
-                .validateJobParameterForDeviceConnection(jobParameter);
+        final JobinitializedResponse jobinitializedResponse = CommonUtil.validateJobParameterForDeviceConnection(jobParameter);
         if (jobinitializedResponse != null) {
-
             return jobinitializedResponse;
         }
 
-        JobDetail jobDetail = new JobDetail();
+        final JobDetail jobDetail = new JobDetail();
         jobDetail.setType(JobType.TRANSACTION_FAILURE);
         jobDetail.setDate(jobParameter.getDate());
+
         if ("VERIZON".equals(jobParameter.getCarrierName())) {
             jobDetail.setName(JobName.VERIZON_CONNECTION_HISTORY);
             jobDetail.setCarrierName(CarrierType.VERIZON.toString());
         }
 
-        producer.asyncRequestBody("direct:startTransactionFailureJob",
-                jobDetail);
-        return (JobinitializedResponse) producer.requestBody(
-                "direct:jobResponse", jobDetail);
-
+        producer.asyncRequestBody("direct:startTransactionFailureJob", jobDetail);
+        return (JobinitializedResponse) producer.requestBody("direct:jobResponse", jobDetail);
     }
 
     @Override
     public JobinitializedResponse reRunDeviceUsageJob(JobParameter jobParameter) {
 
-        JobinitializedResponse jobinitializedResponse = CommonUtil
-                .validateJobParameterForDeviceUsage(jobParameter);
+        final JobinitializedResponse jobinitializedResponse = CommonUtil.validateJobParameterForDeviceUsage(jobParameter);
         if (jobinitializedResponse != null) {
-
             return jobinitializedResponse;
         }
 
-        JobDetail jobDetail = new JobDetail();
+        final JobDetail jobDetail = new JobDetail();
         jobDetail.setType(JobType.RERUN);
         jobDetail.setDate(jobParameter.getDate());
+
         if ("KORE".equals(jobParameter.getCarrierName())) {
             jobDetail.setName(JobName.KORE_DEVICE_USAGE);
             jobDetail.setCarrierName(CarrierType.KORE.toString());
         } else if ("VERIZON".equals(jobParameter.getCarrierName())) {
             jobDetail.setName(JobName.VERIZON_DEVICE_USAGE);
             jobDetail.setCarrierName(CarrierType.VERIZON.toString());
-
         }
+
         producer.asyncRequestBody("direct:startJob", jobDetail);
-        return (JobinitializedResponse) producer.requestBody(
-                "direct:jobResponse", jobDetail);
+        return (JobinitializedResponse) producer.requestBody("direct:jobResponse", jobDetail);
     }
 
     @Override
-    public JobinitializedResponse reRunConnectionHistoryJob(
-            JobParameter jobParameter) {
+    public JobinitializedResponse reRunConnectionHistoryJob(JobParameter jobParameter) {
 
-        JobinitializedResponse jobinitializedResponse = CommonUtil
-                .validateJobParameterForDeviceConnection(jobParameter);
+        final JobinitializedResponse jobinitializedResponse = CommonUtil.validateJobParameterForDeviceConnection(jobParameter);
+
         if (jobinitializedResponse != null) {
-
             return jobinitializedResponse;
         }
 
-        JobDetail jobDetail = new JobDetail();
+        final JobDetail jobDetail = new JobDetail();
         jobDetail.setType(JobType.RERUN);
         jobDetail.setDate(jobParameter.getDate());
+
         if ("VERIZON".equals(jobParameter.getCarrierName())) {
             jobDetail.setCarrierName(CarrierType.VERIZON.toString());
             jobDetail.setName(JobName.VERIZON_CONNECTION_HISTORY);
         }
 
         producer.asyncRequestBody("direct:startJob", jobDetail);
-        return (JobinitializedResponse) producer.requestBody(
-                "direct:jobResponse", jobDetail);
+        return (JobinitializedResponse) producer.requestBody("direct:jobResponse", jobDetail);
     }
 
     @Override
-    public UsageInformationMidwayResponse getDeviceUsageInfoDB(String region,
-            String timestamp, String organization, String transactionId,
-            String sourceName, String applicationName, String bsCarrier,
-            Integer netSuiteId, String startDate, String endDate) {
+    public UsageInformationMidwayResponse getDeviceUsageInfoDB(
+            String region
+            , String timestamp
+            , String organization
+            , String transactionId
+            , String sourceName
+            , String applicationName
+            , String bsCarrier
+            , Integer netSuiteId
+            , String startDate
+            , String endDate) {
 
-        UsageInformationMidwayRequest usageInformationMidwayRequest = new UsageInformationMidwayRequest();
+        final Header header = createHeader(region, timestamp, organization, transactionId, sourceName, applicationName, bsCarrier);
 
-        Header header = createHeader(region, timestamp, organization,
-                transactionId, sourceName, applicationName, bsCarrier);
-
-        UsageInformationRequestMidwayDataArea dataArea = new UsageInformationRequestMidwayDataArea();
+        final UsageInformationRequestMidwayDataArea dataArea = new UsageInformationRequestMidwayDataArea();
         dataArea.setNetSuiteId(netSuiteId);
         dataArea.setStartDate(startDate);
         dataArea.setEndDate(endDate);
 
+        final UsageInformationMidwayRequest usageInformationMidwayRequest = new UsageInformationMidwayRequest();
         usageInformationMidwayRequest.setHeader(header);
-        usageInformationMidwayRequest
-                .setUsageInformationRequestMidwayDataArea(dataArea);
+        usageInformationMidwayRequest.setUsageInformationRequestMidwayDataArea(dataArea);
 
-        UsageInformationMidwayResponse response = (UsageInformationMidwayResponse) producer
-                .requestBody("direct:getDeviceUsageInfoDB",
-                        usageInformationMidwayRequest);
-
-        return response;
+        return (UsageInformationMidwayResponse) producer.requestBody("direct:getDeviceUsageInfoDB", usageInformationMidwayRequest);
     }
 
     @Override
     public ConnectionInformationMidwayResponse getDeviceConnectionHistoryInfoDB(
-            String region, String timestamp, String organization,
-            String transactionId, String sourceName, String applicationName,
-            String bsCarrier, Integer netSuiteId, String startDate,
-            String endDate) {
+            String region
+            , String timestamp
+            , String organization
+            , String transactionId
+            , String sourceName
+            , String applicationName
+            , String bsCarrier
+            , Integer netSuiteId
+            , String startDate
+            , String endDate) {
 
-        ConnectionInformationMidwayRequest connectionInformationMidwayRequest = new ConnectionInformationMidwayRequest();
+        final Header header = createHeader(region, timestamp, organization, transactionId, sourceName, applicationName, bsCarrier);
 
-        Header header = createHeader(region, timestamp, organization,
-                transactionId, sourceName, applicationName, bsCarrier);
-
-        ConnectionInformationRequestMidwayDataArea dataArea = new ConnectionInformationRequestMidwayDataArea();
+        final ConnectionInformationRequestMidwayDataArea dataArea = new ConnectionInformationRequestMidwayDataArea();
         dataArea.setNetSuiteId(netSuiteId);
         dataArea.setStartDate(startDate);
         dataArea.setEndDate(endDate);
 
+        final ConnectionInformationMidwayRequest connectionInformationMidwayRequest = new ConnectionInformationMidwayRequest();
         connectionInformationMidwayRequest.setHeader(header);
         connectionInformationMidwayRequest.setDataArea(dataArea);
 
-        ConnectionInformationMidwayResponse response = (ConnectionInformationMidwayResponse) producer
-                .requestBody("direct:getDeviceConnectionHistoryInfoDB",
-                        connectionInformationMidwayRequest);
-
-        return response;
+        return (ConnectionInformationMidwayResponse) producer.requestBody("direct:getDeviceConnectionHistoryInfoDB", connectionInformationMidwayRequest);
     }
 
     @Override
     public ConnectionStatusResponse deviceConnectionStatusRequest(
-            String region, String timestamp, String organization,
-            String transactionId, String sourceName, String applicationName,
-            String bsCarrier, String deviceId, String kind, String earliest,
-            String latest) {
+            String region
+            , String timestamp
+            , String organization
+            , String transactionId
+            , String sourceName
+            , String applicationName
+            , String bsCarrier
+            , String deviceId
+            , String kind
+            , String earliest
+            , String latest) {
 
-        ConnectionInformationRequest connectionInformationRequest = new ConnectionInformationRequest();
+        final Header header = createHeader(region, timestamp, organization, transactionId, sourceName, applicationName, bsCarrier);
 
-        Header header = createHeader(region, timestamp, organization,
-                transactionId, sourceName, applicationName, bsCarrier);
+        final DeviceId deviceIdValue = new DeviceId();
+        deviceIdValue.setKind(kind);
+        deviceIdValue.setId(deviceId);
 
-        ConnectionInformationRequestDataArea dataArea = new ConnectionInformationRequestDataArea();
-        DeviceId deviceIdvalue = new DeviceId();
-
-        deviceIdvalue.setKind(kind);
-        deviceIdvalue.setId(deviceId);
-
-        dataArea.setDeviceId(deviceIdvalue);
+        final ConnectionInformationRequestDataArea dataArea = new ConnectionInformationRequestDataArea();
+        dataArea.setDeviceId(deviceIdValue);
         dataArea.setEarliest(earliest);
         dataArea.setLatest(latest);
 
+        final ConnectionInformationRequest connectionInformationRequest = new ConnectionInformationRequest();
         connectionInformationRequest.setHeader(header);
         connectionInformationRequest.setDataArea(dataArea);
 
-        ConnectionStatusResponse response = (ConnectionStatusResponse) producer
-                .requestBody("direct:deviceConnectionStatus",
-                        connectionInformationRequest);
-
-        return response;
+        return (ConnectionStatusResponse) producer.requestBody("direct:deviceConnectionStatus", connectionInformationRequest);
     }
 
     @Override
     public UsageInformationResponse retrieveDeviceUsageHistoryCarrier(
-            String region, String timestamp, String organization,
-            String transactionId, String sourceName, String applicationName,
-            String bsCarrier, String deviceId, String kind, String earliest,
-            String latest) {
+            String region
+            , String timestamp
+            , String organization
+            , String transactionId
+            , String sourceName
+            , String applicationName
+            , String bsCarrier
+            , String deviceId
+            , String kind
+            , String earliest
+            , String latest) {
 
-        UsageInformationRequest UsageInformationRequest = new UsageInformationRequest();
+        final Header header = createHeader(region, timestamp, organization, transactionId, sourceName, applicationName, bsCarrier);
 
-        Header header = createHeader(region, timestamp, organization,
-                transactionId, sourceName, applicationName, bsCarrier);
+        final DeviceId deviceIdValue = new DeviceId();
+        deviceIdValue.setKind(kind);
+        deviceIdValue.setId(deviceId);
 
-        UsageInformationRequestDataArea dataArea = new UsageInformationRequestDataArea();
-        DeviceId deviceIdvalue = new DeviceId();
-
-        deviceIdvalue.setKind(kind);
-        deviceIdvalue.setId(deviceId);
-        dataArea.setDeviceId(deviceIdvalue);
+        final UsageInformationRequestDataArea dataArea = new UsageInformationRequestDataArea();
+        dataArea.setDeviceId(deviceIdValue);
         dataArea.setEarliest(earliest);
         dataArea.setLatest(latest);
 
-        UsageInformationRequest.setHeader(header);
-        UsageInformationRequest.setDataArea(dataArea);
+        final UsageInformationRequest usageInformationRequest = new UsageInformationRequest();
+        usageInformationRequest.setHeader(header);
+        usageInformationRequest.setDataArea(dataArea);
 
-        UsageInformationResponse response = (UsageInformationResponse) producer
-                .requestBody("direct:retrieveDeviceUsageHistoryCarrier",
-                        UsageInformationRequest);
-
-        return response;
+        return (UsageInformationResponse) producer.requestBody("direct:retrieveDeviceUsageHistoryCarrier", usageInformationRequest);
     }
 
     @Override
-    public SessionBeginEndResponse deviceSessionBeginEndResponse(String region,
-            String timestamp, String organization, String transactionId,
-            String sourceName, String applicationName, String bsCarrier,
-            String deviceId, String kind, String earliest, String latest) {
-        // TODO Auto-generated method stub
+    public SessionBeginEndResponse deviceSessionBeginEndResponse(
+            String region
+            , String timestamp
+            , String organization
+            , String transactionId
+            , String sourceName
+            , String applicationName
+            , String bsCarrier
+            , String deviceId
+            , String kind
+            , String earliest
+            , String latest) {
 
-        ConnectionInformationRequest connectionInformationRequest = new ConnectionInformationRequest();
+        final Header header = createHeader(region, timestamp, organization, transactionId, sourceName, applicationName, bsCarrier);
 
-        Header header = createHeader(region, timestamp, organization,
-                transactionId, sourceName, applicationName, bsCarrier);
+        final DeviceId deviceIdValue = new DeviceId();
+        deviceIdValue.setKind(kind);
+        deviceIdValue.setId(deviceId);
 
-        ConnectionInformationRequestDataArea dataArea = new ConnectionInformationRequestDataArea();
-        DeviceId deviceIdvalue = new DeviceId();
-
-        deviceIdvalue.setKind(kind);
-        deviceIdvalue.setId(deviceId);
-        dataArea.setDeviceId(deviceIdvalue);
+        final ConnectionInformationRequestDataArea dataArea = new ConnectionInformationRequestDataArea();
+        dataArea.setDeviceId(deviceIdValue);
         dataArea.setEarliest(earliest);
         dataArea.setLatest(latest);
 
+        final ConnectionInformationRequest connectionInformationRequest = new ConnectionInformationRequest();
         connectionInformationRequest.setHeader(header);
         connectionInformationRequest.setDataArea(dataArea);
 
-        SessionBeginEndResponse response = (SessionBeginEndResponse) producer
-                .requestBody("direct:deviceSessionBeginEndInfo",
-                        connectionInformationRequest);
-
-        return response;
+        return (SessionBeginEndResponse) producer.requestBody("direct:deviceSessionBeginEndInfo", connectionInformationRequest);
     }
 
     @Override
-	public DevicesUsageByDayAndCarrierResponse getDevicesUsageByDayAndCarrierInfoDB(
-			String region, String timestamp, String organization,
-			String transactionId, String sourceName, String applicationName,
-			String bsCarrier, String startDate) {
-		    	
-    	 Header header = createHeader(region, timestamp, organization,
-                 transactionId, sourceName, applicationName, bsCarrier);
-    	 
-    	 DevicesUsageByDayAndCarrierRequest devicesUsageByDayAndCarrierRequest=new DevicesUsageByDayAndCarrierRequest();
-    	 
-    	 devicesUsageByDayAndCarrierRequest.setHeader(header);
-    	 
-    	 DevicesUsageByDayAndCarrierRequestDataArea devicesUsageByDayAndCarrierRequestDataArea=new DevicesUsageByDayAndCarrierRequestDataArea();
-    	 
-    	 devicesUsageByDayAndCarrierRequestDataArea.setDate(startDate);
-    	 
-    	 devicesUsageByDayAndCarrierRequest.setDateArea(devicesUsageByDayAndCarrierRequestDataArea);
-    	 DevicesUsageByDayAndCarrierResponse response = (DevicesUsageByDayAndCarrierResponse) producer
-                 .requestBody("direct:getDevicesUsageByDayAndCarrierInfoDB",
-                		 devicesUsageByDayAndCarrierRequest);
+    public DevicesUsageByDayAndCarrierResponse getDevicesUsageByDayAndCarrierInfoDB(
+            String region
+            , String timestamp
+            , String organization
+            , String transactionId
+            , String sourceName
+            , String applicationName
+            , String bsCarrier
+            , String startDate) {
 
-         return response;
-	}
-    
-    private Header createHeader(String region, String timestamp,
-            String organization, String transactionId, String sourceName,
-            String applicationName, String bsCarrier) {
+        final Header header = createHeader(region, timestamp, organization, transactionId, sourceName, applicationName, bsCarrier);
 
-        Header header = new Header();
+        final DevicesUsageByDayAndCarrierRequestDataArea devicesUsageByDayAndCarrierRequestDataArea = new DevicesUsageByDayAndCarrierRequestDataArea();
+        devicesUsageByDayAndCarrierRequestDataArea.setDate(startDate);
+
+        final DevicesUsageByDayAndCarrierRequest devicesUsageByDayAndCarrierRequest = new DevicesUsageByDayAndCarrierRequest();
+        devicesUsageByDayAndCarrierRequest.setHeader(header);
+        devicesUsageByDayAndCarrierRequest.setDateArea(devicesUsageByDayAndCarrierRequestDataArea);
+
+        return (DevicesUsageByDayAndCarrierResponse) producer.requestBody("direct:getDevicesUsageByDayAndCarrierInfoDB", devicesUsageByDayAndCarrierRequest);
+    }
+
+    private Header createHeader(String region
+            , String timestamp
+            , String organization
+            , String transactionId
+            , String sourceName
+            , String applicationName
+            , String bsCarrier) {
+
+        final Header header = new Header();
         header.setRegion(region);
         header.setApplicationName(applicationName);
         header.setBsCarrier(bsCarrier);
@@ -487,9 +449,5 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
         header.setOrganization(organization);
 
         return header;
-
     }
-
-	
-
 }

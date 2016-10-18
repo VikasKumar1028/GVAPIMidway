@@ -19,37 +19,27 @@ import com.gv.midway.pojo.verizon.DeviceId;
 
 public class VerizonDeviceConnectionHistoryPostProcessor implements Processor {
 
-	private static final Logger LOGGER = Logger
-			.getLogger(VerizonDeviceConnectionHistoryPostProcessor.class
-					.getName());
+	private static final Logger LOGGER = Logger.getLogger(VerizonDeviceConnectionHistoryPostProcessor.class.getName());
 
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
 		LOGGER.info("Begin:VerizonDeviceConnectionHistoryPostProcessor");
-		Map map = exchange.getIn().getBody(Map.class);
-		ObjectMapper mapper = new ObjectMapper();
-		ConnectionInformationResponse connectionResponse = mapper.convertValue(
-				map, ConnectionInformationResponse.class);
-		DeviceConnection deviceConnection = new DeviceConnection();
-		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+		final Map map = exchange.getIn().getBody(Map.class);
+		final ObjectMapper mapper = new ObjectMapper();
+		final ConnectionInformationResponse connectionResponse = mapper.convertValue(map, ConnectionInformationResponse.class);
+		final JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
 
-		deviceConnection.setCarrierName((String) exchange
-				.getProperty("CarrierName"));
-		deviceConnection.setDeviceId((DeviceId) exchange
-				.getProperty("DeviceId"));
+		final ArrayList<DeviceEvent> deviceEventList = new ArrayList<>();
 
-		ArrayList<DeviceEvent> deviceEventList = new ArrayList<DeviceEvent>();
-
+		final DeviceEvent[] deviceEvents;
 		if (connectionResponse.getConnectionHistory() != null) {
-			for (ConnectionHistory history : connectionResponse
-					.getConnectionHistory()) {
+			for (ConnectionHistory history : connectionResponse.getConnectionHistory()) {
 
 				int count = 0;
-				DeviceEvent event = new DeviceEvent();
+				final DeviceEvent event = new DeviceEvent();
 
-				for (ConnectionEvent events : history
-						.getConnectionEventAttributes()) {
+				for (ConnectionEvent events : history.getConnectionEventAttributes()) {
 
 					if ("BytesUsed".equalsIgnoreCase(events.getKey())) {
 						event.setBytesUsed(events.getValue());
@@ -58,35 +48,32 @@ public class VerizonDeviceConnectionHistoryPostProcessor implements Processor {
 						event.setEventType(events.getValue());
 						count++;
 					}
-					if (count == 2) {
 
+					if (count == 2) {
 						break;
 					}
-
 				}
 				event.setOccurredAt(history.getOccurredAt());
 				deviceEventList.add(event);
 			}
-			deviceConnection.setEvent(deviceEventList
-					.toArray(new DeviceEvent[deviceEventList.size()]));
+			deviceEvents = deviceEventList.toArray(new DeviceEvent[deviceEventList.size()]);
 		} else {
-			deviceConnection.setEvent(null);
+			deviceEvents = null;
 		}
 
-		// The Day for which Job Ran
-		deviceConnection.setDate(jobDetail.getDate());
+		final DeviceConnection deviceConnection = new DeviceConnection();
+		deviceConnection.setCarrierName((String) exchange.getProperty("CarrierName"));
+		deviceConnection.setDeviceId((DeviceId) exchange.getProperty("DeviceId"));
+		deviceConnection.setEvent(deviceEvents);
+		deviceConnection.setDate(jobDetail.getDate()); // The Day for which Job Ran
 		deviceConnection.setTransactionErrorReason(null);
-		deviceConnection
-				.setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_SUCCESS);
-		deviceConnection.setNetSuiteId((Integer) exchange
-				.getProperty(IConstant.MIDWAY_NETSUITE_ID));
+		deviceConnection.setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_SUCCESS);
+		deviceConnection.setNetSuiteId((Integer) exchange.getProperty(IConstant.MIDWAY_NETSUITE_ID));
 		deviceConnection.setIsValid(true);
-		deviceConnection.setJobId(jobDetail.getJobId());
+		deviceConnection.setJobId( jobDetail.getJobId());
 
 		exchange.getIn().setBody(deviceConnection);
 
 		LOGGER.info("End:VerizonDeviceConnectionHistoryPostProcessor");
-
 	}
-
 }

@@ -87,7 +87,7 @@ public class AttCallBackPreProcessor implements Processor {
    
         if (carrierStatus.equals(IConstant.CARRIER_TRANSACTION_STATUS_ERROR)) {
             LOGGER.info("carrier status error is........." + carrierStatus);
-            message.setHeader(IConstant.ATT_CALLBACK_STATUS, "error");
+            message.setHeader(IConstant.ATT_CALLBACK_STATUS, IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
 
         }
 
@@ -95,7 +95,7 @@ public class AttCallBackPreProcessor implements Processor {
         else if (carrierStatus
                 .equals(IConstant.CARRIER_TRANSACTION_STATUS_SUCCESS)) {
 
-            message.setHeader(IConstant.ATT_CALLBACK_STATUS, "success");
+            message.setHeader(IConstant.ATT_CALLBACK_STATUS, IConstant.MIDWAY_TRANSACTION_STATUS_SUCCESS);
 
         }
 

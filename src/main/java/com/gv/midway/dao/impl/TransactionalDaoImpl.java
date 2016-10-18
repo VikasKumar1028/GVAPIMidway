@@ -836,6 +836,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                                                 ITransaction.DEVICE_NUMBER)
                                                 .is(exchange
                                                         .getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
+                Update update = new Update();
               
                 //This is applicable for AT&T CUSTOM Field to update 
                 //the status for respective custom field
@@ -850,6 +851,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                     {
                     searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
                             .is(RecordType.SECONDARY));
+                    update.set(ITransaction.MIDWAY_STATUS, IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
+                    LOGGER.info("search query connection error is..........."+searchQuery.toString());
                     }
                 }
                 
@@ -864,7 +867,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 LOGGER.info("device number in Kore or ATT is.........."
                         + exchange
                                 .getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER));
-                Update update = new Update();
+                
                 update.set(ITransaction.MIDWAY_STATUS,
                         IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
                 update.set(ITransaction.CALL_BACK_PAYLOAD,
@@ -2005,10 +2008,12 @@ public class TransactionalDaoImpl implements ITransactionalDao {
             
             if (exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null)
             {
+           
             searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
                     .is(RecordType.SECONDARY));
             
             update.set(ITransaction.MIDWAY_STATUS, IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
+            LOGGER.info("search query success is..........."+searchQuery.toString());
             
             }
         }
@@ -2082,7 +2087,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                                                     .getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
       
          
-            
+            Update update = new Update();
             
             // Adding the Search Criteria for custom field of ATT
             if (exchange.getProperty(IConstant.ATT_CUSTOMFIELD_TO_UPDATE) != null) {
@@ -2093,8 +2098,13 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 
                 if (exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null)
                 {
+               
                 searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
                         .is(RecordType.SECONDARY));
+                
+                update.set(ITransaction.MIDWAY_STATUS, IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
+                
+                LOGGER.info("search query error is..........."+searchQuery.toString());
                 }
             }
             
@@ -2108,7 +2118,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
             
 
             
-            Update update = new Update();
+           
             update.set(ITransaction.CARRIER_ERROR_DESCRIPTION, exchange
                     .getProperty(IConstant.ATTJASPER_SOAP_FAULT_ERRORMESSAGE)
                     .toString());

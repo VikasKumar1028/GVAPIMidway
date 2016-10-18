@@ -47,6 +47,8 @@ import org.apache.cxf.binding.soap.SoapHeader;
 import org.apache.cxf.headers.Header.Direction;
 import org.apache.cxf.message.MessageContentsList;
 import org.apache.log4j.Logger;
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -361,100 +363,53 @@ public class CommonUtil<J extends JsonSerialize> {
     }
 
     /**
-     * Method takes the Billing Day(eg 10 and Creates the billing Start date
-     * yyyy-MM-dd)
+     * Method takes the Billing Day(eg 10 and Creates the billing Start date yyyy-MM-dd)
      * 
-     * @param billingDay
-     * @param jobDate
-     * @return
+     * @param billingDay The day of the month the customer is billed
+     * @param jobDate The date of the job
+     * @return The date which the customer will be billed for
      */
-    public static String getDeviceBillingStartDate(String billingDay,
-            String jobDate) {
-
-        String billingStartDate = null;
-        String jobDay = jobDate.substring(8);
-
-        // Creating The bill start date
-        // billingday One oR two character
-        if (billingDay != null && billingDay.length() == 1) {
-            String billingDayChanged = "0" + billingDay;
-            billingDay = billingDayChanged;
+    public static String getDeviceBillingStartDate(String billingDay, String jobDate) {
+        if (billingDay == null || jobDate == null || !billingDay.matches("\\d{1,2}") || !jobDate.matches("\\d{4}-\\d{2}-\\d{2}")) {
+            return null;
+        } else {
+            return getDeviceBillingStartDate(
+                    Integer.parseInt(billingDay)
+                    , LocalDate.parse(jobDate, DateTimeFormat.forPattern("yyyy-MM-dd"))
+            ).toString("yyyy-MM-dd");
         }
+    }
 
-        try {
-            if (billingDay != null) {
+    public static org.joda.time.LocalDate getDeviceBillingStartDate(int billingDay, org.joda.time.LocalDate jobDate) {
 
-                // billing day>JobDetail Day
-                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(dateFormat.parse(jobDate));
+        if (billingDay > jobDate.getDayOfMonth()) {
+            final org.joda.time.LocalDate previousMonth = jobDate.minusMonths(1);
+            final int lastDayOfPreviousMonth = previousMonth.dayOfMonth().withMaximumValue().getDayOfMonth();
 
-                LOGGER.info(billingDay + "::::::::::::::::::::" + jobDay);
-                if (Integer.parseInt(billingDay) > Integer.parseInt(jobDay)) {
-                    // previous month data
+            final int calculatedDay = previousMonth.getDayOfMonth();
 
-                    cal.add(Calendar.MONTH, -1);
-
-                    int noOfLastDay = cal
-                            .getActualMaximum(Calendar.DAY_OF_MONTH);
-
-                    billingStartDate = dateFormat.format(cal.getTime());
-
-                    LOGGER.info(noOfLastDay + ":::::::::::::::::::::::"
-                            + dateFormat.format(cal.getTime()));
-
-                    int calculatedDay = Integer.parseInt(billingStartDate
-                            .substring(8));
-
-                    LOGGER.info("Calculated Day " + calculatedDay);
-
-                    if ((calculatedDay < noOfLastDay)
-                            && (Integer.parseInt(billingDay) < noOfLastDay)) {
-
-                        cal.set(Calendar.DAY_OF_MONTH,
-                                Integer.parseInt(billingDay));
-                        billingStartDate = dateFormat.format(cal.getTime());
-
-                        LOGGER.info("::::::::::::::::" + billingStartDate);
-                    }
-
-                } else
-
-                // billing day is <= JobDetail Day
-                if (Integer.parseInt(billingDay) <= Integer.parseInt(jobDay)) {
-
-                    // current month of data
-                    cal.set(Calendar.DATE, Integer.parseInt(billingDay));
-                    billingStartDate = dateFormat.format(cal.getTime());
-
-                }
-                LOGGER.info("::::::::::::::::" + billingStartDate);
-
+            if ((calculatedDay < lastDayOfPreviousMonth) && (billingDay < lastDayOfPreviousMonth)) {
+                return previousMonth.withDayOfMonth(billingDay);
+            } else {
+                return previousMonth;
             }
-
-        } catch (Exception ex) {
-            LOGGER.error("................Error in Setting Job Dates. Cause: " + ex);
+        } else {
+            return jobDate.withDayOfMonth(billingDay);
         }
-
-        return billingStartDate;
     }
 
     /**
      * Setting Message Header Values in exchange
-     * 
      */
 
     public static Message setMessageHeader(Exchange exchange) {
-        Message message = exchange.getIn();
+        final Message message = exchange.getIn();
         String sessionToken = "";
         String authorizationToken = "";
 
-        if (exchange.getProperty(IConstant.VZ_SEESION_TOKEN) != null
-                && exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN) != null) {
-            sessionToken = exchange.getProperty(IConstant.VZ_SEESION_TOKEN)
-                    .toString();
-            authorizationToken = exchange.getProperty(
-                    IConstant.VZ_AUTHORIZATION_TOKEN).toString();
+        if (exchange.getProperty(IConstant.VZ_SEESION_TOKEN) != null && exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN) != null) {
+            sessionToken = exchange.getProperty(IConstant.VZ_SEESION_TOKEN).toString();
+            authorizationToken = exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN).toString();
         }
 
         message.setHeader("VZ-M2M-Token", sessionToken);

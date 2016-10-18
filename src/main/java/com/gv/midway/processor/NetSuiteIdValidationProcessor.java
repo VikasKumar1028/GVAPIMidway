@@ -12,50 +12,23 @@ import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequestData
 
 public class NetSuiteIdValidationProcessor implements Processor {
 
-	private static final Logger LOGGER = Logger
-			.getLogger(NetSuiteIdValidationProcessor.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(NetSuiteIdValidationProcessor.class.getName());
 
 	@Override
 	public void process(Exchange exchange) throws Exception {
-		LOGGER.info("Begin:NetSuiteIdValidationProcessor");
-		DeviceInformationRequest request = (DeviceInformationRequest) exchange
-				.getIn().getBody(DeviceInformationRequest.class);
+		LOGGER.info("NetSuiteIdValidationProcessor");
+		final DeviceInformationRequest request = exchange.getIn().getBody(DeviceInformationRequest.class);
+		final DeviceInformationRequestDataArea deviceInformationRequestDataArea = request.getDataArea();
 
-		DeviceInformationRequestDataArea deviceInformationRequestDataArea = request
-				.getDataArea();
-
-		if (deviceInformationRequestDataArea == null)
-
-		{
-
+		if (deviceInformationRequestDataArea == null || deviceInformationRequestDataArea.getNetSuiteId() == null) {
 			missingNetSuiteId(exchange);
-
 		}
-
-		else {
-
-			Integer netSuiteId = deviceInformationRequestDataArea
-					.getNetSuiteId();
-
-			if (netSuiteId == null) {
-
-				missingNetSuiteId(exchange);
-			}
-		}
-		LOGGER.info("End:NetSuiteIdValidationProcessor");
 	}
 
-	private void missingNetSuiteId(Exchange exchange)
-			throws MissingParameterException {
-
+	private void missingNetSuiteId(Exchange exchange) throws MissingParameterException {
 		exchange.setProperty(IConstant.RESPONSE_CODE, IResponse.INVALID_PAYLOAD);
-		exchange.setProperty(IConstant.RESPONSE_STATUS,
-				IResponse.ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB);
-		exchange.setProperty(IConstant.RESPONSE_DESCRIPTION,
-				IResponse.ERROR_MESSAGE);
-		throw new MissingParameterException(
-				IResponse.INVALID_PAYLOAD.toString(),
-				IResponse.ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB);
+		exchange.setProperty(IConstant.RESPONSE_STATUS, IResponse.ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB);
+		exchange.setProperty(IConstant.RESPONSE_DESCRIPTION, IResponse.ERROR_MESSAGE);
+		throw new MissingParameterException(IResponse.INVALID_PAYLOAD.toString(), IResponse.ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB);
 	}
-
 }

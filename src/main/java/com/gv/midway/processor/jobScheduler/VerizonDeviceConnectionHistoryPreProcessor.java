@@ -15,54 +15,42 @@ import com.gv.midway.utility.CommonUtil;
 
 public class VerizonDeviceConnectionHistoryPreProcessor implements Processor {
 
-	private static final Logger LOGGER = Logger
-			.getLogger(VerizonDeviceConnectionHistoryPreProcessor.class
-					.getName());
+	private static final Logger LOGGER = Logger.getLogger(VerizonDeviceConnectionHistoryPreProcessor.class.getName());
 
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
 		LOGGER.info("Begin:VerizonDeviceConnectionHistoryPreProcessor");
-		LOGGER.info("Session Parameters  VZSessionToken"
-				+ exchange.getProperty(IConstant.VZ_SEESION_TOKEN));
-		LOGGER.info("Session Parameters  VZAuthorization"
-				+ exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN));
+		LOGGER.info("Session Parameters  VZSessionToken" + exchange.getProperty(IConstant.VZ_SEESION_TOKEN));
+		LOGGER.info("Session Parameters  VZAuthorization" + exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN));
 
-		DeviceInformation deviceInfo = (DeviceInformation) exchange.getIn()
-				.getBody();
-
-		ConnectionInformationRequestDataArea dataArea = new ConnectionInformationRequestDataArea();
-		DeviceId device = new DeviceId();
+		final DeviceInformation deviceInfo = (DeviceInformation) exchange.getIn().getBody();
 
 		// Fetching Recommended device Identifiers
-		DeviceId recommendedDeviceId = CommonUtil
-				.getRecommendedDeviceIdentifier(deviceInfo.getDeviceIds());
+		final DeviceId recommendedDeviceId = CommonUtil.getRecommendedDeviceIdentifier(deviceInfo.getDeviceIds());
 
+		final DeviceId device = new DeviceId();
 		device.setId(recommendedDeviceId.getId());
 		device.setKind(recommendedDeviceId.getKind());
+
+		final ConnectionInformationRequestDataArea dataArea = new ConnectionInformationRequestDataArea();
 		dataArea.setDeviceId(device);
-
-		exchange.setProperty("DeviceId", device);
-		exchange.setProperty("CarrierName", deviceInfo.getBs_carrier());
-		exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID,
-				deviceInfo.getNetSuiteId());
-
 		dataArea.setLatest(exchange.getProperty("jobEndTime").toString());
 		dataArea.setEarliest(exchange.getProperty("jobStartTime").toString());
 
-		ObjectMapper objectMapper = new ObjectMapper();
+		final ObjectMapper objectMapper = new ObjectMapper();
 
-		String strRequestBody = objectMapper.writeValueAsString(dataArea);
+		final String strRequestBody = objectMapper.writeValueAsString(dataArea);
 
-		exchange.getIn().setBody(strRequestBody);
+		final Message message = CommonUtil.setMessageHeader(exchange);
+		message.setHeader(Exchange.HTTP_PATH, "/devices/connections/actions/listHistory");
 
-		Message message = CommonUtil.setMessageHeader(exchange);
-		message.setHeader(Exchange.HTTP_PATH,
-				"/devices/connections/actions/listHistory");
-
+		exchange.setProperty("DeviceId", device);
+		exchange.setProperty("CarrierName", deviceInfo.getBs_carrier());
+		exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID, deviceInfo.getNetSuiteId());
 		exchange.setPattern(ExchangePattern.InOut);
+		exchange.getIn().setBody(strRequestBody);
 
 		LOGGER.info("End:VerizonDeviceConnectionHistoryPreProcessor");
 	}
-
 }

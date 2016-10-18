@@ -353,7 +353,7 @@ public class CamelRoute extends RouteBuilder {
 
                 .when(header("derivedCarrierName").isEqualTo("KORE"))
                 .wireTap("direct:processActivateKoreTransaction")
-                .process(new CarrierProvisioningDevicePostProcessor(env))
+                .process(new CarrierProvisioningDevicePostProcessor())
                 .endChoice()
                 .
 
@@ -366,7 +366,7 @@ public class CamelRoute extends RouteBuilder {
 
                 when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
                 .wireTap("direct:processActivateATTJasperTransaction")
-                .process(new CarrierProvisioningDevicePostProcessor(env))
+                .process(new CarrierProvisioningDevicePostProcessor())
                 .endChoice().end().to("log:input").endChoice().end();
 
         // Verizon Flow-1
@@ -377,7 +377,7 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iTransactionalService,
                         "populateVerizonTransactionalErrorResponse")
                 .bean(iAuditService, "auditExternalExceptionResponseCall")
-                .process(new VerizonGenericExceptionProcessor(env)).endDoTry()
+                .process(new VerizonGenericExceptionProcessor()).endDoTry()
                 .end();
 
         // Verizon Flow-2
@@ -394,7 +394,7 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iTransactionalService,
                         "populateVerizonTransactionalResponse")
                 .bean(iAuditService, "auditExternalResponseCall")
-                .process(new CarrierProvisioningDevicePostProcessor(env));
+                .process(new CarrierProvisioningDevicePostProcessor());
 
         // Kore Flow-1
         from("direct:processActivateKoreTransaction")
@@ -475,12 +475,12 @@ public class CamelRoute extends RouteBuilder {
 
                 .when(header("derivedCarrierName").isEqualTo("KORE"))
                 .wireTap("direct:processDeactivateKoreTransaction")
-                .process(new CarrierProvisioningDevicePostProcessor(env))
+                .process(new CarrierProvisioningDevicePostProcessor())
                 .endChoice().
 
                 when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
                 .wireTap("direct:processDeactivateATTJasperTransaction")
-                .process(new CarrierProvisioningDevicePostProcessor(env))
+                .process(new CarrierProvisioningDevicePostProcessor())
                 .endChoice()
 
                 .when(header("derivedCarrierName").isEqualTo("VERIZON"))
@@ -499,7 +499,7 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iTransactionalService,
                         "populateVerizonTransactionalErrorResponse")
                 .bean(iAuditService, "auditExternalExceptionResponseCall")
-                .process(new VerizonGenericExceptionProcessor(env)).endDoTry()
+                .process(new VerizonGenericExceptionProcessor()).endDoTry()
                 .end();
 
         // Verizon Flow-2
@@ -520,7 +520,7 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iTransactionalService,
                         "populateVerizonTransactionalResponse")
                 .bean(iAuditService, "auditExternalResponseCall")
-                .process(new CarrierProvisioningDevicePostProcessor(env));
+                .process(new CarrierProvisioningDevicePostProcessor());
 
         // Kore Flow-1
 
@@ -599,12 +599,12 @@ public class CamelRoute extends RouteBuilder {
                 .endChoice().otherwise().choice()
                 .when(header("derivedCarrierName").isEqualTo("KORE"))
                 .wireTap("direct:processRestoreKoreTransaction")
-                .process(new CarrierProvisioningDevicePostProcessor(env))
+                .process(new CarrierProvisioningDevicePostProcessor())
                 .endChoice().
 
                 when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
                 .wireTap("direct:processRestoreDeviceATTJasperTansaction")
-                .process(new CarrierProvisioningDevicePostProcessor(env))
+                .process(new CarrierProvisioningDevicePostProcessor())
                 .endChoice()
 
                 .when(header("derivedCarrierName").isEqualTo("VERIZON"))
@@ -624,7 +624,7 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iTransactionalService,
                         "populateVerizonTransactionalErrorResponse")
                 .bean(iAuditService, "auditExternalExceptionResponseCall")
-                .process(new VerizonGenericExceptionProcessor(env)).endDoTry()
+                .process(new VerizonGenericExceptionProcessor()).endDoTry()
                 .end();
 
         // Verizon Flow-2
@@ -642,7 +642,7 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iTransactionalService,
                         "populateVerizonTransactionalResponse")
                 .bean(iAuditService, "auditExternalResponseCall")
-                .process(new CarrierProvisioningDevicePostProcessor(env));
+                .process(new CarrierProvisioningDevicePostProcessor());
 
         // Kore Flow-1
 
@@ -721,12 +721,12 @@ public class CamelRoute extends RouteBuilder {
                 .endChoice().otherwise().choice()
                 .when(header("derivedCarrierName").isEqualTo("KORE"))
                 .wireTap("direct:processSuspendKoreTransaction")
-                .process(new CarrierProvisioningDevicePostProcessor(env))
+                .process(new CarrierProvisioningDevicePostProcessor())
                 .endChoice().
 
                 when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
                 .wireTap("direct:processSuspendDeviceATTJasperTansaction")
-                .process(new CarrierProvisioningDevicePostProcessor(env))
+                .process(new CarrierProvisioningDevicePostProcessor())
                 .endChoice()
 
                 .when(header("derivedCarrierName").isEqualTo("VERIZON"))
@@ -746,7 +746,7 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iTransactionalService,
                         "populateVerizonTransactionalErrorResponse")
                 .bean(iAuditService, "auditExternalExceptionResponseCall")
-                .process(new VerizonGenericExceptionProcessor(env)).endDoTry()
+                .process(new VerizonGenericExceptionProcessor()).endDoTry()
                 .end();
 
         // Verizon Flow-2
@@ -767,7 +767,7 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iTransactionalService,
                         "populateVerizonTransactionalResponse")
                 .bean(iAuditService, "auditExternalResponseCall")
-                .process(new CarrierProvisioningDevicePostProcessor(env));
+                .process(new CarrierProvisioningDevicePostProcessor());
 
         // Kore Flow-1
 
@@ -845,12 +845,12 @@ public class CamelRoute extends RouteBuilder {
                 .endChoice().otherwise().choice()
                 .when(header("derivedCarrierName").isEqualTo("KORE"))
                 .wireTap("direct:processReactivateKoreTransaction")
-                .process(new CarrierProvisioningDevicePostProcessor(env))
+                .process(new CarrierProvisioningDevicePostProcessor())
                 .endChoice().
 
                 when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
                 .wireTap("direct:processReactivateDeviceATTJasperTansaction")
-                .process(new CarrierProvisioningDevicePostProcessor(env))
+                .process(new CarrierProvisioningDevicePostProcessor())
                 .endChoice()
 
                 .end().to("log:input").endChoice().end();
@@ -931,13 +931,13 @@ public class CamelRoute extends RouteBuilder {
 
                 .when(header("derivedCarrierName").isEqualTo("KORE"))
                 .wireTap("direct:processcustomeFieldsKoreTransaction")
-                .process(new CarrierProvisioningDevicePostProcessor(env))
+                .process(new CarrierProvisioningDevicePostProcessor())
 
                 .endChoice()
 
                 .when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
                 .wireTap("direct:processCustomFieldATTJasperTansaction")
-                .process(new CarrierProvisioningDevicePostProcessor(env))
+                .process(new CarrierProvisioningDevicePostProcessor())
                 .endChoice()
 
                 .when(header("derivedCarrierName").isEqualTo("VERIZON"))
@@ -955,7 +955,7 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iTransactionalService,
                         "populateVerizonTransactionalErrorResponse")
                 .bean(iAuditService, "auditExternalExceptionResponseCall")
-                .process(new VerizonGenericExceptionProcessor(env)).endDoTry()
+                .process(new VerizonGenericExceptionProcessor()).endDoTry()
                 .end();
 
         // Verizon Flow-2
@@ -970,7 +970,7 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iTransactionalService,
                         "populateVerizonTransactionalResponse")
                 .bean(iAuditService, "auditExternalResponseCall")
-                .process(new CarrierProvisioningDevicePostProcessor(env));
+                .process(new CarrierProvisioningDevicePostProcessor());
 
         // Kore Flow-1
 
@@ -1062,13 +1062,13 @@ public class CamelRoute extends RouteBuilder {
                 .when(header("derivedCarrierName").isEqualTo("KORE"))
                 .wireTap(
                         "direct:processchangeDeviceServicePlansKoreTransaction")
-                .process(new CarrierProvisioningDevicePostProcessor(env))
+                .process(new CarrierProvisioningDevicePostProcessor())
                 .endChoice()
 
                 .when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
                 .wireTap(
                         "direct:processChangeDeviceServicePlansATTJasperTansaction")
-                .process(new CarrierProvisioningDevicePostProcessor(env))
+                .process(new CarrierProvisioningDevicePostProcessor())
                 .endChoice()
 
                 .when(header("derivedCarrierName").isEqualTo("VERIZON"))
@@ -1089,7 +1089,7 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iTransactionalService,
                         "populateVerizonTransactionalErrorResponse")
                 .bean(iAuditService, "auditExternalExceptionResponseCall")
-                .process(new VerizonGenericExceptionProcessor(env)).endDoTry()
+                .process(new VerizonGenericExceptionProcessor()).endDoTry()
                 .end();
 
         // Verizon Flow-2
@@ -1104,7 +1104,7 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iTransactionalService,
                         "populateVerizonTransactionalResponse")
                 .bean(iAuditService, "auditExternalResponseCall")
-                .process(new CarrierProvisioningDevicePostProcessor(env));
+                .process(new CarrierProvisioningDevicePostProcessor());
 
         // Kore Flow-1
 
@@ -1202,7 +1202,7 @@ public class CamelRoute extends RouteBuilder {
                 .to("direct:DeviceConnectionStatusFlow2")
                 .doCatch(CxfOperationException.class)
                 .bean(iAuditService, "auditExternalExceptionResponseCall")
-                .process(new VerizonGenericExceptionProcessor(env)).endDoTry()
+                .process(new VerizonGenericExceptionProcessor()).endDoTry()
                 .end();
 
         // Verizon Flow-2
@@ -1228,7 +1228,7 @@ public class CamelRoute extends RouteBuilder {
 				.to("direct:ATTJasperDeviceConnectionStatusFlow2")
 				.doCatch(SoapFault.class)
 				.bean(iAuditService, "auditExternalSOAPExceptionResponseCall")
-				.process(new ATTJasperGenericExceptionProcessor(env))
+				.process(new ATTJasperGenericExceptionProcessor())
 				.endDoTry().end();
 
 		// ATTJasper Flow-2
@@ -1276,7 +1276,7 @@ public class CamelRoute extends RouteBuilder {
 				.to("direct:DeviceSessionBeginEndInfoFlow2")
 				.doCatch(CxfOperationException.class)
 				.bean(iAuditService, "auditExternalExceptionResponseCall")
-				.process(new VerizonGenericExceptionProcessor(env)).endDoTry()
+				.process(new VerizonGenericExceptionProcessor()).endDoTry()
 				.end();
 		// Verizon Flow-2
 		from("direct:DeviceSessionBeginEndInfoFlow2")
@@ -1300,7 +1300,7 @@ public class CamelRoute extends RouteBuilder {
 				.to("direct:ATTJasperDeviceSessionBeginEndInfoFlow2")
 				.doCatch(SoapFault.class)
 				.bean(iAuditService, "auditExternalSOAPExceptionResponseCall")
-				.process(new ATTJasperGenericExceptionProcessor(env))
+				.process(new ATTJasperGenericExceptionProcessor())
 				.endDoTry().end();
 		// ATTJASPER Flow-2
 		from("direct:ATTJasperDeviceSessionBeginEndInfoFlow2")
@@ -1353,7 +1353,7 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iDeviceService, "updateDeviceInformationDB")
                 .doCatch(CxfOperationException.class)
                 .bean(iAuditService, "auditExternalExceptionResponseCall")
-                .process(new KoreGenericExceptionProcessor(env))
+                .process(new KoreGenericExceptionProcessor())
                 .endDoTry()
                 .endChoice()
 
@@ -1368,7 +1368,7 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iDeviceService, "updateDeviceInformationDB")
                 .doCatch(SoapFault.class)
                 .bean(iAuditService, "auditExternalSOAPExceptionResponseCall")
-                .process(new ATTJasperGenericExceptionProcessor(env))
+                .process(new ATTJasperGenericExceptionProcessor())
                 .endDoTry()
                 .endChoice()
 
@@ -1385,7 +1385,7 @@ public class CamelRoute extends RouteBuilder {
                 .to("direct:VerizonDeviceInformationCarrierSubProcessFlow")
                 .doCatch(CxfOperationException.class)
                 .bean(iAuditService, "auditExternalExceptionResponseCall")
-                .process(new VerizonGenericExceptionProcessor(env)).endDoTry()
+                .process(new VerizonGenericExceptionProcessor()).endDoTry()
                 .end();
 
         // SubFlow: Verizon Device Information
@@ -1537,7 +1537,7 @@ public class CamelRoute extends RouteBuilder {
                 .onException(ExchangeTimedOutException.class)
                 .handled(true)
                 .log(LoggingLevel.INFO, "TimeOut Exception for Batch Job")
-                .process(new TimeOutErrorProcessor(env))
+                .process(new TimeOutErrorProcessor())
                 .end()
                 .onCompletion()
                 .bean(iJobService, "checkTimeOutDevices")
@@ -1605,7 +1605,7 @@ public class CamelRoute extends RouteBuilder {
                         SocketTimeoutException.class,
                         NoRouteToHostException.class,
                         KoreSimMissingException.class)
-                .process(new KoreBatchExceptionProcessor(env))
+                .process(new KoreBatchExceptionProcessor())
                 .bean(iSchedulerService, "saveDeviceUsageHistory").endDoTry();
 
         // VERIZON Job-DEVICE USAGE
@@ -1623,7 +1623,7 @@ public class CamelRoute extends RouteBuilder {
                         UnknownHostException.class, ConnectException.class,
                         SocketTimeoutException.class,
                         NoRouteToHostException.class)
-                .process(new VerizonBatchExceptionProcessor(env))
+                .process(new VerizonBatchExceptionProcessor())
                 .bean(iSchedulerService, "saveDeviceUsageHistory").endDoTry();
 
         // VERIZON Job CONNECTION HISTORY
@@ -1641,7 +1641,7 @@ public class CamelRoute extends RouteBuilder {
                         UnknownHostException.class, ConnectException.class,
                         SocketTimeoutException.class,
                         NoRouteToHostException.class)
-                .process(new VerizonBatchExceptionProcessor(env))
+                .process(new VerizonBatchExceptionProcessor())
                 .bean(iSchedulerService, "saveDeviceConnectionHistory")
                 .endDoTry();
 
@@ -1662,7 +1662,7 @@ public class CamelRoute extends RouteBuilder {
                 .onException(ExchangeTimedOutException.class)
                 .handled(true)
                 .log(LoggingLevel.INFO, "TimeOut Exception for Batch Job")
-                .process(new TimeOutErrorProcessor(env))
+                .process(new TimeOutErrorProcessor())
                 .end()
                 .onCompletion()
                 .bean(iJobService, "checkTimeOutDevicesTransactionFailure")
@@ -1723,7 +1723,7 @@ public class CamelRoute extends RouteBuilder {
                         SocketTimeoutException.class,
                         NoRouteToHostException.class,
                         KoreSimMissingException.class)
-                .process(new KoreBatchExceptionProcessor(env))
+                .process(new KoreBatchExceptionProcessor())
                 .bean(iSchedulerService, "saveDeviceUsageHistory").endDoTry();
 
         // VERIZON Job-DEVICE USAGE
@@ -1743,7 +1743,7 @@ public class CamelRoute extends RouteBuilder {
                         UnknownHostException.class, ConnectException.class,
                         SocketTimeoutException.class,
                         NoRouteToHostException.class)
-                .process(new VerizonBatchExceptionProcessor(env))
+                .process(new VerizonBatchExceptionProcessor())
                 .bean(iSchedulerService, "saveDeviceUsageHistory").endDoTry();
 
         // VERIZON Job CONNECTION HISTORY
@@ -1763,7 +1763,7 @@ public class CamelRoute extends RouteBuilder {
                         UnknownHostException.class, ConnectException.class,
                         SocketTimeoutException.class,
                         NoRouteToHostException.class)
-                .process(new VerizonBatchExceptionProcessor(env))
+                .process(new VerizonBatchExceptionProcessor())
                 .bean(iSchedulerService, "saveDeviceConnectionHistory")
                 .endDoTry();
 
@@ -1794,7 +1794,7 @@ public class CamelRoute extends RouteBuilder {
                 .to("direct:VerizonretrieveDeviceUsageHistoryFlow2")
                 .doCatch(CxfOperationException.class)
                 .bean(iAuditService, "auditExternalExceptionResponseCall")
-                .process(new VerizonGenericExceptionProcessor(env)).endDoTry()
+                .process(new VerizonGenericExceptionProcessor()).endDoTry()
                 .end();
 
         // Verizon Flow-2
@@ -2103,9 +2103,9 @@ public class CamelRoute extends RouteBuilder {
                 * Now call the netsuite end point for error and write in Kafka
                 * Queue.
                 */
-               .when(header(IConstant.ATT_CALLBACK_STATUS).isEqualTo("error"))
+               .when(header(IConstant.ATT_CALLBACK_STATUS).isEqualTo(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR))
                .to("direct:attCallBackErrorSubProcess")
-               .when(header(IConstant.ATT_CALLBACK_STATUS).isEqualTo("success"))
+               .when(header(IConstant.ATT_CALLBACK_STATUS).isEqualTo(IConstant.MIDWAY_TRANSACTION_STATUS_SUCCESS))
                .to("direct:attCallBackSuccessSubProcess").
                endChoice();
 

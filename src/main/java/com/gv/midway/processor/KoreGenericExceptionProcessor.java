@@ -4,7 +4,6 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.component.cxf.CxfOperationException;
 import org.apache.log4j.Logger;
-import org.springframework.core.env.Environment;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IResponse;
@@ -17,103 +16,57 @@ import com.gv.midway.pojo.kore.KoreErrorResponse;
 
 public class KoreGenericExceptionProcessor implements Processor {
 
-    private static final Logger LOGGER = Logger
-            .getLogger(KoreGenericExceptionProcessor.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(KoreGenericExceptionProcessor.class.getName());
 
-    Environment newEnv;
+	public KoreGenericExceptionProcessor() {
+		// Empty Constructor
+	}
 
-    public KoreGenericExceptionProcessor(Environment env) {
-        super();
-        this.newEnv = env;
-    }
+	@Override
+	public void process(Exchange exchange) throws Exception {
 
-    public KoreGenericExceptionProcessor() {
-        // Empty Constructor
-    }
+		LOGGER.info("Begin:KoreGenericExceptionProcessor");
+		final CxfOperationException exception = (CxfOperationException) exchange.getProperty(Exchange.EXCEPTION_CAUGHT);
 
-    @Override
-    public void process(Exchange exchange) throws Exception {
+		LOGGER.info("----KoreGenericExceptionProcessor----------" + exception.getResponseBody());
+		LOGGER.info("----.getStatusCode()----------" + exception.getStatusCode());
 
-    	LOGGER.info("Begin:KoreGenericExceptionProcessor");
-        CxfOperationException exception = (CxfOperationException) exchange
-                .getProperty(Exchange.EXCEPTION_CAUGHT);
+		final ObjectMapper mapper = new ObjectMapper();
 
-        LOGGER.info("----KoreGenericExceptionProcessor----------"
-                + exception.getResponseBody());
-        LOGGER.info("----.getStatusCode()----------" + exception.getStatusCode());
+		final KoreErrorResponse responsePayload = mapper.readValue(exception.getResponseBody(), KoreErrorResponse.class);
 
-        ObjectMapper mapper = new ObjectMapper();
+		LOGGER.info("----response payload is----------" + responsePayload.toString());
 
-        KoreErrorResponse responsePayload = mapper.readValue(
-                exception.getResponseBody(), KoreErrorResponse.class);
+		final Response response = new Response();
+		response.setResponseCode(IResponse.INVALID_PAYLOAD);
+		response.setResponseStatus(IResponse.ERROR_MESSAGE);
+		response.setResponseDescription(responsePayload.getErrorMessage());
 
-        LOGGER.info("----response payload is----------"
-                + responsePayload.toString());
+		final Header responseHeader = (Header) exchange.getProperty(IConstant.HEADER);
 
-        Response response = new Response();
+		switch (exchange.getFromEndpoint().toString()) {
 
-        response.setResponseCode(IResponse.INVALID_PAYLOAD);
-
-        response.setResponseStatus(IResponse.ERROR_MESSAGE);
-        response.setResponseDescription(responsePayload.getErrorMessage());
-
-        Header responseHeader = (Header) exchange.getProperty(IConstant.HEADER);
-        
-        switch (exchange.getFromEndpoint().toString()) {
-
-		case "Endpoint[direct://deviceInformationCarrier]":
-			DeviceInformationResponse responseObject = new DeviceInformationResponse();
-			responseObject.setHeader(responseHeader);
-			responseObject.setResponse(response);
-			exchange.getIn().setBody(responseObject);
-			break;
-		case "Endpoint[direct://activateDevice]":
-			CarrierProvisioningDeviceResponse activateResposne = new CarrierProvisioningDeviceResponse();
-			activateResposne.setHeader(responseHeader);
-			activateResposne.setResponse(response);
-            exchange.getIn().setBody(activateResposne);
-			break;
-		case "Endpoint[direct://deactivateDevice]":
-			CarrierProvisioningDeviceResponse deactivateDeviceResponse = new CarrierProvisioningDeviceResponse();
-			deactivateDeviceResponse.setHeader(responseHeader);
-			deactivateDeviceResponse.setResponse(response);
-			exchange.getIn().setBody(deactivateDeviceResponse);
-			break;
-		case "Endpoint[direct://suspendDevice]":
-			CarrierProvisioningDeviceResponse suspendDeviceResponse = new CarrierProvisioningDeviceResponse();
-			suspendDeviceResponse.setHeader(responseHeader);
-			suspendDeviceResponse.setResponse(response);
-			exchange.getIn().setBody(suspendDeviceResponse);
-			break;
-		case "Endpoint[direct://customeFields]":
-			CarrierProvisioningDeviceResponse customFieldsDeviceResponse = new CarrierProvisioningDeviceResponse();
-			customFieldsDeviceResponse.setHeader(responseHeader);
-			customFieldsDeviceResponse.setResponse(response);
-			exchange.getIn().setBody(customFieldsDeviceResponse);
-			break;
-		case "Endpoint[direct://changeDeviceServicePlans]":
-			CarrierProvisioningDeviceResponse changeDeviceServicePlansResponse = new CarrierProvisioningDeviceResponse();
-			changeDeviceServicePlansResponse.setHeader(responseHeader);
-			changeDeviceServicePlansResponse.setResponse(response);
-			exchange.getIn().setBody(changeDeviceServicePlansResponse);
-			break;
-		case "Endpoint[direct://reactivateDevice]":
-			CarrierProvisioningDeviceResponse reactivateDeviceResponse = new CarrierProvisioningDeviceResponse();
-			reactivateDeviceResponse.setHeader(responseHeader);
-			reactivateDeviceResponse.setResponse(response);
-			exchange.getIn().setBody(reactivateDeviceResponse);
-			break;
-		case "Endpoint[direct://restoreDevice]":
-			CarrierProvisioningDeviceResponse restoreDeviceResponse = new CarrierProvisioningDeviceResponse();
-			restoreDeviceResponse.setHeader(responseHeader);
-			restoreDeviceResponse.setResponse(response);
-			exchange.getIn().setBody(restoreDeviceResponse);
-			break;
-		default:
-			break;
+			case "Endpoint[direct://deviceInformationCarrier]":
+				final DeviceInformationResponse responseObject = new DeviceInformationResponse();
+				responseObject.setHeader(responseHeader);
+				responseObject.setResponse(response);
+				exchange.getIn().setBody(responseObject);
+				break;
+			case "Endpoint[direct://activateDevice]":
+			case "Endpoint[direct://deactivateDevice]":
+			case "Endpoint[direct://suspendDevice]":
+			case "Endpoint[direct://customeFields]":
+			case "Endpoint[direct://changeDeviceServicePlans]":
+			case "Endpoint[direct://reactivateDevice]":
+			case "Endpoint[direct://restoreDevice]":
+				final CarrierProvisioningDeviceResponse restoreDeviceResponse = new CarrierProvisioningDeviceResponse();
+				restoreDeviceResponse.setHeader(responseHeader);
+				restoreDeviceResponse.setResponse(response);
+				exchange.getIn().setBody(restoreDeviceResponse);
+				break;
+			default:
+				break;
 		}
-
-     	LOGGER.info("End:KoreGenericExceptionProcessor");
-
-    }
+		LOGGER.info("End:KoreGenericExceptionProcessor");
+	}
 }
