@@ -21,7 +21,7 @@ https://api.jasper.com/ws/service/terminal
          <!--Optional:-->
         
          <!--Optional:-->
-         <sch:targetValue>Developer Kit Plan - Monthly Plan</sch:targetValue>
+         <sch:targetValue>OptConnect - 5MB Plan</sch:targetValue>
          <sch:changeType>4</sch:changeType>
       </sch:EditTerminalRequest>
    </soapenv:Body>
