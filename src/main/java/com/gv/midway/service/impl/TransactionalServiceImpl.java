@@ -170,14 +170,23 @@ public class TransactionalServiceImpl implements ITransactionalService {
 	          (List<Transaction>) exchange.getProperty(IConstant.ATT_ACTVATION_WITH_CUSTOMEFILEDS_LIST));
 	}
 	
+	
+        @Override
+        public void setActivateServicePlanListInExchange(Exchange exchange){
+            
+            CommonUtil.setListInWireTap( exchange,
+                  (List<Transaction>) exchange.getProperty(IConstant.ATT_ACTVATION_WITH_SERVICEPLAN_LIST));
+        }
+        	
+	
 	@Override
 	public void fetchAttPendingCallback(Exchange exchange){
 	    transactionalDao.fetchAttPendingCallback(exchange);
 	}
 	
 	@Override
-	 public void updateCallBackStatusOfSecondaryCustomField(Exchange exchange){
-	    transactionalDao.updateCallBackStatusOfSecondaryCustomField(exchange);
+	 public void updateCallBackStatusOfSecondaryField(Exchange exchange){
+	    transactionalDao.updateCallBackStatusOfSecondaryField(exchange);
 	 }
 	 
 	@Override

@@ -128,10 +128,16 @@ public interface IConstant {
     static int ATTJASPER_CUSTOMFIELD_CHANGETYPE = 17;
 
     static String ACTVATION_WITH_CUSTOMEFILEDS = "activationWithCustomFields";
+    
+    static String ACTVATION_WITH_SERVICEPLAN = "activationWithServicePlan";
 
     static String ATT_ACTVATION_WITH_CUSTOMEFILEDS_LIST = "attActivationWithCustomFieldsList";
     
+    static String ATT_ACTVATION_WITH_SERVICEPLAN_LIST = "attActivationWithServicePlanList";
+    
     static String ATT_CUSTOMFIELD_TO_UPDATE = "AttCustomFieldsToUpdate";
+    
+    static String ATT_SERVICEPLAN_TO_UPDATE = "AttServicePlanToUpdate";
 
     static String KORE_USAGE_TIMER24 = "kore.usagetimer24";
 

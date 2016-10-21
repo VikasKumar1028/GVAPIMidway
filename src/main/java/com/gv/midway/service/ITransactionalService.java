@@ -61,11 +61,12 @@ public interface ITransactionalService {
 	
 	public void fetchAttPendingCallback(Exchange exchange);
 	
-	 public void updateCallBackStatusOfSecondaryCustomField(Exchange exchange);
+	 public void updateCallBackStatusOfSecondaryField(Exchange exchange);
 	 
 	 public void updateAttNetSuiteCallBackError(Exchange exchange);
 	 
 	 public void updateAttNetSuiteCallBackRequest(Exchange exchange);
 	 
 	 public void updateAttNetSuiteCallBackResponse(Exchange exchange);
+	  public void setActivateServicePlanListInExchange(Exchange exchange);
 }

@@ -3,6 +3,7 @@ package com.gv.midway.processor.changeDeviceServicePlans;
 
 import java.util.Date;
 import java.util.List;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.Processor;
@@ -11,8 +12,10 @@ import org.apache.cxf.binding.soap.SoapHeader;
 import org.apache.cxf.headers.Header;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
+
 import com.gv.midway.attjasper.EditTerminalRequest;
 import com.gv.midway.constant.IConstant;
+import com.gv.midway.constant.RequestType;
 import com.gv.midway.pojo.changeDeviceServicePlans.request.ChangeDeviceServicePlansRequest;
 import com.gv.midway.pojo.transaction.Transaction;
 import com.gv.midway.processor.deactivateDevice.ATTJasperDeactivateDevicePreProcessor;
@@ -71,6 +74,8 @@ public class ATTJasperChangeDeviceServicePlansPreProcessor implements Processor 
 				.newXMLGregorianCalendar(currentUTCTime.toString());
 
 		getEditTerminalRequest.setEffectiveDate(xmlDate);*/
+		
+		exchange.setProperty(IConstant.ATT_SERVICEPLAN_TO_UPDATE,servicePlan);
 
 		getEditTerminalRequest.setIccid(deviceId);
 

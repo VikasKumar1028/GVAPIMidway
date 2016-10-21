@@ -171,8 +171,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                         IConstant.AUDIT_TRANSACTION_ID).toString());
                 transaction.setRequestType(RequestType.ACTIVATION);
                 transaction.setCallBackReceived(false);
-                // if activate device request comes with custom fields then set the recordType Field as Primary
-                if(activateDevice.getCustomFields()!=null && activateDevice.getCustomFields().length>0)
+                // if activate device request comes with custom fields OR Service Plan then set the recordType Field as Primary
+                if((activateDevice.getCustomFields()!=null && activateDevice.getCustomFields().length>0)||(activateDevice.getServicePlan()!=null &&activateDevice.getServicePlan().length()>0 ) )
                 {
                 	 transaction.setRecordType(RecordType.PRIMARY);
                 }
@@ -205,6 +205,14 @@ public class TransactionalDaoImpl implements ITransactionalDao {
         	
         }
         
+        if(activateDevices.getServicePlan()!=null && activateDevices.getServicePlan().trim().length() >0 && IConstant.BSCARRIER_SERVICE_ATTJASPER.equals(carrierName))
+        {
+             exchange.setProperty(IConstant.ACTVATION_WITH_SERVICEPLAN, true);        
+
+               populateATTActivateServicePlanDBPayload(exchange);
+            
+                
+        }
         
 
         CommonUtil.setListInWireTap(exchange, list);
@@ -450,6 +458,109 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
     }
 
+    
+    //*Service Plan 
+    private void populateATTActivateServicePlanDBPayload(Exchange exchange) {
+
+        ArrayList<Transaction> list = new ArrayList<Transaction>();
+
+        ActivateDeviceRequest req = (ActivateDeviceRequest) exchange.getIn()
+                .getBody();
+
+        ActivateDeviceRequestDataArea activateDeviceRequestDataArea = (ActivateDeviceRequestDataArea) req
+                .getDataArea();
+
+        ActivateDevices activateDevices = activateDeviceRequestDataArea
+                .getDevices();
+
+        ActivateDevices[] activateDevicesArr = new ActivateDevices[1];
+
+        if (activateDevices != null) {
+            activateDevicesArr[0] = activateDevices;
+        }
+
+        for (ActivateDevices activateDevice : activateDevicesArr) {
+
+            ChangeDeviceServicePlansRequest dbPayload = new ChangeDeviceServicePlansRequest();
+          
+            dbPayload.setHeader(req.getHeader());
+            Integer netSuiteId = activateDevice.getNetSuiteId();
+            MidWayDevices[] businessPayLoadDevicesArray = new MidWayDevices[1];
+            MidWayDevices businessPayLoadActivateDevices = new MidWayDevices();
+            MidWayDeviceId[] businessPayloadDeviceId = new MidWayDeviceId[activateDevice
+                    .getDeviceIds().length];
+
+            for (int i = 0; i < activateDevice.getDeviceIds().length; i++) {
+                ActivateDeviceId servicePlanDeviceId = activateDevice
+                        .getDeviceIds()[i];
+
+                MidWayDeviceId businessPayLoadActivateDeviceId = new MidWayDeviceId();
+
+                businessPayLoadActivateDeviceId.setId(servicePlanDeviceId
+                        .getId());
+                businessPayLoadActivateDeviceId.setKind(servicePlanDeviceId
+                        .getKind());
+
+                businessPayloadDeviceId[i] = businessPayLoadActivateDeviceId;
+
+            }
+            businessPayLoadActivateDevices
+                    .setDeviceIds(businessPayloadDeviceId);
+            businessPayLoadActivateDevices.setNetSuiteId(netSuiteId);
+            businessPayLoadDevicesArray[0] = businessPayLoadActivateDevices;
+
+            // create custom field logic
+
+            ChangeDeviceServicePlansRequestDataArea requestDataArea = new ChangeDeviceServicePlansRequestDataArea();
+
+            
+
+            requestDataArea.setServicePlan(req.getDataArea().getDevices().getServicePlan());
+            requestDataArea.setDevices(businessPayLoadDevicesArray);
+            dbPayload.setDataArea(requestDataArea);
+
+            try {
+
+                Transaction transaction = new Transaction();
+
+                transaction.setMidwayTransactionId(exchange.getProperty(
+                        IConstant.MIDWAY_TRANSACTION_ID).toString());
+
+                // Sorting the device id by kind and inserting into deviceNumber
+                Arrays.sort(businessPayloadDeviceId, (MidWayDeviceId a,
+                        MidWayDeviceId b) -> a.getKind().compareTo(b.getKind()));
+
+                ObjectMapper obj = new ObjectMapper();
+                String strDeviceNumber = obj
+                        .writeValueAsString(businessPayloadDeviceId);
+                transaction.setDeviceNumber(strDeviceNumber);
+                transaction.setDevicePayload(dbPayload);
+                transaction.setMidwayStatus(IConstant.MIDWAY_TRANSACTION_STATUS_WAIT);
+                transaction.setCarrierName(exchange.getProperty(
+                        IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString());
+                transaction.setTimeStampReceived(new Date());
+                transaction.setAuditTransactionId(exchange.getProperty(
+                        IConstant.AUDIT_TRANSACTION_ID).toString());
+                transaction.setRequestType(RequestType.CHANGESERVICEPLAN);
+                transaction.setCallBackReceived(false);
+                transaction.setNetSuiteId(netSuiteId);
+                // Set the Record Type as Secondary for the servicePlan transactions records of activate request. 
+                transaction.setRecordType(RecordType.SECONDARY);
+                list.add(transaction);
+
+            } catch (Exception ex) {
+                LOGGER.error("Exception populateATTActivateServicePlanDBPayload" + ex);
+            }
+
+        }
+        mongoTemplate.insertAll(list);
+        
+        exchange.setProperty(IConstant.ATT_ACTVATION_WITH_SERVICEPLAN_LIST, list);
+
+    }
+
+    
+    
     @Override
     public void populateDeactivateDBPayload(Exchange exchange) {
 
@@ -838,6 +949,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                                                         .getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
                 Update update = new Update();
               
+                
+                boolean isSecondary=false;
                 //This is applicable for AT&T CUSTOM Field to update 
                 //the status for respective custom field
                 // Adding the Search Criteria for custom field of ATT
@@ -853,16 +966,33 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                             .is(RecordType.SECONDARY));
                     update.set(ITransaction.MIDWAY_STATUS, IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
                     LOGGER.info("search query connection error is..........."+searchQuery.toString());
+                    isSecondary=true;
                     }
                 }
                 
-                // If device activation request comes with Custom fields then update only the primary record(Activation record) in transaction
-                
-                if(exchange.getProperty(IConstant.ATT_CUSTOMFIELD_TO_UPDATE) == null && exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null){
-                        searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
-                                .is(RecordType.PRIMARY));
-                        
+                //This is for Activation with service Plan
+                if(exchange.getProperty(IConstant.ACTVATION_WITH_SERVICEPLAN)!=null &&  exchange.getProperty(IConstant.ATT_SERVICEPLAN_TO_UPDATE)!=null)
+                {
+                    searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
+                            .is(RecordType.SECONDARY));
+                    
+                    searchQuery.addCriteria(Criteria.where(ITransaction.REQUEST_TYPE)
+                            .is(RequestType.CHANGESERVICEPLAN));
+                    
+                    isSecondary=true;
+                    
+                    update.set(ITransaction.MIDWAY_STATUS, IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
+                    
                 }
+                
+                // If device activation request comes with Custom fields/Service Plan then update only the primary record(Activation record) in transaction
+                
+                if( !isSecondary && (( exchange.getProperty(IConstant.ATT_CUSTOMFIELD_TO_UPDATE) == null && exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null)||(exchange.getProperty(IConstant.ACTVATION_WITH_SERVICEPLAN)!=null &&  exchange.getProperty(IConstant.ATT_SERVICEPLAN_TO_UPDATE)==null  ))){
+                    searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
+                            .is(RecordType.PRIMARY));
+                    LOGGER.info("search query error PRIMARY is..........."+searchQuery.toString());
+                    
+            }
 
                 LOGGER.info("device number in Kore or ATT is.........."
                         + exchange
@@ -1999,6 +2129,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
         
         Update update = new Update();
 
+        boolean isSecondary=false;
         // Adding the Search Criteria for custom field of ATT
         if (exchange.getProperty(IConstant.ATT_CUSTOMFIELD_TO_UPDATE) != null) {
             
@@ -2010,21 +2141,44 @@ public class TransactionalDaoImpl implements ITransactionalDao {
             {
            
             searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
-                    .is(RecordType.SECONDARY));
+                    .is(RecordType.SECONDARY));           
+      
             
             update.set(ITransaction.MIDWAY_STATUS, IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
             LOGGER.info("search query success is..........."+searchQuery.toString());
+            isSecondary=true;
             
             }
         }
         
-        // If device activation request comes with Custom fields then update only the primary record(Activation record) in transaction
-        
-        if(exchange.getProperty(IConstant.ATT_CUSTOMFIELD_TO_UPDATE) == null && exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null){
-        	searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
-                        .is(RecordType.PRIMARY));
-        	
+        //This is for Activation with service Plan
+        if(exchange.getProperty(IConstant.ACTVATION_WITH_SERVICEPLAN)!=null &&  exchange.getProperty(IConstant.ATT_SERVICEPLAN_TO_UPDATE)!=null)
+        {
+            
+           
+            searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
+                    .is(RecordType.SECONDARY));
+            
+            searchQuery.addCriteria(Criteria.where(ITransaction.REQUEST_TYPE)
+                    .is(RequestType.CHANGESERVICEPLAN));
+            
+            update.set(ITransaction.MIDWAY_STATUS, IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
+            isSecondary=true;
+            
+            LOGGER.info("search query success is......2....."+searchQuery.toString());
+            
         }
+        
+        
+        
+        // If device activation request comes with Custom fields/Service Plan then update only the primary record(Activation record) in transaction
+        
+        if( !isSecondary && (( exchange.getProperty(IConstant.ATT_CUSTOMFIELD_TO_UPDATE) == null && exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null)||(exchange.getProperty(IConstant.ACTVATION_WITH_SERVICEPLAN)!=null &&  exchange.getProperty(IConstant.ATT_SERVICEPLAN_TO_UPDATE)==null  ))){
+            searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
+                    .is(RecordType.PRIMARY));
+            LOGGER.info("search query error PRIMARY is..........."+searchQuery.toString());
+            
+    }
 
        
 
@@ -2088,6 +2242,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
       
          
             Update update = new Update();
+            boolean isSecondary =false;
             
             // Adding the Search Criteria for custom field of ATT
             if (exchange.getProperty(IConstant.ATT_CUSTOMFIELD_TO_UPDATE) != null) {
@@ -2103,19 +2258,38 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                         .is(RecordType.SECONDARY));
                 
                 update.set(ITransaction.MIDWAY_STATUS, IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
+                isSecondary=true;
                 
                 LOGGER.info("search query error is..........."+searchQuery.toString());
                 }
             }
             
-            // If device activation request comes with Custom fields then update only the primary record(Activation record) in transaction
-            
-            if(exchange.getProperty(IConstant.ATT_CUSTOMFIELD_TO_UPDATE) == null && exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null){
-                    searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
-                            .is(RecordType.PRIMARY));
-                    
+            //This is for Activation with service Plan
+            if(exchange.getProperty(IConstant.ACTVATION_WITH_SERVICEPLAN)!=null &&  exchange.getProperty(IConstant.ATT_SERVICEPLAN_TO_UPDATE)!=null)
+            {
+                searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
+                        .is(RecordType.SECONDARY.toString()));
+                
+                searchQuery.addCriteria(Criteria.where(ITransaction.REQUEST_TYPE)
+                        .is(RequestType.CHANGESERVICEPLAN));
+                
+                update.set(ITransaction.MIDWAY_STATUS, IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
+                
+                isSecondary=true;
+                LOGGER.info("search query error SECONDARY is..........."+searchQuery.toString());
+                
             }
+           
+            // If device activation request comes with Custom fields/Service Plan then update only the primary record(Activation record) in transaction
             
+            if( !isSecondary && (( exchange.getProperty(IConstant.ATT_CUSTOMFIELD_TO_UPDATE) == null && exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null)||(exchange.getProperty(IConstant.ACTVATION_WITH_SERVICEPLAN)!=null &&  exchange.getProperty(IConstant.ATT_SERVICEPLAN_TO_UPDATE)==null  ))){
+                searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
+                        .is(RecordType.PRIMARY));
+                LOGGER.info("search query error PRIMARY is..........."+searchQuery.toString());
+                
+        }
+           
+       
 
             
            
@@ -2320,8 +2494,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 	    
 	}
 
-	//Setting the custom fields to Error if the Primary Activation is error
-        public void updateCallBackStatusOfSecondaryCustomField(Exchange exchange){
+	//Setting the custom fields & Service Plan to Error if the Primary Activation is error
+        public void updateCallBackStatusOfSecondaryField(Exchange exchange){
             
             Query searchPrimaryActivationWithError = new Query(Criteria
                     .where(ITransaction.CARRIER_NAME)
@@ -2349,7 +2523,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                         .is(IConstant.BSCARRIER_SERVICE_ATTJASPER)
                         
                           .andOperator(
-                                Criteria.where(ITransaction.REQUEST_TYPE).is(RequestType.CHANGECUSTOMFIELDS.toString()),
+                                  //Making it applicable for servicePlan also so commenting below line
+                               // Criteria.where(ITransaction.REQUEST_TYPE).is(RequestType.CHANGECUSTOMFIELDS.toString()),
                                 Criteria.where(ITransaction.RECORD_TYPE).is(RecordType.SECONDARY.toString()),
                                 Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID).is(primaryActivation.getMidwayTransactionId()))
                                 

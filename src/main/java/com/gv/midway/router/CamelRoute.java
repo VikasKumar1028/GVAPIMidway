@@ -441,9 +441,19 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iAuditService, "auditExternalSOAPResponseCall")
                 .bean(iTransactionalService,
                         "populateATTJasperTransactionalResponse")
-                  //sending the request for custom field 
+                //sending the request for custom field & Service Plan
+               .multicast().parallelProcessing().to("direct:activationWithCustomFieldFlow","direct:activationWithServicePlanFlow");
+ 
+        
+                from("direct:activationWithCustomFieldFlow")  
                 .bean(iTransactionalService,
                         "setActivateCustomFieldListInExchange").split()
+                .method("deviceSplitter").recipientList()
+                .method("attJasperDeviceServiceRouter");
+                
+                from("direct:activationWithServicePlanFlow")     
+               .bean(iTransactionalService,
+                        "setActivateServicePlanListInExchange").split()
                 .method("deviceSplitter").recipientList()
                 .method("attJasperDeviceServiceRouter");
 
@@ -2083,7 +2093,7 @@ public class CamelRoute extends RouteBuilder {
     public void attCallBackTimer() {
 
        from("quartz2://attCallBackTimer?"+env.getProperty(IConstant.NETSUITE_CALLBACK_TIMER))
-               .bean(iTransactionalService, "updateCallBackStatusOfSecondaryCustomField")
+               .bean(iTransactionalService, "updateCallBackStatusOfSecondaryField")
                .bean(iTransactionalService, "fetchAttPendingCallback")
                .split()
                .method("attCallBackSplitter").parallelProcessing()
