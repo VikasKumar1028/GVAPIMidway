@@ -29,42 +29,47 @@ public class VerizonCustomFieldsPreProcessor implements Processor {
                 .getIn().getBody();
         businessRequest.setAccountName(proxyRequest.getDataArea()
                 .getAccountName());
-        businessRequest.setCustomFields(proxyRequest.getDataArea()
+        // No Need to pass these options as Midway changes the customeFileds on the basis of deviceIds
+       /* businessRequest.setCustomFields(proxyRequest.getDataArea()
                 .getCustomFields());
         businessRequest.setGroupName(proxyRequest.getDataArea().getGroupName());
         businessRequest.setServicePlan(proxyRequest.getDataArea()
-                .getServicePlan());
+                .getServicePlan());*/
         businessRequest.setCustomFieldsToUpdate(proxyRequest.getDataArea()
                 .getCustomFieldsToUpdate());
 
         MidWayDevices[] proxyDevicesArray = proxyRequest.getDataArea()
                 .getDevices();
-        Devices[] businessDevicesArray = new Devices[proxyDevicesArray.length];
+        // Check if deviceIds are passed then only set them in request not the groupName,ServicePlan and CustomFields
+		if (proxyDevicesArray != null && proxyDevicesArray.length > 0) {
+			Devices[] businessDevicesArray = new Devices[proxyDevicesArray.length];
 
-        for (int j = 0; j < proxyDevicesArray.length; j++) {
+			for (int j = 0; j < proxyDevicesArray.length; j++) {
 
-            DeviceId[] businessDeviceIdArray = new DeviceId[proxyDevicesArray[j]
-                    .getDeviceIds().length];
-            MidWayDevices proxyDevices = proxyDevicesArray[j];
-            Devices businessDevice = new Devices();
+				DeviceId[] businessDeviceIdArray = new DeviceId[proxyDevicesArray[j]
+						.getDeviceIds().length];
+				MidWayDevices proxyDevices = proxyDevicesArray[j];
+				Devices businessDevice = new Devices();
 
-            for (int i = 0; i < proxyDevices.getDeviceIds().length; i++) {
-                MidWayDeviceId proxyDeviceId = proxyDevices.getDeviceIds()[i];
+				for (int i = 0; i < proxyDevices.getDeviceIds().length; i++) {
+					MidWayDeviceId proxyDeviceId = proxyDevices.getDeviceIds()[i];
 
-                DeviceId businessDeviceId = new DeviceId();
-                businessDeviceId.setId(proxyDeviceId.getId());
-                businessDeviceId.setKind(proxyDeviceId.getKind());
+					DeviceId businessDeviceId = new DeviceId();
+					businessDeviceId.setId(proxyDeviceId.getId());
+					businessDeviceId.setKind(proxyDeviceId.getKind());
 
-                LOGGER.info(proxyDeviceId.getId());
+					LOGGER.info(proxyDeviceId.getId());
 
-                businessDeviceIdArray[i] = businessDeviceId;
+					businessDeviceIdArray[i] = businessDeviceId;
 
-            }
-            businessDevicesArray[j] = businessDevice;
+				}
+				businessDevicesArray[j] = businessDevice;
 
-            businessDevicesArray[j].setDeviceIds(businessDeviceIdArray);
-        }
-        businessRequest.setDevices(businessDevicesArray);
+				businessDevicesArray[j].setDeviceIds(businessDeviceIdArray);
+			}
+			businessRequest.setDevices(businessDevicesArray);
+
+		}
 
         ObjectMapper objectMapper = new ObjectMapper();
 
