@@ -154,4 +154,6 @@ public interface IConstant {
     static String NETSUITE_CALLBACK_TIMER= "callBack.CronTimer";
 
     static String ATTJASPER_CUSTOM_FIELD_DEC = "attJasperCustomFieldDescription";
+	
+	static String AUTHORIZATION_KEY ="authorizationKey";
 }

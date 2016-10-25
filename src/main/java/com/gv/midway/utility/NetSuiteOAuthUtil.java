@@ -2,11 +2,12 @@ package com.gv.midway.utility;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Base64;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.commons.codec.binary.Base64;
+//import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 
 public class NetSuiteOAuthUtil {
@@ -15,7 +16,7 @@ public class NetSuiteOAuthUtil {
 
     private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-    private static Base64 base64 = new Base64();
+    //private static Base64 base64 = new Base64();
 
     public static String getNetSuiteOAuthHeader(String url, String consumerKey,
             String tokenId, String tokenSecret, String consumerSecret,
@@ -99,7 +100,7 @@ public class NetSuiteOAuthUtil {
         } catch (Exception e) {
             LOGGER.error("ERROR "+e);
         }
-        return new String(base64.encode(byteHMAC)).trim();
+        return new String(Base64.getEncoder().encode(byteHMAC)).trim();
 
     }
 

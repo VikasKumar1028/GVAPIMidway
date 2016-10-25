@@ -4,6 +4,14 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 
 public class Response {
 
+    public Response() { }
+
+    public Response (Integer responseCode, String responseDescription, String responseStatus) {
+        this.responseCode = responseCode;
+        this.responseDescription = responseDescription;
+        this.responseStatus = responseStatus;
+    }
+
     @ApiModelProperty(value = "Response code for the triggered request.")
     private Integer responseCode;
 
@@ -41,14 +49,9 @@ public class Response {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result
-                + ((responseCode == null) ? 0 : responseCode.hashCode());
-        result = prime
-                * result
-                + ((responseDescription == null) ? 0 : responseDescription
-                        .hashCode());
-        result = prime * result
-                + ((responseStatus == null) ? 0 : responseStatus.hashCode());
+        result = prime * result + ((responseCode == null) ? 0 : responseCode.hashCode());
+        result = prime * result + ((responseDescription == null) ? 0 : responseDescription.hashCode());
+        result = prime * result + ((responseStatus == null) ? 0 : responseStatus.hashCode());
         return result;
     }
 
@@ -85,5 +88,4 @@ public class Response {
                 + responseStatus + ", responseDescription="
                 + responseDescription + "]";
     }
-
 }

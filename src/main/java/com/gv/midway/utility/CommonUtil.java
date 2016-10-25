@@ -11,7 +11,6 @@ import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -39,7 +38,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.cxf.binding.soap.SoapFault;
@@ -64,18 +62,20 @@ import com.gv.midway.pojo.job.JobinitializedResponse;
 import com.gv.midway.pojo.transaction.Transaction;
 import com.gv.midway.pojo.verizon.DeviceId;
 
-public class CommonUtil<J extends JsonSerialize> {
+public class CommonUtil {
+    //TODO The caught exceptions in this class should probably be caught, logged, and then re-thrown
+
+    private CommonUtil() { }
 
     private static final Logger LOGGER = Logger.getLogger(CommonUtil.class);
 
-    public static List<String> endPointList = new ArrayList<String>();
+    public static List<String> endPointList = new ArrayList<>();
 
     public static AtomicBoolean isTokenRequired = new AtomicBoolean();
 
-    public static AtomicBoolean isAlreadyinTokenGeneration = new AtomicBoolean();
+    public static AtomicBoolean isAlreadyInTokenGeneration = new AtomicBoolean();
 
     static {
-
         endPointList.add(IEndPoints.ACTIVATION_ENDPOINT);
         endPointList.add(IEndPoints.DEACTIVATION_ENDPOINT);
         endPointList.add(IEndPoints.RESTORE_ENDPOINT);
@@ -99,35 +99,27 @@ public class CommonUtil<J extends JsonSerialize> {
         endPointList.add(IEndPoints.CHANGE_SERVICEPLAN_ENDPOINT);
         endPointList.add(IEndPoints.CHANGE_SERVICEPLAN_SEDA_KORE_ENDPOINT);
         endPointList.add(IEndPoints.CHANGE_CUSTOMFIELD_SEDA_KORE_ENDPOINT);
-       
-
     }
 
     /**
      * Get Current date
      * 
-     * @return
+     * @return the current date and time in 'yyyy/MM/dd HH:mm:ss' format
      */
     public static String getCurrentTimeStamp() {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        Date date = new Date();
-
-        return dateFormat.format(date);
-
+        final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        return dateFormat.format(new Date());
     }
 
     /**
      * Get the IP address of Machine
      * 
-     * @return
+     * @return The current IP Address
      */
-    public static String getIpAddress()
-
-    {
+    public static String getIpAddress() {
         InetAddress ip;
 
         try {
-
             ip = InetAddress.getLocalHost();
         } catch (UnknownHostException e) {
             LOGGER.error("Exception ex: " + e);
@@ -135,40 +127,32 @@ public class CommonUtil<J extends JsonSerialize> {
         }
 
         return ip.toString();
-
     }
 
     /**
      * Generate Midway Transaction Id
      * 
-     * @return
+     * @return Current time in millis as a String
      */
     public static String getMidwayTransactionID() {
         long timestamp = System.currentTimeMillis();
         return Long.toString(timestamp);
-
     }
 
     /**
      * Method to get the carrier Name from the input
      * 
-     * @param carrierName
-     * @return
+     * @param carrierName Carrier's name
+     * @return Standardized carrier name
      */
     public static String getDerivedCarrierName(String carrierName) throws InvalidParameterException {
 
-        if (carrierName.equalsIgnoreCase("VERIZON")) {
-
-            return "VERIZON";
-
-        } else if (carrierName.equalsIgnoreCase("KORE")) {
-
-            return "KORE";
-        }
-
-        else if (carrierName.equalsIgnoreCase("ATTJASPER")) {
-
-            return "ATTJASPER";
+        if (carrierName.equalsIgnoreCase(IConstant.BSCARRIER_SERVICE_VERIZON)) {
+            return IConstant.BSCARRIER_SERVICE_VERIZON;
+        } else if (carrierName.equalsIgnoreCase(IConstant.BSCARRIER_SERVICE_KORE)) {
+            return IConstant.BSCARRIER_SERVICE_KORE;
+        } else if (carrierName.equalsIgnoreCase(IConstant.BSCARRIER_SERVICE_ATTJASPER)) {
+            return IConstant.BSCARRIER_SERVICE_ATTJASPER;
         }
         throw new InvalidParameterException("402", "Unsupported bsCarrier field value.  Must pass [Verizon, Kore, or AttJasper].");
     }
@@ -176,10 +160,9 @@ public class CommonUtil<J extends JsonSerialize> {
     /**
      * Method to check if the end point is Provisioning Request
      * 
-     * @param endPoint
-     * @return
+     * @param endPoint Endpoint to check
+     * @return true if provisioning method, false otherwise
      */
-
     public static boolean isProvisioningMethod(String endPoint) {
 
         LOGGER.info("endpoint is......." + endPoint);
@@ -195,9 +178,6 @@ public class CommonUtil<J extends JsonSerialize> {
     /**
      * Returning the recommended device Identifier such as ESN/MEID/ICCID for
      * Device Connection and Device Usage Batch Jobs
-     * 
-     * @param devices
-     * @return
      */
     public static DeviceId getRecommendedDeviceIdentifier(DeviceId[] devices) {
 
@@ -210,18 +190,16 @@ public class CommonUtil<J extends JsonSerialize> {
 
                 return device;
             }
-
         }
 
         return devices[0];
-
     }
 
     /**
      * Returning the Sim Number from the DeviceId Array Device Usage Batch Jobs
      * 
-     * @param devices
-     * @return
+     * @param devices devices to check
+     * @return the first DeviceId that has a kind of 'SIM'
      */
     public static DeviceId getSimNumber(DeviceId[] devices) {
 
@@ -229,21 +207,18 @@ public class CommonUtil<J extends JsonSerialize> {
 
         for (DeviceId device : devices) {
             if ("SIM".equalsIgnoreCase(device.getKind())) {
-
                 return device;
             }
-
         }
 
         return null;
-
     }
 
     /**
      * Validate date
      * 
-     * @param date
-     * @return
+     * @param date date to check
+     * @return boolean indicating whether or not 'date' matches the specified format:
      */
     public static boolean isValidDateFormat(String date) {
 
@@ -252,114 +227,87 @@ public class CommonUtil<J extends JsonSerialize> {
             return false;
         }
 
-        String trimDate = date.trim();
+        final String trimDate = date.trim();
 
-        String exp = "^([\\d]{4})[-]?(0?[1-9]|1[012])[-]?(0?[1-9]|[12][0-9]|3[01])";
+        final String exp = "^([\\d]{4})[-]?(0?[1-9]|1[012])[-]?(0?[1-9]|[12][0-9]|3[01])";
 
-        Pattern pattern = Pattern.compile(exp, Pattern.CASE_INSENSITIVE);
+        final Pattern pattern = Pattern.compile(exp, Pattern.CASE_INSENSITIVE);
 
-        Matcher matcher = pattern.matcher(trimDate);
+        final Matcher matcher = pattern.matcher(trimDate);
 
         if (matcher.matches()) {
             LOGGER.info("valid date format for....." + trimDate);
-
             return true;
         } else {
             LOGGER.info("invalid date format for....." + trimDate);
-
             return false;
         }
     }
 
     /**
      * Validate Job Parameter for Device Usage
-     * 
-     * @param jobParameter
-     * @return
      */
-    public static JobinitializedResponse validateJobParameterForDeviceUsage(
-            JobParameter jobParameter) {
+    public static JobinitializedResponse validateJobParameterForDeviceUsage(JobParameter jobParameter) {
 
-        JobinitializedResponse jobinitializedResponse = new JobinitializedResponse();
+        final JobinitializedResponse jobinitializedResponse = new JobinitializedResponse();
 
         if (jobParameter == null) {
-
             jobinitializedResponse.setMessage("Please provide job parameters");
-
             return jobinitializedResponse;
         }
 
-        String carrierName = jobParameter.getCarrierName();
+        final String carrierName = jobParameter.getCarrierName();
 
         if (carrierName == null) {
-            jobinitializedResponse
-                    .setMessage("Please provide Carrier Name. Allowable Values are KORE and VERIZON");
+            jobinitializedResponse.setMessage("Please provide Carrier Name. Allowable Values are KORE and VERIZON");
             return jobinitializedResponse;
         }
 
-        if (!(IConstant.BSCARRIER_SERVICE_KORE.equals(carrierName) || IConstant.BSCARRIER_SERVICE_VERIZON
-                .equals(carrierName))) {
-
-            jobinitializedResponse
-                    .setMessage("Please provide valid Carrier Name. Allowable Values are KORE and VERIZON");
+        if (!(IConstant.BSCARRIER_SERVICE_KORE.equals(carrierName) || IConstant.BSCARRIER_SERVICE_VERIZON.equals(carrierName))) {
+            jobinitializedResponse.setMessage("Please provide valid Carrier Name. Allowable Values are KORE and VERIZON");
             return jobinitializedResponse;
         }
 
-        String date = jobParameter.getDate();
+        final String date = jobParameter.getDate();
 
         if (!isValidDateFormat(date)) {
-
-            jobinitializedResponse
-                    .setMessage(IResponse.ERROR_DESCRIPTION_DATE_VALIDATE_JOB_MIDWAYDB);
+            jobinitializedResponse.setMessage(IResponse.ERROR_DESCRIPTION_DATE_VALIDATE_JOB_MIDWAYDB);
             return jobinitializedResponse;
         }
         return null;
-
     }
 
     /**
      * Validate Job Parameter for Device Connection
-     * 
-     * @param jobParameter
-     * @return
      */
-    public static JobinitializedResponse validateJobParameterForDeviceConnection(
-            JobParameter jobParameter) {
+    public static JobinitializedResponse validateJobParameterForDeviceConnection(JobParameter jobParameter) {
 
-        JobinitializedResponse jobinitializedResponse = new JobinitializedResponse();
+        final JobinitializedResponse jobinitializedResponse = new JobinitializedResponse();
 
         if (jobParameter == null) {
-
             jobinitializedResponse.setMessage("Please provide job parameters");
-
             return jobinitializedResponse;
         }
 
-        String carrierName = jobParameter.getCarrierName();
+        final String carrierName = jobParameter.getCarrierName();
 
         if (carrierName == null) {
-            jobinitializedResponse
-                    .setMessage("Please provide Carrier Name. Allowable Value is VERIZON");
+            jobinitializedResponse.setMessage("Please provide Carrier Name. Allowable Value is VERIZON");
             return jobinitializedResponse;
         }
 
         if (!(IConstant.BSCARRIER_SERVICE_VERIZON.equals(carrierName))) {
-
-            jobinitializedResponse
-                    .setMessage("Please provide valid Carrier Name. Allowable Value is VERIZON");
+            jobinitializedResponse.setMessage("Please provide valid Carrier Name. Allowable Value is VERIZON");
             return jobinitializedResponse;
         }
 
-        String date = jobParameter.getDate();
+        final String date = jobParameter.getDate();
 
         if (!isValidDateFormat(date)) {
-
-            jobinitializedResponse
-                    .setMessage(IResponse.ERROR_DESCRIPTION_DATE_VALIDATE_JOB_MIDWAYDB);
+            jobinitializedResponse.setMessage(IResponse.ERROR_DESCRIPTION_DATE_VALIDATE_JOB_MIDWAYDB);
             return jobinitializedResponse;
         }
         return null;
-
     }
 
     /**
@@ -401,7 +349,6 @@ public class CommonUtil<J extends JsonSerialize> {
     /**
      * Setting Message Header Values in exchange
      */
-
     public static Message setMessageHeader(Exchange exchange) {
         final Message message = exchange.getIn();
         String sessionToken = "";
@@ -420,15 +367,8 @@ public class CommonUtil<J extends JsonSerialize> {
         return message;
     }
 
-    /**
-     *
-     * @param username
-     * @param password
-     * @return
-     */
+    public static List<SoapHeader> getSOAPHeaders(String username, String password) {
 
-    public static List<SoapHeader> getSOAPHeaders(String username,
-            String password) {
         final String soapHeader = "<wsse:Security xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" "
                 + "soap:mustUnderstand=\"true\" xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\">"
                 + "<wsse:UsernameToken xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" wsu:Id=\"UsernameToken-16847597\">"
@@ -440,49 +380,39 @@ public class CommonUtil<J extends JsonSerialize> {
                 + "</wsse:Password>"
                 + "</wsse:UsernameToken></wsse:Security>";
 
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder db = null;
+        final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder db;
         Element element = null;
         try {
             db = dbf.newDocumentBuilder();
-            InputSource is = new InputSource();
+            final InputSource is = new InputSource();
             is.setCharacterStream(new StringReader(soapHeader));
             try {
                 Document doc = db.parse(is);
                 element = doc.getDocumentElement();
 
-            } catch (SAXException e) {
-                // handle SAXException
-            } catch (IOException e) {
-                // handle IOException
+            } catch (SAXException | IOException e) {
+                LOGGER.error(e);
             }
         } catch (ParserConfigurationException e1) {
-            // handle ParserConfigurationException
+            LOGGER.error(e1);
         }
 
-        List<SoapHeader> soapHeaders = new ArrayList<SoapHeader>();
+        final List<SoapHeader> soapHeaders = new ArrayList<>();
 
         try {
-
-            SoapHeader newHeader = new SoapHeader(new QName("soapHeader"),
-                    element);
-
+            final SoapHeader newHeader = new SoapHeader(new QName("soapHeader"), element);
             newHeader.setDirection(Direction.DIRECTION_OUT);
-
             soapHeaders.add(newHeader);
-
         } catch (Exception e) {
-
-            // log error
-
+            LOGGER.error(e);
         }
         return soapHeaders;
     }
 
-    public static String getSOAPResposneFromExchange(Exchange exchange) {
+    public static String getSOAPResponseFromExchange(Exchange exchange) {
 
-        MessageContentsList result = (MessageContentsList) exchange.getIn()
-                .getBody();
+        final MessageContentsList result = (MessageContentsList) exchange.getIn().getBody();
         Object object = result.get(0);
         LOGGER.info("Received output text: " + result.get(0));
 
@@ -494,33 +424,28 @@ public class CommonUtil<J extends JsonSerialize> {
             Marshaller jaxbMarshaller = context.createMarshaller();
             jaxbMarshaller.marshal(object, sw);
             xmlString = sw.toString();
-            LOGGER.info("resposne body is........" + xmlString);
+            LOGGER.info("response body is........" + xmlString);
 
-            exchange.setProperty(IConstant.ATTJASPER_SOAP_RESPONSE_PAYLOAD,
-                    xmlString);
-
+            exchange.setProperty(IConstant.ATTJASPER_SOAP_RESPONSE_PAYLOAD, xmlString);
         } catch (JAXBException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOGGER.error(e);
         }
 
         return xmlString;
     }
 
-    public static String getSOAPErrorResposneFromExchange(Exchange exchange) {
+    public static String getSOAPErrorResponseFromExchange(Exchange exchange) {
 
         String payload = null;
 
-        SoapFault soapFault = (SoapFault) exchange
-                .getProperty(Exchange.EXCEPTION_CAUGHT);
+        SoapFault soapFault = (SoapFault) exchange.getProperty(Exchange.EXCEPTION_CAUGHT);
 
         String message = soapFault.getMessage();
 
         LOGGER.info("soap fault code    ------------------" + message);
 
         try {
-            SOAPMessage soapMessage = MessageFactory.newInstance()
-                    .createMessage();
+            SOAPMessage soapMessage = MessageFactory.newInstance().createMessage();
             SOAPEnvelope envelope = soapMessage.getSOAPPart().getEnvelope();
 
             SOAPBody soapBody = soapMessage.getSOAPBody();
@@ -533,7 +458,6 @@ public class CommonUtil<J extends JsonSerialize> {
 
             NodeList nodeList = soapFault.getDetail().getChildNodes();
 
-            String errorDetails = "";
             for (int i = 0; i < nodeList.getLength(); i++) {
 
                 Node node = nodeList.item(i);
@@ -543,8 +467,7 @@ public class CommonUtil<J extends JsonSerialize> {
                 String nodeTextContent = node.getTextContent();
 
                 LOGGER.info("-----*************--Node----Name------" + nodeName);
-                LOGGER.info("-----*************--Node-------Text-----"
-                        + nodeTextContent);
+                LOGGER.info("-----*************--Node-------Text-----" + nodeTextContent);
 
                 Name entryName = envelope.createName(nodeName);
 
@@ -552,36 +475,24 @@ public class CommonUtil<J extends JsonSerialize> {
                 entry.addTextNode(nodeTextContent);
 
                 if (nodeName.contains(":error")) {
-
-                    errorDetails = nodeTextContent;
-
-                    exchange.setProperty(
-                            IConstant.ATTJASPER_SOAP_FAULT_ERRORMESSAGE,
-                            nodeTextContent);
+                    exchange.setProperty(IConstant.ATTJASPER_SOAP_FAULT_ERRORMESSAGE, nodeTextContent);
                 }
-
             }
 
             ByteArrayOutputStream outStream = new ByteArrayOutputStream();
             soapMessage.writeTo(outStream);
-            payload = new String(outStream.toByteArray(),
-                    StandardCharsets.UTF_8);
+            payload = new String(outStream.toByteArray(), StandardCharsets.UTF_8);
 
-            exchange.setProperty(IConstant.ATTJASPER_SOAP_FAULT_PAYLOAD,
-                    payload);
+            exchange.setProperty(IConstant.ATTJASPER_SOAP_FAULT_PAYLOAD, payload);
 
-        } catch (SOAPException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        } catch (SOAPException | IOException e) {
+            LOGGER.error(e);
         }
 
         return payload;
     }
 
-    public static final String convertSOAPFaulttoString(Node node) {
+    public static String convertSOAPFaulttoString(Node node) {
         try {
             if (node == null) {
                 return null;
@@ -605,49 +516,34 @@ public class CommonUtil<J extends JsonSerialize> {
     /**
      * Get the Exception stack trace in log file
      */
-
     public static String getStackTrace(Exception e) {
-
-        StringWriter stack = new StringWriter();
+        final StringWriter stack = new StringWriter();
         e.printStackTrace(new PrintWriter(stack));
 
         return stack.toString();
-
     }
 
     public static void setTokenGenerationRequired() {
-
-        if (isTokenRequired.get() == false) {
-
+        if (!isTokenRequired.get()) {
             isTokenRequired.set(true);
-            isAlreadyinTokenGeneration.set(true);
+            isAlreadyInTokenGeneration.set(true);
         }
-
     }
 
     public static AtomicBoolean getTokenRequired() {
-
         return isTokenRequired;
-
     }
 
     public static AtomicBoolean isAlreadyinTokenGeneration() {
-
-        return isAlreadyinTokenGeneration;
-
+        return isAlreadyInTokenGeneration;
     }
 
-    public static void setAlreadyInTokenGeneration(
-            boolean isAlreadyInTokenGeneration) {
-
-        isAlreadyinTokenGeneration.set(isAlreadyInTokenGeneration);
-
+    public static void setAlreadyInTokenGeneration(boolean isAlreadyInTokenGeneration) {
+        CommonUtil.isAlreadyInTokenGeneration.set(isAlreadyInTokenGeneration);
     }
 
     public static void setTokenRequired(boolean isTokenRequired) {
-
         CommonUtil.isTokenRequired.set(isTokenRequired);
-
     }
 
     /*
@@ -655,55 +551,40 @@ public class CommonUtil<J extends JsonSerialize> {
      * should be set with array list of transaction for Verizon we simply add
      * into database and do not change the exchange body
      */
-    public static void setListInWireTap(Exchange exchange,
-            List<Transaction> list) {
+    public static void setListInWireTap(Exchange exchange, List<Transaction> list) {
 
-        String carrierName = exchange.getProperty(
-                IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString();
+        final String carrierName = exchange.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString();
 
         if (!IConstant.BSCARRIER_SERVICE_VERIZON.equals(carrierName)) {
-
             exchange.getIn().setBody(list);
         }
     }
 
-    public static int getAttJasperCustomField(String customFiled) {
+    public static int getAttJasperCustomField(String customeField) {
 
-        switch (customFiled) {
-        case "CustomField1":
-            return 17;
-
-        case "CustomField2":
-            return 18;
-
-        case "CustomField3":
-
-            return 19;
-
-        case "CustomField4":
-
-            return 73;
-
-        case "CustomField5":
-            return 74;
-
-        case "CustomField6":
-            return 75;
-
-        case "CustomField7":
-            return 76;
-            
-        case "CustomField8":
-            return 77;
-            
-        case "CustomField9":
-            return 78;
-            
-        case "CustomField10":
-            return 79;
-
-        default:
-            return -1;
+        switch (customeField) {
+            case "CustomField1":
+                return 17;
+            case "CustomField2":
+                return 18;
+            case "CustomField3":
+                return 19;
+            case "CustomField4":
+                return 73;
+            case "CustomField5":
+                return 74;
+            case "CustomField6":
+                return 75;
+            case "CustomField7":
+                return 76;
+            case "CustomField8":
+                return 77;
+            case "CustomField9":
+                return 78;
+            case "CustomField10":
+                return 79;
+            default:
+                return -1;
         }
     }
 
@@ -711,5 +592,4 @@ public class CommonUtil<J extends JsonSerialize> {
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         return ow.writeValueAsString(objectWithJsonSerializeAnnotation);
     }
-
 }

@@ -270,11 +270,11 @@ class TestCommonUtil extends TestMocks {
     }
   }
 
-  test("getSOAPResposneFromExchange") {
+  test("getSOAPResponseFromExchange") {
     pending
   }
 
-  test("getSOAPErrorResposneFromExchange") {
+  test("getSOAPErrorResponseFromExchange") {
     pending
   }
 

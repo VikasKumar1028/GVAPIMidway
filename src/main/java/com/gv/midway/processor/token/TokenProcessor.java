@@ -32,7 +32,7 @@ public class TokenProcessor implements Processor {
     public void process(Exchange exchange) throws Exception {
 
         LOGGER.info("TokenProcessor");
-        if(CommonUtil.isTokenRequired.get()==true&&CommonUtil.isAlreadyinTokenGeneration.get()==true)
+        if(CommonUtil.isTokenRequired.get()==true&&CommonUtil.isAlreadyInTokenGeneration.get()==true)
         {
         CommonUtil.setAlreadyInTokenGeneration(false);
         exchange.getContext().createProducerTemplate()

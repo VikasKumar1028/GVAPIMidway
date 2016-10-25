@@ -2,9 +2,23 @@ package com.gv.midway.pojo.usageInformation.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gv.midway.pojo.BaseResponse;
+import com.gv.midway.pojo.Header;
+import com.gv.midway.pojo.Response;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UsageInformationMidwayResponse extends BaseResponse {
+
+    public UsageInformationMidwayResponse() { }
+
+    public UsageInformationMidwayResponse(Header header, Response response) {
+        super(header, response);
+    }
+
+    public UsageInformationMidwayResponse(Header header, Response response, UsageInformationResponseMidwayDataArea dataArea) {
+        super(header, response);
+        this.dataArea = dataArea;
+    }
+
     private UsageInformationResponseMidwayDataArea dataArea;
 
     public UsageInformationResponseMidwayDataArea getDataArea() {
@@ -19,8 +33,7 @@ public class UsageInformationMidwayResponse extends BaseResponse {
     public int hashCode() {
         final int prime = 31;
         int result = super.hashCode();
-        result = prime * result
-                + ((dataArea == null) ? 0 : dataArea.hashCode());
+        result = prime * result + ((dataArea == null) ? 0 : dataArea.hashCode());
         return result;
     }
 

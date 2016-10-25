@@ -3,7 +3,8 @@ package com.gv.midway.pojo.usageInformation.request;
 import com.gv.midway.pojo.BaseRequest;
 
 public class DevicesUsageByDayAndCarrierRequest extends BaseRequest {
-	
+
+	//TODO This is spelled wrong, it should be dataArea
 	private DevicesUsageByDayAndCarrierRequestDataArea dateArea;
 
 	public DevicesUsageByDayAndCarrierRequestDataArea getDateArea() {
@@ -18,8 +19,7 @@ public class DevicesUsageByDayAndCarrierRequest extends BaseRequest {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result
-				+ ((dateArea == null) ? 0 : dateArea.hashCode());
+		result = prime * result + ((dateArea == null) ? 0 : dateArea.hashCode());
 		return result;
 	}
 
@@ -48,7 +48,4 @@ public class DevicesUsageByDayAndCarrierRequest extends BaseRequest {
 		builder.append("]");
 		return builder.toString();
 	}
-	
-	
-
 }

@@ -10,7 +10,7 @@ import com.gv.midway.pojo.callback.CallbackFaultResponse;
 import com.gv.midway.pojo.callback.CallbackSummary;
 import com.gv.midway.pojo.verizon.DeviceId;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+//@JsonIgnoreProperties(ignoreUnknown = true)
 public class CallBackVerizonRequest {
     @ApiModelProperty(value = "Summary of requested device callback")
     private CallbackSummary summary;

@@ -1,11 +1,16 @@
 package com.gv.midway.pojo;
 
-import org.apache.log4j.Logger;
-
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 public class BaseResponse {
+
+    public BaseResponse() { }
+
+    public BaseResponse(Header header, Response response) {
+        this.header = header;
+        this.response = response;
+    }
 
     private Header header;
     private Response response;
@@ -15,8 +20,6 @@ public class BaseResponse {
     }
 
     public void setResponse(Response response) {
-        System.out.println("set response invoked..........."
-                + response.toString());
         this.response = response;
     }
 
@@ -25,7 +28,6 @@ public class BaseResponse {
     }
 
     public void setHeader(Header header) {
-        System.out.println("set header invoked..........." + header.toString());
         this.header = header;
     }
 
@@ -34,8 +36,7 @@ public class BaseResponse {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((header == null) ? 0 : header.hashCode());
-        result = prime * result
-                + ((response == null) ? 0 : response.hashCode());
+        result = prime * result + ((response == null) ? 0 : response.hashCode());
         return result;
     }
 
@@ -71,5 +72,4 @@ public class BaseResponse {
         builder.append("]");
         return builder.toString();
     }
-
 }

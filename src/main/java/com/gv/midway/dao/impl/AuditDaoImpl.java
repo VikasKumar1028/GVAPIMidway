@@ -129,7 +129,7 @@ public class AuditDaoImpl implements IAuditDao {
             LOGGER.info("apiOperationName" + apiOperationName);
             LOGGER.info("soap object of class type..."+exchange.getIn().getBody().getClass()+" "+exchange.getIn().getBody().toString());
 
-            final String soapPayload = CommonUtil.getSOAPResposneFromExchange(exchange);
+            final String soapPayload = CommonUtil.getSOAPResponseFromExchange(exchange);
 
             mongoTemplate.insert(newAudit(apiOperationName, exchange, soapPayload));
 
@@ -207,7 +207,7 @@ public class AuditDaoImpl implements IAuditDao {
 
             final String message = soapFault.getMessage();
             LOGGER.info("soap fault code    ------------------" + message);
-            final String payload = CommonUtil.getSOAPErrorResposneFromExchange(exchange);
+            final String payload = CommonUtil.getSOAPErrorResponseFromExchange(exchange);
             LOGGER.info("soap fault payload  soap message is ------------------" + payload);
 
             final Audit audit =

@@ -3,11 +3,20 @@ package com.gv.midway.pojo.deviceInformation.response;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.gv.midway.pojo.BaseResponse;
+import com.gv.midway.pojo.Header;
+import com.gv.midway.pojo.Response;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DeviceInformationResponse extends BaseResponse {
+
+    public DeviceInformationResponse() { }
+
+    public DeviceInformationResponse(Header header, Response response, DeviceInformationResponseDataArea dataArea) {
+        super(header, response);
+        this.dataArea = dataArea;
+    }
 
     @ApiModelProperty(value = "Device Information Response DataArea")
     private DeviceInformationResponseDataArea dataArea;
@@ -24,8 +33,7 @@ public class DeviceInformationResponse extends BaseResponse {
     public int hashCode() {
         final int prime = 31;
         int result = super.hashCode();
-        result = prime * result
-                + ((dataArea == null) ? 0 : dataArea.hashCode());
+        result = prime * result + ((dataArea == null) ? 0 : dataArea.hashCode());
         return result;
     }
 
@@ -54,5 +62,4 @@ public class DeviceInformationResponse extends BaseResponse {
         builder.append("]");
         return builder.toString();
     }
-
 }

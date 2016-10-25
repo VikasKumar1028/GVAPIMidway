@@ -76,6 +76,7 @@
 	<bean id="attCallBackSplitter" class="com.gv.midway.splitter.AttCallBackSplitter" />
 
 	<bean id="attCallBackRouter" class="com.gv.midway.router.AttCallBackRouter" />
+	<bean id="authorizationFilter" class="com.gv.midway.filters.AuthorizationRequestFilter"/>
 
 	<jaxrs:server id="GVJax" address="/">
 		<jaxrs:serviceBeans>
@@ -83,6 +84,7 @@
 		</jaxrs:serviceBeans>
 		<jaxrs:providers>
 			<bean class="com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider" />
+			<ref bean="authorizationFilter" />
 		</jaxrs:providers>
 	</jaxrs:server>
 

@@ -9,21 +9,20 @@ import com.gv.midway.utility.CommonUtil;
 
 public class JobCarrierRouter {
 
-   private static final Logger LOGGER = Logger.getLogger(JobCarrierRouter.class);
+    private static final Logger LOGGER = Logger.getLogger(JobCarrierRouter.class);
 
     public String routeCarrierJob(DeviceInformation deviceInformation) throws InvalidParameterException {
 
-        LOGGER.info("Inside the Carrier Job Router");
-        if (IConstant.BSCARRIER_SERVICE_KORE.equals(CommonUtil
-                .getDerivedCarrierName(deviceInformation.getBs_carrier()))) {
-            return "seda:processKoreJob";
+        LOGGER.debug("Inside the Carrier Job Router");
 
-        } else if (IConstant.BSCARRIER_SERVICE_VERIZON.equals(CommonUtil
-                .getDerivedCarrierName(deviceInformation.getBs_carrier()))) {
+        final String derivedCarrierName = CommonUtil.getDerivedCarrierName(deviceInformation.getBs_carrier());
+
+        if (IConstant.BSCARRIER_SERVICE_KORE.equals(derivedCarrierName)) {
+            return "seda:processKoreJob";
+        } else if (IConstant.BSCARRIER_SERVICE_VERIZON.equals(derivedCarrierName)) {
             return "seda:processVerizonJob";
         } else {
             return "";
         }
     }
-
 }
