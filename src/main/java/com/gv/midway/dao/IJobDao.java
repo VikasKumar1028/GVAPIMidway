@@ -54,4 +54,5 @@ public interface IJobDao {
     
     public List<DevicesUsageByDayAndCarrier> fetchDeviceUsageView(Exchange exchange);
 
+	public List fetchPreviousDeviceUsageDataUsed(Exchange exchange);
 }

@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Exchange;
@@ -18,6 +20,7 @@ import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.JobName;
 import com.gv.midway.constant.JobType;
 import com.gv.midway.dao.IJobDao;
+import com.gv.midway.pojo.deviceHistory.DeviceUsage;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.job.JobDetail;
 import com.gv.midway.pojo.notification.DeviceOverageNotification;
@@ -377,5 +380,34 @@ public class JobServiceImpl implements IJobService {
 		return iJobDao.fetchDeviceUsageView(exchange);
 
 	}
+
+	@Override
+	public void fetchPreviousDeviceUsageData(Exchange exchange) {
+
+		List<DeviceUsage> list = iJobDao
+				.fetchPreviousDeviceUsageDataUsed(exchange);
+
+		DeviceUsage deviceUsage = null;
+		if (list != null) {
+			for (int i = 0; i < list.size(); i++) {
+
+				deviceUsage = list.get(i);
+				LOGGER.info(deviceUsage.getNetSuiteId() + "*******"
+						+ deviceUsage.getDate() + "************"
+						+ deviceUsage.getDataUsed() + "************"
+						+ deviceUsage.getMonthToDateUsage());
+
+			}
+		}
+
+		Map<Integer, Long> saveLastUpadtedDataUsed = list.stream().collect(
+				Collectors.toMap(DeviceUsage::getNetSuiteId,
+						DeviceUsage::getMonthToDateUsage));
+
+		exchange.setProperty("saveLastUpadtedDataUsed", saveLastUpadtedDataUsed);
+
+	}
+
+
 
 }

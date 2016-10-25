@@ -8,7 +8,16 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.grou
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
 
+
+
+
+
+
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -24,6 +33,7 @@ import java.util.stream.Collectors;
 import org.apache.camel.Exchange;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
@@ -43,12 +53,16 @@ import com.gv.midway.pojo.job.JobParameter;
 import com.gv.midway.pojo.job.JobStatus;
 import com.gv.midway.pojo.notification.DeviceOverageNotification;
 import com.gv.midway.pojo.server.ServerDetail;
+import com.gv.midway.pojo.transaction.Transaction;
 import com.gv.midway.pojo.usageInformation.request.DevicesUsageByDayAndCarrierRequest;
 import com.gv.midway.pojo.usageInformation.response.DevicesUsageByDayAndCarrier;
 import com.gv.midway.pojo.usageView.DeviceUsageView;
 import com.gv.midway.pojo.usageView.DeviceUsageViewElement;
+import com.gv.midway.pojo.verizon.DeviceId;
 import com.gv.midway.utility.CommonUtil;
 import com.mongodb.WriteResult;
+
+import org.apache.camel.Message;
 
 @Service
 public class JobDaoImpl implements IJobDao {
@@ -1243,6 +1257,46 @@ public class JobDaoImpl implements IJobDao {
 
 	}
 
-  
+	@Override
+	public List fetchPreviousDeviceUsageDataUsed(Exchange exchange) {
+		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+
+		// fetching the last updated value for each netsuiteId in Device Usage
+		// table
+		AggregationResults<DeviceUsage> results = null;
+
+		String fetchdate = jobDetail.getDate();
+		String[] fetchDateString = fetchdate.split("-");
+		String beginningMonthDate = fetchDateString[0] + "-"
+				+ fetchDateString[1] + "-01";
+		LOGGER.info("beginningMonthDate:::::" + beginningMonthDate);
+
+		try
+
+		{
+			Aggregation agg = newAggregation(
+					match(Criteria.where("carrierName").is("ATTJASPER")
+							.and("date").gte(beginningMonthDate).and("isValid")
+							.is(true).and("transactionStatus").is("Success")),
+					sort(Sort.Direction.DESC, "netSuiteId", "date"),
+					group("netSuiteId").first("date").as("date")
+							.first("monthToDateUsage").as("monthToDateUsage")
+							.first("netSuiteId").as("netSuiteId")
+			// .max("date").as("date")
+			);
+
+			results = mongoTemplate.aggregate(agg, DeviceUsage.class,
+					DeviceUsage.class);
+
+			LOGGER.info("LIST KA SIZE" + results.getMappedResults().size());
+		}
+
+		catch (Exception e) {
+			LOGGER.info("e::" + e.getMessage());
+		}
+
+		return results.getMappedResults();
+
+	}
 
 }

@@ -48,5 +48,7 @@ public interface IJobService {
     public void updateDeviceUsageView(Exchange exchange);
     
     public List<DevicesUsageByDayAndCarrier> fetchDeviceUsageView(Exchange exchange);
+    
+    public void fetchPreviousDeviceUsageData(Exchange exchange);
 
 }

@@ -207,7 +207,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
             jobDetail.setName(JobName.VERIZON_CONNECTION_HISTORY);
             jobDetail.setCarrierName(CarrierType.VERIZON.toString());
         }
-
+        
         producer.asyncRequestBody("direct:startTransactionFailureJob", jobDetail);
         return (JobinitializedResponse) producer.requestBody("direct:jobResponse", jobDetail);
     }
@@ -230,6 +230,10 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
         } else if ("VERIZON".equals(jobParameter.getCarrierName())) {
             jobDetail.setName(JobName.VERIZON_DEVICE_USAGE);
             jobDetail.setCarrierName(CarrierType.VERIZON.toString());
+        }
+        else if ("ATTJASPER".equals(jobParameter.getCarrierName())) {
+            jobDetail.setName(JobName.ATTJASPER_DEVICE_USAGE);
+            jobDetail.setCarrierName(CarrierType.ATTJASPER.toString());
         }
 
         producer.asyncRequestBody("direct:startJob", jobDetail);

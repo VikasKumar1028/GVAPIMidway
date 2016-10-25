@@ -35,6 +35,7 @@ import com.gv.midway.pojo.kore.DKoreResponseCode;
 import com.gv.midway.pojo.kore.KoreProvisoningResponse;
 import com.gv.midway.pojo.token.VerizonAuthorizationResponse;
 import com.gv.midway.pojo.token.VerizonSessionLoginResponse;
+import com.gv.midway.processor.ATTJasperBatchExceptionProcessor;
 import com.gv.midway.processor.ATTJasperGenericExceptionProcessor;
 import com.gv.midway.processor.BulkDeviceProcessor;
 import com.gv.midway.processor.CarrierProvisioningDevicePostProcessor;
@@ -104,6 +105,8 @@ import com.gv.midway.processor.deviceInformation.StubKoreDeviceInformationProces
 import com.gv.midway.processor.deviceInformation.StubVerizonDeviceInformationProcessor;
 import com.gv.midway.processor.deviceInformation.VerizonDeviceInformationPostProcessor;
 import com.gv.midway.processor.deviceInformation.VerizonDeviceInformationPreProcessor;
+import com.gv.midway.processor.jobScheduler.ATTJasperDeviceUsageHistoryPostProcessor;
+import com.gv.midway.processor.jobScheduler.ATTJasperDeviceUsageHistoryPreProcessor;
 import com.gv.midway.processor.jobScheduler.JobInitializedPostProcessor;
 import com.gv.midway.processor.jobScheduler.KoreDeviceUsageHistoryPostProcessor;
 import com.gv.midway.processor.jobScheduler.KoreDeviceUsageHistoryPreProcessor;
@@ -1576,6 +1579,9 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iJobService, "deleteDeviceUsageRecords")
                 .when(simple("${exchangeProperty[jobName]} == 'VERIZON_DEVICE_USAGE'"))
                 .bean(iJobService, "deleteDeviceUsageRecords")
+                .when(simple("${exchangeProperty[jobName]} == 'ATTJASPER_DEVICE_USAGE'"))
+                .bean(iJobService, "deleteDeviceUsageRecords")
+                .endChoice()
                 .endChoice()
                 .end()
 
@@ -1596,7 +1602,13 @@ public class CamelRoute extends RouteBuilder {
                 .endChoice()
                 .when(simple("${exchangeProperty[jobName]} == 'VERIZON_DEVICE_USAGE'"))
                 .split().method("jobSplitter").parallelProcessing()
-                .to("seda:processVerizonDeviceUsageJob").endChoice();
+                .to("seda:processVerizonDeviceUsageJob").endChoice()
+                .when(simple("${exchangeProperty[jobName]} == 'ATTJASPER_DEVICE_USAGE'"))
+				.bean(iJobService,"fetchPreviousDeviceUsageData")
+				.split().method("jobSplitter").parallelProcessing()
+				.to("seda:processATTJasperDeviceUsageJob").endChoice();
+                
+               
 
         // KORE Job-DEVICE USAGE
         from("seda:processKoreDeviceUsageJob?concurrentConsumers=10")
@@ -1654,6 +1666,20 @@ public class CamelRoute extends RouteBuilder {
                 .process(new VerizonBatchExceptionProcessor())
                 .bean(iSchedulerService, "saveDeviceConnectionHistory")
                 .endDoTry();
+        
+        
+        // ATT JASPER Job-DEVICE USAGE
+        from("seda:processATTJasperDeviceUsageJob?concurrentConsumers=10")
+                .log("ATTJASPER-Job-DEVICE USAGE")
+                .doTry()
+                .process(new ATTJasperDeviceUsageHistoryPreProcessor(env))
+                .to(IEndPoints.URI_SOAP_ATTJASPER_TERMINAL_ENDPOINT)
+                 .process(new ATTJasperDeviceUsageHistoryPostProcessor())
+                .bean(iSchedulerService, "saveDeviceUsageHistory")
+                .doCatch(SoapFault.class, UnknownHostException.class,ConnectException.class,SocketTimeoutException.class,
+                        NoRouteToHostException.class)
+                .process(new ATTJasperBatchExceptionProcessor(env))
+                .bean(iSchedulerService, "saveDeviceUsageHistory").endDoTry();
 
     }
 
@@ -1823,8 +1849,8 @@ public class CamelRoute extends RouteBuilder {
                  */
                 .bean(iAuditService, "auditExternalResponseCall")
                 .process(new RetrieveDeviceUsageHistoryPostProcessor(env));
-
-    }
+        
+     }
 
     // Not in Use.
     /**
