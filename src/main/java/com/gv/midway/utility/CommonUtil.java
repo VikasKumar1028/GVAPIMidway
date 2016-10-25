@@ -259,14 +259,13 @@ public class CommonUtil {
         final String carrierName = jobParameter.getCarrierName();
 
         if (carrierName == null) {
-            jobinitializedResponse.setMessage("Please provide Carrier Name. Allowable Values are KORE and VERIZON and ATTJASPER");
+            jobinitializedResponse.setMessage("Please provide Carrier Name. Allowable Values are KORE and VERIZON");
             return jobinitializedResponse;
         }
 
 		if (!(IConstant.BSCARRIER_SERVICE_KORE.equals(carrierName)
-				|| IConstant.BSCARRIER_SERVICE_VERIZON.equals(carrierName) || IConstant.BSCARRIER_SERVICE_ATTJASPER
-					.equals(carrierName))) {
-            jobinitializedResponse.setMessage("Please provide valid Carrier Name. Allowable Values are KORE and VERIZON and ATTJASPER");
+				|| IConstant.BSCARRIER_SERVICE_VERIZON.equals(carrierName) )) {
+            jobinitializedResponse.setMessage("Please provide valid Carrier Name. Allowable Values are KORE and VERIZON");
             return jobinitializedResponse;
         }
 

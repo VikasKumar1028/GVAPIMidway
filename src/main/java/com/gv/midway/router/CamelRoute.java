@@ -1678,7 +1678,7 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iSchedulerService, "saveDeviceUsageHistory")
                 .doCatch(SoapFault.class, UnknownHostException.class,ConnectException.class,SocketTimeoutException.class,
                         NoRouteToHostException.class)
-                .process(new ATTJasperBatchExceptionProcessor(env))
+                .process(new ATTJasperBatchExceptionProcessor())
                 .bean(iSchedulerService, "saveDeviceUsageHistory").endDoTry();
 
     }

@@ -4,12 +4,10 @@ import java.net.ConnectException;
 import java.net.NoRouteToHostException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
+import org.apache.cxf.binding.soap.SoapFault;
 import org.apache.log4j.Logger;
-import org.springframework.core.env.Environment;
-
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.deviceHistory.DeviceUsage;
 import com.gv.midway.pojo.job.JobDetail;
@@ -17,16 +15,10 @@ import com.gv.midway.pojo.verizon.DeviceId;
 import com.gv.midway.utility.CommonUtil;
 
 public class ATTJasperBatchExceptionProcessor implements Processor {
-	private static final Logger LOGGER = Logger
-			.getLogger(ATTJasperBatchExceptionProcessor.class.getName());
+	
+	private static final Logger LOGGER = Logger.getLogger(ATTJasperBatchExceptionProcessor.class.getName());
 
-	Environment newEnv;
-
-	public ATTJasperBatchExceptionProcessor(Environment env) {
-		super();
-		this.newEnv = env;
-	}
-
+	
 	public ATTJasperBatchExceptionProcessor() {
 		// Empty Constructor
 	}
@@ -35,10 +27,10 @@ public class ATTJasperBatchExceptionProcessor implements Processor {
 	public void process(Exchange exchange) throws Exception {
 		LOGGER.info("Begin:ATTJasperBatchExceptionProcessor");
 
-		Exception ex = (Exception) exchange
+		final Exception ex = (Exception) exchange
 				.getProperty(Exchange.EXCEPTION_CAUGHT);
 
-		String errorType;
+		String errorType=null;
 
 		// If Connection Exception
 		if (ex.getCause() instanceof UnknownHostException
@@ -50,20 +42,25 @@ public class ATTJasperBatchExceptionProcessor implements Processor {
 			errorType = IConstant.MIDWAY_CONNECTION_ERROR;
 
 		}
+		
+		 else if (ex.getCause() instanceof SoapFault){
+			 
+			errorType= CommonUtil.getSOAPErrorResponseFromExchange(exchange);
+		 }
 
-		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+		final JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
 
-		DeviceUsage deviceUsage = new DeviceUsage();
+		final DeviceUsage deviceUsage = new DeviceUsage();
 
 		deviceUsage
 				.setCarrierName((String) exchange.getProperty("CarrierName"));
 		deviceUsage.setDeviceId((DeviceId) exchange.getProperty("DeviceId"));
 		deviceUsage.setDataUsed(0);
 
-		String date = jobDetail.getDate();
+		final String date = jobDetail.getDate();
 		LOGGER.info("----------------------D----A-----T-------E-------" + date);
 		deviceUsage.setDate(date);
-		// deviceUsage.setTransactionErrorReason(errorType);
+		deviceUsage.setTransactionErrorReason(errorType);
 		deviceUsage
 				.setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
 		deviceUsage.setNetSuiteId((Integer) exchange

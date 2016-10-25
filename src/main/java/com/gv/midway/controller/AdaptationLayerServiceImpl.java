@@ -231,11 +231,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
             jobDetail.setName(JobName.VERIZON_DEVICE_USAGE);
             jobDetail.setCarrierName(CarrierType.VERIZON.toString());
         }
-        else if ("ATTJASPER".equals(jobParameter.getCarrierName())) {
-            jobDetail.setName(JobName.ATTJASPER_DEVICE_USAGE);
-            jobDetail.setCarrierName(CarrierType.ATTJASPER.toString());
-        }
-
+        
         producer.asyncRequestBody("direct:startJob", jobDetail);
         return (JobinitializedResponse) producer.requestBody("direct:jobResponse", jobDetail);
     }
