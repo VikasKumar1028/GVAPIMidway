@@ -82,6 +82,9 @@ public class TransactionalDaoImpl implements ITransactionalDao {
     public void populateActivateDBPayload(Exchange exchange) {
         LOGGER.info("Inside populateActivateDBPayload");
         ArrayList<Transaction> list = new ArrayList<Transaction>();
+        
+        String carrierName = exchange.getProperty(
+                IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString();
 
         ActivateDeviceRequest req = (ActivateDeviceRequest) exchange.getIn()
                 .getBody();
@@ -171,8 +174,15 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                         IConstant.AUDIT_TRANSACTION_ID).toString());
                 transaction.setRequestType(RequestType.ACTIVATION);
                 transaction.setCallBackReceived(false);
-                // if activate device request comes with custom fields OR Service Plan then set the recordType Field as Primary
-                if((activateDevice.getCustomFields()!=null && activateDevice.getCustomFields().length>0)||(activateDevice.getServicePlan()!=null &&activateDevice.getServicePlan().length()>0 ) )
+                
+               // if activate device request comes with custom fields then set the recordType Field as Primary
+                if(activateDevice.getCustomFields()!=null && activateDevice.getCustomFields().length>0 )
+                {
+                	 transaction.setRecordType(RecordType.PRIMARY);
+                }
+                
+             // if activate device request comes with servicePlan for ATTJapser then set the recordType Field as Primary
+                if(IConstant.BSCARRIER_SERVICE_ATTJASPER.equals(carrierName)&&(activateDevice.getServicePlan()!=null &&activateDevice.getServicePlan().length()>0 ) )
                 {
                 	 transaction.setRecordType(RecordType.PRIMARY);
                 }
@@ -186,8 +196,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
         }
         mongoTemplate.insertAll(list);
         
-        String carrierName = exchange.getProperty(
-                IConstant.MIDWAY_DERIVED_CARRIER_NAME).toString();
+       
         
         if(activateDevices.getCustomFields()!=null && activateDevices.getCustomFields().length>0)
         {
