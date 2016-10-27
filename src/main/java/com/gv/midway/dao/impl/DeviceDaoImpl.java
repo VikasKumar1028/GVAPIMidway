@@ -493,7 +493,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 		try {
 			final Aggregation agg = newAggregation(
 					match(Criteria.where("date").is(date)
-							.and("carrierName").regex(devicesUsageByDayAndCarrierRequest.getHeader().getBsCarrier(), "i")
+							.and(IConstant.CARRIER_NAME).regex(devicesUsageByDayAndCarrierRequest.getHeader().getBsCarrier(), "i")
 							.and("isValid").is(true)
 							.and("dataUsed").ne(0)),
 					project("dataUsed").and("netSuiteId").as("netSuiteId"));

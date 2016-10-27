@@ -11,11 +11,13 @@ import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -36,8 +38,10 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.cxf.binding.soap.SoapFault;
@@ -53,6 +57,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IEndPoints;
 import com.gv.midway.constant.IResponse;
@@ -592,5 +597,39 @@ public class CommonUtil {
     public static String toJsonString(Object objectWithJsonSerializeAnnotation) throws Exception {
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         return ow.writeValueAsString(objectWithJsonSerializeAnnotation);
+    }
+    
+    public static boolean checkKoreJobScheduling(int jobDuration)
+    { 
+		Calendar cal = Calendar.getInstance();
+		int date = cal.getTime().getDate();
+
+		switch (date) {
+		
+		 case 24:
+            
+			return false;
+			
+		case 25:
+
+			if(jobDuration==IConstant.DURATION_24)
+			return true;
+			
+			else
+			 return false;
+			
+		case 26:
+
+			if(jobDuration!=IConstant.DURATION_72)
+				return true;
+				
+			else
+				 return false;
+
+		default:
+			break;
+		}
+
+		return true;
     }
 }

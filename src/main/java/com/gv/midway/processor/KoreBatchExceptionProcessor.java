@@ -51,7 +51,7 @@ public class KoreBatchExceptionProcessor implements Processor {
             errorType = IConstant.KORE_MISSING_SIM_ERROR;
         }
 
-        final JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+        final JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
 
         final DeviceUsage deviceUsage = new DeviceUsage();
         deviceUsage.setCarrierName((String) exchange.getProperty("CarrierName"));

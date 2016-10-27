@@ -28,7 +28,7 @@ public class VerizonDeviceConnectionHistoryPostProcessor implements Processor {
 		final Map map = exchange.getIn().getBody(Map.class);
 		final ObjectMapper mapper = new ObjectMapper();
 		final ConnectionInformationResponse connectionResponse = mapper.convertValue(map, ConnectionInformationResponse.class);
-		final JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+		final JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
 
 		final ArrayList<DeviceEvent> deviceEventList = new ArrayList<>();
 

@@ -23,7 +23,7 @@ public class VerizonDeviceUsageHistoryPostProcessor implements Processor {
 
     	LOGGER.info("Begin:VerizonDeviceUsageHistoryPostProcessor");
 
-        final JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+        final JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
         final Map map = exchange.getIn().getBody(Map.class);
 
         final ObjectMapper mapper = new ObjectMapper();

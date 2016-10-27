@@ -94,6 +94,8 @@ public interface IConstant {
     static int DURATION_24 = -24;
 
     static int DURATION_48 = -48;
+    
+    static int DURATION_72 = -72;
 
     static String JOB_INITIALIZED_MESSAGE = "Job Started Successfully";
 
@@ -142,12 +144,18 @@ public interface IConstant {
     static String KORE_USAGE_TIMER24 = "kore.usagetimer24";
 
     static String VERIZON_USAGE_TIMER24 = "verizon.usagetimer24";
+    
+    static String ATTJASPER_USAGE_TIMER24 = "attJasper.usagetimer24";
 
     static String VERIZON_CONNECTION_TIMER24 = "verizon.connectiontimer24";
 
     static String VERIZON_USAGE_TIMER48 = "verizon.usagetimer48";
 
     static String KORE_USAGE_TIMER48 = "kore.usagetimer48";
+    
+    static String VERIZON_USAGE_TIMER72 = "verizon.usagetimer72";
+
+    static String KORE_USAGE_TIMER72 = "kore.usagetimer72";
 
     static String ATT_CALLBACK_STATUS = "attCallBackStatus";
     
@@ -156,4 +164,24 @@ public interface IConstant {
     static String ATTJASPER_CUSTOM_FIELD_DEC = "attJasperCustomFieldDescription";
 	
 	static String AUTHORIZATION_KEY ="authorizationKey";
+	
+	static String JOB_TOTAL_COUNT="JobTotalCount";
+	
+	static String JOB_DETAIL="jobDetail";
+	
+	static String JOB_START_TIME="jobStartTime";
+	
+	static String JOB_END_TIME="jobEndTime";
+	
+	static String JOB_NAME="jobName";
+	
+	static String CARRIER_NAME="carrierName";
+	
+	static String JOB_TYPE="jobType";
+	
+	static String JOB_DETAIL_DATE="jobDetailDate";
+	
+	static String JOB_ERROR_COUNT="JobErrorCount";
+	
+	static String JOB_SUCCESS_COUNT="JobSuccessCount";
 }

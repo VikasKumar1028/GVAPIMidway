@@ -86,7 +86,7 @@ public class ATTJasperDeviceUsageHistoryPostProcessor implements Processor {
 
 			deviceUsage.setDataUsed(monthtoDateUsageBytes);
 		}
-		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+		JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
 
 		deviceUsage
 				.setCarrierName((String) exchange.getProperty("CarrierName"));

@@ -38,7 +38,7 @@ public class TimeOutErrorProcessor implements Processor {
 				break;
 			case "Endpoint[direct://startTransactionFailureJob]":
 
-				final String jobName = (String) exchange.getProperty("jobName");
+				final String jobName = (String) exchange.getProperty(IConstant.JOB_NAME);
 				// check for usage and connection History Job in TransactionFailure
 				if (jobName.endsWith("DeviceUsageJob")) {
 					LOGGER.info("timeOut device for Usage TransactionFailure Job  :::::::::::::::::: ");

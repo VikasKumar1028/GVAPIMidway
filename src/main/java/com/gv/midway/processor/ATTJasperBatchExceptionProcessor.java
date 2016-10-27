@@ -48,7 +48,7 @@ public class ATTJasperBatchExceptionProcessor implements Processor {
 			errorType= CommonUtil.getSOAPErrorResponseFromExchange(exchange);
 		 }
 
-		final JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+		final JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
 
 		final DeviceUsage deviceUsage = new DeviceUsage();
 

@@ -35,8 +35,8 @@ public class VerizonDeviceConnectionHistoryPreProcessor implements Processor {
 
 		final ConnectionInformationRequestDataArea dataArea = new ConnectionInformationRequestDataArea();
 		dataArea.setDeviceId(device);
-		dataArea.setLatest(exchange.getProperty("jobEndTime").toString());
-		dataArea.setEarliest(exchange.getProperty("jobStartTime").toString());
+		dataArea.setLatest(exchange.getProperty(IConstant.JOB_END_TIME).toString());
+		dataArea.setEarliest(exchange.getProperty(IConstant.JOB_START_TIME).toString());
 
 		final ObjectMapper objectMapper = new ObjectMapper();
 

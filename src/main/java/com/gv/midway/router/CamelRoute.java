@@ -291,9 +291,15 @@ public class CamelRoute extends RouteBuilder {
 
         deviceUsageHistoryKoreJob24();
         
+        deviceUsageHistoryATTJasperJob24();
+        
         deviceUsageHistoryVerizonJob48();
         
         deviceUsageHistoryKoreJob48();
+        
+        deviceUsageHistoryVerizonJob72();
+        
+        deviceUsageHistoryKoreJob72();
 
         // Transaction Failure Job
         transactionFailureJob();
@@ -1472,7 +1478,7 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iJobService,
                         "setJobDetails(${exchange},"
                                 + CarrierType.VERIZON.toString() + ", "
-                                + JobName.VERIZON_CONNECTION_HISTORY + ","+IConstant.DURATION_24+","+JobType.NEW+")")
+                                + JobName.VERIZON_CONNECTION_HISTORY + ","+IConstant.DURATION_24+","+JobType.NEW+","+"24"+")")
                 .bean(iJobService, "scheduleJob").end();
 
     }
@@ -1487,7 +1493,7 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iJobService,
                         "setJobDetails(${exchange},"
                                 + CarrierType.VERIZON.toString() + ", "
-                                + JobName.VERIZON_DEVICE_USAGE + ","+IConstant.DURATION_24+","+JobType.NEW+")")
+                                + JobName.VERIZON_DEVICE_USAGE + ","+IConstant.DURATION_24+","+JobType.NEW+","+"24"+")")
                 .bean(iJobService, "scheduleJob").end();
 
     }
@@ -1501,10 +1507,25 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iJobService,
                         "setJobDetails(${exchange},"
                                 + CarrierType.KORE.toString() + ", "
-                                + JobName.KORE_DEVICE_USAGE + ","+IConstant.DURATION_24+","+JobType.NEW+")")
+                                + JobName.KORE_DEVICE_USAGE + ","+IConstant.DURATION_24+","+JobType.NEW+","+"24"+")")
                 .bean(iJobService, "scheduleJob").end();
 
     }
+    
+    /**
+     * Method to Schedule the ATTJasper Device Usage Job for previous day usage
+     */
+    public void deviceUsageHistoryATTJasperJob24() {
+
+        from(env.getProperty(IConstant.ATTJASPER_USAGE_TIMER24))
+                .bean(iJobService,
+                        "setJobDetails(${exchange},"
+                                + CarrierType.ATTJASPER.toString() + ", "
+                                + JobName.ATTJASPER_DEVICE_USAGE + ","+IConstant.DURATION_24+","+JobType.NEW+","+"24"+")")
+                .bean(iJobService, "scheduleJob").end();
+
+    }
+    
     
     
     /**
@@ -1517,7 +1538,7 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iJobService,
                         "setJobDetails(${exchange},"
                                 + CarrierType.VERIZON.toString() + ", "
-                                + JobName.VERIZON_DEVICE_USAGE + ","+IConstant.DURATION_48+","+JobType.RERUN+")")
+                                + JobName.VERIZON_DEVICE_USAGE + ","+IConstant.DURATION_48+","+JobType.RERUN+","+"48"+")")
                 .bean(iJobService, "scheduleJob").end();
 
     }
@@ -1531,7 +1552,36 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iJobService,
                         "setJobDetails(${exchange},"
                                 + CarrierType.KORE.toString() + ", "
-                                + JobName.KORE_DEVICE_USAGE + ","+IConstant.DURATION_48+","+JobType.RERUN+")")
+                                + JobName.KORE_DEVICE_USAGE + ","+IConstant.DURATION_48+","+JobType.RERUN+","+"48"+")")
+                .bean(iJobService, "scheduleJob").end();
+
+    }
+    
+    /**
+     * Method to Schedule the Verizon Device Usage Job for 3 days back to get the updated data usage of roaming devices.
+     */
+    public void deviceUsageHistoryVerizonJob72() {
+
+        from(
+                env.getProperty(IConstant.VERIZON_USAGE_TIMER72))
+                .bean(iJobService,
+                        "setJobDetails(${exchange},"
+                                + CarrierType.VERIZON.toString() + ", "
+                                + JobName.VERIZON_DEVICE_USAGE + ","+IConstant.DURATION_72+","+JobType.RERUN+","+"72"+")")
+                .bean(iJobService, "scheduleJob").end();
+
+    }
+    
+    /**
+     * Method to Schedule the Kore Device Usage Job for 3 days back to get the updated data usage of roaming devices.
+     */
+    public void deviceUsageHistoryKoreJob72() {
+
+        from(env.getProperty(IConstant.KORE_USAGE_TIMER72))
+                .bean(iJobService,
+                        "setJobDetails(${exchange},"
+                                + CarrierType.KORE.toString() + ", "
+                                + JobName.KORE_DEVICE_USAGE + ","+IConstant.DURATION_72+","+JobType.RERUN+","+"72"+")")
                 .bean(iJobService, "scheduleJob").end();
 
     }

@@ -77,7 +77,7 @@ public class VerizonBatchExceptionProcessor implements Processor {
 			}
 		}
 
-		final JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+		final JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
 
 		if (jobDetail.getName().equals(JobName.KORE_DEVICE_USAGE)
 				|| jobDetail.getName().equals(JobName.VERIZON_DEVICE_USAGE)) {

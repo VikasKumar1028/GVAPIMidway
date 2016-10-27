@@ -81,11 +81,11 @@ public class JobDaoImpl implements IJobDao {
 
         JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
 
-        exchange.setProperty("jobName", jobDetail.getName().toString());
+        exchange.setProperty(IConstant.JOB_NAME, jobDetail.getName().toString());
 
-        exchange.setProperty("carrierName", jobDetail.getCarrierName());
+        exchange.setProperty(IConstant.CARRIER_NAME, jobDetail.getCarrierName());
 
-        exchange.setProperty("jobType", jobDetail.getType().toString());
+        exchange.setProperty(IConstant.JOB_TYPE, jobDetail.getType().toString());
 
         List<DeviceInformation> timeOutDeviceList = new ArrayList<DeviceInformation>();
 
@@ -127,11 +127,11 @@ public class JobDaoImpl implements IJobDao {
 
         JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
 
-        exchange.setProperty("jobName", jobDetail.getName().toString());
+        exchange.setProperty(IConstant.JOB_NAME, jobDetail.getName().toString());
 
-        exchange.setProperty("carrierName", jobDetail.getCarrierName());
+        exchange.setProperty(IConstant.CARRIER_NAME, jobDetail.getCarrierName());
 
-        exchange.setProperty("jobType", jobDetail.getType().toString());
+        exchange.setProperty(IConstant.JOB_TYPE, jobDetail.getType().toString());
 
         List<DeviceInformation> timeOutDeviceList = new ArrayList<DeviceInformation>();
 
@@ -177,11 +177,11 @@ public class JobDaoImpl implements IJobDao {
 
         JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
 
-        exchange.setProperty("jobName", jobDetail.getName().toString());
+        exchange.setProperty(IConstant.JOB_NAME, jobDetail.getName().toString());
 
-        exchange.setProperty("carrierName", jobDetail.getCarrierName());
+        exchange.setProperty(IConstant.CARRIER_NAME, jobDetail.getCarrierName());
 
-        exchange.setProperty("jobType", jobDetail.getType().toString());
+        exchange.setProperty(IConstant.JOB_TYPE, jobDetail.getType().toString());
 
         List<DeviceInformation> timeOutDeviceList = new ArrayList<DeviceInformation>();
 
@@ -227,8 +227,8 @@ public class JobDaoImpl implements IJobDao {
         jobDetail.setStartTime(new Date().toString());
         jobDetail.setStatus(IConstant.JOB_STARTED);
         jobDetail.setIpAddress(CommonUtil.getIpAddress());
-        exchange.setProperty("jobDetail", jobDetail);
-        exchange.setProperty("jobDetailDate", jobDetail.getDate());
+        exchange.setProperty(IConstant.JOB_DETAIL, jobDetail);
+        exchange.setProperty(IConstant.JOB_DETAIL_DATE, jobDetail.getDate());
 
         // generating the job ID to recognize the job
         long timestamp = System.currentTimeMillis();
@@ -248,7 +248,7 @@ public class JobDaoImpl implements IJobDao {
 
         LOGGER.info("Inside updateJobDetails .....................");
 
-        JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+        JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
 
         if ("VERIZON_CONNECTION_HISTORY".equals(jobDetail.getName().toString())) {
 
@@ -259,7 +259,7 @@ public class JobDaoImpl implements IJobDao {
         }
         try {
 
-            Query searchJobQuery = new Query(Criteria.where("carrierName").is(
+            Query searchJobQuery = new Query(Criteria.where(IConstant.CARRIER_NAME).is(
                     jobDetail.getCarrierName()))
                     .addCriteria(Criteria.where("date").is(jobDetail.getDate()))
                     .addCriteria(Criteria.where("name").is(jobDetail.getName()))
@@ -277,20 +277,20 @@ public class JobDaoImpl implements IJobDao {
 
             // checking total count
             update.set("transactionCount",
-                    exchange.getProperty("JobTotalCount"));
+                    exchange.getProperty(IConstant.JOB_TOTAL_COUNT));
 
             // checking Error Cont
-            if (exchange.getProperty("JobErrorCount") != null) {
+            if (exchange.getProperty(IConstant.JOB_ERROR_COUNT) != null) {
                 update.set("transactionFailed",
-                        exchange.getProperty("JobErrorCount"));
+                        exchange.getProperty(IConstant.JOB_ERROR_COUNT));
             } else {
                 update.set("transactionFailed", "0");
             }
 
             // checking Successful count
-            if (exchange.getProperty("JobSuccessCount") != null) {
+            if (exchange.getProperty(IConstant.JOB_SUCCESS_COUNT) != null) {
                 update.set("transactionPassed",
-                        exchange.getProperty("JobSuccessCount"));
+                        exchange.getProperty(IConstant.JOB_SUCCESS_COUNT));
             } else {
                 update.set("transactionPassed", "0");
             }
@@ -313,7 +313,7 @@ public class JobDaoImpl implements IJobDao {
 
         LOGGER.info("Inside getDeviceUsageJobCounts .....................");
 
-        JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+        JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
         try {
 
             Aggregation agg = newAggregation(
@@ -336,13 +336,13 @@ public class JobDaoImpl implements IJobDao {
                         + "-----------------------------" + element.getCount());
                 if (IConstant.MIDWAY_TRANSACTION_STATUS_SUCCESS.equals(element
                         .getTransactionStatus())) {
-                    exchange.setProperty("JobSuccessCount", element.getCount());
+                    exchange.setProperty(IConstant.JOB_SUCCESS_COUNT, element.getCount());
                     LOGGER.info("Success Count-------------"
                             + element.getCount());
                 }
                 if (IConstant.MIDWAY_TRANSACTION_STATUS_ERROR.equals(element
                         .getTransactionStatus())) {
-                    exchange.setProperty("JobErrorCount", element.getCount());
+                    exchange.setProperty(IConstant.JOB_ERROR_COUNT, element.getCount());
                     LOGGER.info("Error Count----------" + element.getCount());
                 }
 
@@ -364,7 +364,7 @@ public class JobDaoImpl implements IJobDao {
     public void getConnectionHistoryJobCounts(Exchange exchange) {
         LOGGER.info("Inside getConnectionHistoryJobCounts ");
 
-        JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+        JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
 
         try {
 
@@ -388,13 +388,13 @@ public class JobDaoImpl implements IJobDao {
                         + "-----------------------------" + element.getCount());
                 if (IConstant.MIDWAY_TRANSACTION_STATUS_SUCCESS.equals(element
                         .getTransactionStatus())) {
-                    exchange.setProperty("JobSuccessCount", element.getCount());
+                    exchange.setProperty(IConstant.JOB_SUCCESS_COUNT, element.getCount());
                     LOGGER.info("Success Count-------------"
                             + element.getCount());
                 }
                 if (IConstant.MIDWAY_TRANSACTION_STATUS_ERROR.equals(element
                         .getTransactionStatus())) {
-                    exchange.setProperty("JobErrorCount", element.getCount());
+                    exchange.setProperty(IConstant.JOB_ERROR_COUNT, element.getCount());
                     LOGGER.info("Error Count----------" + element.getCount());
                 }
 
@@ -417,9 +417,9 @@ public class JobDaoImpl implements IJobDao {
 
         LOGGER.info("Inside deleteDeviceUsageRecords .....................");
 
-        JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+        JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
 
-        Query searchJobQuery = new Query(Criteria.where("carrierName").regex(
+        Query searchJobQuery = new Query(Criteria.where(IConstant.CARRIER_NAME).regex(
                 jobDetail.getCarrierName(), "i")).addCriteria(
                 Criteria.where("date").is(jobDetail.getDate())).addCriteria(
                 Criteria.where("isValid").is(true));
@@ -443,10 +443,10 @@ public class JobDaoImpl implements IJobDao {
 
         LOGGER.info("Inside deleteDeviceConnectionRecords .....................");
 
-        JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+        JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
         try {
 
-            Query searchJobQuery = new Query(Criteria.where("carrierName")
+            Query searchJobQuery = new Query(Criteria.where(IConstant.CARRIER_NAME)
                     .regex(jobDetail.getCarrierName(), "i")).addCriteria(
                     Criteria.where("date").is(jobDetail.getDate()))
                     .addCriteria(Criteria.where("isValid").is(true));
@@ -473,7 +473,7 @@ public class JobDaoImpl implements IJobDao {
     public List fetchTransactionFailureDevices(Exchange exchange) {
         JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
 
-        exchange.setProperty("jobName", jobDetail.getName().toString());
+        exchange.setProperty(IConstant.JOB_NAME, jobDetail.getName().toString());
 
         List list = null;
 
@@ -484,7 +484,7 @@ public class JobDaoImpl implements IJobDao {
             LOGGER.info("Carrier Name -----------------" + carrierName);
             // We have to check bs_carrier with possible reseller values for
             // that carrier.
-            Query searchQuery = new Query(Criteria.where("carrierName").regex(
+            Query searchQuery = new Query(Criteria.where(IConstant.CARRIER_NAME).regex(
                     jobDetail.getCarrierName(), "i"))
                     .addCriteria(Criteria.where("date").is(jobDetail.getDate()))
                     .addCriteria(
@@ -531,10 +531,10 @@ public class JobDaoImpl implements IJobDao {
     public void deleteTransactionFailureDeviceUsageRecords(Exchange exchange) {
         LOGGER.info("Inside deleteTransactionFailureDeviceUsageRecords .....................");
 
-        JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+        JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
         try {
 
-            Query searchJobQuery = new Query(Criteria.where("carrierName")
+            Query searchJobQuery = new Query(Criteria.where(IConstant.CARRIER_NAME)
                     .regex(jobDetail.getCarrierName(), "i"))
                     .addCriteria(Criteria.where("date").is(jobDetail.getDate()))
                     .addCriteria(
@@ -568,10 +568,10 @@ public class JobDaoImpl implements IJobDao {
             Exchange exchange) {
         LOGGER.info("Inside deleteTransactionFailureDeviceConnectionHistoryRecords .....................");
 
-        JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+        JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
         try {
 
-            Query searchJobQuery = new Query(Criteria.where("carrierName")
+            Query searchJobQuery = new Query(Criteria.where(IConstant.CARRIER_NAME)
                     .regex(jobDetail.getCarrierName(), "i"))
                     .addCriteria(Criteria.where("date").is(jobDetail.getDate()))
                     .addCriteria(
@@ -634,7 +634,7 @@ public class JobDaoImpl implements IJobDao {
         Integer netSuiteId = deviceInfo.getNetSuiteId();
         if (deviceInfo.getBs_plan() != null) {
 
-            JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+            JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
             billingDay = deviceInfo.getBs_plan().getBill_day();
             billingStartDate = CommonUtil.getDeviceBillingStartDate(billingDay,
                     jobDetail.getDate());
@@ -698,7 +698,7 @@ public class JobDaoImpl implements IJobDao {
     @Override
     public void insertTimeOutUsageRecords(Exchange exchange) {
 
-        JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+        JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
 
         List<DeviceInformation> timeOutDeviceList = (List<DeviceInformation>) exchange
                 .getProperty(IConstant.TIMEOUT_DEVICE_LIST);
@@ -713,10 +713,10 @@ public class JobDaoImpl implements IJobDao {
             timeOutDeviceSet.add(deviceInformation.getNetSuiteId());
         }
 
-        String carrierName = (String) exchange.getProperty("carrierName");
+        String carrierName = (String) exchange.getProperty(IConstant.CARRIER_NAME);
 
         // find the timeout devices that are in device usage Collection
-        Query searchJobQuery = new Query(Criteria.where("carrierName").regex(
+        Query searchJobQuery = new Query(Criteria.where(IConstant.CARRIER_NAME).regex(
                 jobDetail.getCarrierName(), "i"))
                 .addCriteria(Criteria.where("date").is(jobDetail.getDate()))
                 .addCriteria(Criteria.where("isValid").is(true))
@@ -788,7 +788,7 @@ public class JobDaoImpl implements IJobDao {
     @Override
     public void insertTimeOutConnectionRecords(Exchange exchange) {
         // TODO Auto-generated method stub
-        JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+        JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
 
         List<DeviceInformation> timeOutDeviceList = (List<DeviceInformation>) exchange
                 .getProperty(IConstant.TIMEOUT_DEVICE_LIST);
@@ -803,10 +803,10 @@ public class JobDaoImpl implements IJobDao {
             timeOutDeviceSet.add(deviceInformation.getNetSuiteId());
         }
 
-        String carrierName = (String) exchange.getProperty("carrierName");
+        String carrierName = (String) exchange.getProperty(IConstant.CARRIER_NAME);
 
         // find the timeout devices that are in device Connection Collection
-        Query searchJobQuery = new Query(Criteria.where("carrierName").regex(
+        Query searchJobQuery = new Query(Criteria.where(IConstant.CARRIER_NAME).regex(
                 jobDetail.getCarrierName(), "i"))
                 .addCriteria(Criteria.where("date").is(jobDetail.getDate()))
                 .addCriteria(Criteria.where("isValid").is(true))
@@ -867,7 +867,7 @@ public class JobDaoImpl implements IJobDao {
     public void insertTimeOutUsageRecordsTransactionFailure(Exchange exchange) {
         // TODO Auto-generated method stub
 
-        JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+        JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
 
         List<DeviceUsage> timeOutDeviceListTransactionFailure = (List<DeviceUsage>) exchange
                 .getProperty(IConstant.TIMEOUT_DEVICE_LIST);
@@ -882,11 +882,11 @@ public class JobDaoImpl implements IJobDao {
             timeOutDeviceSetTransactionFailure.add(deviceUsage.getNetSuiteId());
         }
 
-        String carrierName = (String) exchange.getProperty("carrierName");
+        String carrierName = (String) exchange.getProperty(IConstant.CARRIER_NAME);
 
         // find the TransactionFailure timeout devices that are in device usage
         // Collection
-        Query searchJobQuery = new Query(Criteria.where("carrierName").regex(
+        Query searchJobQuery = new Query(Criteria.where(IConstant.CARRIER_NAME).regex(
                 jobDetail.getCarrierName(), "i"))
                 .addCriteria(Criteria.where("date").is(jobDetail.getDate()))
                 .addCriteria(Criteria.where("isValid").is(true))
@@ -944,7 +944,7 @@ public class JobDaoImpl implements IJobDao {
             Exchange exchange) {
         // TODO Auto-generated method stub
 
-        JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+        JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
 
         List<DeviceConnection> timeOutDeviceTransactionFailureList = (List<DeviceConnection>) exchange
                 .getProperty(IConstant.TIMEOUT_DEVICE_LIST);
@@ -960,10 +960,9 @@ public class JobDaoImpl implements IJobDao {
                     .getNetSuiteId());
         }
 
-        String carrierName = (String) exchange.getProperty("carrierName");
 
         // find the timeout devices that are in device Connection Collection
-        Query searchJobQuery = new Query(Criteria.where("carrierName").regex(
+        Query searchJobQuery = new Query(Criteria.where(IConstant.CARRIER_NAME).regex(
                 jobDetail.getCarrierName(), "i"))
                 .addCriteria(Criteria.where("date").is(jobDetail.getDate()))
                 .addCriteria(Criteria.where("isValid").is(true))
@@ -1019,11 +1018,11 @@ public class JobDaoImpl implements IJobDao {
 
         Map<Integer, DeviceUsageViewElement> existingRecords = fetchExistingDeviceUsageView(exchange);
 
-        JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+        JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
         try {
 
             Query searchDeviceUsageQuery = new Query(Criteria.where(
-                    "carrierName").regex(jobDetail.getCarrierName(), "i"))
+            		IConstant.CARRIER_NAME).regex(jobDetail.getCarrierName(), "i"))
                     .addCriteria(Criteria.where("date").is(jobDetail.getDate()))
                     .addCriteria(Criteria.where("isValid").is(true))
                     .addCriteria(
@@ -1121,14 +1120,14 @@ public class JobDaoImpl implements IJobDao {
 
             }
             Query searchDeviceUsageViewQuery = new Query(Criteria.where(
-                    "carrierName").regex(jobDetail.getCarrierName(), "i"))
+            		IConstant.CARRIER_NAME).regex(jobDetail.getCarrierName(), "i"))
                     .addCriteria(Criteria.where("date").is(
                             jobDetail.getDate()));
 
             Update update = new Update();
 
             update.set("elements", view.getElements());
-            update.set("carrierName",jobDetail.getCarrierName() );
+            update.set(IConstant.CARRIER_NAME,jobDetail.getCarrierName() );
             update.set("date",jobDetail.getDate());
 
             mongoTemplate.upsert(searchDeviceUsageViewQuery, update,
@@ -1150,10 +1149,10 @@ public class JobDaoImpl implements IJobDao {
 
         Map<Integer, DeviceUsageViewElement> deviceUsageViewMap = new HashMap();
 
-        JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+        JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
         try {
 
-            Query searchJobQuery = new Query(Criteria.where("carrierName")
+            Query searchJobQuery = new Query(Criteria.where(IConstant.CARRIER_NAME)
                     .regex(jobDetail.getCarrierName(), "i"))
                     .addCriteria(Criteria.where("date").is(jobDetail.getDate()));
 
@@ -1189,10 +1188,8 @@ public class JobDaoImpl implements IJobDao {
 			Exchange exchange) {
 		// TODO Auto-generated method stub
 
-		DevicesUsageByDayAndCarrierRequest devicesUsageByDayAndCarrierRequest = new DevicesUsageByDayAndCarrierRequest();
-
+		
 		Boolean isUpdatedElementfalse = false;
-		Boolean isUpdatedElementtrue = true;
 
 		LOGGER.info("Inside fetchDeviceUsageView .....................");
 		DevicesUsageByDayAndCarrier deviceUsageResponse = null;
@@ -1205,7 +1202,7 @@ public class JobDaoImpl implements IJobDao {
 
 		try {
 
-			Query searchJobQuery = new Query(Criteria.where("carrierName").is(
+			Query searchJobQuery = new Query(Criteria.where(IConstant.CARRIER_NAME).is(
 					req.getCarrierName())).addCriteria(Criteria.where("date")
 					.is(req.getDate()));
 
@@ -1259,7 +1256,7 @@ public class JobDaoImpl implements IJobDao {
 
 	@Override
 	public List fetchPreviousDeviceUsageDataUsed(Exchange exchange) {
-		JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+		JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
 
 		// fetching the last updated value for each netsuiteId in Device Usage
 		// table
@@ -1275,7 +1272,7 @@ public class JobDaoImpl implements IJobDao {
 
 		{
 			Aggregation agg = newAggregation(
-					match(Criteria.where("carrierName").is("ATTJASPER")
+					match(Criteria.where(IConstant.CARRIER_NAME).is("ATTJASPER")
 							.and("date").gte(beginningMonthDate).and("isValid")
 							.is(true).and("transactionStatus").is("Success")),
 					sort(Sort.Direction.DESC, "netSuiteId", "date"),

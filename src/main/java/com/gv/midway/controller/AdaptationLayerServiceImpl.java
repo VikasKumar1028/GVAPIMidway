@@ -178,6 +178,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
         JobDetail jobDetail = new JobDetail();
         jobDetail.setType(JobType.TRANSACTION_FAILURE);
         jobDetail.setDate(jobParameter.getDate());
+        jobDetail.setPeriod(JobType.TRANSACTION_FAILURE.toString());
 
         if ("KORE".equals(jobParameter.getCarrierName())) {
             jobDetail.setName(JobName.KORE_DEVICE_USAGE);
@@ -202,6 +203,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
         final JobDetail jobDetail = new JobDetail();
         jobDetail.setType(JobType.TRANSACTION_FAILURE);
         jobDetail.setDate(jobParameter.getDate());
+        jobDetail.setPeriod(JobType.TRANSACTION_FAILURE.toString());
 
         if ("VERIZON".equals(jobParameter.getCarrierName())) {
             jobDetail.setName(JobName.VERIZON_CONNECTION_HISTORY);
@@ -223,6 +225,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
         final JobDetail jobDetail = new JobDetail();
         jobDetail.setType(JobType.RERUN);
         jobDetail.setDate(jobParameter.getDate());
+        jobDetail.setPeriod(JobType.RERUN.toString());
 
         if ("KORE".equals(jobParameter.getCarrierName())) {
             jobDetail.setName(JobName.KORE_DEVICE_USAGE);
@@ -248,6 +251,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
         final JobDetail jobDetail = new JobDetail();
         jobDetail.setType(JobType.RERUN);
         jobDetail.setDate(jobParameter.getDate());
+        jobDetail.setPeriod(JobType.RERUN.toString());
 
         if ("VERIZON".equals(jobParameter.getCarrierName())) {
             jobDetail.setCarrierName(CarrierType.VERIZON.toString());

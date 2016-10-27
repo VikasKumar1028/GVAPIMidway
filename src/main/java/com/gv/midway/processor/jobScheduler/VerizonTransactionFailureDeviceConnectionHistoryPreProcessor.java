@@ -25,8 +25,8 @@ public class VerizonTransactionFailureDeviceConnectionHistoryPreProcessor implem
 		LOGGER.info("Session Parameters  VZAuthorization" + exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN));
 
 		final DeviceConnection deviceInfo = (DeviceConnection) exchange.getIn().getBody();
-		final String jobStartTime = exchange.getProperty("jobStartTime").toString();
-		final String jobEndTime = exchange.getProperty("jobEndTime").toString();
+		final String jobStartTime = exchange.getProperty(IConstant.JOB_START_TIME).toString();
+		final String jobEndTime = exchange.getProperty(IConstant.JOB_END_TIME).toString();
 
 		final DeviceId device = new DeviceId();
 		// Fetching Recommended device Identifiers

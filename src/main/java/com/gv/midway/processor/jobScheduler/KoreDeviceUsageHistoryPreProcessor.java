@@ -37,7 +37,7 @@ public class KoreDeviceUsageHistoryPreProcessor implements Processor {
         LOGGER.info("Begin:KoreDeviceUsageHistoryPreProcessor");
         final Message message = exchange.getIn();
 
-        LOGGER.info("jobDetailDate ------" + exchange.getProperty("jobDetailDate"));
+        LOGGER.info("jobDetailDate ------" + exchange.getProperty(IConstant.JOB_DETAIL_DATE));
 
         final ObjectMapper objectMapper = new ObjectMapper();
 

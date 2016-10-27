@@ -23,8 +23,8 @@ public class VerizonTransactionFailureDeviceUsageHistoryPreProcessor implements 
 		LOGGER.info("Begin:VerizonTransactionFailureDeviceUsageHistoryPreProcessor");
 
 		final DeviceUsage deviceInfo = (DeviceUsage) exchange.getIn().getBody();
-		final String jobStartTime = exchange.getProperty("jobStartTime").toString();
-		final String jobEndTime = exchange.getProperty("jobEndTime").toString();
+		final String jobStartTime = exchange.getProperty(IConstant.JOB_START_TIME).toString();
+		final String jobEndTime = exchange.getProperty(IConstant.JOB_END_TIME).toString();
 
 		final DeviceId device = new DeviceId();
 		// Fetching Recommended device Identifiers

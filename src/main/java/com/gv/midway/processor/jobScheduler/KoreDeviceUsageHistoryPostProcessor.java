@@ -27,7 +27,7 @@ public class KoreDeviceUsageHistoryPostProcessor implements Processor {
 
 		LOGGER.info("Begin:KoreDeviceUsageHistoryPostProcessor");
 		LOGGER.info("exchange::::" + exchange.getIn().getBody());
-		LOGGER.info("jobDetailDate ------" + exchange.getProperty("jobDetailDate"));
+		LOGGER.info("jobDetailDate ------" + exchange.getProperty(IConstant.JOB_DETAIL_DATE));
 
 		final Map map = exchange.getIn().getBody(Map.class);
 		final ObjectMapper mapper = new ObjectMapper();
@@ -43,9 +43,8 @@ public class KoreDeviceUsageHistoryPostProcessor implements Processor {
 			for (Usage usage : usageResponse.getD().getUsage()) {
 
 				final String usageDateValue = getKoreDeviceUsageDate(usage);
-				LOGGER.info("jobDetailDate::" + exchange.getProperty("jobDetailDate"));
 
-				if (usageDateValue != null && exchange.getProperty("jobDetailDate").equals(usageDateValue)) {
+				if (usageDateValue != null && exchange.getProperty(IConstant.JOB_DETAIL_DATE).equals(usageDateValue)) {
 					totalBytesUsed = usage.getDataInBytes().longValue() + totalBytesUsed;
 					LOGGER.info("totalBytesUsed:" + totalBytesUsed);
 					break;
@@ -55,7 +54,7 @@ public class KoreDeviceUsageHistoryPostProcessor implements Processor {
 
 		LOGGER.info("End of Loop totalBytesUsed:::::::::" + totalBytesUsed);
 
-		final JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+		final JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
 
 		final DeviceUsage deviceUsage = new DeviceUsage();
 		deviceUsage.setCarrierName((String) exchange.getProperty("CarrierName"));

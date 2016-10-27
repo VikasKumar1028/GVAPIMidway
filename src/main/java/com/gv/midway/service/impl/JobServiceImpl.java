@@ -48,9 +48,9 @@ public class JobServiceImpl implements IJobService {
 
         if (list != null) {
 
-            exchange.setProperty("JobTotalCount", list.size());
+            exchange.setProperty(IConstant.JOB_TOTAL_COUNT, list.size());
         } else {
-            exchange.setProperty("JobTotalCount", 0);
+            exchange.setProperty(IConstant.JOB_TOTAL_COUNT, 0);
         }
 
         return list;
@@ -65,7 +65,7 @@ public class JobServiceImpl implements IJobService {
      */
     public List<DeviceInformation> fetchDevicesDependingServerDetails(Exchange exchange) {
 
-        JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+        JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
 
         if (jobDetail.getType().toString()
                 .equalsIgnoreCase(JobType.NEW.toString())) {
@@ -141,12 +141,13 @@ public class JobServiceImpl implements IJobService {
      */
     @Override
     public void setJobDetails(Exchange exchange, String carrierName,
-            JobName jobName,int duration,JobType jobType) {
+            JobName jobName,int duration,JobType jobType,String period) {
 
         JobDetail jobDetail = new JobDetail();
         jobDetail.setType(jobType);
         jobDetail.setCarrierName(carrierName);
         jobDetail.setName(jobName);
+        jobDetail.setPeriod(period);
 
         // New Job Will Run Today but for Previous day(Current -1 day) data so
         // setting the Job date to previous day not current date
@@ -168,7 +169,7 @@ public class JobServiceImpl implements IJobService {
     @Override
     public void deleteDeviceUsageRecords(Exchange exchange) {
 
-        JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+        JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
         if (JobType.RERUN.toString().equals(jobDetail.getType().toString())) {
             iJobDao.deleteDeviceUsageRecords(exchange);
         }
@@ -182,7 +183,7 @@ public class JobServiceImpl implements IJobService {
      */
     @Override
     public void deleteDeviceConnectionHistoryRecords(Exchange exchange) {
-        JobDetail jobDetail = (JobDetail) exchange.getProperty("jobDetail");
+        JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
         if (JobType.RERUN.toString().equals(jobDetail.getType().toString())) {
             iJobDao.deleteDeviceConnectionHistoryRecords(exchange);
         }
@@ -209,10 +210,10 @@ public class JobServiceImpl implements IJobService {
             cal.setTime(dateFormat.parse(jobDetail.getDate()));
             Date jobStartTime=cal.getTime();
             jobStartTime.setSeconds(1);
-            exchange.setProperty("jobStartTime",
+            exchange.setProperty(IConstant.JOB_START_TIME,
                     verizondateFormat.format(jobStartTime));
             cal.add(Calendar.HOUR, 24);
-            exchange.setProperty("jobEndTime",
+            exchange.setProperty(IConstant.JOB_END_TIME,
                     verizondateFormat.format(cal.getTime()));
 
         } catch (Exception ex) {
@@ -231,9 +232,9 @@ public class JobServiceImpl implements IJobService {
         
         if (list != null) {
 
-            exchange.setProperty("JobTotalCount", list.size());
+            exchange.setProperty(IConstant.JOB_TOTAL_COUNT, list.size());
         } else {
-            exchange.setProperty("JobTotalCount", 0);
+            exchange.setProperty(IConstant.JOB_TOTAL_COUNT, 0);
         }
 
 
@@ -319,7 +320,7 @@ public class JobServiceImpl implements IJobService {
 
         if (timeOutDeviceList.size() > 0) {
 
-            String jobName = (String) exchange.getProperty("jobName");
+            String jobName = (String) exchange.getProperty(IConstant.JOB_NAME);
 
             // check for usage and connection History Job
 
@@ -349,7 +350,7 @@ public class JobServiceImpl implements IJobService {
 
         if (timeOutDeviceList.size() > 0) {
 
-            String jobName = (String) exchange.getProperty("jobName");
+            String jobName = (String) exchange.getProperty(IConstant.JOB_NAME);
 
             // check for usage and connection History Job
 

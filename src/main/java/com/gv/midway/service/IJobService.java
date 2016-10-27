@@ -22,7 +22,7 @@ public interface IJobService {
     public void deleteDeviceConnectionHistoryRecords(Exchange exchange);
 
     public void setJobDetails(Exchange exchange, String carrierName,
-            JobName jobName,int duration,JobType jobType);
+            JobName jobName,int duration,JobType jobType,String period);
 
     public void setJobStartandEndTime(Exchange exchange);
 
