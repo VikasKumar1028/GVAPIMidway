@@ -50,5 +50,7 @@ public interface IJobService {
     public List<DevicesUsageByDayAndCarrier> fetchDeviceUsageView(Exchange exchange);
     
     public void fetchPreviousDeviceUsageData(Exchange exchange);
+    
+    public void checkKoreJobScheduling(Exchange exchange,int jobDuration);
 
 }

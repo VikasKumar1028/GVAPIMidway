@@ -598,7 +598,13 @@ public class CommonUtil {
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         return ow.writeValueAsString(objectWithJsonSerializeAnnotation);
     }
-    
+   
+    /**
+     * Logic to Schedule Kore Job on Below Dates of Month.
+     *   Day 24 – Don’t run anything
+     *   Day 25 – Run for Day 24 (24 hour)
+     *     Day 26 – Run for Day 25 (24 hour) and Day 24 (48 hour)
+     */
     public static boolean checkKoreJobScheduling(int jobDuration)
     { 
 		Calendar cal = Calendar.getInstance();

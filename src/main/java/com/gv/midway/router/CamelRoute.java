@@ -1503,12 +1503,14 @@ public class CamelRoute extends RouteBuilder {
      */
     public void deviceUsageHistoryKoreJob24() {
 
-        from(env.getProperty(IConstant.KORE_USAGE_TIMER24))
+        from(env.getProperty(IConstant.KORE_USAGE_TIMER24)).bean(iJobService, "checkKoreJobScheduling(${exchange},"
+                                + IConstant.DURATION_24+")").choice()
+                                .when(simple("${exchangeProperty[IsKoreJobScheduling]} == 'true'"))
                 .bean(iJobService,
                         "setJobDetails(${exchange},"
                                 + CarrierType.KORE.toString() + ", "
                                 + JobName.KORE_DEVICE_USAGE + ","+IConstant.DURATION_24+","+JobType.NEW+","+"24"+")")
-                .bean(iJobService, "scheduleJob").end();
+                .bean(iJobService, "scheduleJob").endChoice().end();
 
     }
     
@@ -1548,12 +1550,14 @@ public class CamelRoute extends RouteBuilder {
      */
     public void deviceUsageHistoryKoreJob48() {
 
-        from(env.getProperty(IConstant.KORE_USAGE_TIMER48))
+        from(env.getProperty(IConstant.KORE_USAGE_TIMER48)).bean(iJobService, "checkKoreJobScheduling(${exchange},"
+                + IConstant.DURATION_48+")").choice()
+                .when(simple("${exchangeProperty[IsKoreJobScheduling]} == 'true'"))
                 .bean(iJobService,
                         "setJobDetails(${exchange},"
                                 + CarrierType.KORE.toString() + ", "
                                 + JobName.KORE_DEVICE_USAGE + ","+IConstant.DURATION_48+","+JobType.RERUN+","+"48"+")")
-                .bean(iJobService, "scheduleJob").end();
+                .bean(iJobService, "scheduleJob").endChoice().end();
 
     }
     
@@ -1577,12 +1581,14 @@ public class CamelRoute extends RouteBuilder {
      */
     public void deviceUsageHistoryKoreJob72() {
 
-        from(env.getProperty(IConstant.KORE_USAGE_TIMER72))
+        from(env.getProperty(IConstant.KORE_USAGE_TIMER72)).bean(iJobService, "checkKoreJobScheduling(${exchange},"
+                + IConstant.DURATION_72+")").choice()
+                .when(simple("${exchangeProperty[IsKoreJobScheduling]} == 'true'"))
                 .bean(iJobService,
                         "setJobDetails(${exchange},"
                                 + CarrierType.KORE.toString() + ", "
                                 + JobName.KORE_DEVICE_USAGE + ","+IConstant.DURATION_72+","+JobType.RERUN+","+"72"+")")
-                .bean(iJobService, "scheduleJob").end();
+                .bean(iJobService, "scheduleJob").endChoice().end();
 
     }
 

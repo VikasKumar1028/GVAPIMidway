@@ -409,6 +409,13 @@ public class JobServiceImpl implements IJobService {
 
 	}
 
+	@Override
+	public void checkKoreJobScheduling(Exchange exchange,int jobDuration) {
+		// TODO Auto-generated method stub
+		
+		exchange.setProperty(IConstant.ISKOREJOB_SCHEDULING, CommonUtil.checkKoreJobScheduling(jobDuration));
+	}
+
 
 
 }

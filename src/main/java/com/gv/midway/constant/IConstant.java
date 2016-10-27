@@ -184,4 +184,6 @@ public interface IConstant {
 	static String JOB_ERROR_COUNT="JobErrorCount";
 	
 	static String JOB_SUCCESS_COUNT="JobSuccessCount";
+	
+	static String ISKOREJOB_SCHEDULING="IsKoreJobScheduling";
 }
