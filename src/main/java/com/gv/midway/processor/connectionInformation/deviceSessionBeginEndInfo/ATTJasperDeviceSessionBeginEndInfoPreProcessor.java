@@ -61,9 +61,9 @@ public class ATTJasperDeviceSessionBeginEndInfoPreProcessor implements
 
 		getSessionInfoRequest.getIccid().add(iccidvalue.get(0));
 
-		String version = newEnv.getProperty("attJapser.version");
+		String version = newEnv.getProperty("attJasper.version");
 
-		String licenseKey = newEnv.getProperty("attJapser.licenseKey");
+		String licenseKey = newEnv.getProperty("attJasper.licenseKey");
 
 		getSessionInfoRequest.setLicenseKey(licenseKey);
 		getSessionInfoRequest.setMessageId("" + new Date().getTime());
@@ -79,9 +79,9 @@ public class ATTJasperDeviceSessionBeginEndInfoPreProcessor implements
 				.setHeader("soapAction",
 						"http://api.jasperwireless.com/ws/service/terminal/GetSessionInfo");
 
-		String username = newEnv.getProperty("attJapser.userName");
+		String username = newEnv.getProperty("attJasper.userName");
 
-		String password = newEnv.getProperty("attJapser.password");
+		String password = newEnv.getProperty("attJasper.password");
 
 		List<SoapHeader> soapHeaders = CommonUtil.getSOAPHeaders(username,
 				password);

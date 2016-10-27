@@ -23,10 +23,10 @@ class TestATTJasperActivateDevicePreProcessor extends TestMocks {
 
     withMockExchangeMessageAndEnvironment { (exchange, message, environment) =>
       List(
-        ("attJapser.version", version)
-        , ("attJapser.licenseKey", licenseKey)
-        , ("attJapser.userName", "user")
-        , ("attJapser.password", "password")
+        ("attJasper.version", version)
+        , ("attJasper.licenseKey", licenseKey)
+        , ("attJasper.userName", "user")
+        , ("attJasper.password", "password")
       ).foreach { case (k, v) =>
           when(environment.getProperty(k)).thenReturn(v, Nil: _*)
       }

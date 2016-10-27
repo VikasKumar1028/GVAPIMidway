@@ -54,9 +54,9 @@ public class ATTJasperReactivateDevicePreProcessor implements Processor {
 		editTerminalRequest.setChangeType(IConstant.ATTJASPER_SIM_CHANGETYPE);
 		editTerminalRequest.setTargetValue(IConstant.ATTJASPER_ACTIVATED);
 
-		String version = newEnv.getProperty("attJapser.version");
+		String version = newEnv.getProperty("attJasper.version");
 
-		String licenseKey = newEnv.getProperty("attJapser.licenseKey");
+		String licenseKey = newEnv.getProperty("attJasper.licenseKey");
 
 		editTerminalRequest.setLicenseKey(licenseKey);
 		editTerminalRequest.setMessageId("" + new Date().getTime());
@@ -76,9 +76,9 @@ public class ATTJasperReactivateDevicePreProcessor implements Processor {
 		exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID,
 				transaction.getNetSuiteId());
 
-		String username = newEnv.getProperty("attJapser.userName");
+		String username = newEnv.getProperty("attJasper.userName");
 
-		String password = newEnv.getProperty("attJapser.password");
+		String password = newEnv.getProperty("attJasper.password");
 
 		List<SoapHeader> soapHeaders = CommonUtil.getSOAPHeaders(username,
 				password);

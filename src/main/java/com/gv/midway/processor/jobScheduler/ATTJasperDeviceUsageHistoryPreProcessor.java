@@ -62,9 +62,9 @@ public class ATTJasperDeviceUsageHistoryPreProcessor implements Processor {
 
 		getTerminalDetailsRequest.setIccids(iccids);
 
-		String version = newEnv.getProperty("attJapser.version");
+		String version = newEnv.getProperty("attJasper.version");
 
-		String licenseKey = newEnv.getProperty("attJapser.licenseKey");
+		String licenseKey = newEnv.getProperty("attJasper.licenseKey");
 
 		getTerminalDetailsRequest.setLicenseKey(licenseKey);
 		getTerminalDetailsRequest.setMessageId("" + new Date().getTime());
@@ -89,9 +89,9 @@ public class ATTJasperDeviceUsageHistoryPreProcessor implements Processor {
 				deviceInfo.getNetSuiteId());
 		exchange.setProperty("CarrierName", deviceInfo.getBs_carrier());
 
-		String username = newEnv.getProperty("attJapser.userName");
+		String username = newEnv.getProperty("attJasper.userName");
 
-		String password = newEnv.getProperty("attJapser.password");
+		String password = newEnv.getProperty("attJasper.password");
 
 		List<SoapHeader> soapHeaders = CommonUtil.getSOAPHeaders(username,
 				password);

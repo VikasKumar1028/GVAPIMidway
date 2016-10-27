@@ -40,11 +40,10 @@ public class ATTJasperActivateDevicePreProcessor implements Processor {
         final ActivateDeviceRequest activateDeviceRequest = (ActivateDeviceRequest)transaction.getDevicePayload();
         final String deviceId = activateDeviceRequest.getDataArea().getDevices().getDeviceIds()[0].getId();
 
-        //TODO This is misspelled everywhere (japser instead of jasper)
-        final String version = newEnv.getProperty("attJapser.version");
-        final String licenseKey = newEnv.getProperty("attJapser.licenseKey");
-        final String username = newEnv.getProperty("attJapser.userName");
-        final String password = newEnv.getProperty("attJapser.password");
+        final String version = newEnv.getProperty("attJasper.version");
+        final String licenseKey = newEnv.getProperty("attJasper.licenseKey");
+        final String username = newEnv.getProperty("attJasper.userName");
+        final String password = newEnv.getProperty("attJasper.password");
 
         final EditTerminalRequest editTerminalRequest = new EditTerminalRequest();
         editTerminalRequest.setIccid(deviceId);

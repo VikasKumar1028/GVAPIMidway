@@ -53,9 +53,9 @@ public class ATTJasperCustomFieldDevicePreProcessor implements Processor {
 
 		EditTerminalRequest getEditTerminalRequest = new EditTerminalRequest();
 
-		String version = newEnv.getProperty("attJapser.version");
+		String version = newEnv.getProperty("attJasper.version");
 
-		String licenseKey = newEnv.getProperty("attJapser.licenseKey");
+		String licenseKey = newEnv.getProperty("attJasper.licenseKey");
 		
 		
 		getEditTerminalRequest.setChangeType(CommonUtil.getAttJasperCustomField(customFieldRequest.getDataArea().getCustomFieldsToUpdate()[0].getKey()));
@@ -83,9 +83,9 @@ public class ATTJasperCustomFieldDevicePreProcessor implements Processor {
 				.setHeader("soapAction",
 						"http://api.jasperwireless.com/ws/service/terminal/EditTerminal");
 
-		String username = newEnv.getProperty("attJapser.userName");
+		String username = newEnv.getProperty("attJasper.userName");
 
-		String password = newEnv.getProperty("attJapser.password");
+		String password = newEnv.getProperty("attJasper.password");
 
 		List<SoapHeader> soapHeaders = CommonUtil.getSOAPHeaders(username,
 				password);
