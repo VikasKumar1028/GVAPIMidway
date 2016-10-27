@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
+import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.camel.component.cxf.common.message.CxfConstants;
 import org.apache.cxf.binding.soap.SoapHeader;
@@ -18,14 +19,11 @@ import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.transaction.Transaction;
 import com.gv.midway.utility.CommonUtil;
 
-/**
- * Created by ryan.tracy on 9/6/2016.
- */
 public class ATTJasperActivateDevicePreProcessor implements Processor {
 
     private static final Logger LOGGER = Logger.getLogger(ATTJasperActivateDevicePreProcessor.class.getName());
 
-    Environment newEnv;
+    private Environment newEnv;
 
     public ATTJasperActivateDevicePreProcessor(Environment env) {
         super();
@@ -37,49 +35,37 @@ public class ATTJasperActivateDevicePreProcessor implements Processor {
 
         LOGGER.info("Begin:ATTJasperActivateDevicePreProcessor");
 
-        Transaction transaction = exchange.getIn().getBody(Transaction.class);
+        final Message message = exchange.getIn();
+        final Transaction transaction = message.getBody(Transaction.class);
+        final ActivateDeviceRequest activateDeviceRequest = (ActivateDeviceRequest)transaction.getDevicePayload();
+        final String deviceId = activateDeviceRequest.getDataArea().getDevices().getDeviceIds()[0].getId();
 
-        ActivateDeviceRequest activateDeviceRequest = (ActivateDeviceRequest)transaction.getDevicePayload();
+        //TODO This is misspelled everywhere (japser instead of jasper)
+        final String version = newEnv.getProperty("attJapser.version");
+        final String licenseKey = newEnv.getProperty("attJapser.licenseKey");
+        final String username = newEnv.getProperty("attJapser.userName");
+        final String password = newEnv.getProperty("attJapser.password");
 
-        String deviceId = activateDeviceRequest.getDataArea().getDevices().getDeviceIds()[0].getId();
-        
-        exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,
-				transaction.getDeviceNumber());
-
-        EditTerminalRequest editTerminalRequest = new EditTerminalRequest();
-
+        final EditTerminalRequest editTerminalRequest = new EditTerminalRequest();
         editTerminalRequest.setIccid(deviceId);
-       /* LocalDateTime currentUTCTime = LocalDateTime.now(); // using system timezone
-        XMLGregorianCalendar xmlDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(currentUTCTime.toString());
-        editTerminalRequest.setEffectiveDate(xmlDate);*/
         editTerminalRequest.setChangeType(IConstant.ATTJASPER_SIM_CHANGETYPE);
         editTerminalRequest.setTargetValue(IConstant.ATTJASPER_ACTIVATED);
-
-        String version = newEnv.getProperty("attJapser.version");
-
-        String licenseKey = newEnv.getProperty("attJapser.licenseKey");
-
         editTerminalRequest.setLicenseKey(licenseKey);
         editTerminalRequest.setMessageId("" + new Date().getTime());
         editTerminalRequest.setVersion(version);
 
         LOGGER.info("activate of iccId..............." + deviceId);
 
-        exchange.getIn().setBody(editTerminalRequest);
+        final List<SoapHeader> soapHeaders = CommonUtil.getSOAPHeaders(username, password);
 
-        exchange.getIn().setHeader(CxfConstants.OPERATION_NAME, "EditTerminal");
-        exchange.getIn().setHeader(CxfConstants.OPERATION_NAMESPACE, "http://api.jasperwireless.com/ws/schema");
-        exchange.getIn().setHeader("soapAction", "http://api.jasperwireless.com/ws/service/terminal/EditTerminal");
+        message.setBody(editTerminalRequest);
+        message.setHeader(CxfConstants.OPERATION_NAME, "EditTerminal");
+        message.setHeader(CxfConstants.OPERATION_NAMESPACE, "http://api.jasperwireless.com/ws/schema");
+        message.setHeader("soapAction", "http://api.jasperwireless.com/ws/service/terminal/EditTerminal");
+        message.setHeader(Header.HEADER_LIST, soapHeaders);
 
+        exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER, transaction.getDeviceNumber());
         exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID, transaction.getNetSuiteId());
-
-        String username = newEnv.getProperty("attJapser.userName");
-
-        String password = newEnv.getProperty("attJapser.password");
-
-        List<SoapHeader> soapHeaders = CommonUtil.getSOAPHeaders(username, password);
-
-        exchange.getIn().setHeader(Header.HEADER_LIST, soapHeaders);
         exchange.setPattern(ExchangePattern.InOut);
 
         LOGGER.info("End:ATTJasperActivateDevicePreProcessor");

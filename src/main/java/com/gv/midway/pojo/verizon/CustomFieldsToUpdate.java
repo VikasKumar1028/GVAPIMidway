@@ -4,6 +4,13 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 
 public class CustomFieldsToUpdate {
 
+    public CustomFieldsToUpdate() { }
+
+    public CustomFieldsToUpdate(String key, String value) {
+        this.key = key;
+        this.value = value;
+    }
+
     @ApiModelProperty(value = "The name of the custom field. Valid names are CustomField1, CustomField2, CustomField3, CustomField4, and CustomField5.", required = true)
     private String key;
 
@@ -61,5 +68,4 @@ public class CustomFieldsToUpdate {
     public String toString() {
         return "CustomFieldsToUpdate [value=" + value + ", key=" + key + "]";
     }
-
 }

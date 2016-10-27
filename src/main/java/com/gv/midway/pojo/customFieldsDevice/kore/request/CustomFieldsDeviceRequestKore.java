@@ -1,6 +1,7 @@
 package com.gv.midway.pojo.customFieldsDevice.kore.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.gv.midway.pojo.verizon.CustomFieldsToUpdate;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 public class CustomFieldsDeviceRequestKore {
@@ -36,20 +37,13 @@ public class CustomFieldsDeviceRequestKore {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result
-                + ((customField1 == null) ? 0 : customField1.hashCode());
-        result = prime * result
-                + ((customField2 == null) ? 0 : customField2.hashCode());
-        result = prime * result
-                + ((customField3 == null) ? 0 : customField3.hashCode());
-        result = prime * result
-                + ((customField4 == null) ? 0 : customField4.hashCode());
-        result = prime * result
-                + ((customField5 == null) ? 0 : customField5.hashCode());
-        result = prime * result
-                + ((customField6 == null) ? 0 : customField6.hashCode());
-        result = prime * result
-                + ((deviceNumber == null) ? 0 : deviceNumber.hashCode());
+        result = prime * result + ((customField1 == null) ? 0 : customField1.hashCode());
+        result = prime * result + ((customField2 == null) ? 0 : customField2.hashCode());
+        result = prime * result + ((customField3 == null) ? 0 : customField3.hashCode());
+        result = prime * result + ((customField4 == null) ? 0 : customField4.hashCode());
+        result = prime * result + ((customField5 == null) ? 0 : customField5.hashCode());
+        result = prime * result + ((customField6 == null) ? 0 : customField6.hashCode());
+        result = prime * result + ((deviceNumber == null) ? 0 : deviceNumber.hashCode());
         return result;
     }
 
@@ -165,4 +159,34 @@ public class CustomFieldsDeviceRequestKore {
         this.customField6 = customField6;
     }
 
+    public void updateCustomFields(CustomFieldsToUpdate[] customFieldsArr) {
+        if (customFieldsArr != null) {
+            for (final CustomFieldsToUpdate customField : customFieldsArr) {
+                final String key = customField.getKey();
+
+                switch (key) {
+                    case "CustomField1":
+                        this.setCustomField1(customField.getValue());
+                        break;
+                    case "CustomField2":
+                        this.setCustomField2(customField.getValue());
+                        break;
+                    case "CustomField3":
+                        this.setCustomField3(customField.getValue());
+                        break;
+                    case "CustomField4":
+                        this.setCustomField4(customField.getValue());
+                        break;
+                    case "CustomField5":
+                        this.setCustomField5(customField.getValue());
+                        break;
+                    case "CustomField6":
+                        this.setCustomField6(customField.getValue());
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    }
 }

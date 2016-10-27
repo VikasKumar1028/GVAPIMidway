@@ -1,6 +1,14 @@
 package com.gv.midway.pojo.callback.Netsuite;
 
 public class KeyValues {
+
+    public KeyValues() { }
+
+    public KeyValues(String k, String v) {
+        this.k = k;
+        this.v = v;
+    }
+
     private String v;
 
     private String k;

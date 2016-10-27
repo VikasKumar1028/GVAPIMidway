@@ -5,6 +5,14 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ActivateDeviceId {
+
+    public ActivateDeviceId() { }
+
+    public ActivateDeviceId(String id, String kind) {
+        this.id = id;
+        this.kind = kind;
+    }
+
     // @JsonProperty("id")
     @ApiModelProperty(value = "Value of device identifier.", required = true)
     private String id;
@@ -66,5 +74,4 @@ public class ActivateDeviceId {
             return false;
         return true;
     }
-
 }

@@ -17,11 +17,7 @@ public class KoreCustomFieldsPreProcessor implements Processor {
 
     private static final Logger LOGGER = Logger.getLogger(KoreCustomFieldsPreProcessor.class.getName());
 
-    Environment newEnv;
-
-    public KoreCustomFieldsPreProcessor() {
-        // Empty Constructor
-    }
+    private Environment newEnv;
 
     public KoreCustomFieldsPreProcessor(Environment env) {
         super();
@@ -33,79 +29,29 @@ public class KoreCustomFieldsPreProcessor implements Processor {
 
         LOGGER.info("Begin::KoreCustomFieldsPreProcessor");
 
-        Message message = exchange.getIn();
+        final Message message = exchange.getIn();
+        final Transaction transaction = exchange.getIn().getBody(Transaction.class);
+        final CustomFieldsDeviceRequest changeDeviceServicePlansRequest = (CustomFieldsDeviceRequest) transaction.getDevicePayload();
 
-        Transaction transaction = exchange.getIn().getBody(Transaction.class);
+        final String deviceId = changeDeviceServicePlansRequest.getDataArea().getDevices()[0].getDeviceIds()[0].getId();
 
-        CustomFieldsDeviceRequest changeDeviceServicePlansRequest = (CustomFieldsDeviceRequest) transaction
-                .getDevicePayload();
-
-        String deviceId = changeDeviceServicePlansRequest.getDataArea()
-                .getDevices()[0].getDeviceIds()[0].getId();
-
-        CustomFieldsDeviceRequestKore customFieldsDeviceRequestKore = new CustomFieldsDeviceRequestKore();
+        final CustomFieldsDeviceRequestKore customFieldsDeviceRequestKore = new CustomFieldsDeviceRequestKore();
         customFieldsDeviceRequestKore.setDeviceNumber(deviceId);
 
-        CustomFieldsToUpdate[] customFieldsArr = changeDeviceServicePlansRequest
-                .getDataArea().getCustomFieldsToUpdate();
+        final CustomFieldsToUpdate[] customFieldsArr = changeDeviceServicePlansRequest.getDataArea().getCustomFieldsToUpdate();
 
-        if (customFieldsArr != null) {
-            for (int i = 0; i < customFieldsArr.length; i++) {
-                CustomFieldsToUpdate customField = customFieldsArr[i];
-
-                String key = customField.getKey();
-
-                switch (key) {
-                case "CustomField1":
-                    customFieldsDeviceRequestKore.setCustomField1(customField
-                            .getValue());
-                    break;
-
-                case "CustomField2":
-                    customFieldsDeviceRequestKore.setCustomField2(customField
-                            .getValue());
-                    break;
-
-                case "CustomField3":
-                    customFieldsDeviceRequestKore.setCustomField3(customField
-                            .getValue());
-                    break;
-
-                case "CustomField4":
-                    customFieldsDeviceRequestKore.setCustomField4(customField
-                            .getValue());
-                    break;
-
-                case "CustomField5":
-                    customFieldsDeviceRequestKore.setCustomField5(customField
-                            .getValue());
-                    break;
-                case "CustomField6":
-                    customFieldsDeviceRequestKore.setCustomField6(customField
-                            .getValue());
-                    break;
-                default:
-                    break;
-                }
-            }
-
-        }
-
-        exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,
-                transaction.getDeviceNumber());
+        customFieldsDeviceRequestKore.updateCustomFields(customFieldsArr);
 
         message.setHeader(Exchange.CONTENT_TYPE, "application/json");
         message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
         message.setHeader(Exchange.HTTP_METHOD, "POST");
-
-        message.setHeader("Authorization",
-                newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
+        message.setHeader("Authorization", newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
         message.setHeader(Exchange.HTTP_PATH, "/json/modifyDeviceCustomInfo");
-
         message.setBody(customFieldsDeviceRequestKore);
+
+        exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER, transaction.getDeviceNumber());
         exchange.setPattern(ExchangePattern.InOut);
 
         LOGGER.info("End::KoreCustomFieldsPreProcessor");
     }
-
 }

@@ -18,10 +18,10 @@ import com.gv.midway.pojo.audit.Audit;
 import com.gv.midway.pojo.callback.TargetResponse;
 import com.gv.midway.pojo.job.JobinitializedResponse;
 
+//TODO-Jeff Spelling
 public class AuditLogResponseEventNotifer extends EventNotifierSupport {
 
-    private static final Logger LOGGER = LoggerFactory
-            .getLogger(AuditLogResponseEventNotifer.class); // Initializing
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuditLogResponseEventNotifer.class);
 
     @Autowired
     MongoTemplate mongoTemplate;
@@ -29,67 +29,52 @@ public class AuditLogResponseEventNotifer extends EventNotifierSupport {
     @Override
     public void notify(EventObject event) throws Exception {
         if (event instanceof ExchangeCompletedEvent) {
-            ExchangeCompletedEvent create = (ExchangeCompletedEvent) event;
-            Exchange exchange = create.getExchange();
+            final ExchangeCompletedEvent create = (ExchangeCompletedEvent) event;
+            final Exchange exchange = create.getExchange();
 
-            if (exchange.getIn().getBody() instanceof BaseResponse
-                    && !(exchange.getIn().getBody() instanceof JobinitializedResponse)) {
+            final Object messageBody = exchange.getIn().getBody();
+
+            //TODO-Jeff JobinitializedResponse is not a child of BaseResponse so the second condition check here is pointless
+            if (messageBody instanceof BaseResponse && !(messageBody instanceof JobinitializedResponse)) {
                 LOGGER.info("In Audit log Response4");
-                if (!(exchange.getIn().getBody() instanceof TargetResponse)) {
-                    BaseResponse baseResponse = (BaseResponse) exchange.getIn()
-                            .getBody();
+                if (!(messageBody instanceof TargetResponse)) {
+                    final BaseResponse baseResponse = (BaseResponse) messageBody;
 
-                    String TransactionId = (String) exchange
-                            .getProperty(IConstant.AUDIT_TRANSACTION_ID);
+                    final String TransactionId = (String) exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID);
 
-                    Date localTime = new Date();
+                    final String responseEndpoint = exchange.getFromEndpoint().toString();
+                    final String responseEndpointSplit[] = responseEndpoint.split("//");
 
-                    String responseEndpint = exchange.getFromEndpoint()
-                            .toString();
-                    String responseEndpintSpilt[] = responseEndpint.split("//");
+                    LOGGER.info("responseEndpointSplit::" + responseEndpointSplit[1].replaceAll("]", " "));
 
-                    LOGGER.info("responseEndpintSpilt::"
-                            + responseEndpintSpilt[1].replaceAll("]", " "));
-
-                    String apiOperationName = "GV_"
-                            + responseEndpintSpilt[1].replaceAll("]", "")
-                            + "_ProxyResponse";
+                    final String apiOperationName = "GV_" + responseEndpointSplit[1].replaceAll("]", "") + "_ProxyResponse";
                     LOGGER.info("apiOperationName" + apiOperationName);
 
-                    Audit audit = new Audit();
+                    final Audit audit = new Audit();
 
-                    if (!("GV_jobResponse_ProxyResponse")
-                            .equals(apiOperationName)) {
+                    if (!("GV_jobResponse_ProxyResponse").equals(apiOperationName)) {
                         audit.setApiOperationName(apiOperationName);
                         audit.setFrom(baseResponse.getHeader().getSourceName());
                         audit.setTo(exchange.getFromEndpoint().toString());
-                        audit.setTimeStamp(localTime);
+                        audit.setTimeStamp(new Date());
                         audit.setAuditTransactionId(TransactionId);
-                        audit.setGvTransactionId(exchange.getProperty(
-                                IConstant.GV_TRANSACTION_ID).toString());
-                        audit.setHostName(exchange.getProperty(
-                                IConstant.GV_HOSTNAME).toString());
-                        audit.setPayload(exchange.getIn().getBody());
-                    }
-                    if (IResponse.SUCCESS_CODE != baseResponse.getResponse()
-                            .getResponseCode()) {
-                        audit.setErrorDetails(baseResponse.getResponse()
-                                .getResponseDescription());
-                        audit.setErrorProblem(baseResponse.getResponse()
-                                .getResponseStatus());
-                        audit.setErrorCode(baseResponse.getResponse()
-                                .getResponseCode());
-
+                        audit.setGvTransactionId(exchange.getProperty(IConstant.GV_TRANSACTION_ID).toString());
+                        audit.setHostName(exchange.getProperty(IConstant.GV_HOSTNAME).toString());
+                        audit.setPayload(messageBody);
                     }
 
-                    audit.setPayload(exchange.getIn().getBody());
+                    if (!IResponse.SUCCESS_CODE.equals(baseResponse.getResponse().getResponseCode())) {
+                        audit.setErrorDetails(baseResponse.getResponse().getResponseDescription());
+                        audit.setErrorProblem(baseResponse.getResponse().getResponseStatus());
+                        audit.setErrorCode(baseResponse.getResponse().getResponseCode());
+                    }
+
+                    audit.setPayload(messageBody);
 
                     mongoTemplate.save(audit);
-
                 }
             }
         }
-
     }
 
     @Override

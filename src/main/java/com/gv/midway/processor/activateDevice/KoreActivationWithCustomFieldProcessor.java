@@ -21,133 +21,79 @@ import com.gv.midway.utility.NetSuiteOAuthUtil;
 
 public class KoreActivationWithCustomFieldProcessor implements Processor {
 
-	/**
-	 * Call back the Netsuite endPoint
-	 */
+    /**
+     * Call back the Netsuite endPoint
+     */
+    private static final Logger LOGGER = Logger.getLogger(KoreActivationWithCustomFieldProcessor.class.getName());
 
-	private static final Logger LOGGER = Logger
-			.getLogger(KoreActivationWithCustomFieldProcessor.class.getName());
+    private Environment newEnv;
 
-	private Environment newEnv;
+    public KoreActivationWithCustomFieldProcessor(Environment env) {
+        super();
+        this.newEnv = env;
+    }
 
-	public KoreActivationWithCustomFieldProcessor() {
-		// Empty Constructor
-	}
+    @Override
+    public void process(Exchange exchange) throws Exception {
+        LOGGER.info("Begin:KoreActivationWithCustomFieldProcessor");
 
-	public KoreActivationWithCustomFieldProcessor(Environment env) {
-		super();
-		this.newEnv = env;
-	}
+        final String midWayTransactionDeviceNumber = (String) exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER);
+        final String midWayTransactionId = (String) exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID);
+        final Integer netSuiteID = (Integer) exchange.getProperty(IConstant.MIDWAY_NETSUITE_ID);
+        final Object body = exchange.getProperty(IConstant.KORE_ACTIVATION_CUSTOMEFIELD_PAYLOAD);
+        final KafkaNetSuiteCallBackEvent netSuiteCallBackEvent = (KafkaNetSuiteCallBackEvent) exchange.getProperty(IConstant.KAFKA_OBJECT);
 
-	@Override
-	public void process(Exchange exchange) throws Exception {
-		// TODO Auto-generated method stub
+        final String desc = "Successful callBack from Kore For "
+                + midWayTransactionDeviceNumber + ", transactionId "
+                + midWayTransactionId + "and request Type is "
+                + RequestType.CHANGECUSTOMFIELDS;
 
-		LOGGER.info("Begin:KoreActivationWithCustomFieldProcessor");
+        netSuiteCallBackEvent.setId(RequestType.CHANGECUSTOMFIELDS.toString());
+        netSuiteCallBackEvent.setTimestamp(new Date().getTime());
+        netSuiteCallBackEvent.setDesc(desc);
+        netSuiteCallBackEvent.setBody(body);
 
-		Message message = exchange.getIn();
+        final String deviceIdsJson = "{\"deviceIds\":" + midWayTransactionDeviceNumber + "}";
+        final ObjectMapper mapper = new ObjectMapper();
+        final Devices devices = mapper.readValue(deviceIdsJson, Devices.class);
+        final DeviceId[] deviceIds = devices.getDeviceIds();
 
-		String midWayTransactionDeviceNumber = (String) exchange
-				.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER);
+        final NetSuiteCallBackProvisioningRequest netSuiteCallBackProvisioningRequest = new NetSuiteCallBackProvisioningRequest();
+        netSuiteCallBackProvisioningRequest.setStatus("success");
+        netSuiteCallBackProvisioningRequest.setCarrierOrderNumber(midWayTransactionId);
+        netSuiteCallBackProvisioningRequest.setNetSuiteID("" + netSuiteID);
+        netSuiteCallBackProvisioningRequest.setDeviceIds(deviceIds);
+        netSuiteCallBackProvisioningRequest.setResponse("Device Custom Fields Changed successfully.");
+        netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.CUSTOM_FIELDS);
 
-		String midWayTransactionId = (String) exchange
-				.getProperty(IConstant.MIDWAY_TRANSACTION_ID);
+        final String oauthConsumerKey = newEnv.getProperty("netSuite.oauthConsumerKey");
+        final String oauthTokenId = newEnv.getProperty("netSuite.oauthTokenId");
+        final String oauthTokenSecret = newEnv.getProperty("netSuite.oauthTokenSecret");
+        final String oauthConsumerSecret = newEnv.getProperty("netSuite.oauthConsumerSecret");
+        final String realm = newEnv.getProperty("netSuite.realm");
+        final String endPoint = newEnv.getProperty("netSuite.endPoint");
 
-		Integer netSuiteID = (Integer) exchange
-				.getProperty(IConstant.MIDWAY_NETSUITE_ID);
+        LOGGER.info("request type for NetSuite CallBack success is..." + RequestType.CHANGECUSTOMFIELDS);
+        LOGGER.info("oauth info is....." + oauthConsumerKey + " " + oauthTokenId + " " + endPoint + " " + oauthTokenSecret + " " + oauthConsumerSecret + " " + realm);
 
-		KafkaNetSuiteCallBackEvent netSuiteCallBackEvent = (KafkaNetSuiteCallBackEvent) exchange
-				.getProperty(IConstant.KAFKA_OBJECT);
+        final String script = "539";
 
-		netSuiteCallBackEvent.setId(RequestType.CHANGECUSTOMFIELDS.toString());
-		netSuiteCallBackEvent.setTimestamp(new Date().getTime());
+        final String oauthHeader =
+                NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, realm, script);
 
-		String desc = "Succesfull callBack from Kore For "
-				+ midWayTransactionDeviceNumber + ", transactionId "
-				+ midWayTransactionId + "and request Type is "
-				+ RequestType.CHANGECUSTOMFIELDS;
+        exchange.setProperty(IConstant.KAFKA_OBJECT, netSuiteCallBackEvent);
+        exchange.setProperty("script", script);
+        exchange.setPattern(ExchangePattern.InOut);
 
-		netSuiteCallBackEvent.setDesc(desc);
+        final Message message = exchange.getIn();
+        message.setHeader(Exchange.CONTENT_TYPE, "application/json");
+        message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
+        message.setHeader(Exchange.HTTP_METHOD, "POST");
+        message.setHeader("Authorization", oauthHeader);
+        message.setHeader(Exchange.HTTP_PATH, null);
+        message.setBody(netSuiteCallBackProvisioningRequest);
 
-		Object body = exchange
-				.getProperty(IConstant.KORE_ACTIVATION_CUSTOMEFIELD_PAYLOAD);
-
-		netSuiteCallBackEvent.setBody(body);
-
-		exchange.setProperty(IConstant.KAFKA_OBJECT, netSuiteCallBackEvent);
-
-		NetSuiteCallBackProvisioningRequest netSuiteCallBackProvisioningRequest = new NetSuiteCallBackProvisioningRequest();
-
-		netSuiteCallBackProvisioningRequest.setStatus("success");
-
-		netSuiteCallBackProvisioningRequest
-				.setCarrierOrderNumber(midWayTransactionId);
-
-		netSuiteCallBackProvisioningRequest.setNetSuiteID("" + netSuiteID);
-
-		StringBuffer deviceIdsArr = new StringBuffer("{\"deviceIds\":");
-
-		deviceIdsArr.append(midWayTransactionDeviceNumber);
-
-		String str = "}";
-
-		deviceIdsArr.append(str);
-
-		ObjectMapper mapper = new ObjectMapper();
-
-		Devices devices = mapper.readValue(deviceIdsArr.toString(),
-				Devices.class);
-
-		DeviceId[] deviceIds = devices.getDeviceIds();
-
-		netSuiteCallBackProvisioningRequest.setDeviceIds(deviceIds);
-
-		netSuiteCallBackProvisioningRequest
-				.setResponse("Device Custom Fields Changed successfully.");
-		
-		netSuiteCallBackProvisioningRequest
-				.setRequestType(NetSuiteRequestType.CUSTOM_FIELDS);
-
-		String oauthConsumerKey = newEnv
-				.getProperty("netSuite.oauthConsumerKey");
-		String oauthTokenId = newEnv.getProperty("netSuite.oauthTokenId");
-		String oauthTokenSecret = newEnv
-				.getProperty("netSuite.oauthTokenSecret");
-		String oauthConsumerSecret = newEnv
-				.getProperty("netSuite.oauthConsumerSecret");
-		String realm = newEnv.getProperty("netSuite.realm");
-		String endPoint = newEnv.getProperty("netSuite.endPoint");
-
-		
-		LOGGER.info("request type for NetSuite CallBack success is..."
-				+ RequestType.CHANGECUSTOMFIELDS);
-		
-		LOGGER.info("oauth info is....." + oauthConsumerKey + " "
-				+ oauthTokenId + " " + endPoint + " " + oauthTokenSecret + " "
-				+ oauthConsumerSecret + " " + realm);
-		
-		String script = "539";
-		
-		String oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
-                oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                oauthConsumerSecret, realm, script);
-		
-		exchange.setProperty("script", script);
-
-		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
-		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
-		message.setHeader(Exchange.HTTP_METHOD, "POST");
-
-		
-		message.setHeader("Authorization", oauthHeader);
-		message.setHeader(Exchange.HTTP_PATH, null);
-		message.setBody(netSuiteCallBackProvisioningRequest);
-		exchange.setPattern(ExchangePattern.InOut);
-
-		LOGGER.info("successfull callback resposne to Kore for activation with Custom Field..."
-				+ exchange.getIn().getBody());
-
-		 LOGGER.info("End:KoreActivationWithCustomFieldProcessor");
-	}
-
+        LOGGER.info("successful callback response to Kore for activation with Custom Field..." + exchange.getIn().getBody());
+        LOGGER.info("End:KoreActivationWithCustomFieldProcessor");
+    }
 }

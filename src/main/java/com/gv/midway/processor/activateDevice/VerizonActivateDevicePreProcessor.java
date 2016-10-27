@@ -1,5 +1,6 @@
 package com.gv.midway.processor.activateDevice;
 
+import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequestDataArea;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
@@ -11,134 +12,69 @@ import com.gv.midway.pojo.activateDevice.request.ActivateDeviceId;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.request.ActivateDevices;
 import com.gv.midway.pojo.activateDevice.verizon.request.ActivateDeviceRequestVerizon;
-import com.gv.midway.pojo.verizon.Address;
-import com.gv.midway.pojo.verizon.CustomerName;
 import com.gv.midway.pojo.verizon.DeviceId;
 import com.gv.midway.pojo.verizon.Devices;
-import com.gv.midway.pojo.verizon.PrimaryPlaceOfUse;
 import com.gv.midway.utility.CommonUtil;
 
 public class VerizonActivateDevicePreProcessor implements Processor {
 
-    private static final Logger LOGGER = Logger.getLogger(VerizonActivateDevicePreProcessor.class
-            .getName());
+    private static final Logger LOGGER = Logger.getLogger(VerizonActivateDevicePreProcessor.class.getName());
 
     @Override
     public void process(Exchange exchange) throws Exception {
 
         LOGGER.info("Begin:VerizonActivateDevicePreProcessor");
+        LOGGER.info("Session Parameters  VZSessionToken" + exchange.getProperty(IConstant.VZ_SEESION_TOKEN));
+        LOGGER.info("Session Parameters  VZAuthorization" + exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN));
 
-        LOGGER.info("Session Parameters  VZSessionToken"
-                + exchange.getProperty(IConstant.VZ_SEESION_TOKEN));
-        LOGGER.info("Session Parameters  VZAuthorization"
-                + exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN));
+        final ActivateDeviceRequest proxyRequest = (ActivateDeviceRequest) exchange.getIn().getBody();
+        final ActivateDeviceRequestDataArea dataArea = proxyRequest.getDataArea();
+        final ActivateDevices proxyDevices = dataArea.getDevices();
 
-        ActivateDeviceRequestVerizon businessRequest = new ActivateDeviceRequestVerizon();
-        ActivateDeviceRequest proxyRequest = (ActivateDeviceRequest) exchange
-                .getIn().getBody();
-        businessRequest.setAccountName(proxyRequest.getDataArea()
-                .getAccountName());
-        businessRequest.setCarrierIpPoolName(proxyRequest.getDataArea()
-                .getCarrierIpPoolName());
-        businessRequest.setCarrierName(proxyRequest.getDataArea()
-                .getCarrierName());
-        businessRequest.setCostCenterCode(proxyRequest.getDataArea()
-                .getCostCenterCode());
+        final ActivateDeviceRequestVerizon businessRequest = new ActivateDeviceRequestVerizon();
+        businessRequest.setAccountName(dataArea.getAccountName());
+        businessRequest.setCarrierIpPoolName(dataArea.getCarrierIpPoolName());
+        businessRequest.setCarrierName(dataArea.getCarrierName());
+        businessRequest.setCostCenterCode(dataArea.getCostCenterCode());
+        businessRequest.setCustomFields(proxyDevices.getCustomFields());
+        businessRequest.setGroupName(dataArea.getGroupName());
+        businessRequest.setLeadId(dataArea.getLeadId());
+        businessRequest.setMdnZipCode(dataArea.getMdnZipCode());
+        businessRequest.setPublicIpRestriction(dataArea.getPublicIpRestriction());
+        businessRequest.setServicePlan(proxyDevices.getServicePlan());
+        businessRequest.setSkuNumber(dataArea.getSkuNumber());
+        businessRequest.setPrimaryPlaceOfUse(proxyDevices.generatePrimaryPlaceOfUse());
 
-        businessRequest.setCustomFields(proxyRequest.getDataArea().getDevices()
-                .getCustomFields());
-        businessRequest.setGroupName(proxyRequest.getDataArea().getGroupName());
-        businessRequest.setLeadId(proxyRequest.getDataArea().getLeadId());
-        businessRequest.setMdnZipCode(proxyRequest.getDataArea()
-                .getMdnZipCode());
-
-        String macAddress = proxyRequest.getDataArea().getDevices()
-                .getMacAddress();
-        String serialNumber = proxyRequest.getDataArea().getDevices()
-                .getSerialNumber();
-        String middleName = proxyRequest.getDataArea().getDevices()
-                .getMiddleName();
-        String title = proxyRequest.getDataArea().getDevices().getTitle();
-        Address address = proxyRequest.getDataArea().getDevices().getAddress();
-        if (serialNumber == null && title == null && middleName == null
-                && macAddress == null && address == null) {
-
-            businessRequest.setPrimaryPlaceOfUse(null);
-        } else {
-            PrimaryPlaceOfUse primaryPlaceOfUse = new PrimaryPlaceOfUse();
-            if (address != null) {
-                primaryPlaceOfUse.setAddress(address);
-            }
-            if (serialNumber != null || title != null || middleName != null
-                    || macAddress != null) {
-                CustomerName customerName = new CustomerName();
-                if (middleName != null) {
-                    customerName.setMiddleName(middleName);
-                }
-                if (title != null) {
-                    customerName.setTitle(title);
-                }
-                if (serialNumber != null) {
-                    customerName.setFirstName(serialNumber);
-                }
-                if (macAddress != null) {
-                    customerName.setLastName(macAddress);
-                }
-
-                primaryPlaceOfUse.setCustomerName(customerName);
-            }
-
-            businessRequest.setPrimaryPlaceOfUse(primaryPlaceOfUse);
-        }
-
-        businessRequest.setPublicIpRestriction(proxyRequest.getDataArea()
-                .getPublicIpRestriction());
-
-        businessRequest.setServicePlan(proxyRequest.getDataArea().getDevices()
-                .getServicePlan());
-        businessRequest.setSkuNumber(proxyRequest.getDataArea().getSkuNumber());
-
-        ActivateDevices proxyDevices = proxyRequest.getDataArea().getDevices();
-
-        Devices[] businessDevicesArray = new Devices[1];
-
-        DeviceId[] businessDeviceIdArray = new DeviceId[proxyDevices
-                .getDeviceIds().length];
-
-        Devices businessDevice = new Devices();
+        final DeviceId[] businessDeviceIdArray = new DeviceId[proxyDevices.getDeviceIds().length];
 
         for (int i = 0; i < proxyDevices.getDeviceIds().length; i++) {
-            ActivateDeviceId proxyDeviceId = proxyDevices.getDeviceIds()[i];
+            final ActivateDeviceId proxyDeviceId = proxyDevices.getDeviceIds()[i];
 
-            DeviceId businessDeviceId = new DeviceId();
+            final DeviceId businessDeviceId = new DeviceId();
             businessDeviceId.setId(proxyDeviceId.getId());
             businessDeviceId.setKind(proxyDeviceId.getKind());
 
             LOGGER.info(proxyDeviceId.getId());
 
             businessDeviceIdArray[i] = businessDeviceId;
-
         }
 
+        final Devices businessDevice = new Devices();
         businessDevice.setDeviceIds(businessDeviceIdArray);
 
+        final Devices[] businessDevicesArray = new Devices[1];
         businessDevicesArray[0] = businessDevice;
 
         businessRequest.setDevices(businessDevicesArray);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        String strRequestBody = objectMapper
-                .writeValueAsString(businessRequest);
-
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final String strRequestBody = objectMapper.writeValueAsString(businessRequest);
         exchange.getIn().setBody(strRequestBody);
 
-        Message message = CommonUtil.setMessageHeader(exchange);
+        final Message message = CommonUtil.setMessageHeader(exchange);
 
         message.setHeader(Exchange.HTTP_PATH, "/devices/actions/activate");
         
         LOGGER.info("End:VerizonActivateDevicePreProcessor");
-
     }
-
 }

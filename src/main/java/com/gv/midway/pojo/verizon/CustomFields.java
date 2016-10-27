@@ -3,6 +3,14 @@ package com.gv.midway.pojo.verizon;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 public class CustomFields {
+
+    public CustomFields() { }
+
+    public CustomFields(String key, String value) {
+        this.key = key;
+        this.value = value;
+    }
+
     @ApiModelProperty(value = "The value of the custom field. The value is not case-sensitive.Wildcards and partial matches are not supported.", required = true)
     private String value;
 

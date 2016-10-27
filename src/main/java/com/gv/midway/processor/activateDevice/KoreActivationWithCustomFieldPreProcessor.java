@@ -13,100 +13,43 @@ import com.gv.midway.pojo.verizon.CustomFieldsToUpdate;
 
 public class KoreActivationWithCustomFieldPreProcessor implements Processor {
 
-	/**
-	 * Call back the Netsuite endPoint
-	 */
+    /**
+     * Call back the Netsuite endPoint
+     */
+    private static final Logger LOGGER = Logger.getLogger(KoreActivationWithCustomFieldPreProcessor.class.getName());
 
-	private static final Logger LOGGER = Logger
-			.getLogger(KoreActivationWithCustomFieldPreProcessor.class
-					.getName());
+    private Environment newEnv;
 
-	private Environment newEnv;
+    public KoreActivationWithCustomFieldPreProcessor(Environment env) {
+        super();
+        this.newEnv = env;
+    }
 
-	public KoreActivationWithCustomFieldPreProcessor() {
-		// Empty Constructor
-	}
+    @Override
+    public void process(Exchange exchange) throws Exception {
+        LOGGER.info("Begin:KoreActivationWithCustomFieldPreProcessor.");
 
-	public KoreActivationWithCustomFieldPreProcessor(Environment env) {
-		super();
-		this.newEnv = env;
-	}
+        final CustomFieldsDeviceRequest proxyPayload = (CustomFieldsDeviceRequest) exchange.getProperty(IConstant.KORE_ACTIVATION_CUSTOMEFIELD_PAYLOAD);
 
-	@Override
-	public void process(Exchange exchange) throws Exception {
-		// TODO Auto-generated method stub
-		
-         LOGGER.info("Begin:KoreActivationWithCustomFieldPreProcessor.");
-		 
-		 Message message = exchange.getIn();
-	     
-	     CustomFieldsDeviceRequest proxyPayload =(CustomFieldsDeviceRequest)exchange.getProperty(IConstant.KORE_ACTIVATION_CUSTOMEFIELD_PAYLOAD);
-	     
-	     String deviceId = proxyPayload.getDataArea()
-	                .getDevices()[0].getDeviceIds()[0].getId();
+        final String deviceId = proxyPayload.getDataArea().getDevices()[0].getDeviceIds()[0].getId();
 
-		CustomFieldsDeviceRequestKore customFieldsDeviceRequestKore = new CustomFieldsDeviceRequestKore();
-		customFieldsDeviceRequestKore.setDeviceNumber(deviceId);
+        final CustomFieldsDeviceRequestKore customFieldsDeviceRequestKore = new CustomFieldsDeviceRequestKore();
+        customFieldsDeviceRequestKore.setDeviceNumber(deviceId);
 
-		CustomFieldsToUpdate[] customFieldsArr = proxyPayload.getDataArea()
-				.getCustomFieldsToUpdate();
-		
-		 if (customFieldsArr != null) {
-	            for (int i = 0; i < customFieldsArr.length; i++) {
-	                CustomFieldsToUpdate customField = customFieldsArr[i];
+        final CustomFieldsToUpdate[] customFieldsArr = proxyPayload.getDataArea().getCustomFieldsToUpdate();
 
-	                String key = customField.getKey();
+        customFieldsDeviceRequestKore.updateCustomFields(customFieldsArr);
 
-	                switch (key) {
-	                case "CustomField1":
-	                    customFieldsDeviceRequestKore.setCustomField1(customField
-	                            .getValue());
-	                    break;
+        final Message message = exchange.getIn();
+        message.setHeader(Exchange.CONTENT_TYPE, "application/json");
+        message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
+        message.setHeader(Exchange.HTTP_METHOD, "POST");
+        message.setHeader("Authorization", newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
+        message.setHeader(Exchange.HTTP_PATH, "/json/modifyDeviceCustomInfo");
+        message.setBody(customFieldsDeviceRequestKore);
 
-	                case "CustomField2":
-	                    customFieldsDeviceRequestKore.setCustomField2(customField
-	                            .getValue());
-	                    break;
+        exchange.setPattern(ExchangePattern.InOut);
 
-	                case "CustomField3":
-	                    customFieldsDeviceRequestKore.setCustomField3(customField
-	                            .getValue());
-	                    break;
-
-	                case "CustomField4":
-	                    customFieldsDeviceRequestKore.setCustomField4(customField
-	                            .getValue());
-	                    break;
-
-	                case "CustomField5":
-	                    customFieldsDeviceRequestKore.setCustomField5(customField
-	                            .getValue());
-	                    break;
-	                case "CustomField6":
-	                    customFieldsDeviceRequestKore.setCustomField6(customField
-	                            .getValue());
-	                    break;
-	                default:
-	                    break;
-	                }
-	            }
-
-	        }
-
-	      
-	        message.setHeader(Exchange.CONTENT_TYPE, "application/json");
-	        message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
-	        message.setHeader(Exchange.HTTP_METHOD, "POST");
-
-	        message.setHeader("Authorization",
-	                newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
-	        message.setHeader(Exchange.HTTP_PATH, "/json/modifyDeviceCustomInfo");
-
-	        message.setBody(customFieldsDeviceRequestKore);
-	        exchange.setPattern(ExchangePattern.InOut);
-
-	        LOGGER.info("End:KoreActivationWithCustomFieldPreProcessor");
-
-	}
-
+        LOGGER.info("End:KoreActivationWithCustomFieldPreProcessor");
+    }
 }

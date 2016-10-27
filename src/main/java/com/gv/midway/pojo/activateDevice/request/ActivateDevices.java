@@ -3,7 +3,11 @@ package com.gv.midway.pojo.activateDevice.request;
 import java.util.Arrays;
 import com.gv.midway.pojo.verizon.Address;
 import com.gv.midway.pojo.verizon.CustomFields;
+import com.gv.midway.pojo.verizon.CustomerName;
+import com.gv.midway.pojo.verizon.PrimaryPlaceOfUse;
 import com.wordnik.swagger.annotations.ApiModelProperty;
+
+import javax.annotation.Nullable;
 
 public class ActivateDevices {
 
@@ -113,16 +117,11 @@ public class ActivateDevices {
         result = prime * result + ((address == null) ? 0 : address.hashCode());
         result = prime * result + Arrays.hashCode(customFields);
         result = prime * result + Arrays.hashCode(deviceIds);
-        result = prime * result
-                + ((macAddress == null) ? 0 : macAddress.hashCode());
-        result = prime * result
-                + ((middleName == null) ? 0 : middleName.hashCode());
-        result = prime * result
-                + ((netSuiteId == null) ? 0 : netSuiteId.hashCode());
-        result = prime * result
-                + ((serialNumber == null) ? 0 : serialNumber.hashCode());
-        result = prime * result
-                + ((servicePlan == null) ? 0 : servicePlan.hashCode());
+        result = prime * result + ((macAddress == null) ? 0 : macAddress.hashCode());
+        result = prime * result + ((middleName == null) ? 0 : middleName.hashCode());
+        result = prime * result + ((netSuiteId == null) ? 0 : netSuiteId.hashCode());
+        result = prime * result + ((serialNumber == null) ? 0 : serialNumber.hashCode());
+        result = prime * result + ((servicePlan == null) ? 0 : servicePlan.hashCode());
         result = prime * result + ((title == null) ? 0 : title.hashCode());
         return result;
     }
@@ -203,24 +202,24 @@ public class ActivateDevices {
         return builder.toString();
     }
 
-    /*
-     * @Override public String toString() { StringBuilder builder = new
-     * StringBuilder(); builder.append("ActivateDevices [deviceIds=");
-     * builder.append(Arrays.toString(deviceIds));
-     * builder.append(", netSuiteId="); builder.append(netSuiteId);
-     * builder.append("]"); return builder.toString(); }
-     * 
-     * @Override public int hashCode() { final int prime = 31; int result = 1;
-     * result = prime * result + Arrays.hashCode(deviceIds); result = prime *
-     * result + ((netSuiteId == null) ? 0 : netSuiteId.hashCode()); return
-     * result; }
-     * 
-     * @Override public boolean equals(Object obj) { if (this == obj) return
-     * true; if (obj == null) return false; if (getClass() != obj.getClass())
-     * return false; ActivateDevices other = (ActivateDevices) obj; if
-     * (!Arrays.equals(deviceIds, other.deviceIds)) return false; if (netSuiteId
-     * == null) { if (other.netSuiteId != null) return false; } else if
-     * (!netSuiteId.equals(other.netSuiteId)) return false; return true; }
-     */
+    @Nullable
+    public PrimaryPlaceOfUse generatePrimaryPlaceOfUse() {
+        if (serialNumber == null && title == null && middleName == null && macAddress == null && address == null) {
+            return null;
+        } else {
+            final PrimaryPlaceOfUse primaryPlaceOfUse = new PrimaryPlaceOfUse();
+            primaryPlaceOfUse.setAddress(address);
 
+            if (serialNumber != null || title != null || middleName != null || macAddress != null) {
+                final CustomerName customerName = new CustomerName();
+                customerName.setMiddleName(middleName);
+                customerName.setTitle(title);
+                customerName.setFirstName(serialNumber);
+                customerName.setLastName(macAddress);
+                primaryPlaceOfUse.setCustomerName(customerName);
+            }
+
+            return primaryPlaceOfUse;
+        }
+    }
 }
