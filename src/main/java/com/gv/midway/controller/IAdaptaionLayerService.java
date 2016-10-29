@@ -197,27 +197,27 @@ public interface IAdaptaionLayerService {
     @Produces("application/json")
     @ApiOperation(value = "Retrieve Device data Usage by start and end Date from Carrier for Verizon Devices.")
     UsageInformationResponse retrieveDeviceUsageHistoryCarrier(
-    		@ApiParam(value = "Region for the request.") 
+            @ApiParam(value = "Region for the request.")
             @QueryParam("region") final String region,
-            @ApiParam(value = "Date and time of the request.Format will be yyyy-MM-dd'T'HH:mm:ss", required = true) 
+            @ApiParam(value = "Date and time of the request.Format will be yyyy-MM-dd'T'HH:mm:ss", required = true)
             @QueryParam("timestamp") final String timestamp,
-            @ApiParam(value = "Organization name of the request.", required = true) 
+            @ApiParam(value = "Organization name of the request.", required = true)
             @QueryParam("organization") final String organization,
-            @ApiParam(value = "Unique id of the entire flow for the request.", required = true) 
+            @ApiParam(value = "Unique id of the entire flow for the request.", required = true)
             @QueryParam("transactionId") final String transactionId,
-            @ApiParam(value = "Name of the source from where the request is triggered.", required = true) 
+            @ApiParam(value = "Name of the source from where the request is triggered.", required = true)
             @QueryParam("sourceName") final String sourceName,
-            @ApiParam(value = "Mode of the request triggered.") 
+            @ApiParam(value = "Mode of the request triggered.")
             @QueryParam("applicationName") final String applicationName,
-            @ApiParam(value = "Target System of the request.", required = true) 
+            @ApiParam(value = "Target System of the request.", required = true)
             @QueryParam("bsCarrier") final String bsCarrier,
-            @ApiParam(value = "value of the device identifier.", required = true) 
+            @ApiParam(value = "value of the device identifier.", required = true)
             @QueryParam("deviceId") final String deviceId,
-            @ApiParam(value = "kind of device identifier like meid,iccid, mdn,esn,msisdn,imei.", required = true) 
+            @ApiParam(value = "kind of device identifier like meid,iccid, mdn,esn,msisdn,imei.", required = true)
             @QueryParam("kind") final String kind,
-            @ApiParam(value = "The earliest date and time for which you want usage data. In yyyy-MM-dd'T'HH:mm:ss format GMT time zone", required = true) 
+            @ApiParam(value = "The earliest date and time for which you want usage data. In yyyy-MM-dd'T'HH:mm:ss'Z' format GMT time zone", required = true)
             @QueryParam("earliest") final String earliest,
-            @ApiParam(value = "The latest date and time for which you want usage data. In yyyy-MM-dd'T'HH:mm:ss format GMT time zone", required = true) 
+            @ApiParam(value = "The latest date and time for which you want usage data. In yyyy-MM-dd'T'HH:mm:ss'Z' format GMT time zone", required = true)
             @QueryParam("latest") final String latest);
 
     @GET
@@ -225,27 +225,79 @@ public interface IAdaptaionLayerService {
     @Produces("application/json")
     @ApiOperation(value = "Service to check Device Session Begin and End information for Verizon and AT&T Jasper")
     SessionBeginEndResponse deviceSessionBeginEndResponse(
-    		@ApiParam(value = "Region for the request.")
+            @ApiParam(value = "Region for the request.")
             @QueryParam("region") final String region,
-            @ApiParam(value = "Date and time of the request.Format will be yyyy-MM-dd'T'HH:mm:ss", required = true) 
+            @ApiParam(value = "Date and time of the request.Format will be yyyy-MM-dd'T'HH:mm:ss", required = true)
             @QueryParam("timestamp") final String timestamp,
-            @ApiParam(value = "Organization name of the request.", required = true) 
+            @ApiParam(value = "Organization name of the request.", required = true)
             @QueryParam("organization") final String organization,
-            @ApiParam(value = "Unique id of the entire flow for the request.", required = true) 
+            @ApiParam(value = "Unique id of the entire flow for the request.", required = true)
             @QueryParam("transactionId") final String transactionId,
-            @ApiParam(value = "Name of the source from where the request is triggered.", required = true) 
+            @ApiParam(value = "Name of the source from where the request is triggered.", required = true)
             @QueryParam("sourceName") final String sourceName,
-            @ApiParam(value = "Mode of the request triggered.") 
+            @ApiParam(value = "Mode of the request triggered.")
             @QueryParam("applicationName") final String applicationName,
-            @ApiParam(value = "Target System of the request.", required = true) 
+            @ApiParam(value = "Target System of the request.", required = true)
             @QueryParam("bsCarrier") final String bsCarrier,
-            @ApiParam(value = "value of the device identifier.", required = true) 
+            @ApiParam(value = "value of the device identifier.", required = true)
             @QueryParam("deviceId") final String deviceId,
-            @ApiParam(value = "kind of device identifier like meid,iccid, mdn,esn,msisdn,imei.", required = true) 
+            @ApiParam(value = "kind of device identifier like meid,iccid, mdn,esn,msisdn,imei.", required = true)
             @QueryParam("kind") final String kind,
-            @ApiParam(value = "The earliest date and time for which you want session begin and end ifnormation. In yyyy-MM-dd'T'HH:mm:ss format GMT time zone", required = true) 
+            @ApiParam(value = "The earliest date and time for which you want session begin and end information. In yyyy-MM-dd'T'HH:mm:ss'Z' format GMT time zone", required = true)
             @QueryParam("earliest") final String earliest,
-            @ApiParam(value = "The latest date and time for which you want session begin and end ifnormation. In yyyy-MM-dd'T'HH:mm:ss format GMT time zone", required = true) 
+            @ApiParam(value = "The latest date and time for which you want session begin and end information. In yyyy-MM-dd'T'HH:mm:ss'Z' format GMT time zone", required = true)
+            @QueryParam("latest") final String latest);
+
+    @GET
+    @Path("/device/session/usage")
+    @Produces("application/json")
+    @ApiOperation(value = "Retrieve Device data Usage by start and end Date from Carrier for Verizon Devices.")
+    UsageInformationResponse deviceSessionUsage(
+            @ApiParam(value = "Region for the request.")
+            @QueryParam("region") final String region,
+            @ApiParam(value = "Date and time of the request.Format will be yyyy-MM-dd'T'HH:mm:ss", required = true)
+            @QueryParam("timestamp") final String timestamp,
+            @ApiParam(value = "Organization name of the request.", required = true)
+            @QueryParam("organization") final String organization,
+            @ApiParam(value = "Unique id of the entire flow for the request.", required = true)
+            @QueryParam("transactionId") final String transactionId,
+            @ApiParam(value = "Name of the source from where the request is triggered.", required = true)
+            @QueryParam("sourceName") final String sourceName,
+            @ApiParam(value = "Mode of the request triggered.")
+            @QueryParam("applicationName") final String applicationName,
+            @ApiParam(value = "Target System of the request.", required = true)
+            @QueryParam("bsCarrier") final String bsCarrier,
+            @ApiParam(value = "NetSuiteId for identifying the device to query for session usage.", required = true)
+            @QueryParam("netSuiteId") final Integer netSuiteId,
+            @ApiParam(value = "The earliest date and time for which you want usage data. In yyyy-MM-dd'T'HH:mm:ss'Z' format GMT time zone", required = true)
+            @QueryParam("earliest") final String earliest,
+            @ApiParam(value = "The latest date and time for which you want usage data. In yyyy-MM-dd'T'HH:mm:ss'Z' format GMT time zone", required = true)
+            @QueryParam("latest") final String latest);
+
+    @GET
+    @Path("/devices/session/info")
+    @Produces("application/json")
+    @ApiOperation(value = "Service to check Device Session Begin and End information for Verizon and AT&T Jasper")
+    SessionBeginEndResponse deviceSessionInfo(
+            @ApiParam(value = "Region for the request.")
+            @QueryParam("region") final String region,
+            @ApiParam(value = "Date and time of the request.Format will be yyyy-MM-dd'T'HH:mm:ss", required = true)
+            @QueryParam("timestamp") final String timestamp,
+            @ApiParam(value = "Organization name of the request.", required = true)
+            @QueryParam("organization") final String organization,
+            @ApiParam(value = "Unique id of the entire flow for the request.", required = true)
+            @QueryParam("transactionId") final String transactionId,
+            @ApiParam(value = "Name of the source from where the request is triggered.", required = true)
+            @QueryParam("sourceName") final String sourceName,
+            @ApiParam(value = "Mode of the request triggered.")
+            @QueryParam("applicationName") final String applicationName,
+            @ApiParam(value = "Target System of the request.", required = true)
+            @QueryParam("bsCarrier") final String bsCarrier,
+            @ApiParam(value = "NetSuiteId for identifying the device to query for session usage.", required = true)
+            @QueryParam("netSuiteId") final Integer netSuiteId,
+            @ApiParam(value = "The earliest date and time for which you want session begin and end ifnormation. In yyyy-MM-dd'T'HH:mm:ss'Z' format GMT time zone", required = true)
+            @QueryParam("earliest") final String earliest,
+            @ApiParam(value = "The latest date and time for which you want session begin and end ifnormation. In yyyy-MM-dd'T'HH:mm:ss'Z' format GMT time zone", required = true)
             @QueryParam("latest") final String latest);
 
     @POST

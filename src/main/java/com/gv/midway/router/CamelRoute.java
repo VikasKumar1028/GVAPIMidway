@@ -331,9 +331,27 @@ public class CamelRoute extends RouteBuilder {
 
         //ATT Timer for invoking Callback to NetSuite
          attCallBackTimer();
+         
+         //New device session usage
+         deviceSessionUsage();
+
+         //New device session information
+         deviceSessionInformation();
 
     }
 
+    public void deviceSessionUsage() {
+        from("direct:deviceSessionUsage")
+                .bean(iDeviceService, "getDeviceSessionUsage")
+                .to("direct:retrieveDeviceUsageHistoryCarrier");
+    }
+
+    public void deviceSessionInformation() {
+        from("direct:deviceSessionInfo")
+                .bean(iDeviceService, "getDeviceSessionInfo")
+                .to("direct:deviceSessionBeginEndInfo");
+    }
+    
     /**
      * Activation Flow for Verizon and Kore
      * 

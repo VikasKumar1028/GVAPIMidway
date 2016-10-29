@@ -1,5 +1,7 @@
 package com.gv.midway.controller;
 
+import com.gv.midway.pojo.session.SessionRequestDataArea;
+import com.gv.midway.pojo.session.SessionRequest;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.ProducerTemplate;
 import org.slf4j.Logger;
@@ -204,12 +206,12 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
         jobDetail.setType(JobType.TRANSACTION_FAILURE);
         jobDetail.setDate(jobParameter.getDate());
         jobDetail.setPeriod(JobType.TRANSACTION_FAILURE.toString());
-
+        
         if ("VERIZON".equals(jobParameter.getCarrierName())) {
             jobDetail.setName(JobName.VERIZON_CONNECTION_HISTORY);
             jobDetail.setCarrierName(CarrierType.VERIZON.toString());
         }
-        
+
         producer.asyncRequestBody("direct:startTransactionFailureJob", jobDetail);
         return (JobinitializedResponse) producer.requestBody("direct:jobResponse", jobDetail);
     }
@@ -226,7 +228,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
         jobDetail.setType(JobType.RERUN);
         jobDetail.setDate(jobParameter.getDate());
         jobDetail.setPeriod(JobType.RERUN.toString());
-
+        
         if ("KORE".equals(jobParameter.getCarrierName())) {
             jobDetail.setName(JobName.KORE_DEVICE_USAGE);
             jobDetail.setCarrierName(CarrierType.KORE.toString());
@@ -234,7 +236,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
             jobDetail.setName(JobName.VERIZON_DEVICE_USAGE);
             jobDetail.setCarrierName(CarrierType.VERIZON.toString());
         }
-        
+
         producer.asyncRequestBody("direct:startJob", jobDetail);
         return (JobinitializedResponse) producer.requestBody("direct:jobResponse", jobDetail);
     }
@@ -251,8 +253,8 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
         final JobDetail jobDetail = new JobDetail();
         jobDetail.setType(JobType.RERUN);
         jobDetail.setDate(jobParameter.getDate());
+        
         jobDetail.setPeriod(JobType.RERUN.toString());
-
         if ("VERIZON".equals(jobParameter.getCarrierName())) {
             jobDetail.setCarrierName(CarrierType.VERIZON.toString());
             jobDetail.setName(JobName.VERIZON_CONNECTION_HISTORY);
@@ -382,17 +384,17 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
 
     @Override
     public SessionBeginEndResponse deviceSessionBeginEndResponse(
-            String region
-            , String timestamp
-            , String organization
-            , String transactionId
-            , String sourceName
-            , String applicationName
-            , String bsCarrier
-            , String deviceId
-            , String kind
-            , String earliest
-            , String latest) {
+            String region,
+            String timestamp,
+            String organization,
+            String transactionId,
+            String sourceName,
+            String applicationName,
+            String bsCarrier,
+            String deviceId,
+            String kind,
+            String earliest,
+            String latest) {
 
         final Header header = createHeader(region, timestamp, organization, transactionId, sourceName, applicationName, bsCarrier);
 
@@ -410,6 +412,60 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
         connectionInformationRequest.setDataArea(dataArea);
 
         return (SessionBeginEndResponse) producer.requestBody("direct:deviceSessionBeginEndInfo", connectionInformationRequest);
+    }
+
+    @Override
+    public UsageInformationResponse deviceSessionUsage(
+            String region,
+            String timestamp,
+            String organization,
+            String transactionId,
+            String sourceName,
+            String applicationName,
+            String bsCarrier,
+            Integer netSuiteId,
+            String earliest,
+            String latest) {
+
+        final Header header = createHeader(region, timestamp, organization, transactionId, sourceName, applicationName, bsCarrier);
+
+        final SessionRequestDataArea dataArea = new SessionRequestDataArea();
+        dataArea.setNetSuiteId(netSuiteId);
+        dataArea.setEarliest(earliest);
+        dataArea.setLatest(latest);
+
+        final SessionRequest sessionRequest = new SessionRequest();
+        sessionRequest.setHeader(header);
+        sessionRequest.setDataArea(dataArea);
+
+        return (UsageInformationResponse) producer.requestBody("direct:deviceSessionUsage", sessionRequest);
+    }
+
+    @Override
+    public SessionBeginEndResponse deviceSessionInfo(
+            String region,
+            String timestamp,
+            String organization,
+            String transactionId,
+            String sourceName,
+            String applicationName,
+            String bsCarrier,
+            Integer netSuiteId,
+            String earliest,
+            String latest) {
+
+        final Header header = createHeader(region, timestamp, organization, transactionId, sourceName, applicationName, bsCarrier);
+
+        final SessionRequestDataArea dataArea = new SessionRequestDataArea();
+        dataArea.setNetSuiteId(netSuiteId);
+        dataArea.setEarliest(earliest);
+        dataArea.setLatest(latest);
+
+        final SessionRequest sessionRequest = new SessionRequest();
+        sessionRequest.setHeader(header);
+        sessionRequest.setDataArea(dataArea);
+
+        return (SessionBeginEndResponse) producer.requestBody("direct:deviceSessionInfo", sessionRequest);
     }
 
     @Override

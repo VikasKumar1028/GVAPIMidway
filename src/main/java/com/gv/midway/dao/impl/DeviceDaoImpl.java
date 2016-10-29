@@ -7,12 +7,17 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.proj
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
+import com.gv.midway.exception.InvalidParameterException;
 import com.gv.midway.pojo.Header;
+import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationRequest;
+import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationRequestDataArea;
+import com.gv.midway.pojo.session.SessionRequest;
+import com.gv.midway.pojo.session.SessionRequestDataArea;
+import com.gv.midway.pojo.usageInformation.request.UsageInformationRequest;
+import com.gv.midway.pojo.usageInformation.request.UsageInformationRequestDataArea;
+import com.gv.midway.pojo.verizon.DeviceId;
 import org.apache.camel.Exchange;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +54,7 @@ import com.gv.midway.pojo.usageInformation.response.DevicesUsageByDayAndCarrierR
 import com.gv.midway.pojo.usageInformation.response.UsageInformationMidwayResponse;
 import com.gv.midway.pojo.usageInformation.response.UsageInformationResponseMidwayDataArea;
 import com.gv.midway.utility.CommonUtil;
+import scala.Int;
 
 @Service
 public class DeviceDaoImpl implements IDeviceDao {
@@ -524,5 +530,49 @@ public class DeviceDaoImpl implements IDeviceDao {
 					new Response(IResponse.DB_ERROR_CODE, IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB, IResponse.ERROR_MESSAGE);
 			return new DevicesUsageByDayAndCarrierResponse(header, response);
 		}
+	}
+
+	@Override
+	public UsageInformationRequest getDeviceSessionUsage(SessionRequest sessionRequest) throws InvalidParameterException {
+		SessionRequestDataArea requestDataArea = sessionRequest.getDataArea();
+		Integer netSuiteId = requestDataArea.getNetSuiteId();
+
+		UsageInformationRequestDataArea dataArea = new UsageInformationRequestDataArea();
+		DeviceId deviceId = getDeviceId(netSuiteId);
+		dataArea.setDeviceId(deviceId);
+		UsageInformationRequest request = new UsageInformationRequest();
+		request.setHeader(sessionRequest.getHeader());
+		dataArea.setEarliest(requestDataArea.getEarliest());
+		dataArea.setLatest(requestDataArea.getLatest());
+		request.setDataArea(dataArea);
+		return request;
+	}
+
+	@Override
+	public ConnectionInformationRequest getDeviceSessionInfo(SessionRequest sessionRequest) throws InvalidParameterException {
+		SessionRequestDataArea requestDataArea = sessionRequest.getDataArea();
+		Integer netSuiteId = requestDataArea.getNetSuiteId();
+		ConnectionInformationRequest request = new ConnectionInformationRequest();
+		request.setHeader(sessionRequest.getHeader());
+		ConnectionInformationRequestDataArea dataArea = new ConnectionInformationRequestDataArea();
+		DeviceId deviceId = getDeviceId(netSuiteId);
+		dataArea.setDeviceId(deviceId);
+		dataArea.setEarliest(requestDataArea.getEarliest());
+		dataArea.setLatest(requestDataArea.getLatest());
+		request.setDataArea(dataArea);
+		return request;
+	}
+
+	private DeviceId getDeviceId(Integer netSuiteId) throws InvalidParameterException {
+		final Query searchDeviceQuery = new Query(Criteria.where("netSuiteId").is(netSuiteId));
+		DeviceInformation deviceInformation = mongoTemplate.findOne(searchDeviceQuery, DeviceInformation.class);
+		if (deviceInformation != null) {
+			for (DeviceId deviceId : deviceInformation.getDeviceIds()) {
+				if ("ICCID".equalsIgnoreCase(deviceId.getKind()) || "MEID".equalsIgnoreCase(deviceId.getKind())) {
+					return deviceId;
+				}
+			}
+		}
+		throw new InvalidParameterException("402", "Cannot find a compatible DeviceId for the Carriers to consume for netSuitId " + netSuiteId + ".");
 	}
 }

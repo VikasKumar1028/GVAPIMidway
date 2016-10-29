@@ -2,6 +2,10 @@ package com.gv.midway.dao;
 
 import java.util.ArrayList;
 
+import com.gv.midway.exception.InvalidParameterException;
+import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationRequest;
+import com.gv.midway.pojo.session.SessionRequest;
+import com.gv.midway.pojo.usageInformation.request.UsageInformationRequest;
 import org.apache.camel.Exchange;
 
 import com.gv.midway.pojo.connectionInformation.ConnectionInformationMidwayResponse;
@@ -40,4 +44,7 @@ public interface IDeviceDao {
     public DevicesUsageByDayAndCarrierResponse getDevicesUsageByDayAndCarrierInfoDB(
     		DevicesUsageByDayAndCarrierRequest devicesUsageByDayAndCarrierRequest);
 
+    UsageInformationRequest getDeviceSessionUsage(SessionRequest sessionRequest) throws InvalidParameterException;
+
+    ConnectionInformationRequest getDeviceSessionInfo(SessionRequest sessionRequest) throws InvalidParameterException;
 }

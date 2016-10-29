@@ -1,18 +1,18 @@
-package com.gv.midway.pojo.usageInformation.request;
+package com.gv.midway.pojo.session;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gv.midway.pojo.BaseRequest;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UsageInformationRequest extends BaseRequest {
+public class SessionRequest extends BaseRequest {
 
-    private UsageInformationRequestDataArea dataArea;
+    private SessionRequestDataArea dataArea;
 
-    public UsageInformationRequestDataArea getDataArea() {
+    public SessionRequestDataArea getDataArea() {
         return dataArea;
     }
 
-    public void setDataArea(UsageInformationRequestDataArea dataArea) {
+    public void setDataArea(SessionRequestDataArea dataArea) {
         this.dataArea = dataArea;
     }
 
@@ -38,7 +38,7 @@ public class UsageInformationRequest extends BaseRequest {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        UsageInformationRequest other = (UsageInformationRequest) obj;
+        SessionRequest other = (SessionRequest) obj;
         if (dataArea == null) {
             if (other.dataArea != null)
                 return false;

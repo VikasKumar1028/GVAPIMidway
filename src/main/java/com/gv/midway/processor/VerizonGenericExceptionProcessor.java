@@ -74,6 +74,7 @@ public class VerizonGenericExceptionProcessor implements Processor {
 				exchange.getIn().setBody(connectionStatusResponse);
 				break;
 			case "Endpoint[direct://deviceSessionBeginEndInfo]":
+			case "Endpoint[direct://deviceSessionInfo]":
 				final SessionBeginEndResponse sessionBeginEndResponse = new SessionBeginEndResponse();
 				sessionBeginEndResponse.setHeader(responseHeader);
 				sessionBeginEndResponse.setResponse(response);
@@ -92,6 +93,7 @@ public class VerizonGenericExceptionProcessor implements Processor {
 				exchange.getIn().setBody(restoreDeviceResponse);
 				break;
 			case "Endpoint[direct://retrieveDeviceUsageHistoryCarrier]":
+			case "Endpoint[direct://deviceSessionUsage]":
 				final UsageInformationResponse usageInformationResponse = new UsageInformationResponse();
 				usageInformationResponse.setHeader(responseHeader);
 				usageInformationResponse.setResponse(response);

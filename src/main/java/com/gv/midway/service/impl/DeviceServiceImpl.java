@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.gv.midway.constant.IResponse;
+import com.gv.midway.exception.InvalidParameterException;
+import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationRequest;
+import com.gv.midway.pojo.session.SessionRequest;
+import com.gv.midway.pojo.usageInformation.request.UsageInformationRequest;
 import org.apache.camel.Exchange;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,5 +133,31 @@ public class DeviceServiceImpl implements IDeviceService {
 		return iDeviceDao
                 .getDevicesUsageByDayAndCarrierInfoDB(devicesUsageByDayAndCarrierRequest);
 	}
+
+    @Override
+    public ConnectionInformationRequest getDeviceSessionInfo(Exchange exchange) throws InvalidParameterException {
+        SessionRequest sessionRequest = exchange.getIn().getBody(SessionRequest.class);
+        try {
+            return iDeviceDao.getDeviceSessionInfo(sessionRequest);
+        } catch (InvalidParameterException ex) {
+            exchange.setProperty(IConstant.RESPONSE_CODE, "402");
+            exchange.setProperty(IConstant.RESPONSE_STATUS, "Invalid Parameter");
+            exchange.setProperty(IConstant.RESPONSE_DESCRIPTION, ex.getMessage());
+            throw ex;
+        }
+    }
+
+    @Override
+    public UsageInformationRequest getDeviceSessionUsage(Exchange exchange) throws InvalidParameterException {
+        SessionRequest sessionRequest = exchange.getIn().getBody(SessionRequest.class);
+        try {
+            return iDeviceDao.getDeviceSessionUsage(sessionRequest);
+        } catch (InvalidParameterException ex) {
+            exchange.setProperty(IConstant.RESPONSE_CODE, "402");
+            exchange.setProperty(IConstant.RESPONSE_STATUS, "Invalid Parameter");
+            exchange.setProperty(IConstant.RESPONSE_DESCRIPTION, ex.getMessage());
+            throw ex;
+        }
+    }
 
 }

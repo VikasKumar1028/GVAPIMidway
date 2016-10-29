@@ -1,14 +1,13 @@
-package com.gv.midway.pojo.usageInformation.request;
+package com.gv.midway.pojo.session;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.gv.midway.pojo.verizon.DeviceId;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UsageInformationRequestDataArea {
+public class SessionRequestDataArea {
 
-    @ApiModelProperty(value = "All identifiers for the device.")
-    private DeviceId deviceId;
+    @ApiModelProperty(value = "Identifier for the device.")
+    private Integer netSuiteId;
 
     @ApiModelProperty(value = "Start Date")
     private String earliest;
@@ -16,12 +15,12 @@ public class UsageInformationRequestDataArea {
     @ApiModelProperty(value = "End Date")
     private String latest;
 
-    public DeviceId getDeviceId() {
-        return deviceId;
+    public Integer getNetSuiteId() {
+        return netSuiteId;
     }
 
-    public void setDeviceId(DeviceId deviceId) {
-        this.deviceId = deviceId;
+    public void setNetSuiteId(Integer netSuiteId) {
+        this.netSuiteId = netSuiteId;
     }
 
     public String getEarliest() {
@@ -45,7 +44,7 @@ public class UsageInformationRequestDataArea {
         final int prime = 31;
         int result = 1;
         result = prime * result
-                + ((deviceId == null) ? 0 : deviceId.hashCode());
+                + ((netSuiteId == null) ? 0 : netSuiteId.hashCode());
         result = prime * result
                 + ((earliest == null) ? 0 : earliest.hashCode());
         result = prime * result + ((latest == null) ? 0 : latest.hashCode());
@@ -60,11 +59,11 @@ public class UsageInformationRequestDataArea {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        UsageInformationRequestDataArea other = (UsageInformationRequestDataArea) obj;
-        if (deviceId == null) {
-            if (other.deviceId != null)
+        SessionRequestDataArea other = (SessionRequestDataArea) obj;
+        if (netSuiteId == null) {
+            if (other.netSuiteId != null)
                 return false;
-        } else if (!deviceId.equals(other.deviceId))
+        } else if (!netSuiteId.equals(other.netSuiteId))
             return false;
         if (earliest == null) {
             if (other.earliest != null)
@@ -81,7 +80,7 @@ public class UsageInformationRequestDataArea {
 
     @Override
     public String toString() {
-        return "SessionRequestDataArea [deviceId=" + deviceId
+        return "SessionRequestDataArea [netSuiteId=" + netSuiteId
                 + ", earliest=" + earliest + ", latest=" + latest + "]";
     }
 
