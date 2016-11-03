@@ -2144,7 +2144,7 @@ public class CamelRoute extends RouteBuilder {
                 .to("kafka:" + env.getProperty("kafka.endpoint")
                         + ",?topic=midway-alerts")
                 .
-                // Activation with custom fields error scenario
+                // Activation with custom fields success scenario
                 choice()
                 .when(simple("${exchangeProperty[koreActivationWithCustomField]} == 'true'"))
                 .

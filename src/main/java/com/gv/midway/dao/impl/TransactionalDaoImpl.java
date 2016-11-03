@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
@@ -1062,7 +1063,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 .is(IConstant.BSCARRIER_SERVICE_KORE)
                 .andOperator(
                         Criteria.where(ITransaction.MIDWAY_STATUS).is(
-                                IConstant.MIDWAY_TRANSACTION_STATUS_PENDING)));
+                                IConstant.MIDWAY_TRANSACTION_STATUS_PENDING).andOperator(Criteria.where(ITransaction.CARRIER_STATUS).ne(null))));
 
         List<Transaction> transactionListPendingStatus = mongoTemplate.find(
                 searchPendingCheckStatusQuery, Transaction.class);
@@ -2416,92 +2417,123 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 	}
 	
 	public void fetchAttPendingCallback(Exchange exchange){
-	    
-	    
-	     Query searchPendingCallBack = new Query(Criteria
-	                .where(ITransaction.CARRIER_NAME)
-	                .is(IConstant.BSCARRIER_SERVICE_ATTJASPER)
-	                .andOperator(
-	                        Criteria.where(ITransaction.MIDWAY_STATUS).is(
-	                                IConstant.MIDWAY_TRANSACTION_STATUS_PENDING)));
+        
+        
+        Query searchPendingCallBack = new Query(Criteria
+                   .where(ITransaction.CARRIER_NAME)
+                   .is(IConstant.BSCARRIER_SERVICE_ATTJASPER)
+                   .andOperator(
+                           Criteria.where(ITransaction.MIDWAY_STATUS).is(
+                                   IConstant.MIDWAY_TRANSACTION_STATUS_PENDING)));
 
-	        List<Transaction> transactionWithPendingStatusList = mongoTemplate.find(
-	                searchPendingCallBack, Transaction.class);
-	        
-	       List<Transaction> newList= new ArrayList<Transaction>();
-	               
-	        
-	        Iterator<Transaction> itr= transactionWithPendingStatusList.iterator();
-	        
-	        Map<String,Transaction> map =new HashMap<String,Transaction>();
-	        
-	        
-	        while(itr.hasNext()){
-	            Transaction trans= itr.next();
-	           
-	            if(trans.getRequestType().equals(RequestType.CHANGECUSTOMFIELDS))
-	                
-	            {
-	                
-	                String custKey=((CustomFieldsDeviceRequest)trans.getDevicePayload()).getDataArea().getCustomFieldsToUpdate()[0].getKey();
-                        String custValue=trans.getCarrierStatus();
-                        CustomFieldsToUpdate custfield=    new CustomFieldsToUpdate();
-                        custfield.setKey(custKey);
-                        custfield.setValue(custValue);
-	                
-	                //Add to the map
-	                String key= trans.getMidwayTransactionId()+"_"+trans.getDeviceNumber()+"_"+trans.getRequestType();
-	                Transaction transInter=(Transaction)map.get(key);
-	                   if (transInter==null){
-	                      List<CustomFieldsToUpdate>custList= new ArrayList<CustomFieldsToUpdate>();
-	                     //Add cust field to call back payload 
-	                       custList.add(custfield);
-	                       trans.setCallBackPayload(custList);
-	                       map.put(key, trans);
-	                    
-	                   }
-	                       else {
-	                           List<CustomFieldsToUpdate> list=(List<CustomFieldsToUpdate>)transInter.getCallBackPayload();
-	                           
-	                           //If any of the custom field is error then transaction carrier status should be error
-	                          if( trans.getCarrierStatus().equals(IConstant.CARRIER_TRANSACTION_STATUS_ERROR))
-	                           {
-	                              transInter.setCarrierStatus(IConstant.CARRIER_TRANSACTION_STATUS_ERROR); 
-	                           }
-	                           
-	                         //Add cust field to call back payload   
-	                           list.add(custfield);
-	                       }
-	            }
-	            else{
-	                newList.add(trans);
-	            }
-	        }
-	        LOGGER.info("size of callback list for ATT JASPER............."
-                        + newList.size());
+           List<Transaction> transactionWithPendingStatusList = mongoTemplate.find(
+                   searchPendingCallBack, Transaction.class);
+           
+          List<Transaction> newList= new ArrayList<Transaction>();
+                  
+           
+           Iterator<Transaction> itr= transactionWithPendingStatusList.iterator();
+           
+           Map<String,Transaction> map =new HashMap<String,Transaction>();
+           
+           
+           while(itr.hasNext()){
+               Transaction trans= itr.next();
+              
+               if(trans.getRequestType().equals(RequestType.CHANGECUSTOMFIELDS))
+                   
+               {
+                   
+                   String custKey=((CustomFieldsDeviceRequest)trans.getDevicePayload()).getDataArea().getCustomFieldsToUpdate()[0].getKey();
+                    String custValue=trans.getCarrierStatus();
+                    CustomFieldsToUpdate custfield=    new CustomFieldsToUpdate();
+                    custfield.setKey(custKey);
+                    custfield.setValue(custValue);
+                   
+                   //Add to the map
+                   String key= trans.getMidwayTransactionId()+"_"+trans.getDeviceNumber()+"_"+trans.getRequestType();
+                  
+                      if (! map.containsKey(key)  ){
+                         List<CustomFieldsToUpdate>custList= new ArrayList<CustomFieldsToUpdate>();
+                        //Add cust field to call back payload 
+                          custList.add(custfield);
+                          trans.setCallBackPayload(custList);         
+                          
+                          
+                          //if carrier Transaction is null ignore putting in the map
+                          if(trans.getCarrierStatus()!=null){
+                              map.put(key, trans);
+                              
+                          }else{
+                              map.put(key, null);
+                          }
+                       
+                      }
+                          else {
+                              Transaction transInter=(Transaction)map.get(key);
+                              
+                              //if the key exist and map value is null then ignore or carrier status is null then make the map value as null for that key
+                              if(transInter==null || trans.getCarrierStatus() ==null)
+                                    {
+                                       //ignore do not do anything 
+                                      map.put(key, null);
+                                    }
+                              else{
+                              
+                                                       
+                              List<CustomFieldsToUpdate> list=(List<CustomFieldsToUpdate>)transInter.getCallBackPayload();
+                              
+                              //If any of the custom field is error then transaction carrier status should be error
+                             if( trans.getCarrierStatus().equals(IConstant.CARRIER_TRANSACTION_STATUS_ERROR))
+                              {
+                                 transInter.setCarrierStatus(IConstant.CARRIER_TRANSACTION_STATUS_ERROR); 
+                              }
+                              
+                            //Add cust field to call back payload   
+                              list.add(custfield);
+                          }
+                          }
+               }
+               else{
+                   //if the carrier status is null ignore
+                   if(trans.getCarrierStatus()!=null){                    
+                   newList.add(trans);}
+               }
+           }
+           LOGGER.info("size of callback list for ATT JASPER WITH NON CUSTOM FIELDS............."
+                    + newList.size());
+           
+           LOGGER.info("size of callback list for ATT JASPER CUSTOM FIELDS BEFORE............."
+                   + map.size());
+           // remove the carrier status null records from map
+           map.values().removeIf(Objects::isNull);
+           
+           LOGGER.info("size of callback list for ATT JASPER CUSTOM FIELDS AFTER............."
+                   + map.size());
+           
+           newList.addAll(map.values());
 
-	        newList.addAll(map.values());
+           LOGGER.info("size of pending device list for ATT JASPER............."
+                   + transactionWithPendingStatusList.size());
+           
+           LOGGER.info("size of callback list for ATT JASPER............."
+                    + newList.size());
+           
+           Collections.sort(newList,
+                   new Comparator<Transaction>() {
+                       @Override
+                       public int compare(Transaction a, Transaction b) {
 
-	        LOGGER.info("size of pending device list for ATT JASPER............."
-	                + transactionWithPendingStatusList.size());
-	        
-	        LOGGER.info("size of callback list for ATT JASPER............."
-                        + newList.size());
-	        
-	        Collections.sort(newList,
-	                new Comparator<Transaction>() {
-	                    @Override
-	                    public int compare(Transaction a, Transaction b) {
+                           return a.getTimeStampReceived().compareTo(
+                                   b.getTimeStampReceived());
+                       }
+                   });
+           
+           
+           exchange.getIn().setBody(newList);
+       
+   }
 
-	                        return a.getTimeStampReceived().compareTo(
-	                                b.getTimeStampReceived());
-	                    }
-	                });
-	        
-	        
-	        exchange.getIn().setBody(newList);
-	    
-	}
 
 	//Setting the custom fields & Service Plan to Error if the Primary Activation is error
         public void updateCallBackStatusOfSecondaryField(Exchange exchange){

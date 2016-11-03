@@ -6,8 +6,11 @@ import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
+
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.JobName;
+import com.gv.midway.environment.EnvironmentParser;
+import com.gv.midway.environment.NetSuiteOAuthHeaderProperties;
 import com.gv.midway.pojo.job.JobCompletionCallBacktoNetSuite;
 import com.gv.midway.pojo.job.JobDetail;
 import com.gv.midway.utility.NetSuiteOAuthUtil;
@@ -71,32 +74,25 @@ public class JobCallBackProcessor implements Processor {
 			jobCompletionCallBacktoNetSuite.setErrorCount("0");
 		}
 
-		String oauthConsumerKey = newEnv
-				.getProperty("netSuite.oauthConsumerKey");
-		String oauthTokenId = newEnv.getProperty("netSuite.oauthTokenId");
-		String oauthTokenSecret = newEnv
-				.getProperty("netSuite.oauthTokenSecret");
-		String oauthConsumerSecret = newEnv
-				.getProperty("netSuite.oauthConsumerSecret");
-		String realm = newEnv.getProperty("netSuite.realm");
-		String endPoint = newEnv.getProperty("netSuite.endPoint");
+		final NetSuiteOAuthHeaderProperties properties = EnvironmentParser.getNetSuiteOAuthHeaderProperties(newEnv);
+	    final String script = "569";
+	    
+	    LOGGER.info("oauth info is....." + properties);
 
-		String script = "569";
-		String oauthHeader = null;
+        final String oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(properties, script);
+        
+		
 
 		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
 		message.setHeader(Exchange.HTTP_METHOD, "POST");
-
-		oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
-				oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-				oauthConsumerSecret, realm, script);
-
-		message.setHeader("Authorization", oauthHeader);
-		exchange.setProperty("script", script);
+        message.setHeader("Authorization", oauthHeader);
 		message.setHeader(Exchange.HTTP_PATH, null);
 		message.setBody(jobCompletionCallBacktoNetSuite);
+		
+		exchange.setProperty("script", script);
 		exchange.setPattern(ExchangePattern.InOut);
+		
 		LOGGER.info("Job CallBack to netSuite is ..."
 				+ exchange.getIn().getBody());
 
