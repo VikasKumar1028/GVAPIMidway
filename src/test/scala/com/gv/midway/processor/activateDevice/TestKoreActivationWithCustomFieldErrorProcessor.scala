@@ -144,6 +144,4 @@ class TestKoreActivationWithCustomFieldErrorProcessor extends TestMocks {
     assert(request.getDeviceIds.length === 2)
     assert(request.getRequestType === NetSuiteRequestType.CUSTOM_FIELDS)
   }
-
-  private def deviceIdJson(id: String, kind: String) = s"""{"id":"$id","kind":"$kind"}"""
 }

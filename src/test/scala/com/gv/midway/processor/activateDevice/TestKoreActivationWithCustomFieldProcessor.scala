@@ -69,6 +69,4 @@ class TestKoreActivationWithCustomFieldProcessor extends TestMocks {
       assert(callback.getRequestType === NetSuiteRequestType.CUSTOM_FIELDS)
     }
   }
-
-  private def deviceIdJson(id: String, kind: String) = s"""{"id":"$id","kind":"$kind"}"""
 }
