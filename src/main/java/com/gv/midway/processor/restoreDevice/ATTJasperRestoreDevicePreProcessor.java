@@ -2,8 +2,12 @@ package com.gv.midway.processor.restoreDevice;
 
 import java.util.Date;
 import java.util.List;
+
+import com.gv.midway.environment.ATTJasperProperties;
+import com.gv.midway.environment.EnvironmentParser;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
+import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.camel.component.cxf.common.message.CxfConstants;
 import org.apache.cxf.binding.soap.SoapHeader;
@@ -14,14 +18,13 @@ import com.gv.midway.attjasper.EditTerminalRequest;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.restoreDevice.request.RestoreDeviceRequest;
 import com.gv.midway.pojo.transaction.Transaction;
-import com.gv.midway.processor.activateDevice.ATTJasperActivateDevicePreProcessor;
 import com.gv.midway.utility.CommonUtil;
 
 public class ATTJasperRestoreDevicePreProcessor implements Processor {
-	private static final Logger LOGGER = Logger
-			.getLogger(ATTJasperRestoreDevicePreProcessor.class.getName());
 
-	Environment newEnv;
+	private static final Logger LOGGER = Logger.getLogger(ATTJasperRestoreDevicePreProcessor.class.getName());
+
+	private Environment newEnv;
 
 	public ATTJasperRestoreDevicePreProcessor(Environment env) {
 		super();
@@ -33,60 +36,34 @@ public class ATTJasperRestoreDevicePreProcessor implements Processor {
 
 		LOGGER.info("Begin:ATTJasperRestoreDevicePreProcessor");
 
-		Transaction transaction = exchange.getIn().getBody(Transaction.class);
+		final Message message = exchange.getIn();
+		final Transaction transaction = message.getBody(Transaction.class);
+		final RestoreDeviceRequest restoreDeviceRequest = (RestoreDeviceRequest) transaction.getDevicePayload();
 
-		RestoreDeviceRequest restoreDeviceRequest = (RestoreDeviceRequest) transaction
-				.getDevicePayload();
+		final String deviceId = restoreDeviceRequest.getDataArea().getDevices()[0].getDeviceIds()[0].getId();
 
-		String deviceId = restoreDeviceRequest.getDataArea().getDevices()[0]
-				.getDeviceIds()[0].getId();
+		final ATTJasperProperties properties = EnvironmentParser.getATTJasperProperties(newEnv);
 
-		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,
-				transaction.getDeviceNumber());
-
-		EditTerminalRequest editTerminalRequest = new EditTerminalRequest();
-
+		final EditTerminalRequest editTerminalRequest = new EditTerminalRequest();
 		editTerminalRequest.setIccid(deviceId);
-		/*
-		 * LocalDateTime currentUTCTime = LocalDateTime.now(); // using system
-		 * // timezone XMLGregorianCalendar xmlDate =
-		 * DatatypeFactory.newInstance()
-		 * .newXMLGregorianCalendar(currentUTCTime.toString());
-		 * editTerminalRequest.setEffectiveDate(xmlDate);
-		 */
 		editTerminalRequest.setChangeType(IConstant.ATTJASPER_SIM_CHANGETYPE);
 		editTerminalRequest.setTargetValue(IConstant.ATTJASPER_ACTIVATED);
-
-		String version = newEnv.getProperty("attJasper.version");
-
-		String licenseKey = newEnv.getProperty("attJasper.licenseKey");
-
-		editTerminalRequest.setLicenseKey(licenseKey);
+		editTerminalRequest.setLicenseKey(properties.licenseKey);
 		editTerminalRequest.setMessageId("" + new Date().getTime());
-		editTerminalRequest.setVersion(version);
+		editTerminalRequest.setVersion(properties.version);
 
 		LOGGER.info("activate of iccId..............." + deviceId);
 
-		exchange.getIn().setBody(editTerminalRequest);
+		final List<SoapHeader> soapHeaders = CommonUtil.getSOAPHeaders(properties.username, properties.password);
 
-		exchange.getIn().setHeader(CxfConstants.OPERATION_NAME, "EditTerminal");
-		exchange.getIn().setHeader(CxfConstants.OPERATION_NAMESPACE,
-				"http://api.jasperwireless.com/ws/schema");
-		exchange.getIn()
-				.setHeader("soapAction",
-						"http://api.jasperwireless.com/ws/service/terminal/EditTerminal");
+		message.setBody(editTerminalRequest);
+		message.setHeader(CxfConstants.OPERATION_NAME, "EditTerminal");
+		message.setHeader(CxfConstants.OPERATION_NAMESPACE, "http://api.jasperwireless.com/ws/schema");
+		message.setHeader("soapAction", "http://api.jasperwireless.com/ws/service/terminal/EditTerminal");
+		message.setHeader(Header.HEADER_LIST, soapHeaders);
 
-		exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID,
-				transaction.getNetSuiteId());
-
-		String username = newEnv.getProperty("attJasper.userName");
-
-		String password = newEnv.getProperty("attJasper.password");
-
-		List<SoapHeader> soapHeaders = CommonUtil.getSOAPHeaders(username,
-				password);
-
-		exchange.getIn().setHeader(Header.HEADER_LIST, soapHeaders);
+		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER, transaction.getDeviceNumber());
+		exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID, transaction.getNetSuiteId());
 		exchange.setPattern(ExchangePattern.InOut);
 
 		LOGGER.info("End:ATTJasperRestoreDevicePreProcessor");

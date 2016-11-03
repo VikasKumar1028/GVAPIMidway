@@ -3,6 +3,8 @@ package com.gv.midway.processor.activateDevice;
 import java.util.Date;
 import java.util.List;
 
+import com.gv.midway.environment.ATTJasperProperties;
+import com.gv.midway.environment.EnvironmentParser;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.Message;
@@ -40,22 +42,19 @@ public class ATTJasperActivateDevicePreProcessor implements Processor {
         final ActivateDeviceRequest activateDeviceRequest = (ActivateDeviceRequest)transaction.getDevicePayload();
         final String deviceId = activateDeviceRequest.getDataArea().getDevices().getDeviceIds()[0].getId();
 
-        final String version = newEnv.getProperty("attJasper.version");
-        final String licenseKey = newEnv.getProperty("attJasper.licenseKey");
-        final String username = newEnv.getProperty("attJasper.userName");
-        final String password = newEnv.getProperty("attJasper.password");
+        final ATTJasperProperties properties = EnvironmentParser.getATTJasperProperties(newEnv);
 
         final EditTerminalRequest editTerminalRequest = new EditTerminalRequest();
         editTerminalRequest.setIccid(deviceId);
         editTerminalRequest.setChangeType(IConstant.ATTJASPER_SIM_CHANGETYPE);
         editTerminalRequest.setTargetValue(IConstant.ATTJASPER_ACTIVATED);
-        editTerminalRequest.setLicenseKey(licenseKey);
+        editTerminalRequest.setLicenseKey(properties.licenseKey);
         editTerminalRequest.setMessageId("" + new Date().getTime());
-        editTerminalRequest.setVersion(version);
+        editTerminalRequest.setVersion(properties.version);
 
         LOGGER.info("activate of iccId..............." + deviceId);
 
-        final List<SoapHeader> soapHeaders = CommonUtil.getSOAPHeaders(username, password);
+        final List<SoapHeader> soapHeaders = CommonUtil.getSOAPHeaders(properties.username, properties.password);
 
         message.setBody(editTerminalRequest);
         message.setHeader(CxfConstants.OPERATION_NAME, "EditTerminal");

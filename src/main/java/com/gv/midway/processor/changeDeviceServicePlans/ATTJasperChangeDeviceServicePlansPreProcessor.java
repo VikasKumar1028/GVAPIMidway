@@ -4,8 +4,11 @@ package com.gv.midway.processor.changeDeviceServicePlans;
 import java.util.Date;
 import java.util.List;
 
+import com.gv.midway.environment.ATTJasperProperties;
+import com.gv.midway.environment.EnvironmentParser;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
+import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.camel.component.cxf.common.message.CxfConstants;
 import org.apache.cxf.binding.soap.SoapHeader;
@@ -15,7 +18,6 @@ import org.springframework.core.env.Environment;
 
 import com.gv.midway.attjasper.EditTerminalRequest;
 import com.gv.midway.constant.IConstant;
-import com.gv.midway.constant.RequestType;
 import com.gv.midway.pojo.changeDeviceServicePlans.request.ChangeDeviceServicePlansRequest;
 import com.gv.midway.pojo.transaction.Transaction;
 import com.gv.midway.processor.deactivateDevice.ATTJasperDeactivateDevicePreProcessor;
@@ -23,13 +25,9 @@ import com.gv.midway.utility.CommonUtil;
 
 public class ATTJasperChangeDeviceServicePlansPreProcessor implements Processor {
 
-	private static final Logger LOGGER = Logger
-			.getLogger(ATTJasperDeactivateDevicePreProcessor.class.getName());
-	Environment newEnv;
+	private static final Logger LOGGER = Logger.getLogger(ATTJasperDeactivateDevicePreProcessor.class.getName());
 
-	public ATTJasperChangeDeviceServicePlansPreProcessor() {
-		// Empty ConstructorATT_JasperDeviceInformationPostProcessor
-	}
+	private Environment newEnv;
 
 	public ATTJasperChangeDeviceServicePlansPreProcessor(Environment env) {
 		super();
@@ -38,72 +36,40 @@ public class ATTJasperChangeDeviceServicePlansPreProcessor implements Processor 
 
 	@Override
 	public void process(Exchange exchange) throws Exception {
-		// TODO Auto-generated method stub
-
 		LOGGER.info("Begin:ATTJasperChangeDeviceServicePlansPreProcessor");
 
-		Transaction transaction = exchange.getIn().getBody(Transaction.class);
+		final Message message = exchange.getIn();
+		final Transaction transaction = message.getBody(Transaction.class);
 
-		ChangeDeviceServicePlansRequest changeDeviceServicePlansRequest = (ChangeDeviceServicePlansRequest) transaction
-				.getDevicePayload();
-		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,
-				transaction.getDeviceNumber());
+		final ChangeDeviceServicePlansRequest changeDeviceServicePlansRequest = (ChangeDeviceServicePlansRequest) transaction.getDevicePayload();
 
-		String deviceId = changeDeviceServicePlansRequest.getDataArea()
-				.getDevices()[0].getDeviceIds()[0].getId();
-
-		String servicePlan = changeDeviceServicePlansRequest.getDataArea()
-				.getServicePlan();
+		final String deviceId = changeDeviceServicePlansRequest.getDataArea().getDevices()[0].getDeviceIds()[0].getId();
+		final String servicePlan = changeDeviceServicePlansRequest.getDataArea().getServicePlan();
 
 		LOGGER.info("deviceId::::" + deviceId);
 
-		EditTerminalRequest getEditTerminalRequest = new EditTerminalRequest();
+		final ATTJasperProperties properties = EnvironmentParser.getATTJasperProperties(newEnv);
 
-		String version = newEnv.getProperty("attJasper.version");
-
-		String licenseKey = newEnv.getProperty("attJasper.licenseKey");
-
-		getEditTerminalRequest
-				.setChangeType(IConstant.ATTJASPER_RATE_PLAN_CHANGETYPE);
-
+		final EditTerminalRequest getEditTerminalRequest = new EditTerminalRequest();
+		getEditTerminalRequest.setChangeType(IConstant.ATTJASPER_RATE_PLAN_CHANGETYPE);
 		getEditTerminalRequest.setTargetValue(servicePlan);
-
-		/*LocalDateTime currentUTCTime = LocalDateTime.now(); // using system
-															// timezone
-		XMLGregorianCalendar xmlDate = DatatypeFactory.newInstance()
-				.newXMLGregorianCalendar(currentUTCTime.toString());
-
-		getEditTerminalRequest.setEffectiveDate(xmlDate);*/
-		
-		exchange.setProperty(IConstant.ATT_SERVICEPLAN_TO_UPDATE,servicePlan);
-
 		getEditTerminalRequest.setIccid(deviceId);
-
-		getEditTerminalRequest.setLicenseKey(licenseKey);
+		getEditTerminalRequest.setLicenseKey(properties.licenseKey);
 		getEditTerminalRequest.setMessageId("" + new Date().getTime());
-		getEditTerminalRequest.setVersion(version);
+		getEditTerminalRequest.setVersion(properties.version);
 
-		exchange.getIn().setBody(getEditTerminalRequest);
+		final List<SoapHeader> soapHeaders = CommonUtil.getSOAPHeaders(properties.username, properties.password);
 
-		exchange.getIn().setHeader(CxfConstants.OPERATION_NAME, "EditTerminal");
-		exchange.getIn().setHeader(CxfConstants.OPERATION_NAMESPACE,
-				"http://api.jasperwireless.com/ws/schema");
-		exchange.getIn()
-				.setHeader("soapAction",
-						"http://api.jasperwireless.com/ws/service/terminal/EditTerminal");
+		message.setBody(getEditTerminalRequest);
+		message.setHeader(CxfConstants.OPERATION_NAME, "EditTerminal");
+		message.setHeader(CxfConstants.OPERATION_NAMESPACE, "http://api.jasperwireless.com/ws/schema");
+		message.setHeader("soapAction", "http://api.jasperwireless.com/ws/service/terminal/EditTerminal");
+		message.setHeader(Header.HEADER_LIST, soapHeaders);
 
-		String username = newEnv.getProperty("attJasper.userName");
-
-		String password = newEnv.getProperty("attJasper.password");
-
-		List<SoapHeader> soapHeaders = CommonUtil.getSOAPHeaders(username,
-				password);
-
-		exchange.getIn().setHeader(Header.HEADER_LIST, soapHeaders);
+		exchange.setProperty(IConstant.ATT_SERVICEPLAN_TO_UPDATE, servicePlan);
+		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER, transaction.getDeviceNumber());
 		exchange.setPattern(ExchangePattern.InOut);
 
 		LOGGER.info("End:ATTJasperChangeDeviceServicePlansPreProcessor");
-
 	}
-
 }

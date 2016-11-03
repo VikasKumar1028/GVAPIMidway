@@ -107,6 +107,7 @@ import com.gv.midway.processor.deviceInformation.VerizonDeviceInformationPostPro
 import com.gv.midway.processor.deviceInformation.VerizonDeviceInformationPreProcessor;
 import com.gv.midway.processor.jobScheduler.ATTJasperDeviceUsageHistoryPostProcessor;
 import com.gv.midway.processor.jobScheduler.ATTJasperDeviceUsageHistoryPreProcessor;
+import com.gv.midway.processor.jobScheduler.JobCallBackProcessor;
 import com.gv.midway.processor.jobScheduler.JobInitializedPostProcessor;
 import com.gv.midway.processor.jobScheduler.KoreDeviceUsageHistoryPostProcessor;
 import com.gv.midway.processor.jobScheduler.KoreDeviceUsageHistoryPreProcessor;
@@ -1629,7 +1630,11 @@ public class CamelRoute extends RouteBuilder {
                 .onCompletion()
                 .bean(iJobService, "checkTimeOutDevices")
                 .bean(iJobService, "updateJobDetails")
-                .
+                // CallBack to NetSuite on Job Completion
+                .process(new JobCallBackProcessor(env)).
+                setHeader(Exchange.HTTP_QUERY).
+                simple("script=${exchangeProperty[script]}&deploy=1")
+                .to(IEndPoints.URI_REST_NETSUITE_ENDPOINT).
                 // Notification Not required.
                 /*
                  * // Run the Notification Job for Self triggered Batch job of
@@ -1777,6 +1782,11 @@ public class CamelRoute extends RouteBuilder {
                 .onCompletion()
                 .bean(iJobService, "checkTimeOutDevicesTransactionFailure")
                 .bean(iJobService, "updateJobDetails")
+              // CallBack to NetSuite on Job Completion
+                .process(new JobCallBackProcessor(env)).
+                setHeader(Exchange.HTTP_QUERY).
+                simple("script=${exchangeProperty[script]}&deploy=1")
+                .to(IEndPoints.URI_REST_NETSUITE_ENDPOINT)
                 .end()
                 .bean(iJobService, "insertJobDetails")
                 .bean(iJobService, "setJobStartandEndTime")

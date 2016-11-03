@@ -118,7 +118,7 @@
 	</cxf:rsClient>
 	<!-- START : Defining client endpoint to create cxf-rs URL -->
 
-	<cxf:rsClient id="rsNetsuitClient"
+	<cxf:rsClient id="rsNetsuiteClient"
 		address="${netSuite.endPoint}"
 		loggingFeatureEnabled="true">
 		<cxf:providers>

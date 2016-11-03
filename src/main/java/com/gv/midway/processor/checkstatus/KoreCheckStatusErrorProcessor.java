@@ -2,6 +2,8 @@ package com.gv.midway.processor.checkstatus;
 
 import java.util.Date;
 
+import com.gv.midway.environment.EnvironmentParser;
+import com.gv.midway.environment.NetSuiteOAuthHeaderProperties;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.Message;
@@ -30,15 +32,9 @@ public class KoreCheckStatusErrorProcessor implements Processor {
     /**
      * Call back the Netsuite endPoint
      */
-
-    private static final Logger LOGGER = Logger
-            .getLogger(KoreCheckStatusErrorProcessor.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(KoreCheckStatusErrorProcessor.class.getName());
 
     private Environment newEnv;
-
-    public KoreCheckStatusErrorProcessor() {
-        // Empty Constructor
-    }
 
     public KoreCheckStatusErrorProcessor(Environment env) {
         super();
@@ -48,55 +44,38 @@ public class KoreCheckStatusErrorProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
-    	LOGGER.info("Begin:KoreCheckStatusErrorProcessor");
+        LOGGER.info("Begin:KoreCheckStatusErrorProcessor");
         LOGGER.info("kore check status error processor");
 
-        Message message = exchange.getIn();
-
-        String midWayTransactionDeviceNumber = (String) exchange
-                .getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER);
-
-        String midWayTransactionId = (String) exchange
-                .getProperty(IConstant.MIDWAY_TRANSACTION_ID);
-
-        Integer netSuiteID = (Integer) exchange
-                .getProperty(IConstant.MIDWAY_NETSUITE_ID);
-
-        RequestType requestType = (RequestType) exchange
-                .getProperty(IConstant.MIDWAY_TRANSACTION_REQUEST_TYPE);
-
-        String errorDescription = (String) exchange
-                .getProperty(IConstant.MIDWAY_CARRIER_ERROR_DESC);
-
-        LOGGER.info("cxf operation not caught before is...........");
-
-        CxfOperationException exception = (CxfOperationException) exchange
-                .getProperty(Exchange.EXCEPTION_CAUGHT);
-
-        LOGGER.info("cxf operation caught is...........");
-        
-
+        final Message message = exchange.getIn();
+        final String midWayTransactionDeviceNumber = (String) exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER);
+        final String midWayTransactionId = (String) exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID);
+        final Integer netSuiteID = (Integer) exchange.getProperty(IConstant.MIDWAY_NETSUITE_ID);
+        final RequestType requestType = (RequestType) exchange.getProperty(IConstant.MIDWAY_TRANSACTION_REQUEST_TYPE);
+        String errorDescription = (String) exchange.getProperty(IConstant.MIDWAY_CARRIER_ERROR_DESC);
+        final CxfOperationException exception = (CxfOperationException) exchange.getProperty(Exchange.EXCEPTION_CAUGHT);
+        final Object body = exchange.getProperty(IConstant.MIDWAY_TRANSACTION_PAYLOAD);
 
         if (exception != null) {
-
-            LOGGER.info("cxf exception while checking the status of Kore Provisoning request");
-            String errorResponseBody = exception.getResponseBody();
-            ObjectMapper mapper = new ObjectMapper();
+            LOGGER.info("cxf exception while checking the status of Kore Provisioning request");
+            final String errorResponseBody = exception.getResponseBody();
+            final ObjectMapper mapper = new ObjectMapper();
 
             try {
-                KoreErrorResponse errorResponsePayload = mapper.readValue(
-                        errorResponseBody, KoreErrorResponse.class);
+                final KoreErrorResponse errorResponsePayload = mapper.readValue(errorResponseBody, KoreErrorResponse.class);
                 errorDescription = errorResponsePayload.getErrorMessage();
                 exchange.setProperty(IConstant.KORE_ACTIVATION_CUSTOMEFIELD_ERROR_DESCRIPTION, errorDescription);
                 exchange.setProperty(IConstant.KORE_ACTIVATION_CUSTOMEFIELD_ERRORPAYLOAD, errorResponsePayload);
             } catch (Exception e) {
                 LOGGER.error("Error ::" + e);
             }
-
         }
 
-        KafkaNetSuiteCallBackError netSuiteCallBackError = new KafkaNetSuiteCallBackError();
+        final String desc = "Error in callBack from Kore For "
+                + midWayTransactionDeviceNumber + ", transactionId "
+                + midWayTransactionId + "and request Type is " + requestType;
 
+        final KafkaNetSuiteCallBackError netSuiteCallBackError = new KafkaNetSuiteCallBackError();
         netSuiteCallBackError.setApp("Midway");
         netSuiteCallBackError.setCategory("Kore Call Back Error");
         netSuiteCallBackError.setId(requestType.toString());
@@ -105,179 +84,89 @@ public class KoreCheckStatusErrorProcessor implements Processor {
         netSuiteCallBackError.setVersion("1");
         netSuiteCallBackError.setException(errorDescription);
         netSuiteCallBackError.setMsg("Error in Call Back from Kore.");
-
-        String desc = "Error in callBack from Kore For "
-                + midWayTransactionDeviceNumber + ", transactionId "
-                + midWayTransactionId + "and request Type is " + requestType;
-
         netSuiteCallBackError.setDesc(desc);
-
-        Object body = exchange
-                .getProperty(IConstant.MIDWAY_TRANSACTION_PAYLOAD);
-
         netSuiteCallBackError.setBody(body);
 
-        BaseRequest baseRequest = (BaseRequest) body;
+        final BaseRequest baseRequest = (BaseRequest) body;
+        final Header header = baseRequest.getHeader();
 
-        Header header = baseRequest.getHeader();
-
-        KeyValues keyValues1 = new KeyValues();
-
-        keyValues1.setK("transactionId");
-        keyValues1.setV(header.getTransactionId());
-
-        KeyValues keyValues2 = new KeyValues();
-
-        keyValues2.setK("orderNumber");
-        keyValues2.setV(midWayTransactionId);
-
-        KeyValues keyValues3 = new KeyValues();
-
-        keyValues3.setK("deviceIds");
-        keyValues3.setV(midWayTransactionDeviceNumber.replace("'\'", ""));
-
-        KeyValues keyValues4 = new KeyValues();
-
-        keyValues4.setK("netSuiteID");
-        keyValues4.setV("" + netSuiteID);
-
-        KeyValues[] keyValuesArr = new KeyValues[4];
-
-        keyValuesArr[0] = keyValues1;
-        keyValuesArr[1] = keyValues2;
-        keyValuesArr[2] = keyValues3;
-        keyValuesArr[3] = keyValues4;
+        final KeyValues keyValues1 = new KeyValues("transactionId", header.getTransactionId());
+        final KeyValues keyValues2 = new KeyValues("orderNumber", midWayTransactionId);
+        final KeyValues keyValues3 = new KeyValues("deviceIds", midWayTransactionDeviceNumber.replace("'\'", ""));
+        final KeyValues keyValues4 = new KeyValues("netSuiteID", "" + netSuiteID);
+        final KeyValues[] keyValuesArr = new KeyValues[]{keyValues1, keyValues2, keyValues3, keyValues4};
 
         netSuiteCallBackError.setKeyValues(keyValuesArr);
 
-        exchange.setProperty(IConstant.KAFKA_OBJECT, netSuiteCallBackError);
-
-        NetSuiteCallBackProvisioningRequest netSuiteCallBackProvisioningRequest = new NetSuiteCallBackProvisioningRequest();
-
+        final NetSuiteCallBackProvisioningRequest netSuiteCallBackProvisioningRequest = new NetSuiteCallBackProvisioningRequest();
         netSuiteCallBackProvisioningRequest.setStatus("fail");
         netSuiteCallBackProvisioningRequest.setResponse(errorDescription);
-        netSuiteCallBackProvisioningRequest
-                .setCarrierOrderNumber(midWayTransactionId);
+        netSuiteCallBackProvisioningRequest.setCarrierOrderNumber(midWayTransactionId);
         netSuiteCallBackProvisioningRequest.setNetSuiteID("" + netSuiteID);
 
-        StringBuffer deviceIdsArr = new StringBuffer("{\"deviceIds\":");
-
-        deviceIdsArr.append(midWayTransactionDeviceNumber);
-
-        String str = "}";
-
-        deviceIdsArr.append(str);
-
-        ObjectMapper mapper = new ObjectMapper();
-
-        Devices devices = mapper.readValue(deviceIdsArr.toString(),
-                Devices.class);
-
-        DeviceId[] deviceIds = devices.getDeviceIds();
+        final String deviceIdsArr = "{\"deviceIds\":" + midWayTransactionDeviceNumber + "}";
+        final ObjectMapper mapper = new ObjectMapper();
+        final Devices devices = mapper.readValue(deviceIdsArr, Devices.class);
+        final DeviceId[] deviceIds = devices.getDeviceIds();
 
         netSuiteCallBackProvisioningRequest.setDeviceIds(deviceIds);
 
-        LOGGER.info("body set for netSuiteCallBack........."
-                + exchange.getIn().getBody());
+        LOGGER.info("body set for netSuiteCallBack........." + exchange.getIn().getBody());
+        LOGGER.info("request type for NetSuite CallBack error...." + requestType);
 
-       
+        //TODO Duplicated in AttCallBackErrorPostProcessor
+        switch (requestType) {
+            case ACTIVATION:
+                netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.ACTIVATION);
+                break;
+            case DEACTIVATION:
+                netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.DEACTIVATION);
+                break;
+            case REACTIVATION:
+                netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.REACTIVATION);
+                break;
+            case RESTORE:
+                netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.RESTORATION);
+                break;
+            case SUSPEND:
+                netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.SUSPENSION);
+                break;
+            case CHANGESERVICEPLAN:
+                final ChangeDeviceServicePlansRequest changeDeviceServicePlansRequest = (ChangeDeviceServicePlansRequest) body;
+                LOGGER.info("change device service plan data area...." + changeDeviceServicePlansRequest.getDataArea().toString());
+                final String oldServicePlan = changeDeviceServicePlansRequest.getDataArea().getCurrentServicePlan();
+                final String newServicePlan = changeDeviceServicePlansRequest.getDataArea().getServicePlan();
+                LOGGER.info("service plan new is..." + newServicePlan + " old service plan is....." + oldServicePlan);
+                netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.SERVICE_PLAN);
+                netSuiteCallBackProvisioningRequest.setOldServicePlan(oldServicePlan);
+                netSuiteCallBackProvisioningRequest.setNewServicePlan(newServicePlan);
+                break;
+            case CHANGECUSTOMFIELDS:
+                netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.CUSTOM_FIELDS);
+                break;
+            default:
+                break;
+        }
 
+
+        final NetSuiteOAuthHeaderProperties properties = EnvironmentParser.getNetSuiteOAuthHeaderProperties(newEnv);
+        final String script = "539";
+
+        LOGGER.info("oauth info is....." + properties);
+
+        final String oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(properties, script);
+
+        message.setBody(netSuiteCallBackProvisioningRequest);
         message.setHeader(Exchange.CONTENT_TYPE, "application/json");
         message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
         message.setHeader(Exchange.HTTP_METHOD, "POST");
-
-        LOGGER.info("request type for NetSuite CallBack error...." + requestType);
-
-       
-
-        switch (requestType) {
-        case ACTIVATION:
-            netSuiteCallBackProvisioningRequest
-                    .setRequestType(NetSuiteRequestType.ACTIVATION);
-           
-            break;
-        case DEACTIVATION:
-            netSuiteCallBackProvisioningRequest
-                    .setRequestType(NetSuiteRequestType.DEACTIVATION);
-           
-            break;
-        case REACTIVATION:
-            netSuiteCallBackProvisioningRequest
-                    .setRequestType(NetSuiteRequestType.REACTIVATION);
-          
-            break;
-        case RESTORE:
-            netSuiteCallBackProvisioningRequest
-                    .setRequestType(NetSuiteRequestType.RESTORATION);
-           
-            break;
-        case SUSPEND:
-            netSuiteCallBackProvisioningRequest
-                    .setRequestType(NetSuiteRequestType.SUSPENSION);
-          
-            break;
-        case CHANGESERVICEPLAN:
-            ChangeDeviceServicePlansRequest changeDeviceServicePlansRequest = (ChangeDeviceServicePlansRequest) body;
-            LOGGER.info("change devcie servcie plan data area...."
-                    + changeDeviceServicePlansRequest.getDataArea().toString());
-            String oldServicePlan = changeDeviceServicePlansRequest
-                    .getDataArea().getCurrentServicePlan();
-            String newServicePlan = changeDeviceServicePlansRequest
-                    .getDataArea().getServicePlan();
-            LOGGER.info("service plan new is..." + newServicePlan
-                    + " old service plan is....." + oldServicePlan);
-            netSuiteCallBackProvisioningRequest
-                    .setRequestType(NetSuiteRequestType.SERVICE_PLAN);
-            netSuiteCallBackProvisioningRequest
-                    .setOldServicePlan(oldServicePlan);
-            netSuiteCallBackProvisioningRequest
-                    .setNewServicePlan(newServicePlan);
-          
-            break;
-        case CHANGECUSTOMFIELDS:
-            netSuiteCallBackProvisioningRequest
-                    .setRequestType(NetSuiteRequestType.CUSTOM_FIELDS);
-           
-            break;
-        default:
-            break;
-        }
-
-       
-        
-        String oauthConsumerKey = newEnv
-                .getProperty("netSuite.oauthConsumerKey");
-        String oauthTokenId = newEnv.getProperty("netSuite.oauthTokenId");
-        String oauthTokenSecret = newEnv
-                .getProperty("netSuite.oauthTokenSecret");
-        String oauthConsumerSecret = newEnv
-                .getProperty("netSuite.oauthConsumerSecret");
-        String realm = newEnv.getProperty("netSuite.realm");
-        String endPoint = newEnv.getProperty("netSuite.endPoint");
-
-        String script="539";
-        
-        LOGGER.info("oauth info is....." + oauthConsumerKey + " " + oauthTokenId
-                + " " + endPoint + " " + oauthTokenSecret + " "
-                + oauthConsumerSecret + " " + realm);
-        
-        
-        String oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
-                oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                oauthConsumerSecret, realm, script);
-         
         message.setHeader("Authorization", oauthHeader);
-        exchange.setProperty("script", script);
         message.setHeader(Exchange.HTTP_PATH, null);
-        message.setBody(netSuiteCallBackProvisioningRequest);
-        
+
+        exchange.setProperty(IConstant.KAFKA_OBJECT, netSuiteCallBackError);
         exchange.setProperty("script", script);
         exchange.setPattern(ExchangePattern.InOut);
-        LOGGER.info("error callback resposne for Kore..."
-                + exchange.getIn().getBody());
-        
-      	LOGGER.info("End:KoreCheckStatusErrorProcessor");
-
+        LOGGER.info("error callback response for Kore..." + exchange.getIn().getBody());
+        LOGGER.info("End:KoreCheckStatusErrorProcessor");
     }
-
 }

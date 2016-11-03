@@ -2,6 +2,8 @@ package com.gv.midway.processor.activateDevice;
 
 import java.util.Date;
 
+import com.gv.midway.environment.EnvironmentParser;
+import com.gv.midway.environment.NetSuiteOAuthHeaderProperties;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.Message;
@@ -134,20 +136,13 @@ public class KoreActivationWithCustomFieldErrorProcessor implements Processor {
         netSuiteCallBackProvisioningRequest.setDeviceIds(deviceIds);
         netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.CUSTOM_FIELDS);
 
-        final String oauthConsumerKey = newEnv.getProperty("netSuite.oauthConsumerKey");
-        final String oauthTokenId = newEnv.getProperty("netSuite.oauthTokenId");
-        final String oauthTokenSecret = newEnv.getProperty("netSuite.oauthTokenSecret");
-        final String oauthConsumerSecret = newEnv.getProperty("netSuite.oauthConsumerSecret");
-        final String realm = newEnv.getProperty("netSuite.realm");
-        final String endPoint = newEnv.getProperty("netSuite.endPoint");
+        final NetSuiteOAuthHeaderProperties properties = EnvironmentParser.getNetSuiteOAuthHeaderProperties(newEnv);
 
         LOGGER.info("request type for NetSuite CallBack error...." + RequestType.CHANGECUSTOMFIELDS);
-        LOGGER.info("oauth info is....." + oauthConsumerKey + " " + oauthTokenId + " " + endPoint + " " + oauthTokenSecret + " " + oauthConsumerSecret + " " + realm);
+        LOGGER.info("oauth info is....." + properties);
 
         final String script = "539";
-
-        final String oauthHeader =
-                NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint, oauthConsumerKey, oauthTokenId, oauthTokenSecret, oauthConsumerSecret, realm, script);
+        final String oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(properties, script);
 
         message.setHeader(Exchange.CONTENT_TYPE, "application/json");
         message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");

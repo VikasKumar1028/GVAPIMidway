@@ -2,6 +2,8 @@ package com.gv.midway.processor.checkstatus;
 
 import java.util.Date;
 
+import com.gv.midway.environment.EnvironmentParser;
+import com.gv.midway.environment.NetSuiteOAuthHeaderProperties;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.Message;
@@ -28,14 +30,9 @@ public class AttCallBackSuccessPostProcessor implements Processor {
     /**
      * Call back the Netsuite endPoint
      */
-
     private static final Logger LOGGER = Logger.getLogger(AttCallBackSuccessPostProcessor.class.getName());
 
     private Environment newEnv;
-
-    public AttCallBackSuccessPostProcessor() {
-        // Empty Constructor
-    }
 
     public AttCallBackSuccessPostProcessor(Environment env) {
         super();
@@ -44,214 +41,121 @@ public class AttCallBackSuccessPostProcessor implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {
-
-    	LOGGER.info("Begin:AttCallBackSuccessPostProcessor");
+        LOGGER.info("Begin:AttCallBackSuccessPostProcessor");
         LOGGER.info("ATT Jasper CallBack Success post processor");
 
-        Message message = exchange.getIn();
+        final Message message = exchange.getIn();
 
-        String midWayTransactionDeviceNumber = (String) exchange
-                .getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER);
+        final String midWayTransactionDeviceNumber = (String) exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER);
+        final String midWayTransactionId = (String) exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID);
+        final Integer netSuiteID = (Integer) exchange.getProperty(IConstant.MIDWAY_NETSUITE_ID);
+        final RequestType requestType = (RequestType) exchange.getProperty(IConstant.MIDWAY_TRANSACTION_REQUEST_TYPE);
+        final Object body = exchange.getProperty(IConstant.MIDWAY_TRANSACTION_PAYLOAD);
 
-        String midWayTransactionId = (String) exchange
-                .getProperty(IConstant.MIDWAY_TRANSACTION_ID);
+        final String desc = "Successful callBack from ATT Jasper For "
+                + midWayTransactionDeviceNumber + ", transactionId "
+                + midWayTransactionId + "and request Type is " + requestType;
 
-        Integer netSuiteID = (Integer) exchange
-                .getProperty(IConstant.MIDWAY_NETSUITE_ID);
-
-        RequestType requestType = (RequestType) exchange
-                .getProperty(IConstant.MIDWAY_TRANSACTION_REQUEST_TYPE);
-
-        KafkaNetSuiteCallBackEvent netSuiteCallBackEvent = new KafkaNetSuiteCallBackEvent();
-
+        final KafkaNetSuiteCallBackEvent netSuiteCallBackEvent = new KafkaNetSuiteCallBackEvent();
         netSuiteCallBackEvent.setApp("Midway");
         netSuiteCallBackEvent.setCategory("ATT Jasper Call Back Success");
         netSuiteCallBackEvent.setId(requestType.toString());
         netSuiteCallBackEvent.setLevel("Info");
         netSuiteCallBackEvent.setTimestamp(new Date().getTime());
         netSuiteCallBackEvent.setVersion("1");
-
-        netSuiteCallBackEvent.setMsg("Succesfull Call Back from ATT Jasper.");
-
-        String desc = "Successful callBack from ATT Jasper For "
-                + midWayTransactionDeviceNumber + ", transactionId "
-                + midWayTransactionId + "and request Type is " + requestType;
-
+        netSuiteCallBackEvent.setMsg("Successful Call Back from ATT Jasper.");
         netSuiteCallBackEvent.setDesc(desc);
-
-        Object body = exchange
-                .getProperty(IConstant.MIDWAY_TRANSACTION_PAYLOAD);
-
         netSuiteCallBackEvent.setBody(body);
 
-        BaseRequest baseRequest = (BaseRequest) body;
+        final BaseRequest baseRequest = (BaseRequest) body;
+        final Header header = baseRequest.getHeader();
 
-        Header header = baseRequest.getHeader();
-
-        KeyValues keyValues1 = new KeyValues();
-
-        keyValues1.setK("transactionId");
-        keyValues1.setV(header.getTransactionId());
-
-        KeyValues keyValues2 = new KeyValues();
-
-        keyValues2.setK("orderNumber");
-        keyValues2.setV(midWayTransactionId);
-
-        KeyValues keyValues3 = new KeyValues();
-
-        keyValues3.setK("deviceIds");
-        keyValues3.setV(midWayTransactionDeviceNumber.replace("'\'", ""));
-
-        KeyValues keyValues4 = new KeyValues();
-
-        keyValues4.setK("netSuiteID");
-        keyValues4.setV("" + netSuiteID);
-
-        KeyValues[] keyValuesArr = new KeyValues[4];
-
-        keyValuesArr[0] = keyValues1;
-        keyValuesArr[1] = keyValues2;
-        keyValuesArr[2] = keyValues3;
-        keyValuesArr[3] = keyValues4;
+        final KeyValues keyValues1 = new KeyValues("transactionId", header.getTransactionId());
+        final KeyValues keyValues2 = new KeyValues("orderNumber", midWayTransactionId);
+        final KeyValues keyValues3 = new KeyValues("deviceIds", midWayTransactionDeviceNumber.replace("'\'", ""));
+        final KeyValues keyValues4 = new KeyValues("netSuiteID", "" + netSuiteID);
+        final KeyValues[] keyValuesArr = new KeyValues[]{keyValues1, keyValues2, keyValues3, keyValues4};
 
         netSuiteCallBackEvent.setKeyValues(keyValuesArr);
 
-        exchange.setProperty(IConstant.KAFKA_OBJECT, netSuiteCallBackEvent);
-
-        NetSuiteCallBackProvisioningRequest netSuiteCallBackProvisioningRequest = new NetSuiteCallBackProvisioningRequest();
-
+        final NetSuiteCallBackProvisioningRequest netSuiteCallBackProvisioningRequest = new NetSuiteCallBackProvisioningRequest();
         netSuiteCallBackProvisioningRequest.setStatus("success");
-
-        netSuiteCallBackProvisioningRequest
-                .setCarrierOrderNumber(midWayTransactionId);
+        netSuiteCallBackProvisioningRequest.setCarrierOrderNumber(midWayTransactionId);
         netSuiteCallBackProvisioningRequest.setNetSuiteID("" + netSuiteID);
 
-        StringBuffer deviceIdsArr = new StringBuffer("{\"deviceIds\":");
+        final String deviceIdsArr = "{\"deviceIds\":" + midWayTransactionDeviceNumber + "}";
 
-        deviceIdsArr.append(midWayTransactionDeviceNumber);
+        final ObjectMapper mapper = new ObjectMapper();
 
-        String str = "}";
+        final Devices devices = mapper.readValue(deviceIdsArr, Devices.class);
 
-        deviceIdsArr.append(str);
-
-        ObjectMapper mapper = new ObjectMapper();
-
-        Devices devices = mapper.readValue(deviceIdsArr.toString(),
-                Devices.class);
-
-        DeviceId[] deviceIds = devices.getDeviceIds();
+        final DeviceId[] deviceIds = devices.getDeviceIds();
 
         netSuiteCallBackProvisioningRequest.setDeviceIds(deviceIds);
-  
-        message.setHeader(Exchange.CONTENT_TYPE, "application/json");
-        message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
-        message.setHeader(Exchange.HTTP_METHOD, "POST");
 
         LOGGER.info("request type for NetSuite CallBack error...." + requestType);
 
-       
-
+        //TODO Duplicated in KoreCheckStatusPostProcessor
         switch (requestType) {
-        case ACTIVATION:
-            netSuiteCallBackProvisioningRequest
-                    .setResponse("Device successfully activated.");
-            netSuiteCallBackProvisioningRequest
-                    .setRequestType(NetSuiteRequestType.ACTIVATION);
-           
-            break;
-        case DEACTIVATION:
-            netSuiteCallBackProvisioningRequest
-                    .setResponse("Device successfully DeActivated.");
-            netSuiteCallBackProvisioningRequest
-                    .setRequestType(NetSuiteRequestType.DEACTIVATION);
-          
-            break;
-        case REACTIVATION:
-            netSuiteCallBackProvisioningRequest
-                    .setResponse("Device successfully ReActivated.");
-            netSuiteCallBackProvisioningRequest
-                    .setRequestType(NetSuiteRequestType.REACTIVATION);
-        
-            break;
-        case RESTORE:
-            netSuiteCallBackProvisioningRequest
-                    .setResponse("Device successfully ReStored.");
-            netSuiteCallBackProvisioningRequest
-                    .setRequestType(NetSuiteRequestType.RESTORATION);
-          
-            break;
-        case SUSPEND:
-            netSuiteCallBackProvisioningRequest
-                    .setResponse("Device successfully Suspended.");
-            netSuiteCallBackProvisioningRequest
-                    .setRequestType(NetSuiteRequestType.SUSPENSION);
-           
-            break;
-        case CHANGESERVICEPLAN:
-            netSuiteCallBackProvisioningRequest
-                    .setResponse("Device Service Plan Changed successfully.");
-
-            ChangeDeviceServicePlansRequest changeDeviceServicePlansRequest = (ChangeDeviceServicePlansRequest) body;
-            LOGGER.info("change devcie servcie plan data area...."
-                    + changeDeviceServicePlansRequest.getDataArea().toString());
-            String oldServicePlan = changeDeviceServicePlansRequest
-                    .getDataArea().getCurrentServicePlan();
-            String newServicePlan = changeDeviceServicePlansRequest
-                    .getDataArea().getServicePlan();
-            LOGGER.info("service plan new is..." + newServicePlan
-                    + " old service plan is....." + oldServicePlan);
-            netSuiteCallBackProvisioningRequest
-                    .setRequestType(NetSuiteRequestType.SERVICE_PLAN);
-            netSuiteCallBackProvisioningRequest
-                    .setOldServicePlan(oldServicePlan);
-            netSuiteCallBackProvisioningRequest
-                    .setNewServicePlan(newServicePlan);
-           
-            break;
-        case CHANGECUSTOMFIELDS:
-            netSuiteCallBackProvisioningRequest
-                    .setResponse("Device Custom Fields Changed successfully.");
-            netSuiteCallBackProvisioningRequest
-                    .setRequestType(NetSuiteRequestType.CUSTOM_FIELDS);
-            
-            break;
-        default:
-            break;
+            case ACTIVATION:
+                netSuiteCallBackProvisioningRequest.setResponse("Device successfully activated.");
+                netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.ACTIVATION);
+                break;
+            case DEACTIVATION:
+                netSuiteCallBackProvisioningRequest.setResponse("Device successfully DeActivated.");
+                netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.DEACTIVATION);
+                break;
+            case REACTIVATION:
+                netSuiteCallBackProvisioningRequest.setResponse("Device successfully ReActivated.");
+                netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.REACTIVATION);
+                break;
+            case RESTORE:
+                netSuiteCallBackProvisioningRequest.setResponse("Device successfully ReStored.");
+                netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.RESTORATION);
+                break;
+            case SUSPEND:
+                netSuiteCallBackProvisioningRequest.setResponse("Device successfully Suspended.");
+                netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.SUSPENSION);
+                break;
+            case CHANGESERVICEPLAN:
+                netSuiteCallBackProvisioningRequest.setResponse("Device Service Plan Changed successfully.");
+                final ChangeDeviceServicePlansRequest changeDeviceServicePlansRequest = (ChangeDeviceServicePlansRequest) body;
+                LOGGER.info("change device service plan data area...." + changeDeviceServicePlansRequest.getDataArea().toString());
+                final String oldServicePlan = changeDeviceServicePlansRequest.getDataArea().getCurrentServicePlan();
+                final String newServicePlan = changeDeviceServicePlansRequest.getDataArea().getServicePlan();
+                LOGGER.info("service plan new is..." + newServicePlan + " old service plan is....." + oldServicePlan);
+                netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.SERVICE_PLAN);
+                netSuiteCallBackProvisioningRequest.setOldServicePlan(oldServicePlan);
+                netSuiteCallBackProvisioningRequest.setNewServicePlan(newServicePlan);
+                break;
+            case CHANGECUSTOMFIELDS:
+                netSuiteCallBackProvisioningRequest.setResponse("Device Custom Fields Changed successfully.");
+                netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.CUSTOM_FIELDS);
+                break;
+            default:
+                break;
         }
 
-        String oauthConsumerKey = newEnv
-                .getProperty("netSuite.oauthConsumerKey");
-        String oauthTokenId = newEnv.getProperty("netSuite.oauthTokenId");
-        String oauthTokenSecret = newEnv
-                .getProperty("netSuite.oauthTokenSecret");
-        String oauthConsumerSecret = newEnv
-                .getProperty("netSuite.oauthConsumerSecret");
-        String realm = newEnv.getProperty("netSuite.realm");
-        String endPoint = newEnv.getProperty("netSuite.endPoint");
+        final NetSuiteOAuthHeaderProperties properties = EnvironmentParser.getNetSuiteOAuthHeaderProperties(newEnv);
 
-        LOGGER.info("oauth info is....." + oauthConsumerKey + " " + oauthTokenId
-                + " " + endPoint + " " + oauthTokenSecret + " "
-                + oauthConsumerSecret + " " + realm);
-        
-        String script = "539";
-        
-        String oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(endPoint,
-                oauthConsumerKey, oauthTokenId, oauthTokenSecret,
-                oauthConsumerSecret, realm, script);
-        
+        LOGGER.info("oauth info is....." + properties);
+
+        final String script = "539";
+
+        final String oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(properties, script);
+
+        message.setHeader(Exchange.CONTENT_TYPE, "application/json");
+        message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
+        message.setHeader(Exchange.HTTP_METHOD, "POST");
         message.setHeader("Authorization", oauthHeader);
-        message.setBody(netSuiteCallBackProvisioningRequest);
         message.setHeader(Exchange.HTTP_PATH, null);
-        
+        message.setBody(netSuiteCallBackProvisioningRequest);
+
+        exchange.setProperty(IConstant.KAFKA_OBJECT, netSuiteCallBackEvent);
         exchange.setProperty("script", script);
         exchange.setPattern(ExchangePattern.InOut);
-        
-        LOGGER.info("success callback response for ATT Jasper..."
-                + exchange.getIn().getBody());
-        
-    	LOGGER.info("End:AttCallBackSuccessPostProcessor");
 
+        LOGGER.info("success callback response for ATT Jasper..." + exchange.getIn().getBody());
+        LOGGER.info("End:AttCallBackSuccessPostProcessor");
     }
-
 }

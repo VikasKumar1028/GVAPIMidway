@@ -4,8 +4,11 @@ package com.gv.midway.processor.deviceInformation;
 import java.util.Date;
 import java.util.List;
 
+import com.gv.midway.environment.ATTJasperProperties;
+import com.gv.midway.environment.EnvironmentParser;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
+import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.camel.component.cxf.common.message.CxfConstants;
 import org.apache.cxf.binding.soap.SoapHeader;
@@ -20,75 +23,51 @@ import com.gv.midway.utility.CommonUtil;
 
 public class ATTJasperDeviceInformationPreProcessor implements Processor {
 
-	private static final Logger LOGGER = Logger
-			.getLogger(ATTJasperDeviceInformationPreProcessor.class.getName());
-	
-	Environment newEnv;
-	
-	
-	public ATTJasperDeviceInformationPreProcessor(Environment env) {
-		super();
-		this.newEnv = env;
-	}
+    private static final Logger LOGGER = Logger.getLogger(ATTJasperDeviceInformationPreProcessor.class.getName());
 
-	public ATTJasperDeviceInformationPreProcessor() {
-		// Empty ConstructorATT_JasperDeviceInformationPostProcessor
-	}
+    private Environment newEnv;
 
-	@Override
-	public void process(Exchange exchange) throws Exception {
-		// TODO Auto-generated method stub
+    public ATTJasperDeviceInformationPreProcessor(Environment env) {
+        super();
+        this.newEnv = env;
+    }
 
-		LOGGER.info("Begin:ATT_JasperDeviceInformationPreProcessor");
-		
-		 DeviceInformationRequest request = (DeviceInformationRequest)
-		 exchange .getIn().getBody(DeviceInformationRequest.class);
-		 
-        String iccId=request.getDataArea().getDeviceId().getId();
-		GetTerminalDetailsRequest getTerminalDetailsRequest = new GetTerminalDetailsRequest();
+    @Override
+    public void process(Exchange exchange) throws Exception {
 
-		GetTerminalDetailsRequest.Iccids iccids = new GetTerminalDetailsRequest.Iccids();
-		List<String> iccIdList = iccids.getIccid();
-		/*iccIdList.add("89011702272013902603");*/
-			
-		iccIdList.add(iccId);
+        LOGGER.info("Begin:ATT_JasperDeviceInformationPreProcessor");
 
-		getTerminalDetailsRequest.setIccids(iccids);
-		
-        String version=newEnv.getProperty("attJasper.version");
-		
-		String licenseKey=newEnv.getProperty("attJasper.licenseKey");
-		
-		getTerminalDetailsRequest
-				.setLicenseKey(licenseKey);
-		getTerminalDetailsRequest.setMessageId(""+new Date().getTime());
-		getTerminalDetailsRequest.setVersion(version);
+        final Message message = exchange.getIn();
+        final DeviceInformationRequest request = message.getBody(DeviceInformationRequest.class);
 
-		LOGGER.info("szie of iccId..............."
-				+ getTerminalDetailsRequest.getIccids().getIccid().size());
+        final String iccId = request.getDataArea().getDeviceId().getId();
 
-		exchange.getIn().setBody(getTerminalDetailsRequest);
+        final GetTerminalDetailsRequest.Iccids iccids = new GetTerminalDetailsRequest.Iccids();
+        final List<String> iccIdList = iccids.getIccid();
 
-		exchange.getIn().setHeader(CxfConstants.OPERATION_NAME,
-				"GetTerminalDetails");
-		exchange.getIn().setHeader(CxfConstants.OPERATION_NAMESPACE,
-				"http://api.jasperwireless.com/ws/schema");
-		exchange.getIn()
-				.setHeader("soapAction",
-						"http://api.jasperwireless.com/ws/service/terminal/GetTerminalDetails");
-		
-		exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID, request.getDataArea()
-	                .getNetSuiteId());
-		
-		String username=newEnv.getProperty("attJasper.userName");
-		
-		String password=newEnv.getProperty("attJasper.password");
-		
-		List<SoapHeader> soapHeaders=CommonUtil.getSOAPHeaders(username, password);
-	
-		exchange.getIn().setHeader(Header.HEADER_LIST, soapHeaders);
-	    exchange.setPattern(ExchangePattern.InOut);
-	    
-		LOGGER.info("End:ATT_JasperDeviceInformationPreProcessor");
-	}
+        iccIdList.add(iccId);
+
+        final ATTJasperProperties properties = EnvironmentParser.getATTJasperProperties(newEnv);
+
+        final GetTerminalDetailsRequest getTerminalDetailsRequest = new GetTerminalDetailsRequest();
+        getTerminalDetailsRequest.setIccids(iccids);
+        getTerminalDetailsRequest.setLicenseKey(properties.licenseKey);
+        getTerminalDetailsRequest.setMessageId("" + new Date().getTime());
+        getTerminalDetailsRequest.setVersion(properties.version);
+
+        LOGGER.info("size of iccId..............." + getTerminalDetailsRequest.getIccids().getIccid().size());
+
+        final List<SoapHeader> soapHeaders = CommonUtil.getSOAPHeaders(properties.username, properties.password);
+
+        message.setBody(getTerminalDetailsRequest);
+        message.setHeader(CxfConstants.OPERATION_NAME, "GetTerminalDetails");
+        message.setHeader(CxfConstants.OPERATION_NAMESPACE, "http://api.jasperwireless.com/ws/schema");
+        message.setHeader("soapAction", "http://api.jasperwireless.com/ws/service/terminal/GetTerminalDetails");
+        message.setHeader(Header.HEADER_LIST, soapHeaders);
+
+        exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID, request.getDataArea().getNetSuiteId());
+        exchange.setPattern(ExchangePattern.InOut);
+
+        LOGGER.info("End:ATT_JasperDeviceInformationPreProcessor");
+    }
 }

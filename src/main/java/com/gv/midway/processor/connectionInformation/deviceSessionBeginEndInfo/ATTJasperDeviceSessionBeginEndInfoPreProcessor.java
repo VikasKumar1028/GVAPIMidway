@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.gv.midway.environment.ATTJasperProperties;
+import com.gv.midway.environment.EnvironmentParser;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
+import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.camel.component.cxf.common.message.CxfConstants;
 import org.apache.cxf.binding.soap.SoapHeader;
@@ -15,25 +18,18 @@ import org.springframework.core.env.Environment;
 
 import com.gv.midway.attjasper.GetSessionInfoRequest;
 import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationRequest;
-import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationRequestDataArea;
 import com.gv.midway.pojo.verizon.DeviceId;
 import com.gv.midway.utility.CommonUtil;
 
-public class ATTJasperDeviceSessionBeginEndInfoPreProcessor implements
-		Processor {
-	private static final Logger LOGGER = Logger
-			.getLogger(ATTJasperDeviceSessionBeginEndInfoPreProcessor.class
-					.getName());
+public class ATTJasperDeviceSessionBeginEndInfoPreProcessor implements Processor {
 
-	Environment newEnv;
+	private static final Logger LOGGER = Logger.getLogger(ATTJasperDeviceSessionBeginEndInfoPreProcessor.class.getName());
+
+	private Environment newEnv;
 
 	public ATTJasperDeviceSessionBeginEndInfoPreProcessor(Environment env) {
 		super();
 		this.newEnv = env;
-	}
-
-	public ATTJasperDeviceSessionBeginEndInfoPreProcessor() {
-
 	}
 
 	@Override
@@ -41,52 +37,34 @@ public class ATTJasperDeviceSessionBeginEndInfoPreProcessor implements
 
 		LOGGER.info("Begin:ATTJasperDeviceSessionBeginEndInfoPreProcessor");
 
-		ConnectionInformationRequestDataArea businessRequest = new ConnectionInformationRequestDataArea();
-		ConnectionInformationRequest proxyRequest = (ConnectionInformationRequest) exchange
-				.getIn().getBody();
-		DeviceId deviceId = new DeviceId();
+		final Message message = exchange.getIn();
+		final ConnectionInformationRequest proxyRequest = (ConnectionInformationRequest) message.getBody();
+
+		final DeviceId deviceId = new DeviceId();
 		deviceId.setId(proxyRequest.getDataArea().getDeviceId().getId());
 		deviceId.setKind(proxyRequest.getDataArea().getDeviceId().getKind());
-		businessRequest.setDeviceId(deviceId);
 
-		GetSessionInfoRequest getSessionInfoRequest = new GetSessionInfoRequest();
+		final List<String> iccidvalue = new ArrayList<>();
+		iccidvalue.add(0, proxyRequest.getDataArea().getDeviceId().getId());
 
-		List<String> iccidvalue = new ArrayList<String>();
+		LOGGER.info("proxyRequest.getDataArea().getDeviceId().getId().toString() " + proxyRequest.getDataArea().getDeviceId().getId());
 
-		iccidvalue.add(0, proxyRequest.getDataArea().getDeviceId().getId()
-				.toString());
+		final ATTJasperProperties properties = EnvironmentParser.getATTJasperProperties(newEnv);
 
-		LOGGER.info("proxyRequest.getDataArea().getDeviceId().getId().toString() "
-				+ proxyRequest.getDataArea().getDeviceId().getId().toString());
-
+		final GetSessionInfoRequest getSessionInfoRequest = new GetSessionInfoRequest();
 		getSessionInfoRequest.getIccid().add(iccidvalue.get(0));
-
-		String version = newEnv.getProperty("attJasper.version");
-
-		String licenseKey = newEnv.getProperty("attJasper.licenseKey");
-
-		getSessionInfoRequest.setLicenseKey(licenseKey);
+		getSessionInfoRequest.setLicenseKey(properties.licenseKey);
 		getSessionInfoRequest.setMessageId("" + new Date().getTime());
-		getSessionInfoRequest.setVersion(version);
+		getSessionInfoRequest.setVersion(properties.version);
 
-		exchange.getIn().setBody(getSessionInfoRequest);
+		final List<SoapHeader> soapHeaders = CommonUtil.getSOAPHeaders(properties.username, properties.password);
 
-		exchange.getIn().setHeader(CxfConstants.OPERATION_NAME,
-				"GetSessionInfo");
-		exchange.getIn().setHeader(CxfConstants.OPERATION_NAMESPACE,
-				"http://api.jasperwireless.com/ws/schema");
-		exchange.getIn()
-				.setHeader("soapAction",
-						"http://api.jasperwireless.com/ws/service/terminal/GetSessionInfo");
+		message.setBody(getSessionInfoRequest);
+		message.setHeader(CxfConstants.OPERATION_NAME, "GetSessionInfo");
+		message.setHeader(CxfConstants.OPERATION_NAMESPACE, "http://api.jasperwireless.com/ws/schema");
+		message.setHeader("soapAction", "http://api.jasperwireless.com/ws/service/terminal/GetSessionInfo");
+		message.setHeader(Header.HEADER_LIST, soapHeaders);
 
-		String username = newEnv.getProperty("attJasper.userName");
-
-		String password = newEnv.getProperty("attJasper.password");
-
-		List<SoapHeader> soapHeaders = CommonUtil.getSOAPHeaders(username,
-				password);
-
-		exchange.getIn().setHeader(Header.HEADER_LIST, soapHeaders);
 		exchange.setPattern(ExchangePattern.InOut);
 
 		LOGGER.info("End:ATTJasperDeviceSessionBeginEndInfoPreProcessor");

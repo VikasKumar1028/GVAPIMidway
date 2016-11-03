@@ -3,8 +3,11 @@ package com.gv.midway.processor.jobScheduler;
 import java.util.Date;
 import java.util.List;
 
+import com.gv.midway.environment.ATTJasperProperties;
+import com.gv.midway.environment.EnvironmentParser;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
+import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.camel.component.cxf.common.message.CxfConstants;
 import org.apache.cxf.binding.soap.SoapHeader;
@@ -14,93 +17,62 @@ import org.springframework.core.env.Environment;
 
 import com.gv.midway.attjasper.GetTerminalDetailsRequest;
 import com.gv.midway.constant.IConstant;
-import com.gv.midway.pojo.connectionInformation.request.ConnectionInformationRequestDataArea;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.verizon.DeviceId;
 import com.gv.midway.utility.CommonUtil;
 
 public class ATTJasperDeviceUsageHistoryPreProcessor implements Processor {
 
-	private static final Logger LOGGER = Logger
-			.getLogger(ATTJasperDeviceUsageHistoryPreProcessor.class.getName());
+    private static final Logger LOGGER = Logger
+            .getLogger(ATTJasperDeviceUsageHistoryPreProcessor.class.getName());
 
-	Environment newEnv;
+    private Environment newEnv;
 
-	public ATTJasperDeviceUsageHistoryPreProcessor() {
-		// Empty Constructor
-	}
+    public ATTJasperDeviceUsageHistoryPreProcessor(Environment env) {
+        super();
+        this.newEnv = env;
+    }
 
-	public ATTJasperDeviceUsageHistoryPreProcessor(Environment env) {
-		super();
-		this.newEnv = env;
-	}
+    @Override
+    public void process(Exchange exchange) throws Exception {
+        LOGGER.info("Begin:ATTJasperDeviceUsageHistoryPreProcessor");
 
-	@Override
-	public void process(Exchange exchange) throws Exception {
-		LOGGER.info("Begin:ATTJasperDeviceUsageHistoryPreProcessor");
+        final Message message = exchange.getIn();
+        final DeviceInformation deviceInfo = (DeviceInformation) message.getBody();
 
-		DeviceInformation deviceInfo = (DeviceInformation) exchange.getIn()
-				.getBody();
+        final DeviceId recommendedDeviceId = CommonUtil.getRecommendedDeviceIdentifier(deviceInfo.getDeviceIds());
 
-		ConnectionInformationRequestDataArea dataArea = new ConnectionInformationRequestDataArea();
-		DeviceId device = new DeviceId();
+        final DeviceId device = new DeviceId();
+        device.setId(recommendedDeviceId.getId());
+        device.setKind(recommendedDeviceId.getKind());
 
-		// Fetching Recommended device Identifiers
-		DeviceId recommendedDeviceId = CommonUtil
-				.getRecommendedDeviceIdentifier(deviceInfo.getDeviceIds());
+        final GetTerminalDetailsRequest.Iccids iccids = new GetTerminalDetailsRequest.Iccids();
+        final List<String> iccIdList = iccids.getIccid();
+        iccIdList.add(recommendedDeviceId.getId());
 
-		device.setId(recommendedDeviceId.getId());
-		device.setKind(recommendedDeviceId.getKind());
-		dataArea.setDeviceId(device);
+        final ATTJasperProperties properties = EnvironmentParser.getATTJasperProperties(newEnv);
 
-		GetTerminalDetailsRequest getTerminalDetailsRequest = new GetTerminalDetailsRequest();
+        final GetTerminalDetailsRequest getTerminalDetailsRequest = new GetTerminalDetailsRequest();
+        getTerminalDetailsRequest.setIccids(iccids);
+        getTerminalDetailsRequest.setLicenseKey(properties.licenseKey);
+        getTerminalDetailsRequest.setVersion(properties.version);
+        getTerminalDetailsRequest.setMessageId("" + new Date().getTime());
 
-		GetTerminalDetailsRequest.Iccids iccids = new GetTerminalDetailsRequest.Iccids();
-		List<String> iccIdList = iccids.getIccid();
+        LOGGER.info("size of iccId..............." + getTerminalDetailsRequest.getIccids().getIccid().size());
 
-		iccIdList.add(recommendedDeviceId.getId());
+        final List<SoapHeader> soapHeaders = CommonUtil.getSOAPHeaders(properties.username, properties.password);
 
-		getTerminalDetailsRequest.setIccids(iccids);
+        message.setBody(getTerminalDetailsRequest);
+        message.setHeader(CxfConstants.OPERATION_NAME, "GetTerminalDetails");
+        message.setHeader(CxfConstants.OPERATION_NAMESPACE, "http://api.jasperwireless.com/ws/schema");
+        message.setHeader("soapAction", "http://api.jasperwireless.com/ws/service/terminal/GetTerminalDetails");
+        message.setHeader(Header.HEADER_LIST, soapHeaders);
 
-		String version = newEnv.getProperty("attJasper.version");
+        exchange.setProperty("DeviceId", device);
+        exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID, deviceInfo.getNetSuiteId());
+        exchange.setProperty("CarrierName", deviceInfo.getBs_carrier());
+        exchange.setPattern(ExchangePattern.InOut);
 
-		String licenseKey = newEnv.getProperty("attJasper.licenseKey");
-
-		getTerminalDetailsRequest.setLicenseKey(licenseKey);
-		getTerminalDetailsRequest.setMessageId("" + new Date().getTime());
-		getTerminalDetailsRequest.setVersion(version);
-
-		LOGGER.info("szie of iccId..............."
-				+ getTerminalDetailsRequest.getIccids().getIccid().size());
-
-		exchange.getIn().setBody(getTerminalDetailsRequest);
-
-		exchange.setProperty("DeviceId", device);
-
-		exchange.getIn().setHeader(CxfConstants.OPERATION_NAME,
-				"GetTerminalDetails");
-		exchange.getIn().setHeader(CxfConstants.OPERATION_NAMESPACE,
-				"http://api.jasperwireless.com/ws/schema");
-		exchange.getIn()
-				.setHeader("soapAction",
-						"http://api.jasperwireless.com/ws/service/terminal/GetTerminalDetails");
-
-		exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID,
-				deviceInfo.getNetSuiteId());
-		exchange.setProperty("CarrierName", deviceInfo.getBs_carrier());
-
-		String username = newEnv.getProperty("attJasper.userName");
-
-		String password = newEnv.getProperty("attJasper.password");
-
-		List<SoapHeader> soapHeaders = CommonUtil.getSOAPHeaders(username,
-				password);
-
-		exchange.getIn().setHeader(Header.HEADER_LIST, soapHeaders);
-		exchange.setPattern(ExchangePattern.InOut);
-
-		LOGGER.info("End:ATTJasperDeviceUsageHistoryPreProcessor");
-
-	}
-
+        LOGGER.info("End:ATTJasperDeviceUsageHistoryPreProcessor");
+    }
 }
