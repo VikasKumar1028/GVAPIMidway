@@ -48,11 +48,11 @@ public class ATTJasperDeviceUsageHistoryPostProcessor implements Processor {
 		BigDecimal monthtoDateUsagevalue = terminalType.get(0)
 				.getMonthToDateUsage();
 
-		LOGGER.info("monthtoDateUsagevalue:::::first" + monthtoDateUsagevalue);
-
+		LOGGER.info("monthtoDateUsagevalue:::::first" + monthtoDateUsagevalue);	
+	
 		// convert from MB to bytes usages
 		long monthtoDateUsageBytes = (long) (1048576 * monthtoDateUsagevalue
-				.floatValue()); // 444
+				.doubleValue()); // 444
 			
 		LOGGER.info("after convert to Bytes" + monthtoDateUsageBytes);
 
