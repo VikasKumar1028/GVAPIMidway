@@ -1272,7 +1272,7 @@ public class JobDaoImpl implements IJobDao {
 
 		{
 			Aggregation agg = newAggregation(
-					match(Criteria.where(IConstant.CARRIER_NAME).is("ATTJASPER")
+					match(Criteria.where(IConstant.CARRIER_NAME).is("ATTJasper")
 							.and("date").gte(beginningMonthDate).and("isValid")
 							.is(true).and("transactionStatus").is("Success")),
 					sort(Sort.Direction.DESC, "netSuiteId", "date"),
