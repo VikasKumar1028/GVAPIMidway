@@ -7,6 +7,8 @@ public interface IConstant {
     static String VZ_AUTHORIZATION_TOKEN = "vzAuthorizationToken";
     static String KORE_AUTHENTICATION = "kore.authentication";
     static String VERIZON_AUTHENTICATION = "verizon.authentication";
+    static String VERIZON_API_USERNAME = "verizon.api.username";
+    static String VERIZON_API_PASSWORD = "verizon.api.password";
     static String RESPONSE_CODE = "ResponseCode";
     static String RESPONSE_STATUS = "ResponseStatus";
     static String ERROR_MESSAGE = "ERROR_MESSAGE";
@@ -129,13 +131,13 @@ public interface IConstant {
 
     static int ATTJASPER_CUSTOMFIELD_CHANGETYPE = 17;
 
-    static String ACTVATION_WITH_CUSTOMEFILEDS = "activationWithCustomFields";
+    static String ACTIVATION_WITH_CUSTOMFIELDS = "activationWithCustomFields";
     
     static String ACTVATION_WITH_SERVICEPLAN = "activationWithServicePlan";
 
-    static String ATT_ACTVATION_WITH_CUSTOMEFILEDS_LIST = "attActivationWithCustomFieldsList";
+    static String ATT_ACTIVATION_WITH_CUSTOMFIELDS_LIST = "attActivationWithCustomFieldsList";
     
-    static String ATT_ACTVATION_WITH_SERVICEPLAN_LIST = "attActivationWithServicePlanList";
+    static String ATT_ACTIVATION_WITH_SERVICEPLAN_LIST = "attActivationWithServicePlanList";
     
     static String ATT_CUSTOMFIELD_TO_UPDATE = "AttCustomFieldsToUpdate";
     

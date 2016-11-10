@@ -10,6 +10,8 @@ import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -21,6 +23,9 @@ import java.util.regex.Pattern;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -41,6 +46,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
@@ -81,6 +87,7 @@ public class CommonUtil {
     public static AtomicBoolean isAlreadyInTokenGeneration = new AtomicBoolean();
 
     static {
+
         endPointList.add(IEndPoints.ACTIVATION_ENDPOINT);
         endPointList.add(IEndPoints.DEACTIVATION_ENDPOINT);
         endPointList.add(IEndPoints.RESTORE_ENDPOINT);
@@ -104,27 +111,35 @@ public class CommonUtil {
         endPointList.add(IEndPoints.CHANGE_SERVICEPLAN_ENDPOINT);
         endPointList.add(IEndPoints.CHANGE_SERVICEPLAN_SEDA_KORE_ENDPOINT);
         endPointList.add(IEndPoints.CHANGE_CUSTOMFIELD_SEDA_KORE_ENDPOINT);
+
+
     }
 
     /**
      * Get Current date
      * 
-     * @return the current date and time in 'yyyy/MM/dd HH:mm:ss' format
+     * @return
      */
     public static String getCurrentTimeStamp() {
-        final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        return dateFormat.format(new Date());
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+
+        return dateFormat.format(date);
+
     }
 
     /**
      * Get the IP address of Machine
      * 
-     * @return The current IP Address
+     * @return
      */
-    public static String getIpAddress() {
+    public static String getIpAddress()
+
+    {
         InetAddress ip;
 
         try {
+
             ip = InetAddress.getLocalHost();
         } catch (UnknownHostException e) {
             LOGGER.error("Exception ex: " + e);
@@ -132,23 +147,25 @@ public class CommonUtil {
         }
 
         return ip.toString();
+
     }
 
     /**
      * Generate Midway Transaction Id
      * 
-     * @return Current time in millis as a String
+     * @return
      */
     public static String getMidwayTransactionID() {
         long timestamp = System.currentTimeMillis();
         return Long.toString(timestamp);
+
     }
 
     /**
      * Method to get the carrier Name from the input
      * 
-     * @param carrierName Carrier's name
-     * @return Standardized carrier name
+     * @param carrierName
+     * @return
      */
     public static String getDerivedCarrierName(String carrierName) throws InvalidParameterException {
 
@@ -183,6 +200,9 @@ public class CommonUtil {
     /**
      * Returning the recommended device Identifier such as ESN/MEID/ICCID for
      * Device Connection and Device Usage Batch Jobs
+     *
+     * @param devices
+     * @return
      */
     public static DeviceId getRecommendedDeviceIdentifier(DeviceId[] devices) {
 
@@ -212,6 +232,7 @@ public class CommonUtil {
 
         for (DeviceId device : devices) {
             if ("SIM".equalsIgnoreCase(device.getKind())) {
+
                 return device;
             }
         }
@@ -251,6 +272,9 @@ public class CommonUtil {
 
     /**
      * Validate Job Parameter for Device Usage
+     *
+     * @param jobParameter
+     * @return
      */
     public static JobinitializedResponse validateJobParameterForDeviceUsage(JobParameter jobParameter) {
 
@@ -285,6 +309,9 @@ public class CommonUtil {
 
     /**
      * Validate Job Parameter for Device Connection
+     *
+     * @param jobParameter
+     * @return
      */
     public static JobinitializedResponse validateJobParameterForDeviceConnection(JobParameter jobParameter) {
 
@@ -373,8 +400,15 @@ public class CommonUtil {
         return message;
     }
 
-    public static List<SoapHeader> getSOAPHeaders(String username, String password) {
+    /**
+     *
+     * @param username
+     * @param password
+     * @return
+     */
 
+    public static List<SoapHeader> getSOAPHeaders(String username,
+            String password) {
         final String soapHeader = "<wsse:Security xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" "
                 + "soap:mustUnderstand=\"true\" xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\">"
                 + "<wsse:UsernameToken xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" wsu:Id=\"UsernameToken-16847597\">"
@@ -598,37 +632,44 @@ public class CommonUtil {
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         return ow.writeValueAsString(objectWithJsonSerializeAnnotation);
     }
-   
+
+    public static XMLGregorianCalendar getCurrentXMLGregorianDateTimeUTC() throws DatatypeConfigurationException {
+        LocalDateTime currentUTCTime = LocalDateTime.now(Clock.systemUTC()); // using UTC timezone
+        XMLGregorianCalendar xmlDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(currentUTCTime.toString());
+        return xmlDate;
+    }
+
+
     /**
      * Logic to Schedule Kore Job on Below Dates of Month.
-     *   Day 24 – Don’t run anything
-     *   Day 25 – Run for Day 24 (24 hour)
-     *     Day 26 – Run for Day 25 (24 hour) and Day 24 (48 hour)
+     *   Day 24 ï¿½ Donï¿½t run anything
+     *   Day 25 ï¿½ Run for Day 24 (24 hour)
+     *     Day 26 ï¿½ Run for Day 25 (24 hour) and Day 24 (48 hour)
      */
     public static boolean checkKoreJobScheduling(int jobDuration)
-    { 
+    {
 		Calendar cal = Calendar.getInstance();
 		int date = cal.getTime().getDate();
 
 		switch (date) {
-		
+
 		 case 24:
-            
+
 			return false;
-			
+
 		case 25:
 
 			if(jobDuration==IConstant.DURATION_24)
 			return true;
-			
+
 			else
 			 return false;
-			
+
 		case 26:
 
 			if(jobDuration!=IConstant.DURATION_72)
 				return true;
-				
+
 			else
 				 return false;
 

@@ -75,19 +75,19 @@ public class KoreCheckStatusPreProcessor implements Processor {
                 transaction.getNetSuiteId());
         
         // check if activation request with custom fields then set the property in exchange.
-        if(RequestType.ACTIVATION.equals(transaction.getRequestType())&&RecordType.PRIMARY.equals(transaction.getRecordType())){
+        if (RequestType.ACTIVATION.equals(transaction.getRequestType()) && RecordType.PRIMARY.equals(transaction.getRecordType())){
         	
         	exchange.setProperty("koreActivationWithCustomField", true);
         	
-        	ActivateDeviceRequest activateDeviceRequestWithCustomFileds=(ActivateDeviceRequest)payload;
-        	ActivateDeviceRequestDataArea activateDeviceRequestDataArea = activateDeviceRequestWithCustomFileds
+        	ActivateDeviceRequest activateDeviceRequestWithCustomFields=(ActivateDeviceRequest)payload;
+        	ActivateDeviceRequestDataArea activateDeviceRequestDataArea = activateDeviceRequestWithCustomFields
                     .getDataArea();
 
             ActivateDevices activateDevices = activateDeviceRequestDataArea
                     .getDevices();
             
         	CustomFieldsDeviceRequest dbPayload = new CustomFieldsDeviceRequest();
-            dbPayload.setHeader(activateDeviceRequestWithCustomFileds.getHeader());
+            dbPayload.setHeader(activateDeviceRequestWithCustomFields.getHeader());
             Integer netSuiteId = activateDevices.getNetSuiteId();
             MidWayDevices[] businessPayLoadDevicesArray = new MidWayDevices[1];
             MidWayDevices businessPayLoadActivateDevices = new MidWayDevices();
@@ -95,21 +95,16 @@ public class KoreCheckStatusPreProcessor implements Processor {
                     .getDeviceIds().length];
 
             for (int i = 0; i < activateDevices.getDeviceIds().length; i++) {
-                ActivateDeviceId customFieldsDeviceId = activateDevices
-                        .getDeviceIds()[i];
+                ActivateDeviceId customFieldsDeviceId = activateDevices.getDeviceIds()[i];
 
-                MidWayDeviceId businessPayLoadActivateDeviceId = new MidWayDeviceId();
-
-                businessPayLoadActivateDeviceId.setId(customFieldsDeviceId
-                        .getId());
-                businessPayLoadActivateDeviceId.setKind(customFieldsDeviceId
-                        .getKind());
+                MidWayDeviceId businessPayLoadActivateDeviceId = new MidWayDeviceId(
+                        customFieldsDeviceId.getId(),
+                        customFieldsDeviceId.getKind());
 
                 businessPayloadDeviceId[i] = businessPayLoadActivateDeviceId;
 
             }
-            businessPayLoadActivateDevices
-                    .setDeviceIds(businessPayloadDeviceId);
+            businessPayLoadActivateDevices.setDeviceIds(businessPayloadDeviceId);
             businessPayLoadActivateDevices.setNetSuiteId(netSuiteId);
             businessPayLoadDevicesArray[0] = businessPayLoadActivateDevices;
 
@@ -126,10 +121,8 @@ public class KoreCheckStatusPreProcessor implements Processor {
             for (int i = 0; i < activateDevices.getCustomFields().length; i++) {
                 CustomFieldsToUpdate newCustomField = new CustomFieldsToUpdate();
 
-                newCustomField.setKey(activateDevices.getCustomFields()[i]
-                        .getKey());
-                newCustomField.setValue(activateDevices.getCustomFields()[i]
-                        .getValue());
+                newCustomField.setKey(activateDevices.getCustomFields()[i].getKey());
+                newCustomField.setValue(activateDevices.getCustomFields()[i].getValue());
                 customFieldsToUpdate[i] = newCustomField;
             }
 
@@ -138,9 +131,7 @@ public class KoreCheckStatusPreProcessor implements Processor {
             dbPayload.setDataArea(requestDataArea);
             
             exchange.setProperty(IConstant.KORE_ACTIVATION_CUSTOMEFIELD_PAYLOAD, dbPayload);
-            if(transaction.getCarrierErrorDescription()!=null)
-            {
-            	
+            if (transaction.getCarrierErrorDescription()!=null) {
             	  exchange.setProperty(IConstant.KORE_ACTIVATION_CUSTOMEFIELD_ERROR_DESCRIPTION, transaction.getCarrierErrorDescription());
                   exchange.setProperty(IConstant.KORE_ACTIVATION_CUSTOMEFIELD_ERRORPAYLOAD, transaction.getCallBackPayload());	
             }
@@ -154,16 +145,12 @@ public class KoreCheckStatusPreProcessor implements Processor {
         if (carrierStatus.equals(IConstant.CARRIER_TRANSACTION_STATUS_ERROR)) {
             LOGGER.info("carrier status error is........." + carrierStatus);
             message.setHeader(IConstant.KORE_CHECK_STATUS, "error");
-
         }
 
         // carrier status as Success and request Type is Change CustomFileds or
         // Change Service Plans
-        else if (carrierStatus
-                .equals(IConstant.CARRIER_TRANSACTION_STATUS_SUCCESS)) {
-
+        else if (carrierStatus.equals(IConstant.CARRIER_TRANSACTION_STATUS_SUCCESS)) {
             message.setHeader(IConstant.KORE_CHECK_STATUS, "change");
-
         }
 
         /**
@@ -175,18 +162,15 @@ public class KoreCheckStatusPreProcessor implements Processor {
             LOGGER.info("carrier status not error is........." + carrierStatus);
             message.setHeader(IConstant.KORE_CHECK_STATUS, "forward");
             String carrierTransationID = transaction.getCarrierTransactionId();
-            exchange.setProperty(IConstant.CARRIER_TRANSACTION_ID,
-                    carrierTransationID);
+            exchange.setProperty(IConstant.CARRIER_TRANSACTION_ID, carrierTransationID);
             net.sf.json.JSONObject obj = new net.sf.json.JSONObject();
             obj.put("trackingNumber", carrierTransationID);
 
             message.setHeader(Exchange.CONTENT_TYPE, "application/json");
             message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
             message.setHeader(Exchange.HTTP_METHOD, "POST");
-            message.setHeader("Authorization",
-                    newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
-            message.setHeader(Exchange.HTTP_PATH,
-                    "/json/queryProvisioningRequestStatus");
+            message.setHeader("Authorization", newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
+            message.setHeader(Exchange.HTTP_PATH, "/json/queryProvisioningRequestStatus");
 
             message.setBody(obj);
 

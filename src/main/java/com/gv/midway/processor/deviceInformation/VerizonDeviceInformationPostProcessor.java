@@ -84,7 +84,7 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 
 			response.setResponseCode(IResponse.SUCCESS_CODE);
 			response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
-			response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_CARRIER);
+			response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVICEINFO_CARRIER);
 
 			Header responseheader = (Header) exchange
 					.getProperty(IConstant.HEADER);
@@ -188,7 +188,7 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 
 			response.setResponseCode(IResponse.NO_DATA_FOUND_CODE);
 			response.setResponseStatus(IResponse.ERROR_MESSAGE);
-			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_NODATA_DEVCIEINFO_CARRIER);
+			response.setResponseDescription(IResponse.ERROR_DESCRIPTION_NODATA_DEVICEINFO_CARRIER);
 
 			Header responseheader = (Header) exchange
 					.getProperty(IConstant.HEADER);

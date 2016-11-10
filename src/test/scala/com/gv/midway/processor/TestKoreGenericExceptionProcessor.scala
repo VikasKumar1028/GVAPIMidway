@@ -18,7 +18,7 @@ class TestKoreGenericExceptionProcessor extends TestMocks {
     , TestCase("Endpoint[direct://activateDevice]", classOf[CarrierProvisioningDeviceResponse])
     , TestCase("Endpoint[direct://deactivateDevice]", classOf[CarrierProvisioningDeviceResponse])
     , TestCase("Endpoint[direct://suspendDevice]", classOf[CarrierProvisioningDeviceResponse])
-    , TestCase("Endpoint[direct://customeFields]", classOf[CarrierProvisioningDeviceResponse])
+    , TestCase("Endpoint[direct://customFields]", classOf[CarrierProvisioningDeviceResponse])
     , TestCase("Endpoint[direct://changeDeviceServicePlans]", classOf[CarrierProvisioningDeviceResponse])
     , TestCase("Endpoint[direct://reactivateDevice]", classOf[CarrierProvisioningDeviceResponse])
     , TestCase("Endpoint[direct://restoreDevice]", classOf[CarrierProvisioningDeviceResponse])

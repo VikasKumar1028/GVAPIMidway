@@ -24,8 +24,7 @@ class TestKoreActivationWithCustomFieldPreProcessor extends TestMocks {
       val customField6 = new CustomFieldsToUpdate("CustomField6", "v6")
       val customField7 = new CustomFieldsToUpdate("invalid key", "v7")
 
-      val deviceId = new MidWayDeviceId
-      deviceId.setId("id!")
+      val deviceId = new MidWayDeviceId("id!", "kind!")
 
       val midWayDevices = new MidWayDevices
       midWayDevices.setDeviceIds(Array(deviceId))

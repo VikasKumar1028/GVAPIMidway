@@ -30,7 +30,7 @@ public class BulkDeviceProcessor implements Processor {
 		final Response response = new Response();
 		response.setResponseCode(IResponse.SUCCESS_CODE);
 		response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
-		response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_CARRIER);
+		response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVICEINFO_CARRIER);
 
 		final BatchDeviceId[] successArr = new BatchDeviceId[successList.size()];
 		final BatchDeviceId[] successArr1 = successList.toArray(successArr);

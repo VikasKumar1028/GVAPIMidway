@@ -124,7 +124,7 @@ class TestDeviceDaoImpl extends TestMocks {
 
       val response = dao.getDeviceInformationDB(request)
 
-      assertResponse(response.getResponse, IResponse.SUCCESS_CODE, IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_MIDWAYDB, IResponse.SUCCESS_MESSAGE)
+      assertResponse(response.getResponse, IResponse.SUCCESS_CODE, IResponse.SUCCESS_DESCRIPTION_DEVICEINFO_MIDWAYDB, IResponse.SUCCESS_MESSAGE)
 
       assert(response.getHeader === request.getHeader)
       assert(response.getDataArea.getDevices === deviceInfo)
@@ -143,7 +143,7 @@ class TestDeviceDaoImpl extends TestMocks {
 
       val response = dao.getDeviceInformationDB(request)
 
-      assertResponse(response.getResponse, IResponse.NO_DATA_FOUND_CODE, IResponse.ERROR_DESCRIPTION_NODATA_DEVCIEINFO_MIDWAYDB, IResponse.ERROR_MESSAGE)
+      assertResponse(response.getResponse, IResponse.NO_DATA_FOUND_CODE, IResponse.ERROR_DESCRIPTION_NODATA_DEVICEINFO_MIDWAYDB, IResponse.ERROR_MESSAGE)
 
       assert(response.getHeader === request.getHeader)
       assert(response.getDataArea.getDevices === null)
@@ -170,7 +170,7 @@ class TestDeviceDaoImpl extends TestMocks {
       when(template.findOne(any(), any())).thenThrow(new RuntimeException("Boom!"))
 
       val response = dao.getDeviceInformationDB(request)
-      assertResponse(response.getResponse, IResponse.DB_ERROR_CODE, IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB, IResponse.ERROR_MESSAGE)
+      assertResponse(response.getResponse, IResponse.DB_ERROR_CODE, IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVICEINFO_MIDWAYDB, IResponse.ERROR_MESSAGE)
       assert(response.getHeader === request.getHeader)
     }
   }
@@ -362,7 +362,7 @@ class TestDeviceDaoImpl extends TestMocks {
 
       assert(response.getHeader === request.getHeader)
       assert(response.getDataArea != null)
-      assertResponse(response.getResponse, IResponse.NO_DATA_FOUND_CODE, IResponse.ERROR_DESCRIPTION_NODATA_DEVCIEINFO_MIDWAYDB, IResponse.ERROR_MESSAGE)
+      assertResponse(response.getResponse, IResponse.NO_DATA_FOUND_CODE, IResponse.ERROR_DESCRIPTION_NODATA_DEVICEINFO_MIDWAYDB, IResponse.ERROR_MESSAGE)
     }
   }
 
@@ -376,7 +376,7 @@ class TestDeviceDaoImpl extends TestMocks {
 
       assert(response.getHeader === request.getHeader)
       assert(response.getDataArea != null)
-      assertResponse(response.getResponse, IResponse.DB_ERROR_CODE, IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB, IResponse.ERROR_MESSAGE)
+      assertResponse(response.getResponse, IResponse.DB_ERROR_CODE, IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVICEINFO_MIDWAYDB, IResponse.ERROR_MESSAGE)
     }
   }
 
@@ -403,7 +403,7 @@ class TestDeviceDaoImpl extends TestMocks {
       val response = dao.getDeviceUsageInfoDB(request)
 
       assert(response.getHeader === request.getHeader)
-      assertResponse(response.getResponse, IResponse.SUCCESS_CODE, IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_MIDWAYDB, IResponse.SUCCESS_MESSAGE)
+      assertResponse(response.getResponse, IResponse.SUCCESS_CODE, IResponse.SUCCESS_DESCRIPTION_DEVICEINFO_MIDWAYDB, IResponse.SUCCESS_MESSAGE)
       assert(response.getDataArea != null)
       val returnedList = response.getDataArea.getDeviceUsages
       assert(returnedList.size() === 2)
@@ -445,7 +445,7 @@ class TestDeviceDaoImpl extends TestMocks {
 
       assert(response.getHeader === request.getHeader)
       assert(response.getDataArea === null)
-      assertResponse(response.getResponse, IResponse.NO_DATA_FOUND_CODE, IResponse.ERROR_DESCRIPTION_NODATA_DEVCIEINFO_MIDWAYDB, IResponse.ERROR_MESSAGE)
+      assertResponse(response.getResponse, IResponse.NO_DATA_FOUND_CODE, IResponse.ERROR_DESCRIPTION_NODATA_DEVICEINFO_MIDWAYDB, IResponse.ERROR_MESSAGE)
     }
   }
 
@@ -459,7 +459,7 @@ class TestDeviceDaoImpl extends TestMocks {
 
       assert(response.getHeader === request.getHeader)
       assert(response.getDataArea != null)
-      assertResponse(response.getResponse, IResponse.DB_ERROR_CODE, IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB, IResponse.ERROR_MESSAGE)
+      assertResponse(response.getResponse, IResponse.DB_ERROR_CODE, IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVICEINFO_MIDWAYDB, IResponse.ERROR_MESSAGE)
     }
   }
 
@@ -492,7 +492,7 @@ class TestDeviceDaoImpl extends TestMocks {
 
       assert(response.getHeader === request.getHeader)
       assert(response.getDataArea != null)
-      assertResponse(response.getResponse, IResponse.SUCCESS_CODE, IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_MIDWAYDB, IResponse.SUCCESS_MESSAGE)
+      assertResponse(response.getResponse, IResponse.SUCCESS_CODE, IResponse.SUCCESS_DESCRIPTION_DEVICEINFO_MIDWAYDB, IResponse.SUCCESS_MESSAGE)
 
       val returnedList: List[DeviceEvents] = response.getDataArea.getEvents.toList
 
@@ -530,7 +530,7 @@ class TestDeviceDaoImpl extends TestMocks {
       val response = dao.getDevicesUsageByDayAndCarrierInfoDB(request)
 
       assert(response.getHeader === request.getHeader)
-      assertResponse(response.getResponse, IResponse.DB_ERROR_CODE, IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB, IResponse.ERROR_MESSAGE)
+      assertResponse(response.getResponse, IResponse.DB_ERROR_CODE, IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVICEINFO_MIDWAYDB, IResponse.ERROR_MESSAGE)
     }
   }
 
@@ -547,7 +547,7 @@ class TestDeviceDaoImpl extends TestMocks {
       val response = dao.getDevicesUsageByDayAndCarrierInfoDB(request)
 
       assert(response.getHeader === request.getHeader)
-      assertResponse(response.getResponse, IResponse.NO_DATA_FOUND_CODE, IResponse.ERROR_DESCRIPTION_NODATA_DEVCIEINFO_MIDWAYDB, IResponse.ERROR_MESSAGE)
+      assertResponse(response.getResponse, IResponse.NO_DATA_FOUND_CODE, IResponse.ERROR_DESCRIPTION_NODATA_DEVICEINFO_MIDWAYDB, IResponse.ERROR_MESSAGE)
     }
   }
 
@@ -570,7 +570,7 @@ class TestDeviceDaoImpl extends TestMocks {
       val response = dao.getDevicesUsageByDayAndCarrierInfoDB(request)
 
       assert(response.getHeader === request.getHeader)
-      assertResponse(response.getResponse, IResponse.SUCCESS_CODE, IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_MIDWAYDB, IResponse.SUCCESS_MESSAGE)
+      assertResponse(response.getResponse, IResponse.SUCCESS_CODE, IResponse.SUCCESS_DESCRIPTION_DEVICEINFO_MIDWAYDB, IResponse.SUCCESS_MESSAGE)
       assert(response.getDataArea.getDevices.length === 2)
       assert(response.getDataArea.getDate === startDate)
     }

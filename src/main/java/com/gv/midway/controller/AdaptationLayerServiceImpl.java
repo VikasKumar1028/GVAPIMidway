@@ -146,7 +146,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
     }
 
     public CarrierProvisioningDeviceResponse customFieldsUpdateRequest(CustomFieldsDeviceRequest customFieldDeviceRequest) {
-        return (CarrierProvisioningDeviceResponse) producer.requestBody("direct:customeFields", customFieldDeviceRequest);
+        return (CarrierProvisioningDeviceResponse) producer.requestBody("direct:customFields", customFieldDeviceRequest);
     }
 
     public void callbacks(CallBackVerizonRequest callbackRequest) {

@@ -18,8 +18,7 @@ class TestKoreActivateDevicePreProcessor extends TestMocks {
     withMockExchangeMessageAndEnvironment { (exchange, message, environment) =>
       when(environment.getProperty(IConstant.KORE_AUTHENTICATION)).thenReturn(koreAuth)
 
-      val id1 = new ActivateDeviceId()
-      id1.setId("id1id")
+      val id1 = new ActivateDeviceId("id1id", "kind1kind")
       val devices = new ActivateDevices
       devices.setDeviceIds(Array(id1))
       devices.setServicePlan("servicePlan")

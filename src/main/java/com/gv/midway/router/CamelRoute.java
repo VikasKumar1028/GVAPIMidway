@@ -5,6 +5,9 @@ import java.net.NoRouteToHostException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
+import com.gv.midway.pojo.connectionInformation.verizon.response.ConnectionInformationResponse;
+import com.gv.midway.pojo.usageInformation.verizon.response.VerizonUsageInformationResponse;
+import com.gv.midway.processor.*;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangeTimedOutException;
 import org.apache.camel.LoggingLevel;
@@ -35,20 +38,6 @@ import com.gv.midway.pojo.kore.DKoreResponseCode;
 import com.gv.midway.pojo.kore.KoreProvisoningResponse;
 import com.gv.midway.pojo.token.VerizonAuthorizationResponse;
 import com.gv.midway.pojo.token.VerizonSessionLoginResponse;
-import com.gv.midway.processor.ATTJasperBatchExceptionProcessor;
-import com.gv.midway.processor.ATTJasperGenericExceptionProcessor;
-import com.gv.midway.processor.BulkDeviceProcessor;
-import com.gv.midway.processor.CarrierProvisioningDevicePostProcessor;
-import com.gv.midway.processor.ChangeDeviceServicePlanValidatorProcessor;
-import com.gv.midway.processor.DateValidationProcessor;
-import com.gv.midway.processor.GenericErrorProcessor;
-import com.gv.midway.processor.HeaderProcessor;
-import com.gv.midway.processor.KoreBatchExceptionProcessor;
-import com.gv.midway.processor.KoreGenericExceptionProcessor;
-import com.gv.midway.processor.NetSuiteIdValidationProcessor;
-import com.gv.midway.processor.TimeOutErrorProcessor;
-import com.gv.midway.processor.VerizonBatchExceptionProcessor;
-import com.gv.midway.processor.VerizonGenericExceptionProcessor;
 import com.gv.midway.processor.activateDevice.ATTJasperActivateDevicePreProcessor;
 import com.gv.midway.processor.activateDevice.KoreActivateDevicePreProcessor;
 import com.gv.midway.processor.activateDevice.KoreActivationWithCustomFieldErrorProcessor;
@@ -226,7 +215,7 @@ public class CamelRoute extends RouteBuilder {
                 .process(new VerizonAuthorizationTokenProcessor(env))
                 .to(IEndPoints.URI_REST_VERIZON_TOKEN_ENDPOINT).unmarshal()
                 .json(JsonLibrary.Jackson, VerizonAuthorizationResponse.class)
-                .process(new VerizonSessionTokenProcessor())
+                .process(new VerizonSessionTokenProcessor(env))
                 .to(IEndPoints.URI_REST_VERIZON_TOKEN_ENDPOINT).unmarshal()
                 .json(JsonLibrary.Jackson, VerizonSessionLoginResponse.class)
                 .process(new VerizonSessionAttributeProcessor())
@@ -257,8 +246,8 @@ public class CamelRoute extends RouteBuilder {
         // Calling the Reactivate Device Flow
         reactivateDevice();
 
-        // Calling the CustomeFields Device Flow
-        customeFields();
+        // Calling the CustomFields Device Flow
+        customFields();
 
         // Calling the change Device ServicePlans Flow
         changeDeviceServicePlans();
@@ -269,7 +258,7 @@ public class CamelRoute extends RouteBuilder {
         // Calling the Device in Session Flow
         deviceSessionBeginEndInfo();
 
-        // Calling the getDeviceInfomrationFromCarrier
+        // Calling the getDeviceInformationFromCarrier
         deviceInformationCarrier();
 
         // Calling the getDeviceInformationDB
@@ -284,7 +273,7 @@ public class CamelRoute extends RouteBuilder {
         // Retrieve Device Usage History from Carrier
         retrieveDeviceUsageHistoryCarrier();
 
-        // Execution of schduled jobs scheduledJobs
+        // Execution of scheduled jobs scheduledJobs
 
         deviceConnectionHistoryVerizonJob24();
 
@@ -293,13 +282,13 @@ public class CamelRoute extends RouteBuilder {
         deviceUsageHistoryKoreJob24();
         
         deviceUsageHistoryATTJasperJob24();
-        
+
         deviceUsageHistoryVerizonJob48();
         
         deviceUsageHistoryKoreJob48();
-        
+
         deviceUsageHistoryVerizonJob72();
-        
+
         deviceUsageHistoryKoreJob72();
 
         // Transaction Failure Job
@@ -328,13 +317,12 @@ public class CamelRoute extends RouteBuilder {
 
         // Kore Check Status Timer
         koreCheckStatusTimer();
-        
 
         //ATT Timer for invoking Callback to NetSuite
-         attCallBackTimer();
-         
-         //New device session usage
-         deviceSessionUsage();
+        attCallBackTimer();
+
+        //New device session usage
+        deviceSessionUsage();
 
          //New device session information
          deviceSessionInformation();
@@ -342,17 +330,17 @@ public class CamelRoute extends RouteBuilder {
     }
 
     public void deviceSessionUsage() {
-        from("direct:deviceSessionUsage")
-                .bean(iDeviceService, "getDeviceSessionUsage")
+        from("direct:deviceSessionUsage").routeId("deviceSessionUsage")
+                .bean(iDeviceService, "getDeviceSessionUsage").id("getDeviceSessionUsage")
                 .to("direct:retrieveDeviceUsageHistoryCarrier");
     }
 
     public void deviceSessionInformation() {
-        from("direct:deviceSessionInfo")
-                .bean(iDeviceService, "getDeviceSessionInfo")
+        from("direct:deviceSessionInfo").routeId("deviceSessionInfo")
+                .bean(iDeviceService, "getDeviceSessionInfo").id("getDeviceSessionInfo")
                 .to("direct:deviceSessionBeginEndInfo");
     }
-    
+
     /**
      * Activation Flow for Verizon and Kore
      * 
@@ -361,41 +349,46 @@ public class CamelRoute extends RouteBuilder {
 
         // Begin:Activate Devices
 
-        from("direct:activateDevice").process(new HeaderProcessor()).choice()
+        from("direct:activateDevice").routeId("activateDevice")
+                .process(new HeaderProcessor())
+                .choice()
                 .when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
 
-                .choice().when(header("derivedCarrierName").isEqualTo("KORE"))
+                .choice()
+                .when(header("derivedCarrierName").isEqualTo("KORE"))
                 .log("message" + header("derivedSourceName"))
                 .process(new StubKoreActivateDeviceProcessor()).to("log:input")
 
                 .when(header("derivedCarrierName").isEqualTo("VERIZON"))
                 .process(new StubVerizonActivateDeviceProcessor())
-                .to("log:input").
+                .to("log:input")
 
-                when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
+                .when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
                 .process(new StubATTJasperActivateDeviceProcessor())
-                .to("log:input").endChoice().
+                .to("log:input")
+                .endChoice()
 
-                otherwise()
+                .otherwise()
                 .choice()
 
                 .when(header("derivedCarrierName").isEqualTo("KORE"))
                 .wireTap("direct:processActivateKoreTransaction")
                 .process(new CarrierProvisioningDevicePostProcessor())
                 .endChoice()
-                .
 
-                when(header("derivedCarrierName").isEqualTo("VERIZON"))
+                .when(header("derivedCarrierName").isEqualTo("VERIZON"))
                 .bean(iSessionService, "setContextTokenInExchange")
                 .bean(iTransactionalService, "populateActivateDBPayload")
                 // will store only one time in Audit even on connection failure
                 .bean(iAuditService, "auditExternalRequestCall")
-                .to("direct:VerizonActivationFlow1").endChoice().
+                .to("direct:VerizonActivationFlow1").endChoice()
 
-                when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
+                .when(header("derivedCarrierName").isEqualTo("ATTJASPER"))
                 .wireTap("direct:processActivateATTJasperTransaction")
                 .process(new CarrierProvisioningDevicePostProcessor())
-                .endChoice().end().to("log:input").endChoice().end();
+                .endChoice()
+                .end()
+                .endChoice().end();
 
         // Verizon Flow-1
         from("direct:VerizonActivationFlow1")
@@ -417,10 +410,8 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iSessionService, "setContextTokenInExchange")
                 .process(new VerizonActivateDevicePreProcessor())
                 .to(IEndPoints.URI_REST_VERIZON_ENDPOINT)
-                .unmarshal()
-                .json(JsonLibrary.Jackson)
-                .bean(iTransactionalService,
-                        "populateVerizonTransactionalResponse")
+                .unmarshal().json(JsonLibrary.Jackson)
+                .bean(iTransactionalService, "populateVerizonTransactionalResponse")
                 .bean(iAuditService, "auditExternalResponseCall")
                 .process(new CarrierProvisioningDevicePostProcessor());
 
@@ -435,33 +426,32 @@ public class CamelRoute extends RouteBuilder {
         from("seda:koreSedaActivation?concurrentConsumers=5")
                 .onException(CxfOperationException.class)
                 .handled(true)
-                .bean(iTransactionalService,
-                        "populateKoreTransactionalErrorResponse")
+                .bean(iTransactionalService, "populateKoreTransactionalErrorResponse")
                 .bean(iAuditService, "auditExternalExceptionResponseCall")
                 .end()
                 .process(new KoreActivateDevicePreProcessor(env))
                 .bean(iAuditService, "auditExternalRequestCall")
                 .to(IEndPoints.URI_REST_KORE_ENDPOINT)
-                .unmarshal()
-                .json(JsonLibrary.Jackson, KoreProvisoningResponse.class)
-                .bean(iTransactionalService,
-                        "populateKoreTransactionalResponse")
+                .unmarshal().json(JsonLibrary.Jackson, KoreProvisoningResponse.class)
+                .to("direct:postActivateDeviceKoreRest");
+
+        from("direct:postActivateDeviceKoreRest")
+                .bean(iTransactionalService, "populateKoreTransactionalResponse")
                 .bean(iAuditService, "auditExternalResponseCall");
 
         // ATTJasper Flow-1
         from("direct:processActivateATTJasperTransaction")
                 .log("Wire Tap Thread activation")
                 .bean(iTransactionalService, "populateActivateDBPayload")
-                .split().method("deviceSplitter").recipientList()
-                .method("attJasperDeviceServiceRouter");
+                .split().method("deviceSplitter")
+                .recipientList().method("attJasperDeviceServiceRouter");
 
         // ATTJASPER SEDA FLOW
-        from("seda:attJasperSedaActivation?concurrentConsumers=5")
+        from("seda:attJasperSedaActivation?concurrentConsumers=5").routeId("seda:attJasperSedaActivation")
                 .onException(SoapFault.class)
                 .handled(true)
                 .bean(iAuditService, "auditExternalSOAPExceptionResponseCall")
-                .bean(iTransactionalService,
-                        "populateATTJasperTransactionalErrorResponse")
+                .bean(iTransactionalService, "populateATTJasperTransactionalErrorResponse")
                 .end()
                 .process(new ATTJasperActivateDevicePreProcessor(env))
                 .bean(iAuditService, "auditExternalRequestCall")
@@ -473,15 +463,13 @@ public class CamelRoute extends RouteBuilder {
                .multicast().parallelProcessing().to("direct:activationWithCustomFieldFlow","direct:activationWithServicePlanFlow");
  
         
-                from("direct:activationWithCustomFieldFlow")  
-                .bean(iTransactionalService,
-                        "setActivateCustomFieldListInExchange").split()
+        from("direct:activationWithCustomFieldFlow")
+                .bean(iTransactionalService, "setActivateCustomFieldListInExchange").split()
                 .method("deviceSplitter").recipientList()
                 .method("attJasperDeviceServiceRouter");
                 
-                from("direct:activationWithServicePlanFlow")     
-               .bean(iTransactionalService,
-                        "setActivateServicePlanListInExchange").split()
+        from("direct:activationWithServicePlanFlow")
+               .bean(iTransactionalService, "setActivateServicePlanListInExchange").split()
                 .method("deviceSplitter").recipientList()
                 .method("attJasperDeviceServiceRouter");
 
@@ -951,11 +939,11 @@ public class CamelRoute extends RouteBuilder {
     /**
      * Custom Fields Flow for Verizon and Kore
      */
-    public void customeFields() {
+    public void customFields() {
 
         // Begin:CustomeFields Devices
 
-        from("direct:customeFields").process(new HeaderProcessor()).choice()
+        from("direct:customFields").process(new HeaderProcessor()).choice()
 				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
 				.choice().when(header("derivedCarrierName").isEqualTo("KORE"))
 				.process(new StubKoreCustomFieldsProcessor()).to("log:input")
@@ -990,8 +978,7 @@ public class CamelRoute extends RouteBuilder {
                 .doTry()
                 .to("direct:VerizoncustomeFieldsFlow2")
                 .doCatch(CxfOperationException.class)
-                .bean(iTransactionalService,
-                        "populateVerizonTransactionalErrorResponse")
+                .bean(iTransactionalService, "populateVerizonTransactionalErrorResponse")
                 .bean(iAuditService, "auditExternalExceptionResponseCall")
                 .process(new VerizonGenericExceptionProcessor()).endDoTry()
                 .end();
@@ -1290,7 +1277,8 @@ public class CamelRoute extends RouteBuilder {
 
         // Begin: Device Session Begin End
 
-		from("direct:deviceSessionBeginEndInfo").process(new HeaderProcessor())
+		from("direct:deviceSessionBeginEndInfo")
+                .process(new HeaderProcessor())
 				.process(new DateValidationProcessor()).choice()
 				.when(simple(env.getProperty(IConstant.STUB_ENVIRONMENT)))
 				.choice()
@@ -1327,11 +1315,13 @@ public class CamelRoute extends RouteBuilder {
 				// Audit will store record 3 times in case of failure (see
 				// onException for connection.class above)
 				// .bean(iAuditService, "auditExternalRequestCall")
-				.to(IEndPoints.URI_REST_VERIZON_ENDPOINT)
-				.unmarshal()
-				.json(JsonLibrary.Jackson)
-				.bean(iAuditService, "auditExternalResponseCall")
-				.process(new VerizonDeviceSessionBeginEndInfoPostProcessor(env));
+				.to(IEndPoints.URI_REST_VERIZON_ENDPOINT).unmarshal()
+                .json(JsonLibrary.Jackson, ConnectionInformationResponse.class)
+                .to("direct:verizonDeviceSessionBeginEndInfoPostProcessor");
+
+        from("direct:verizonDeviceSessionBeginEndInfoPostProcessor")
+                .bean(iAuditService, "auditExternalResponseCall")
+                .process(new VerizonDeviceSessionBeginEndInfoPostProcessor(env));
 
 		// ATTJASPER Flow-1
 		from("direct:ATTJasperDeviceSessionBeginEndInfoFlow1").doTry()
@@ -1343,12 +1333,13 @@ public class CamelRoute extends RouteBuilder {
 		// ATTJASPER Flow-2
 		from("direct:ATTJasperDeviceSessionBeginEndInfoFlow2")
 				.errorHandler(noErrorHandler())
-				.process(
-						new ATTJasperDeviceSessionBeginEndInfoPreProcessor(env))
+				.process(new ATTJasperDeviceSessionBeginEndInfoPreProcessor(env))
 				.to(IEndPoints.URI_SOAP_ATTJASPER_TERMINAL_ENDPOINT)
-				.bean(iAuditService, "auditExternalSOAPResponseCall")
-				.process(
-						new ATTJasperDeviceSessionBeginEndInfoPostProcessor(env));
+                .to("direct:attJasperDeviceSessionBeginEndInfoPostProcessor");
+
+        from("direct:attJasperDeviceSessionBeginEndInfoPostProcessor")
+                .bean(iAuditService, "auditExternalSOAPResponseCall")
+                .process(new ATTJasperDeviceSessionBeginEndInfoPostProcessor(env));
 
 		// End: Device Session Begin End
     }
@@ -1385,10 +1376,7 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iAuditService, "auditExternalRequestCall")
                 .to(IEndPoints.URI_REST_KORE_ENDPOINT)
                 .unmarshal().json(JsonLibrary.Jackson, DeviceInformationResponseKore.class)
-                .bean(iAuditService, "auditExternalResponseCall")
-                .bean(iDeviceService, "setDeviceInformationDB")
-                .process(new KoreDeviceInformationPostProcessor(env))
-                .bean(iDeviceService, "updateDeviceInformationDB")
+                .to("direct:postDeviceInformationCarrierKoreRest")
                 .doCatch(CxfOperationException.class)
                 .bean(iAuditService, "auditExternalExceptionResponseCall")
                 .process(new KoreGenericExceptionProcessor())
@@ -1419,6 +1407,12 @@ public class CamelRoute extends RouteBuilder {
 
                 .to("log:input").endChoice().end();
 
+        from("direct:postDeviceInformationCarrierKoreRest")
+                .bean(iAuditService, "auditExternalResponseCall")
+                .bean(iDeviceService, "setDeviceInformationDB")
+                .process(new KoreDeviceInformationPostProcessor(env))
+                .bean(iDeviceService, "updateDeviceInformationDB");
+
         from("direct:VerizonDeviceInformationCarrierSubProcess").doTry()
                 .to("direct:VerizonDeviceInformationCarrierSubProcessFlow")
                 .doCatch(CxfOperationException.class)
@@ -1436,8 +1430,10 @@ public class CamelRoute extends RouteBuilder {
                 .process(new VerizonDeviceInformationPreProcessor())
                 .to(IEndPoints.URI_REST_VERIZON_ENDPOINT)
                 .unmarshal()
-                .json(JsonLibrary.Jackson,
-                        DeviceInformationResponseVerizon.class)
+                .json(JsonLibrary.Jackson, DeviceInformationResponseVerizon.class)
+                .to("direct:postDeviceInformationCarrierVerizonRest");
+
+        from("direct:postDeviceInformationCarrierVerizonRest")
                 .bean(iAuditService, "auditExternalResponseCall")
                 .bean(iDeviceService, "setDeviceInformationDB")
                 .process(new VerizonDeviceInformationPostProcessor(env))
@@ -1450,7 +1446,12 @@ public class CamelRoute extends RouteBuilder {
     public void getDeviceInformationDB() {
         from("direct:getDeviceInformationDB").routeId("getDeviceInformationDB")
                 .process(new HeaderProcessor())
-                .bean(iDeviceService, "getDeviceInformationDB").to("log:input")
+                .to("direct:preDeviceService")
+                .end();
+
+        from("direct:preDeviceService")
+                .bean(iDeviceService, "getDeviceInformationDB")
+                .to("log:input")
                 .end();
 
     }
@@ -1532,7 +1533,7 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iJobService, "scheduleJob").endChoice().end();
 
     }
-    
+
     /**
      * Method to Schedule the ATTJasper Device Usage Job for previous day usage
      */
@@ -1548,7 +1549,7 @@ public class CamelRoute extends RouteBuilder {
     }
     
     
-    
+
     /**
      * Method to Schedule the Verizon Device Usage Job for 2 days back to get the updated data usage of roaming devices.
      */
@@ -1579,7 +1580,7 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iJobService, "scheduleJob").endChoice().end();
 
     }
-    
+
     /**
      * Method to Schedule the Verizon Device Usage Job for 3 days back to get the updated data usage of roaming devices.
      */
@@ -1594,7 +1595,7 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iJobService, "scheduleJob").end();
 
     }
-    
+
     /**
      * Method to Schedule the Kore Device Usage Job for 3 days back to get the updated data usage of roaming devices.
      */
@@ -1900,7 +1901,7 @@ public class CamelRoute extends RouteBuilder {
                 .choice()
                 .when(header("derivedCarrierName").isEqualTo("VERIZON"))
                 .process(new StubVerizonRetrieveDeviceUsageHistoryProcessor())
-                .to("log:input").endChoice().otherwise().choice()
+                .endChoice().otherwise().choice()
 
                 .when(header("derivedCarrierName").isEqualTo("VERIZON"))
                 .bean(iSessionService, "setContextTokenInExchange")
@@ -1926,11 +1927,14 @@ public class CamelRoute extends RouteBuilder {
                 .bean(iSessionService, "setContextTokenInExchange")
                 .process(new RetrieveDeviceUsageHistoryPreProcessor())
                 .to(IEndPoints.URI_REST_VERIZON_ENDPOINT).unmarshal()
-                .json(JsonLibrary.Jackson)
+                .json(JsonLibrary.Jackson, VerizonUsageInformationResponse.class)
                 /*
                  * .bean(iTransactionalService,
                  * "populateRetrieveDeviceUsageHistoryDBPayload")
                  */
+                .to("direct:retrieveDeviceUsageHistoryPostProcessor");
+
+        from("direct:retrieveDeviceUsageHistoryPostProcessor")
                 .bean(iAuditService, "auditExternalResponseCall")
                 .process(new RetrieveDeviceUsageHistoryPostProcessor(env));
         
@@ -2059,30 +2063,27 @@ public class CamelRoute extends RouteBuilder {
 
                 .onException(UnknownHostException.class, ConnectException.class)
                 .handled(true)
-                .bean(iTransactionalService,
-                        "populateKoreCheckStatusConnectionResponse")
+                .bean(iTransactionalService, "populateKoreCheckStatusConnectionResponse")
                 .end()
 
                 .process(new KoreCheckStatusPreProcessor(env))
                 .choice()
-                .
                 /**
                  * Now call the netsuite end point for error and write in Kafka
                  * Queue.
                  */
-                when(header(IConstant.KORE_CHECK_STATUS).isEqualTo("error"))
+                .when(header(IConstant.KORE_CHECK_STATUS).isEqualTo("error"))
                 .to("direct:koreCheckStatusErrorSubProcess")
-                .
 
                 // now call the netsuite end point for changeServicePlan and
                 // changeCustomeFields.
 
-                when(header(IConstant.KORE_CHECK_STATUS).isEqualTo("change"))
-                .to("direct:koreCustomChangeSubProcess").
+                .when(header(IConstant.KORE_CHECK_STATUS).isEqualTo("change"))
+                .to("direct:koreCustomChangeSubProcess")
                 /**
                  * Call the Kore API to check the status of device
                  */
-                when(header(IConstant.KORE_CHECK_STATUS).isEqualTo("forward"))
+                .when(header(IConstant.KORE_CHECK_STATUS).isEqualTo("forward"))
                 .to(IEndPoints.URI_REST_KORE_ENDPOINT).unmarshal()
                 .json(JsonLibrary.Jackson, KoreCheckStatusResponse.class)
                 .to("direct:koreCheckStatusSubProcess").endChoice();

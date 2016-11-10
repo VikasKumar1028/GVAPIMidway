@@ -116,11 +116,9 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 ActivateDeviceId activateDeviceId = activateDevice
                         .getDeviceIds()[i];
 
-                ActivateDeviceId businessPayLoadActivateDeviceId = new ActivateDeviceId();
-
-                businessPayLoadActivateDeviceId.setId(activateDeviceId.getId());
-                businessPayLoadActivateDeviceId.setKind(activateDeviceId
-                        .getKind());
+                ActivateDeviceId businessPayLoadActivateDeviceId = new ActivateDeviceId(
+                        activateDeviceId.getId(),
+                        activateDeviceId.getKind());
 
                 businessPayloadDeviceId[i] = businessPayLoadActivateDeviceId;
 
@@ -201,7 +199,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
         
         if(activateDevices.getCustomFields()!=null && activateDevices.getCustomFields().length>0)
         {
-        	exchange.setProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS, true);
+        	exchange.setProperty(IConstant.ACTIVATION_WITH_CUSTOMFIELDS, true);
         	
         	if (IConstant.BSCARRIER_SERVICE_KORE.equals(carrierName)) {
 
@@ -266,15 +264,11 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                     .getDeviceIds().length];
 
             for (int i = 0; i < activateDevice.getDeviceIds().length; i++) {
-                ActivateDeviceId customFieldsDeviceId = activateDevice
-                        .getDeviceIds()[i];
+                ActivateDeviceId customFieldsDeviceId = activateDevice.getDeviceIds()[i];
 
-                MidWayDeviceId businessPayLoadActivateDeviceId = new MidWayDeviceId();
-
-                businessPayLoadActivateDeviceId.setId(customFieldsDeviceId
-                        .getId());
-                businessPayLoadActivateDeviceId.setKind(customFieldsDeviceId
-                        .getKind());
+                MidWayDeviceId businessPayLoadActivateDeviceId = new MidWayDeviceId(
+                        customFieldsDeviceId.getId(),
+                        customFieldsDeviceId.getKind());
 
                 businessPayloadDeviceId[i] = businessPayLoadActivateDeviceId;
 
@@ -333,7 +327,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 transaction.setRequestType(RequestType.CHANGECUSTOMFIELDS);
                 transaction.setCallBackReceived(false);
                 transaction.setNetSuiteId(netSuiteId);
-                // Set the Record Type as Secondary for the customeFields transactions records of activate request. In case of Kore it will
+                // Set the Record Type as Secondary for the customFields transactions records of activate request. In case of Kore it will
                // one to one mapping of primary and secondary.
                 transaction.setRecordType(RecordType.SECONDARY);
                 list.add(transaction);
@@ -382,21 +376,16 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                     .getDeviceIds().length];
 
             for (int i = 0; i < activateDevice.getDeviceIds().length; i++) {
-                ActivateDeviceId customFieldsDeviceId = activateDevice
-                        .getDeviceIds()[i];
+                ActivateDeviceId customFieldsDeviceId = activateDevice.getDeviceIds()[i];
 
-                MidWayDeviceId businessPayLoadActivateDeviceId = new MidWayDeviceId();
-
-                businessPayLoadActivateDeviceId.setId(customFieldsDeviceId
-                        .getId());
-                businessPayLoadActivateDeviceId.setKind(customFieldsDeviceId
-                        .getKind());
+                MidWayDeviceId businessPayLoadActivateDeviceId = new MidWayDeviceId(
+                        customFieldsDeviceId.getId(),
+                        customFieldsDeviceId.getKind());
 
                 businessPayloadDeviceId[i] = businessPayLoadActivateDeviceId;
 
             }
-            businessPayLoadActivateDevices
-                    .setDeviceIds(businessPayloadDeviceId);
+            businessPayLoadActivateDevices.setDeviceIds(businessPayloadDeviceId);
             businessPayLoadDevicesArray[0] = businessPayLoadActivateDevices;
 
             // create custom field logic
@@ -451,7 +440,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                     transaction.setRequestType(RequestType.CHANGECUSTOMFIELDS);
                     transaction.setCallBackReceived(false);
                     transaction.setNetSuiteId(netSuiteId);
-                    // Set the Record Type as Secondary for the customeFields transactions records of activate request. In case of ATT jasper it will
+                    // Set the Record Type as Secondary for the customFields transactions records of activate request. In case of ATT jasper it will
                     // be one to many mapping of primary and secondary. as ATT takes one custom field at a time.
                     transaction.setRecordType(RecordType.SECONDARY);
                     list.add(transaction);
@@ -464,7 +453,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
             }
         }
         mongoTemplate.insertAll(list);
-        exchange.setProperty(IConstant.ATT_ACTVATION_WITH_CUSTOMEFILEDS_LIST, list);
+        exchange.setProperty(IConstant.ATT_ACTIVATION_WITH_CUSTOMFIELDS_LIST, list);
 
     }
 
@@ -504,12 +493,9 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 ActivateDeviceId servicePlanDeviceId = activateDevice
                         .getDeviceIds()[i];
 
-                MidWayDeviceId businessPayLoadActivateDeviceId = new MidWayDeviceId();
-
-                businessPayLoadActivateDeviceId.setId(servicePlanDeviceId
-                        .getId());
-                businessPayLoadActivateDeviceId.setKind(servicePlanDeviceId
-                        .getKind());
+                MidWayDeviceId businessPayLoadActivateDeviceId = new MidWayDeviceId(
+                        servicePlanDeviceId.getId(),
+                        servicePlanDeviceId.getKind());
 
                 businessPayloadDeviceId[i] = businessPayLoadActivateDeviceId;
 
@@ -565,7 +551,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
         }
         mongoTemplate.insertAll(list);
         
-        exchange.setProperty(IConstant.ATT_ACTVATION_WITH_SERVICEPLAN_LIST, list);
+        exchange.setProperty(IConstant.ATT_ACTIVATION_WITH_SERVICEPLAN_LIST, list);
 
     }
 
@@ -696,17 +682,15 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
             for (int i = 0; i < suspendDevice.getDeviceIds().length; i++) {
                 MidWayDeviceId suspendDeviceId = suspendDevice.getDeviceIds()[i];
-                MidWayDeviceId businesspayLoadSuspendDeviceId = new MidWayDeviceId();
-                businesspayLoadSuspendDeviceId.setId(suspendDeviceId.getId());
-                businesspayLoadSuspendDeviceId.setKind(suspendDeviceId
-                        .getKind());
+                MidWayDeviceId businesspayLoadSuspendDeviceId = new MidWayDeviceId(
+                        suspendDeviceId.getId(),
+                        suspendDeviceId.getKind());
                 businessPayloadDeviceId[i] = businesspayLoadSuspendDeviceId;
             }
 
             businessPayLoadSuspendDevices.setDeviceIds(businessPayloadDeviceId);
             businessPayloadDeviceArray[0] = businessPayLoadSuspendDevices;
-            SuspendDeviceRequestDataArea copyDataArea = kryo.copy(req
-                    .getDataArea());
+            SuspendDeviceRequestDataArea copyDataArea = kryo.copy(req.getDataArea());
 
             copyDataArea.setDevices(businessPayloadDeviceArray);
             dbPayload.setDataArea(copyDataArea);
@@ -824,7 +808,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
      // If device activation request comes with Custom fields then update only the primary record(Activation record) in transaction
         
-        if(exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null){
+        if(exchange.getProperty(IConstant.ACTIVATION_WITH_CUSTOMFIELDS)!=null){
         	searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
                         .is(RecordType.PRIMARY));
         	
@@ -896,7 +880,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
         
         // If device activation request comes with Custom fields then update only the primary record(Activation record) in transaction
         
-        if(exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null){
+        if(exchange.getProperty(IConstant.ACTIVATION_WITH_CUSTOMFIELDS)!=null){
         	searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
                         .is(RecordType.PRIMARY));
         	
@@ -970,7 +954,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                             "devicePayload.dataArea.customFieldsToUpdate.key").is(
                             exchange.getProperty(IConstant.ATT_CUSTOMFIELD_TO_UPDATE)));
                     
-                    if (exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null)
+                    if (exchange.getProperty(IConstant.ACTIVATION_WITH_CUSTOMFIELDS)!=null)
                     {
                     searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
                             .is(RecordType.SECONDARY));
@@ -997,7 +981,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 
                 // If device activation request comes with Custom fields/Service Plan then update only the primary record(Activation record) in transaction
                 
-                if( !isSecondary && (( exchange.getProperty(IConstant.ATT_CUSTOMFIELD_TO_UPDATE) == null && exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null)||(exchange.getProperty(IConstant.ACTVATION_WITH_SERVICEPLAN)!=null &&  exchange.getProperty(IConstant.ATT_SERVICEPLAN_TO_UPDATE)==null  ))){
+                if( !isSecondary && (( exchange.getProperty(IConstant.ATT_CUSTOMFIELD_TO_UPDATE) == null && exchange.getProperty(IConstant.ACTIVATION_WITH_CUSTOMFIELDS)!=null)||(exchange.getProperty(IConstant.ACTVATION_WITH_SERVICEPLAN)!=null &&  exchange.getProperty(IConstant.ATT_SERVICEPLAN_TO_UPDATE)==null  ))){
                     searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
                             .is(RecordType.PRIMARY));
                     LOGGER.info("search query error PRIMARY is..........."+searchQuery.toString());
@@ -1428,12 +1412,9 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 MidWayDeviceId reActivateDeviceId = reActivateDevice
                         .getDeviceIds()[i];
 
-                MidWayDeviceId businessPayLoadActivateDeviceId = new MidWayDeviceId();
-
-                businessPayLoadActivateDeviceId.setId(reActivateDeviceId
-                        .getId());
-                businessPayLoadActivateDeviceId.setKind(reActivateDeviceId
-                        .getKind());
+                MidWayDeviceId businessPayLoadActivateDeviceId = new MidWayDeviceId(
+                        reActivateDeviceId.getId(),
+                        reActivateDeviceId.getKind());
 
                 businessPayloadDeviceId[i] = businessPayLoadActivateDeviceId;
 
@@ -1511,10 +1492,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
             for (int i = 0; i < restoreDevice.getDeviceIds().length; i++) {
                 MidWayDeviceId deviceId = restoreDevice.getDeviceIds()[i];
 
-                MidWayDeviceId businessPayLoadRestoreDeviceId = new MidWayDeviceId();
-
-                businessPayLoadRestoreDeviceId.setId(deviceId.getId());
-                businessPayLoadRestoreDeviceId.setKind(deviceId.getKind());
+                MidWayDeviceId businessPayLoadRestoreDeviceId = new MidWayDeviceId(deviceId.getId(), deviceId.getKind());
 
                 businessPayloadDeviceId[i] = businessPayLoadRestoreDeviceId;
 
@@ -1522,8 +1500,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
             businessPayLoadRestoreDevices.setDeviceIds(businessPayloadDeviceId);
             businessPayLoadDevicesArray[0] = businessPayLoadRestoreDevices;
 
-            RestoreDeviceRequestDataArea copyDataArea = kryo.copy(req
-                    .getDataArea());
+            RestoreDeviceRequestDataArea copyDataArea = kryo.copy(req.getDataArea());
 
             copyDataArea.setDevices(businessPayLoadDevicesArray);
             dbPayload.setDataArea(copyDataArea);
@@ -1592,25 +1569,19 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                     .getDeviceIds().length];
 
             for (int i = 0; i < customFieldsDevice.getDeviceIds().length; i++) {
-                MidWayDeviceId customFieldsDeviceId = customFieldsDevice
-                        .getDeviceIds()[i];
+                MidWayDeviceId customFieldsDeviceId = customFieldsDevice.getDeviceIds()[i];
 
-                MidWayDeviceId businessPayLoadActivateDeviceId = new MidWayDeviceId();
-
-                businessPayLoadActivateDeviceId.setId(customFieldsDeviceId
-                        .getId());
-                businessPayLoadActivateDeviceId.setKind(customFieldsDeviceId
-                        .getKind());
+                MidWayDeviceId businessPayLoadActivateDeviceId = new MidWayDeviceId(
+                        customFieldsDeviceId.getId(),
+                        customFieldsDeviceId.getKind());
 
                 businessPayloadDeviceId[i] = businessPayLoadActivateDeviceId;
 
             }
-            businessPayLoadActivateDevices
-                    .setDeviceIds(businessPayloadDeviceId);
+            businessPayLoadActivateDevices.setDeviceIds(businessPayloadDeviceId);
             businessPayLoadDevicesArray[0] = businessPayLoadActivateDevices;
 
-            CustomFieldsDeviceRequestDataArea copyDataArea = kryo.copy(req
-                    .getDataArea());
+            CustomFieldsDeviceRequestDataArea copyDataArea = kryo.copy(req.getDataArea());
 
             copyDataArea.setDevices(businessPayLoadDevicesArray);
             dbPayload.setDataArea(copyDataArea);
@@ -1627,8 +1598,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                         MidWayDeviceId b) -> a.getKind().compareTo(b.getKind()));
 
                 ObjectMapper obj = new ObjectMapper();
-                String strDeviceNumber = obj
-                        .writeValueAsString(businessPayloadDeviceId);
+                String strDeviceNumber = obj.writeValueAsString(businessPayloadDeviceId);
                 transaction.setDeviceNumber(strDeviceNumber);
                 transaction.setDevicePayload(dbPayload);
                 transaction
@@ -1661,11 +1631,9 @@ public class TransactionalDaoImpl implements ITransactionalDao {
         CustomFieldsDeviceRequest req = (CustomFieldsDeviceRequest) exchange
                 .getIn().getBody();
 
-        CustomFieldsDeviceRequestDataArea customFieldsDeviceRequestDataArea = (CustomFieldsDeviceRequestDataArea) req
-                .getDataArea();
+        CustomFieldsDeviceRequestDataArea customFieldsDeviceRequestDataArea = req.getDataArea();
 
-        MidWayDevices[] customFieldsDevices = customFieldsDeviceRequestDataArea
-                .getDevices();
+        MidWayDevices[] customFieldsDevices = customFieldsDeviceRequestDataArea.getDevices();
 
         for (MidWayDevices customFieldsDevice : customFieldsDevices) {
 
@@ -1679,19 +1647,15 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 MidWayDeviceId customFieldsDeviceId = customFieldsDevice
                         .getDeviceIds()[i];
 
-                MidWayDeviceId businessPayLoadActivateDeviceId = new MidWayDeviceId();
-
-                businessPayLoadActivateDeviceId.setId(customFieldsDeviceId
-                        .getId());
-                businessPayLoadActivateDeviceId.setKind(customFieldsDeviceId
-                        .getKind());
+                MidWayDeviceId businessPayLoadActivateDeviceId = new MidWayDeviceId(
+                        customFieldsDeviceId.getId(),
+                        customFieldsDeviceId.getKind());
 
                 businessPayloadDeviceId[i] = businessPayLoadActivateDeviceId;
 
             }
 
-            businessPayLoadActivateDevices
-                    .setDeviceIds(businessPayloadDeviceId);
+            businessPayLoadActivateDevices.setDeviceIds(businessPayloadDeviceId);
             businessPayLoadDevicesArray[0] = businessPayLoadActivateDevices;
 
             for (int i = 0; i < req.getDataArea().getCustomFieldsToUpdate().length; i++) {
@@ -1703,10 +1667,8 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                 CustomFieldsToUpdate[] customFieldsToUpdate = new CustomFieldsToUpdate[1];
                 CustomFieldsToUpdate newCustomField = new CustomFieldsToUpdate();
 
-                newCustomField.setKey(req.getDataArea()
-                        .getCustomFieldsToUpdate()[i].getKey());
-                newCustomField.setValue(req.getDataArea()
-                        .getCustomFieldsToUpdate()[i].getValue());
+                newCustomField.setKey(req.getDataArea().getCustomFieldsToUpdate()[i].getKey());
+                newCustomField.setValue(req.getDataArea().getCustomFieldsToUpdate()[i].getValue());
                 customFieldsToUpdate[0] = newCustomField;
 
                 requestDataArea.setCustomFieldsToUpdate(customFieldsToUpdate);
@@ -1780,21 +1742,18 @@ public class TransactionalDaoImpl implements ITransactionalDao {
                     .getDeviceIds().length];
 
             for (int i = 0; i < changeServicePlansDevice.getDeviceIds().length; i++) {
-                MidWayDeviceId changeServicePlansDeviceId = changeServicePlansDevice
-                        .getDeviceIds()[i];
-                MidWayDeviceId businesspayLoadChangeServicePlansDeviceId = new MidWayDeviceId();
-                businesspayLoadChangeServicePlansDeviceId
-                        .setId(changeServicePlansDeviceId.getId());
-                businesspayLoadChangeServicePlansDeviceId
-                        .setKind(changeServicePlansDeviceId.getKind());
-                businessPayloadDeviceId[i] = businesspayLoadChangeServicePlansDeviceId;
+                MidWayDeviceId changeServicePlansDeviceId = changeServicePlansDevice.getDeviceIds()[i];
+
+                MidWayDeviceId businessPayLoadChangeServicePlansDeviceId = new MidWayDeviceId(
+                        changeServicePlansDeviceId.getId(),
+                        changeServicePlansDeviceId.getKind());
+
+                businessPayloadDeviceId[i] = businessPayLoadChangeServicePlansDeviceId;
             }
 
-            businessPayLoadChangeServicePlansDevices
-                    .setDeviceIds(businessPayloadDeviceId);
+            businessPayLoadChangeServicePlansDevices.setDeviceIds(businessPayloadDeviceId);
             businessPayloadDeviceArray[0] = businessPayLoadChangeServicePlansDevices;
-            ChangeDeviceServicePlansRequestDataArea copyDataArea = kryo
-                    .copy(req.getDataArea());
+            ChangeDeviceServicePlansRequestDataArea copyDataArea = kryo.copy(req.getDataArea());
 
             copyDataArea.setDevices(businessPayloadDeviceArray);
             dbPayload.setDataArea(copyDataArea);
@@ -2142,35 +2101,25 @@ public class TransactionalDaoImpl implements ITransactionalDao {
         boolean isSecondary=false;
         // Adding the Search Criteria for custom field of ATT
         if (exchange.getProperty(IConstant.ATT_CUSTOMFIELD_TO_UPDATE) != null) {
+            searchQuery.addCriteria(Criteria.where("devicePayload.dataArea.customFieldsToUpdate.key")
+                    .is(exchange.getProperty(IConstant.ATT_CUSTOMFIELD_TO_UPDATE)));
             
-                 searchQuery.addCriteria(Criteria.where(
-                    "devicePayload.dataArea.customFieldsToUpdate.key").is(
-                    exchange.getProperty(IConstant.ATT_CUSTOMFIELD_TO_UPDATE)));
-            
-            if (exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null)
-            {
-           
-            searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
-                    .is(RecordType.SECONDARY));           
-      
-            
-            update.set(ITransaction.MIDWAY_STATUS, IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
-            LOGGER.info("search query success is..........."+searchQuery.toString());
-            isSecondary=true;
-            
+            if (exchange.getProperty(IConstant.ACTIVATION_WITH_CUSTOMFIELDS) != null) {
+                searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE).is(RecordType.SECONDARY));
+
+                update.set(ITransaction.MIDWAY_STATUS, IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
+                isSecondary=true;
+
+                LOGGER.info("search query success is..........."+searchQuery.toString());
             }
         }
         
         //This is for Activation with service Plan
-        if(exchange.getProperty(IConstant.ACTVATION_WITH_SERVICEPLAN)!=null &&  exchange.getProperty(IConstant.ATT_SERVICEPLAN_TO_UPDATE)!=null)
-        {
-            
-           
-            searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
-                    .is(RecordType.SECONDARY));
-            
-            searchQuery.addCriteria(Criteria.where(ITransaction.REQUEST_TYPE)
-                    .is(RequestType.CHANGESERVICEPLAN));
+        if (exchange.getProperty(IConstant.ACTVATION_WITH_SERVICEPLAN)!=null &&
+                exchange.getProperty(IConstant.ATT_SERVICEPLAN_TO_UPDATE)!=null) {
+
+            searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE).is(RecordType.SECONDARY));
+            searchQuery.addCriteria(Criteria.where(ITransaction.REQUEST_TYPE).is(RequestType.CHANGESERVICEPLAN));
             
             update.set(ITransaction.MIDWAY_STATUS, IConstant.MIDWAY_TRANSACTION_STATUS_PENDING);
             isSecondary=true;
@@ -2183,9 +2132,13 @@ public class TransactionalDaoImpl implements ITransactionalDao {
         
         // If device activation request comes with Custom fields/Service Plan then update only the primary record(Activation record) in transaction
         
-        if( !isSecondary && (( exchange.getProperty(IConstant.ATT_CUSTOMFIELD_TO_UPDATE) == null && exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null)||(exchange.getProperty(IConstant.ACTVATION_WITH_SERVICEPLAN)!=null &&  exchange.getProperty(IConstant.ATT_SERVICEPLAN_TO_UPDATE)==null  ))){
-            searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
-                    .is(RecordType.PRIMARY));
+        if (!isSecondary && (( exchange.getProperty(IConstant.ATT_CUSTOMFIELD_TO_UPDATE) == null &&
+                exchange.getProperty(IConstant.ACTIVATION_WITH_CUSTOMFIELDS) != null) ||
+                (exchange.getProperty(IConstant.ACTVATION_WITH_SERVICEPLAN) != null
+                        &&  exchange.getProperty(IConstant.ATT_SERVICEPLAN_TO_UPDATE) == null))
+                ) {
+            searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE).is(RecordType.PRIMARY));
+
             LOGGER.info("search query error PRIMARY is..........."+searchQuery.toString());
             
     }
@@ -2216,8 +2169,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
             }*/
 
-           update.set(ITransaction.CARRIER_STATUS,
-                IConstant.CARRIER_TRANSACTION_STATUS_SUCCESS);
+           update.set(ITransaction.CARRIER_STATUS, IConstant.CARRIER_TRANSACTION_STATUS_SUCCESS);
 
             update.set(ITransaction.CALL_BACK_PAYLOAD, soapPayload);
             update.set(ITransaction.CALL_BACK_RECEIVED, true);
@@ -2243,26 +2195,21 @@ public class TransactionalDaoImpl implements ITransactionalDao {
 
             Query searchQuery = new Query(
                     Criteria.where(ITransaction.MIDWAY_TRANSACTION_ID)
-                            .is(exchange
-                                    .getProperty(IConstant.MIDWAY_TRANSACTION_ID))
+                            .is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID))
                             .andOperator(
                                     Criteria.where(ITransaction.DEVICE_NUMBER)
-                                            .is(exchange
-                                                    .getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
-      
-         
+                                            .is(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER))));
+
             Update update = new Update();
-            boolean isSecondary =false;
+            boolean isSecondary = false;
             
             // Adding the Search Criteria for custom field of ATT
             if (exchange.getProperty(IConstant.ATT_CUSTOMFIELD_TO_UPDATE) != null) {
                 
-                     searchQuery.addCriteria(Criteria.where(
-                        "devicePayload.dataArea.customFieldsToUpdate.key").is(
-                        exchange.getProperty(IConstant.ATT_CUSTOMFIELD_TO_UPDATE)));
+                     searchQuery.addCriteria(Criteria.where("devicePayload.dataArea.customFieldsToUpdate.key")
+                             .is(exchange.getProperty(IConstant.ATT_CUSTOMFIELD_TO_UPDATE)));
                 
-                if (exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null)
-                {
+                if (exchange.getProperty(IConstant.ACTIVATION_WITH_CUSTOMFIELDS) != null) {
                
                 searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
                         .is(RecordType.SECONDARY));
@@ -2275,7 +2222,7 @@ public class TransactionalDaoImpl implements ITransactionalDao {
             }
             
             //This is for Activation with service Plan
-            if(exchange.getProperty(IConstant.ACTVATION_WITH_SERVICEPLAN)!=null &&  exchange.getProperty(IConstant.ATT_SERVICEPLAN_TO_UPDATE)!=null)
+            if (exchange.getProperty(IConstant.ACTVATION_WITH_SERVICEPLAN) != null &&  exchange.getProperty(IConstant.ATT_SERVICEPLAN_TO_UPDATE) != null)
             {
                 searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
                         .is(RecordType.SECONDARY.toString()));
@@ -2292,9 +2239,13 @@ public class TransactionalDaoImpl implements ITransactionalDao {
            
             // If device activation request comes with Custom fields/Service Plan then update only the primary record(Activation record) in transaction
             
-            if( !isSecondary && (( exchange.getProperty(IConstant.ATT_CUSTOMFIELD_TO_UPDATE) == null && exchange.getProperty(IConstant.ACTVATION_WITH_CUSTOMEFILEDS)!=null)||(exchange.getProperty(IConstant.ACTVATION_WITH_SERVICEPLAN)!=null &&  exchange.getProperty(IConstant.ATT_SERVICEPLAN_TO_UPDATE)==null  ))){
-                searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE)
-                        .is(RecordType.PRIMARY));
+            if( !isSecondary && (( exchange.getProperty(IConstant.ATT_CUSTOMFIELD_TO_UPDATE) == null &&
+                    exchange.getProperty(IConstant.ACTIVATION_WITH_CUSTOMFIELDS)!=null) ||
+                    (exchange.getProperty(IConstant.ACTVATION_WITH_SERVICEPLAN)!=null &&
+                            exchange.getProperty(IConstant.ATT_SERVICEPLAN_TO_UPDATE) == null))){
+
+                searchQuery.addCriteria(Criteria.where(ITransaction.RECORD_TYPE).is(RecordType.PRIMARY));
+
                 LOGGER.info("search query error PRIMARY is..........."+searchQuery.toString());
                 
         }

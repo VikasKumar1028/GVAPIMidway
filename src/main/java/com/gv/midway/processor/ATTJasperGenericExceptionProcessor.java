@@ -59,7 +59,7 @@ public class ATTJasperGenericExceptionProcessor implements Processor {
 			case "Endpoint[direct://deactivateDevice]":
 			case "Endpoint[direct://activateDevice]":
 			case "Endpoint[direct://suspendDevice]":
-			case "Endpoint[direct://customeFields]":
+			case "Endpoint[direct://customFields]":
 			case "Endpoint[direct://changeDeviceServicePlans]":
 			case "Endpoint[direct://reactivateDevice]":
 			case "Endpoint[direct://restoreDevice]":

@@ -19,9 +19,7 @@ class TestATTJasperReactivateDevicePreProcessor extends TestMocks with ATTJasper
       val netSuiteId: Integer = 324342
       val deviceNumber = "deviceNumber"
 
-      val id1 = new MidWayDeviceId
-      id1.setId("id1")
-      id1.setKind("kind")
+      val id1 = new MidWayDeviceId("id1", "kind")
 
       val device1 = new MidWayDevices
       device1.setDeviceIds(Array(id1))

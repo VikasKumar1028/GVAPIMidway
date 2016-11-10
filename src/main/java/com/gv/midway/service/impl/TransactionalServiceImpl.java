@@ -167,7 +167,7 @@ public class TransactionalServiceImpl implements ITransactionalService {
 	public void setActivateCustomFieldListInExchange(Exchange exchange){
 	    
 	    CommonUtil.setListInWireTap( exchange,
-	          (List<Transaction>) exchange.getProperty(IConstant.ATT_ACTVATION_WITH_CUSTOMEFILEDS_LIST));
+	          (List<Transaction>) exchange.getProperty(IConstant.ATT_ACTIVATION_WITH_CUSTOMFIELDS_LIST));
 	}
 	
 	
@@ -175,7 +175,7 @@ public class TransactionalServiceImpl implements ITransactionalService {
         public void setActivateServicePlanListInExchange(Exchange exchange){
             
             CommonUtil.setListInWireTap( exchange,
-                  (List<Transaction>) exchange.getProperty(IConstant.ATT_ACTVATION_WITH_SERVICEPLAN_LIST));
+                  (List<Transaction>) exchange.getProperty(IConstant.ATT_ACTIVATION_WITH_SERVICEPLAN_LIST));
         }
         	
 	

@@ -122,7 +122,7 @@ class TestAdaptationLayerServiceImplLayer extends FunSuite with MockitoSugar {
 
   provisionTest("suspendDevice", "direct:suspendDevice", new SuspendDeviceRequest, (s, sdr: SuspendDeviceRequest) => s.suspendDevice(sdr))
 
-  provisionTest("customFieldsUpdateRequest", "direct:customeFields", new CustomFieldsDeviceRequest, (s, cfdr: CustomFieldsDeviceRequest) => s.customFieldsUpdateRequest(cfdr))
+  provisionTest("customFieldsUpdateRequest", "direct:customFields", new CustomFieldsDeviceRequest, (s, cfdr: CustomFieldsDeviceRequest) => s.customFieldsUpdateRequest(cfdr))
 
   provisionTest("restoreDevice", "direct:restoreDevice", new RestoreDeviceRequest, (s, rdr: RestoreDeviceRequest) => s.restoreDevice(rdr))
 

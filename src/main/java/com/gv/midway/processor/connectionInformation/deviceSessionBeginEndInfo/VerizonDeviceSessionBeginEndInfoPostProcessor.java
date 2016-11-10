@@ -44,10 +44,7 @@ public class VerizonDeviceSessionBeginEndInfoPostProcessor implements Processor 
 
         if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
 
-            Map map = exchange.getIn().getBody(Map.class);
-            ObjectMapper mapper = new ObjectMapper(); // jackson's objectmapper
-            ConnectionInformationResponse connectionResponse = mapper
-                    .convertValue(map, ConnectionInformationResponse.class);
+            ConnectionInformationResponse connectionResponse = exchange.getIn().getBody(ConnectionInformationResponse.class);
 
             int totalConnectionHistory = connectionResponse
                     .getConnectionHistory().length;

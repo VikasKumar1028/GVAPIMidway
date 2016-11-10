@@ -17,9 +17,7 @@ class TestKoreCustomFieldsPreProcessor extends TestMocks {
   test("process") {
     withMockExchangeAndMessage { (exchange, message) =>
 
-      val deviceId = new MidWayDeviceId()
-      deviceId.setId("id")
-      deviceId.setKind("kind")
+      val deviceId = new MidWayDeviceId("id", "kind")
 
       val device1 = new MidWayDevices
       device1.setDeviceIds(Array(deviceId))

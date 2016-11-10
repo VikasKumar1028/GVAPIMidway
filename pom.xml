@@ -203,6 +203,7 @@
 									<replacements>
 										<replacement>
 											<token>localhost:8080</token>
+											<!-- value to replace with load balance ip and port -->
 											<value>mid1.gv.systems:8080</value>
 										</replacement>
 									</replacements>
@@ -220,6 +221,7 @@
 									<file>${project.build.outputDirectory}/../../src/main/webapp/dist/index.html</file>
 									<replacements>
 										<replacement>
+										<!-- token to replace with load balance ip and port -->
 											<token>mid1.gv.systems:8080</token>
 											<value>localhost:8080</value>
 										</replacement>
@@ -436,7 +438,7 @@
 		<dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-kafka</artifactId>
-			<version>${camel.version}</version>
+			<version>2.16.2</version>
 
 		</dependency>
 

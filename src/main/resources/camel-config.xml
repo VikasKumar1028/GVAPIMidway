@@ -167,26 +167,26 @@
 		<property name="resourcePackage" value="com.gv.midway" />
 		<property name="version" value="2.0" />
 		<property name="basePath" value="${swagger.uri}" />
-		<!-- <property name="basePath" value="http://mid2.gv.systems:8080/MidWay/api" 
-			/> -->
-		<property name="title" value="Swagger UI MidWay Integration" />
-		<property name="description" value="Swagger UI Integration for MidWay" />
+		<property name="title" value="Swagger UI Midway Integration" />
+		<property name="description" value="Swagger UI Integration for Midway" />
 		<property name="contact" value="vs00419238@techmahindra.com" />
 		<property name="scan" value="true" />
 	</bean>
 
-	<!-- <mongo:mongo host="${mongo.endpoint}" port="${mongo.port}" /> -->
-	<!-- <mongo:db-factory dbname="midWayDB" /> -->
-	
-	<mongo:mongo id="midWayRs" replica-set="${mongo.replica-set}" /> 
-	
+	<mongo:mongo id="midWayRs" replica-set="${mongo.replica-set}" />
+
+	<bean id="mongoCredentials" class="org.springframework.data.authentication.UserCredentials">
+		<constructor-arg name="username" value="${mongo.username:#{null}}"/>
+		<constructor-arg name="password" value="${mongo.password:#{null}}" />
+	</bean>
+
 	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
-		<!-- <constructor-arg name="mongoDbFactory" ref="mongoDbFactory" /> -->
-		  <constructor-arg ref="midWayRs"/>
-          <constructor-arg name="databaseName" value="midWayDB"/>
-        <!--   <constructor-arg name="userCredentials" ref="userCredentials"/> -->
+		<constructor-arg ref="midWayRs"/>
+		<constructor-arg name="databaseName" value="${mongo.dbname}"/>
+		<constructor-arg name="userCredentials" ref="mongoCredentials"/>
 		<property name="writeConcern">
 			<util:constant static-field="com.mongodb.WriteConcern.SAFE" />
 		</property>
 	</bean>
+
 </beans>

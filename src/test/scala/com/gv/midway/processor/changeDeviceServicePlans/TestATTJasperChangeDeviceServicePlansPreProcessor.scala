@@ -19,8 +19,7 @@ class TestATTJasperChangeDeviceServicePlansPreProcessor extends TestMocks with A
       val servicePlan = "servicePlan"
       val deviceNumber = "deviceNumber"
 
-      val id1 = new MidWayDeviceId
-      id1.setId("id1")
+      val id1 = new MidWayDeviceId("id1", null)
 
       val device1 = new MidWayDevices
       device1.setDeviceIds(Array(id1))

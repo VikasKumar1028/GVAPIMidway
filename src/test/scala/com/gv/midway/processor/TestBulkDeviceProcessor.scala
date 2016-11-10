@@ -43,7 +43,7 @@ class TestBulkDeviceProcessor  extends FunSuite with MockitoSugar {
           val response = bdr.getResponse
           assert(response.getResponseCode === IResponse.SUCCESS_CODE)
           assert(response.getResponseStatus === IResponse.SUCCESS_MESSAGE)
-          assert(response.getResponseDescription === IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_CARRIER)
+          assert(response.getResponseDescription === IResponse.SUCCESS_DESCRIPTION_DEVICEINFO_CARRIER)
 
           val dataArea = bdr.getDataArea
           assert(dataArea.getFailedCount === errors.size)

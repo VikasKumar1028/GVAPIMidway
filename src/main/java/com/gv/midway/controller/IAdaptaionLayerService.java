@@ -195,7 +195,7 @@ public interface IAdaptaionLayerService {
     @GET
     @Path("/device/usage/session")
     @Produces("application/json")
-    @ApiOperation(value = "Retrieve Device data Usage by start and end Date from Carrier for Verizon Devices.")
+    @ApiOperation(value = "Retrieve Device data Usage by start Date, end Date, and by Device id/kind from Carrier for Verizon devices.")
     UsageInformationResponse retrieveDeviceUsageHistoryCarrier(
             @ApiParam(value = "Region for the request.")
             @QueryParam("region") final String region,
@@ -223,7 +223,7 @@ public interface IAdaptaionLayerService {
     @GET
     @Path("/devices/connections/session/info")
     @Produces("application/json")
-    @ApiOperation(value = "Service to check Device Session Begin and End information for Verizon and AT&T Jasper")
+    @ApiOperation(value = "Service to check Device Session Begin and End information by start Date, end Date, and by Device id/kind from Carrier for Verizon and AT&T Jasper devices.")
     SessionBeginEndResponse deviceSessionBeginEndResponse(
             @ApiParam(value = "Region for the request.")
             @QueryParam("region") final String region,
@@ -251,7 +251,7 @@ public interface IAdaptaionLayerService {
     @GET
     @Path("/device/session/usage")
     @Produces("application/json")
-    @ApiOperation(value = "Retrieve Device data Usage by start and end Date from Carrier for Verizon Devices.")
+    @ApiOperation(value = "Retrieve Device data Usage by start Date, end Date, and by NetSuiteId from Carrier for Verizon devices.")
     UsageInformationResponse deviceSessionUsage(
             @ApiParam(value = "Region for the request.")
             @QueryParam("region") final String region,
@@ -277,7 +277,7 @@ public interface IAdaptaionLayerService {
     @GET
     @Path("/devices/session/info")
     @Produces("application/json")
-    @ApiOperation(value = "Service to check Device Session Begin and End information for Verizon and AT&T Jasper")
+    @ApiOperation(value = "Service to check Device Session Begin and End information by start Date, end Date, and by NetSuiteId from Carrier for Verizon and AT&T Jasper devices.")
     SessionBeginEndResponse deviceSessionInfo(
             @ApiParam(value = "Region for the request.")
             @QueryParam("region") final String region,

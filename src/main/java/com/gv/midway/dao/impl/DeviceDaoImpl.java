@@ -54,7 +54,6 @@ import com.gv.midway.pojo.usageInformation.response.DevicesUsageByDayAndCarrierR
 import com.gv.midway.pojo.usageInformation.response.UsageInformationMidwayResponse;
 import com.gv.midway.pojo.usageInformation.response.UsageInformationResponseMidwayDataArea;
 import com.gv.midway.utility.CommonUtil;
-import scala.Int;
 
 @Service
 public class DeviceDaoImpl implements IDeviceDao {
@@ -128,11 +127,11 @@ public class DeviceDaoImpl implements IDeviceDao {
 				final Response response = new Response();
 				if (deviceInformation == null) {
 					response.setResponseCode(IResponse.NO_DATA_FOUND_CODE);
-					response.setResponseDescription(IResponse.ERROR_DESCRIPTION_NODATA_DEVCIEINFO_MIDWAYDB);
+					response.setResponseDescription(IResponse.ERROR_DESCRIPTION_NODATA_DEVICEINFO_MIDWAYDB);
 					response.setResponseStatus(IResponse.ERROR_MESSAGE);
 				} else {
 					response.setResponseCode(IResponse.SUCCESS_CODE);
-					response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_MIDWAYDB);
+					response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVICEINFO_MIDWAYDB);
 					response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
 				}
 
@@ -144,7 +143,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 				LOGGER.error("Exception ex" + CommonUtil.getStackTrace(e));
 
 				final Response response =
-						new Response(IResponse.DB_ERROR_CODE, IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB, IResponse.ERROR_MESSAGE);
+						new Response(IResponse.DB_ERROR_CODE, IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVICEINFO_MIDWAYDB, IResponse.ERROR_MESSAGE);
 
 				final DeviceInformationResponseDataArea deviceInformationResponseDataArea = new DeviceInformationResponseDataArea();
 				deviceInformationResponseDataArea.setDevices(null);
@@ -326,7 +325,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 			if (deviceUsageSize == 0) {
 				final Response response =
-						new Response(IResponse.NO_DATA_FOUND_CODE, IResponse.ERROR_DESCRIPTION_NODATA_DEVCIEINFO_MIDWAYDB, IResponse.ERROR_MESSAGE);
+						new Response(IResponse.NO_DATA_FOUND_CODE, IResponse.ERROR_DESCRIPTION_NODATA_DEVICEINFO_MIDWAYDB, IResponse.ERROR_MESSAGE);
 
 				return new UsageInformationMidwayResponse(header, response, new UsageInformationResponseMidwayDataArea());
 			} else {
@@ -346,7 +345,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 				Collections.sort(deviceDateBasedUsageList, (a, b) -> a.getDate().compareTo(b.getDate()));
 
 				final Response response =
-						new Response(IResponse.SUCCESS_CODE, IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_MIDWAYDB, IResponse.SUCCESS_MESSAGE);
+						new Response(IResponse.SUCCESS_CODE, IResponse.SUCCESS_DESCRIPTION_DEVICEINFO_MIDWAYDB, IResponse.SUCCESS_MESSAGE);
 
 				final UsageInformationResponseMidwayDataArea usageInformationResponseMidwayDataArea = new UsageInformationResponseMidwayDataArea();
 				usageInformationResponseMidwayDataArea.setDeviceUsages(deviceDateBasedUsageList);
@@ -357,7 +356,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 			LOGGER.error("Exception ex " + CommonUtil.getStackTrace(e));
 
 			final Response response =
-					new Response(IResponse.DB_ERROR_CODE, IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB, IResponse.ERROR_MESSAGE);
+					new Response(IResponse.DB_ERROR_CODE, IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVICEINFO_MIDWAYDB, IResponse.ERROR_MESSAGE);
 
 			return new UsageInformationMidwayResponse(header, response, new UsageInformationResponseMidwayDataArea());
 		}
@@ -437,7 +436,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 			if (deviceConnectionUsageSize == 0) {
 				final Response response =
-						new Response(IResponse.NO_DATA_FOUND_CODE, IResponse.ERROR_DESCRIPTION_NODATA_DEVCIEINFO_MIDWAYDB, IResponse.ERROR_MESSAGE);
+						new Response(IResponse.NO_DATA_FOUND_CODE, IResponse.ERROR_DESCRIPTION_NODATA_DEVICEINFO_MIDWAYDB, IResponse.ERROR_MESSAGE);
 				return new ConnectionInformationMidwayResponse(header, response);
 			} else {
 				final List<DeviceEvents> deviceEventsList = new ArrayList<>();
@@ -469,7 +468,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 				dataArea.setEvents(deviceEventsList);
 
 				final Response response =
-						new Response(IResponse.SUCCESS_CODE, IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_MIDWAYDB, IResponse.SUCCESS_MESSAGE);
+						new Response(IResponse.SUCCESS_CODE, IResponse.SUCCESS_DESCRIPTION_DEVICEINFO_MIDWAYDB, IResponse.SUCCESS_MESSAGE);
 
 				return new ConnectionInformationMidwayResponse(header, response, dataArea);
 			}
@@ -477,7 +476,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 			LOGGER.error("Exception ex " + CommonUtil.getStackTrace(e));
 
 			final Response response =
-					new Response(IResponse.DB_ERROR_CODE, IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB, IResponse.ERROR_MESSAGE);
+					new Response(IResponse.DB_ERROR_CODE, IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVICEINFO_MIDWAYDB, IResponse.ERROR_MESSAGE);
 			return new ConnectionInformationMidwayResponse(header, response, new ConnectionInformationResponseMidwayDataArea());
 		}
 	}
@@ -510,11 +509,11 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 			if (results == null || results.getMappedResults().size() == 0) {
 				final Response response =
-						new Response(IResponse.NO_DATA_FOUND_CODE, IResponse.ERROR_DESCRIPTION_NODATA_DEVCIEINFO_MIDWAYDB, IResponse.ERROR_MESSAGE);
+						new Response(IResponse.NO_DATA_FOUND_CODE, IResponse.ERROR_DESCRIPTION_NODATA_DEVICEINFO_MIDWAYDB, IResponse.ERROR_MESSAGE);
 				return new DevicesUsageByDayAndCarrierResponse(header, response);
 			} else {
 				final Response response =
-						new Response(IResponse.SUCCESS_CODE, IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_MIDWAYDB, IResponse.SUCCESS_MESSAGE);
+						new Response(IResponse.SUCCESS_CODE, IResponse.SUCCESS_DESCRIPTION_DEVICEINFO_MIDWAYDB, IResponse.SUCCESS_MESSAGE);
 
 				LOGGER.info("size of result is     ......" + results.getMappedResults().size());
 
@@ -527,7 +526,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 		} catch (Exception e) {
 			LOGGER.error("Exception ex " + CommonUtil.getStackTrace(e));
 			final Response response =
-					new Response(IResponse.DB_ERROR_CODE, IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB, IResponse.ERROR_MESSAGE);
+					new Response(IResponse.DB_ERROR_CODE, IResponse.ERROR_DESCRIPTION_EXCEPTION_DEVICEINFO_MIDWAYDB, IResponse.ERROR_MESSAGE);
 			return new DevicesUsageByDayAndCarrierResponse(header, response);
 		}
 	}

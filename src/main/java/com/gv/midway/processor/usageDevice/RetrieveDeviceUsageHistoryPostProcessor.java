@@ -44,11 +44,11 @@ public class RetrieveDeviceUsageHistoryPostProcessor implements Processor {
 
         if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
 
-            Map map = exchange.getIn().getBody(Map.class);
-            ObjectMapper mapper = new ObjectMapper();
-
-            VerizonUsageInformationResponse usageResponse = mapper
-                    .convertValue(map, VerizonUsageInformationResponse.class);
+            VerizonUsageInformationResponse usageResponse = exchange.getIn().getBody(VerizonUsageInformationResponse.class);
+//            ObjectMapper mapper = new ObjectMapper();
+//
+//            VerizonUsageInformationResponse usageResponse = mapper
+//                    .convertValue(map, VerizonUsageInformationResponse.class);
 
             if (usageResponse.getUsageHistory() != null) {
                 for (UsageHistory history : usageResponse.getUsageHistory()) {
@@ -62,22 +62,19 @@ public class RetrieveDeviceUsageHistoryPostProcessor implements Processor {
             response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVICE_USAGE_MIDWAY);
 
             usageInformationResponseDataArea.setTotalUsages(totalBytesUsed);
-            usageInformationResponse
-                    .setDataArea(usageInformationResponseDataArea);
-        }
+            usageInformationResponse.setDataArea(usageInformationResponseDataArea);
 
-        else {
+        } else {
 
             response.setResponseCode(400);
             response.setResponseStatus(IResponse.ERROR_MESSAGE);
-            response.setResponseDescription(exchange.getIn().getBody()
-                    .toString());
+            response.setResponseDescription(exchange.getIn().getBody().toString());
 
         }
 
-        Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
+        Header responseHeader = (Header) exchange.getProperty(IConstant.HEADER);
 
-        usageInformationResponse.setHeader(responseheader);
+        usageInformationResponse.setHeader(responseHeader);
         usageInformationResponse.setResponse(response);
 
         exchange.getIn().setBody(usageInformationResponse);

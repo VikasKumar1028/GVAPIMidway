@@ -13,8 +13,8 @@ public class IResponse {
 
     public static final String SUCCESS_MESSAGE = "Success";
 
-    public static final String SUCCESS_DESCRIPTION_UPDATE_MIDWAYDB = "Record succesfully uploaded in Midway";
-    public static final String SUCCESS_DESCRIPTION_DEVCIEINFO_MIDWAYDB = "Data Succesfully Found from Midway";
+    public static final String SUCCESS_DESCRIPTION_UPDATE_MIDWAYDB = "Record successfully uploaded in Midway";
+    public static final String SUCCESS_DESCRIPTION_DEVICEINFO_MIDWAYDB = "Data Successfully Found from Midway";
     
     public static final String SUCCESS_DESCRIPTION_PROVISIONING_MIDWAY = "Data Submitted Successfully";
 
@@ -25,17 +25,17 @@ public class IResponse {
     public static final String SUCCESS_DESCRIPTION_SUSPEND_MIDWAY = "Data Submitted Successfully";
     public static final String SUCCESS_DESCRIPTION_CONNECTION_STATUS = "Data Processed Successfully";
 
-    public static final String SUCCESS_DESCRIPTION_DEVCIEINFO_CARRIER = "Data Successfully Found from Carrier";
+    public static final String SUCCESS_DESCRIPTION_DEVICEINFO_CARRIER = "Data Successfully Found from Carrier";
 
     public static final String ERROR_MESSAGE = "Error";
 
     public static final String ERROR_DESCRIPTION_UPDATE_MIDWAYDB = "Failed to upload record in Midway";
     public static final String ERROR_DESCRIPTION_UPDATE_NETSUITE_MIDWAYDB = "NetSuite id is missing in Request";
     public static final String ERROR_DESCRIPTION_CHANGE_SERVICE_PLAN = "Current Service plan or Service plan is missing in Request";
-    public static final String ERROR_DESCRIPTION_NODATA_DEVCIEINFO_MIDWAYDB = "No data found in Midway";
-    public static final String ERROR_DESCRIPTION_NODATA_DEVCIEINFO_CARRIER = "No Device Information found from Carrier";
-    public static final String ERROR_DESCRIPTION_NODATA_UPDATEDEVCIE_MIDWAYDB = "No record found to Update in Midway";
-    public static final String ERROR_DESCRIPTION_EXCEPTION_DEVCIEINFO_MIDWAYDB = "Error in fecthing the Device Data from Midway";
+    public static final String ERROR_DESCRIPTION_NODATA_DEVICEINFO_MIDWAYDB = "No data found in Midway";
+    public static final String ERROR_DESCRIPTION_NODATA_DEVICEINFO_CARRIER = "No Device Information found from Carrier";
+    public static final String ERROR_DESCRIPTION_NODATA_UPDATEDEVICE_MIDWAYDB = "No record found to Update in Midway";
+    public static final String ERROR_DESCRIPTION_EXCEPTION_DEVICEINFO_MIDWAYDB = "Error in fetching the Device Data from Midway";
     public static final String ERROR_DESCRIPTION_CONNECTION_MIDWAYDB = "Error in Connection with Carrier";
     public static final String ERROR_DESCRIPTION_START_DATE_FORMAT_MIDWAYDB = "Start Date  is missing in Request";
     public static final String ERROR_DESCRIPTION_END_DATE_FORMAT_MIDWAYDB = "End Date  is missing in Request";

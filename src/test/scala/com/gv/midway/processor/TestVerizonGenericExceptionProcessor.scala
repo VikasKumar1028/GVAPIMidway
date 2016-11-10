@@ -22,7 +22,7 @@ class TestVerizonGenericExceptionProcessor extends TestMocks {
     , TestCase("Endpoint[direct://suspendDevice]", classOf[CarrierProvisioningDeviceResponse])
     , TestCase("Endpoint[direct://deviceConnectionStatus]", classOf[ConnectionStatusResponse])
     , TestCase("Endpoint[direct://deviceSessionBeginEndInfo]", classOf[SessionBeginEndResponse])
-    , TestCase("Endpoint[direct://customeFields]", classOf[CarrierProvisioningDeviceResponse])
+    , TestCase("Endpoint[direct://customFields]", classOf[CarrierProvisioningDeviceResponse])
     , TestCase("Endpoint[direct://changeDeviceServicePlans]", classOf[CarrierProvisioningDeviceResponse])
     , TestCase("Endpoint[direct://restoreDevice]", classOf[CarrierProvisioningDeviceResponse])
     , TestCase("Endpoint[direct://retrieveDeviceUsageHistoryCarrier]", classOf[UsageInformationResponse])

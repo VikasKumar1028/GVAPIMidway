@@ -18,9 +18,7 @@ class TestATTJasperCustomFieldDevicePreProcessor extends TestMocks with ATTJaspe
 
       val deviceNumber = "deviceNumber"
 
-      val deviceId = new MidWayDeviceId
-      deviceId.setId("id1")
-      deviceId.setKind("kind")
+      val deviceId = new MidWayDeviceId("id1", "kind")
 
       val device1 = new MidWayDevices
       device1.setDeviceIds(Array(deviceId))

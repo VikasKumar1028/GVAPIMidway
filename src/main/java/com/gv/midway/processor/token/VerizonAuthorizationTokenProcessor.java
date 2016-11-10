@@ -34,16 +34,13 @@ public class VerizonAuthorizationTokenProcessor implements Processor {
         LOGGER.info("Authorization:::"
                 + newEnv.getProperty(IConstant.VERIZON_AUTHENTICATION));
         Message message = exchange.getIn();
-        message.setHeader("Authorization",
-                newEnv.getProperty(IConstant.VERIZON_AUTHENTICATION));
-        message.setHeader(Exchange.CONTENT_TYPE,
-                "application/x-www-form-urlencoded");
+        message.setHeader("Authorization", newEnv.getProperty(IConstant.VERIZON_AUTHENTICATION));
+        message.setHeader(Exchange.CONTENT_TYPE, "application/x-www-form-urlencoded");
         message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
         message.setHeader(Exchange.HTTP_METHOD, "POST");
         message.setHeader(Exchange.HTTP_PATH, "/ts/v1/oauth2/token");
 
-        exchange.getIn().setHeader(Exchange.HTTP_QUERY,
-                "grant_type=client_credentials");
+        exchange.getIn().setHeader(Exchange.HTTP_QUERY, "grant_type=client_credentials");
 
         exchange.setPattern(ExchangePattern.InOut);
 

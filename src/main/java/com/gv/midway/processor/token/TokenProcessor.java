@@ -32,17 +32,13 @@ public class TokenProcessor implements Processor {
     public void process(Exchange exchange) throws Exception {
 
         LOGGER.info("TokenProcessor");
-        if(CommonUtil.isTokenRequired.get()==true&&CommonUtil.isAlreadyInTokenGeneration.get()==true)
-        {
-        CommonUtil.setAlreadyInTokenGeneration(false);
-        exchange.getContext().createProducerTemplate()
-                .sendBody("direct:tokenGeneration", exchange.getIn().getBody());
-        }
-        
-        else
-        {
-        	  LOGGER.info(exchange.getExchangeId()+"   TokenProcessor exchnage in waiting state......");
-        	Thread.sleep(4000);
+        if (CommonUtil.isTokenRequired.get() && CommonUtil.isAlreadyInTokenGeneration.get()) {
+            CommonUtil.setAlreadyInTokenGeneration(false);
+            exchange.getContext().createProducerTemplate()
+                    .sendBody("direct:tokenGeneration", exchange.getIn().getBody());
+        } else {
+            LOGGER.info(exchange.getExchangeId()+"   TokenProcessor exchange in waiting state......");
+            Thread.sleep(4000);
         }
 
     }

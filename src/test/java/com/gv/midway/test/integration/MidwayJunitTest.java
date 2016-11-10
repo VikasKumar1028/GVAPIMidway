@@ -4,7 +4,7 @@ Midway Junit is developed to test the
  Batch Jobs of different carrier
 
  */
-package com.gv.midway.test;
+package com.gv.midway.test.integration;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
@@ -87,9 +87,8 @@ public class MidwayJunitTest extends Assert {
 
 		ActivateDeviceId[] ActivateDeviceIdArray = new ActivateDeviceId[1];
 
-		ActivateDeviceId deviceId = new ActivateDeviceId();
+		ActivateDeviceId deviceId = new ActivateDeviceId("89014103277405947099", null);
 
-		deviceId.setId("89014103277405947099");
 		ActivateDeviceIdArray[0] = deviceId;
 
 		adevices.setDeviceIds(ActivateDeviceIdArray);
@@ -145,15 +144,10 @@ public class MidwayJunitTest extends Assert {
 
 		ActivateDeviceId[] ActivateDeviceIdArray = new ActivateDeviceId[2];
 
-		ActivateDeviceId deviceId1 = new ActivateDeviceId();
-		ActivateDeviceId deviceId2 = new ActivateDeviceId();
+		ActivateDeviceId deviceId1 = new ActivateDeviceId("89148000002034203015", "ICCID");
+		ActivateDeviceId deviceId2 = new ActivateDeviceId("353238061040837", "IMEI");
 
-		deviceId1.setId("89148000002034203015");
-		deviceId1.setKind("ICCID");
 		ActivateDeviceIdArray[0] = deviceId1;
-
-		deviceId2.setId("353238061040837");
-		deviceId2.setKind("IMEI");
 		ActivateDeviceIdArray[1] = deviceId2;
 
 		adevices.setDeviceIds(ActivateDeviceIdArray);
@@ -209,12 +203,9 @@ public class MidwayJunitTest extends Assert {
 
 		ActivateDeviceId[] ActivateDeviceIdArray = new ActivateDeviceId[1];
 
-		ActivateDeviceId deviceId1 = new ActivateDeviceId();
-		// ActivateDeviceId deviceId2= new ActivateDeviceId();
+		ActivateDeviceId deviceId1 = new ActivateDeviceId("353238061040", "");
+		//ActivateDeviceId deviceId1 = new ActivateDeviceId("89148000002034203015", null);
 
-		// deviceId1.setId("89148000002034203015");
-		deviceId1.setId("353238061040");
-		deviceId1.setKind("");
 		ActivateDeviceIdArray[0] = deviceId1;
 
 		/*
@@ -458,10 +449,7 @@ public class MidwayJunitTest extends Assert {
 
 		MidWayDeviceId[] reactivateDeviceIdArray = new MidWayDeviceId[1];
 
-		MidWayDeviceId reactivateDeviceId = new MidWayDeviceId();
-
-		reactivateDeviceId.setId("89014103277405946190");
-		reactivateDeviceId.setKind("");
+		MidWayDeviceId reactivateDeviceId = new MidWayDeviceId("89014103277405946190", "");
 
 		reactivateDeviceIdArray[0] = reactivateDeviceId;
 
@@ -516,9 +504,7 @@ public class MidwayJunitTest extends Assert {
 
 		MidWayDeviceId[] suspendDeviceIdArray = new MidWayDeviceId[1];
 
-		MidWayDeviceId suspendDeviceId = new MidWayDeviceId();
-
-		suspendDeviceId.setId("89014103277405946190");
+		MidWayDeviceId suspendDeviceId = new MidWayDeviceId("89014103277405946190", null);
 
 		suspendDeviceIdArray[0] = suspendDeviceId;
 
@@ -563,14 +549,8 @@ public class MidwayJunitTest extends Assert {
 
 		MidWayDeviceId[] suspendDeviceIdArray = new MidWayDeviceId[2];
 
-		MidWayDeviceId suspendDeviceId1 = new MidWayDeviceId();
-		MidWayDeviceId suspendDeviceId2 = new MidWayDeviceId();
-
-		suspendDeviceId1.setId("353238063289994");
-		suspendDeviceId1.setKind("IMEI");
-
-		suspendDeviceId2.setId("89148000002377648495");
-		suspendDeviceId2.setKind("ICCID");
+		MidWayDeviceId suspendDeviceId1 = new MidWayDeviceId("353238063289994", "IMEI");
+		MidWayDeviceId suspendDeviceId2 = new MidWayDeviceId("89148000002377648495", "ICCID");
 
 		suspendDeviceIdArray[0] = suspendDeviceId1;
 		suspendDeviceIdArray[1] = suspendDeviceId2;
@@ -617,14 +597,8 @@ public class MidwayJunitTest extends Assert {
 
 		MidWayDeviceId[] suspendDeviceIdArray = new MidWayDeviceId[2];
 
-		MidWayDeviceId suspendDeviceId1 = new MidWayDeviceId();
-		MidWayDeviceId suspendDeviceId2 = new MidWayDeviceId();
-
-		suspendDeviceId1.setId("353238063289994");
-		suspendDeviceId1.setKind("");
-
-		suspendDeviceId2.setId("89148000002377648495");
-		suspendDeviceId2.setKind("ICCID");
+		MidWayDeviceId suspendDeviceId1 = new MidWayDeviceId("353238063289994", "");
+		MidWayDeviceId suspendDeviceId2 = new MidWayDeviceId("89148000002377648495", "ICCID");
 
 		suspendDeviceIdArray[0] = suspendDeviceId1;
 		suspendDeviceIdArray[1] = suspendDeviceId2;
@@ -674,9 +648,7 @@ public class MidwayJunitTest extends Assert {
 
 		MidWayDeviceId[] restoreDeviceIdArray = new MidWayDeviceId[1];
 
-		MidWayDeviceId restoreDeviceId = new MidWayDeviceId();
-
-		restoreDeviceId.setId("89014103277405946190");
+		MidWayDeviceId restoreDeviceId = new MidWayDeviceId("89014103277405946190", null);
 
 		restoreDeviceIdArray[0] = restoreDeviceId;
 
@@ -721,14 +693,8 @@ public class MidwayJunitTest extends Assert {
 
 		MidWayDeviceId[] restoreDeviceIdArray = new MidWayDeviceId[2];
 
-		MidWayDeviceId restoreDeviceId1 = new MidWayDeviceId();
-		MidWayDeviceId restoreDeviceId2 = new MidWayDeviceId();
-
-		restoreDeviceId1.setId("353238063289994");
-		restoreDeviceId1.setKind("IMEI");
-
-		restoreDeviceId2.setId("89148000002377648495");
-		restoreDeviceId2.setKind("ICCID");
+		MidWayDeviceId restoreDeviceId1 = new MidWayDeviceId("353238063289994", "IMEI");
+		MidWayDeviceId restoreDeviceId2 = new MidWayDeviceId("89148000002377648495", "ICCID");
 
 		restoreDeviceIdArray[0] = restoreDeviceId1;
 		restoreDeviceIdArray[1] = restoreDeviceId2;
@@ -778,14 +744,8 @@ public class MidwayJunitTest extends Assert {
 
 		MidWayDeviceId[] restoreDeviceIdArray = new MidWayDeviceId[2];
 
-		MidWayDeviceId restoreDeviceId1 = new MidWayDeviceId();
-		MidWayDeviceId restoreDeviceId2 = new MidWayDeviceId();
-
-		restoreDeviceId1.setId("353238063289994");
-		restoreDeviceId1.setKind("");
-
-		restoreDeviceId2.setId("89148000002377648495");
-		restoreDeviceId2.setKind("ICCID");
+		MidWayDeviceId restoreDeviceId1 = new MidWayDeviceId("353238063289994", "");
+		MidWayDeviceId restoreDeviceId2 = new MidWayDeviceId("89148000002377648495", "ICCID");
 
 		restoreDeviceIdArray[0] = restoreDeviceId1;
 		restoreDeviceIdArray[1] = restoreDeviceId2;
@@ -839,9 +799,7 @@ public class MidwayJunitTest extends Assert {
 
 		MidWayDeviceId[] customFiledsDeviceIdArray = new MidWayDeviceId[1];
 
-		MidWayDeviceId customFieldsDeviceId = new MidWayDeviceId();
-
-		customFieldsDeviceId.setId("89014103277405946190");
+		MidWayDeviceId customFieldsDeviceId = new MidWayDeviceId("89014103277405946190", null);
 
 		customFiledsDeviceIdArray[0] = customFieldsDeviceId;
 
@@ -862,7 +820,7 @@ public class MidwayJunitTest extends Assert {
 		LOGGER.info("Request in Junit Test:" + req);
 
 		CarrierProvisioningDeviceResponse response = (CarrierProvisioningDeviceResponse) template
-				.requestBody("direct:customeFields", req);
+				.requestBody("direct:customFields", req);
 
 		LOGGER.info("Response in Junit Test for Device Custom Fileds....... :"
 				+ response.getResponse().getResponseCode());
@@ -887,11 +845,8 @@ public class MidwayJunitTest extends Assert {
 
 		MidWayDeviceId[] customFiledsDeviceIdArray = new MidWayDeviceId[1];
 
-		MidWayDeviceId customFieldsDeviceId1 = new MidWayDeviceId();
+		MidWayDeviceId customFieldsDeviceId1 = new MidWayDeviceId("353238063289994", "IMEI");
 		// DeviceId customFieldsDeviceId2= new DeviceId();
-
-		customFieldsDeviceId1.setId("353238063289994");
-		customFieldsDeviceId1.setKind("IMEI");
 
 		customFiledsDeviceIdArray[0] = customFieldsDeviceId1;
 		// customFiledsDeviceIdArray[1] = customFieldsDeviceId2;
@@ -926,7 +881,7 @@ public class MidwayJunitTest extends Assert {
 		LOGGER.info("Request in Junit Test:" + req);
 
 		CarrierProvisioningDeviceResponse response = (CarrierProvisioningDeviceResponse) template
-				.requestBody("direct:customeFields", req);
+				.requestBody("direct:customFields", req);
 		LOGGER.info("Response in Junit Test for Custom Field....... :"
 				+ response.getResponse().getResponseCode());
 		assertEquals(response.getResponse().getResponseCode().toString(), "400");
@@ -949,10 +904,8 @@ public class MidwayJunitTest extends Assert {
 
 		MidWayDeviceId[] customFiledsDeviceIdArray = new MidWayDeviceId[1];
 
-		MidWayDeviceId customFieldsDeviceId1 = new MidWayDeviceId();
+		MidWayDeviceId customFieldsDeviceId1 = new MidWayDeviceId("3532363289994", null);
 		// DeviceId customFieldsDeviceId2= new DeviceId();
-
-		customFieldsDeviceId1.setId("3532363289994");
 
 		customFiledsDeviceIdArray[0] = customFieldsDeviceId1;
 		// customFiledsDeviceIdArray[1] = customFieldsDeviceId2;
@@ -981,7 +934,7 @@ public class MidwayJunitTest extends Assert {
 		LOGGER.info("Request in Junit Test:" + req);
 
 		CarrierProvisioningDeviceResponse response = (CarrierProvisioningDeviceResponse) template
-				.requestBody("direct:customeFields", req);
+				.requestBody("direct:customFields", req);
 		LOGGER.info("Response in Junit Test for Custom Fields....... :"
 				+ response);
 		assertEquals(response.getResponse().getResponseCode().toString(),
@@ -1015,10 +968,7 @@ public class MidwayJunitTest extends Assert {
 
 		MidWayDeviceId[] changeServicePlanDeviceIdArray = new MidWayDeviceId[1];
 
-		MidWayDeviceId changeServicePlanDeviceId = new MidWayDeviceId();
-
-		changeServicePlanDeviceId.setId("8901260761246107398");
-		changeServicePlanDeviceId.setKind("");
+		MidWayDeviceId changeServicePlanDeviceId = new MidWayDeviceId("8901260761246107398", "");
 
 		changeServicePlanDeviceIdArray[0] = changeServicePlanDeviceId;
 
@@ -1068,11 +1018,8 @@ public class MidwayJunitTest extends Assert {
 
 		MidWayDeviceId[] changeServicePlanDeviceIdArray = new MidWayDeviceId[1];
 
-		MidWayDeviceId changeServicePlanDeviceId1 = new MidWayDeviceId();
+		MidWayDeviceId changeServicePlanDeviceId1 = new MidWayDeviceId("353238063289994", "IMEI");
 		// DeviceId changeServicePlanDeviceId2= new DeviceId();
-
-		changeServicePlanDeviceId1.setId("353238063289994");
-		changeServicePlanDeviceId1.setKind("IMEI");
 
 		// changeServicePlanDeviceId2.setId("89148000002377648495");
 		// changeServicePlanDeviceId2.setKind("ICCID");
@@ -1128,12 +1075,8 @@ public class MidwayJunitTest extends Assert {
 
 		MidWayDeviceId[] changeServicePlanDeviceIdArray = new MidWayDeviceId[2];
 
-		MidWayDeviceId changeServicePlanDeviceId1 = new MidWayDeviceId();
-		MidWayDeviceId changeServicePlanDeviceId2 = new MidWayDeviceId();
-
-		changeServicePlanDeviceId1.setId("353238063289994");
-
-		changeServicePlanDeviceId2.setId("89148000002377648495");
+		MidWayDeviceId changeServicePlanDeviceId1 = new MidWayDeviceId("353238063289994", null);
+		MidWayDeviceId changeServicePlanDeviceId2 = new MidWayDeviceId("89148000002377648495", null);
 
 		changeServicePlanDeviceIdArray[0] = changeServicePlanDeviceId1;
 		changeServicePlanDeviceIdArray[1] = changeServicePlanDeviceId2;
@@ -1182,15 +1125,10 @@ public class MidwayJunitTest extends Assert {
 
 		ActivateDeviceId[] ActivateDeviceIdArray = new ActivateDeviceId[2];
 
-		ActivateDeviceId deviceId1 = new ActivateDeviceId();
-		ActivateDeviceId deviceId2 = new ActivateDeviceId();
+		ActivateDeviceId deviceId1 = new ActivateDeviceId("89011702272013902629", "ICCID");
+		ActivateDeviceId deviceId2 = new ActivateDeviceId("89011702272013902587", "ICCID");
 
-		deviceId1.setId("89011702272013902629");
-		deviceId1.setKind("ICCID");
 		ActivateDeviceIdArray[0] = deviceId1;
-
-		deviceId2.setId("89011702272013902587");
-		deviceId2.setKind("ICCID");
 		ActivateDeviceIdArray[1] = deviceId2;
 
 		adevices.setDeviceIds(ActivateDeviceIdArray);
@@ -1241,11 +1179,9 @@ public class MidwayJunitTest extends Assert {
 
 		ActivateDeviceId[] ActivateDeviceIdArray = new ActivateDeviceId[1];
 
-		ActivateDeviceId deviceId1 = new ActivateDeviceId();
+		ActivateDeviceId deviceId1 = new ActivateDeviceId("353238061040", "");
 
 		// deviceId1.setId("89148000002034203015");
-		deviceId1.setId("353238061040");
-		deviceId1.setKind("");
 		ActivateDeviceIdArray[0] = deviceId1;
 
 		adevices.setDeviceIds(ActivateDeviceIdArray);
@@ -1349,10 +1285,7 @@ public class MidwayJunitTest extends Assert {
 
 		MidWayDeviceId[] reactivateDeviceIdArray = new MidWayDeviceId[1];
 
-		MidWayDeviceId reactivateDeviceId = new MidWayDeviceId();
-
-		reactivateDeviceId.setId("89011702272013902587");
-		reactivateDeviceId.setKind("ICCID");
+		MidWayDeviceId reactivateDeviceId = new MidWayDeviceId("89011702272013902587", "ICCID");
 
 		reactivateDeviceIdArray[0] = reactivateDeviceId;
 
@@ -1378,9 +1311,9 @@ public class MidwayJunitTest extends Assert {
 		LOGGER.info("Response in Junit Test for Reactive....... :"
 				+ response.getResponse().getResponseCode());
 		assertEquals(response.getResponse().getResponseCode().toString(),
-				"2000");
-		assertEquals(response.getResponse().getResponseStatus(), "Success");
-		assertNotNull(response.getDataArea().getOrderNumber());
+				"400");
+		assertEquals(response.getResponse().getResponseStatus(), "ReactivateDevice cannot have a bsCarrier of ATTJasper.");
+		//assertNotNull(response.getDataArea().getOrderNumber());
 	}
 
 	// 24.Test Case for Restore Device ATTJasper with valid data
@@ -1398,14 +1331,8 @@ public class MidwayJunitTest extends Assert {
 
 		MidWayDeviceId[] restoreDeviceIdArray = new MidWayDeviceId[2];
 
-		MidWayDeviceId restoreDeviceId1 = new MidWayDeviceId();
-		MidWayDeviceId restoreDeviceId2 = new MidWayDeviceId();
-
-		restoreDeviceId1.setId("89011702272013902603");
-		restoreDeviceId1.setKind("ICCID");
-
-		restoreDeviceId2.setId("89011702272013902595");
-		restoreDeviceId2.setKind("ICCID");
+		MidWayDeviceId restoreDeviceId1 = new MidWayDeviceId("89011702272013902603", "ICCID");
+		MidWayDeviceId restoreDeviceId2 = new MidWayDeviceId("89011702272013902595", "ICCID");
 
 		restoreDeviceIdArray[0] = restoreDeviceId1;
 		restoreDeviceIdArray[1] = restoreDeviceId2;
@@ -1432,8 +1359,7 @@ public class MidwayJunitTest extends Assert {
 		LOGGER.info("Response in Junit Test for Rerstore....... :"
 				+ response.getResponse().getResponseCode());
 
-		assertEquals(response.getResponse().getResponseCode().toString(),
-				"2000");
+		assertEquals(response.getResponse().getResponseCode().toString(), "2000");
 		assertEquals(response.getResponse().getResponseStatus(), "Success");
 		assertNotNull(response.getDataArea().getOrderNumber());
 
@@ -1454,14 +1380,8 @@ public class MidwayJunitTest extends Assert {
 
 		MidWayDeviceId[] suspendDeviceIdArray = new MidWayDeviceId[2];
 
-		MidWayDeviceId suspendDeviceId1 = new MidWayDeviceId();
-		MidWayDeviceId suspendDeviceId2 = new MidWayDeviceId();
-
-		suspendDeviceId1.setId("89011702272013902603");
-		suspendDeviceId1.setKind("ICCID");
-
-		suspendDeviceId2.setId("89011702272013902629");
-		suspendDeviceId2.setKind("ICCID");
+		MidWayDeviceId suspendDeviceId1 = new MidWayDeviceId("89011702272013902603", "ICCID");
+		MidWayDeviceId suspendDeviceId2 = new MidWayDeviceId("89011702272013902629", "ICCID");
 
 		suspendDeviceIdArray[0] = suspendDeviceId1;
 		suspendDeviceIdArray[1] = suspendDeviceId2;
@@ -1485,16 +1405,14 @@ public class MidwayJunitTest extends Assert {
 		response.getResponse().getResponseCode();
 		LOGGER.info("Response in Junit Test for Suspend....... :"
 				+ response.getResponse().getResponseCode());
-		assertEquals(response.getResponse().getResponseCode().toString(),
-				"2000");
-		assertEquals(response.getResponse().getResponseStatus(), "Success");
-		assertNotNull(response.getDataArea().getOrderNumber());
+		assertEquals(response.getResponse().getResponseCode().toString(), "400");
+		assertEquals(response.getResponse().getResponseStatus(), "SuspendDevice cannot have a bsCarrier of ATTJasper.");
+		//assertNotNull(response.getDataArea().getOrderNumber());
 	}
 
 	// 26.test case for Device Custom Fields for ATTJasper with valid data
 	@Test
-	public void testCustomFieldsDeviceRequestATTJasperWithValidData()
-			throws Exception {
+	public void testCustomFieldsDeviceRequestATTJasperWithValidData() throws Exception {
 
 		CustomFieldsDeviceRequest req = new CustomFieldsDeviceRequest();
 		Header header = new Header();
@@ -1504,18 +1422,15 @@ public class MidwayJunitTest extends Assert {
 		MidWayDevices[] deDevices = new MidWayDevices[1];
 		MidWayDevices ddevices = new MidWayDevices();
 
-		MidWayDeviceId[] customFiledsDeviceIdArray = new MidWayDeviceId[1];
+		MidWayDeviceId[] customFieldsDeviceIdArray = new MidWayDeviceId[1];
 
-		MidWayDeviceId customFieldsDeviceId1 = new MidWayDeviceId();
+		MidWayDeviceId customFieldsDeviceId1 = new MidWayDeviceId("89011702272013902611", "ICCID");
 		// DeviceId customFieldsDeviceId2= new DeviceId();
 
-		customFieldsDeviceId1.setId("89011702272013902611");
-		customFieldsDeviceId1.setKind("ICCID");
+		customFieldsDeviceIdArray[0] = customFieldsDeviceId1;
+		// customFieldsDeviceIdArray[1] = customFieldsDeviceId2;
 
-		customFiledsDeviceIdArray[0] = customFieldsDeviceId1;
-		// customFiledsDeviceIdArray[1] = customFieldsDeviceId2;
-
-		ddevices.setDeviceIds(customFiledsDeviceIdArray);
+		ddevices.setDeviceIds(customFieldsDeviceIdArray);
 		deDevices[0] = ddevices;
 
 		CustomFieldsToUpdate[] customFieldsToUpdateArray = new CustomFieldsToUpdate[1];
@@ -1545,7 +1460,7 @@ public class MidwayJunitTest extends Assert {
 		LOGGER.info("Request in Junit Test:" + req);
 
 		CarrierProvisioningDeviceResponse response = (CarrierProvisioningDeviceResponse) template
-				.requestBody("direct:customeFields", req);
+				.requestBody("direct:customFields", req);
 		LOGGER.info("Response in Junit Test for Custom Field....... :"
 				+ response.getResponse().getResponseCode());
 		assertEquals(response.getResponse().getResponseCode().toString(),
@@ -1569,11 +1484,8 @@ public class MidwayJunitTest extends Assert {
 
 		MidWayDeviceId[] changeServicePlanDeviceIdArray = new MidWayDeviceId[1];
 
-		MidWayDeviceId changeServicePlanDeviceId1 = new MidWayDeviceId();
+		MidWayDeviceId changeServicePlanDeviceId1 = new MidWayDeviceId("89011702272013902603", "ICCID");
 		// DeviceId changeServicePlanDeviceId2= new DeviceId();
-
-		changeServicePlanDeviceId1.setId("89011702272013902603");
-		changeServicePlanDeviceId1.setKind("ICCID");
 
 		changeServicePlanDeviceIdArray[0] = changeServicePlanDeviceId1;
 

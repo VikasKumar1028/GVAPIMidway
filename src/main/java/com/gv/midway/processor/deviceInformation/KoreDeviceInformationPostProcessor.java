@@ -69,7 +69,7 @@ public class KoreDeviceInformationPostProcessor implements Processor {
         response.setResponseCode(IResponse.SUCCESS_CODE);
 
         response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
-        response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVCIEINFO_CARRIER);
+        response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVICEINFO_CARRIER);
 
         Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
 

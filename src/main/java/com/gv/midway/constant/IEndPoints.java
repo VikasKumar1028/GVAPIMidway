@@ -6,6 +6,8 @@ public interface IEndPoints {
 
     public final String DEACTIVATION_ENDPOINT = "deactivateDevice";
 
+    public final String REACTIVATION_ENDPOINT = "reactivateDevice";
+
     public final String RESTORE_ENDPOINT = "restoreDevice";
 
     public final String SUSPENSION_ENDPOINT = "suspendDevice";
@@ -20,7 +22,7 @@ public interface IEndPoints {
 
     public final String SUSPENSION_SEDA_KORE_ENDPOINT = "koreSedaSuspend";
 
-    public final String CHANGE_CUSTOMFIELD_ENDPOINT = "customeFields";
+    public final String CHANGE_CUSTOMFIELD_ENDPOINT = "customFields";
 
     public final String CHANGE_SERVICEPLAN_ENDPOINT = "changeDeviceServicePlans";
 

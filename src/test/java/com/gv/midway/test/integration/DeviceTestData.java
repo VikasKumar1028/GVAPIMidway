@@ -1,4 +1,4 @@
-package com.gv.midway.test;
+package com.gv.midway.test.integration;
 
 import org.apache.camel.Exchange;
 
@@ -187,22 +187,20 @@ public class DeviceTestData extends Header {
         ActivateDeviceRequestDataArea dataArea = new ActivateDeviceRequestDataArea();
 
         ActivateDevices[] decs = new ActivateDevices[1];
-        ActivateDevices adevices = new ActivateDevices();
+        ActivateDevices activateDevices = new ActivateDevices();
 
         ActivateDeviceId[] ActivateDeviceIdArray = new ActivateDeviceId[1];
 
-        ActivateDeviceId deviceId = new ActivateDeviceId();
+        ActivateDeviceId deviceId = new ActivateDeviceId("89014103277405946190", "ghgjg");
 
-        deviceId.setId("89014103277405946190");
-        deviceId.setKind("ghgjg");
         /* deviceId.seteAPCode("eAPCode"); */
 
         ActivateDeviceIdArray[0] = deviceId;
 
-        adevices.setDeviceIds(ActivateDeviceIdArray);
-        decs[0] = adevices;
+        activateDevices.setDeviceIds(ActivateDeviceIdArray);
+        decs[0] = activateDevices;
         // dataArea.setDevices(decs);
-        dataArea.setDevices(adevices);
+        dataArea.setDevices(activateDevices);
         req.setDataArea(dataArea);
 
         header.setSourceName("KORE");
@@ -395,10 +393,7 @@ public class DeviceTestData extends Header {
 
         MidWayDeviceId[] DeActivateDeviceIdArray = new MidWayDeviceId[1];
 
-        MidWayDeviceId restoreDeviceId = new MidWayDeviceId();
-
-        restoreDeviceId.setId("89014103277405946190");
-        restoreDeviceId.setKind("ghgjg");
+        MidWayDeviceId restoreDeviceId = new MidWayDeviceId("89014103277405946190", "ghgjg");
 
         DeActivateDeviceIdArray[0] = restoreDeviceId;
 
@@ -444,10 +439,7 @@ public class DeviceTestData extends Header {
 
         MidWayDeviceId[] suspendDeviceIdArray = new MidWayDeviceId[1];
 
-        MidWayDeviceId suspendDeviceId = new MidWayDeviceId();
-
-        suspendDeviceId.setId("89014103277405946190");
-        suspendDeviceId.setKind("ghgjg");
+        MidWayDeviceId suspendDeviceId = new MidWayDeviceId("89014103277405946190", "ghgjg");
 
         suspendDeviceIdArray[0] = suspendDeviceId;
 
