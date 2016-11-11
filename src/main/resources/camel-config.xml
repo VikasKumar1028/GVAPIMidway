@@ -25,7 +25,7 @@
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
        http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd
        http://www.springframework.org/schema/data/mongo
-       http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd
+       http://www.springframework.org/schema/data/mongo/spring-mongo-1.8.xsd
        http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.0.xsd
        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 	<!-- We still need it for loading the CXFServlet -->
@@ -173,7 +173,7 @@
 		<property name="scan" value="true" />
 	</bean>
 
-	<mongo:mongo id="midWayRs" replica-set="${mongo.replica-set}" />
+	<!--  <mongo:mongo id="midWayRs" replica-set="${mongo.replica-set}" />
 
 	<bean id="mongoCredentials" class="org.springframework.data.authentication.UserCredentials">
 		<constructor-arg name="username" value="${mongo.username:#{null}}"/>
@@ -187,6 +187,17 @@
 		<property name="writeConcern">
 			<util:constant static-field="com.mongodb.WriteConcern.SAFE" />
 		</property>
-	</bean>
+	</bean> -->
+	
+	<!--  comment the credentials property if you are not using username and password for authentication for your local development environment-->
+	<mongo:mongo-client replica-set="${mongo.replica-set}" credentials="${mongo.username:#{null}}:${mongo.password:#{null}}@${mongo.dbname}" >
+        <mongo:client-options write-concern="SAFE"/>
+    </mongo:mongo-client>
+		
+
+    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+        <constructor-arg ref="mongo" />
+        <constructor-arg name="databaseName" value="${mongo.dbname}" />
+    </bean>
 
 </beans>
