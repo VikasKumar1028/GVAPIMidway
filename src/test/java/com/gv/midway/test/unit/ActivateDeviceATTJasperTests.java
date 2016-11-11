@@ -4,6 +4,7 @@ import com.gv.midway.attjasper.EditTerminalRequest;
 import com.gv.midway.attjasper.EditTerminalResponse;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IEndPoints;
+import com.gv.midway.constant.RequestType;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceId;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequestDataArea;
@@ -47,10 +48,15 @@ public class ActivateDeviceATTJasperTests extends MidwayTestSupport {
                         .to("mock:" + IEndPoints.URI_SOAP_ATTJASPER_TERMINAL_ENDPOINT)
                         .skipSendToOriginalEndpoint();
 
-//                interceptSendToEndpoint("direct:postActivateDeviceKoreRest")
-//                        .to("log:input")
-//                        .to("mock:direct:postActivateDeviceKoreRest")
-//                        .skipSendToOriginalEndpoint();
+                interceptSendToEndpoint("direct:activationWithCustomFieldFlow")
+                        .to("log:input")
+                        .to("mock:direct:activationWithCustomFieldFlow")
+                        .skipSendToOriginalEndpoint();
+
+                interceptSendToEndpoint("direct:activationWithServicePlanFlow")
+                        .to("log:input")
+                        .to("mock:direct:activationWithServicePlanFlow")
+                        .skipSendToOriginalEndpoint();
             }
 
         });
@@ -83,6 +89,9 @@ public class ActivateDeviceATTJasperTests extends MidwayTestSupport {
         transaction.setDeviceNumber("89011702272013902587");
         transaction.setNetSuiteId(187527);
         transaction.setCarrierName("ATTJASPER");
+
+        //set by populateActivateDBPayload
+        transaction.setRequestType(RequestType.ACTIVATION);
 
 //        EditTerminalRequest editTerminalRequest = new EditTerminalRequest();
 //        editTerminalRequest.setIccid(activateDeviceId.getId());

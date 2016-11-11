@@ -8,9 +8,6 @@ import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.test.junit4.CamelTestSupport;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 /**
  * Created by ryan.tracy on 10/14/2016.
  */
@@ -30,7 +27,7 @@ public class CamelTestExamples extends CamelTestSupport {
             public void configure() throws Exception {
                 interceptSendToEndpoint("direct:end")
                         //.process((Exchange exchange) -> {
-                            //System.out.println(exchange.getIn().getBody(String.class));
+                        //System.out.println(exchange.getIn().getBody(String.class));
                         //})
                         .to("mock:direct:end")
                         .skipSendToOriginalEndpoint();
@@ -39,7 +36,9 @@ public class CamelTestExamples extends CamelTestSupport {
 
         context.start();
 
-        template.request("direct:start", (Exchange exchange) -> exchange.getIn().setBody("hello world!"));
+        template.request("direct:start", (Exchange exchange) -> {
+            exchange.getIn().setBody("hello world!");
+        });
 
         MockEndpoint mock = getMockEndpoint("mock:direct:end");
 
@@ -47,35 +46,6 @@ public class CamelTestExamples extends CamelTestSupport {
         mock.expectedBodyReceived().body().isEqualTo("hello world!");
 
         mock.assertIsSatisfied();
-
-        Collection<RoutableMessage> routableMessages = new ArrayList<>();
-        RoutableMessage routableMessage = new RoutableMessage();
-        routableMessage.setRoute("direct:north");
-        routableMessage.setHeader("northHeader");
-        routableMessage.setBody("northBody");
-        routableMessages.add(routableMessage);
-
-        routableMessage = new RoutableMessage();
-        routableMessage.setRoute("direct:east");
-        routableMessage.setHeader("eastHeader");
-        routableMessage.setBody("eastBody");
-        routableMessages.add(routableMessage);
-
-        routableMessage = new RoutableMessage();
-        routableMessage.setRoute("direct:south");
-        routableMessage.setHeader("southHeader");
-        routableMessage.setBody("southBody");
-        routableMessages.add(routableMessage);
-
-        routableMessage = new RoutableMessage();
-        routableMessage.setRoute("direct:west");
-        routableMessage.setHeader("westHeader");
-        routableMessage.setBody("westBody");
-        routableMessages.add(routableMessage);
-
-        template.request("direct:collection", (Exchange exchange) -> {
-            exchange.getIn().setBody(routableMessages);
-        });
     }
 
     @Override
@@ -100,22 +70,8 @@ public class CamelTestExamples extends CamelTestSupport {
                             exchange.getIn().setBody("bye world!");
                         })
                         .to("log:input");
-
-                from("direct:collection")
-                        .split(body()).recipientList(bodyAs(RoutableMessage.class).method("route"));
-
-                from("direct:north").to("log:input");
-
-                from("direct:east").to("log:input");
-
-                from("direct:south").to("log:input");
-
-                from("direct:west").to("log:input?showHeaders=true");
             }
         };
     }
 
-
-
 }
-
