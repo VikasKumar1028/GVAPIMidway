@@ -45,7 +45,8 @@ public class CallbackPostProcessor implements Processor {
         final NetSuiteOAuthHeaderProperties oAuthHeaderProperties = EnvironmentParser.getNetSuiteOAuthHeaderProperties(newEnv);
         LOGGER.info("oauth info is....." + oAuthHeaderProperties);
 
-        final String script = "539";
+        //final String script = "539";
+        final String script = newEnv.getProperty("netSuite.callbacks.script");
         final String oauthHeader;
 
         switch (requestType) {

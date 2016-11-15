@@ -24,7 +24,6 @@ class TestAttCallBackErrorPostProcessor extends TestMocks with NetSuiteSuite {
 
     test(s"process($requestType)") {
 
-      val script = "539"
       val netSuiteId: Integer = 342348
       val transId = "transId"
       val deviceNumber = s"""[${deviceIdJson("id1", "kind1")}, ${deviceIdJson("id2", "kind2")}]"""
@@ -49,6 +48,7 @@ class TestAttCallBackErrorPostProcessor extends TestMocks with NetSuiteSuite {
         when(exchange.getProperty(IConstant.MIDWAY_CARRIER_ERROR_DESC)).thenReturn(errorDesc, Nil: _*)
         when(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_PAYLOAD)).thenReturn(payload, Nil: _*)
         when(exchange.getProperty(IConstant.ATTJASPER_CUSTOM_FIELD_DEC)).thenReturn(customFieldDesc, Nil: _*)
+        when(environment.getProperty(IConstant.NETSUITE_CALLBACKS_SCRIPT)).thenReturn(IConstant.NETSUITE_CALLBACKS_SCRIPT)
 
         val requestCaptor = ArgumentCaptor.forClass(classOf[NetSuiteCallBackProvisioningRequest])
         val errorCaptor = ArgumentCaptor.forClass(classOf[KafkaNetSuiteCallBackError])
@@ -61,6 +61,7 @@ class TestAttCallBackErrorPostProcessor extends TestMocks with NetSuiteSuite {
         verify(message, times(1)).setHeader(Exchange.HTTP_METHOD, "POST")
         verify(message, times(1)).setHeader(same("Authorization"), anyString())
         verify(message, times(1)).setHeader(same(Exchange.HTTP_PATH), isNull)
+
         val request = requestCaptor.getValue
         assert(request.getStatus === "fail")
         assert(request.getCarrierOrderNumber === transId)
@@ -74,7 +75,7 @@ class TestAttCallBackErrorPostProcessor extends TestMocks with NetSuiteSuite {
         assert(request.getDeviceIds.length === 2)
 
         verify(exchange, times(1)).setProperty(same(IConstant.KAFKA_OBJECT), errorCaptor.capture())
-        verify(exchange, times(1)).setProperty("script", script)
+        verify(exchange, times(1)).setProperty("script", IConstant.NETSUITE_CALLBACKS_SCRIPT)
         verify(exchange, times(1)).setPattern(ExchangePattern.InOut)
         val error = errorCaptor.getValue
         assert(error.getApp === "Midway")

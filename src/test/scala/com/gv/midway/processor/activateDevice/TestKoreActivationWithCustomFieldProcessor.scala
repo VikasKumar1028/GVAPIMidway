@@ -34,6 +34,7 @@ class TestKoreActivationWithCustomFieldProcessor extends TestMocks {
         , ("netSuite.oauthConsumerSecret", "consumerSecret")
         , ("netSuite.realm", "realm")
         , ("netSuite.endPoint", "endpoint")
+        , (IConstant.NETSUITE_CALLBACKS_SCRIPT, IConstant.NETSUITE_CALLBACKS_SCRIPT)
       ).foreach { case (k, v) =>
         when(environment.getProperty(k)).thenReturn(v, Nil: _*)
       }
@@ -44,7 +45,7 @@ class TestKoreActivationWithCustomFieldProcessor extends TestMocks {
       new KoreActivationWithCustomFieldProcessor(environment).process(exchange)
 
       verify(exchange, times(1)).setProperty(same(IConstant.KAFKA_OBJECT), captorKafkaEvent.capture())
-      verify(exchange, times(1)).setProperty("script", "539")
+      verify(exchange, times(1)).setProperty("script", IConstant.NETSUITE_CALLBACKS_SCRIPT)
       verify(exchange, times(1)).setPattern(ExchangePattern.InOut)
 
       val kafkaEvent = captorKafkaEvent.getValue

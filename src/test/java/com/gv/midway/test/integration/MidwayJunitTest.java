@@ -76,7 +76,7 @@ public class MidwayJunitTest extends Assert {
 
 	// 1.Test Activate device API for Kore with correct data.
 	@Test
-	public void testActivateDeviceRequestKoreWithValiData() throws Exception {
+	public void testActivateDeviceRequestKoreWithValidData() throws Exception {
 
 		ActivateDeviceRequest req = new ActivateDeviceRequest();
 		Header header = new Header();

@@ -105,7 +105,7 @@ public interface IAdaptaionLayerService {
     @Path("/device/deactivate")
     @Produces("application/json")
     @Consumes("application/json")
-    @ApiOperation(value = "DeactivateDeviceService")
+    @ApiOperation(value = "Deactivate a device.")
     CarrierProvisioningDeviceResponse deactivateDevice(
             DeactivateDeviceRequest deactivateDeviceRequest);
 
@@ -113,7 +113,7 @@ public interface IAdaptaionLayerService {
     @Path("/device/activate")
     @Produces("application/json")
     @Consumes("application/json")
-    @ApiOperation(value = "ActivateDeviceService")
+    @ApiOperation(value = "Activate a device.")
     CarrierProvisioningDeviceResponse activateDevice(
             ActivateDeviceRequest activateDeviceRequest);
 
@@ -121,7 +121,7 @@ public interface IAdaptaionLayerService {
     @Path("/device/reactivate")
     @Produces("application/json")
     @Consumes("application/json")
-    @ApiOperation(value = "ReactivateDeviceService")
+    @ApiOperation(value = "Reactivate a device after Deactivation. Reactivation is only available to Kore devices.")
     CarrierProvisioningDeviceResponse reactivateDevice(
             ReactivateDeviceRequest reActivateDeviceRequest);
 
@@ -129,7 +129,7 @@ public interface IAdaptaionLayerService {
     @Path("/device/suspend")
     @Produces("application/json")
     @Consumes("application/json")
-    @ApiOperation(value = "SuspendDeviceService")
+    @ApiOperation(value = "Suspend a device which can later be Restored. Suspend is only available to Verizon and Kore devices.")
     CarrierProvisioningDeviceResponse suspendDevice(
             SuspendDeviceRequest suspendDeviceRequest);
 
@@ -137,7 +137,7 @@ public interface IAdaptaionLayerService {
     @Path("/device/customFields")
     @Produces("application/json")
     @Consumes("application/json")
-    @ApiOperation(value = "CustomFieldsUpdateService")
+    @ApiOperation(value = "Update Carrier device CustomFields.")
     CarrierProvisioningDeviceResponse customFieldsUpdateRequest(
             CustomFieldsDeviceRequest customeFieldDeviceRequest);
 
@@ -145,7 +145,7 @@ public interface IAdaptaionLayerService {
     @Path("/device/changeServicePlan")
     @Produces("application/json")
     @Consumes("application/json")
-    @ApiOperation(value = "ChangeDeviceServicePlans")
+    @ApiOperation(value = "Change device Service Plans.")
     CarrierProvisioningDeviceResponse changeDeviceServicePlans(
             ChangeDeviceServicePlansRequest changeDeviceServicePlansRequest);
 
@@ -188,7 +188,7 @@ public interface IAdaptaionLayerService {
     @Path("/device/restore")
     @Produces("application/json")
     @Consumes("application/json")
-    @ApiOperation(value = "RestoreDeviceService")
+    @ApiOperation(value = "Restore a Suspended device. Restore is only available to Verizon and Kore devices.")
     CarrierProvisioningDeviceResponse restoreDevice(
             RestoreDeviceRequest restoreDeviceRequest);
 

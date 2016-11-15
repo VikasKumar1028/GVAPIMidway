@@ -140,7 +140,8 @@ public class AttCallBackSuccessPostProcessor implements Processor {
 
         LOGGER.info("oauth info is....." + properties);
 
-        final String script = "539";
+        //final String script = "539";
+        final String script = newEnv.getProperty("netSuite.callbacks.script");
 
         final String oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(properties, script);
 

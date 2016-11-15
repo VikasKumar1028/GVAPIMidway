@@ -28,6 +28,7 @@ class TestCallbackPostProcessor extends TestMocks {
           , "netSuite.oauthConsumerSecret" -> "consumerSecret"
           , "netSuite.realm" -> "realm"
           , "netSuite.endPoint" -> "endPoint"
+          , IConstant.NETSUITE_CALLBACKS_SCRIPT -> IConstant.NETSUITE_CALLBACKS_SCRIPT
         ).foreach { case (k, v) =>
           when(environment.getProperty(k)).thenReturn(v, Nil: _*)
         }
@@ -56,6 +57,7 @@ class TestCallbackPostProcessor extends TestMocks {
 
       when(message.getBody).thenReturn(request, Nil: _*)
       when(exchange.getProperty(IConstant.KAFKA_OBJECT)).thenReturn(kafkaObj, Nil: _*)
+      when(environment.getProperty(IConstant.NETSUITE_CALLBACKS_SCRIPT)).thenReturn(IConstant.NETSUITE_CALLBACKS_SCRIPT)
 
       new CallbackPostProcessor(environment).process(exchange)
 
@@ -71,7 +73,7 @@ class TestCallbackPostProcessor extends TestMocks {
     verify(message, times(1)).setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json")
     verify(message, times(1)).setHeader(Exchange.HTTP_METHOD, "POST")
 
-    verify(exchange, times(1)).setProperty("script", "539")
+    verify(exchange, times(1)).setProperty("script", IConstant.NETSUITE_CALLBACKS_SCRIPT)
     verify(exchange, times(1)).setPattern(ExchangePattern.InOut)
   }
 }

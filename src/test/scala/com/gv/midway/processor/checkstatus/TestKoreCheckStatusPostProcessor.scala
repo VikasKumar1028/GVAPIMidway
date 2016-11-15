@@ -26,7 +26,6 @@ class TestKoreCheckStatusPostProcessor extends TestMocks with NetSuiteSuite {
 
       val deviceNumber = s"""[${deviceIdJson("id1", "kind1")}, ${deviceIdJson("id2", "kind2")}]"""
       val transId = "transId"
-      val script = "539"
       val netSuiteId: Integer = 349343
       val dataArea = new ChangeDeviceServicePlansRequestDataArea
       dataArea.setCurrentServicePlan("currentPlan")
@@ -46,6 +45,7 @@ class TestKoreCheckStatusPostProcessor extends TestMocks with NetSuiteSuite {
         when(exchange.getProperty(IConstant.MIDWAY_NETSUITE_ID)).thenReturn(netSuiteId, Nil: _*)
         when(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_REQUEST_TYPE)).thenReturn(requestType, Nil: _*)
         when(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_PAYLOAD)).thenReturn(payload, Nil: _*)
+        when(environment.getProperty(IConstant.NETSUITE_CALLBACKS_SCRIPT)).thenReturn(IConstant.NETSUITE_CALLBACKS_SCRIPT)
 
         val requestCaptor = ArgumentCaptor.forClass(classOf[NetSuiteCallBackProvisioningRequest])
         val eventCaptor = ArgumentCaptor.forClass(classOf[KafkaNetSuiteCallBackEvent])
@@ -67,7 +67,7 @@ class TestKoreCheckStatusPostProcessor extends TestMocks with NetSuiteSuite {
         assert(request.getRequestType === netSuiteRequestType)
 
         verify(exchange, times(1)).setProperty(same(IConstant.KAFKA_OBJECT), eventCaptor.capture())
-        verify(exchange, times(1)).setProperty("script", script)
+        verify(exchange, times(1)).setProperty("script", IConstant.NETSUITE_CALLBACKS_SCRIPT)
         verify(exchange, times(1)).setPattern(ExchangePattern.InOut)
         val event = eventCaptor.getValue
 

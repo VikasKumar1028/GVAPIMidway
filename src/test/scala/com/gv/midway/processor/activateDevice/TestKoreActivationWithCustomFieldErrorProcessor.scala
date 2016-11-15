@@ -33,6 +33,7 @@ class TestKoreActivationWithCustomFieldErrorProcessor extends TestMocks {
 
       val captor = ArgumentCaptor.forClass(classOf[NetSuiteCallBackProvisioningRequest])
 
+      when(environment.getProperty(IConstant.NETSUITE_CALLBACKS_SCRIPT)).thenReturn(IConstant.NETSUITE_CALLBACKS_SCRIPT)
       new KoreActivationWithCustomFieldErrorProcessor(environment).process(exchange)
 
       assert(kafkaObj.getId === RequestType.CHANGECUSTOMFIELDS.toString)
@@ -45,7 +46,7 @@ class TestKoreActivationWithCustomFieldErrorProcessor extends TestMocks {
 
       requestAsserts(captor.getValue)
 
-      verify(exchange, times(1)).setProperty("script", "539")
+      verify(exchange, times(1)).setProperty("script", IConstant.NETSUITE_CALLBACKS_SCRIPT)
       verify(exchange, times(1)).setPattern(ExchangePattern.InOut)
     }
   }
@@ -68,13 +69,14 @@ class TestKoreActivationWithCustomFieldErrorProcessor extends TestMocks {
         val captor = ArgumentCaptor.forClass(classOf[NetSuiteCallBackProvisioningRequest])
         val callbackCaptor = ArgumentCaptor.forClass(classOf[KafkaNetSuiteCallBackError])
 
+        when(environment.getProperty(IConstant.NETSUITE_CALLBACKS_SCRIPT)).thenReturn(IConstant.NETSUITE_CALLBACKS_SCRIPT)
         new KoreActivationWithCustomFieldErrorProcessor(environment).process(exchange)
 
         messageAsserts(message)
         verify(message, times(1)).setBody(captor.capture())
         requestAsserts(captor.getValue)
 
-        verify(exchange, times(1)).setProperty("script", "539")
+        verify(exchange, times(1)).setProperty("script", IConstant.NETSUITE_CALLBACKS_SCRIPT)
         verify(exchange, times(1)).setPattern(ExchangePattern.InOut)
         verify(exchange, times(1)).setProperty(same(IConstant.KORE_ACTIVATION_CUSTOMEFIELD_ERROR_DESCRIPTION), anyString())
         verify(exchange, times(1)).setProperty(same(IConstant.KAFKA_OBJECT), callbackCaptor.capture())

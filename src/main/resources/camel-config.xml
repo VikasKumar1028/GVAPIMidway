@@ -190,7 +190,7 @@
 	</bean> -->
 	
 	<!--  comment the credentials property if you are not using username and password for authentication for your local development environment-->
-	<mongo:mongo-client replica-set="${mongo.replica-set}" credentials="${mongo.username:#{null}}:${mongo.password:#{null}}@${mongo.dbname}" >
+	<mongo:mongo-client replica-set="${mongo.replica-set}" id="mongo" credentials="${mongo.username}:${mongo.password}@${mongo.dbname}" >
         <mongo:client-options write-concern="SAFE"/>
     </mongo:mongo-client>
 		

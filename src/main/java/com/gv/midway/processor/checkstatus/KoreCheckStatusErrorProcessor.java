@@ -150,7 +150,8 @@ public class KoreCheckStatusErrorProcessor implements Processor {
 
 
         final NetSuiteOAuthHeaderProperties properties = EnvironmentParser.getNetSuiteOAuthHeaderProperties(newEnv);
-        final String script = "539";
+        //final String script = "539";
+        final String script = newEnv.getProperty("netSuite.callbacks.script");
 
         LOGGER.info("oauth info is....." + properties);
 

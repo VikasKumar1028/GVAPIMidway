@@ -163,6 +163,10 @@ public interface IConstant {
     
     static String NETSUITE_CALLBACK_TIMER= "callBack.CronTimer";
 
+    String NETSUITE_CALLBACKS_SCRIPT = "netSuite.callbacks.script";
+
+    String NETSUITE_PROCESSJOB_SCRIPT = "netSuite.processJob.script";
+
     static String ATTJASPER_CUSTOM_FIELD_DEC = "attJasperCustomFieldDescription";
 	
 	static String AUTHORIZATION_KEY ="authorizationKey";

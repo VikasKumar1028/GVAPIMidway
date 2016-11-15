@@ -141,7 +141,8 @@ public class KoreActivationWithCustomFieldErrorProcessor implements Processor {
         LOGGER.info("request type for NetSuite CallBack error...." + RequestType.CHANGECUSTOMFIELDS);
         LOGGER.info("oauth info is....." + properties);
 
-        final String script = "539";
+        //final String script = "539";
+        final String script = newEnv.getProperty("netSuite.callbacks.script");
         final String oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(properties, script);
 
         message.setHeader(Exchange.CONTENT_TYPE, "application/json");

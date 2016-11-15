@@ -75,7 +75,8 @@ public class JobCallBackProcessor implements Processor {
 		}
 
 		final NetSuiteOAuthHeaderProperties properties = EnvironmentParser.getNetSuiteOAuthHeaderProperties(newEnv);
-	    final String script = "569";
+	    //final String script = "569";
+		final String script = newEnv.getProperty("netSuite.processJob.script");
 	    
 	    LOGGER.info("oauth info is....." + properties);
 

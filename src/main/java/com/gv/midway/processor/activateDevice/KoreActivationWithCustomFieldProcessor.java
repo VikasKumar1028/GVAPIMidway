@@ -73,7 +73,8 @@ public class KoreActivationWithCustomFieldProcessor implements Processor {
         LOGGER.info("request type for NetSuite CallBack success is..." + RequestType.CHANGECUSTOMFIELDS);
         LOGGER.info("oauth info is....." + properties);
 
-        final String script = "539";
+        //final String script = "539";
+        final String script = newEnv.getProperty("netSuite.callbacks.script");
         final String oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(properties, script);
 
         exchange.setProperty(IConstant.KAFKA_OBJECT, netSuiteCallBackEvent);

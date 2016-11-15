@@ -44,9 +44,14 @@ public class KoreDeviceUsageHistoryPreProcessor implements Processor {
         final DeviceInformation deviceInfo = (DeviceInformation) message.getBody();
 
         final DeviceId deviceId = CommonUtil.getSimNumber(deviceInfo.getDeviceIds());
+        
+       // Need to set these properties before device id check.In case of KoreSimMissingException
+       // able to set the carrierName and netSuiteId in device Usage collection.
+        exchange.setProperty("CarrierName", deviceInfo.getBs_carrier());
+        exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID, deviceInfo.getNetSuiteId());
 
         if (deviceId == null) {
-            throw new KoreSimMissingException("401", IConstant.KORE_MISSING_SIM_ERROR);
+            throw new KoreSimMissingException("400", IConstant.KORE_MISSING_SIM_ERROR);
         }
 
         final String simNumber = deviceId.getId();
@@ -66,8 +71,6 @@ public class KoreDeviceUsageHistoryPreProcessor implements Processor {
         message.setBody(strRequestBody);
 
         exchange.setProperty("DeviceId", deviceId);
-        exchange.setProperty("CarrierName", deviceInfo.getBs_carrier());
-        exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID, deviceInfo.getNetSuiteId());
         exchange.setPattern(ExchangePattern.InOut);
 
         LOGGER.info("message::" + message.toString());

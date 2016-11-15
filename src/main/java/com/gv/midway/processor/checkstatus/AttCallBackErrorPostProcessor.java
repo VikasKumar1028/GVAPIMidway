@@ -140,7 +140,8 @@ public class AttCallBackErrorPostProcessor implements Processor {
                 break;
         }
 
-        final String script = "539";
+        //final String script = "539";
+        final String script = newEnv.getProperty("netSuite.callbacks.script");
         final NetSuiteOAuthHeaderProperties properties = EnvironmentParser.getNetSuiteOAuthHeaderProperties(newEnv);
         LOGGER.info("oauth info is....." + properties);
         final String oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(properties, script);
