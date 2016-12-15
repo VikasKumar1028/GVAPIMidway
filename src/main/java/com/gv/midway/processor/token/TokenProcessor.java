@@ -31,11 +31,10 @@ public class TokenProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        LOGGER.info("TokenProcessor");
+        LOGGER.debug("TokenProcessor");
         if (CommonUtil.isTokenRequired.get() && CommonUtil.isAlreadyInTokenGeneration.get()) {
             CommonUtil.setAlreadyInTokenGeneration(false);
-            exchange.getContext().createProducerTemplate()
-                    .sendBody("direct:tokenGeneration", exchange.getIn().getBody());
+            exchange.getContext().createProducerTemplate().sendBody("direct:tokenGeneration", exchange.getIn().getBody());
         } else {
             LOGGER.info(exchange.getExchangeId()+"   TokenProcessor exchange in waiting state......");
             Thread.sleep(4000);

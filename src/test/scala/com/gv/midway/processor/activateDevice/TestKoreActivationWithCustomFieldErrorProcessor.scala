@@ -4,15 +4,15 @@ import java.util
 
 import com.gv.midway.TestMocks
 import com.gv.midway.constant.{IConstant, NetSuiteRequestType, RequestType}
-import com.gv.midway.pojo.{BaseRequest, Header}
 import com.gv.midway.pojo.callback.Netsuite.{KafkaNetSuiteCallBackError, NetSuiteCallBackProvisioningRequest}
 import com.gv.midway.pojo.kore.KoreErrorResponse
+import com.gv.midway.pojo.{BaseRequest, Header}
 import org.apache.camel.component.cxf.CxfOperationException
 import org.apache.camel.{Exchange, ExchangePattern, Message}
 import org.mockito.ArgumentCaptor
+import org.mockito.Matchers._
 import org.mockito.Mockito._
 import org.springframework.core.env.Environment
-import org.mockito.Matchers._
 
 class TestKoreActivationWithCustomFieldErrorProcessor extends TestMocks {
 
@@ -78,7 +78,7 @@ class TestKoreActivationWithCustomFieldErrorProcessor extends TestMocks {
 
         verify(exchange, times(1)).setProperty("script", IConstant.NETSUITE_CALLBACKS_SCRIPT)
         verify(exchange, times(1)).setPattern(ExchangePattern.InOut)
-        verify(exchange, times(1)).setProperty(same(IConstant.KORE_ACTIVATION_CUSTOMEFIELD_ERROR_DESCRIPTION), anyString())
+        verify(exchange, times(1)).setProperty(same(IConstant.KORE_ACTIVATION_CUSTOMFIELD_ERROR_DESCRIPTION), anyString())
         verify(exchange, times(1)).setProperty(same(IConstant.KAFKA_OBJECT), callbackCaptor.capture())
 
         val callback = callbackCaptor.getValue
@@ -99,7 +99,7 @@ class TestKoreActivationWithCustomFieldErrorProcessor extends TestMocks {
 
         errorObject match {
           case cxf: CxfOperationException =>
-            verify(exchange, times(1)).setProperty(same(IConstant.KORE_ACTIVATION_CUSTOMEFIELD_ERRORPAYLOAD), any(classOf[KoreErrorResponse]))
+            verify(exchange, times(1)).setProperty(same(IConstant.KORE_ACTIVATION_CUSTOMFIELD_ERRORPAYLOAD), any(classOf[KoreErrorResponse]))
           case _ =>
             //Nothing extra
         }
@@ -113,15 +113,15 @@ class TestKoreActivationWithCustomFieldErrorProcessor extends TestMocks {
       when(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER)).thenReturn(deviceNumber, Nil: _*)
       when(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)).thenReturn(transId, Nil: _*)
       when(exchange.getProperty(IConstant.MIDWAY_NETSUITE_ID)).thenReturn(netSuiteId, Nil: _*)
-      when(exchange.getProperty(IConstant.KORE_ACTIVATION_CUSTOMEFIELD_PAYLOAD)).thenReturn(payload, Nil: _*)
+      when(exchange.getProperty(IConstant.KORE_ACTIVATION_CUSTOMFIELD_PAYLOAD)).thenReturn(payload, Nil: _*)
 
       List(
-        ("netSuite.oauthConsumerKey", "key")
-        , ("netSuite.oauthTokenId", "tokenId")
-        , ("netSuite.oauthTokenSecret", "tokenSecret")
-        , ("netSuite.oauthConsumerSecret", "consumerSecret")
-        , ("netSuite.realm", "realm")
-        , ("netSuite.endPoint", "endpoint")
+        (IConstant.NETSUITE_OAUTH_CONSUMER_KEY, "key")
+        , (IConstant.NETSUITE_OAUTH_TOKEN_ID, "tokenId")
+        , (IConstant.NETSUITE_OAUTH_TOKEN_SECRET, "tokenSecret")
+        , (IConstant.NETSUITE_OAUTH_CONSUMER_SECRET, "consumerSecret")
+        , (IConstant.NETSUITE_REALM, "realm")
+        , (IConstant.NETSUITE_END_POINT, "endpoint")
       ).foreach { case (k, v) =>
         when(environment.getProperty(k)).thenReturn(v, Nil: _*)
       }

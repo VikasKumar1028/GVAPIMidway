@@ -20,7 +20,7 @@ public class StubVerizonRetrieveDeviceUsageHistoryProcessor implements
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		LOGGER.info("Begin::StubVerizonRetrieveDeviceUsageHistoryProcessor");
+		LOGGER.debug("Begin::StubVerizonRetrieveDeviceUsageHistoryProcessor");
 		UsageInformationResponse usageInformationResponse = new UsageInformationResponse();
 
 		UsageInformationResponseDataArea usageInformationResponseDataArea = new UsageInformationResponseDataArea();
@@ -48,6 +48,6 @@ public class StubVerizonRetrieveDeviceUsageHistoryProcessor implements
 		usageInformationResponse.setDataArea(usageInformationResponseDataArea);
 
 		exchange.getIn().setBody(usageInformationResponse);
-		LOGGER.info("End::StubVerizonRetrieveDeviceUsageHistoryProcessor");
+		LOGGER.debug("End::StubVerizonRetrieveDeviceUsageHistoryProcessor");
 	}
 }

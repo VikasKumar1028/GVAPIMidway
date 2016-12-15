@@ -58,9 +58,9 @@ class TestAuditDaoImpl extends FunSuite with MockitoSugar {
   }
 
   testAuditException("auditExternalExceptionResponseCall - Verizon", _BusinessExternalError, exception)(_.auditExternalExceptionResponseCall(_)){ audit =>
-    assert(audit.getErrorCode === 14)
+    assert(audit.getErrorCode === 400)
     assert(audit.getErrorProblem === IConstant.CARRIER_TRANSACTION_STATUS_ERROR)
-    assert(audit.getErrorDetails === "This is my error code")
+    assert(audit.getErrorDetails === "14 - This is my error code")
   }
 
   testAuditException("auditExternalExceptionResponseCall - Kore", _BusinessExternalError, exception, IConstant.BSCARRIER_SERVICE_KORE)(_.auditExternalExceptionResponseCall(_)){ audit =>

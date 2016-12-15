@@ -96,16 +96,22 @@
         showRequestHeaders: false
       });
 
-      function addApiKeyAuthorization(){
-        var key = $('#input_apiKey')[0].value;
-        if(key && key.trim() != "") {
-          var value = $('#input_apiValue')[0].value;
+      function addApiKeyAuthorization() {
+        var key = $('#input_apiKey').val();
+        if (key && key.trim() != "") {
+          var value = $('#input_apiValue').val();
           var apiKeyAuth = new SwaggerClient.ApiKeyAuthorization(key, value ? value : '', "header");
           window.swaggerUi.api.clientAuthorizations.add("api_key", apiKeyAuth);
           //log("added key " + key);
         }
+        var baseUrl = $('#input_baseUrl').val();
+        if (baseUrl && baseUrl.trim() != "") {
+          window.swaggerUi.url = baseUrl;
+        }
+
       }
 
+      $('#input_baseUrl').change(addApiKeyAuthorization);
       $('#input_apiKey').change(addApiKeyAuthorization);
 
       // if you have an apiKey you would like to pre-populate on the page for demonstration purposes...

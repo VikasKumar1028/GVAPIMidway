@@ -24,23 +24,17 @@ public class VerizonRestoreDevicePreProcessor implements Processor {
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		LOGGER.info("Begin:VerizonRestoreDevicePreProcessor");
+		LOGGER.debug("Begin:VerizonRestoreDevicePreProcessor");
 
-		LOGGER.info("Session Parameters  VZSessionToken"
-				+ exchange.getProperty(IConstant.VZ_SEESION_TOKEN));
-		LOGGER.info("Session Parameters  VZAuthorization"
-				+ exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN));
+		LOGGER.debug("Session Parameters  VZSessionToken" + exchange.getProperty(IConstant.VZ_SESSION_TOKEN));
+		LOGGER.debug("Session Parameters  VZAuthorization" + exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN));
 
 		RestoreDeviceRequestVerizon businessRequest = new RestoreDeviceRequestVerizon();
-		RestoreDeviceRequest proxyRequest = (RestoreDeviceRequest) exchange
-				.getIn().getBody();
-		businessRequest.setAccountName(proxyRequest.getDataArea()
-				.getAccountName());
-		businessRequest.setCustomFields(proxyRequest.getDataArea()
-				.getCustomFields());
+		RestoreDeviceRequest proxyRequest = (RestoreDeviceRequest) exchange.getIn().getBody();
+		businessRequest.setAccountName(proxyRequest.getDataArea().getAccountName());
+		businessRequest.setCustomFields(proxyRequest.getDataArea().getCustomFields());
 		businessRequest.setGroupName(proxyRequest.getDataArea().getGroupName());
-		businessRequest.setServicePlan(proxyRequest.getDataArea()
-				.getServicePlan());
+		businessRequest.setServicePlan(proxyRequest.getDataArea().getServicePlan());
 
 		MidWayDevices[] proxyDevicesArray = proxyRequest.getDataArea()
 				.getDevices();
@@ -48,8 +42,7 @@ public class VerizonRestoreDevicePreProcessor implements Processor {
 
 		for (int j = 0; j < proxyDevicesArray.length; j++) {
 
-			DeviceId[] businessDeviceIdArray = new DeviceId[proxyDevicesArray[j]
-					.getDeviceIds().length];
+			DeviceId[] businessDeviceIdArray = new DeviceId[proxyDevicesArray[j].getDeviceIds().length];
 			MidWayDevices proxyDevices = proxyDevicesArray[j];
 			Devices businessDevice = new Devices();
 
@@ -60,7 +53,7 @@ public class VerizonRestoreDevicePreProcessor implements Processor {
 				businessDeviceId.setId(proxyDeviceId.getId());
 				businessDeviceId.setKind(proxyDeviceId.getKind());
 
-				LOGGER.info(proxyDeviceId.getId());
+				LOGGER.debug(proxyDeviceId.getId());
 
 				businessDeviceIdArray[i] = businessDeviceId;
 
@@ -73,14 +66,13 @@ public class VerizonRestoreDevicePreProcessor implements Processor {
 
 		ObjectMapper objectMapper = new ObjectMapper();
 
-		String strRequestBody = objectMapper
-				.writeValueAsString(businessRequest);
+		String strRequestBody = objectMapper.writeValueAsString(businessRequest);
 
 		exchange.getIn().setBody(strRequestBody);
 		Message message = CommonUtil.setMessageHeader(exchange);
 		message.setHeader(Exchange.HTTP_PATH, "/devices/actions/restore");
 
-		LOGGER.info("End:VerizonRestoreDevicePreProcessor");
+		LOGGER.debug("End:VerizonRestoreDevicePreProcessor");
 
 	}
 

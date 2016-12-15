@@ -35,7 +35,7 @@ public class ATTJasperDeactivateDevicePreProcessor implements Processor {
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		LOGGER.info("Begin:ATTJasperDeactivateDevicePreProcessor");
+		LOGGER.debug("Begin:ATTJasperDeactivateDevicePreProcessor");
 
 		final Message message = exchange.getIn();
 		final Transaction transaction = message.getBody(Transaction.class);
@@ -65,6 +65,6 @@ public class ATTJasperDeactivateDevicePreProcessor implements Processor {
 		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER, transaction.getDeviceNumber());
 		exchange.setPattern(ExchangePattern.InOut);
 
-		LOGGER.info("End:ATTJasperDeactivateDevicePreProcessor");
+		LOGGER.debug("End:ATTJasperDeactivateDevicePreProcessor");
 	}
 }

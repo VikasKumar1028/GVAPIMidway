@@ -35,7 +35,7 @@ public class ATTJasperDeviceInformationPreProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        LOGGER.info("Begin:ATT_JasperDeviceInformationPreProcessor");
+        LOGGER.debug("Begin:ATT_JasperDeviceInformationPreProcessor");
 
         final Message message = exchange.getIn();
         final DeviceInformationRequest request = message.getBody(DeviceInformationRequest.class);
@@ -68,6 +68,6 @@ public class ATTJasperDeviceInformationPreProcessor implements Processor {
         exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID, request.getDataArea().getNetSuiteId());
         exchange.setPattern(ExchangePattern.InOut);
 
-        LOGGER.info("End:ATT_JasperDeviceInformationPreProcessor");
+        LOGGER.debug("End:ATT_JasperDeviceInformationPreProcessor");
     }
 }

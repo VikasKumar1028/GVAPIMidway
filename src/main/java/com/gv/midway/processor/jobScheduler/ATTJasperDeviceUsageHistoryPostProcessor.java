@@ -35,7 +35,7 @@ public class ATTJasperDeviceUsageHistoryPostProcessor implements Processor {
 
 	@Override
 	public void process(Exchange exchange) throws Exception {
-		LOGGER.info("Begin:ATTJasperDeviceUsageHistoryPostProcessor");
+		LOGGER.debug("Begin:ATTJasperDeviceUsageHistoryPostProcessor");
 
 		GetTerminalDetailsResponse getTerminalDetailsResponse = (GetTerminalDetailsResponse) exchange
 				.getIn().getBody(GetTerminalDetailsResponse.class);
@@ -43,69 +43,60 @@ public class ATTJasperDeviceUsageHistoryPostProcessor implements Processor {
 		Terminals terminals = getTerminalDetailsResponse.getTerminals();
 		List<TerminalType> terminalType = terminals.getTerminal();
 		DeviceUsage deviceUsage = new DeviceUsage();
-		long lastMTDvalue = 0;
+		long lastMTDValue = 0;
 		long updateLastMTDValue = 0;
-		BigDecimal monthtoDateUsagevalue = terminalType.get(0)
+		BigDecimal monthToDateUsageValue = terminalType.get(0)
 				.getMonthToDateUsage();
 
-		LOGGER.info("monthtoDateUsagevalue:::::first" + monthtoDateUsagevalue);	
+		LOGGER.debug("monthToDateUsageValue:::::first" + monthToDateUsageValue);
 	
 		// convert from MB to bytes usages
-		long monthtoDateUsageBytes = (long) (1048576 * monthtoDateUsagevalue
-				.doubleValue()); // 444
+		long monthToDateUsageBytes = (long) (1048576 * monthToDateUsageValue.doubleValue()); // 444
 			
-		LOGGER.info("after convert to Bytes" + monthtoDateUsageBytes);
+		LOGGER.debug("after convert to Bytes" + monthToDateUsageBytes);
 
-		Map<Integer, Long> map = null;
-
-		map = (Map<Integer, Long>) exchange
-				.getProperty("saveLastUpadtedDataUsed");
-		if (map != null
-				&& map.get((Integer) exchange
-						.getProperty(IConstant.MIDWAY_NETSUITE_ID)) != null) {
+		Map<Integer, Long> map = (Map<Integer, Long>) exchange.getProperty("saveLastUpdatedDataUsed");
+		if (map != null && map.get((Integer) exchange.getProperty(IConstant.MIDWAY_NETSUITE_ID)) != null) {
 
 			// Setting the Values as Map does contains data usage value for
 			// previous dates
 
-			lastMTDvalue = map.get((Integer) exchange
-					.getProperty(IConstant.MIDWAY_NETSUITE_ID));
+			lastMTDValue = map.get((Integer) exchange.getProperty(IConstant.MIDWAY_NETSUITE_ID));
 
-			LOGGER.info("valueofLastMTD::::::::" + lastMTDvalue);
+			LOGGER.debug("valueOfLastMTD::::::::" + lastMTDValue);
 
-			updateLastMTDValue = monthtoDateUsageBytes - lastMTDvalue;
+			updateLastMTDValue = monthToDateUsageBytes - lastMTDValue;
 			deviceUsage.setDataUsed(updateLastMTDValue);
 
-			LOGGER.info("updateLastMTDValue::::::::" + updateLastMTDValue);
+			LOGGER.debug("updateLastMTDValue::::::::" + updateLastMTDValue);
 
-			LOGGER.info("----exchange_Body- Post Processor-===++++++++++++---------"
+			LOGGER.debug("----exchange_Body- Post Processor-===++++++++++++---------"
 					+ getTerminalDetailsResponse.toString());
 
 		} else {
 			// Setting the Original values as Map does not contain any datausage
 			// value for previous dates
 
-			deviceUsage.setDataUsed(monthtoDateUsageBytes);
+			deviceUsage.setDataUsed(monthToDateUsageBytes);
 		}
 		JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
 
-		deviceUsage
-				.setCarrierName((String) exchange.getProperty("CarrierName"));
+		deviceUsage.setCarrierName((String) exchange.getProperty("CarrierName"));
 		deviceUsage.setDeviceId((DeviceId) exchange.getProperty("DeviceId"));
 
 		// The Day for which Job Ran
 
 		deviceUsage.setDate(jobDetail.getDate());
 		deviceUsage.setTransactionErrorReason(null);
-		deviceUsage
-				.setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_SUCCESS);
+		deviceUsage.setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_SUCCESS);
 		deviceUsage.setNetSuiteId((Integer) exchange
 				.getProperty(IConstant.MIDWAY_NETSUITE_ID));
 		deviceUsage.setIsValid(true);
 		deviceUsage.setJobId(jobDetail.getJobId());
-		deviceUsage.setMonthToDateUsage(monthtoDateUsageBytes);
+		deviceUsage.setMonthToDateUsage(monthToDateUsageBytes);
 
 		exchange.getIn().setBody(deviceUsage);
-		LOGGER.info("End:ATTJasperDeviceUsageHistoryPostProcessor");
+		LOGGER.debug("End:ATTJasperDeviceUsageHistoryPostProcessor");
 
 	}
 

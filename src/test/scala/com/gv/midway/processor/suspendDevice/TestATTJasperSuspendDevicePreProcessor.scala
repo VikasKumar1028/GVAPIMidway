@@ -2,13 +2,12 @@ package com.gv.midway.processor.suspendDevice
 
 import com.gv.midway.attjasper.EditTerminalRequest
 import com.gv.midway.constant.IConstant
-import com.gv.midway.pojo.{MidWayDeviceId, MidWayDevices}
 import com.gv.midway.pojo.suspendDevice.request.{SuspendDeviceRequest, SuspendDeviceRequestDataArea}
 import com.gv.midway.pojo.transaction.Transaction
+import com.gv.midway.pojo.{MidWayDeviceId, MidWayDevices}
 import com.gv.midway.{ATTJasperSuite, TestMocks}
 import org.apache.camel.ExchangePattern
 import org.mockito.ArgumentCaptor
-import org.mockito.Matchers._
 import org.mockito.Mockito._
 
 class TestATTJasperSuspendDevicePreProcessor extends TestMocks with ATTJasperSuite {
@@ -51,9 +50,9 @@ class TestATTJasperSuspendDevicePreProcessor extends TestMocks with ATTJasperSui
       assert(request.getChangeType === IConstant.ATTJASPER_SIM_CHANGETYPE)
       assert(request.getTargetValue === IConstant.ATTJASPER_DEACTIVATED)
       assert(request.getIccid === id1.getId)
-      assert(request.getLicenseKey === propertyValue(attJasperLicenseKey))
+      assert(request.getLicenseKey === propertyValue(IConstant.ATTJASPER_LICENSE_KEY))
       assert(request.getMessageId != null)
-      assert(request.getVersion === propertyValue(attJasperVersion))
+      assert(request.getVersion === propertyValue(IConstant.ATTJASPER_VERSION))
 
       verify(exchange, times(1)).setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER, deviceNumber)
       verify(exchange, times(1)).setPattern(ExchangePattern.InOut)

@@ -13,7 +13,7 @@ public class KoreDeviceServiceRouter {
 
         final RequestType requestType = transaction.getRequestType();
 
-        LOGGER.info("************KORE ROUTER****************************" + transaction.getRequestType());
+        LOGGER.debug("************KORE ROUTER****************************" + transaction.getRequestType());
 
         switch (requestType) {
             case ACTIVATION:
@@ -27,9 +27,9 @@ public class KoreDeviceServiceRouter {
             case REACTIVATION:
                 return "seda:koreSedaReactivation";
             case CHANGECUSTOMFIELDS:
-                return "seda:koreSedacustomeFields";
+                return "seda:koreSedaCustomFields";
             case CHANGESERVICEPLAN:
-                return "seda:koreSedachangeDeviceServicePlans";
+                return "seda:koreSedaChangeDeviceServicePlans";
             default:
                 return null;
         }

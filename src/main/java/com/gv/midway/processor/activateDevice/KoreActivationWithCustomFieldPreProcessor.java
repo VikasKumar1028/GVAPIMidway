@@ -1,5 +1,8 @@
 package com.gv.midway.processor.activateDevice;
 
+import com.gv.midway.pojo.KeyValuePair;
+import com.gv.midway.utility.MessageStuffer;
+import com.gv.midway.pojo.MidWayDeviceId;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.Message;
@@ -9,7 +12,6 @@ import org.springframework.core.env.Environment;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.customFieldsDevice.kore.request.CustomFieldsDeviceRequestKore;
 import com.gv.midway.pojo.customFieldsDevice.request.CustomFieldsDeviceRequest;
-import com.gv.midway.pojo.verizon.CustomFieldsToUpdate;
 
 public class KoreActivationWithCustomFieldPreProcessor implements Processor {
 
@@ -27,29 +29,30 @@ public class KoreActivationWithCustomFieldPreProcessor implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {
-        LOGGER.info("Begin:KoreActivationWithCustomFieldPreProcessor.");
+        LOGGER.debug("Begin:KoreActivationWithCustomFieldPreProcessor.");
 
-        final CustomFieldsDeviceRequest proxyPayload = (CustomFieldsDeviceRequest) exchange.getProperty(IConstant.KORE_ACTIVATION_CUSTOMEFIELD_PAYLOAD);
+        final CustomFieldsDeviceRequest proxyPayload = (CustomFieldsDeviceRequest) exchange.getProperty(IConstant.KORE_ACTIVATION_CUSTOMFIELD_PAYLOAD);
 
-        final String deviceId = proxyPayload.getDataArea().getDevices()[0].getDeviceIds()[0].getId();
+        String deviceId = "";
+        for (MidWayDeviceId midWayDeviceId : proxyPayload.getDataArea().getDevices()[0].getDeviceIds()) {
+            deviceId = midWayDeviceId.getId();
+            if ("SIM".equalsIgnoreCase(midWayDeviceId.getKind())) { //Prefer SIM over other deviceIds
+                break;
+            }
+        }
 
         final CustomFieldsDeviceRequestKore customFieldsDeviceRequestKore = new CustomFieldsDeviceRequestKore();
         customFieldsDeviceRequestKore.setDeviceNumber(deviceId);
 
-        final CustomFieldsToUpdate[] customFieldsArr = proxyPayload.getDataArea().getCustomFieldsToUpdate();
+        final KeyValuePair[] customFieldsArr = proxyPayload.getDataArea().getCustomFieldsToUpdate();
 
         customFieldsDeviceRequestKore.updateCustomFields(customFieldsArr);
 
         final Message message = exchange.getIn();
-        message.setHeader(Exchange.CONTENT_TYPE, "application/json");
-        message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
-        message.setHeader(Exchange.HTTP_METHOD, "POST");
-        message.setHeader("Authorization", newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
-        message.setHeader(Exchange.HTTP_PATH, "/json/modifyDeviceCustomInfo");
-        message.setBody(customFieldsDeviceRequestKore);
+        MessageStuffer.setKorePOSTRequest(message, newEnv, "/json/modifyDeviceCustomInfo", customFieldsDeviceRequestKore);
 
         exchange.setPattern(ExchangePattern.InOut);
 
-        LOGGER.info("End:KoreActivationWithCustomFieldPreProcessor");
+        LOGGER.debug("End:KoreActivationWithCustomFieldPreProcessor");
     }
 }

@@ -29,10 +29,10 @@ public class CallbackPostProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        LOGGER.info("Inside CallbackPostProcessor process " + exchange.getIn().getBody());
+        LOGGER.debug("Inside CallbackPostProcessor process " + exchange.getIn().getBody());
 
         final NetSuiteCallBackProvisioningRequest netSuiteCallBackProvisioningRequest = (NetSuiteCallBackProvisioningRequest) exchange.getIn().getBody();
-        LOGGER.info("body set for netSuiteCallBack........." + netSuiteCallBackProvisioningRequest);
+        LOGGER.debug("body set for netSuiteCallBack........." + netSuiteCallBackProvisioningRequest);
 
         final Object kafkaObject = exchange.getProperty(IConstant.KAFKA_OBJECT);
 
@@ -40,12 +40,11 @@ public class CallbackPostProcessor implements Processor {
         exchange.setProperty(IConstant.KAFKA_TOPIC_NAME, topicName);
 
         final NetSuiteRequestType requestType = netSuiteCallBackProvisioningRequest.getRequestType();
-        LOGGER.info("request type for NetSuite CallBack error...." + requestType);
+        LOGGER.debug("request type for NetSuite CallBack ..." + requestType);
 
         final NetSuiteOAuthHeaderProperties oAuthHeaderProperties = EnvironmentParser.getNetSuiteOAuthHeaderProperties(newEnv);
-        LOGGER.info("oauth info is....." + oAuthHeaderProperties);
+        LOGGER.debug("oauth info is....." + oAuthHeaderProperties);
 
-        //final String script = "539";
         final String script = newEnv.getProperty("netSuite.callbacks.script");
         final String oauthHeader;
 
@@ -71,6 +70,8 @@ public class CallbackPostProcessor implements Processor {
         message.setHeader("Authorization", oauthHeader);
 
         exchange.setProperty("script", script);
+        exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID, netSuiteCallBackProvisioningRequest.getNetSuiteID());
+        exchange.setProperty(IConstant.MIDWAY_TRANSACTION_REQUEST_TYPE, requestType);
         exchange.setPattern(ExchangePattern.InOut);
     }
 }

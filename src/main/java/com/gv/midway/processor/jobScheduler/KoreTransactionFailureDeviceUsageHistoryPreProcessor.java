@@ -1,5 +1,6 @@
 package com.gv.midway.processor.jobScheduler;
 
+import com.gv.midway.utility.MessageStuffer;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.Message;
@@ -17,11 +18,7 @@ public class KoreTransactionFailureDeviceUsageHistoryPreProcessor implements Pro
 
 	private static final Logger LOGGER = Logger.getLogger(KoreDeviceUsageHistoryPreProcessor.class.getName());
 
-	Environment newEnv;
-
-	public KoreTransactionFailureDeviceUsageHistoryPreProcessor() {
-		// Empty Constructor
-	}
+	private Environment newEnv;
 
 	public KoreTransactionFailureDeviceUsageHistoryPreProcessor(Environment env) {
 		super();
@@ -31,7 +28,7 @@ public class KoreTransactionFailureDeviceUsageHistoryPreProcessor implements Pro
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		LOGGER.info("Begin:KoreTransactionFailureDeviceUsageHistoryPreProcessor");
+		LOGGER.debug("Begin:KoreTransactionFailureDeviceUsageHistoryPreProcessor");
 		final Message message = exchange.getIn();
 		final DeviceUsage deviceInfo = (DeviceUsage) message.getBody();
 		final DeviceId deviceId = deviceInfo.getDeviceId();
@@ -43,20 +40,15 @@ public class KoreTransactionFailureDeviceUsageHistoryPreProcessor implements Pro
 		final ObjectMapper objectMapper = new ObjectMapper();
 		final String strRequestBody = objectMapper.writeValueAsString(usageInformationKoreRequest);
 
-		LOGGER.info("strRequestBody::" + strRequestBody);
+		LOGGER.debug("strRequestBody::" + strRequestBody);
 
-		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
-		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
-		message.setHeader(Exchange.HTTP_METHOD, "POST");
-		message.setHeader("Authorization", newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
-		message.setHeader(Exchange.HTTP_PATH, "/json/queryDeviceUsageBySimNumber");
-		message.setBody(strRequestBody);
+		MessageStuffer.setKorePOSTRequest(message, newEnv, "/json/queryDeviceUsageBySimNumber", strRequestBody);
 
 		exchange.setProperty("DeviceId", deviceId);
 		exchange.setProperty("CarrierName", deviceInfo.getCarrierName());
 		exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID, deviceInfo.getNetSuiteId());
 		exchange.setPattern(ExchangePattern.InOut);
 
-		LOGGER.info("End:KoreTransactionFailureDeviceUsageHistoryPreProcessor");
+		LOGGER.debug("End:KoreTransactionFailureDeviceUsageHistoryPreProcessor");
 	}
 }

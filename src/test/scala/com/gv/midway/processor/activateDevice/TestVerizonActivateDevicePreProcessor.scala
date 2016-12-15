@@ -3,9 +3,10 @@ package com.gv.midway.processor.activateDevice
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.gv.midway.TestMocks
 import com.gv.midway.constant.IConstant
+import com.gv.midway.pojo.KeyValuePair
 import com.gv.midway.pojo.activateDevice.request.{ActivateDeviceId, ActivateDeviceRequest, ActivateDeviceRequestDataArea, ActivateDevices}
 import com.gv.midway.pojo.activateDevice.verizon.request.ActivateDeviceRequestVerizon
-import com.gv.midway.pojo.verizon.{Address, CustomFields}
+import com.gv.midway.pojo.verizon.Address
 import org.apache.camel.Exchange
 import org.mockito.ArgumentCaptor
 import org.mockito.Mockito._
@@ -18,8 +19,8 @@ class TestVerizonActivateDevicePreProcessor extends TestMocks {
   test("process") {
     withMockExchangeAndMessage { (exchange, message) =>
 
-      val customField1 = new CustomFields("k1", "v1")
-      val customField2 = new CustomFields("k2", "v2")
+      val customField1 = new KeyValuePair("k1", "v1")
+      val customField2 = new KeyValuePair("k2", "v2")
 
       val adid1 = new ActivateDeviceId("id1", "kind1")
       val adid2 = new ActivateDeviceId("id2", "kind2")
@@ -55,7 +56,7 @@ class TestVerizonActivateDevicePreProcessor extends TestMocks {
       val request = new ActivateDeviceRequest
       request.setDataArea(dataArea)
 
-      when(exchange.getProperty(IConstant.VZ_SEESION_TOKEN)).thenReturn(sessionToken, Nil: _*)
+      when(exchange.getProperty(IConstant.VZ_SESSION_TOKEN)).thenReturn(sessionToken, Nil: _*)
       when(exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN)).thenReturn(authToken, Nil: _*)
       when(message.getBody).thenReturn(request, Nil: _*)
 

@@ -19,7 +19,7 @@ public class StubVerizonChangeDeviceServicePlansProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        LOGGER.info("Start::StubVerizonChangeDeviceServicePlansProcessor");
+        LOGGER.debug("Start::StubVerizonChangeDeviceServicePlansProcessor");
 
         CarrierProvisioningDeviceResponse changeDeviceServicePlansResponse = new CarrierProvisioningDeviceResponse();
 
@@ -51,7 +51,7 @@ public class StubVerizonChangeDeviceServicePlansProcessor implements Processor {
 
         exchange.getIn().setBody(changeDeviceServicePlansResponse);
 
-        LOGGER.info("End::StubVerizonChangeDeviceServicePlansProcessor");
+        LOGGER.debug("End::StubVerizonChangeDeviceServicePlansProcessor");
 
     }
 

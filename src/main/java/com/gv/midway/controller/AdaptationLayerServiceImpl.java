@@ -57,11 +57,11 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
     ProducerTemplate producer;
 
     public UpdateDeviceResponse updateDeviceDetails(SingleDevice device) {
-        LOGGER.info("device info to update is...." + device.toString());
+        LOGGER.debug("device info to update is...." + device.toString());
 
         final UpdateDeviceResponse response = (UpdateDeviceResponse) producer.requestBody("direct:updateDeviceDetails", device);
 
-        LOGGER.info("updateDeviceDetails response is ........" + response);
+        LOGGER.debug("updateDeviceDetails response is ........" + response);
 
         return response;
     }
@@ -116,15 +116,15 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
     }
 
     public BatchDeviceResponse updateDevicesDetailsBulk(BulkDevices devices) {
-        LOGGER.info("devices info is...." + devices.toString());
+        LOGGER.debug("devices info is...." + devices.toString());
 
         final Object responseActual = producer.requestBody("direct:updateDevicesDetailsBulk", devices);
 
-        LOGGER.info("response actual is........" + responseActual.toString());
+        LOGGER.debug("response actual is........" + responseActual.toString());
 
         final BatchDeviceResponse response = (BatchDeviceResponse) responseActual;
 
-        LOGGER.info(" direct:updateDevicesDetails in Batch response is ........" + response);
+        LOGGER.debug(" direct:updateDevicesDetails in Batch response is ........" + response);
 
         return response;
     }
@@ -150,6 +150,7 @@ public class AdaptationLayerServiceImpl implements IAdaptaionLayerService {
     }
 
     public void callbacks(CallBackVerizonRequest callbackRequest) {
+        LOGGER.debug("Received callback from verizon:\n" + callbackRequest);
         producer.requestBody("direct:callbacks", callbackRequest);
     }
 

@@ -1,5 +1,6 @@
 package com.gv.midway.processor.deviceInformation;
 
+import com.gv.midway.pojo.KeyValuePair;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
@@ -11,7 +12,6 @@ import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponseDataArea;
 import com.gv.midway.pojo.deviceInformation.verizon.response.ExtendedAttributes;
-import com.gv.midway.pojo.verizon.CustomFields;
 import com.gv.midway.pojo.verizon.DeviceId;
 
 public class StubKoreDeviceInformationProcessor implements Processor {
@@ -22,7 +22,7 @@ public class StubKoreDeviceInformationProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        LOGGER.info("Begin:StubKoreDeviceInformationProcessor");
+        LOGGER.debug("Begin:StubKoreDeviceInformationProcessor");
         DeviceInformationResponse deviceInformationResponse = new DeviceInformationResponse();
 
         DeviceInformationResponseDataArea deviceInformationResponseDataArea = new DeviceInformationResponseDataArea();
@@ -51,7 +51,7 @@ public class StubKoreDeviceInformationProcessor implements Processor {
         deviceInformation.setNetSuiteId(2);
         deviceInformation.setMidwayMasterDeviceId("MMD002");
         deviceInformation.setBillingCycleEndDate("null");
-        deviceInformation.setConnected(false);
+        deviceInformation.setIsConnected(false);
         deviceInformation.setCreatedAt("null");
         deviceInformation.setIpAddress("null");
         deviceInformation.setLastActivationBy("null");
@@ -92,12 +92,12 @@ public class StubKoreDeviceInformationProcessor implements Processor {
 
         deviceInformation.setLstFeatures(lstFeatures);
 
-        CustomFields customFields = new CustomFields();
-        CustomFields customFields1 = new CustomFields();
-        CustomFields customFields2 = new CustomFields();
-        CustomFields customFields3 = new CustomFields();
-        CustomFields customFields4 = new CustomFields();
-        CustomFields customFields5 = new CustomFields();
+        KeyValuePair customFields = new KeyValuePair();
+        KeyValuePair customFields1 = new KeyValuePair();
+        KeyValuePair customFields2 = new KeyValuePair();
+        KeyValuePair customFields3 = new KeyValuePair();
+        KeyValuePair customFields4 = new KeyValuePair();
+        KeyValuePair customFields5 = new KeyValuePair();
 
         customFields.setKey("customField1");
         customFields.setValue("791755");
@@ -115,7 +115,7 @@ public class StubKoreDeviceInformationProcessor implements Processor {
         customFields5.setKey("customField6");
         customFields5.setValue("customField6");
 
-        CustomFields[] arr = { customFields, customFields1, customFields2,
+        KeyValuePair[] arr = { customFields, customFields1, customFields2,
                 customFields3, customFields4, customFields5 };
 
         deviceInformation.setCustomFields(arr);
@@ -132,7 +132,7 @@ public class StubKoreDeviceInformationProcessor implements Processor {
 
         exchange.getIn().setBody(deviceInformationResponse);
         
-        LOGGER.info("End:StubKoreDeviceInformationProcessor");
+        LOGGER.debug("End:StubKoreDeviceInformationProcessor");
 
     }
 }

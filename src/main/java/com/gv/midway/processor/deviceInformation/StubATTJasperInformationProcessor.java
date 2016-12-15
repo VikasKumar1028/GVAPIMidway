@@ -2,6 +2,7 @@ package com.gv.midway.processor.deviceInformation;
 
 import java.util.Date;
 
+import com.gv.midway.pojo.KeyValuePair;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
@@ -12,7 +13,6 @@ import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponseDataArea;
-import com.gv.midway.pojo.verizon.CustomFields;
 import com.gv.midway.pojo.verizon.DeviceId;
 
 public class StubATTJasperInformationProcessor implements Processor {
@@ -23,7 +23,7 @@ public class StubATTJasperInformationProcessor implements Processor {
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		LOGGER.info("Begin:StubATTJasperInformationProcessor");
+		LOGGER.debug("Begin:StubATTJasperInformationProcessor");
 		DeviceInformationResponse deviceInformationResponse = new DeviceInformationResponse();
 
 		DeviceInformationResponseDataArea deviceInformationResponseDataArea = new DeviceInformationResponseDataArea();
@@ -84,11 +84,11 @@ public class StubATTJasperInformationProcessor implements Processor {
 		deviceInformation.setState("ACTIVATED_NAME");
 		deviceInformation.setBs_carrier("ATTJASPER");
 
-		CustomFields customerCustom1 = new CustomFields();
-		CustomFields customerCustom2 = new CustomFields();
-		CustomFields customerCustom3 = new CustomFields();
-		CustomFields customerCustom4 = new CustomFields();
-		CustomFields customerCustom5 = new CustomFields();
+		KeyValuePair customerCustom1 = new KeyValuePair();
+		KeyValuePair customerCustom2 = new KeyValuePair();
+		KeyValuePair customerCustom3 = new KeyValuePair();
+		KeyValuePair customerCustom4 = new KeyValuePair();
+		KeyValuePair customerCustom5 = new KeyValuePair();
 
 		customerCustom1.setKey("customerCustom1");
 		customerCustom1.setValue("");
@@ -105,38 +105,38 @@ public class StubATTJasperInformationProcessor implements Processor {
 		customerCustom5.setKey("customerCustom1");
 		customerCustom5.setValue("");
 
-		CustomFields opeartorCustomFields1 = new CustomFields();
-		CustomFields opeartorCustomFields2 = new CustomFields();
-		CustomFields opeartorCustomFields3 = new CustomFields();
-		CustomFields opeartorCustomFields4 = new CustomFields();
-		CustomFields opeartorCustomFields5 = new CustomFields();
+		KeyValuePair operatorCustomFields1 = new KeyValuePair();
+		KeyValuePair operatorCustomFields2 = new KeyValuePair();
+		KeyValuePair operatorCustomFields3 = new KeyValuePair();
+		KeyValuePair operatorCustomFields4 = new KeyValuePair();
+		KeyValuePair operatorCustomFields5 = new KeyValuePair();
 
-		opeartorCustomFields1.setKey("operatorCustom1");
-		opeartorCustomFields1.setValue("");
+		operatorCustomFields1.setKey("operatorCustom1");
+		operatorCustomFields1.setValue("");
 
-		opeartorCustomFields2.setKey("operatorCustom2");
-		opeartorCustomFields2.setValue("");
+		operatorCustomFields2.setKey("operatorCustom2");
+		operatorCustomFields2.setValue("");
 
-		opeartorCustomFields3.setKey("operatorCustom3");
-		opeartorCustomFields3.setValue("");
+		operatorCustomFields3.setKey("operatorCustom3");
+		operatorCustomFields3.setValue("");
 
-		opeartorCustomFields4.setKey("operatorCustom4");
-		opeartorCustomFields4.setValue("");
+		operatorCustomFields4.setKey("operatorCustom4");
+		operatorCustomFields4.setValue("");
 
-		opeartorCustomFields5.setKey("operatorCustom5");
-		opeartorCustomFields5.setValue("");
+		operatorCustomFields5.setKey("operatorCustom5");
+		operatorCustomFields5.setValue("");
 
-		CustomFields customFields = new CustomFields();
-		CustomFields customFields1 = new CustomFields();
-		CustomFields customFields2 = new CustomFields();
-		CustomFields customFields3 = new CustomFields();
-		CustomFields customFields4 = new CustomFields();
-		CustomFields customFields5 = new CustomFields();
-		CustomFields customFields6 = new CustomFields();
-		CustomFields customFields7 = new CustomFields();
-		CustomFields customFields8 = new CustomFields();
-		CustomFields customFields9 = new CustomFields();
-		CustomFields customFields10 = new CustomFields();
+		KeyValuePair customFields = new KeyValuePair();
+		KeyValuePair customFields1 = new KeyValuePair();
+		KeyValuePair customFields2 = new KeyValuePair();
+		KeyValuePair customFields3 = new KeyValuePair();
+		KeyValuePair customFields4 = new KeyValuePair();
+		KeyValuePair customFields5 = new KeyValuePair();
+		KeyValuePair customFields6 = new KeyValuePair();
+		KeyValuePair customFields7 = new KeyValuePair();
+		KeyValuePair customFields8 = new KeyValuePair();
+		KeyValuePair customFields9 = new KeyValuePair();
+		KeyValuePair customFields10 = new KeyValuePair();
 
 		customFields.setKey("CustomField");
 		customFields.setValue("");
@@ -170,20 +170,20 @@ public class StubATTJasperInformationProcessor implements Processor {
 		customFields10.setKey("CustomField10");
 		customFields10.setValue("");
 
-		CustomFields[] arr = { customFields, customFields1, customFields2,
+		KeyValuePair[] arr = { customFields, customFields1, customFields2,
 				customFields3, customFields4, customFields5, customFields6,
 				customFields7, customFields8, customFields9, customFields10 };
 
-		CustomFields[] opeartorCustomFieldsarray = { opeartorCustomFields1,
-				opeartorCustomFields2, opeartorCustomFields3,
-				opeartorCustomFields4, opeartorCustomFields5 };
+		KeyValuePair[] operatorCustomFieldsArray = { operatorCustomFields1,
+				operatorCustomFields2, operatorCustomFields3,
+				operatorCustomFields4, operatorCustomFields5 };
 
-		CustomFields[] customerCustomFieldsarray = { customerCustom1,
+		KeyValuePair[] customerCustomFieldsarray = { customerCustom1,
 				customerCustom2, customerCustom3, customerCustom4,
 				customerCustom5 };
 
 		deviceInformation.setCustomFields(arr);
-		deviceInformation.setOpeartorCustomFields(opeartorCustomFieldsarray);
+		deviceInformation.setOperatorCustomFields(operatorCustomFieldsArray);
 
 		deviceInformation.setCustomerCustomFields(customerCustomFieldsarray);
 		deviceInformationResponseDataArea.setDevices(deviceInformation);
@@ -193,6 +193,6 @@ public class StubATTJasperInformationProcessor implements Processor {
 
 		exchange.getIn().setBody(deviceInformationResponse);
 
-		LOGGER.info("End:StubATTJasperInformationProcessor");
+		LOGGER.debug("End:StubATTJasperInformationProcessor");
 	}
 }

@@ -22,7 +22,7 @@ public class StubKoreDeactivateDeviceProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        LOGGER.info("Begin::StubKoreDeactivateDeviceProcessor");
+        LOGGER.debug("Begin::StubKoreDeactivateDeviceProcessor");
         CarrierProvisioningDeviceResponse deactivateDeviceResponse = new CarrierProvisioningDeviceResponse();
         Header responseheader = new Header();
         CarrierProvisioningDeviceResponseDataArea deactivateDeviceResponseDataArea = new CarrierProvisioningDeviceResponseDataArea();
@@ -48,7 +48,7 @@ public class StubKoreDeactivateDeviceProcessor implements Processor {
 
         deactivateDeviceResponse.setDataArea(deactivateDeviceResponseDataArea);
         exchange.getIn().setBody(deactivateDeviceResponse);
-        LOGGER.info("End::StubKoreDeactivateDeviceProcessor");
+        LOGGER.debug("End::StubKoreDeactivateDeviceProcessor");
     }
 
 }

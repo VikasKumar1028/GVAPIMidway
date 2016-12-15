@@ -29,12 +29,12 @@ public class VerizonGenericExceptionProcessor implements Processor {
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		LOGGER.info("Begin:VerizonGenericExceptionProcessor");
+		LOGGER.debug("Begin:VerizonGenericExceptionProcessor");
 		final CxfOperationException exception = (CxfOperationException) exchange.getProperty(Exchange.EXCEPTION_CAUGHT);
 
-		LOGGER.info("----VerizonGenericExceptionProcessor----------" + exception.getResponseBody());
-		LOGGER.info("----.getStatusCode()----------" + exception.getStatusCode());
-		LOGGER.info("----.exchange----------" + exchange.getFromEndpoint().toString());
+		LOGGER.error("----VerizonGenericExceptionProcessor----------" + exception.getResponseBody());
+		LOGGER.error("----.getStatusCode()----------" + exception.getStatusCode());
+		LOGGER.error("----.exchange----------" + exchange.getFromEndpoint());
 
 		final Response response = new Response();
 		if (exception.getStatusCode() == 401
@@ -48,14 +48,14 @@ public class VerizonGenericExceptionProcessor implements Processor {
 			final ObjectMapper mapper = new ObjectMapper();
 			final VerizonErrorResponse responsePayload = mapper.readValue(exception.getResponseBody(), VerizonErrorResponse.class);
 
-			LOGGER.info("----response payload is----------" + responsePayload.toString());
+			LOGGER.error("----response payload is----------" + responsePayload);
 
 			response.setResponseCode(IResponse.INVALID_PAYLOAD);
 			response.setResponseStatus(IResponse.ERROR_MESSAGE);
 			response.setResponseDescription(responsePayload.getErrorMessage());
 		}
 
-		LOGGER.info("exchange endpoint of error........." + exchange.getFromEndpoint().toString());
+		LOGGER.error("exchange endpoint of error........." + exchange.getFromEndpoint());
 
 		final Header responseHeader = (Header) exchange.getProperty(IConstant.HEADER);
 		//noinspection Duplicates
@@ -102,6 +102,6 @@ public class VerizonGenericExceptionProcessor implements Processor {
 			default:
 				break;
 		}
-		LOGGER.info("End:VerizonGenericExceptionProcessor");
+		LOGGER.debug("End:VerizonGenericExceptionProcessor");
 	}
 }

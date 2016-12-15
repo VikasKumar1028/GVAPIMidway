@@ -2,11 +2,7 @@ package com.gv.midway.pojo.activateDevice.request;
 
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
-import java.util.Arrays;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.gv.midway.pojo.verizon.CustomFields;
-import com.gv.midway.pojo.verizon.PrimaryPlaceOfUse;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ActivateDeviceRequestDataArea {

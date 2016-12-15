@@ -12,8 +12,7 @@ public class AttCallBackSplitter {
 
     public List<Transaction> split(List<Transaction> deviceList) {
 
-        LOGGER.info("*****************SPLITTER*********************"
-                + deviceList.size());
+        LOGGER.debug("*****************SPLITTER*********************" + deviceList.size());
         return deviceList;
     }
 }

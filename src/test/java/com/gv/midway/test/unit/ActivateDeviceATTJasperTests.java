@@ -1,6 +1,5 @@
 package com.gv.midway.test.unit;
 
-import com.gv.midway.attjasper.EditTerminalRequest;
 import com.gv.midway.attjasper.EditTerminalResponse;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IEndPoints;
@@ -10,7 +9,7 @@ import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequestDataArea;
 import com.gv.midway.pojo.activateDevice.request.ActivateDevices;
 import com.gv.midway.pojo.transaction.Transaction;
-import com.gv.midway.pojo.verizon.CustomFields;
+import com.gv.midway.pojo.KeyValuePair;
 import com.gv.midway.utility.CommonUtil;
 import org.apache.camel.*;
 import org.apache.camel.builder.AdviceWithRouteBuilder;
@@ -21,7 +20,6 @@ import org.apache.cxf.binding.soap.SoapHeader;
 import org.apache.cxf.headers.Header;
 import org.junit.Test;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,7 +30,7 @@ public class ActivateDeviceATTJasperTests extends MidwayTestSupport {
     @Test
     public void test_activateDeviceATTJasper() throws Exception {
 
-        RouteDefinition route = context.getRouteDefinition("seda:attJasperSedaActivation");
+        RouteDefinition route = context.getRouteDefinition("attJasperSedaActivation");
         route.adviceWith(context, new AdviceWithRouteBuilder() {
             @Override
             public void configure() throws Exception {
@@ -64,14 +62,14 @@ public class ActivateDeviceATTJasperTests extends MidwayTestSupport {
 
         ActivateDeviceId activateDeviceId = new ActivateDeviceId("89011702272013902587", "ICCID");
 
-        CustomFields customFields = new CustomFields();
+        KeyValuePair customFields = new KeyValuePair();
         customFields.setKey("");
         customFields.setValue("");
 
         ActivateDevices activateDevices = new ActivateDevices();
         activateDevices.setDeviceIds(new ActivateDeviceId[] {activateDeviceId});
         activateDevices.setNetSuiteId(123456);
-        activateDevices.setCustomFields(new CustomFields[] {customFields});
+        activateDevices.setCustomFields(new KeyValuePair[] {customFields});
         activateDevices.setServicePlan("");
 
         ActivateDeviceRequestDataArea activateDeviceRequestDataArea = new ActivateDeviceRequestDataArea();

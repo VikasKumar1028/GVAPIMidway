@@ -2,7 +2,6 @@ package com.gv.midway.processor.jobScheduler;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Map;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -10,7 +9,6 @@ import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.deviceHistory.DeviceUsage;
 import com.gv.midway.pojo.job.JobDetail;
@@ -25,34 +23,33 @@ public class KoreDeviceUsageHistoryPostProcessor implements Processor {
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		LOGGER.info("Begin:KoreDeviceUsageHistoryPostProcessor");
-		LOGGER.info("exchange::::" + exchange.getIn().getBody());
-		LOGGER.info("jobDetailDate ------" + exchange.getProperty(IConstant.JOB_DETAIL_DATE));
+		LOGGER.debug("Begin:KoreDeviceUsageHistoryPostProcessor");
+		LOGGER.debug("exchange::::" + exchange.getIn().getBody());
+		LOGGER.debug("jobDetailDate ------" + exchange.getProperty(IConstant.JOB_DETAIL_DATE));
 
-		final Map map = exchange.getIn().getBody(Map.class);
-		final ObjectMapper mapper = new ObjectMapper();
-
-		final UsageInformationKoreResponse usageResponse = mapper.convertValue(map, UsageInformationKoreResponse.class);
+		final UsageInformationKoreResponse usageResponse = exchange.getIn().getBody(UsageInformationKoreResponse.class);
 
 		long totalBytesUsed = 0L;
 
-		LOGGER.info("usageInformationKoreResponse:::::::::" + usageResponse.toString());
+		LOGGER.debug("usageInformationKoreResponse:::::::::" + usageResponse);
 
 		if (usageResponse.getD().getUsage() != null && !usageResponse.getD().getUsage().isEmpty()) {
 
 			for (Usage usage : usageResponse.getD().getUsage()) {
 
 				final String usageDateValue = getKoreDeviceUsageDate(usage);
+				LOGGER.debug("usageDateValue: " + usageDateValue);
+				LOGGER.debug("IConstant.JOB_DETAIL_DATE: " + exchange.getProperty(IConstant.JOB_DETAIL_DATE));
 
 				if (usageDateValue != null && exchange.getProperty(IConstant.JOB_DETAIL_DATE).equals(usageDateValue)) {
 					totalBytesUsed = usage.getDataInBytes().longValue() + totalBytesUsed;
-					LOGGER.info("totalBytesUsed:" + totalBytesUsed);
+					LOGGER.debug("totalBytesUsed:" + totalBytesUsed);
 					break;
 				}
 			}
 		}
 
-		LOGGER.info("End of Loop totalBytesUsed:::::::::" + totalBytesUsed);
+		LOGGER.debug("End of Loop totalBytesUsed:::::::::" + totalBytesUsed);
 
 		final JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
 
@@ -69,35 +66,35 @@ public class KoreDeviceUsageHistoryPostProcessor implements Processor {
 
 		exchange.getIn().setBody(deviceUsage);
 
-		LOGGER.info("End:KoreDeviceUsageHistoryPostProcessor");
+		LOGGER.debug("End:KoreDeviceUsageHistoryPostProcessor");
 	}
 
 	private String getKoreDeviceUsageDate(Usage usage) {
 
-		LOGGER.info("Begin:KoreUsageDateFormat()");
+		LOGGER.debug("Begin:KoreUsageDateFormat()");
 
 		final String koreUsageDate = usage.getUsageDate();
 		final String longValueOfDate = koreUsageDate.substring(koreUsageDate.indexOf("(") + 1, koreUsageDate.indexOf("-"));
 
-		LOGGER.info("long value of Date is........." + longValueOfDate);
+		LOGGER.debug("long value of Date is........." + longValueOfDate);
 
 		final Long valueOfDateInLong = Long.valueOf(longValueOfDate);
 		final String timeZoneOfDate = koreUsageDate.substring(koreUsageDate.indexOf("-"), koreUsageDate.indexOf(")"));
 
-		LOGGER.info("time zone is......." + timeZoneOfDate);
+		LOGGER.debug("time zone is......." + timeZoneOfDate);
 
 		final DateTimeZone timeZone = DateTimeZone.forID(timeZoneOfDate);
 
-		LOGGER.info("****************timeZone ID is" + timeZone);
+		LOGGER.debug("****************timeZone ID is" + timeZone);
 
 		final DateTime dateTime = new DateTime(valueOfDateInLong, timeZone);
 
-		LOGGER.info("****************" + dateTime.toString());
+		LOGGER.debug("****************" + dateTime.toString());
 
 		final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		final String finalUsageDateFormat = df.format(dateTime.toDate());
 
-		LOGGER.info("finalUsageDateFormat :::::::" + finalUsageDateFormat);
+		LOGGER.debug("finalUsageDateFormat :::::::" + finalUsageDateFormat);
 
 		return finalUsageDateFormat;
 	}

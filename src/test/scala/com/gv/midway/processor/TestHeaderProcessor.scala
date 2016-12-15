@@ -35,7 +35,7 @@ class TestHeaderProcessor extends FunSuite with MockitoSugar {
         assertThrows[MissingParameterException] {
           new HeaderProcessor().process(exchange)
 
-          verify(exchange, times(1)).setProperty(IConstant.RESPONSE_CODE, "402")
+          verify(exchange, times(1)).setProperty(IConstant.RESPONSE_CODE, "400")
           verify(exchange, times(1)).setProperty(IConstant.RESPONSE_STATUS, "Missing Parameter")
           verify(exchange, times(1)).setProperty(IConstant.RESPONSE_DESCRIPTION, "Pass all the required header parameters. ")
         }
@@ -92,7 +92,7 @@ class TestHeaderProcessor extends FunSuite with MockitoSugar {
   }
 
   private def assertInvalidParameterExceptionCalls(exchange: Exchange): Unit = {
-    verify(exchange, times(1)).setProperty(IConstant.RESPONSE_CODE, "402")
+    verify(exchange, times(1)).setProperty(IConstant.RESPONSE_CODE, "400")
     verify(exchange, times(1)).setProperty(IConstant.RESPONSE_STATUS, "Invalid Parameter")
     verify(exchange, times(1)).setProperty(IConstant.RESPONSE_DESCRIPTION, "Invalid bsCarrier field value")
   }

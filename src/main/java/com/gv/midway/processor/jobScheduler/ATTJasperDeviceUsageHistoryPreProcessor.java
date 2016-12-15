@@ -35,7 +35,7 @@ public class ATTJasperDeviceUsageHistoryPreProcessor implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {
-        LOGGER.info("Begin:ATTJasperDeviceUsageHistoryPreProcessor");
+        LOGGER.debug("Begin:ATTJasperDeviceUsageHistoryPreProcessor");
 
         final Message message = exchange.getIn();
         final DeviceInformation deviceInfo = (DeviceInformation) message.getBody();
@@ -58,7 +58,7 @@ public class ATTJasperDeviceUsageHistoryPreProcessor implements Processor {
         getTerminalDetailsRequest.setVersion(properties.version);
         getTerminalDetailsRequest.setMessageId("" + new Date().getTime());
 
-        LOGGER.info("size of iccId..............." + getTerminalDetailsRequest.getIccids().getIccid().size());
+        LOGGER.debug("size of iccId..............." + getTerminalDetailsRequest.getIccids().getIccid().size());
 
         final List<SoapHeader> soapHeaders = CommonUtil.getSOAPHeaders(properties.username, properties.password);
 
@@ -73,6 +73,6 @@ public class ATTJasperDeviceUsageHistoryPreProcessor implements Processor {
         exchange.setProperty("CarrierName", deviceInfo.getBs_carrier());
         exchange.setPattern(ExchangePattern.InOut);
 
-        LOGGER.info("End:ATTJasperDeviceUsageHistoryPreProcessor");
+        LOGGER.debug("End:ATTJasperDeviceUsageHistoryPreProcessor");
     }
 }

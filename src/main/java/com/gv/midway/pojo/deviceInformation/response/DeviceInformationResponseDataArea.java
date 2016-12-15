@@ -1,9 +1,9 @@
 package com.gv.midway.pojo.deviceInformation.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.wordnik.swagger.annotations.ApiModelProperty;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+@JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 public class DeviceInformationResponseDataArea {
 
     @ApiModelProperty(value = "Information of the Device(s)")

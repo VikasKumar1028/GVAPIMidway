@@ -18,7 +18,7 @@ public class StubATTJasperDeviceConnectionStatusProcessor implements Processor {
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		LOGGER.info("Begin::StubATTJasperDeviceConnectionStatusProcessor");
+		LOGGER.debug("Begin::StubATTJasperDeviceConnectionStatusProcessor");
 
 		ConnectionStatusResponse connectionStatusReponse = new ConnectionStatusResponse();
 
@@ -45,6 +45,6 @@ public class StubATTJasperDeviceConnectionStatusProcessor implements Processor {
 		connectionStatusReponse.setDataArea(dataArea);
 
 		exchange.getIn().setBody(connectionStatusReponse);
-		LOGGER.info("End::StubATTJasperDeviceConnectionStatusProcessor");
+		LOGGER.debug("End::StubATTJasperDeviceConnectionStatusProcessor");
 	}
 }

@@ -1,5 +1,7 @@
 package com.gv.midway.processor.changeDeviceServicePlans;
 
+import com.gv.midway.utility.MessageStuffer;
+import com.gv.midway.pojo.MidWayDeviceId;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.Message;
@@ -13,14 +15,8 @@ import com.gv.midway.pojo.changeDeviceServicePlans.request.ChangeDeviceServicePl
 import com.gv.midway.pojo.transaction.Transaction;
 
 public class KoreChangeDeviceServicePlansPreProcessor implements Processor {
-
-    private static final Logger LOGGER = Logger
-            .getLogger(KoreChangeDeviceServicePlansPreProcessor.class.getName());
-    Environment newEnv;
-
-    public KoreChangeDeviceServicePlansPreProcessor() {
-        // Empty Constructor
-    }
+    private static final Logger LOGGER = Logger.getLogger(KoreChangeDeviceServicePlansPreProcessor.class.getName());
+    private Environment newEnv;
 
     public KoreChangeDeviceServicePlansPreProcessor(Environment env) {
         super();
@@ -29,40 +25,31 @@ public class KoreChangeDeviceServicePlansPreProcessor implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {
+        LOGGER.debug("Begin::KoreChangeDeviceServicePlansPreProcessor");
 
-        LOGGER.info("Begin::KoreChangeDeviceServicePlansPreProcessor");
+        final Message message = exchange.getIn();
+        final Transaction transaction = message.getBody(Transaction.class);
+        final ChangeDeviceServicePlansRequest changeDeviceServicePlansRequest =
+                (ChangeDeviceServicePlansRequest) transaction.getDevicePayload();
 
-        Message message = exchange.getIn();
+        String deviceId = "";
+        for (MidWayDeviceId midWayDeviceId : changeDeviceServicePlansRequest.getDataArea().getDevices()[0].getDeviceIds()) {
+            deviceId = midWayDeviceId.getId();
+            if ("SIM".equalsIgnoreCase(midWayDeviceId.getKind())) { //Prefer SIM over other deviceIds
+                break;
+            }
+        }
+        final String planCode = changeDeviceServicePlansRequest.getDataArea().getServicePlan();
 
-        Transaction transaction = exchange.getIn().getBody(Transaction.class);
-
-        ChangeDeviceServicePlansRequest changeDeviceServicePlansRequest = (ChangeDeviceServicePlansRequest) transaction
-                .getDevicePayload();
-
-        String deviceId = changeDeviceServicePlansRequest.getDataArea()
-                .getDevices()[0].getDeviceIds()[0].getId();
-        String planCode = changeDeviceServicePlansRequest.getDataArea()
-                .getServicePlan();
-
-        ChangeDeviceServicePlansRequestKore changeDeviceServicePlansRequestKore = new ChangeDeviceServicePlansRequestKore();
+        final ChangeDeviceServicePlansRequestKore changeDeviceServicePlansRequestKore = new ChangeDeviceServicePlansRequestKore();
         changeDeviceServicePlansRequestKore.setDeviceNumber(deviceId);
         changeDeviceServicePlansRequestKore.setPlanCode(planCode);
 
-        exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,
-                transaction.getDeviceNumber());
+        MessageStuffer.setKorePOSTRequest(message, newEnv, "/json/modifyDevicePlanForNextPeriod", changeDeviceServicePlansRequestKore);
 
-        message.setHeader(Exchange.CONTENT_TYPE, "application/json");
-        message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
-        message.setHeader(Exchange.HTTP_METHOD, "POST");
-
-        message.setHeader("Authorization",
-                newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
-        message.setHeader(Exchange.HTTP_PATH,
-                "/json/modifyDevicePlanForNextPeriod");
-        message.setBody(changeDeviceServicePlansRequestKore);
+        exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER, transaction.getDeviceNumber());
         exchange.setPattern(ExchangePattern.InOut);
 
-        LOGGER.info("End::KoreChangeDeviceServicePlansPreProcessor");
+        LOGGER.debug("End::KoreChangeDeviceServicePlansPreProcessor");
     }
-
 }

@@ -1,5 +1,6 @@
 package com.gv.midway.processor.jobScheduler;
 
+import com.gv.midway.utility.MessageStuffer;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.Message;
@@ -18,11 +19,7 @@ public class KoreDeviceUsageHistoryPreProcessor implements Processor {
 
     private static final Logger LOGGER = Logger.getLogger(KoreDeviceUsageHistoryPreProcessor.class.getName());
 
-    Environment newEnv;
-
-    public KoreDeviceUsageHistoryPreProcessor() {
-        // Empty Constructor
-    }
+    private Environment newEnv;
 
     public KoreDeviceUsageHistoryPreProcessor(Environment env) {
         super();
@@ -32,12 +29,12 @@ public class KoreDeviceUsageHistoryPreProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        LOGGER.info("*************Testing**************************************" + exchange.getIn().getBody());
+        LOGGER.debug("*************Testing**************************************" + exchange.getIn().getBody());
 
-        LOGGER.info("Begin:KoreDeviceUsageHistoryPreProcessor");
+        LOGGER.debug("Begin:KoreDeviceUsageHistoryPreProcessor");
         final Message message = exchange.getIn();
 
-        LOGGER.info("jobDetailDate ------" + exchange.getProperty(IConstant.JOB_DETAIL_DATE));
+        LOGGER.debug("jobDetailDate ------" + exchange.getProperty(IConstant.JOB_DETAIL_DATE));
 
         final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -61,19 +58,14 @@ public class KoreDeviceUsageHistoryPreProcessor implements Processor {
 
         final String strRequestBody = objectMapper.writeValueAsString(usageInformationKoreRequest);
 
-        LOGGER.info("strRequestBody::" + strRequestBody);
+        LOGGER.debug("strRequestBody::" + strRequestBody);
 
-        message.setHeader(Exchange.CONTENT_TYPE, "application/json");
-        message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
-        message.setHeader(Exchange.HTTP_METHOD, "POST");
-        message.setHeader("Authorization", newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
-        message.setHeader(Exchange.HTTP_PATH, "/json/queryDeviceUsageBySimNumber");
-        message.setBody(strRequestBody);
+        MessageStuffer.setKorePOSTRequest(message, newEnv, "/json/queryDeviceUsageBySimNumber", strRequestBody);
 
         exchange.setProperty("DeviceId", deviceId);
         exchange.setPattern(ExchangePattern.InOut);
 
-        LOGGER.info("message::" + message.toString());
-        LOGGER.info("End:KoreDeviceUsageHistoryPreProcessor");
+        LOGGER.debug("message::" + message.toString());
+        LOGGER.debug("End:KoreDeviceUsageHistoryPreProcessor");
     }
 }

@@ -17,7 +17,7 @@ public class StubKoreCustomFieldsProcessor implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {
-        LOGGER.info("Begin::StubKoreCustomFieldsProcessor");
+        LOGGER.debug("Begin::StubKoreCustomFieldsProcessor");
 
         CarrierProvisioningDeviceResponse updateCustomeFieldDeviceResponse = new CarrierProvisioningDeviceResponse();
 
@@ -48,7 +48,7 @@ public class StubKoreCustomFieldsProcessor implements Processor {
                 .setDataArea(updateCustomeFieldDeviceResponseDataArea);
 
         exchange.getIn().setBody(updateCustomeFieldDeviceResponse);
-        LOGGER.info("End::StubKoreCustomFieldsProcessor");
+        LOGGER.debug("End::StubKoreCustomFieldsProcessor");
 
     }
 

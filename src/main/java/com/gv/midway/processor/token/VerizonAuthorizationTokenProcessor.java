@@ -1,5 +1,6 @@
 package com.gv.midway.processor.token;
 
+import com.gv.midway.utility.MessageStuffer;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.Message;
@@ -10,42 +11,25 @@ import org.springframework.core.env.Environment;
 import com.gv.midway.constant.IConstant;
 
 public class VerizonAuthorizationTokenProcessor implements Processor {
+    private static final Logger LOGGER = Logger.getLogger(VerizonAuthorizationTokenProcessor.class.getName());
 
-    private static final Logger LOGGER = Logger.getLogger(VerizonAuthorizationTokenProcessor.class
-            .getName());
-
-    Environment newEnv;
+    private Environment newEnv;
 
     public VerizonAuthorizationTokenProcessor(Environment env) {
         super();
         this.newEnv = env;
-
-    }
-
-    public VerizonAuthorizationTokenProcessor() {
-        // Empty Constructor
     }
 
     @Override
     public void process(Exchange exchange) throws Exception {
+        LOGGER.debug("Begin:VerizonAuthorizationTokenProcessor----------" + exchange.getPattern());
+        LOGGER.debug("Authorization:::" + newEnv.getProperty(IConstant.VERIZON_AUTHENTICATION));
 
-        LOGGER.info("Begin:VerizonAuthorizationTokenProcessor----------"
-                + exchange.getPattern());
-        LOGGER.info("Authorization:::"
-                + newEnv.getProperty(IConstant.VERIZON_AUTHENTICATION));
-        Message message = exchange.getIn();
-        message.setHeader("Authorization", newEnv.getProperty(IConstant.VERIZON_AUTHENTICATION));
-        message.setHeader(Exchange.CONTENT_TYPE, "application/x-www-form-urlencoded");
-        message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
-        message.setHeader(Exchange.HTTP_METHOD, "POST");
-        message.setHeader(Exchange.HTTP_PATH, "/ts/v1/oauth2/token");
-
-        exchange.getIn().setHeader(Exchange.HTTP_QUERY, "grant_type=client_credentials");
+        final Message message = exchange.getIn();
+        MessageStuffer.setVerizonPOSTRequest(message, newEnv, "/ts/v1/oauth2/token");
 
         exchange.setPattern(ExchangePattern.InOut);
 
-        LOGGER.info("End:VerizonAuthorizationTokenProcessor");
-
+        LOGGER.debug("End:VerizonAuthorizationTokenProcessor");
     }
-
 }

@@ -22,7 +22,7 @@ public class VerizonCustomFieldsPreProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        LOGGER.info("Begin::VerizonCustomFieldsPreProcessor");
+        LOGGER.debug("Begin::VerizonCustomFieldsPreProcessor");
 
         CustomFieldsDeviceRequestVerizon businessRequest = new CustomFieldsDeviceRequestVerizon();
         CustomFieldsDeviceRequest proxyRequest = (CustomFieldsDeviceRequest) exchange
@@ -40,7 +40,7 @@ public class VerizonCustomFieldsPreProcessor implements Processor {
 
         MidWayDevices[] proxyDevicesArray = proxyRequest.getDataArea()
                 .getDevices();
-        // Check if deviceIds are passed then only set them in request not the groupName,ServicePlan and CustomFields
+        // Check if deviceIds are passed then only set them in request not the groupName,ServicePlan and KeyValuePair
 		if (proxyDevicesArray != null && proxyDevicesArray.length > 0) {
 			Devices[] businessDevicesArray = new Devices[proxyDevicesArray.length];
 
@@ -58,7 +58,7 @@ public class VerizonCustomFieldsPreProcessor implements Processor {
 					businessDeviceId.setId(proxyDeviceId.getId());
 					businessDeviceId.setKind(proxyDeviceId.getKind());
 
-					LOGGER.info(proxyDeviceId.getId());
+					LOGGER.debug(proxyDeviceId.getId());
 
 					businessDeviceIdArray[i] = businessDeviceId;
 
@@ -78,15 +78,15 @@ public class VerizonCustomFieldsPreProcessor implements Processor {
 
         exchange.getIn().setBody(strRequestBody);
 
-        LOGGER.info("strRequestBody***ChangeService" + strRequestBody);
+        LOGGER.debug("strRequestBody***ChangeService" + strRequestBody);
 
         Message message = exchange.getIn();
         String sessionToken = "";
         String authorizationToken = "";
 
-        if (exchange.getProperty(IConstant.VZ_SEESION_TOKEN) != null
+        if (exchange.getProperty(IConstant.VZ_SESSION_TOKEN) != null
                 && exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN) != null) {
-            sessionToken = exchange.getProperty(IConstant.VZ_SEESION_TOKEN)
+            sessionToken = exchange.getProperty(IConstant.VZ_SESSION_TOKEN)
                     .toString();
             authorizationToken = exchange.getProperty(
                     IConstant.VZ_AUTHORIZATION_TOKEN).toString();
@@ -99,7 +99,7 @@ public class VerizonCustomFieldsPreProcessor implements Processor {
         message.setHeader(Exchange.HTTP_METHOD, "PUT");
         message.setHeader(Exchange.HTTP_PATH, "/devices/actions/customFields");
 
-        LOGGER.info("End::VerizonCustomFieldsPreProcessor");
+        LOGGER.debug("End::VerizonCustomFieldsPreProcessor");
     }
 
 }

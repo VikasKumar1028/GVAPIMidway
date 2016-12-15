@@ -1,13 +1,11 @@
 package com.gv.midway.processor.jobScheduler;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.connectionInformation.verizon.response.ConnectionEvent;
 import com.gv.midway.pojo.connectionInformation.verizon.response.ConnectionHistory;
@@ -24,10 +22,8 @@ public class VerizonDeviceConnectionHistoryPostProcessor implements Processor {
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		LOGGER.info("Begin:VerizonDeviceConnectionHistoryPostProcessor");
-		final Map map = exchange.getIn().getBody(Map.class);
-		final ObjectMapper mapper = new ObjectMapper();
-		final ConnectionInformationResponse connectionResponse = mapper.convertValue(map, ConnectionInformationResponse.class);
+		LOGGER.debug("Begin:VerizonDeviceConnectionHistoryPostProcessor");
+		final ConnectionInformationResponse connectionResponse = exchange.getIn().getBody(ConnectionInformationResponse.class);
 		final JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
 
 		final ArrayList<DeviceEvent> deviceEventList = new ArrayList<>();
@@ -74,6 +70,6 @@ public class VerizonDeviceConnectionHistoryPostProcessor implements Processor {
 
 		exchange.getIn().setBody(deviceConnection);
 
-		LOGGER.info("End:VerizonDeviceConnectionHistoryPostProcessor");
+		LOGGER.debug("End:VerizonDeviceConnectionHistoryPostProcessor");
 	}
 }

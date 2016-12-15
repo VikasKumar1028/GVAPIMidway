@@ -20,7 +20,7 @@ public class StubVerizonDeactivateDeviceProcessor implements Processor {
     }
 
     public void process(Exchange exchange) throws Exception {
-        LOGGER.info("Begin::StubVerizonDeactivateDeviceProcessor");
+        LOGGER.debug("Begin::StubVerizonDeactivateDeviceProcessor");
         CarrierProvisioningDeviceResponse deactivateDeviceResponse = new CarrierProvisioningDeviceResponse();
         CarrierProvisioningDeviceResponseDataArea deactivateDeviceResponseDataArea = new CarrierProvisioningDeviceResponseDataArea();
 
@@ -47,6 +47,6 @@ public class StubVerizonDeactivateDeviceProcessor implements Processor {
         deactivateDeviceResponseDataArea.setOrderNumber("VZ012345789");
         deactivateDeviceResponse.setDataArea(deactivateDeviceResponseDataArea);
         exchange.getIn().setBody(deactivateDeviceResponse);
-        LOGGER.info("End::StubVerizonDeactivateDeviceProcessor");
+        LOGGER.debug("End::StubVerizonDeactivateDeviceProcessor");
     }
 }

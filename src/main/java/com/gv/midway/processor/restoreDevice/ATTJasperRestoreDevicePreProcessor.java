@@ -34,7 +34,7 @@ public class ATTJasperRestoreDevicePreProcessor implements Processor {
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		LOGGER.info("Begin:ATTJasperRestoreDevicePreProcessor");
+		LOGGER.debug("Begin:ATTJasperRestoreDevicePreProcessor");
 
 		final Message message = exchange.getIn();
 		final Transaction transaction = message.getBody(Transaction.class);
@@ -52,6 +52,7 @@ public class ATTJasperRestoreDevicePreProcessor implements Processor {
 		editTerminalRequest.setMessageId("" + new Date().getTime());
 		editTerminalRequest.setVersion(properties.version);
 
+		//TODO: set to debug after att jasper testing
 		LOGGER.info("activate of iccId..............." + deviceId);
 
 		final List<SoapHeader> soapHeaders = CommonUtil.getSOAPHeaders(properties.username, properties.password);
@@ -66,6 +67,6 @@ public class ATTJasperRestoreDevicePreProcessor implements Processor {
 		exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID, transaction.getNetSuiteId());
 		exchange.setPattern(ExchangePattern.InOut);
 
-		LOGGER.info("End:ATTJasperRestoreDevicePreProcessor");
+		LOGGER.debug("End:ATTJasperRestoreDevicePreProcessor");
 	}
 }

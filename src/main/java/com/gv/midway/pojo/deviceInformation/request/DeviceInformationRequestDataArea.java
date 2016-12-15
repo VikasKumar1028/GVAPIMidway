@@ -1,10 +1,10 @@
 package com.gv.midway.pojo.deviceInformation.request;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.gv.midway.pojo.verizon.DeviceId;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+@JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 public class DeviceInformationRequestDataArea {
 
     @ApiModelProperty(value = "An identifier from NetSuite system")

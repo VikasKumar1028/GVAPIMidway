@@ -46,7 +46,6 @@ import javax.xml.transform.stream.StreamResult;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
@@ -176,7 +175,7 @@ public class CommonUtil {
         } else if (carrierName.equalsIgnoreCase(IConstant.BSCARRIER_SERVICE_ATTJASPER)) {
             return IConstant.BSCARRIER_SERVICE_ATTJASPER;
         }
-        throw new InvalidParameterException("402", "Unsupported bsCarrier field value.  Must pass [Verizon, Kore, or AttJasper].");
+        throw new InvalidParameterException("400", "Unsupported bsCarrier field value.  Must pass [Verizon, Kore, or AttJasper].");
     }
 
     /**
@@ -187,7 +186,7 @@ public class CommonUtil {
      */
     public static boolean isProvisioningMethod(String endPoint) {
 
-        LOGGER.info("endpoint is......." + endPoint);
+        LOGGER.debug("Endpoint is......." + endPoint);
 
         for (String element : endPointList) {
             if (endPoint.contains(element)) {
@@ -206,7 +205,7 @@ public class CommonUtil {
      */
     public static DeviceId getRecommendedDeviceIdentifier(DeviceId[] devices) {
 
-        LOGGER.info("getRecommendedDeviceIdentifier........deviceId..is.......");
+        LOGGER.debug("getRecommendedDeviceIdentifier........deviceId..is.......");
 
         for (DeviceId device : devices) {
             if (("ESN".equalsIgnoreCase(device.getKind()))
@@ -228,7 +227,7 @@ public class CommonUtil {
      */
     public static DeviceId getSimNumber(DeviceId[] devices) {
 
-        LOGGER.info("getSimNumber........deviceId..is.......");
+        LOGGER.debug("getSimNumber........deviceId..is.......");
 
         for (DeviceId device : devices) {
             if ("SIM".equalsIgnoreCase(device.getKind())) {
@@ -249,7 +248,7 @@ public class CommonUtil {
     public static boolean isValidDateFormat(String date) {
 
         if (date == null) {
-            LOGGER.info("date is null.....");
+            LOGGER.warn("date is null.....");
             return false;
         }
 
@@ -262,10 +261,10 @@ public class CommonUtil {
         final Matcher matcher = pattern.matcher(trimDate);
 
         if (matcher.matches()) {
-            LOGGER.info("valid date format for....." + trimDate);
+            LOGGER.debug("valid date format for....." + trimDate);
             return true;
         } else {
-            LOGGER.info("invalid date format for....." + trimDate);
+            LOGGER.warn("invalid date format for....." + trimDate);
             return false;
         }
     }
@@ -387,8 +386,8 @@ public class CommonUtil {
         String sessionToken = "";
         String authorizationToken = "";
 
-        if (exchange.getProperty(IConstant.VZ_SEESION_TOKEN) != null && exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN) != null) {
-            sessionToken = exchange.getProperty(IConstant.VZ_SEESION_TOKEN).toString();
+        if (exchange.getProperty(IConstant.VZ_SESSION_TOKEN) != null && exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN) != null) {
+            sessionToken = exchange.getProperty(IConstant.VZ_SESSION_TOKEN).toString();
             authorizationToken = exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN).toString();
         }
 
@@ -454,7 +453,7 @@ public class CommonUtil {
 
         final MessageContentsList result = (MessageContentsList) exchange.getIn().getBody();
         Object object = result.get(0);
-        LOGGER.info("Received output text: " + result.get(0));
+        LOGGER.debug("Received output text: " + result.get(0));
 
         JAXBContext context;
         String xmlString = null;
@@ -464,7 +463,7 @@ public class CommonUtil {
             Marshaller jaxbMarshaller = context.createMarshaller();
             jaxbMarshaller.marshal(object, sw);
             xmlString = sw.toString();
-            LOGGER.info("response body is........" + xmlString);
+            LOGGER.debug("response body is........" + xmlString);
 
             exchange.setProperty(IConstant.ATTJASPER_SOAP_RESPONSE_PAYLOAD, xmlString);
         } catch (JAXBException e) {
@@ -482,7 +481,7 @@ public class CommonUtil {
 
         String message = soapFault.getMessage();
 
-        LOGGER.info("soap fault code    ------------------" + message);
+        LOGGER.error("soap fault code    ------------------" + message);
 
         try {
             SOAPMessage soapMessage = MessageFactory.newInstance().createMessage();
@@ -506,8 +505,8 @@ public class CommonUtil {
 
                 String nodeTextContent = node.getTextContent();
 
-                LOGGER.info("-----*************--Node----Name------" + nodeName);
-                LOGGER.info("-----*************--Node-------Text-----" + nodeTextContent);
+                LOGGER.debug("-----*************--Node----Name------" + nodeName);
+                LOGGER.debug("-----*************--Node-------Text-----" + nodeTextContent);
 
                 Name entryName = envelope.createName(nodeName);
 
@@ -642,41 +641,28 @@ public class CommonUtil {
 
     /**
      * Logic to Schedule Kore Job on Below Dates of Month.
-     *   Day 24 � Don�t run anything
-     *   Day 25 � Run for Day 24 (24 hour)
-     *     Day 26 � Run for Day 25 (24 hour) and Day 24 (48 hour)
+     *   Day 24 - Don't run anything
+     *   Day 25 - Run for Day 24 (24 hour)
+     *   Day 26 - Run for Day 25 (24 hour) and Day 24 (48 hour)
      */
-    public static boolean checkKoreJobScheduling(int jobDuration)
-    {
-		Calendar cal = Calendar.getInstance();
-		int date = cal.getTime().getDate();
+    public static boolean checkKoreJobScheduling(int jobDuration) {
+        return checkKoreJobScheduling(jobDuration, Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+    }
 
-		switch (date) {
-
-		 case 24:
-
-			return false;
-
-		case 25:
-
-			if(jobDuration==IConstant.DURATION_24)
-			return true;
-
-			else
-			 return false;
-
-		case 26:
-
-			if(jobDuration!=IConstant.DURATION_72)
-				return true;
-
-			else
-				 return false;
-
-		default:
-			break;
-		}
-
-		return true;
+    public static boolean checkKoreJobScheduling(int jobDuration, int dayOfMonth) {
+        switch (dayOfMonth) {
+            case 24:
+                return false;
+            case 25:
+                return jobDuration == IConstant.DURATION_24;
+            case 26:
+                return jobDuration != IConstant.DURATION_72 && jobDuration != IConstant.DURATION_96 && jobDuration != IConstant.DURATION_120;
+            case 27:
+                return jobDuration != IConstant.DURATION_96 && jobDuration != IConstant.DURATION_120;
+            case 28:
+                return jobDuration != IConstant.DURATION_120;
+            default:
+                return true;
+        }
     }
 }

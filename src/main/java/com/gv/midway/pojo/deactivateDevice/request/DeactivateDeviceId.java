@@ -6,10 +6,10 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DeactivateDeviceId {
     // @JsonProperty("id")
-    @ApiModelProperty(value = "The value of device indentifier.", required = true)
+    @ApiModelProperty(value = "The value of device identifier.", required = true)
     private String id;
     // @JsonProperty("kind")
-    @ApiModelProperty(value = "The type of device indentifier.", required = true)
+    @ApiModelProperty(value = "The type of device identifier.", required = true)
     private String kind;
 
     @ApiModelProperty(value = "KORE : A flag indicating whether to scrap the device or just deactivate it to stock.")

@@ -6,6 +6,6 @@ public interface ISessionDao {
 
     public SessionBean getSessionBean();
 
-    public SessionBean saveSesionBean(SessionBean sessionBean);
+    public SessionBean saveSessionBean(SessionBean sessionBean);
 
 }

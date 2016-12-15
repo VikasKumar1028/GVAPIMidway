@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.gv.midway.pojo.KeyValuePair;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
@@ -17,7 +18,6 @@ import com.gv.midway.pojo.deviceInformation.kore.response.DeviceInformationRespo
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponseDataArea;
-import com.gv.midway.pojo.verizon.CustomFields;
 import com.gv.midway.pojo.verizon.DeviceId;
 
 public class KoreDeviceInformationPostProcessor implements Processor {
@@ -39,15 +39,13 @@ public class KoreDeviceInformationPostProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        LOGGER.info("Begin:KoreDeviceInformationPostProcessor");
-        DeviceInformationResponseKore koreDeviceInformationResponse = (DeviceInformationResponseKore) exchange
-                .getIn().getBody(DeviceInformationResponseKore.class);
+        LOGGER.debug("Begin:KoreDeviceInformationPostProcessor");
+        DeviceInformationResponseKore koreDeviceInformationResponse =
+                exchange.getIn().getBody(DeviceInformationResponseKore.class);
 
-        LOGGER.info("----exchange_Body- Post Processor-===++++++++++++---------"
-                + koreDeviceInformationResponse.toString());
+        LOGGER.debug("----exchange_Body- Post Processor-===+++++-----" + koreDeviceInformationResponse.toString());
 
-        DeviceInformation deviceInformation = (DeviceInformation) exchange
-                .getProperty(IConstant.MIDWAY_DEVICEINFO_DB);
+        DeviceInformation deviceInformation = (DeviceInformation) exchange.getProperty(IConstant.MIDWAY_DEVICEINFO_DB);
 
         if (deviceInformation == null) {
 
@@ -56,8 +54,7 @@ public class KoreDeviceInformationPostProcessor implements Processor {
 
         if (deviceInformation.getBs_carrier() == null
                 || "".equals(deviceInformation.getBs_carrier().trim())) {
-            deviceInformation.setBs_carrier(exchange.getProperty(
-                    IConstant.BSCARRIER).toString());
+            deviceInformation.setBs_carrier(exchange.getProperty(IConstant.BSCARRIER).toString());
         }
 
         DeviceInformationResponse deviceInformationResponse = new DeviceInformationResponse();
@@ -108,34 +105,34 @@ public class KoreDeviceInformationPostProcessor implements Processor {
         deviceInformation.setIpAddress(koreDeviceInformationResponse.getD()
                 .getStaticIP());
 
-        CustomFields[] customeFields = new CustomFields[6];
+        KeyValuePair[] customeFields = new KeyValuePair[6];
 
-        CustomFields customFields1 = new CustomFields();
+        KeyValuePair customFields1 = new KeyValuePair();
         customFields1.setKey("CustomField1");
         customFields1.setValue(koreDeviceInformationResponse.getD()
                 .getCustomField1());
 
-        CustomFields customFields2 = new CustomFields();
+        KeyValuePair customFields2 = new KeyValuePair();
         customFields2.setKey("CustomField2");
         customFields2.setValue(koreDeviceInformationResponse.getD()
                 .getCustomField2());
 
-        CustomFields customFields3 = new CustomFields();
+        KeyValuePair customFields3 = new KeyValuePair();
         customFields3.setKey("CustomField3");
         customFields3.setValue(koreDeviceInformationResponse.getD()
                 .getCustomField3());
 
-        CustomFields customFields4 = new CustomFields();
+        KeyValuePair customFields4 = new KeyValuePair();
         customFields4.setKey("CustomField4");
         customFields4.setValue(koreDeviceInformationResponse.getD()
                 .getCustomField4());
 
-        CustomFields customFields5 = new CustomFields();
+        KeyValuePair customFields5 = new KeyValuePair();
         customFields5.setKey("CustomField5");
         customFields5.setValue(koreDeviceInformationResponse.getD()
                 .getCustomField5());
 
-        CustomFields customFields6 = new CustomFields();
+        KeyValuePair customFields6 = new KeyValuePair();
         customFields6.setKey("CustomField6");
         customFields6.setValue(koreDeviceInformationResponse.getD()
                 .getCustomField6());
@@ -193,8 +190,7 @@ public class KoreDeviceInformationPostProcessor implements Processor {
                 .setDataArea(deviceInformationResponseDataArea);
 
         exchange.getIn().setBody(deviceInformationResponse);
-        LOGGER.info("End:KoreDeviceInformationPostProcessor..............."
-                + deviceInformation.toString());
+        LOGGER.debug("End:KoreDeviceInformationPostProcessor..........." + deviceInformation.toString());
     }
 
 }

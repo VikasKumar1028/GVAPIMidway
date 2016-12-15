@@ -1,5 +1,7 @@
 package com.gv.midway.processor.reactivate;
 
+import com.gv.midway.utility.MessageStuffer;
+import com.gv.midway.pojo.MidWayDeviceId;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.Message;
@@ -13,14 +15,10 @@ import com.gv.midway.pojo.reActivateDevice.request.ReactivateDeviceRequestKore;
 import com.gv.midway.pojo.transaction.Transaction;
 
 public class KoreReactivateDevicePreProcessor implements Processor {
-	private static final Logger LOGGER = Logger
-			.getLogger(KoreReactivateDevicePreProcessor.class.getName());
 
-	Environment newEnv;
+	private static final Logger LOGGER = Logger.getLogger(KoreReactivateDevicePreProcessor.class.getName());
 
-	public KoreReactivateDevicePreProcessor() {
-		// Empty Constructor
-	}
+	private Environment newEnv;
 
 	public KoreReactivateDevicePreProcessor(Environment env) {
 		this.newEnv = env;
@@ -29,39 +27,28 @@ public class KoreReactivateDevicePreProcessor implements Processor {
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		LOGGER.info("Begin:KoreReActivateDevicePreProcessor");
-		LOGGER.info("*************Testing********" + exchange.getIn().getBody());
+		LOGGER.debug("Begin:KoreReActivateDevicePreProcessor");
+		LOGGER.debug("*************Testing********" + exchange.getIn().getBody());
 
-		Message message = exchange.getIn();
+		final Message message = exchange.getIn();
+		final Transaction transaction = message.getBody(Transaction.class);
+		final ReactivateDeviceRequest reactivateDeviceRequest = (ReactivateDeviceRequest) transaction.getDevicePayload();
+        String deviceId = "";
+        for (MidWayDeviceId midWayDeviceId : reactivateDeviceRequest.getDataArea().getDevices()[0].getDeviceIds()) {
+            deviceId = midWayDeviceId.getId();
+            if ("SIM".equalsIgnoreCase(midWayDeviceId.getKind())) { //Prefer SIM over other deviceIds
+                break;
+            }
+        }
 
-		Transaction transaction = exchange.getIn().getBody(Transaction.class);
+		final ReactivateDeviceRequestKore reactivationDeviceRequestKore = new ReactivateDeviceRequestKore();
+		reactivationDeviceRequestKore.setDeviceNumber(deviceId);
 
-		ReactivateDeviceRequest reActivateDeviceRequest = (ReactivateDeviceRequest) transaction
-				.getDevicePayload();
+		MessageStuffer.setKorePOSTRequest(message, newEnv, "/json/reactivateDevice", reactivationDeviceRequestKore);
 
-		String deviceId = reActivateDeviceRequest.getDataArea().getDevices()[0]
-				.getDeviceIds()[0].getId();
-
-		ReactivateDeviceRequestKore reActicationDeviceRequestKore = new ReactivateDeviceRequestKore();
-		reActicationDeviceRequestKore.setDeviceNumber(deviceId);
-
-		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,
-				transaction.getDeviceNumber());
-
-		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
-		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
-		message.setHeader(Exchange.HTTP_METHOD, "POST");
-		message.setHeader("Authorization",
-				newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
-		message.setHeader(Exchange.HTTP_PATH, "/json/reactivateDevice");
+		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER, transaction.getDeviceNumber());
 		exchange.setPattern(ExchangePattern.InOut);
 
-		message.setBody(reActicationDeviceRequestKore);
-
-		exchange.setPattern(ExchangePattern.InOut);
-
-		LOGGER.info("End:KoreReactivateDevicePreProcessor");
-
+		LOGGER.debug("End:KoreReactivateDevicePreProcessor");
 	}
-
 }

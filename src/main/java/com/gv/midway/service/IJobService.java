@@ -52,5 +52,9 @@ public interface IJobService {
     public void fetchPreviousDeviceUsageData(Exchange exchange);
     
     public void checkKoreJobScheduling(Exchange exchange,int jobDuration);
+    
+    public void updateNetSuiteCallBackResponse(Exchange exchange);
+
+    public void updateNetSuiteCallBackError(Exchange exchange);
 
 }

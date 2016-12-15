@@ -19,7 +19,7 @@ public class StubCellUploadProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
-    	LOGGER.info("Begin:StubCellUploadProcessor");
+    	LOGGER.debug("Begin:StubCellUploadProcessor");
 
         UpdateDeviceResponse updateDeviceResponse = new UpdateDeviceResponse();
 
@@ -51,7 +51,7 @@ public class StubCellUploadProcessor implements Processor {
 
         exchange.getIn().setBody(updateDeviceResponse);
         
-    	LOGGER.info("End:StubCellUploadProcessor");
+    	LOGGER.debug("End:StubCellUploadProcessor");
     }
 
 }

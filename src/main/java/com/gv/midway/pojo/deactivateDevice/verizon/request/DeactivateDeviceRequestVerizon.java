@@ -5,9 +5,8 @@ import java.util.Arrays;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.gv.midway.pojo.verizon.CustomFields;
+import com.gv.midway.pojo.KeyValuePair;
 import com.gv.midway.pojo.verizon.Devices;
-import com.wordnik.swagger.annotations.ApiModelProperty;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -21,7 +20,7 @@ public class DeactivateDeviceRequestVerizon {
     private String accountName;
 
     @ApiModelProperty(value = "The custom fields and values that have been set for the device.")
-    private CustomFields[] customFields;
+    private KeyValuePair[] customFields;
 
     @ApiModelProperty(value = "Service Plan that that device belongs to.Verizon Wireless provides service plan codes at the time of on-boarding and subsequently whenever there are any changes to the service plan. NOTE:  Any devices in the request that are not supported by the service plan will not activate. For example, if the service plan is only for 4G devices, any 3G devices included in the activation request will fail.", required = true)
     private String servicePlan;
@@ -51,11 +50,11 @@ public class DeactivateDeviceRequestVerizon {
         this.accountName = accountName;
     }
 
-    public CustomFields[] getCustomFields() {
+    public KeyValuePair[] getCustomFields() {
         return customFields;
     }
 
-    public void setCustomFields(CustomFields[] customFields) {
+    public void setCustomFields(KeyValuePair[] customFields) {
         this.customFields = customFields;
     }
 

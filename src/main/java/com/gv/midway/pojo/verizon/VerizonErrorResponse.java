@@ -1,5 +1,8 @@
 package com.gv.midway.pojo.verizon;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class VerizonErrorResponse {
 
     private String errorCode;
@@ -41,17 +44,20 @@ public class VerizonErrorResponse {
             return false;
         if (getClass() != obj.getClass())
             return false;
+
         VerizonErrorResponse other = (VerizonErrorResponse) obj;
         if (errorCode == null) {
             if (other.errorCode != null)
                 return false;
         } else if (!errorCode.equals(other.errorCode))
             return false;
+
         if (errorMessage == null) {
             if (other.errorMessage != null)
                 return false;
         } else if (!errorMessage.equals(other.errorMessage))
             return false;
+
         return true;
     }
 
@@ -65,5 +71,4 @@ public class VerizonErrorResponse {
         builder.append("]");
         return builder.toString();
     }
-
 }

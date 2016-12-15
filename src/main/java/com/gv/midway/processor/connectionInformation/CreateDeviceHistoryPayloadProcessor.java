@@ -23,7 +23,7 @@ public class CreateDeviceHistoryPayloadProcessor implements Processor {
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		LOGGER.info("Begin:CreateDeviceHistoryPayloadProcessor");
+		LOGGER.debug("Begin:CreateDeviceHistoryPayloadProcessor");
 
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 		Calendar cal = Calendar.getInstance();
@@ -52,7 +52,7 @@ public class CreateDeviceHistoryPayloadProcessor implements Processor {
 
 		message.setHeader(Exchange.HTTP_PATH, "/devices/usage/actions/list");
 
-		LOGGER.info("End:CreateDeviceHistoryPayloadProcessor");
+		LOGGER.debug("End:CreateDeviceHistoryPayloadProcessor");
 	}
 
 }

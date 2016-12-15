@@ -41,8 +41,7 @@ public class AttCallBackSuccessPostProcessor implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {
-        LOGGER.info("Begin:AttCallBackSuccessPostProcessor");
-        LOGGER.info("ATT Jasper CallBack Success post processor");
+        LOGGER.debug("Begin:AttCallBackSuccessPostProcessor");
 
         final Message message = exchange.getIn();
 
@@ -93,7 +92,7 @@ public class AttCallBackSuccessPostProcessor implements Processor {
 
         netSuiteCallBackProvisioningRequest.setDeviceIds(deviceIds);
 
-        LOGGER.info("request type for NetSuite CallBack error...." + requestType);
+        LOGGER.debug("request type for NetSuite CallBack success...." + requestType);
 
         //TODO Duplicated in KoreCheckStatusPostProcessor
         switch (requestType) {
@@ -120,10 +119,10 @@ public class AttCallBackSuccessPostProcessor implements Processor {
             case CHANGESERVICEPLAN:
                 netSuiteCallBackProvisioningRequest.setResponse("Device Service Plan Changed successfully.");
                 final ChangeDeviceServicePlansRequest changeDeviceServicePlansRequest = (ChangeDeviceServicePlansRequest) body;
-                LOGGER.info("change device service plan data area...." + changeDeviceServicePlansRequest.getDataArea().toString());
+                LOGGER.debug("change device service plan data area...." + changeDeviceServicePlansRequest.getDataArea().toString());
                 final String oldServicePlan = changeDeviceServicePlansRequest.getDataArea().getCurrentServicePlan();
                 final String newServicePlan = changeDeviceServicePlansRequest.getDataArea().getServicePlan();
-                LOGGER.info("service plan new is..." + newServicePlan + " old service plan is....." + oldServicePlan);
+                LOGGER.debug("service plan new is..." + newServicePlan + " old service plan is....." + oldServicePlan);
                 netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.SERVICE_PLAN);
                 netSuiteCallBackProvisioningRequest.setOldServicePlan(oldServicePlan);
                 netSuiteCallBackProvisioningRequest.setNewServicePlan(newServicePlan);
@@ -138,7 +137,7 @@ public class AttCallBackSuccessPostProcessor implements Processor {
 
         final NetSuiteOAuthHeaderProperties properties = EnvironmentParser.getNetSuiteOAuthHeaderProperties(newEnv);
 
-        LOGGER.info("oauth info is....." + properties);
+        LOGGER.debug("oauth info is....." + properties);
 
         //final String script = "539";
         final String script = newEnv.getProperty("netSuite.callbacks.script");
@@ -156,7 +155,7 @@ public class AttCallBackSuccessPostProcessor implements Processor {
         exchange.setProperty("script", script);
         exchange.setPattern(ExchangePattern.InOut);
 
-        LOGGER.info("success callback response for ATT Jasper..." + exchange.getIn().getBody());
-        LOGGER.info("End:AttCallBackSuccessPostProcessor");
+        LOGGER.debug("success callback response for ATT Jasper..." + exchange.getIn().getBody());
+        LOGGER.debug("End:AttCallBackSuccessPostProcessor");
     }
 }

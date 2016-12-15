@@ -30,11 +30,10 @@ public class CallbackPreProcessor implements Processor {
          * 
          * 
          * */
-        LOGGER.info("Begin:CallbackPreProcessor");
-        CallBackVerizonRequest req = (CallBackVerizonRequest) exchange.getIn()
-                .getBody(CallBackVerizonRequest.class);
+        LOGGER.debug("Begin:CallbackPreProcessor");
+        CallBackVerizonRequest req = exchange.getIn().getBody(CallBackVerizonRequest.class);
 
-        exchange.setProperty(IConstant.VERIZON_CALLBACK_RESPONE, req);
+        exchange.setProperty(IConstant.VERIZON_CALLBACK_RESPONSE, req);
 
         NetSuiteCallBackProvisioningRequest netSuiteCallBackProvisioningRequest = new NetSuiteCallBackProvisioningRequest();
         netSuiteCallBackProvisioningRequest.setDeviceIds(req.getDeviceIds());
@@ -42,8 +41,7 @@ public class CallbackPreProcessor implements Processor {
         if (req.getFaultResponse() != null) {
 
             netSuiteCallBackProvisioningRequest.setStatus("fail");
-            netSuiteCallBackProvisioningRequest.setResponse(req
-                    .getFaultResponse().getFaultstring());
+            netSuiteCallBackProvisioningRequest.setResponse(req.getFaultResponse().getFaultstring());
 
             KafkaNetSuiteCallBackError netSuiteCallBackError = new KafkaNetSuiteCallBackError();
 
@@ -52,15 +50,12 @@ public class CallbackPreProcessor implements Processor {
             netSuiteCallBackError.setLevel("Error");
             netSuiteCallBackError.setTimestamp(new Date().getTime());
             netSuiteCallBackError.setVersion("1");
-            netSuiteCallBackError.setException(req.getFaultResponse()
-                    .getFaultstring());
+            netSuiteCallBackError.setException(req.getFaultResponse().getFaultstring());
             netSuiteCallBackError.setMsg("Error in Call Back from Verizon.");
 
             exchange.setProperty(IConstant.KAFKA_OBJECT, netSuiteCallBackError);
 
-        }
-
-        else {
+        } else {
 
             netSuiteCallBackProvisioningRequest.setStatus("success");
 
@@ -72,7 +67,7 @@ public class CallbackPreProcessor implements Processor {
             netSuiteCallBackEvent.setTimestamp(new Date().getTime());
             netSuiteCallBackEvent.setVersion("1");
 
-            netSuiteCallBackEvent.setMsg("Succesfull Call Back from Verizon.");
+            netSuiteCallBackEvent.setMsg("Successful Call Back from Verizon.");
 
             exchange.setProperty(IConstant.KAFKA_OBJECT, netSuiteCallBackEvent);
 
@@ -80,7 +75,7 @@ public class CallbackPreProcessor implements Processor {
 
         exchange.getIn().setBody(netSuiteCallBackProvisioningRequest);
         
-        LOGGER.info("End:CallbackPreProcessor");
+        LOGGER.debug("End:CallbackPreProcessor");
     }
 
 }

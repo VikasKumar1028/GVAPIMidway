@@ -36,7 +36,7 @@ public class ATTJasperChangeDeviceServicePlansPreProcessor implements Processor 
 
 	@Override
 	public void process(Exchange exchange) throws Exception {
-		LOGGER.info("Begin:ATTJasperChangeDeviceServicePlansPreProcessor");
+		LOGGER.debug("Begin:ATTJasperChangeDeviceServicePlansPreProcessor");
 
 		final Message message = exchange.getIn();
 		final Transaction transaction = message.getBody(Transaction.class);
@@ -46,7 +46,7 @@ public class ATTJasperChangeDeviceServicePlansPreProcessor implements Processor 
 		final String deviceId = changeDeviceServicePlansRequest.getDataArea().getDevices()[0].getDeviceIds()[0].getId();
 		final String servicePlan = changeDeviceServicePlansRequest.getDataArea().getServicePlan();
 
-		LOGGER.info("deviceId::::" + deviceId);
+		LOGGER.debug("deviceId::::" + deviceId);
 
 		final ATTJasperProperties properties = EnvironmentParser.getATTJasperProperties(newEnv);
 
@@ -70,6 +70,6 @@ public class ATTJasperChangeDeviceServicePlansPreProcessor implements Processor 
 		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER, transaction.getDeviceNumber());
 		exchange.setPattern(ExchangePattern.InOut);
 
-		LOGGER.info("End:ATTJasperChangeDeviceServicePlansPreProcessor");
+		LOGGER.debug("End:ATTJasperChangeDeviceServicePlansPreProcessor");
 	}
 }

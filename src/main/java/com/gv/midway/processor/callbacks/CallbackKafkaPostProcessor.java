@@ -17,9 +17,9 @@ public class CallbackKafkaPostProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        LOGGER.info("Inside CallbackKafkaPostProcessor process "
+        LOGGER.debug("Inside CallbackKafkaPostProcessor process "
                 + exchange.getIn().getBody());
-        LOGGER.info("Exchange inside ");
+        LOGGER.debug("Exchange inside ");
 
         byte[] body = (byte[]) exchange.getIn().getBody();
         ObjectMapper mapper = new ObjectMapper();

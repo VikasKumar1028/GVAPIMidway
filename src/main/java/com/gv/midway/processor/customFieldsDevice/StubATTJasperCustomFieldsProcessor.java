@@ -17,7 +17,7 @@ public class StubATTJasperCustomFieldsProcessor implements Processor {
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		LOGGER.info("Begin::StubATTJasperCustomFieldsProcessor");
+		LOGGER.debug("Begin::StubATTJasperCustomFieldsProcessor");
 
 		CarrierProvisioningDeviceResponse updateCustomeFieldDeviceResponse = new CarrierProvisioningDeviceResponse();
 
@@ -50,7 +50,7 @@ public class StubATTJasperCustomFieldsProcessor implements Processor {
 
 		exchange.getIn().setBody(updateCustomeFieldDeviceResponse);
 
-		LOGGER.info("End::StubATTJasperCustomFieldsProcessor");
+		LOGGER.debug("End::StubATTJasperCustomFieldsProcessor");
 
 	}
 

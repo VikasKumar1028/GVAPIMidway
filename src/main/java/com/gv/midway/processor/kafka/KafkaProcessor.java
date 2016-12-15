@@ -32,27 +32,26 @@ public class KafkaProcessor implements Processor {
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		LOGGER.info("Begin:KafkaProcessor");
+		LOGGER.debug("Begin:KafkaProcessor");
 		Object kafkaObject = exchange.getProperty(IConstant.KAFKA_OBJECT);
 
-		LOGGER.info(kafkaObject.getClass().getName());
+		LOGGER.debug(kafkaObject.getClass().getName());
 
-		LOGGER.info("Data to write in Kafka Queue is......."
-				+ kafkaObject.toString());
+		LOGGER.debug("Data to write in Kafka Queue is......." + kafkaObject.toString());
 
 		ObjectMapper objectMapper = new ObjectMapper();
-		byte[] bytes = null;
+		String message = null;
 		try {
-			bytes = objectMapper.writeValueAsString(kafkaObject).getBytes();
-			LOGGER.info(" data converted to bytes...");
+			message = objectMapper.writeValueAsString(kafkaObject);
+			LOGGER.debug(" data converted to bytes...");
 		} catch (JsonProcessingException e) {
-			LOGGER.error("Exception in wrting the Kafka Queue is......." + e
-					+ "for the paylaod.." + kafkaObject.toString());
+			LOGGER.error("Exception in writing the Kafka Queue is......." + e
+					+ " for the payload.. " + kafkaObject.toString());
 		}
 
-		exchange.getIn().setBody(bytes);
+		exchange.getIn().setBody(message, String.class);
 
-		LOGGER.info("End:KafkaProcessor");
+		LOGGER.debug("End:KafkaProcessor");
 	}
 
 	public Environment getNewEnv() {

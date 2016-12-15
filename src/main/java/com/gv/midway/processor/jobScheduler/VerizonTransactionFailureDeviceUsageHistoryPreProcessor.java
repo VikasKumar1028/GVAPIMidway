@@ -20,7 +20,7 @@ public class VerizonTransactionFailureDeviceUsageHistoryPreProcessor implements 
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		LOGGER.info("Begin:VerizonTransactionFailureDeviceUsageHistoryPreProcessor");
+		LOGGER.debug("Begin:VerizonTransactionFailureDeviceUsageHistoryPreProcessor");
 
 		final DeviceUsage deviceInfo = (DeviceUsage) exchange.getIn().getBody();
 		final String jobStartTime = exchange.getProperty(IConstant.JOB_START_TIME).toString();
@@ -48,6 +48,6 @@ public class VerizonTransactionFailureDeviceUsageHistoryPreProcessor implements 
 		exchange.setPattern(ExchangePattern.InOut);
 		exchange.getIn().setBody(strRequestBody);
 
-		LOGGER.info("End:VerizonTransactionFailureDeviceUsageHistoryPreProcessor");
+		LOGGER.debug("End:VerizonTransactionFailureDeviceUsageHistoryPreProcessor");
 	}
 }

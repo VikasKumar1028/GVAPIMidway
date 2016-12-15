@@ -5,7 +5,7 @@ import java.util.Arrays;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.gv.midway.pojo.verizon.CustomFields;
+import com.gv.midway.pojo.KeyValuePair;
 import com.gv.midway.pojo.verizon.Devices;
 import com.gv.midway.pojo.verizon.PrimaryPlaceOfUse;
 import com.wordnik.swagger.annotations.ApiModelProperty;
@@ -24,7 +24,7 @@ public class ActivateDeviceRequestVerizon {
     private String skuNumber;
 
     @ApiModelProperty(value = "The custom fields and values that have been set for the device.")
-    private CustomFields[] customFields;
+    private KeyValuePair[] customFields;
 
     @ApiModelProperty(value = " VERIZON :Name of cost Center Code.")
     private String costCenterCode;
@@ -77,11 +77,11 @@ public class ActivateDeviceRequestVerizon {
         this.skuNumber = skuNumber;
     }
 
-    public CustomFields[] getCustomFields() {
+    public KeyValuePair[] getCustomFields() {
         return customFields;
     }
 
-    public void setCustomFields(CustomFields[] customFields) {
+    public void setCustomFields(KeyValuePair[] customFields) {
         this.customFields = customFields;
     }
 

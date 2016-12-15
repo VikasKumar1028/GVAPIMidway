@@ -23,7 +23,7 @@ public class VerizonChangeDeviceServicePlansPreProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        LOGGER.info("Begin::VerizonChangeDeviceServicePlansPreProcessor");
+        LOGGER.debug("Begin::VerizonChangeDeviceServicePlansPreProcessor");
 
         ChangeDeviceServicePlansRequestVerizon businessRequest = new ChangeDeviceServicePlansRequestVerizon();
         ChangeDeviceServicePlansRequest proxyRequest = (ChangeDeviceServicePlansRequest) exchange
@@ -56,7 +56,7 @@ public class VerizonChangeDeviceServicePlansPreProcessor implements Processor {
                 businessDeviceId.setId(proxyDeviceId.getId());
                 businessDeviceId.setKind(proxyDeviceId.getKind());
 
-                LOGGER.info(proxyDeviceId.getId());
+                LOGGER.debug(proxyDeviceId.getId());
 
                 businessDeviceIdArray[i] = businessDeviceId;
 
@@ -89,9 +89,9 @@ public class VerizonChangeDeviceServicePlansPreProcessor implements Processor {
         String sessionToken = "";
         String authorizationToken = "";
 
-        if (exchange.getProperty(IConstant.VZ_SEESION_TOKEN) != null
+        if (exchange.getProperty(IConstant.VZ_SESSION_TOKEN) != null
                 && exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN) != null) {
-            sessionToken = exchange.getProperty(IConstant.VZ_SEESION_TOKEN)
+            sessionToken = exchange.getProperty(IConstant.VZ_SESSION_TOKEN)
                     .toString();
             authorizationToken = exchange.getProperty(
                     IConstant.VZ_AUTHORIZATION_TOKEN).toString();
@@ -105,7 +105,7 @@ public class VerizonChangeDeviceServicePlansPreProcessor implements Processor {
         message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
         message.setHeader(Exchange.HTTP_METHOD, "PUT");
         message.setHeader(Exchange.HTTP_PATH, "/devices/actions/plan");
-        LOGGER.info("End::VerizonChangeDeviceServicePlansPreProcessor");
+        LOGGER.debug("End::VerizonChangeDeviceServicePlansPreProcessor");
 
     }
 

@@ -1,12 +1,9 @@
 package com.gv.midway.processor.jobScheduler;
 
-import java.util.Map;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.deviceHistory.DeviceUsage;
 import com.gv.midway.pojo.job.JobDetail;
@@ -21,13 +18,10 @@ public class VerizonDeviceUsageHistoryPostProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
-    	LOGGER.info("Begin:VerizonDeviceUsageHistoryPostProcessor");
+    	LOGGER.debug("Begin:VerizonDeviceUsageHistoryPostProcessor");
 
         final JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
-        final Map map = exchange.getIn().getBody(Map.class);
-
-        final ObjectMapper mapper = new ObjectMapper();
-        final VerizonUsageInformationResponse usageResponse = mapper.convertValue(map, VerizonUsageInformationResponse.class);
+        final VerizonUsageInformationResponse usageResponse = exchange.getIn().getBody(VerizonUsageInformationResponse.class);
 
         long totalBytesUsed = 0L;
         if (usageResponse.getUsageHistory() != null) {
@@ -49,6 +43,6 @@ public class VerizonDeviceUsageHistoryPostProcessor implements Processor {
 
         exchange.getIn().setBody(deviceUsage);
 
-    	LOGGER.info("End:VerizonDeviceUsageHistoryPostProcessor");
+    	LOGGER.debug("End:VerizonDeviceUsageHistoryPostProcessor");
     }
 }

@@ -18,7 +18,7 @@ public class StubATTJasperRestoreDeviceProcessor implements Processor {
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		LOGGER.info("Begin:StubATTJasperRestoreDeviceProcessor");
+		LOGGER.debug("Begin:StubATTJasperRestoreDeviceProcessor");
 
 		CarrierProvisioningDeviceResponse restoreDeviceResponse = new CarrierProvisioningDeviceResponse();
 
@@ -48,6 +48,6 @@ public class StubATTJasperRestoreDeviceProcessor implements Processor {
 
 		exchange.getIn().setBody(restoreDeviceResponse);
 
-		LOGGER.info("End:StubATTJasperRestoreDeviceProcessor");
+		LOGGER.debug("End:StubATTJasperRestoreDeviceProcessor");
 	}
 }

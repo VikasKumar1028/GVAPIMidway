@@ -51,9 +51,9 @@ class TestATTJasperRestoreDevicePreProcessor extends TestMocks with ATTJasperSui
       assert(request.getIccid === id1.getId)
       assert(request.getChangeType === IConstant.ATTJASPER_SIM_CHANGETYPE)
       assert(request.getTargetValue === IConstant.ATTJASPER_ACTIVATED)
-      assert(request.getLicenseKey === propertyValue(attJasperLicenseKey))
+      assert(request.getLicenseKey === propertyValue(IConstant.ATTJASPER_LICENSE_KEY))
       assert(request.getMessageId != null)
-      assert(request.getVersion === propertyValue(attJasperVersion))
+      assert(request.getVersion === propertyValue(IConstant.ATTJASPER_VERSION))
 
       verify(exchange, times(1)).setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER, deviceNumber)
       verify(exchange, times(1)).setProperty(IConstant.MIDWAY_NETSUITE_ID, netSuiteId)

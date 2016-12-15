@@ -20,9 +20,9 @@ public class VerizonDeviceConnectionHistoryPreProcessor implements Processor {
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		LOGGER.info("Begin:VerizonDeviceConnectionHistoryPreProcessor");
-		LOGGER.info("Session Parameters  VZSessionToken" + exchange.getProperty(IConstant.VZ_SEESION_TOKEN));
-		LOGGER.info("Session Parameters  VZAuthorization" + exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN));
+		LOGGER.debug("Begin:VerizonDeviceConnectionHistoryPreProcessor");
+		LOGGER.debug("Session Parameters  VZSessionToken" + exchange.getProperty(IConstant.VZ_SESSION_TOKEN));
+		LOGGER.debug("Session Parameters  VZAuthorization" + exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN));
 
 		final DeviceInformation deviceInfo = (DeviceInformation) exchange.getIn().getBody();
 
@@ -51,6 +51,6 @@ public class VerizonDeviceConnectionHistoryPreProcessor implements Processor {
 		exchange.setPattern(ExchangePattern.InOut);
 		exchange.getIn().setBody(strRequestBody);
 
-		LOGGER.info("End:VerizonDeviceConnectionHistoryPreProcessor");
+		LOGGER.debug("End:VerizonDeviceConnectionHistoryPreProcessor");
 	}
 }

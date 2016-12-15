@@ -20,7 +20,7 @@ public class HeaderProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
-		LOGGER.info("Begin:HeaderProcessor");
+		LOGGER.debug("Begin:HeaderProcessor");
 
         // populate MidwayTransationID
         String midwayTransactionID = CommonUtil.getMidwayTransactionID();
@@ -112,12 +112,12 @@ public class HeaderProcessor implements Processor {
             throw ex;
         }
 
-        LOGGER.info("derivedSourceName::" + derivedCarrierName);
+        LOGGER.debug("derivedSourceName::" + derivedCarrierName);
 
         exchange.getIn().setHeader(IConstant.MIDWAY_DERIVED_CARRIER_NAME, derivedCarrierName);
         exchange.setProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME, derivedCarrierName);
         
-        LOGGER.info("End:HeaderProcessor");
+        LOGGER.debug("End:HeaderProcessor");
     }
 
 }

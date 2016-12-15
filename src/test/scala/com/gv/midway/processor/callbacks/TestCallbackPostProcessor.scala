@@ -4,8 +4,8 @@ import com.gv.midway.TestMocks
 import com.gv.midway.constant.{IConstant, NetSuiteRequestType}
 import com.gv.midway.pojo.callback.Netsuite.{KafkaNetSuiteCallBackError, NetSuiteCallBackProvisioningRequest}
 import org.apache.camel.{Exchange, ExchangePattern, Message}
-import org.mockito.Mockito._
 import org.mockito.Matchers._
+import org.mockito.Mockito._
 
 class TestCallbackPostProcessor extends TestMocks {
 

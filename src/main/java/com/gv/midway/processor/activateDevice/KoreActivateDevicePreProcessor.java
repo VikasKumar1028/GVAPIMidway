@@ -1,5 +1,7 @@
 package com.gv.midway.processor.activateDevice;
 
+import com.gv.midway.utility.MessageStuffer;
+import com.gv.midway.pojo.MidWayDeviceId;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.Message;
@@ -26,30 +28,33 @@ public class KoreActivateDevicePreProcessor implements Processor {
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		LOGGER.info("Begin:KoreActivateDevicePreProcessor");
-		LOGGER.info("*************Testing**************************************" + exchange.getIn().getBody());
+		LOGGER.debug("Begin:KoreActivateDevicePreProcessor");
+		LOGGER.debug("*************Testing**************************************" + exchange.getIn().getBody());
 
 		final Message message = exchange.getIn();
 		final Transaction transaction = exchange.getIn().getBody(Transaction.class);
 
 		final ActivateDeviceRequest activateDeviceRequest = (ActivateDeviceRequest) transaction.getDevicePayload();
-		final String deviceId = activateDeviceRequest.getDataArea().getDevices().getDeviceIds()[0].getId();
+
+		String deviceId = "";
+		for (MidWayDeviceId midWayDeviceId : activateDeviceRequest.getDataArea().getDevices().getDeviceIds()) {
+			deviceId = midWayDeviceId.getId();
+			if ("SIM".equalsIgnoreCase(midWayDeviceId.getKind())) { //Prefer SIM over other deviceIds
+				break;
+			}
+		}
+
 		final String EAPCode = activateDeviceRequest.getDataArea().getDevices().getServicePlan();
 
 		final ActivateDeviceRequestKore activationDeviceRequestKore = new ActivateDeviceRequestKore();
 		activationDeviceRequestKore.setDeviceNumber(deviceId);
 		activationDeviceRequestKore.setEAPCode(EAPCode);
 
-		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
-		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
-		message.setHeader(Exchange.HTTP_METHOD, "POST");
-		message.setHeader("Authorization", newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
-		message.setHeader(Exchange.HTTP_PATH, "/json/activateDevice");
-		message.setBody(activationDeviceRequestKore);
+		MessageStuffer.setKorePOSTRequest(message, newEnv, "/json/activateDevice", activationDeviceRequestKore);
 
 		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER, transaction.getDeviceNumber());
 		exchange.setPattern(ExchangePattern.InOut);
 
-		LOGGER.info("End:KoreActivateDevicePreProcessor");
+		LOGGER.debug("End:KoreActivateDevicePreProcessor");
 	}
 }

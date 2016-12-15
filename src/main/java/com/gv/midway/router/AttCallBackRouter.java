@@ -8,8 +8,8 @@ public class AttCallBackRouter {
 
     private static final Logger LOGGER = Logger.getLogger(AttCallBackRouter.class);
 
-    public String checkStatsuOfPendigDevice(Transaction transaction) {
-        LOGGER.info("************ATT Router****************************" + transaction.toString());
+    public String checkStatusOfPendingDevice(Transaction transaction) {
+        LOGGER.debug("************ATT Router****************************" + transaction.toString());
         return "seda:attSedaCallBack";
     }
 }

@@ -49,10 +49,15 @@ public interface IJobDao {
     public void getConnectionHistoryJobCounts(Exchange exchange);
 
     public void getDeviceUsageJobCounts(Exchange exchange);
-    
-    public void updateDeviceUsageView(Exchange exchange);
-    
-    public List<DevicesUsageByDayAndCarrier> fetchDeviceUsageView(Exchange exchange);
 
-	public List fetchPreviousDeviceUsageDataUsed(Exchange exchange);
+    public void updateDeviceUsageView(Exchange exchange);
+
+    public List<DevicesUsageByDayAndCarrier> fetchDeviceUsageView(
+            Exchange exchange);
+
+    public List fetchPreviousDeviceUsageDataUsed(Exchange exchange);
+
+    public void updateNetSuiteCallBackResponse(Exchange exchange);
+
+    public void updateNetSuiteCallBackError(Exchange exchange);
 }

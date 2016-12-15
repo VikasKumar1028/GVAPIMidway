@@ -19,19 +19,13 @@ public class SchedulerServiceImpl implements ISchedulerService {
 
     @Override
     public void saveDeviceConnectionHistory(Exchange exchange) {
-        LOGGER.info("SchedulerServiceImpl");
-
-        schedulerDao.saveDeviceConnectionHistory((DeviceConnection) exchange
-                .getIn().getBody());
-
+        LOGGER.debug("SchedulerServiceImpl");
+        schedulerDao.saveDeviceConnectionHistory((DeviceConnection) exchange.getIn().getBody());
     }
 
     @Override
     public void saveDeviceUsageHistory(Exchange exchange) {
-        LOGGER.info("SchedulerServiceImpl");
-        schedulerDao.saveDeviceUsageHistory((DeviceUsage) exchange.getIn()
-                .getBody());
-
+        LOGGER.debug("SchedulerServiceImpl");
+        schedulerDao.saveDeviceUsageHistory((DeviceUsage) exchange.getIn().getBody());
     }
-
 }

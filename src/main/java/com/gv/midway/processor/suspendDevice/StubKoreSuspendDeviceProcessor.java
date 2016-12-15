@@ -18,7 +18,7 @@ public class StubKoreSuspendDeviceProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        LOGGER.info("Begin:StubKoreSuspendDeviceProcessor");
+        LOGGER.debug("Begin:StubKoreSuspendDeviceProcessor");
 
         CarrierProvisioningDeviceResponse suspendDeviceResponse = new CarrierProvisioningDeviceResponse();
 
@@ -49,6 +49,6 @@ public class StubKoreSuspendDeviceProcessor implements Processor {
 
         exchange.getIn().setBody(suspendDeviceResponse);
 
-        LOGGER.info("End:StubKoreSuspendDeviceProcessor");
+        LOGGER.debug("End:StubKoreSuspendDeviceProcessor");
     }
 }

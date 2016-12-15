@@ -21,7 +21,7 @@ public class BulkDeviceProcessor implements Processor {
 
 	@Override
 	public void process(Exchange exchange) throws Exception {
-		LOGGER.info("End:BulkDeviceProcessor");
+		LOGGER.debug("End:BulkDeviceProcessor");
 
 		final List<BatchDeviceId> errorList = (List<BatchDeviceId>)exchange.getProperty(IConstant.BULK_ERROR_LIST);
 		final List<BatchDeviceId> successList = (List<BatchDeviceId>)exchange.getProperty(IConstant.BULK_SUCCESS_LIST);
@@ -49,17 +49,17 @@ public class BulkDeviceProcessor implements Processor {
 		batchDeviceResponse.setResponse(response);
 		batchDeviceResponse.setDataArea(batchDeviceResponseDataArea);
 
-		LOGGER.info("batch device response value is........" + response.toString());
-		LOGGER.info("batch device response header value is........" + responseHeader.toString());
-		LOGGER.info("batch device response is........" + batchDeviceResponse.toString());
-		LOGGER.info("batch device response  response value is........" + batchDeviceResponse.getHeader().toString());
-		LOGGER.info("batch device response header header value is........" + batchDeviceResponse.getResponse().toString());
-		LOGGER.info("******************Bulk device Processor body before********************" + exchange.getIn().getBody());
+		LOGGER.debug("batch device response value is........" + response.toString());
+		LOGGER.debug("batch device response header value is........" + responseHeader.toString());
+		LOGGER.debug("batch device response is........" + batchDeviceResponse.toString());
+		LOGGER.debug("batch device response  response value is........" + batchDeviceResponse.getHeader().toString());
+		LOGGER.debug("batch device response header header value is........" + batchDeviceResponse.getResponse().toString());
+		LOGGER.debug("******************Bulk device Processor body before********************" + exchange.getIn().getBody());
 
 		exchange.getIn().setBody(batchDeviceResponse);
 		exchange.setPattern(ExchangePattern.InOut);
 
-		LOGGER.info("******************Bulk device Processor body after********************" + exchange.getIn().getBody());
-		LOGGER.info("End:BulkDeviceProcessor");
+		LOGGER.debug("******************Bulk device Processor body after********************" + exchange.getIn().getBody());
+		LOGGER.debug("End:BulkDeviceProcessor");
 	}
 }

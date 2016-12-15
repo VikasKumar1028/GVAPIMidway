@@ -21,7 +21,7 @@ public class DateValidationProcessor implements Processor {
 
 	@Override
 	public void process(Exchange exchange) throws Exception {
-		LOGGER.info("Begin:DateValidationProcessor");
+		LOGGER.debug("Begin:DateValidationProcessor");
 
 		final String endpoint = exchange.getFromEndpoint().toString();
 		if (("Endpoint[direct://retrieveDeviceUsageHistoryCarrier]").equals(endpoint)) {
@@ -44,7 +44,7 @@ public class DateValidationProcessor implements Processor {
 
 			nullCheckEarliestAndLatest(exchange, connectionInformationRequestDataArea.getEarliest(), connectionInformationRequestDataArea.getLatest());
 		}
-		LOGGER.info("End:DateValidationProcessor");
+		LOGGER.debug("End:DateValidationProcessor");
 	}
 
 	private void nullCheckEarliestAndLatest(Exchange exchange, String earliest, String latest) throws MissingParameterException {
@@ -57,8 +57,7 @@ public class DateValidationProcessor implements Processor {
 				formatter.parse(earliest);
 				formatter.parse(latest);
 			}
-		}
-		catch (ParseException e1) {
+		} catch (ParseException e1) {
 			blowUp(exchange);
 		}
 	}

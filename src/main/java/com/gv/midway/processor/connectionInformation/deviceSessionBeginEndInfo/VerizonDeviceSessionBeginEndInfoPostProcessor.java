@@ -33,13 +33,13 @@ public class VerizonDeviceSessionBeginEndInfoPostProcessor implements Processor 
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        LOGGER.info("Begin:VerizonDeviceSessionBeginEndInfoPostProcessor");
+        LOGGER.debug("Begin:VerizonDeviceSessionBeginEndInfoPostProcessor");
 
         SessionBeginEndResponse businessResponse = new SessionBeginEndResponse();
         SessionBeginEndResponseDataArea sessionBeginEndResponseDataArea = new SessionBeginEndResponseDataArea();
         Response response = new Response();
 
-        LOGGER.info("exchange.getIn().getBody().toString()***************************************"
+        LOGGER.debug("exchange.getIn().getBody().toString()***************************************"
                 + exchange.getIn().getBody().toString());
 
         if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
@@ -100,7 +100,7 @@ public class VerizonDeviceSessionBeginEndInfoPostProcessor implements Processor 
                                         .getValue().equalsIgnoreCase(
                                                 IConstant.EVENT_START)) {
 
-                            LOGGER.info("Exception on " + i);
+                            LOGGER.error("Exception on " + i);
                             if (eventStatus == 0) {
                                 eventStatus = 1;
                                 deviceSession.setBegin(connectionResponse
@@ -136,7 +136,7 @@ public class VerizonDeviceSessionBeginEndInfoPostProcessor implements Processor 
 
                 }
 
-                LOGGER.info("RequestID::" + exchange.getIn().getBody().toString());
+                LOGGER.debug("RequestID::" + exchange.getIn().getBody().toString());
                 response.setResponseCode(IResponse.SUCCESS_CODE);
                 response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
                 response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_CONNECTION_STATUS);
@@ -168,7 +168,7 @@ public class VerizonDeviceSessionBeginEndInfoPostProcessor implements Processor 
 
         exchange.getIn().setBody(businessResponse);
 
-        LOGGER.info("End:VerizonDeviceSessionBeginEndInfoPostProcessor");
+        LOGGER.debug("End:VerizonDeviceSessionBeginEndInfoPostProcessor");
 
     }
 

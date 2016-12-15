@@ -34,7 +34,7 @@ public class ATTJasperCustomFieldDevicePreProcessor implements Processor {
 
 	@Override
 	public void process(Exchange exchange) throws Exception {
-		LOGGER.info("Begin:ATTJasperCustomFieldDevicePreProcessor");
+		LOGGER.debug("Begin:ATTJasperCustomFieldDevicePreProcessor");
 
 		final Message message = exchange.getIn();
 		final Transaction transaction = message.getBody(Transaction.class);
@@ -67,6 +67,6 @@ public class ATTJasperCustomFieldDevicePreProcessor implements Processor {
 		exchange.setProperty(IConstant.ATT_CUSTOMFIELD_TO_UPDATE, customFieldRequest.getDataArea().getCustomFieldsToUpdate()[0].getKey());
 		exchange.setPattern(ExchangePattern.InOut);
 
-		LOGGER.info("End:ATTJasperCustomFieldDevicePreProcessor");
+		LOGGER.debug("End:ATTJasperCustomFieldDevicePreProcessor");
 	}
 }

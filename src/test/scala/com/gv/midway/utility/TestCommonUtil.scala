@@ -235,7 +235,7 @@ class TestCommonUtil extends TestMocks {
       val sessionToken = "sessionToken"
       val authToken = "authToken"
 
-      when(exchange.getProperty(IConstant.VZ_SEESION_TOKEN)).thenReturn(sessionToken, Nil: _*)
+      when(exchange.getProperty(IConstant.VZ_SESSION_TOKEN)).thenReturn(sessionToken, Nil: _*)
       when(exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN)).thenReturn(authToken, Nil: _*)
 
       CommonUtil.setMessageHeader(exchange)
@@ -304,6 +304,39 @@ class TestCommonUtil extends TestMocks {
       test(s"getAttJasperCustomField($field)") {
         assert(CommonUtil.getAttJasperCustomField(field) === int)
       }
+  }
+
+  List(
+    (1, 1, true)
+    , (2, 2, true)
+    , (14, 14, true)
+    , (24, 24, false)
+    , (25, 72, false)
+    , (25, 24, false)
+    , (25, -24, true)
+    , (26, 72, true)
+    , (26, 28, true)
+    , (26, -24, true)
+    , (26, -48, true)
+    , (26, -72, false)
+    , (26, -96, false)
+    , (26, -120, false)
+    , (27, -24, true)
+    , (27, -48, true)
+    , (27, -72, true)
+    , (27, -96, false)
+    , (27, -120, false)
+    , (28, -24, true)
+    , (28, -48, true)
+    , (28, -72, true)
+    , (28, -96, true)
+    , (28, -120, false)
+    , (29, -120, true)
+  ).foreach { case (dom, duration, expected) =>
+
+    test(s"checkKoreJobScheduling($duration, $dom)") {
+      assert(CommonUtil.checkKoreJobScheduling(duration, dom) === expected)
+    }
   }
 
   private def deviceId(id: String, kind: String): DeviceId = {

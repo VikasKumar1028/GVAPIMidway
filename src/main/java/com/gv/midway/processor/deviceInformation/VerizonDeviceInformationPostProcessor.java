@@ -17,7 +17,7 @@ import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponseDataArea;
 import com.gv.midway.pojo.deviceInformation.verizon.response.CarrierInformations;
 import com.gv.midway.pojo.deviceInformation.verizon.response.DeviceInformationResponseVerizon;
-import com.gv.midway.pojo.verizon.CustomFields;
+import com.gv.midway.pojo.KeyValuePair;
 import com.gv.midway.pojo.verizon.DeviceId;
 
 @Component
@@ -48,17 +48,17 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		LOGGER.info("Begin:VerizonDeviceInformationPostProcessor");
+		LOGGER.debug("Begin:VerizonDeviceInformationPostProcessor");
 
 		DeviceInformationResponseVerizon verizonResponse = exchange.getIn()
 				.getBody(DeviceInformationResponseVerizon.class);
 
-		LOGGER.info("----exchange_Body- Post Processor-===++++++++++++---------"
+		LOGGER.debug("----exchange_Body- Post Processor-===++++++++++++---------"
 				+ verizonResponse.toString());
 
 		int getDevicelenth = verizonResponse.getDevices().length;
 
-		LOGGER.info("getDevicelenth::" + getDevicelenth);
+		LOGGER.debug("getDevicelenth::" + getDevicelenth);
 
 		DeviceInformation deviceInformation = (DeviceInformation) exchange
 				.getProperty(IConstant.MIDWAY_DEVICEINFO_DB);
@@ -103,14 +103,12 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 								.getAccountName());
 				deviceInformation.setBillingCycleEndDate(verizonResponse
 						.getDevices()[i].getBillingCycleEndDate());
-				deviceInformation.setConnected(verizonResponse.getDevices()[i]
+				deviceInformation.setIsConnected(verizonResponse.getDevices()[i]
 						.getConnected());
 				deviceInformation.setCreatedAt(verizonResponse.getDevices()[i]
 						.getCreatedAt());
 				deviceInformation.setIpAddress(verizonResponse.getDevices()[i]
 						.getIpAddress());
-				deviceInformation.setConnected(verizonResponse.getDevices()[i]
-						.getConnected());
 
 				String[] groupNamesArr = verizonResponse.getDevices()[i]
 						.getGroupNames();
@@ -159,11 +157,11 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 				}
 
 				if (verizonResponse.getDevices()[i].getCustomFields() != null) {
-					CustomFields[] customFieldsArray = new CustomFields[verizonResponse
+					KeyValuePair[] customFieldsArray = new KeyValuePair[verizonResponse
 							.getDevices()[i].getCustomFields().length];
 
 					for (int m = 0; m < customFieldsArray.length; m++) {
-						CustomFields customFields = new CustomFields();
+						KeyValuePair customFields = new KeyValuePair();
 						customFields.setKey(verizonResponse.getDevices()[i]
 								.getCustomFields()[m].getKey());
 						customFields.setValue(verizonResponse.getDevices()[i]
@@ -255,7 +253,7 @@ public class VerizonDeviceInformationPostProcessor implements Processor {
 
 		exchange.getIn().setBody(deviceInformationResponse);
 
-		LOGGER.info("End:VerizonDeviceInformationPostProcessor");
+		LOGGER.debug("End:VerizonDeviceInformationPostProcessor");
 
 	}
 

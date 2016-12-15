@@ -25,17 +25,17 @@ public class KoreGenericExceptionProcessor implements Processor {
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		LOGGER.info("Begin:KoreGenericExceptionProcessor");
+		LOGGER.debug("Begin:KoreGenericExceptionProcessor");
 		final CxfOperationException exception = (CxfOperationException) exchange.getProperty(Exchange.EXCEPTION_CAUGHT);
 
-		LOGGER.info("----KoreGenericExceptionProcessor----------" + exception.getResponseBody());
-		LOGGER.info("----.getStatusCode()----------" + exception.getStatusCode());
+		LOGGER.debug("----KoreGenericExceptionProcessor----------" + exception.getResponseBody());
+		LOGGER.debug("----.getStatusCode()----------" + exception.getStatusCode());
 
 		final ObjectMapper mapper = new ObjectMapper();
 
 		final KoreErrorResponse responsePayload = mapper.readValue(exception.getResponseBody(), KoreErrorResponse.class);
 
-		LOGGER.info("----response payload is----------" + responsePayload.toString());
+		LOGGER.debug("----response payload is----------" + responsePayload.toString());
 
 		final Response response = new Response();
 		response.setResponseCode(IResponse.INVALID_PAYLOAD);
@@ -67,6 +67,6 @@ public class KoreGenericExceptionProcessor implements Processor {
 			default:
 				break;
 		}
-		LOGGER.info("End:KoreGenericExceptionProcessor");
+		LOGGER.debug("End:KoreGenericExceptionProcessor");
 	}
 }

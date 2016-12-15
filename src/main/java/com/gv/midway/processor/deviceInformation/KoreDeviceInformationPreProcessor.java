@@ -1,5 +1,6 @@
 package com.gv.midway.processor.deviceInformation;
 
+import com.gv.midway.utility.MessageStuffer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
@@ -10,15 +11,9 @@ import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.deviceInformation.request.DeviceInformationRequest;
 
 public class KoreDeviceInformationPreProcessor implements Processor {
+	private static final Logger LOGGER = Logger.getLogger(KoreDeviceInformationPreProcessor.class.getName());
 
-	private static final Logger LOGGER = Logger
-			.getLogger(KoreDeviceInformationPreProcessor.class.getName());
-
-	Environment newEnv;
-
-	public KoreDeviceInformationPreProcessor() {
-		// Empty Constructor
-	}
+	private Environment newEnv;
 
 	public KoreDeviceInformationPreProcessor(Environment env) {
 		super();
@@ -27,32 +22,20 @@ public class KoreDeviceInformationPreProcessor implements Processor {
 
 	@Override
 	public void process(Exchange exchange) throws Exception {
+		LOGGER.debug("Begin:KoreDeviceInformationPreProcessor");
 
-		LOGGER.info("Begin:KoreDeviceInformationPreProcessor");
+		final Message message = exchange.getIn();
+		final DeviceInformationRequest request = message.getBody(DeviceInformationRequest.class);
 
-		// wrap it in a Subject
-		DeviceInformationRequest request = (DeviceInformationRequest) exchange
-				.getIn().getBody(DeviceInformationRequest.class);
-		exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID, request
-				.getDataArea().getNetSuiteId());
-
-		String deviceId = request.getDataArea().getDeviceId().getId();
-		exchange.setProperty(IConstant.KORE_SIM_NUMBER, deviceId);
-		net.sf.json.JSONObject obj = new net.sf.json.JSONObject();
+		final String deviceId = request.getDataArea().getDeviceId().getId();
+		final net.sf.json.JSONObject obj = new net.sf.json.JSONObject();
 		obj.put("deviceNumber", deviceId);
 
-		Message message = exchange.getIn();
+		MessageStuffer.setKorePOSTRequest(message, newEnv, "/json/queryDevice", obj);
 
-		message.setHeader(Exchange.CONTENT_TYPE, "application/json");
-		message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
-		message.setHeader(Exchange.HTTP_METHOD, "POST");
-		message.setHeader("Authorization",
-				newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
-		message.setHeader(Exchange.HTTP_PATH, "/json/queryDevice");
+		exchange.setProperty(IConstant.KORE_SIM_NUMBER, deviceId);
+		exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID, request.getDataArea().getNetSuiteId());
 
-		message.setBody(obj);
-		LOGGER.info("End:KoreDeviceInformationPreProcessor");
-
+		LOGGER.debug("End:KoreDeviceInformationPreProcessor");
 	}
-
 }

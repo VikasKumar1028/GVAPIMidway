@@ -1,5 +1,6 @@
 package com.gv.midway.environment;
 
+import com.gv.midway.constant.IConstant;
 import org.springframework.core.env.Environment;
 
 public class EnvironmentParser {
@@ -8,21 +9,28 @@ public class EnvironmentParser {
 
     public static ATTJasperProperties getATTJasperProperties(Environment environment) {
         return new ATTJasperProperties(
-                environment.getProperty("attJasper.version")
-                , environment.getProperty("attJasper.licenseKey")
-                , environment.getProperty("attJasper.userName")
-                , environment.getProperty("attJasper.password")
+                environment.getProperty(IConstant.ATTJASPER_VERSION)
+                , environment.getProperty(IConstant.ATTJASPER_LICENSE_KEY)
+                , environment.getProperty(IConstant.ATTJASPER_USERNAME)
+                , environment.getProperty(IConstant.ATTJASPER_PASSWORD)
         );
     }
 
     public static NetSuiteOAuthHeaderProperties getNetSuiteOAuthHeaderProperties(Environment environment) {
         return new NetSuiteOAuthHeaderProperties(
-                environment.getProperty("netSuite.oauthConsumerKey")
-                , environment.getProperty("netSuite.oauthTokenId")
-                , environment.getProperty("netSuite.oauthTokenSecret")
-                , environment.getProperty("netSuite.oauthConsumerSecret")
-                , environment.getProperty("netSuite.realm")
-                , environment.getProperty("netSuite.endPoint")
+                environment.getProperty(IConstant.NETSUITE_OAUTH_CONSUMER_KEY)
+                , environment.getProperty(IConstant.NETSUITE_OAUTH_TOKEN_ID)
+                , environment.getProperty(IConstant.NETSUITE_OAUTH_TOKEN_SECRET)
+                , environment.getProperty(IConstant.NETSUITE_OAUTH_CONSUMER_SECRET)
+                , environment.getProperty(IConstant.NETSUITE_REALM)
+                , environment.getProperty(IConstant.NETSUITE_END_POINT)
+        );
+    }
+
+    public static VerizonCredentialsProperties getVerizonCredentialsProperties(Environment environment) {
+        return new VerizonCredentialsProperties(
+                environment.getProperty(IConstant.VERIZON_API_USERNAME)
+                , environment.getProperty(IConstant.VERIZON_API_PASSWORD)
         );
     }
 }

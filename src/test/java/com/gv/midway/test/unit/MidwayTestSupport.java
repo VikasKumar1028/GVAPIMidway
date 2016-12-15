@@ -3,12 +3,14 @@ package com.gv.midway.test.unit;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.pojo.BaseRequest;
 import com.gv.midway.pojo.Header;
+import com.gv.midway.service.IAuditService;
+import com.gv.midway.service.IDeviceService;
 import com.gv.midway.service.ISessionService;
+import com.gv.midway.service.ITransactionalService;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.spring.CamelSpringTestSupport;
-import org.junit.Test;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.mock.web.MockServletContext;
@@ -18,6 +20,14 @@ import org.springframework.mock.web.MockServletContext;
  */
 
 public class MidwayTestSupport extends CamelSpringTestSupport {
+
+    protected IAuditService iAuditService;
+
+    protected ITransactionalService iTransactionalService;
+
+    protected ISessionService iSessionService;
+
+    protected IDeviceService iDeviceService;
 
     @Override
     protected AbstractApplicationContext createApplicationContext() {
@@ -33,10 +43,12 @@ public class MidwayTestSupport extends CamelSpringTestSupport {
     public void setUp() throws Exception {
         super.setUp();
         MockServletContext sc = new MockServletContext("camel-config.xml");
-        sc.setAttribute(IConstant.VZ_SEESION_TOKEN, "1d1f8e7a-c8bb-4f3c-a924-cf612b562425");
-        sc.setAttribute(IConstant.VZ_AUTHORIZATION_TOKEN, "89ba225e1438e95bd05c3cc288d3591");
-        ISessionService sessionService = (ISessionService) applicationContext.getBean("iSessionService");
-        sessionService.setServletContext(sc);
+        sc.setAttribute(IConstant.VZ_SESSION_TOKEN, "1d1f8e7a-c8bb-4f3c-a924-cf612b562425");
+        iTransactionalService = (ITransactionalService) applicationContext.getBean("iTransactionalService");
+        iAuditService = (IAuditService) applicationContext.getBean("iAuditService");
+        iDeviceService = (IDeviceService) applicationContext.getBean("iDeviceService");
+        iSessionService = (ISessionService) applicationContext.getBean("iSessionService");
+        iSessionService.setServletContext(sc);
     }
 
 //    @Test

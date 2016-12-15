@@ -61,7 +61,7 @@ class TestVerizonDeviceConnectionHistoryPreProcessor extends FunSuite with Mocki
     val message = mock[Message]
 
     when(exchange.getIn).thenReturn(message)
-    when(exchange.getProperty(IConstant.VZ_SEESION_TOKEN)).thenReturn(sessionToken, Nil: _*)
+    when(exchange.getProperty(IConstant.VZ_SESSION_TOKEN)).thenReturn(sessionToken, Nil: _*)
     when(exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN)).thenReturn(authToken, Nil: _*)
 
     f(exchange, message)

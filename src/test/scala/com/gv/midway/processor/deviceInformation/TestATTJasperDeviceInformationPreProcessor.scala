@@ -6,10 +6,10 @@ import com.gv.midway.pojo.deviceInformation.request.{DeviceInformationRequest, D
 import com.gv.midway.pojo.verizon.DeviceId
 import com.gv.midway.{ATTJasperSuite, TestMocks}
 import org.apache.camel.ExchangePattern
-import org.mockito.ArgumentCaptor
-import org.mockito.Mockito._
-import org.mockito.Matchers._
 import org.apache.cxf.headers.Header
+import org.mockito.ArgumentCaptor
+import org.mockito.Matchers._
+import org.mockito.Mockito._
 
 class TestATTJasperDeviceInformationPreProcessor extends TestMocks with ATTJasperSuite {
 
@@ -43,9 +43,9 @@ class TestATTJasperDeviceInformationPreProcessor extends TestMocks with ATTJaspe
       verify(message, times(1)).setBody(captor.capture())
       val request = captor.getValue
       assert(request.getIccids.getIccid.size() === 1)
-      assert(request.getLicenseKey === propertyValue(attJasperLicenseKey))
+      assert(request.getLicenseKey === propertyValue(IConstant.ATTJASPER_LICENSE_KEY))
       assert(request.getMessageId != null)
-      assert(request.getVersion === propertyValue(attJasperVersion))
+      assert(request.getVersion === propertyValue(IConstant.ATTJASPER_VERSION))
 
       verify(exchange, times(1)).setProperty(IConstant.MIDWAY_NETSUITE_ID, dataArea.getNetSuiteId)
       verify(exchange, times(1)).setPattern(ExchangePattern.InOut)

@@ -1,6 +1,7 @@
 package com.gv.midway.processor.connectionInformation.deviceSessionBeginEndInfo
 
 import com.gv.midway.attjasper.GetSessionInfoRequest
+import com.gv.midway.constant.IConstant
 import com.gv.midway.pojo.connectionInformation.request.{ConnectionInformationRequest, ConnectionInformationRequestDataArea}
 import com.gv.midway.pojo.verizon.DeviceId
 import com.gv.midway.{ATTJasperSuite, TestMocks}
@@ -40,9 +41,9 @@ class TestATTJasperDeviceSessionBeginEndInfoPreProcessor extends TestMocks with 
       val request = captor.getValue
       assert(request.getIccid.size() === 1)
       assert(request.getIccid.get(0) === deviceId.getId)
-      assert(request.getLicenseKey === propertyValue(attJasperLicenseKey))
+      assert(request.getLicenseKey === propertyValue(IConstant.ATTJASPER_LICENSE_KEY))
       assert(request.getMessageId != null)
-      assert(request.getVersion === propertyValue(attJasperVersion))
+      assert(request.getVersion === propertyValue(IConstant.ATTJASPER_VERSION))
 
       verify(exchange, times(1)).setPattern(ExchangePattern.InOut)
     }

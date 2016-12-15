@@ -29,7 +29,7 @@ class TestVerizonGenericExceptionProcessor extends TestMocks {
   ).foreach { case TestCase(name, clazz) =>
     test(name) {
       val errorMessage = "This is my error message!"
-      val responseBody = s"""{"errorCode":4,"errorMessage":"$errorMessage"}"""
+      val responseBody = s"""{"errorCode":4,"errorMessage":"$errorMessage","fault":{"code":1,"message":"msg","description":"desc"}}"""
       val statusCode: java.lang.Integer = 9000
 
       val exception = new CxfOperationException("", statusCode, "", "", new java.util.HashMap[String, String](), responseBody)

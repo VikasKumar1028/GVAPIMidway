@@ -18,11 +18,11 @@ public class VerizonDeviceInformationPreProcessor implements Processor {
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		LOGGER.info("Begin:VerizonDeviceInformationPreProcessor");
+		LOGGER.debug("Begin:VerizonDeviceInformationPreProcessor");
 
-		LOGGER.info("Session Parameters  VZSessionToken"
-				+ exchange.getProperty(IConstant.VZ_SEESION_TOKEN));
-		LOGGER.info("Session Parameters  VZAuthorization"
+		LOGGER.debug("Session Parameters  VZSessionToken "
+				+ exchange.getProperty(IConstant.VZ_SESSION_TOKEN));
+		LOGGER.debug("Session Parameters  VZAuthorization "
 				+ exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN));
 
 		DeviceInformationRequest req = (DeviceInformationRequest) exchange
@@ -41,7 +41,7 @@ public class VerizonDeviceInformationPreProcessor implements Processor {
 
 		message.setHeader(Exchange.HTTP_PATH, "/devices/actions/list");
 
-		LOGGER.info("End:VerizonDeviceInformationPreProcessor");
+		LOGGER.debug("End:VerizonDeviceInformationPreProcessor");
 
 	}
 

@@ -18,7 +18,7 @@ public class StubATTJasperActivateDeviceProcessor implements Processor {
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		LOGGER.info("Begin:StubATTJasperActivateDeviceProcessor");
+		LOGGER.debug("Begin:StubATTJasperActivateDeviceProcessor");
 
 		CarrierProvisioningDeviceResponse carrierProvisioningDeviceResponse = new CarrierProvisioningDeviceResponse();
 		CarrierProvisioningDeviceResponseDataArea carrierProvisioningDeviceResponseDataArea = new CarrierProvisioningDeviceResponseDataArea();
@@ -48,6 +48,6 @@ public class StubATTJasperActivateDeviceProcessor implements Processor {
 
 		exchange.getIn().setBody(carrierProvisioningDeviceResponse);
 
-		LOGGER.info("End:StubATTJasperActivateDeviceProcessor");
+		LOGGER.debug("End:StubATTJasperActivateDeviceProcessor");
 	}
 }

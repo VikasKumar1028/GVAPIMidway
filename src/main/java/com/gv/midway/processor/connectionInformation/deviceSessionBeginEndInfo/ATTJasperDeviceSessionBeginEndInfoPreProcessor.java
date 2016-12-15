@@ -35,7 +35,7 @@ public class ATTJasperDeviceSessionBeginEndInfoPreProcessor implements Processor
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		LOGGER.info("Begin:ATTJasperDeviceSessionBeginEndInfoPreProcessor");
+		LOGGER.debug("Begin:ATTJasperDeviceSessionBeginEndInfoPreProcessor");
 
 		final Message message = exchange.getIn();
 		final ConnectionInformationRequest proxyRequest = (ConnectionInformationRequest) message.getBody();
@@ -67,6 +67,6 @@ public class ATTJasperDeviceSessionBeginEndInfoPreProcessor implements Processor
 
 		exchange.setPattern(ExchangePattern.InOut);
 
-		LOGGER.info("End:ATTJasperDeviceSessionBeginEndInfoPreProcessor");
+		LOGGER.debug("End:ATTJasperDeviceSessionBeginEndInfoPreProcessor");
 	}
 }

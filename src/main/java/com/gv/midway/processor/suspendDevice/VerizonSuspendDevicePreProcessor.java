@@ -23,32 +23,24 @@ public class VerizonSuspendDevicePreProcessor implements Processor {
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		LOGGER.info("Begin:VerizonSuspendDevicePreProcessor");
+		LOGGER.debug("Begin:VerizonSuspendDevicePreProcessor");
 
-		LOGGER.info("Session Parameters  VZSessionToken"
-				+ exchange.getProperty(IConstant.VZ_SEESION_TOKEN));
-		LOGGER.info("Session Parameters  VZAuthorization"
-				+ exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN));
+		LOGGER.debug("Session Parameters  VZSessionToken" + exchange.getProperty(IConstant.VZ_SESSION_TOKEN));
+		LOGGER.debug("Session Parameters  VZAuthorization" + exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN));
 
 		SuspendDeviceRequestVerizon businessRequest = new SuspendDeviceRequestVerizon();
-		SuspendDeviceRequest proxyRequest = (SuspendDeviceRequest) exchange
-				.getIn().getBody();
-		businessRequest.setAccountName(proxyRequest.getDataArea()
-				.getAccountName());
-		businessRequest.setCustomFields(proxyRequest.getDataArea()
-				.getCustomFields());
+		SuspendDeviceRequest proxyRequest = (SuspendDeviceRequest) exchange.getIn().getBody();
+		businessRequest.setAccountName(proxyRequest.getDataArea().getAccountName());
+		businessRequest.setCustomFields(proxyRequest.getDataArea().getCustomFields());
 		businessRequest.setGroupName(proxyRequest.getDataArea().getGroupName());
-		businessRequest.setServicePlan(proxyRequest.getDataArea()
-				.getServicePlan());
+		businessRequest.setServicePlan(proxyRequest.getDataArea().getServicePlan());
 
-		MidWayDevices[] proxyDevicesArray = proxyRequest.getDataArea()
-				.getDevices();
+		MidWayDevices[] proxyDevicesArray = proxyRequest.getDataArea().getDevices();
 		Devices[] businessDevicesArray = new Devices[proxyDevicesArray.length];
 
 		for (int j = 0; j < proxyDevicesArray.length; j++) {
 
-			DeviceId[] businessDeviceIdArray = new DeviceId[proxyDevicesArray[j]
-					.getDeviceIds().length];
+			DeviceId[] businessDeviceIdArray = new DeviceId[proxyDevicesArray[j].getDeviceIds().length];
 			MidWayDevices proxyDevices = proxyDevicesArray[j];
 			Devices businessDevice = new Devices();
 
@@ -59,7 +51,7 @@ public class VerizonSuspendDevicePreProcessor implements Processor {
 				businessDeviceId.setId(proxyDeviceId.getId());
 				businessDeviceId.setKind(proxyDeviceId.getKind());
 
-				LOGGER.info(proxyDeviceId.getId());
+				LOGGER.debug(proxyDeviceId.getId());
 
 				businessDeviceIdArray[i] = businessDeviceId;
 
@@ -72,15 +64,14 @@ public class VerizonSuspendDevicePreProcessor implements Processor {
 
 		ObjectMapper objectMapper = new ObjectMapper();
 
-		String strRequestBody = objectMapper
-				.writeValueAsString(businessRequest);
+		String strRequestBody = objectMapper.writeValueAsString(businessRequest);
 
 		exchange.getIn().setBody(strRequestBody);
 
 		Message message = CommonUtil.setMessageHeader(exchange);
 		message.setHeader(Exchange.HTTP_PATH, "/devices/actions/suspend");
 
-		LOGGER.info("End:VerizonSuspendDevicePreProcessor");
+		LOGGER.debug("End:VerizonSuspendDevicePreProcessor");
 
 	}
 

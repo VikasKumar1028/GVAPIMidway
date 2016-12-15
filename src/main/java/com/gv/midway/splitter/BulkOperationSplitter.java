@@ -8,11 +8,9 @@ public class BulkOperationSplitter {
 
    private static final Logger LOGGER = Logger.getLogger(BulkOperationSplitter.class);
 
-    public List<DeviceInformation> split(
-            List<DeviceInformation> deviceInformationList) {
+    public List<DeviceInformation> split(List<DeviceInformation> deviceInformationList) {
 
-        LOGGER.info("***************** BULK OPERATION SPLITTER*********************"
-                + deviceInformationList.size());
+        LOGGER.debug("***************** BULK OPERATION SPLITTER*********************" + deviceInformationList.size());
         return deviceInformationList;
     }
 }

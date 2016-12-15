@@ -30,7 +30,7 @@ public class StubATTJasperDeactivateDeviceProcessor implements Processor {
 	public void process(Exchange exchange) throws Exception {
 		// TODO Auto-generated method stub
 
-		LOGGER.info("Begin::StubATTJasperDeactivateDeviceProcessor");
+		LOGGER.debug("Begin::StubATTJasperDeactivateDeviceProcessor");
 
 		CarrierProvisioningDeviceResponse carrierProvisioningDeviceResponse = new CarrierProvisioningDeviceResponse();
 		CarrierProvisioningDeviceResponseDataArea carrierProvisioningDeviceResponseDataArea = new CarrierProvisioningDeviceResponseDataArea();
@@ -61,7 +61,7 @@ public class StubATTJasperDeactivateDeviceProcessor implements Processor {
 				.setDataArea(carrierProvisioningDeviceResponseDataArea);
 		exchange.getIn().setBody(carrierProvisioningDeviceResponse);
 
-		LOGGER.info("End:StubATTJasperDeactivateDeviceProcessor");
+		LOGGER.debug("End:StubATTJasperDeactivateDeviceProcessor");
 	}
 
 }

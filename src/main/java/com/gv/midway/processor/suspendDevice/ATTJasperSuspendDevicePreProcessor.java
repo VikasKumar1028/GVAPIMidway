@@ -34,7 +34,7 @@ public class ATTJasperSuspendDevicePreProcessor implements Processor {
 
 	@Override
 	public void process(Exchange exchange) throws Exception {
-		LOGGER.info("Begin:ATTJasperSuspendDevicePreProcessor");
+		LOGGER.debug("Begin:ATTJasperSuspendDevicePreProcessor");
 
 		final Message message = exchange.getIn();
 		final Transaction transaction = message.getBody(Transaction.class);
@@ -42,7 +42,7 @@ public class ATTJasperSuspendDevicePreProcessor implements Processor {
 
 		final String deviceId = suspendDeviceRequest.getDataArea().getDevices()[0].getDeviceIds()[0].getId();
 
-		LOGGER.info("deviceId::::" + deviceId);
+		LOGGER.debug("deviceId::::" + deviceId);
 
 		final ATTJasperProperties properties = EnvironmentParser.getATTJasperProperties(newEnv);
 
@@ -65,6 +65,6 @@ public class ATTJasperSuspendDevicePreProcessor implements Processor {
 		exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER, transaction.getDeviceNumber());
 		exchange.setPattern(ExchangePattern.InOut);
 
-		LOGGER.info("End:ATTJasperSuspendDevicePreProcessor");
+		LOGGER.debug("End:ATTJasperSuspendDevicePreProcessor");
 	}
 }

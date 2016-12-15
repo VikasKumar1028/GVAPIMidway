@@ -69,4 +69,6 @@ public interface ITransactionalService {
 	 
 	 public void updateAttNetSuiteCallBackResponse(Exchange exchange);
 	  public void setActivateServicePlanListInExchange(Exchange exchange);
+
+	  void populateActivateDBPayloadMock(Exchange exchange);
 }

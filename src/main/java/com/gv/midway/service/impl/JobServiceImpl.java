@@ -2,6 +2,8 @@ package com.gv.midway.service.impl;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -43,18 +45,12 @@ public class JobServiceImpl implements IJobService {
    
     @Override
     public List<DeviceInformation> fetchDevices(Exchange exchange) {
+        final List<DeviceInformation> list = iJobDao.fetchDevices(exchange);
 
-        List<DeviceInformation> list =  iJobDao.fetchDevices(exchange);
+        final int count = list == null ? 0 : list.size();
 
-        if (list != null) {
-
-            exchange.setProperty(IConstant.JOB_TOTAL_COUNT, list.size());
-        } else {
-            exchange.setProperty(IConstant.JOB_TOTAL_COUNT, 0);
-        }
-
+        exchange.setProperty(IConstant.JOB_TOTAL_COUNT, count);
         return list;
-
     }
 
     /**
@@ -72,7 +68,7 @@ public class JobServiceImpl implements IJobService {
 
             String currentServerIp = CommonUtil.getIpAddress();
 
-            LOGGER.info("currentServerIp:::::::" + currentServerIp);
+            LOGGER.debug("currentServerIp:::::::" + currentServerIp);
 
             ServerDetail serverDetail;
             serverDetail = iJobDao.fetchServerIp(currentServerIp);
@@ -80,16 +76,14 @@ public class JobServiceImpl implements IJobService {
             // Send the currentServerIp and fetch serverDetail
             // get the jobType of the serverDetail
 
-            if (serverDetail != null
-                    && IConstant.JOB_TYPE_ODD.equalsIgnoreCase(serverDetail
-                            .getJobType())) {
-                return iJobDao.fetchOddDevices(exchange);
-            }
+            if (serverDetail != null) {
+                if (IConstant.JOB_TYPE_ODD.equalsIgnoreCase(serverDetail.getJobType())) {
+                    return iJobDao.fetchOddDevices(exchange);
+                }
 
-            if (serverDetail != null
-                    && IConstant.JOB_TYPE_EVEN.equalsIgnoreCase(serverDetail
-                            .getJobType())) {
-                return iJobDao.fetchEvenDevices(exchange);
+                if (IConstant.JOB_TYPE_EVEN.equalsIgnoreCase(serverDetail.getJobType())) {
+                    return iJobDao.fetchEvenDevices(exchange);
+                }
             }
 
         }
@@ -98,16 +92,12 @@ public class JobServiceImpl implements IJobService {
 
     }
 
-   
     @Override
     public void insertJobDetails(Exchange exchange) {
         iJobDao.insertJobDetails(exchange);
-
         // To be removed just to populate dummy bulk data in deviceInfo and
         // device Usage
-
         // iJobDao.insertBulkRecords()
-
     }
 
     /**
@@ -118,20 +108,10 @@ public class JobServiceImpl implements IJobService {
         iJobDao.updateJobDetails(exchange);
     }
 
-    /**
-     * Getter
-     * 
-     * @return
-     */
     public IJobDao getiJobDao() {
         return iJobDao;
     }
 
-    /**
-     * Setter
-     * 
-     * @return
-     */
     public void setiJobDao(IJobDao iJobDao) {
         this.iJobDao = iJobDao;
     }
@@ -140,22 +120,20 @@ public class JobServiceImpl implements IJobService {
      * Setting the Job Details for New Job Only
      */
     @Override
-    public void setJobDetails(Exchange exchange, String carrierName,
-            JobName jobName,int duration,JobType jobType,String period) {
+    public void setJobDetails(Exchange exchange, String carrierName, JobName jobName, int duration, JobType jobType, String period) {
 
-        JobDetail jobDetail = new JobDetail();
+        // New Job Will Run Today but for Previous day(Current -1 day) data so
+        // setting the Job date to previous day not current date
+        final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.HOUR, duration);
+
+        final JobDetail jobDetail = new JobDetail();
+        jobDetail.setDate(dateFormat.format(cal.getTime()));
         jobDetail.setType(jobType);
         jobDetail.setCarrierName(carrierName);
         jobDetail.setName(jobName);
         jobDetail.setPeriod(period);
-
-        // New Job Will Run Today but for Previous day(Current -1 day) data so
-        // setting the Job date to previous day not current date
-
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.HOUR, duration);
-        jobDetail.setDate(dateFormat.format(cal.getTime()));
 
         exchange.getIn().setBody(jobDetail);
 
@@ -193,33 +171,35 @@ public class JobServiceImpl implements IJobService {
      * Function is used for setting the latest Start Time and End Time For
      * running the Job For Now we have set the verizon Api start and end time in
      * exchange
-     * 
-     * @param exchange
      */
     @Override
     public void setJobStartandEndTime(Exchange exchange) {
-
-        JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
-        // finding the Start and end time of Job and Setting in exchange as
-        // parameter
+        final JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
+        // finding the Start and end time of Job and Setting in exchange as parameter
         try {
-            DateFormat verizondateFormat = new SimpleDateFormat(
-                    "yyyy-MM-dd'T'HH:mm:ss'Z'");
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(dateFormat.parse(jobDetail.getDate()));
-            Date jobStartTime=cal.getTime();
-            jobStartTime.setSeconds(1);
-            exchange.setProperty(IConstant.JOB_START_TIME,
-                    verizondateFormat.format(jobStartTime));
-            cal.add(Calendar.HOUR, 24);
-            exchange.setProperty(IConstant.JOB_END_TIME,
-                    verizondateFormat.format(cal.getTime()));
+            //TODO: convert to new Java LocalDateTime
+//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//            DateTimeFormatter verizonFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+//            LocalDateTime jobStartTime = LocalDateTime.parse(jobDetail.getDate(), formatter);
+//            jobStartTime.withSecond(1);
+//            exchange.setProperty(IConstant.JOB_START_TIME, verizonFormatter.format(jobStartTime));
+//            LocalDateTime jobEndTime = jobStartTime.plusHours(1);
+//            exchange.setProperty(IConstant.JOB_END_TIME, verizonFormatter.format(jobEndTime));
 
+            final DateFormat verizonDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+            final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            final Calendar cal = Calendar.getInstance();
+            cal.setTime(dateFormat.parse(jobDetail.getDate()));
+
+            final Date jobStartTime = cal.getTime();
+            jobStartTime.setSeconds(1);
+            exchange.setProperty(IConstant.JOB_START_TIME, verizonDateFormat.format(jobStartTime));
+
+            cal.add(Calendar.HOUR, 24);
+            exchange.setProperty(IConstant.JOB_END_TIME, verizonDateFormat.format(cal.getTime()));
         } catch (Exception ex) {
             LOGGER.error("................Error in Setting Job Dates" + ex);
         }
-
     }
 
     /**
@@ -292,8 +272,7 @@ public class JobServiceImpl implements IJobService {
                 .getProperty("NotificationLsit");
 
         for (DeviceOverageNotification notification : notificationList) {
-            LOGGER.info("Notification  :::::::::::::::::: "
-                    + notification.getNetSuiteId());
+            LOGGER.debug("Notification  :::::::::::::::::: " + notification.getNetSuiteId());
         }
 
     }
@@ -304,7 +283,7 @@ public class JobServiceImpl implements IJobService {
     @Override
     public void scheduleJob(Exchange exchange) {
 
-        LOGGER.info("scheduleJob  :::::::::::::::::: ");
+        LOGGER.debug("scheduleJob  :::::::::::::::::: ");
         JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
         producer.requestBody("direct:startJob", jobDetail);
 
@@ -313,7 +292,7 @@ public class JobServiceImpl implements IJobService {
     @Override
     public void checkTimeOutDevices(Exchange exchange) {
 
-        LOGGER.info("checkTimeOutDevices  :::::::::::::::::: ");
+        LOGGER.debug("checkTimeOutDevices  :::::::::::::::::: ");
 
         List<DeviceInformation> timeOutDeviceList = (List<DeviceInformation>) exchange
                 .getProperty(IConstant.TIMEOUT_DEVICE_LIST);
@@ -325,13 +304,13 @@ public class JobServiceImpl implements IJobService {
             // check for usage and connection History Job
 
             if (jobName.endsWith("DEVICE_USAGE")) {
-                LOGGER.info("insert timeOut devcies in Usage  :::::::::::::::::: ");
+                LOGGER.debug("insert timeOut devices in Usage  :::::::::::::::::: ");
                 iJobDao.insertTimeOutUsageRecords(exchange);
             }
 
             // Connection History Job
             else {
-                LOGGER.info("insert timeOut devcies in Connection  :::::::::::::::::: ");
+                LOGGER.debug("insert timeOut devices in Connection  :::::::::::::::::: ");
                 iJobDao.insertTimeOutConnectionRecords(exchange);
 
             }
@@ -343,10 +322,9 @@ public class JobServiceImpl implements IJobService {
     @Override
     public void checkTimeOutDevicesTransactionFailure(Exchange exchange) {
 
-        LOGGER.info("checkTimeOutDevices for TransactionFailure :::::::::::::::::: ");
+        LOGGER.debug("checkTimeOutDevices for TransactionFailure :::::::::::::::::: ");
 
-        List<Object> timeOutDeviceList = (List<Object>) exchange
-                .getProperty(IConstant.TIMEOUT_DEVICE_LIST);
+        List<Object> timeOutDeviceList = (List<Object>) exchange.getProperty(IConstant.TIMEOUT_DEVICE_LIST);
 
         if (timeOutDeviceList.size() > 0) {
 
@@ -355,13 +333,12 @@ public class JobServiceImpl implements IJobService {
             // check for usage and connection History Job
 
             if (jobName.endsWith("DeviceUsageJob")) {
-                LOGGER.info("insert timeOut devcies in TransactionFailure Usage  :::::::::::::::::: ");
+                LOGGER.debug("insert timeOut devices in TransactionFailure Usage  :::::::::::::::::: ");
                 iJobDao.insertTimeOutUsageRecordsTransactionFailure(exchange);
             }
-
             // Connection History Job
             else {
-                LOGGER.info("insert timeOut devcies in TransactionFailure Connection  :::::::::::::::::: ");
+                LOGGER.debug("insert timeOut devices in TransactionFailure Connection  :::::::::::::::::: ");
                 iJobDao.insertTimeOutConnectionRecordsTransactionFailure(exchange);
 
             }
@@ -401,11 +378,11 @@ public class JobServiceImpl implements IJobService {
 			}
 		}
 
-		Map<Integer, Long> saveLastUpadtedDataUsed = list.stream().collect(
+		Map<Integer, Long> saveLastUpdatedDataUsed = list.stream().collect(
 				Collectors.toMap(DeviceUsage::getNetSuiteId,
 						DeviceUsage::getMonthToDateUsage));
 
-		exchange.setProperty("saveLastUpadtedDataUsed", saveLastUpadtedDataUsed);
+		exchange.setProperty("saveLastUpdatedDataUsed", saveLastUpdatedDataUsed);
 
 	}
 
@@ -416,6 +393,14 @@ public class JobServiceImpl implements IJobService {
 		exchange.setProperty(IConstant.ISKOREJOB_SCHEDULING, CommonUtil.checkKoreJobScheduling(jobDuration));
 	}
 
+        public void updateNetSuiteCallBackResponse(Exchange exchange){
+            iJobDao.updateNetSuiteCallBackResponse(exchange);
+            
+        }
 
+        public void updateNetSuiteCallBackError(Exchange exchange){
+            iJobDao.updateNetSuiteCallBackError(exchange);
+            
+        }
 
 }

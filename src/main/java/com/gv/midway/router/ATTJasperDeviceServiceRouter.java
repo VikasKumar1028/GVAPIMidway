@@ -11,7 +11,7 @@ public class ATTJasperDeviceServiceRouter {
     public String resolveDeviceServiceChannel(Transaction transaction) {
 
         final RequestType requestType = transaction.getRequestType();
-
+        //TODO: log as debug once testing has complete
         LOGGER.info("************ATTJASPER ROUTER****************************" + transaction.getRequestType());
 
         switch (requestType) {
@@ -26,7 +26,7 @@ public class ATTJasperDeviceServiceRouter {
             case REACTIVATION:
                 return "seda:attJasperSedaReactivation";
             case CHANGECUSTOMFIELDS:
-                return "seda:attJasperSedaCustomeFields";
+                return "seda:attJasperSedaCustomFields";
             case CHANGESERVICEPLAN:
                 return "seda:attJasperSedaChangeDeviceServicePlans";
             default:

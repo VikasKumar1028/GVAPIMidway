@@ -32,7 +32,7 @@ public class RetrieveDeviceUsageHistoryPostProcessor implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {
-        LOGGER.info("Begin::RetrieveDeviceUsageHistoryPostProcessor");
+        LOGGER.debug("Begin::RetrieveDeviceUsageHistoryPostProcessor");
 
         Response response = new Response();
 
@@ -56,7 +56,7 @@ public class RetrieveDeviceUsageHistoryPostProcessor implements Processor {
                 }
             }
 
-            LOGGER.info("RequestID::" + exchange.getIn().getBody().toString());
+            LOGGER.debug("RequestID::" + exchange.getIn().getBody().toString());
             response.setResponseCode(IResponse.SUCCESS_CODE);
             response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
             response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_DEVICE_USAGE_MIDWAY);
@@ -79,6 +79,6 @@ public class RetrieveDeviceUsageHistoryPostProcessor implements Processor {
 
         exchange.getIn().setBody(usageInformationResponse);
 
-        LOGGER.info("End::RetrieveDeviceUsageHistoryPostProcessor");
+        LOGGER.debug("End::RetrieveDeviceUsageHistoryPostProcessor");
     }
 }

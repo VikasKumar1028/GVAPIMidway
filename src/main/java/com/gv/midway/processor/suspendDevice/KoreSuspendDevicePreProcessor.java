@@ -1,5 +1,7 @@
 package com.gv.midway.processor.suspendDevice;
 
+import com.gv.midway.utility.MessageStuffer;
+import com.gv.midway.pojo.MidWayDeviceId;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.Message;
@@ -13,15 +15,9 @@ import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequest;
 import com.gv.midway.pojo.transaction.Transaction;
 
 public class KoreSuspendDevicePreProcessor implements Processor {
+    private static final Logger LOGGER = Logger.getLogger(KoreSuspendDevicePreProcessor.class.getName());
 
-    private static final Logger LOGGER = Logger
-            .getLogger(KoreSuspendDevicePreProcessor.class.getName());
-
-    Environment newEnv;
-
-    public KoreSuspendDevicePreProcessor() {
-        // Empty Constructor
-    }
+    private Environment newEnv;
 
     public KoreSuspendDevicePreProcessor(Environment env) {
         super();
@@ -30,36 +26,28 @@ public class KoreSuspendDevicePreProcessor implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {
-        LOGGER.info("*************Testing**************************************"
-                + exchange.getIn().getBody());
+        LOGGER.debug("*************Testing**************************************" + exchange.getIn().getBody());
+        LOGGER.debug("Begin:KoreSuspendDevicePreProcessor");
 
-        LOGGER.info("Begin:KoreSuspendDevicePreProcessor");
-        Message message = exchange.getIn();
+        final Message message = exchange.getIn();
+        final Transaction transaction = exchange.getIn().getBody(Transaction.class);
+        final SuspendDeviceRequest suspendDeviceRequest = (SuspendDeviceRequest) transaction.getDevicePayload();
+        String deviceId = "";
+        for (MidWayDeviceId midWayDeviceId : suspendDeviceRequest.getDataArea().getDevices()[0].getDeviceIds()) {
+            deviceId = midWayDeviceId.getId();
+            if ("SIM".equalsIgnoreCase(midWayDeviceId.getKind())) { //Prefer SIM over other deviceIds
+                break;
+            }
+        }
 
-        Transaction transaction = exchange.getIn().getBody(Transaction.class);
-
-        SuspendDeviceRequest suspendDeviceRequest = (SuspendDeviceRequest) transaction
-                .getDevicePayload();
-
-        String deviceId = suspendDeviceRequest.getDataArea().getDevices()[0]
-                .getDeviceIds()[0].getId();
-
-        SuspendDeviceRequestKore suspendDeviceRequestKore = new SuspendDeviceRequestKore();
+        final SuspendDeviceRequestKore suspendDeviceRequestKore = new SuspendDeviceRequestKore();
         suspendDeviceRequestKore.setDeviceNumber(deviceId);
 
-        exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER,
-                transaction.getDeviceNumber());
-        message.setHeader(Exchange.CONTENT_TYPE, "application/json");
-        message.setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json");
-        message.setHeader(Exchange.HTTP_METHOD, "POST");
-        message.setHeader("Authorization",
-                newEnv.getProperty(IConstant.KORE_AUTHENTICATION));
-        message.setHeader(Exchange.HTTP_PATH, "/json/suspendDevice");
+        MessageStuffer.setKorePOSTRequest(message, newEnv, "/json/suspendDevice", suspendDeviceRequestKore);
 
-        message.setBody(suspendDeviceRequestKore);
-
+        exchange.setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER, transaction.getDeviceNumber());
         exchange.setPattern(ExchangePattern.InOut);
-        LOGGER.info("End:KoreSuspendDevicePreProcessor");
-    }
 
+        LOGGER.debug("End:KoreSuspendDevicePreProcessor");
+    }
 }

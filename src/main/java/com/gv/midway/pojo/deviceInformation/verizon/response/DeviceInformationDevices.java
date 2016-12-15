@@ -3,7 +3,7 @@ package com.gv.midway.pojo.deviceInformation.verizon.response;
 import java.util.Arrays;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.gv.midway.pojo.verizon.CustomFields;
+import com.gv.midway.pojo.KeyValuePair;
 import com.gv.midway.pojo.verizon.DeviceId;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -19,7 +19,7 @@ public class DeviceInformationDevices {
 
     private String createdAt;
 
-    private CustomFields[] customFields;
+    private KeyValuePair[] customFields;
 
     private DeviceId[] deviceIds;
 
@@ -75,11 +75,11 @@ public class DeviceInformationDevices {
         this.createdAt = createdAt;
     }
 
-    public CustomFields[] getCustomFields() {
+    public KeyValuePair[] getCustomFields() {
         return customFields;
     }
 
-    public void setCustomFields(CustomFields[] customFields) {
+    public void setCustomFields(KeyValuePair[] customFields) {
         this.customFields = customFields;
     }
 

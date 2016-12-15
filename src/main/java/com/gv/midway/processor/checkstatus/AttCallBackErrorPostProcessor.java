@@ -41,7 +41,7 @@ public class AttCallBackErrorPostProcessor implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {
-        LOGGER.info("Begin:AttCallBackErrorPostProcessor");
+        LOGGER.debug("Begin:AttCallBackErrorPostProcessor");
 
         final Message message = exchange.getIn();
 
@@ -52,7 +52,7 @@ public class AttCallBackErrorPostProcessor implements Processor {
         final String errorDescription = (String) exchange.getProperty(IConstant.MIDWAY_CARRIER_ERROR_DESC);
         final BaseRequest baseRequest = (BaseRequest)exchange.getProperty(IConstant.MIDWAY_TRANSACTION_PAYLOAD);
 
-        LOGGER.info("cxf operation not caught before is...........");
+        LOGGER.error("cxf operation not caught before is...........");
 
         final String desc = "Error in callBack from ATT Jasper For "
                 + midWayTransactionDeviceNumber + ", transactionId "
@@ -103,8 +103,8 @@ public class AttCallBackErrorPostProcessor implements Processor {
 
         netSuiteCallBackProvisioningRequest.setDeviceIds(deviceIds);
 
-        LOGGER.info("body set for netSuiteCallBack........." + exchange.getIn().getBody());
-        LOGGER.info("request type for NetSuite CallBack error...." + requestType);
+        LOGGER.error("body set for netSuiteCallBack........." + exchange.getIn().getBody());
+        LOGGER.error("request type for NetSuite CallBack error...." + requestType);
 
         //TODO Duplicated in KoreCheckStatusErrorProcessor
         switch (requestType) {
@@ -125,10 +125,10 @@ public class AttCallBackErrorPostProcessor implements Processor {
                 break;
             case CHANGESERVICEPLAN:
                 final ChangeDeviceServicePlansRequest changeDeviceServicePlansRequest = (ChangeDeviceServicePlansRequest) baseRequest;
-                LOGGER.info("change device service plan data area...." + changeDeviceServicePlansRequest.getDataArea().toString());
+                LOGGER.error("change device service plan data area...." + changeDeviceServicePlansRequest.getDataArea().toString());
                 final String oldServicePlan = changeDeviceServicePlansRequest.getDataArea().getCurrentServicePlan();
                 final String newServicePlan = changeDeviceServicePlansRequest.getDataArea().getServicePlan();
-                LOGGER.info("service plan new is..." + newServicePlan + " old service plan is....." + oldServicePlan);
+                LOGGER.error("service plan new is..." + newServicePlan + " old service plan is....." + oldServicePlan);
                 netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.SERVICE_PLAN);
                 netSuiteCallBackProvisioningRequest.setOldServicePlan(oldServicePlan);
                 netSuiteCallBackProvisioningRequest.setNewServicePlan(newServicePlan);
@@ -143,7 +143,7 @@ public class AttCallBackErrorPostProcessor implements Processor {
         //final String script = "539";
         final String script = newEnv.getProperty("netSuite.callbacks.script");
         final NetSuiteOAuthHeaderProperties properties = EnvironmentParser.getNetSuiteOAuthHeaderProperties(newEnv);
-        LOGGER.info("oauth info is....." + properties);
+        LOGGER.error("oauth info is....." + properties);
         final String oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(properties, script);
 
         message.setBody(netSuiteCallBackProvisioningRequest);
@@ -157,7 +157,7 @@ public class AttCallBackErrorPostProcessor implements Processor {
         exchange.setProperty("script", script);
         exchange.setPattern(ExchangePattern.InOut);
 
-        LOGGER.info("error callback response for ATT Jasper..." + exchange.getIn().getBody());
-        LOGGER.info("End:AttCallBackErrorPostProcessor");
+        LOGGER.error("error callback response for ATT Jasper..." + exchange.getIn().getBody());
+        LOGGER.debug("End:AttCallBackErrorPostProcessor");
     }
 }

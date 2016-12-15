@@ -15,7 +15,7 @@ public class ChangeDeviceServicePlanValidatorProcessor implements Processor {
 
 	@Override
 	public void process(Exchange exchange) throws Exception {
-		LOGGER.info("Begin:ChangeDeviceServicePlanValidatorProcessor");
+		LOGGER.debug("Begin:ChangeDeviceServicePlanValidatorProcessor");
 
 		final ChangeDeviceServicePlansRequest request = exchange.getIn().getBody(ChangeDeviceServicePlansRequest.class);
 		final ChangeDeviceServicePlansRequestDataArea changeDeviceServicePlansRequestDataArea = request.getDataArea();
@@ -30,7 +30,7 @@ public class ChangeDeviceServicePlanValidatorProcessor implements Processor {
 				missingServicePlan(exchange);
 			}
 		}
-		LOGGER.info("End:ChangeDeviceServicePlanValidatorProcessor");
+		LOGGER.debug("End:ChangeDeviceServicePlanValidatorProcessor");
 	}
 
 	private void missingServicePlan(Exchange exchange) throws MissingParameterException {

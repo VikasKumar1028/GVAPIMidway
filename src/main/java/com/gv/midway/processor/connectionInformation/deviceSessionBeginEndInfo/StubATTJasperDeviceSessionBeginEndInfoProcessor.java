@@ -19,7 +19,7 @@ public class StubATTJasperDeviceSessionBeginEndInfoProcessor implements
 
 	@Override
 	public void process(Exchange exchange) throws Exception {
-		LOGGER.info("Begin::StubATTJasperDeviceSessionBeginEndInfoProcessor");
+		LOGGER.debug("Begin::StubATTJasperDeviceSessionBeginEndInfoProcessor");
 
 		SessionBeginEndResponse sessionBeginEndResponse = new SessionBeginEndResponse();
 
@@ -57,7 +57,7 @@ public class StubATTJasperDeviceSessionBeginEndInfoProcessor implements
 
 		exchange.getIn().setBody(sessionBeginEndResponse);
 
-		LOGGER.info("End::StubATTJasperDeviceSessionBeginEndInfoProcessor");
+		LOGGER.debug("End::StubATTJasperDeviceSessionBeginEndInfoProcessor");
 
 	}
 }

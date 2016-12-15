@@ -36,10 +36,10 @@ public class AuditDaoImpl implements IAuditDao {
      */
     @Override
     public void auditExternalRequestCall(Exchange exchange) {
-        LOGGER.info("Begin-AuditDaoImpl :auditExternalRequestCall" + exchange.getIn().getBody());
+        LOGGER.debug("Begin-AuditDaoImpl :auditExternalRequestCall" + exchange.getIn().getBody());
 
         try {
-            LOGGER.info("auditExternalRequestCall-jsonInString::" + exchange.getIn().getBody().toString());
+            LOGGER.debug("auditExternalRequestCall-jsonInString::" + exchange.getIn().getBody());
 
             final String apiOperationName = getAPIOperationName(exchange, _BusinessRequest, "requestEndpointSplit");
 
@@ -52,7 +52,7 @@ public class AuditDaoImpl implements IAuditDao {
             //TODO Should this really be ignored?
         }
 
-        LOGGER.info("End-AuditDaoImpl :auditExternalRequestCall");
+        LOGGER.debug("End-AuditDaoImpl :auditExternalRequestCall");
     }
 
     /**
@@ -61,13 +61,13 @@ public class AuditDaoImpl implements IAuditDao {
     @Override
     public void auditExternalResponseCall(Exchange exchange) {
 
-        LOGGER.info("Start-AuditDaoImpl:auditExternalResponseCall");
+        LOGGER.debug("Start-AuditDaoImpl:auditExternalResponseCall");
 
         try {
             final String apiOperationName = getAPIOperationName(exchange, _BusinessResponse, "responseEndpointSplit");
 
             LOGGER.info("apiOperationName" + apiOperationName);
-            LOGGER.info("business response is.........." + exchange.getIn().getBody());
+            LOGGER.debug("business response is.........." + exchange.getIn().getBody());
 
             mongoTemplate.insert(newAudit(apiOperationName, exchange, exchange.getIn().getBody()));
 
@@ -76,7 +76,7 @@ public class AuditDaoImpl implements IAuditDao {
             //TODO Should this really be ignored?
         }
 
-        LOGGER.info("End-AuditDaoImpl:auditExternalResponseCall");
+        LOGGER.debug("End-AuditDaoImpl:auditExternalResponseCall");
     }
 
     private String getAPIOperationName(Exchange exchange, String requestResponseDistinction, String logName) {
@@ -121,13 +121,13 @@ public class AuditDaoImpl implements IAuditDao {
     @Override
     public void auditExternalSOAPResponseCall(Exchange exchange) {
 
-        LOGGER.info("Start-AuditDaoImpl:auditExternalResponseCall");
+        LOGGER.debug("Start-AuditDaoImpl:auditExternalResponseCall");
 
         try {
             final String apiOperationName = getAPIOperationName(exchange, _BusinessResponse, "responseEndpointSplit");
 
             LOGGER.info("apiOperationName" + apiOperationName);
-            LOGGER.info("soap object of class type..."+exchange.getIn().getBody().getClass()+" "+exchange.getIn().getBody().toString());
+            LOGGER.debug("soap object of class type..."+exchange.getIn().getBody().getClass()+" "+exchange.getIn().getBody().toString());
 
             final String soapPayload = CommonUtil.getSOAPResponseFromExchange(exchange);
 
@@ -137,7 +137,7 @@ public class AuditDaoImpl implements IAuditDao {
             //TODO Should this really be ignored?
             LOGGER.error("auditExternalResponseCall-Exception" + e);
         }
-        LOGGER.info("End-AuditDaoImpl:auditExternalResponseCall");
+        LOGGER.debug("End-AuditDaoImpl:auditExternalResponseCall");
     }
 
     /**
@@ -146,7 +146,7 @@ public class AuditDaoImpl implements IAuditDao {
     @Override
     public void auditExternalExceptionResponseCall(Exchange exchange) {
 
-        LOGGER.info("Begin-AuditDaoImpl:auditExternalExceptionResponseCall");
+        LOGGER.debug("Begin-AuditDaoImpl:auditExternalExceptionResponseCall");
 
         final Object exceptionCaught = exchange.getProperty(Exchange.EXCEPTION_CAUGHT);
         final String responseBody = exceptionCaught == null ? "" : ((CxfOperationException)exceptionCaught).getResponseBody();
@@ -164,9 +164,9 @@ public class AuditDaoImpl implements IAuditDao {
                 if (IConstant.BSCARRIER_SERVICE_VERIZON.equals(exchange.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME))) {
                     final VerizonErrorResponse responsePayload = mapper.readValue(responseBody, VerizonErrorResponse.class);
 
-                    audit.setErrorDetails(responsePayload.getErrorMessage());
+                    audit.setErrorDetails(responsePayload.getErrorCode() + " - " + responsePayload.getErrorMessage());
                     audit.setErrorProblem(IConstant.CARRIER_TRANSACTION_STATUS_ERROR);
-                    audit.setErrorCode(Integer.parseInt(responsePayload.getErrorCode()));
+                    audit.setErrorCode(400); //Verizon's ErrorCodes come in as a string ie (REQUEST_FAILED.CarrierNotOnAccount)
                     audit.setPayload(responsePayload);
 
                 } else if (IConstant.BSCARRIER_SERVICE_KORE.equals(exchange.getProperty(IConstant.MIDWAY_DERIVED_CARRIER_NAME))) {
@@ -178,7 +178,6 @@ public class AuditDaoImpl implements IAuditDao {
                     audit.setPayload(responsePayload);
                 }
             } catch (Exception ex) {
-                //TODO Should this really be ignored?
                 LOGGER.error("Error in Parsing Json"+ex);
             }
 
@@ -188,6 +187,7 @@ public class AuditDaoImpl implements IAuditDao {
             //TODO Should this really be ignored?
             LOGGER.error("auditExternalExceptionResponseCall" + e);
         }
+        LOGGER.debug("End-AuditDaoImpl:auditExternalExceptionResponseCall");
     }
 
     /**
@@ -196,7 +196,7 @@ public class AuditDaoImpl implements IAuditDao {
     @Override
     public void auditExternalSOAPExceptionResponseCall(Exchange exchange) {
 
-        LOGGER.info("Begin-AuditDaoImpl:auditExternalSOAPExceptionResponseCall");
+        LOGGER.debug("Begin-AuditDaoImpl:auditExternalSOAPExceptionResponseCall");
 
         final SoapFault soapFault = (SoapFault)exchange.getProperty(Exchange.EXCEPTION_CAUGHT);
 
@@ -206,9 +206,9 @@ public class AuditDaoImpl implements IAuditDao {
             LOGGER.info("apiOperationName" + apiOperationName);
 
             final String message = soapFault.getMessage();
-            LOGGER.info("soap fault code    ------------------" + message);
+            LOGGER.warn("soap fault code    ------------------" + message);
             final String payload = CommonUtil.getSOAPErrorResponseFromExchange(exchange);
-            LOGGER.info("soap fault payload  soap message is ------------------" + payload);
+            LOGGER.warn("soap fault payload  soap message is ------------------" + payload);
 
             final Audit audit =
                     newErrorAudit(apiOperationName, exchange, payload, IConstant.CARRIER_TRANSACTION_STATUS_ERROR, message, exchange.getProperty(IConstant.ATTJASPER_SOAP_FAULT_ERRORMESSAGE).toString());
@@ -218,6 +218,7 @@ public class AuditDaoImpl implements IAuditDao {
             //TODO Should this really be ignored?
             LOGGER.error("auditExternalExceptionResponseCall" + e);
         }
+        LOGGER.debug("End-AuditDaoImpl:auditExternalSOAPExceptionResponseCall");
     }
 
     /**
@@ -226,7 +227,7 @@ public class AuditDaoImpl implements IAuditDao {
     @Override
     public void auditExternalConnectionExceptionResponseCall(Exchange exchange) {
 
-        LOGGER.info("Start-auditExternalConnectionExceptionResponseCall");
+        LOGGER.debug("Start-auditExternalConnectionExceptionResponseCall");
         final String responseBody = exchange.getProperty(Exchange.EXCEPTION_CAUGHT) == null ?
                 "" : exchange.getProperty(Exchange.EXCEPTION_CAUGHT).toString();
 
@@ -243,5 +244,6 @@ public class AuditDaoImpl implements IAuditDao {
             e.printStackTrace();
             LOGGER.error("auditExternalConnectionExceptionResponseCall" + e);
         }
+        LOGGER.debug("End-auditExternalConnectionExceptionResponseCall");
     }
 }

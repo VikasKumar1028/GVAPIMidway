@@ -33,7 +33,7 @@ class TestVerizonDeviceUsageHistoryPostProcessor extends TestMocks {
       when(exchange.getProperty("DeviceId")).thenReturn(deviceId, Nil: _*)
       when(exchange.getProperty(IConstant.MIDWAY_NETSUITE_ID)).thenReturn(netSuiteId, Nil: _*)
 
-      when(message.getBody(any)).thenReturn(getMap, Nil: _*)
+      when(message.getBody(any)).thenReturn(informationResponse, Nil: _*)
 
       val captor = ArgumentCaptor.forClass(classOf[DeviceUsage])
 
@@ -56,7 +56,7 @@ class TestVerizonDeviceUsageHistoryPostProcessor extends TestMocks {
     }
   }
 
-  private def getMap: JMap[_, _] = {
+  private def informationResponse: VerizonUsageInformationResponse = {
 
     val usage1 = new UsageHistory
     usage1.setBytesUsed(10l)
@@ -68,6 +68,6 @@ class TestVerizonDeviceUsageHistoryPostProcessor extends TestMocks {
     response.setUsageHistory(Array(usage1, usage2))
 
     val mapper = new ObjectMapper()
-    mapper.convertValue(response, classOf[JMap[_, _]])
+    mapper.convertValue(response, classOf[VerizonUsageInformationResponse])
   }
 }

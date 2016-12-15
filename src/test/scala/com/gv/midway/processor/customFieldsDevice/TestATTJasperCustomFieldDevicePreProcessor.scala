@@ -1,12 +1,11 @@
 package com.gv.midway.processor.customFieldsDevice
 
-import com.gv.midway.{ATTJasperSuite, TestMocks}
 import com.gv.midway.attjasper.EditTerminalRequest
 import com.gv.midway.constant.IConstant
-import com.gv.midway.pojo.{MidWayDeviceId, MidWayDevices}
 import com.gv.midway.pojo.customFieldsDevice.request.{CustomFieldsDeviceRequest, CustomFieldsDeviceRequestDataArea}
 import com.gv.midway.pojo.transaction.Transaction
-import com.gv.midway.pojo.verizon.CustomFieldsToUpdate
+import com.gv.midway.pojo.{KeyValuePair, MidWayDeviceId, MidWayDevices}
+import com.gv.midway.{ATTJasperSuite, TestMocks}
 import org.apache.camel.ExchangePattern
 import org.mockito.ArgumentCaptor
 import org.mockito.Mockito._
@@ -22,7 +21,7 @@ class TestATTJasperCustomFieldDevicePreProcessor extends TestMocks with ATTJaspe
 
       val device1 = new MidWayDevices
       device1.setDeviceIds(Array(deviceId))
-      val custom1 = new CustomFieldsToUpdate("CustomField6", "value1")
+      val custom1 = new KeyValuePair("CustomField6", "value1")
 
       val dataArea = new CustomFieldsDeviceRequestDataArea
       dataArea.setDevices(Array(device1))
@@ -51,9 +50,9 @@ class TestATTJasperCustomFieldDevicePreProcessor extends TestMocks with ATTJaspe
       assert(request.getChangeType === 75)
       assert(request.getTargetValue === custom1.getValue)
       assert(request.getIccid === deviceId.getId)
-      assert(request.getLicenseKey === propertyValue(attJasperLicenseKey))
+      assert(request.getLicenseKey === propertyValue(IConstant.ATTJASPER_LICENSE_KEY))
       assert(request.getMessageId != null)
-      assert(request.getVersion === propertyValue(attJasperVersion))
+      assert(request.getVersion === propertyValue(IConstant.ATTJASPER_VERSION))
 
       verify(exchange, times(1)).setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER, transaction.getDeviceNumber)
       verify(exchange, times(1)).setProperty(IConstant.ATT_CUSTOMFIELD_TO_UPDATE, custom1.getKey)

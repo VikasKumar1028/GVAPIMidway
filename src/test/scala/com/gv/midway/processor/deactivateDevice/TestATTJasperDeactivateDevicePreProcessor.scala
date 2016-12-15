@@ -48,9 +48,9 @@ class TestATTJasperDeactivateDevicePreProcessor extends TestMocks with ATTJasper
       assert(request.getChangeType === IConstant.ATTJASPER_SIM_CHANGETYPE)
       assert(request.getTargetValue === IConstant.ATTJASPER_DEACTIVATED)
       assert(request.getIccid === id1.getId)
-      assert(request.getLicenseKey === propertyValue(attJasperLicenseKey))
+      assert(request.getLicenseKey === propertyValue(IConstant.ATTJASPER_LICENSE_KEY))
       assert(request.getMessageId != null)
-      assert(request.getVersion === propertyValue(attJasperVersion))
+      assert(request.getVersion === propertyValue(IConstant.ATTJASPER_VERSION))
 
       verify(exchange, times(1)).setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER, deviceNumber)
       verify(exchange, times(1)).setPattern(ExchangePattern.InOut)

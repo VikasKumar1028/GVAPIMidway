@@ -6,6 +6,7 @@ Midway Junit is developed to test the
  */
 package com.gv.midway.test.integration;
 
+import com.gv.midway.pojo.KeyValuePair;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.apache.log4j.Logger;
@@ -41,8 +42,6 @@ import com.gv.midway.pojo.restoreDevice.request.RestoreDeviceRequest;
 import com.gv.midway.pojo.restoreDevice.request.RestoreDeviceRequestDataArea;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequest;
 import com.gv.midway.pojo.suspendDevice.request.SuspendDeviceRequestDataArea;
-import com.gv.midway.pojo.verizon.CustomFields;
-import com.gv.midway.pojo.verizon.CustomFieldsToUpdate;
 import com.gv.midway.service.ISessionService;
 
 public class MidwayJunitTest extends Assert {
@@ -60,7 +59,7 @@ public class MidwayJunitTest extends Assert {
 				"camel-config.xml");
 		sc = new MockServletContext("camel-config.xml");
 		// sc.setAttribute(ContextLoader.CONFIG_LOCATION_PARAM,"");
-		sc.setAttribute(IConstant.VZ_SEESION_TOKEN,
+		sc.setAttribute(IConstant.VZ_SESSION_TOKEN,
 				"1d1f8e7a-c8bb-4f3c-a924-cf612b562425");
 		sc.setAttribute(IConstant.VZ_AUTHORIZATION_TOKEN,
 				"89ba225e1438e95bd05c3cc288d3591");
@@ -854,14 +853,14 @@ public class MidwayJunitTest extends Assert {
 		ddevices.setDeviceIds(customFiledsDeviceIdArray);
 		deDevices[0] = ddevices;
 
-		CustomFieldsToUpdate[] customFieldsToUpdateArray = new CustomFieldsToUpdate[1];
-		CustomFieldsToUpdate customFieldsToUpdate = new CustomFieldsToUpdate();
+		KeyValuePair[] customFieldsToUpdateArray = new KeyValuePair[1];
+		KeyValuePair customFieldsToUpdate = new KeyValuePair();
 		customFieldsToUpdate.setKey("CustomField1");
 		customFieldsToUpdateArray[0] = customFieldsToUpdate;
 		dataArea.setCustomFieldsToUpdate(customFieldsToUpdateArray);
 
-		CustomFields[] customFieldsArray = new CustomFields[1];
-		CustomFields customFields = new CustomFields();
+		KeyValuePair[] customFieldsArray = new KeyValuePair[1];
+		KeyValuePair customFields = new KeyValuePair();
 		customFields.setKey("CustomField1");
 		customFieldsArray[0] = customFields;
 		dataArea.setCustomFields(customFieldsArray);
@@ -913,8 +912,8 @@ public class MidwayJunitTest extends Assert {
 		ddevices.setDeviceIds(customFiledsDeviceIdArray);
 		deDevices[0] = ddevices;
 
-		CustomFieldsToUpdate[] customFieldsToUpdateArray = new CustomFieldsToUpdate[1];
-		CustomFieldsToUpdate customFieldsToUpdate = new CustomFieldsToUpdate();
+		KeyValuePair[] customFieldsToUpdateArray = new KeyValuePair[1];
+		KeyValuePair customFieldsToUpdate = new KeyValuePair();
 		customFieldsToUpdate.setKey("CustomField1");
 		customFieldsToUpdate.setValue("string");
 		customFieldsToUpdateArray[0] = customFieldsToUpdate;
@@ -1433,14 +1432,14 @@ public class MidwayJunitTest extends Assert {
 		ddevices.setDeviceIds(customFieldsDeviceIdArray);
 		deDevices[0] = ddevices;
 
-		CustomFieldsToUpdate[] customFieldsToUpdateArray = new CustomFieldsToUpdate[1];
-		CustomFieldsToUpdate customFieldsToUpdate = new CustomFieldsToUpdate();
+		KeyValuePair[] customFieldsToUpdateArray = new KeyValuePair[1];
+		KeyValuePair customFieldsToUpdate = new KeyValuePair();
 		customFieldsToUpdate.setKey("CustomField1");
 		customFieldsToUpdateArray[0] = customFieldsToUpdate;
 		dataArea.setCustomFieldsToUpdate(customFieldsToUpdateArray);
 
-		CustomFields[] customFieldsArray = new CustomFields[1];
-		CustomFields customFields = new CustomFields();
+		KeyValuePair[] customFieldsArray = new KeyValuePair[1];
+		KeyValuePair customFields = new KeyValuePair();
 		customFields.setKey("CustomField1");
 		customFieldsArray[0] = customFields;
 		dataArea.setCustomFields(customFieldsArray);

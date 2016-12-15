@@ -9,7 +9,7 @@ public class BulkOperationServiceRouter {
 
     public String bulkOperationDeviceSyncInDB(DeviceInformation deviceInformation) {
 
-        LOGGER.info("************BulkOperation ROUTER****************************" + deviceInformation.toString());
+        LOGGER.debug("************BulkOperation ROUTER****************************" + deviceInformation.toString());
 
         return "seda:bulkOperationDeviceSyncInDB";
     }

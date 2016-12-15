@@ -1,13 +1,12 @@
 package com.gv.midway.dao.impl;
 
+import com.gv.midway.dao.ISchedulerDao;
+import com.gv.midway.pojo.deviceHistory.DeviceConnection;
+import com.gv.midway.pojo.deviceHistory.DeviceUsage;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
-
-import com.gv.midway.dao.ISchedulerDao;
-import com.gv.midway.pojo.deviceHistory.DeviceConnection;
-import com.gv.midway.pojo.deviceHistory.DeviceUsage;
 
 @Service
 public class SchedulerDaoImpl implements ISchedulerDao {
@@ -19,16 +18,13 @@ public class SchedulerDaoImpl implements ISchedulerDao {
 
     @Override
     public void saveDeviceConnectionHistory(DeviceConnection deviceConnection) {
-        LOGGER.info("saveDeviceConnectionHistory for Netsuite id......"+deviceConnection.getNetSuiteId());
+        LOGGER.debug("saveDeviceConnectionHistory for NetSuite id......" + deviceConnection.getNetSuiteId());
         mongoTemplate.insert(deviceConnection);
-
     }
 
     @Override
     public void saveDeviceUsageHistory(DeviceUsage deviceUsage) {
-        LOGGER.info("saveDeviceUsageHistory for Netsuite id......"+deviceUsage.getNetSuiteId());
+        LOGGER.debug("saveDeviceUsageHistory for NetSuite id......" + deviceUsage.getNetSuiteId());
         mongoTemplate.insert(deviceUsage);
-
     }
-
 }

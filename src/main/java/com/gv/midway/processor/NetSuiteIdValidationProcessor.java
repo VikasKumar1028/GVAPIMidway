@@ -16,14 +16,14 @@ public class NetSuiteIdValidationProcessor implements Processor {
 
 	@Override
 	public void process(Exchange exchange) throws Exception {
-		LOGGER.info("Begin:NetSuiteIdValidationProcessor");
+		LOGGER.debug("Begin:NetSuiteIdValidationProcessor");
 		final DeviceInformationRequest request = exchange.getIn().getBody(DeviceInformationRequest.class);
 		final DeviceInformationRequestDataArea deviceInformationRequestDataArea = request.getDataArea();
 
 		if (deviceInformationRequestDataArea == null || deviceInformationRequestDataArea.getNetSuiteId() == null) {
 			missingNetSuiteId(exchange);
 		}
-		LOGGER.info("End:NetSuiteIdValidationProcessor");
+		LOGGER.debug("End:NetSuiteIdValidationProcessor");
 	}
 
 	private void missingNetSuiteId(Exchange exchange) throws MissingParameterException {

@@ -12,8 +12,8 @@ class TestKoreDeviceServiceRouter extends FunSuite {
     , (RequestType.SUSPEND, "seda:koreSedaSuspend")
     , (RequestType.RESTORE, "seda:koreSedaRestore")
     , (RequestType.REACTIVATION, "seda:koreSedaReactivation")
-    , (RequestType.CHANGECUSTOMFIELDS, "seda:koreSedacustomeFields")
-    , (RequestType.CHANGESERVICEPLAN, "seda:koreSedachangeDeviceServicePlans")
+    , (RequestType.CHANGECUSTOMFIELDS, "seda:koreSedaCustomFields")
+    , (RequestType.CHANGESERVICEPLAN, "seda:koreSedaChangeDeviceServicePlans")
   ).foreach { case (request, endpoint) =>
     test(s"$request -> $endpoint") {
       val trans = new Transaction

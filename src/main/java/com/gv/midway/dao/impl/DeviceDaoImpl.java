@@ -107,7 +107,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 	public DeviceInformationResponse getDeviceInformationDB(DeviceInformationRequest deviceInformationRequest) {
 
 		final Integer netSuiteId = deviceInformationRequest.getDataArea().getNetSuiteId();
-		LOGGER.info("device dao netsuite id is..." + netSuiteId);
+		LOGGER.debug("device dao netsuite id is..." + netSuiteId);
 
 		final Header header = deviceInformationRequest.getHeader();
 
@@ -162,10 +162,9 @@ public class DeviceDaoImpl implements IDeviceDao {
 			final DeviceInformation deviceInformation = mongoTemplate.findOne(searchDeviceQuery, DeviceInformation.class);
 
 			exchange.setProperty(IConstant.MIDWAY_DEVICEINFO_DB, deviceInformation);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			LOGGER.error("Exception ex" + CommonUtil.getStackTrace(e));
-			LOGGER.info("Not able to fetch the data from DB....." + e.getMessage());
+			LOGGER.error("Not able to fetch the data from DB....." + e.getMessage());
 		}
 	}
 
@@ -176,16 +175,16 @@ public class DeviceDaoImpl implements IDeviceDao {
 		final DeviceInformation deviceInformation = deviceInformationResponse.getDataArea().getDevices();
 
 		if (exchange.getProperty(IConstant.MIDWAY_DEVICEINFO_DB) != null) {
-			LOGGER.info("device info was already in master DB");
-			LOGGER.info("device info carrier is........." + deviceInformation.toString());
+			LOGGER.debug("device info was already in master DB");
+			LOGGER.debug("device info carrier is........." + deviceInformation.toString());
 
 			deviceInformation.setMidwayMasterDeviceId(deviceInformation.getMidwayMasterDeviceId());
 			mongoTemplate.save(deviceInformation);
 		} else {
 			final Integer netSuiteId = (Integer) exchange.getProperty(IConstant.MIDWAY_NETSUITE_ID);
 
-			LOGGER.info("device info was not already in master DB");
-			LOGGER.info("device info to insert for netSuiteId " + netSuiteId);
+			LOGGER.debug("device info was not already in master DB");
+			LOGGER.debug("device info to insert for netSuiteId " + netSuiteId);
 
 			deviceInformation.setNetSuiteId(netSuiteId);
 
@@ -254,15 +253,15 @@ public class DeviceDaoImpl implements IDeviceDao {
 	@Override
 	public UsageInformationMidwayResponse getDeviceUsageInfoDB(UsageInformationMidwayRequest usageInformationMidwayRequest) {
 
-		LOGGER.info("Begin::getDeviceUsageInfoDB");
+		LOGGER.debug("Begin::getDeviceUsageInfoDB");
 		final Header header = usageInformationMidwayRequest.getHeader();
 		final Integer netSuiteId = usageInformationMidwayRequest.getUsageInformationRequestMidwayDataArea().getNetSuiteId();
 		final String startDate = usageInformationMidwayRequest.getUsageInformationRequestMidwayDataArea().getStartDate();
 		final String endDate = usageInformationMidwayRequest.getUsageInformationRequestMidwayDataArea().getEndDate();
 
-		LOGGER.info("device dao netsuite id is..." + netSuiteId);
-		LOGGER.info("device dao startDate is..." + startDate);
-		LOGGER.info("device dao endDate is..." + endDate);
+		LOGGER.debug("device dao netsuite id is..." + netSuiteId);
+		LOGGER.debug("device dao startDate is..." + startDate);
+		LOGGER.debug("device dao endDate is..." + endDate);
 
 		if (netSuiteId == null) {
 			final Response response =
@@ -291,8 +290,8 @@ public class DeviceDaoImpl implements IDeviceDao {
 		try {
 			startDateValue = formatter.parse(startDate);
 			endDateValue = formatter.parse(endDate);
-			LOGGER.info("startDateValue..." + startDateValue);
-			LOGGER.info("endDateValue..." + endDateValue);
+			LOGGER.debug("startDateValue..." + startDateValue);
+			LOGGER.debug("endDateValue..." + endDateValue);
 		} catch (ParseException e1) {
 			LOGGER.error(e1);
 			final Response response =
@@ -311,7 +310,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 					.addCriteria(Criteria.where("date").gte(startDate).orOperator(Criteria.where("date").lte(endDate)))
 					.addCriteria(Criteria.where("isValid").is(true));
 
-			LOGGER.info("searchDeviceQuery::::::::::::::" + searchDeviceQuery);
+			LOGGER.debug("searchDeviceQuery::::::::::::::" + searchDeviceQuery);
 
 			final List<DeviceUsage> deviceUsage = mongoTemplate.find(searchDeviceQuery, DeviceUsage.class);
 
@@ -330,7 +329,6 @@ public class DeviceDaoImpl implements IDeviceDao {
 				return new UsageInformationMidwayResponse(header, response, new UsageInformationResponseMidwayDataArea());
 			} else {
 
-				LOGGER.info("deviceUsage        " + deviceUsage.size());
 				final List<DeviceUsages> deviceDateBasedUsageList = new ArrayList<>();
 
 				for (DeviceUsage deviceUsageValue : deviceUsage) {
@@ -364,16 +362,16 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 	@Override
 	public ConnectionInformationMidwayResponse getDeviceConnectionHistoryInfoDB(ConnectionInformationMidwayRequest connectionInformationMidwayRequest) {
-		LOGGER.info("Begin::getDeviceConnectionHistoryInfoDB");
+		LOGGER.debug("Begin::getDeviceConnectionHistoryInfoDB");
 
 		final Header header = connectionInformationMidwayRequest.getHeader();
 		final Integer netSuiteId = connectionInformationMidwayRequest.getDataArea().getNetSuiteId();
 		final String startDate = connectionInformationMidwayRequest.getDataArea().getStartDate();
 		final String endDate = connectionInformationMidwayRequest.getDataArea().getEndDate();
 
-		LOGGER.info("device dao netsuite id is..." + netSuiteId);
-		LOGGER.info("device dao startDate is..." + startDate);
-		LOGGER.info("device dao endDate is..." + endDate);
+		LOGGER.debug("device dao netsuite id is..." + netSuiteId);
+		LOGGER.debug("device dao startDate is..." + startDate);
+		LOGGER.debug("device dao endDate is..." + endDate);
 
 		if (netSuiteId == null) {
 			final Response response =
@@ -401,17 +399,17 @@ public class DeviceDaoImpl implements IDeviceDao {
 		try {
 			startDateValue = formatter.parse(startDate);
 			endDateValue = formatter.parse(endDate);
-			LOGGER.info("startDateValue..." + startDateValue);
-			LOGGER.info("endDateValue..." + endDateValue);
+			LOGGER.debug("startDateValue..." + startDateValue);
+			LOGGER.debug("endDateValue..." + endDateValue);
 		} catch (ParseException e1) {
-			LOGGER.info(" format error while parsing the date");
+			LOGGER.error(" format error while parsing the date");
 			final Response response =
 					new Response(IResponse.INVALID_PAYLOAD, IResponse.ERROR_DESCRIPTION_STARTDATE_VALIDATE_MIDWAYDB, IResponse.ERROR_MESSAGE);
 			return new ConnectionInformationMidwayResponse(header, response);
 		}
 
 		if (startDateValue.after(endDateValue)) {
-			LOGGER.info("Earliest date should not be greater than Latest date");
+			LOGGER.warn("Earliest date should not be greater than Latest date");
 
 			final Response response =
 					new Response(IResponse.INVALID_PAYLOAD, IResponse.ERROR_DESCRIPTION_START_END_VALIDATION_MIDWAYDB, IResponse.ERROR_MESSAGE);
@@ -423,7 +421,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 					Criteria.where("date").gte(startDate).orOperator(Criteria.where("date").lte(endDate)))
 					.addCriteria(Criteria.where("isValid").is(true));
 
-			LOGGER.info("searchDeviceQuery::::::::::::::" + searchDeviceQuery);
+			LOGGER.debug("searchDeviceQuery::::::::::::::" + searchDeviceQuery);
 
 			final List<DeviceConnection> deviceConnectionUsage = mongoTemplate.find(searchDeviceQuery, DeviceConnection.class);
 
@@ -431,7 +429,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 			if (deviceConnectionUsage != null) {
 				deviceConnectionUsageSize = deviceConnectionUsage.size();
-				LOGGER.info("deviceConnectionUsage size is....." + deviceConnectionUsageSize);
+				LOGGER.debug("deviceConnectionUsage size is....." + deviceConnectionUsageSize);
 			}
 
 			if (deviceConnectionUsageSize == 0) {
@@ -445,7 +443,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 					if (deviceConnection.getEvent() != null) {
 						final DeviceEvent[] deviceEventArr = deviceConnection.getEvent();
 
-						LOGGER.info("device event size for Date " + deviceConnection.getDate() + " is " + deviceEventArr.length);
+						LOGGER.debug("device event size for Date " + deviceConnection.getDate() + " is " + deviceEventArr.length);
 
 						for (DeviceEvent deviceEvent : deviceEventArr) {
 							final String eventType = deviceEvent.getEventType();
@@ -505,7 +503,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 
 			final AggregationResults<DevicesUsageByDayAndCarrier> results = mongoTemplate.aggregate(agg, DeviceUsage.class, DevicesUsageByDayAndCarrier.class);
 
-			LOGGER.info("aggregation result is......" + results);
+			LOGGER.debug("aggregation result is......" + results);
 
 			if (results == null || results.getMappedResults().size() == 0) {
 				final Response response =
@@ -515,7 +513,7 @@ public class DeviceDaoImpl implements IDeviceDao {
 				final Response response =
 						new Response(IResponse.SUCCESS_CODE, IResponse.SUCCESS_DESCRIPTION_DEVICEINFO_MIDWAYDB, IResponse.SUCCESS_MESSAGE);
 
-				LOGGER.info("size of result is     ......" + results.getMappedResults().size());
+				LOGGER.debug("size of result is     ......" + results.getMappedResults().size());
 
 				final DevicesUsageByDayAndCarrierResponseDataArea devicesUsageByDayAndCarrierResponseDataArea = new DevicesUsageByDayAndCarrierResponseDataArea();
 				devicesUsageByDayAndCarrierResponseDataArea.setDevices(results.getMappedResults());
@@ -572,6 +570,6 @@ public class DeviceDaoImpl implements IDeviceDao {
 				}
 			}
 		}
-		throw new InvalidParameterException("402", "Cannot find a compatible DeviceId for the Carriers to consume for netSuitId " + netSuiteId + ".");
+		throw new InvalidParameterException("400", "Cannot find a compatible DeviceId for the Carriers to consume for netSuitId " + netSuiteId + ".");
 	}
 }

@@ -19,7 +19,7 @@ public class StubVerizonDeviceConnectionStatusProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        LOGGER.info("Begin::StubVerizonDeviceConnectionStatusProcessor");
+        LOGGER.debug("Begin::StubVerizonDeviceConnectionStatusProcessor");
 
         ConnectionStatusResponse connectionStatusReponse = new ConnectionStatusResponse();
 
@@ -46,7 +46,7 @@ public class StubVerizonDeviceConnectionStatusProcessor implements Processor {
         connectionStatusReponse.setDataArea(dataArea);
 
         exchange.getIn().setBody(connectionStatusReponse);
-        LOGGER.info("End::StubVerizonDeviceConnectionStatusProcessor");
+        LOGGER.debug("End::StubVerizonDeviceConnectionStatusProcessor");
     }
 
 }

@@ -12,8 +12,7 @@ public class DeviceInformationSplitter {
 
     public List<DeviceInformation> split(List<DeviceInformation> deviceList) {
 
-        LOGGER.info("*****************SPLITTER*********************"
-                + deviceList.size());
+        LOGGER.debug("*****************SPLITTER*********************" + deviceList.size());
         return deviceList;
     }
 }

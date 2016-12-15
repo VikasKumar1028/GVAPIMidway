@@ -30,7 +30,7 @@ class TestVerizonDeviceUsageHistoryPreProcessor extends TestMocks {
       deviceInfo.setNetSuiteId(netSuiteId)
       deviceInfo.setCurrentServicePlan(currentServicePlan)
 
-      when(exchange.getProperty(IConstant.VZ_SEESION_TOKEN)).thenReturn("sessionToken", Nil: _*)
+      when(exchange.getProperty(IConstant.VZ_SESSION_TOKEN)).thenReturn("sessionToken", Nil: _*)
       when(exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN)).thenReturn("authToken", Nil: _*)
       when(exchange.getProperty("jobStartTime")).thenReturn(startTime, Nil: _*)
       when(exchange.getProperty("jobEndTime")).thenReturn(endTime, Nil: _*)

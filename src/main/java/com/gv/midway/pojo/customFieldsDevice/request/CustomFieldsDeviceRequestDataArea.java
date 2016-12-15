@@ -3,8 +3,7 @@ package com.gv.midway.pojo.customFieldsDevice.request;
 import java.util.Arrays;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gv.midway.pojo.MidWayDevices;
-import com.gv.midway.pojo.verizon.CustomFields;
-import com.gv.midway.pojo.verizon.CustomFieldsToUpdate;
+import com.gv.midway.pojo.KeyValuePair;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -27,10 +26,10 @@ public class CustomFieldsDeviceRequestDataArea {
     private String servicePlan;
 
     @ApiModelProperty(value = "Custom field names and values, if you want to only include devices that have matching values.")
-    private CustomFields[] customFields;
+    private KeyValuePair[] customFields;
 
     @ApiModelProperty(value = "The names and new values of any custom fields that you want to change.")
-    private CustomFieldsToUpdate[] customFieldsToUpdate;
+    private KeyValuePair[] customFieldsToUpdate;
 
     public String getAccountName() {
         return accountName;
@@ -56,12 +55,12 @@ public class CustomFieldsDeviceRequestDataArea {
         this.servicePlan = servicePlan;
     }
 
-    public CustomFieldsToUpdate[] getCustomFieldsToUpdate() {
+    public KeyValuePair[] getCustomFieldsToUpdate() {
         return customFieldsToUpdate;
     }
 
     public void setCustomFieldsToUpdate(
-            CustomFieldsToUpdate[] customFieldsToUpdate) {
+            KeyValuePair[] customFieldsToUpdate) {
         this.customFieldsToUpdate = customFieldsToUpdate;
     }
 
@@ -73,11 +72,11 @@ public class CustomFieldsDeviceRequestDataArea {
         this.devices = devices;
     }
 
-    public CustomFields[] getCustomFields() {
+    public KeyValuePair[] getCustomFields() {
         return customFields;
     }
 
-    public void setCustomFields(CustomFields[] customFields) {
+    public void setCustomFields(KeyValuePair[] customFields) {
         this.customFields = customFields;
     }
 

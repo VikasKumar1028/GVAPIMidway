@@ -20,9 +20,9 @@ public class VerizonTransactionFailureDeviceConnectionHistoryPreProcessor implem
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		LOGGER.info("Begin:VerizonTransactionFailureDeviceConnectionHistoryPreProcessor");
-		LOGGER.info("Session Parameters  VZSessionToken" + exchange.getProperty(IConstant.VZ_SEESION_TOKEN));
-		LOGGER.info("Session Parameters  VZAuthorization" + exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN));
+		LOGGER.debug("Begin:VerizonTransactionFailureDeviceConnectionHistoryPreProcessor");
+		LOGGER.debug("Session Parameters  VZSessionToken" + exchange.getProperty(IConstant.VZ_SESSION_TOKEN));
+		LOGGER.debug("Session Parameters  VZAuthorization" + exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN));
 
 		final DeviceConnection deviceInfo = (DeviceConnection) exchange.getIn().getBody();
 		final String jobStartTime = exchange.getProperty(IConstant.JOB_START_TIME).toString();
@@ -50,6 +50,6 @@ public class VerizonTransactionFailureDeviceConnectionHistoryPreProcessor implem
 		exchange.getIn().setBody(strRequestBody);
 		exchange.setPattern(ExchangePattern.InOut);
 
-		LOGGER.info("End:VerizonTransactionFailureDeviceConnectionHistoryPreProcessor");
+		LOGGER.debug("End:VerizonTransactionFailureDeviceConnectionHistoryPreProcessor");
 	}
 }

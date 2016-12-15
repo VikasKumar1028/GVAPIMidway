@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.gv.midway.pojo.KeyValuePair;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
@@ -16,7 +17,6 @@ import com.gv.midway.pojo.Response;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponse;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponseDataArea;
-import com.gv.midway.pojo.verizon.CustomFields;
 import com.gv.midway.pojo.verizon.DeviceId;
 import com.gv.midway.attjasper.GetTerminalDetailsResponse;
 import com.gv.midway.attjasper.GetTerminalDetailsResponse.Terminals;
@@ -42,7 +42,7 @@ public class ATTJasperDeviceInformationPostProcessor implements Processor {
 	public void process(Exchange exchange) throws Exception {
 		// TODO Auto-generated method stub
 
-		LOGGER.info("Begin:ATT_JasperDeviceInformationPostProcessor");
+		LOGGER.debug("Begin:ATT_JasperDeviceInformationPostProcessor");
 
 		GetTerminalDetailsResponse getTerminalDetailsResponse = exchange
 				.getIn().getBody(GetTerminalDetailsResponse.class);
@@ -127,45 +127,45 @@ public class ATTJasperDeviceInformationPostProcessor implements Processor {
 
 		deviceInformation.setDeviceIds(deviceIds);
 
-		CustomFields[] customFields = new CustomFields[10];
+		KeyValuePair[] customFields = new KeyValuePair[10];
 
-		CustomFields customFields1 = new CustomFields();
+		KeyValuePair customFields1 = new KeyValuePair();
 		customFields1.setKey("CustomField1");
 		customFields1.setValue(terminalType.get(0).getCustom1());
 
-		CustomFields customFields2 = new CustomFields();
+		KeyValuePair customFields2 = new KeyValuePair();
 		customFields2.setKey("CustomField2");
 		customFields2.setValue(terminalType.get(0).getCustom2());
 
-		CustomFields customFields3 = new CustomFields();
+		KeyValuePair customFields3 = new KeyValuePair();
 		customFields3.setKey("CustomField3");
 		customFields3.setValue(terminalType.get(0).getCustom3());
 
-		CustomFields customFields4 = new CustomFields();
+		KeyValuePair customFields4 = new KeyValuePair();
 		customFields4.setKey("CustomField4");
 		customFields4.setValue(terminalType.get(0).getCustom4());
 
-		CustomFields customFields5 = new CustomFields();
+		KeyValuePair customFields5 = new KeyValuePair();
 		customFields5.setKey("CustomField5");
 		customFields5.setValue(terminalType.get(0).getCustom5());
 
-		CustomFields customFields6 = new CustomFields();
+		KeyValuePair customFields6 = new KeyValuePair();
 		customFields6.setKey("CustomField6");
 		customFields6.setValue(terminalType.get(0).getCustom6());
 
-		CustomFields customFields7 = new CustomFields();
+		KeyValuePair customFields7 = new KeyValuePair();
 		customFields7.setKey("CustomField7");
 		customFields7.setValue(terminalType.get(0).getCustom7());
 
-		CustomFields customFields8 = new CustomFields();
+		KeyValuePair customFields8 = new KeyValuePair();
 		customFields8.setKey("CustomField8");
 		customFields8.setValue(terminalType.get(0).getCustom8());
 
-		CustomFields customFields9 = new CustomFields();
+		KeyValuePair customFields9 = new KeyValuePair();
 		customFields9.setKey("CustomField9");
 		customFields9.setValue(terminalType.get(0).getCustom9());
 
-		CustomFields customFields10 = new CustomFields();
+		KeyValuePair customFields10 = new KeyValuePair();
 		customFields10.setKey("CustomField10");
 		customFields10.setValue(terminalType.get(0).getCustom10());
 
@@ -182,25 +182,25 @@ public class ATTJasperDeviceInformationPostProcessor implements Processor {
 
 		deviceInformation.setCustomFields(customFields);
 
-		CustomFields[] customerCustomFields = new CustomFields[5];
+		KeyValuePair[] customerCustomFields = new KeyValuePair[5];
 
-		CustomFields customerCustomFields1 = new CustomFields();
+		KeyValuePair customerCustomFields1 = new KeyValuePair();
 		customerCustomFields1.setKey("customerCustom1");
 		customerCustomFields1.setValue(terminalType.get(0).getCustomerCustom1());
 
-		CustomFields customerCustomFields2 = new CustomFields();
+		KeyValuePair customerCustomFields2 = new KeyValuePair();
 		customerCustomFields2.setKey("customerCustom2");
 		customerCustomFields2.setValue(terminalType.get(0).getCustomerCustom2());
 
-		CustomFields customerCustomFields3 = new CustomFields();
+		KeyValuePair customerCustomFields3 = new KeyValuePair();
 		customerCustomFields3.setKey("customerCustom3");
 		customerCustomFields3.setValue(terminalType.get(0).getCustomerCustom3());
 
-		CustomFields customerCustomFields4 = new CustomFields();
+		KeyValuePair customerCustomFields4 = new KeyValuePair();
 		customerCustomFields4.setKey("customerCustom4");
 		customerCustomFields4.setValue(terminalType.get(0).getCustomerCustom4());
 
-		CustomFields customerCustomFields5 = new CustomFields();
+		KeyValuePair customerCustomFields5 = new KeyValuePair();
 		customerCustomFields5.setKey("customerCustom5");
 		customerCustomFields5.setValue(terminalType.get(0).getCustomerCustom5());
 
@@ -212,25 +212,25 @@ public class ATTJasperDeviceInformationPostProcessor implements Processor {
 
 		deviceInformation.setCustomerCustomFields(customerCustomFields);
 
-		CustomFields[] operatorCustomFields = new CustomFields[5];
+		KeyValuePair[] operatorCustomFields = new KeyValuePair[5];
 
-		CustomFields operatorCustomFields1 = new CustomFields();
+		KeyValuePair operatorCustomFields1 = new KeyValuePair();
 		operatorCustomFields1.setKey("operatorCustom1");
 		operatorCustomFields1.setValue(terminalType.get(0).getOperatorCustom1());
 
-		CustomFields operatorCustomFields2 = new CustomFields();
+		KeyValuePair operatorCustomFields2 = new KeyValuePair();
 		operatorCustomFields2.setKey("operatorCustom2");
 		operatorCustomFields2.setValue(terminalType.get(0).getOperatorCustom2());
 
-		CustomFields operatorCustomFields3 = new CustomFields();
+		KeyValuePair operatorCustomFields3 = new KeyValuePair();
 		operatorCustomFields3.setKey("operatorCustom3");
 		operatorCustomFields3.setValue(terminalType.get(0).getOperatorCustom3());
 
-		CustomFields operatorCustomFields4 = new CustomFields();
+		KeyValuePair operatorCustomFields4 = new KeyValuePair();
 		operatorCustomFields4.setKey("operatorCustom4");
 		operatorCustomFields4.setValue(terminalType.get(0).getOperatorCustom4());
 
-		CustomFields operatorCustomFields5 = new CustomFields();
+		KeyValuePair operatorCustomFields5 = new KeyValuePair();
 		operatorCustomFields5.setKey("operatorCustom5");
 		operatorCustomFields5.setValue(terminalType.get(0).getOperatorCustom5());
 
@@ -241,7 +241,7 @@ public class ATTJasperDeviceInformationPostProcessor implements Processor {
 		operatorCustomFields[3] = operatorCustomFields4;
 		operatorCustomFields[4] = operatorCustomFields5;
 
-		deviceInformation.setOpeartorCustomFields(operatorCustomFields);
+		deviceInformation.setOperatorCustomFields(operatorCustomFields);
 
 		deviceInformation.setLastUpdated(new Date());
 
@@ -265,6 +265,6 @@ public class ATTJasperDeviceInformationPostProcessor implements Processor {
 		deviceInformationResponse.setDataArea(deviceInformationResponseDataArea);
 
 		exchange.getIn().setBody(deviceInformationResponse);
-		LOGGER.info("End:ATTJasperDeviceInformationPostProcessor");
+		LOGGER.debug("End:ATTJasperDeviceInformationPostProcessor");
 	}
 }

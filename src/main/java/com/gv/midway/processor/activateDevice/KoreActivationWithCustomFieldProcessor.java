@@ -37,12 +37,12 @@ public class KoreActivationWithCustomFieldProcessor implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {
-        LOGGER.info("Begin:KoreActivationWithCustomFieldProcessor");
+        LOGGER.debug("Begin:KoreActivationWithCustomFieldProcessor");
 
         final String midWayTransactionDeviceNumber = (String) exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER);
         final String midWayTransactionId = (String) exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID);
         final Integer netSuiteID = (Integer) exchange.getProperty(IConstant.MIDWAY_NETSUITE_ID);
-        final Object body = exchange.getProperty(IConstant.KORE_ACTIVATION_CUSTOMEFIELD_PAYLOAD);
+        final Object body = exchange.getProperty(IConstant.KORE_ACTIVATION_CUSTOMFIELD_PAYLOAD);
         final KafkaNetSuiteCallBackEvent netSuiteCallBackEvent = (KafkaNetSuiteCallBackEvent) exchange.getProperty(IConstant.KAFKA_OBJECT);
 
         final String desc = "Successful callBack from Kore For "
@@ -70,8 +70,8 @@ public class KoreActivationWithCustomFieldProcessor implements Processor {
 
         final NetSuiteOAuthHeaderProperties properties = EnvironmentParser.getNetSuiteOAuthHeaderProperties(newEnv);
 
-        LOGGER.info("request type for NetSuite CallBack success is..." + RequestType.CHANGECUSTOMFIELDS);
-        LOGGER.info("oauth info is....." + properties);
+        LOGGER.debug("request type for NetSuite CallBack success is..." + RequestType.CHANGECUSTOMFIELDS);
+        LOGGER.debug("oauth info is....." + properties);
 
         //final String script = "539";
         final String script = newEnv.getProperty("netSuite.callbacks.script");
@@ -79,6 +79,7 @@ public class KoreActivationWithCustomFieldProcessor implements Processor {
 
         exchange.setProperty(IConstant.KAFKA_OBJECT, netSuiteCallBackEvent);
         exchange.setProperty("script", script);
+        exchange.setProperty(IConstant.MIDWAY_TRANSACTION_REQUEST_TYPE, RequestType.CHANGECUSTOMFIELDS);
         exchange.setPattern(ExchangePattern.InOut);
 
         final Message message = exchange.getIn();
@@ -89,7 +90,7 @@ public class KoreActivationWithCustomFieldProcessor implements Processor {
         message.setHeader(Exchange.HTTP_PATH, null);
         message.setBody(netSuiteCallBackProvisioningRequest);
 
-        LOGGER.info("successful callback response to Kore for activation with Custom Field..." + exchange.getIn().getBody());
-        LOGGER.info("End:KoreActivationWithCustomFieldProcessor");
+        LOGGER.debug("successful callback response to Kore for activation with Custom Field..." + exchange.getIn().getBody());
+        LOGGER.debug("End:KoreActivationWithCustomFieldProcessor");
     }
 }

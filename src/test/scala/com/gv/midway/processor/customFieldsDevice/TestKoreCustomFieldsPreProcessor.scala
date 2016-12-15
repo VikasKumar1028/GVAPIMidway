@@ -1,34 +1,32 @@
 package com.gv.midway.processor.customFieldsDevice
 
-import com.gv.midway.TestMocks
+import com.gv.midway.{KoreSuite, TestMocks}
 import com.gv.midway.constant.IConstant
 import com.gv.midway.pojo.customFieldsDevice.kore.request.CustomFieldsDeviceRequestKore
-import com.gv.midway.pojo.{MidWayDeviceId, MidWayDevices}
+import com.gv.midway.pojo.{KeyValuePair, MidWayDeviceId, MidWayDevices}
 import com.gv.midway.pojo.customFieldsDevice.request.{CustomFieldsDeviceRequest, CustomFieldsDeviceRequestDataArea}
 import com.gv.midway.pojo.transaction.Transaction
-import com.gv.midway.pojo.verizon.CustomFieldsToUpdate
-import org.apache.camel.{Exchange, ExchangePattern}
+import org.apache.camel.ExchangePattern
 import org.mockito.ArgumentCaptor
 import org.mockito.Mockito._
-import org.springframework.core.env.Environment
 
-class TestKoreCustomFieldsPreProcessor extends TestMocks {
+class TestKoreCustomFieldsPreProcessor extends TestMocks with KoreSuite {
 
   test("process") {
-    withMockExchangeAndMessage { (exchange, message) =>
+    withMockExchangeMessageAndEnvironment { (exchange, message, environment) =>
 
       val deviceId = new MidWayDeviceId("id", "kind")
 
       val device1 = new MidWayDevices
       device1.setDeviceIds(Array(deviceId))
 
-      val customField1 = new CustomFieldsToUpdate("CustomField1", "v1")
-      val customField2 = new CustomFieldsToUpdate("CustomField2", "v2")
-      val customField3 = new CustomFieldsToUpdate("CustomField3", "v3")
-      val customField4 = new CustomFieldsToUpdate("CustomField4", "v4")
-      val customField5 = new CustomFieldsToUpdate("CustomField5", "v5")
-      val customField6 = new CustomFieldsToUpdate("CustomField6", "v6")
-      val customField7 = new CustomFieldsToUpdate("invalid key", "v7")
+      val customField1 = new KeyValuePair("CustomField1", "v1")
+      val customField2 = new KeyValuePair("CustomField2", "v2")
+      val customField3 = new KeyValuePair("CustomField3", "v3")
+      val customField4 = new KeyValuePair("CustomField4", "v4")
+      val customField5 = new KeyValuePair("CustomField5", "v5")
+      val customField6 = new KeyValuePair("CustomField6", "v6")
+      val customField7 = new KeyValuePair("invalid key", "v7")
 
       val dataArea = new CustomFieldsDeviceRequestDataArea
       dataArea.setDevices(Array(device1))
@@ -45,19 +43,11 @@ class TestKoreCustomFieldsPreProcessor extends TestMocks {
 
       when(message.getBody(classOf[Transaction])).thenReturn(trans, Nil: _*)
 
-      val koreAuth = "koreAuth"
-      val environment = mock[Environment]
-      when(environment.getProperty(IConstant.KORE_AUTHENTICATION)).thenReturn(koreAuth)
-
       val captor = ArgumentCaptor.forClass(classOf[CustomFieldsDeviceRequestKore])
 
       new KoreCustomFieldsPreProcessor(environment).process(exchange)
 
-      verify(message, times(1)).setHeader(Exchange.CONTENT_TYPE, "application/json")
-      verify(message, times(1)).setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json")
-      verify(message, times(1)).setHeader(Exchange.HTTP_METHOD, "POST")
-      verify(message, times(1)).setHeader("Authorization", koreAuth)
-      verify(message, times(1)).setHeader(Exchange.HTTP_PATH, "/json/modifyDeviceCustomInfo")
+      assertKoreRequest(message, "/json/modifyDeviceCustomInfo")
       verify(message, times(1)).setBody(captor.capture())
 
       val request = captor.getValue

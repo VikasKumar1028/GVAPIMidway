@@ -1,6 +1,5 @@
 package com.gv.midway.processor.activateDevice
 
-import org.apache.cxf.binding.soap.SoapHeader
 import com.gv.midway.TestMocks
 import com.gv.midway.attjasper.EditTerminalRequest
 import com.gv.midway.constant.IConstant
@@ -8,10 +7,11 @@ import com.gv.midway.pojo.activateDevice.request.{ActivateDeviceId, ActivateDevi
 import com.gv.midway.pojo.transaction.Transaction
 import org.apache.camel.ExchangePattern
 import org.apache.camel.component.cxf.common.message.CxfConstants
-import org.mockito.ArgumentCaptor
+import org.apache.cxf.binding.soap.SoapHeader
 import org.apache.cxf.headers.Header
-import org.mockito.Mockito._
+import org.mockito.ArgumentCaptor
 import org.mockito.Matchers._
+import org.mockito.Mockito._
 
 class TestATTJasperActivateDevicePreProcessor extends TestMocks {
 
@@ -23,10 +23,10 @@ class TestATTJasperActivateDevicePreProcessor extends TestMocks {
 
     withMockExchangeMessageAndEnvironment { (exchange, message, environment) =>
       List(
-        ("attJasper.version", version)
-        , ("attJasper.licenseKey", licenseKey)
-        , ("attJasper.userName", "user")
-        , ("attJasper.password", "password")
+        (IConstant.ATTJASPER_VERSION, version)
+        , (IConstant.ATTJASPER_LICENSE_KEY, licenseKey)
+        , (IConstant.ATTJASPER_USERNAME, "user")
+        , (IConstant.ATTJASPER_PASSWORD, "password")
       ).foreach { case (k, v) =>
           when(environment.getProperty(k)).thenReturn(v, Nil: _*)
       }

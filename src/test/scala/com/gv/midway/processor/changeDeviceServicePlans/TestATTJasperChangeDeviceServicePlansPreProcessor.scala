@@ -2,9 +2,9 @@ package com.gv.midway.processor.changeDeviceServicePlans
 
 import com.gv.midway.attjasper.EditTerminalRequest
 import com.gv.midway.constant.IConstant
-import com.gv.midway.pojo.{MidWayDeviceId, MidWayDevices}
 import com.gv.midway.pojo.changeDeviceServicePlans.request.{ChangeDeviceServicePlansRequest, ChangeDeviceServicePlansRequestDataArea}
 import com.gv.midway.pojo.transaction.Transaction
+import com.gv.midway.pojo.{MidWayDeviceId, MidWayDevices}
 import com.gv.midway.{ATTJasperSuite, TestMocks}
 import org.apache.camel.ExchangePattern
 import org.mockito.ArgumentCaptor
@@ -51,9 +51,9 @@ class TestATTJasperChangeDeviceServicePlansPreProcessor extends TestMocks with A
       assert(request.getChangeType === IConstant.ATTJASPER_RATE_PLAN_CHANGETYPE)
       assert(request.getTargetValue === servicePlan)
       assert(request.getIccid === id1.getId)
-      assert(request.getLicenseKey === propertyValue(attJasperLicenseKey))
+      assert(request.getLicenseKey === propertyValue(IConstant.ATTJASPER_LICENSE_KEY))
       assert(request.getMessageId != null)
-      assert(request.getVersion === propertyValue(attJasperVersion))
+      assert(request.getVersion === propertyValue(IConstant.ATTJASPER_VERSION))
 
       verify(exchange, times(1)).setProperty(IConstant.ATT_SERVICEPLAN_TO_UPDATE, servicePlan)
       verify(exchange, times(1)).setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER, deviceNumber)

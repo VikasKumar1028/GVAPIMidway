@@ -7,7 +7,7 @@ class TestAttCallBackRouter extends FunSuite {
 
   test("valid transaction") {
 
-    val answer = new AttCallBackRouter().checkStatsuOfPendigDevice(new Transaction)
+    val answer = new AttCallBackRouter().checkStatusOfPendingDevice(new Transaction)
     assert(answer === "seda:attSedaCallBack")
   }
 }

@@ -23,7 +23,7 @@ class TestKoreActivationWithCustomFieldProcessor extends TestMocks {
       when(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER)).thenReturn(deviceNumber, Nil: _*)
       when(exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID)).thenReturn(transId, Nil: _*)
       when(exchange.getProperty(IConstant.MIDWAY_NETSUITE_ID)).thenReturn(netSuiteId, Nil: _*)
-      when(exchange.getProperty(IConstant.KORE_ACTIVATION_CUSTOMEFIELD_PAYLOAD)).thenReturn(payload, Nil: _*)
+      when(exchange.getProperty(IConstant.KORE_ACTIVATION_CUSTOMFIELD_PAYLOAD)).thenReturn(payload, Nil: _*)
       when(exchange.getProperty(IConstant.KAFKA_OBJECT)).thenReturn(kafkaObject, Nil: _*)
 
       val environment = mock[Environment]

@@ -1,19 +1,19 @@
 package com.gv.midway.test.unit;
 
-import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IEndPoints;
 import com.gv.midway.pojo.CarrierProvisioningDeviceResponse;
 import com.gv.midway.pojo.CarrierProvisioningDeviceResponseDataArea;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.usageInformation.request.UsageInformationRequest;
 import com.gv.midway.pojo.usageInformation.verizon.response.VerizonUsageInformationResponse;
-import com.gv.midway.test.mock.processor.MockVerizonUsageInformationRequestProcessor;
+import com.gv.midway.service.IDeviceService;
 import com.gv.midway.utility.CommonUtil;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.AdviceWithRouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.model.RouteDefinition;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Created by ryan.tracy on 10/27/2016.
@@ -28,8 +28,8 @@ public class DeviceSessionUsageTests extends DeviceSessionTestSupport {
             @Override
             public void configure() throws Exception {
                 weaveById("getDeviceSessionUsage")
-                        .replace()
-                        .process(new MockVerizonUsageInformationRequestProcessor());
+                        .replace().bean(iDeviceService, "getDeviceSessionUsageMock");
+                        //.process(new MockVerizonUsageInformationRequestProcessor());
 
                 interceptSendToEndpoint("direct:retrieveDeviceUsageHistoryCarrier")
                         .to("log:input")

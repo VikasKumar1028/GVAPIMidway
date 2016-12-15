@@ -63,6 +63,12 @@
 
 	<bean id="iSchedulerService" class="com.gv.midway.service.impl.SchedulerServiceImpl" />
 
+	<bean id="iTransactionalService" class="com.gv.midway.service.impl.TransactionalServiceImpl" />
+
+	<bean id="iAuditService" class="com.gv.midway.service.impl.AuditServiceImpl" />
+
+	<bean id="iDeviceService" class="com.gv.midway.service.impl.DeviceServiceImpl" />
+
 	<bean id="getDeviceConnectionRouter" class="com.gv.midway.router.GetDeviceConnectionRouter" />
 	
 	<bean id="getDeviceUsageRouter" class="com.gv.midway.router.GetDeviceUsageRouter" />
@@ -77,6 +83,7 @@
 
 	<bean id="attCallBackRouter" class="com.gv.midway.router.AttCallBackRouter" />
 	<bean id="authorizationFilter" class="com.gv.midway.filters.AuthorizationRequestFilter"/>
+	<bean id="loggerResponseFilter" class="com.gv.midway.filters.LoggerResponseFilter"/>
 
 	<jaxrs:server id="GVJax" address="/">
 		<jaxrs:serviceBeans>
@@ -85,6 +92,7 @@
 		<jaxrs:providers>
 			<bean class="com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider" />
 			<ref bean="authorizationFilter" />
+			<ref bean="loggerResponseFilter" />
 		</jaxrs:providers>
 	</jaxrs:server>
 
@@ -173,24 +181,7 @@
 		<property name="scan" value="true" />
 	</bean>
 
-	<!--  <mongo:mongo id="midWayRs" replica-set="${mongo.replica-set}" />
-
-	<bean id="mongoCredentials" class="org.springframework.data.authentication.UserCredentials">
-		<constructor-arg name="username" value="${mongo.username:#{null}}"/>
-		<constructor-arg name="password" value="${mongo.password:#{null}}" />
-	</bean>
-
-	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
-		<constructor-arg ref="midWayRs"/>
-		<constructor-arg name="databaseName" value="${mongo.dbname}"/>
-		<constructor-arg name="userCredentials" ref="mongoCredentials"/>
-		<property name="writeConcern">
-			<util:constant static-field="com.mongodb.WriteConcern.SAFE" />
-		</property>
-	</bean> -->
-	
-	<!--  comment the credentials property if you are not using username and password for authentication for your local development environment-->
-	<mongo:mongo-client replica-set="${mongo.replica-set}" id="mongo" credentials="${mongo.username}:${mongo.password}@${mongo.dbname}" >
+	<mongo:mongo-client replica-set="${mongo.replica-set}" id="mongo"  >
         <mongo:client-options write-concern="SAFE"/>
     </mongo:mongo-client>
 		

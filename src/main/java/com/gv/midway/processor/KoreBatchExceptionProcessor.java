@@ -27,7 +27,7 @@ public class KoreBatchExceptionProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        LOGGER.info("Begin:KoreBatchExceptionProcessor");
+        LOGGER.debug("Begin:KoreBatchExceptionProcessor");
         final Exception ex = (Exception) exchange.getProperty(Exchange.EXCEPTION_CAUGHT);
 
         String errorType;
@@ -37,7 +37,7 @@ public class KoreBatchExceptionProcessor implements Processor {
                 || ex.getCause() instanceof ConnectException
                 || ex.getCause() instanceof NoRouteToHostException
                 || ex.getCause() instanceof SocketTimeoutException) {
-            LOGGER.info("reason of connection error is......." + CommonUtil.getStackTrace(ex));
+            LOGGER.error("reason of connection error is......." + CommonUtil.getStackTrace(ex));
             errorType = IConstant.MIDWAY_CONNECTION_ERROR;
         }
         // CXF Exception
@@ -58,7 +58,7 @@ public class KoreBatchExceptionProcessor implements Processor {
         deviceUsage.setDeviceId((DeviceId) exchange.getProperty("DeviceId"));
         deviceUsage.setDataUsed(0);
         final String date = jobDetail.getDate();
-        LOGGER.info("----------------------D----A-----T-------E-------" + date);
+        LOGGER.debug("----------------------D----A-----T-------E-------" + date);
         deviceUsage.setDate(date);
         deviceUsage.setTransactionErrorReason(errorType);
         deviceUsage.setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
@@ -67,6 +67,6 @@ public class KoreBatchExceptionProcessor implements Processor {
         deviceUsage.setJobId(jobDetail.getJobId());
 
         exchange.getIn().setBody(deviceUsage);
-        LOGGER.info("End:KoreBatchExceptionProcessor");
+        LOGGER.debug("End:KoreBatchExceptionProcessor");
     }
 }

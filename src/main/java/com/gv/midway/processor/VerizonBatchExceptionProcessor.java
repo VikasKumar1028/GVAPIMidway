@@ -30,7 +30,7 @@ public class VerizonBatchExceptionProcessor implements Processor {
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		LOGGER.info("Begin:VerizonBatchExceptionProcessor");
+		LOGGER.debug("Begin:VerizonBatchExceptionProcessor");
 		final Exception ex = (Exception) exchange.getProperty(Exchange.EXCEPTION_CAUGHT);
 
 		final String errorType;
@@ -41,7 +41,7 @@ public class VerizonBatchExceptionProcessor implements Processor {
 				|| ex.getCause() instanceof NoRouteToHostException
 				|| ex.getCause() instanceof SocketTimeoutException) {
 
-			LOGGER.info("reason of connection error is......." + CommonUtil.getStackTrace(ex));
+			LOGGER.warn("reason of connection error is......." + CommonUtil.getStackTrace(ex));
 			errorType = IConstant.MIDWAY_CONNECTION_ERROR;
 		}
 		// CXF Exception
@@ -83,7 +83,7 @@ public class VerizonBatchExceptionProcessor implements Processor {
 				|| jobDetail.getName().equals(JobName.VERIZON_DEVICE_USAGE)) {
 
 			final String date = jobDetail.getDate();
-			LOGGER.info("----------------------D----A-----T-------E-------" + date);
+			LOGGER.debug("----------------------D----A-----T-------E-------" + date);
 
 			final DeviceUsage deviceUsage = new DeviceUsage();
 			deviceUsage.setCarrierName((String) exchange.getProperty("CarrierName"));
@@ -100,7 +100,7 @@ public class VerizonBatchExceptionProcessor implements Processor {
 		} else {
 
 			final String date = jobDetail.getDate();
-			LOGGER.info("----------------------D----A-----T-------E-------" + date);
+			LOGGER.debug("----------------------D----A-----T-------E-------" + date);
 
 			final DeviceConnection deviceConnection = new DeviceConnection();
 			deviceConnection.setCarrierName((String) exchange.getProperty("CarrierName"));
@@ -114,7 +114,7 @@ public class VerizonBatchExceptionProcessor implements Processor {
 			deviceConnection.setJobId(jobDetail.getJobId());
 
 			exchange.getIn().setBody(deviceConnection);
-			LOGGER.info("End:VerizonBatchExceptionProcessor");
+			LOGGER.debug("End:VerizonBatchExceptionProcessor");
 		}
 	}
 }

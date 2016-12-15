@@ -1,7 +1,7 @@
 package com.gv.midway.pojo.customFieldsDevice.kore.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.gv.midway.pojo.verizon.CustomFieldsToUpdate;
+import com.gv.midway.pojo.KeyValuePair;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 public class CustomFieldsDeviceRequestKore {
@@ -159,9 +159,9 @@ public class CustomFieldsDeviceRequestKore {
         this.customField6 = customField6;
     }
 
-    public void updateCustomFields(CustomFieldsToUpdate[] customFieldsArr) {
+    public void updateCustomFields(KeyValuePair[] customFieldsArr) {
         if (customFieldsArr != null) {
-            for (final CustomFieldsToUpdate customField : customFieldsArr) {
+            for (final KeyValuePair customField : customFieldsArr) {
                 final String key = customField.getKey();
 
                 switch (key) {

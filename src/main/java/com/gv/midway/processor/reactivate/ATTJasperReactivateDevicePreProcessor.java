@@ -35,7 +35,7 @@ public class ATTJasperReactivateDevicePreProcessor implements Processor {
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		LOGGER.info("Begin:ATTJasperReactivateDevicePreProcessor");
+		LOGGER.debug("Begin:ATTJasperReactivateDevicePreProcessor");
 
 		final Message message = exchange.getIn();
 		final Transaction transaction = message.getBody(Transaction.class);
@@ -53,7 +53,7 @@ public class ATTJasperReactivateDevicePreProcessor implements Processor {
 		editTerminalRequest.setMessageId("" + new Date().getTime());
 		editTerminalRequest.setVersion(properties.version);
 
-		LOGGER.info("Reactivate of iccId..............." + deviceId);
+		LOGGER.debug("Reactivate of iccId..............." + deviceId);
 
 		final List<SoapHeader> soapHeaders = CommonUtil.getSOAPHeaders(properties.username, properties.password);
 
@@ -67,6 +67,6 @@ public class ATTJasperReactivateDevicePreProcessor implements Processor {
 		exchange.setProperty(IConstant.MIDWAY_NETSUITE_ID, transaction.getNetSuiteId());
 		exchange.setPattern(ExchangePattern.InOut);
 
-		LOGGER.info("End:ATTJasperReactivateDevicePreProcessor");
+		LOGGER.debug("End:ATTJasperReactivateDevicePreProcessor");
 	}
 }

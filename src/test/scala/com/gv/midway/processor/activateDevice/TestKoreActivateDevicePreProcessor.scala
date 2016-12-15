@@ -1,22 +1,20 @@
 package com.gv.midway.processor.activateDevice
 
-import com.gv.midway.TestMocks
+import com.gv.midway.{KoreSuite, TestMocks}
 import com.gv.midway.constant.IConstant
 import com.gv.midway.pojo.activateDevice.kore.request.ActivateDeviceRequestKore
 import com.gv.midway.pojo.activateDevice.request.{ActivateDeviceId, ActivateDeviceRequest, ActivateDeviceRequestDataArea, ActivateDevices}
 import com.gv.midway.pojo.transaction.Transaction
-import org.apache.camel.{Exchange, ExchangePattern}
+import org.apache.camel.ExchangePattern
 import org.mockito.ArgumentCaptor
 import org.mockito.Mockito._
 
-class TestKoreActivateDevicePreProcessor extends TestMocks {
+class TestKoreActivateDevicePreProcessor extends TestMocks with KoreSuite {
 
   test("process") {
-    val koreAuth = "koreAuth"
     val deviceNumber = "deviceNumber"
 
     withMockExchangeMessageAndEnvironment { (exchange, message, environment) =>
-      when(environment.getProperty(IConstant.KORE_AUTHENTICATION)).thenReturn(koreAuth)
 
       val id1 = new ActivateDeviceId("id1id", "kind1kind")
       val devices = new ActivateDevices
@@ -37,11 +35,7 @@ class TestKoreActivateDevicePreProcessor extends TestMocks {
 
       new KoreActivateDevicePreProcessor(environment).process(exchange)
 
-      verify(message, times(1)).setHeader(Exchange.CONTENT_TYPE, "application/json")
-      verify(message, times(1)).setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json")
-      verify(message, times(1)).setHeader(Exchange.HTTP_METHOD, "POST")
-      verify(message, times(1)).setHeader("Authorization", koreAuth)
-      verify(message, times(1)).setHeader(Exchange.HTTP_PATH, "/json/activateDevice")
+      assertKoreRequest(message, "/json/activateDevice")
       verify(message, times(1)).setBody(captor.capture())
 
       verify(exchange, times(1)).setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER, deviceNumber)

@@ -19,7 +19,7 @@ public class StubVerizonRestoreDeviceProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        LOGGER.info("Begin:StubVerizonRestoreDeviceProcessor");
+        LOGGER.debug("Begin:StubVerizonRestoreDeviceProcessor");
         CarrierProvisioningDeviceResponse restoreDeviceResponse = new CarrierProvisioningDeviceResponse();
 
         CarrierProvisioningDeviceResponseDataArea restoreDeviceResponseDataArea = new CarrierProvisioningDeviceResponseDataArea();
@@ -47,6 +47,6 @@ public class StubVerizonRestoreDeviceProcessor implements Processor {
         restoreDeviceResponse.setDataArea(restoreDeviceResponseDataArea);
 
         exchange.getIn().setBody(restoreDeviceResponse);
-        LOGGER.info("End:StubVerizonRestoreDeviceProcessor");
+        LOGGER.debug("End:StubVerizonRestoreDeviceProcessor");
     }
 }

@@ -1,5 +1,6 @@
 package com.gv.midway.processor.cell;
 
+import com.gv.midway.pojo.KeyValuePair;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
@@ -17,7 +18,6 @@ import com.gv.midway.pojo.deviceInformation.response.DeviceInformation;
 import com.gv.midway.pojo.deviceInformation.response.DeviceInformationResponseDataArea;
 import com.gv.midway.pojo.deviceInformation.response.Features;
 import com.gv.midway.pojo.deviceInformation.verizon.response.ExtendedAttributes;
-import com.gv.midway.pojo.verizon.CustomFields;
 import com.gv.midway.pojo.verizon.DeviceId;
 
 public class StubCellBulkUploadProcessor implements Processor {
@@ -27,7 +27,7 @@ public class StubCellBulkUploadProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
-    	LOGGER.info("Begin:StubCellBulkUploadProcessor");
+    	LOGGER.debug("Begin:StubCellBulkUploadProcessor");
 
         DevicesDataArea deviceDataArea = new DevicesDataArea();
 
@@ -102,7 +102,7 @@ public class StubCellBulkUploadProcessor implements Processor {
         bs_plan.setFeatures(featureArray);
 
         deviceInformation1.setBs_plan(bs_plan);
-        deviceInformation1.setConnected(true);
+        deviceInformation1.setIsConnected(true);
         deviceInformation1.setCurrentServicePlan("PLAN_A");
         deviceInformation1.setCurrentSMSPlan("SMSPLAN_A");
         deviceInformation1.setDailyDataThreshold(10);
@@ -146,12 +146,12 @@ public class StubCellBulkUploadProcessor implements Processor {
 
         deviceInformation1.setExtendedAttributes(extendedAttributes);
 
-        CustomFields customFields = new CustomFields();
-        CustomFields customFields1 = new CustomFields();
-        CustomFields customFields2 = new CustomFields();
-        CustomFields customFields3 = new CustomFields();
-        CustomFields customFields4 = new CustomFields();
-        CustomFields customFields5 = new CustomFields();
+        KeyValuePair customFields = new KeyValuePair();
+        KeyValuePair customFields1 = new KeyValuePair();
+        KeyValuePair customFields2 = new KeyValuePair();
+        KeyValuePair customFields3 = new KeyValuePair();
+        KeyValuePair customFields4 = new KeyValuePair();
+        KeyValuePair customFields5 = new KeyValuePair();
 
         customFields.setKey("customField1");
         customFields.setValue("customField1");
@@ -169,7 +169,7 @@ public class StubCellBulkUploadProcessor implements Processor {
         customFields5.setKey("customField6");
         customFields5.setValue("customField6");
 
-        CustomFields[] arr = { customFields, customFields1, customFields2,
+        KeyValuePair[] arr = { customFields, customFields1, customFields2,
                 customFields3, customFields4, customFields5 };
 
         deviceInformation1.setCustomFields(arr);
@@ -216,7 +216,7 @@ public class StubCellBulkUploadProcessor implements Processor {
         bs_plan1.setFeatures(featureArray1);
 
         deviceInformation2.setBs_plan(bs_plan1);
-        deviceInformation2.setConnected(true);
+        deviceInformation2.setIsConnected(true);
         deviceInformation2.setCurrentServicePlan("PLAN_A");
         deviceInformation2.setCurrentSMSPlan("SMSPLAN_A");
         deviceInformation2.setDailyDataThreshold(10);
@@ -259,8 +259,8 @@ public class StubCellBulkUploadProcessor implements Processor {
 
         deviceInformation1.setExtendedAttributes(extendedAttributes1);
 
-        CustomFields customFields11 = new CustomFields();
-        CustomFields customFields21 = new CustomFields();
+        KeyValuePair customFields11 = new KeyValuePair();
+        KeyValuePair customFields21 = new KeyValuePair();
 
         customFields11.setKey("customField2");
         customFields11.setValue("customField2");
@@ -268,7 +268,7 @@ public class StubCellBulkUploadProcessor implements Processor {
         customFields21.setKey("customField3");
         customFields21.setValue("customField3");
 
-        CustomFields[] arr1 = { customFields11, customFields21 };
+        KeyValuePair[] arr1 = { customFields11, customFields21 };
 
         deviceInformation1.setCustomFields(arr1);
         deviceInformation1.setGroupName("GRP01");
@@ -291,7 +291,7 @@ public class StubCellBulkUploadProcessor implements Processor {
         exchange.getIn().setBody(batchDeviceResponse);
         LOGGER.info("Exchange Result is..........." + (batchDeviceResponse));
         
-    	LOGGER.info("End:StubCellBulkUploadProcessor");
+    	LOGGER.debug("End:StubCellBulkUploadProcessor");
     }
 
 }

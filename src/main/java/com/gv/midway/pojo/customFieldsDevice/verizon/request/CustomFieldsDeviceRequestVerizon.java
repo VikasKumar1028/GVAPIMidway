@@ -5,8 +5,7 @@ import java.util.Arrays;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.gv.midway.pojo.verizon.CustomFields;
-import com.gv.midway.pojo.verizon.CustomFieldsToUpdate;
+import com.gv.midway.pojo.KeyValuePair;
 import com.gv.midway.pojo.verizon.Devices;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
@@ -17,7 +16,7 @@ public class CustomFieldsDeviceRequestVerizon {
     private String accountName;
 
     @ApiModelProperty(value = "The custom fields and values that have been set for the device.")
-    private CustomFields[] customFields;
+    private KeyValuePair[] customFields;
 
     @ApiModelProperty(value = "All identifiers for the device.")
     private Devices[] devices;
@@ -29,7 +28,7 @@ public class CustomFieldsDeviceRequestVerizon {
     private String groupName;
 
     @ApiModelProperty(value = "Update custom fields and values that have been set for the device.")
-    private CustomFieldsToUpdate[] customFieldsToUpdate;
+    private KeyValuePair[] customFieldsToUpdate;
 
     public String getAccountName() {
         return accountName;
@@ -39,11 +38,11 @@ public class CustomFieldsDeviceRequestVerizon {
         this.accountName = accountName;
     }
 
-    public CustomFields[] getCustomFields() {
+    public KeyValuePair[] getCustomFields() {
         return customFields;
     }
 
-    public void setCustomFields(CustomFields[] customFields) {
+    public void setCustomFields(KeyValuePair[] customFields) {
         this.customFields = customFields;
     }
 
@@ -71,12 +70,12 @@ public class CustomFieldsDeviceRequestVerizon {
         this.groupName = groupName;
     }
 
-    public CustomFieldsToUpdate[] getCustomFieldsToUpdate() {
+    public KeyValuePair[] getCustomFieldsToUpdate() {
         return customFieldsToUpdate;
     }
 
     public void setCustomFieldsToUpdate(
-            CustomFieldsToUpdate[] customFieldsToUpdate) {
+            KeyValuePair[] customFieldsToUpdate) {
         this.customFieldsToUpdate = customFieldsToUpdate;
     }
 

@@ -22,8 +22,8 @@ public class TimeOutErrorProcessor implements Processor {
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		LOGGER.info("Begin:TimeOutErrorProcessor");
-		LOGGER.info("TimeOut exception occurred................" + exchange.getIn().getBody().toString());
+		LOGGER.debug("Begin:TimeOutErrorProcessor");
+		LOGGER.warn("TimeOut exception occurred................" + exchange.getIn().getBody().toString());
 
 		switch (exchange.getFromEndpoint().toString()) {
 			case "Endpoint[direct://startJob]":
@@ -31,7 +31,7 @@ public class TimeOutErrorProcessor implements Processor {
 				final List<DeviceInformation> timeOutList = (List<DeviceInformation>) exchange.getProperty(IConstant.TIMEOUT_DEVICE_LIST);
 				final DeviceInformation deviceInformation = (DeviceInformation) exchange.getIn().getBody();
 
-				LOGGER.info("NetSuite Id of timeOut Device is................" + deviceInformation.getNetSuiteId());
+				LOGGER.warn("NetSuite Id of timeOut Device is................" + deviceInformation.getNetSuiteId());
 
 				timeOutList.add(deviceInformation);
 				exchange.setProperty(IConstant.TIMEOUT_DEVICE_LIST, timeOutList);
@@ -41,20 +41,20 @@ public class TimeOutErrorProcessor implements Processor {
 				final String jobName = (String) exchange.getProperty(IConstant.JOB_NAME);
 				// check for usage and connection History Job in TransactionFailure
 				if (jobName.endsWith("DeviceUsageJob")) {
-					LOGGER.info("timeOut device for Usage TransactionFailure Job  :::::::::::::::::: ");
+					LOGGER.warn("timeOut device for Usage TransactionFailure Job  :::::::::::::::::: ");
 					final List<DeviceUsage> timeOutListTransactionFailure = (List<DeviceUsage>) exchange.getProperty(IConstant.TIMEOUT_DEVICE_LIST);
 					final DeviceUsage deviceUsage = (DeviceUsage) exchange.getIn().getBody();
-					LOGGER.info("NetSuite Id of timeOut Device is................" + deviceUsage.getNetSuiteId());
+					LOGGER.warn("NetSuite Id of timeOut Device is................" + deviceUsage.getNetSuiteId());
 					timeOutListTransactionFailure.add(deviceUsage);
 					exchange.setProperty(IConstant.TIMEOUT_DEVICE_LIST, timeOutListTransactionFailure);
 				}
 				// Connection History Job
 				else {
-					LOGGER.info("timeOut device for Connection TransactionFailure Job   :::::::::::::::::: ");
+					LOGGER.warn("timeOut device for Connection TransactionFailure Job   :::::::::::::::::: ");
 
 					final List<DeviceConnection> timeOutListTransactionFailure = (List<DeviceConnection>) exchange.getProperty(IConstant.TIMEOUT_DEVICE_LIST);
 					final DeviceConnection deviceConnection = (DeviceConnection) exchange.getIn().getBody();
-					LOGGER.info("NetSuite Id of timeOut Device is................" + deviceConnection.getNetSuiteId());
+					LOGGER.warn("NetSuite Id of timeOut Device is................" + deviceConnection.getNetSuiteId());
 					timeOutListTransactionFailure.add(deviceConnection);
 					exchange.setProperty(IConstant.TIMEOUT_DEVICE_LIST, timeOutListTransactionFailure);
 				}
@@ -62,6 +62,6 @@ public class TimeOutErrorProcessor implements Processor {
 			default:
 				break;
 		}
-		LOGGER.info("End:TimeOutErrorProcessor");
+		LOGGER.debug("End:TimeOutErrorProcessor");
 	}
 }

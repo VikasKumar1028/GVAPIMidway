@@ -18,7 +18,7 @@ public class StubVerizonCustomFieldsProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        LOGGER.info("Begin::StubVerizonCustomFieldsProcessor");
+        LOGGER.debug("Begin::StubVerizonCustomFieldsProcessor");
 
         CarrierProvisioningDeviceResponse updateCustomeFieldDeviceResponse = new CarrierProvisioningDeviceResponse();
 
@@ -51,7 +51,7 @@ public class StubVerizonCustomFieldsProcessor implements Processor {
 
         exchange.getIn().setBody(updateCustomeFieldDeviceResponse);
 
-        LOGGER.info("End::StubVerizonCustomFieldsProcessor");
+        LOGGER.debug("End::StubVerizonCustomFieldsProcessor");
 
     }
 

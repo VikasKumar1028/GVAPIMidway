@@ -32,7 +32,7 @@ public class ATTJasperDeviceConnectionStatusPostProcessor implements Processor {
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		LOGGER.info("Begin:ATTJasperDeviceConnectionStatusPostProcessor");
+		LOGGER.debug("Begin:ATTJasperDeviceConnectionStatusPostProcessor");
 
 		ConnectionStatusResponse businessResponse = new ConnectionStatusResponse();
 		ConnectionStatusResponseDataArea connectionStatusResponseDataArea = new ConnectionStatusResponseDataArea();
@@ -73,7 +73,7 @@ public class ATTJasperDeviceConnectionStatusPostProcessor implements Processor {
 
 		exchange.getIn().setBody(businessResponse);
 
-		LOGGER.info("End:ATTJasperDeviceConnectionStatusPostProcessor");
+		LOGGER.debug("End:ATTJasperDeviceConnectionStatusPostProcessor");
 
 	}
 

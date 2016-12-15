@@ -31,7 +31,7 @@ class TestVerizonDeviceConnectionHistoryPostProcessor extends FunSuite with Mock
 
       when(exchange.getProperty("jobDetail")).thenReturn(jobDetail, Nil: _*)
       when(exchange.getProperty("DeviceId")).thenReturn(deviceId, Nil: _*)
-      when(message.getBody(any)).thenReturn(getMap, Nil: _*)
+      when(message.getBody(any)).thenReturn(informationResponse, Nil: _*)
 
       new VerizonDeviceConnectionHistoryPostProcessor().process(exchange)
 
@@ -72,14 +72,14 @@ class TestVerizonDeviceConnectionHistoryPostProcessor extends FunSuite with Mock
     f(exchange, message)
   }
 
-  private def getMap: JMap[_, _] = {
+  private def informationResponse: ConnectionInformationResponse = {
     val response = new ConnectionInformationResponse
     val hist1 = connHist("2016-10-01", "400", "Download")
     val hist2 = connHist("2016-10-02", "9000", "Upload")
     response.setConnectionHistory(Array(hist1, hist2))
 
     val mapper: ObjectMapper = new ObjectMapper
-    mapper.convertValue(response, classOf[JMap[_, _]])
+    mapper.convertValue(response, classOf[ConnectionInformationResponse])
   }
 
   private def connHist(occurred: String, bytes: String, event: String): ConnectionHistory = {

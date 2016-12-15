@@ -1,8 +1,8 @@
 package com.gv.midway.pojo;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+@JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 public class BaseResponse {
 
     public BaseResponse() { }

@@ -34,40 +34,36 @@ public class JobCallBackProcessor implements Processor {
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		LOGGER.info("Begin::JobCallBackProcessor");
+		LOGGER.debug("Begin::JobCallBackProcessor");
 
 		Message message = exchange.getIn();
 
-		JobDetail jobDetail = (JobDetail) exchange
-				.getProperty(IConstant.JOB_DETAIL);
+		JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
 
-		String successCount = (String) exchange
-				.getProperty(IConstant.JOB_SUCCESS_COUNT);
+		String successCount = (String) exchange.getProperty(IConstant.JOB_SUCCESS_COUNT);
 
-		String errorCount = (String) exchange
-				.getProperty(IConstant.JOB_ERROR_COUNT);
+		String errorCount = (String) exchange.getProperty(IConstant.JOB_ERROR_COUNT);
 
 		JobCompletionCallBacktoNetSuite jobCompletionCallBacktoNetSuite = new JobCompletionCallBacktoNetSuite();
 
 		jobCompletionCallBacktoNetSuite.setPeriod(jobDetail.getPeriod());
-		jobCompletionCallBacktoNetSuite
-				.setBsCarrier(jobDetail.getCarrierName());
+		jobCompletionCallBacktoNetSuite.setBsCarrier(jobDetail.getCarrierName());
 		jobCompletionCallBacktoNetSuite.setJobDate(jobDetail.getDate());
 
 		JobName jobName = jobDetail.getName();
 
 		if (jobName.equals(JobName.VERIZON_CONNECTION_HISTORY)) {
 			jobCompletionCallBacktoNetSuite.setJobType("connectionHistory");
-		}
-
-		else {
+		} else {
 			jobCompletionCallBacktoNetSuite.setJobType("deviceUsage");
 		}
+
 		if (successCount != null) {
 			jobCompletionCallBacktoNetSuite.setSuccessCount(successCount);
 		} else {
 			jobCompletionCallBacktoNetSuite.setSuccessCount("0");
 		}
+
 		if (errorCount != null) {
 			jobCompletionCallBacktoNetSuite.setErrorCount(errorCount);
 		} else {
@@ -78,7 +74,7 @@ public class JobCallBackProcessor implements Processor {
 	    //final String script = "569";
 		final String script = newEnv.getProperty("netSuite.processJob.script");
 	    
-	    LOGGER.info("oauth info is....." + properties);
+	    LOGGER.debug("oauth info is....." + properties);
 
         final String oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(properties, script);
         
@@ -92,12 +88,15 @@ public class JobCallBackProcessor implements Processor {
 		message.setBody(jobCompletionCallBacktoNetSuite);
 		
 		exchange.setProperty("script", script);
+		exchange.setProperty("jobId", jobDetail.getJobId());
+		exchange.setProperty("jobName", jobName);
+		exchange.setProperty("jobCarrier", jobDetail.getCarrierName());
+		exchange.setProperty("jobType", jobDetail.getType());
 		exchange.setPattern(ExchangePattern.InOut);
 		
-		LOGGER.info("Job CallBack to netSuite is ..."
-				+ exchange.getIn().getBody());
+		LOGGER.debug("Job CallBack to netSuite is ..." + exchange.getIn().getBody());
 
-		LOGGER.info("End::JobCallBackProcessor");
+		LOGGER.debug("End::JobCallBackProcessor");
 	}
 
 }

@@ -19,7 +19,7 @@ public class StubVerizonDeviceSessionBeginEndInfoProcessor implements Processor 
 
     @Override
     public void process(Exchange exchange) throws Exception {
-        LOGGER.info("Begin::StubVerizonDeviceSessionBeginEndInfoProcessor");
+        LOGGER.debug("Begin::StubVerizonDeviceSessionBeginEndInfoProcessor");
 
         SessionBeginEndResponse sessionBeginEndResponse = new SessionBeginEndResponse();
 
@@ -57,7 +57,7 @@ public class StubVerizonDeviceSessionBeginEndInfoProcessor implements Processor 
 
         exchange.getIn().setBody(sessionBeginEndResponse);
 
-        LOGGER.info("End::StubVerizonDeviceSessionBeginEndInfoProcessor");
+        LOGGER.debug("End::StubVerizonDeviceSessionBeginEndInfoProcessor");
 
     }
 

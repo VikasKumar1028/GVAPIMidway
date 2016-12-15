@@ -41,8 +41,8 @@ public class KoreCheckStatusPostProcessor implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {
-        LOGGER.info("Begin:KoreCheckStatusPostProcessor");
-        LOGGER.info("kore check status post processor");
+        LOGGER.debug("Begin:KoreCheckStatusPostProcessor");
+        LOGGER.debug("kore check status post processor");
 
         final Message message = exchange.getIn();
         final String midWayTransactionDeviceNumber = (String) exchange.getProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER);
@@ -89,7 +89,7 @@ public class KoreCheckStatusPostProcessor implements Processor {
 
         netSuiteCallBackProvisioningRequest.setDeviceIds(deviceIds);
 
-        LOGGER.info("request type for NetSuite CallBack error...." + requestType);
+        LOGGER.debug("request type for NetSuite CallBack error...." + requestType);
 
         //TODO Duplicated in AttCallBackSuccessPostProcessor
         switch (requestType) {
@@ -117,10 +117,10 @@ public class KoreCheckStatusPostProcessor implements Processor {
                 netSuiteCallBackProvisioningRequest.setResponse("Device Service Plan Changed successfully.");
 
                 final ChangeDeviceServicePlansRequest changeDeviceServicePlansRequest = (ChangeDeviceServicePlansRequest) body;
-                LOGGER.info("change device service plan data area...." + changeDeviceServicePlansRequest.getDataArea().toString());
+                LOGGER.debug("change device service plan data area...." + changeDeviceServicePlansRequest.getDataArea().toString());
                 final String oldServicePlan = changeDeviceServicePlansRequest.getDataArea().getCurrentServicePlan();
                 final String newServicePlan = changeDeviceServicePlansRequest.getDataArea().getServicePlan();
-                LOGGER.info("service plan new is..." + newServicePlan + " old service plan is....." + oldServicePlan);
+                LOGGER.debug("service plan new is..." + newServicePlan + " old service plan is....." + oldServicePlan);
                 netSuiteCallBackProvisioningRequest.setRequestType(NetSuiteRequestType.SERVICE_PLAN);
                 netSuiteCallBackProvisioningRequest.setOldServicePlan(oldServicePlan);
                 netSuiteCallBackProvisioningRequest.setNewServicePlan(newServicePlan);
@@ -149,7 +149,7 @@ public class KoreCheckStatusPostProcessor implements Processor {
         exchange.setProperty("script", script);
         exchange.setPattern(ExchangePattern.InOut);
 
-        LOGGER.info("success callback response for Kore..." + exchange.getIn().getBody());
-        LOGGER.info("End:KoreCheckStatusPostProcessor");
+        LOGGER.debug("success callback response for Kore..." + exchange.getIn().getBody());
+        LOGGER.debug("End:KoreCheckStatusPostProcessor");
     }
 }

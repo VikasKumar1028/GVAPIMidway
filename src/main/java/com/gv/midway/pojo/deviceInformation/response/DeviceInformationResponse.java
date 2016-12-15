@@ -1,13 +1,14 @@
 package com.gv.midway.pojo.deviceInformation.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.gv.midway.pojo.BaseResponse;
 import com.gv.midway.pojo.Header;
 import com.gv.midway.pojo.Response;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+@JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DeviceInformationResponse extends BaseResponse {
 

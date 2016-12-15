@@ -10,10 +10,9 @@ public class JobSplitter {
 
    private static final Logger LOGGER = Logger.getLogger(JobSplitter.class);
 
-    public List<DeviceInformation> split(
-            List<DeviceInformation> deviceInformationList) {
+    public List<DeviceInformation> split(List<DeviceInformation> deviceInformationList) {
 
-        LOGGER.info("JobSplitter&&&&&&&&&&&&&&&&&&&&&&");
+        LOGGER.debug("JobSplitter&&&&&&&&&&&&&&&&&&&&&&");
 
         return deviceInformationList;
     }

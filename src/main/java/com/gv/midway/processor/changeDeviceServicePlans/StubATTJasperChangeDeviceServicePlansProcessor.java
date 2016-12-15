@@ -19,7 +19,7 @@ public class StubATTJasperChangeDeviceServicePlansProcessor implements
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		LOGGER.info("Begin::StubATTJasperChangeDeviceServicePlansProcessor");
+		LOGGER.debug("Begin::StubATTJasperChangeDeviceServicePlansProcessor");
 
 		CarrierProvisioningDeviceResponse changeDeviceServicePlansResponse = new CarrierProvisioningDeviceResponse();
 
@@ -52,7 +52,7 @@ public class StubATTJasperChangeDeviceServicePlansProcessor implements
 
 		exchange.getIn().setBody(changeDeviceServicePlansResponse);
 
-		LOGGER.info("End::StubATTJasperChangeDeviceServicePlansProcessor");
+		LOGGER.debug("End::StubATTJasperChangeDeviceServicePlansProcessor");
 
 	}
 

@@ -16,7 +16,7 @@ public class StubATTJasperReactivateDeviceProcessor implements Processor {
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		LOGGER.info("Begin:StubATTJasperReactivateDeviceProcessor");
+		LOGGER.debug("Begin:StubATTJasperReactivateDeviceProcessor");
 		CarrierProvisioningDeviceResponse reactivateDeviceResponse = new CarrierProvisioningDeviceResponse();
 
 		CarrierProvisioningDeviceResponseDataArea reactivateDeviceResponseDataArea = new CarrierProvisioningDeviceResponseDataArea();
@@ -44,7 +44,7 @@ public class StubATTJasperReactivateDeviceProcessor implements Processor {
 		reactivateDeviceResponse.setDataArea(reactivateDeviceResponseDataArea);
 
 		exchange.getIn().setBody(reactivateDeviceResponse);
-		LOGGER.info("End:StubATTJasperReactivateDeviceProcessor");
+		LOGGER.debug("End:StubATTJasperReactivateDeviceProcessor");
 
 	}
 

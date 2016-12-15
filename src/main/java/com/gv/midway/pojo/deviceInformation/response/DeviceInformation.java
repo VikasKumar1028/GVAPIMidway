@@ -3,17 +3,17 @@ package com.gv.midway.pojo.deviceInformation.response;
 import java.util.Arrays;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.gv.midway.pojo.KeyValuePair;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.gv.midway.pojo.verizon.CustomFields;
 import com.gv.midway.pojo.verizon.DeviceId;
 import com.gv.midway.pojo.deviceInformation.verizon.response.ExtendedAttributes;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+@JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 @Document(collection = "deviceInfo")
 public class DeviceInformation {
 
@@ -56,7 +56,7 @@ public class DeviceInformation {
     private String ipAddress;
 
     @ApiModelProperty(value = "The custom fields and values that have been set for the device.")
-    private CustomFields[] customFields;
+    private KeyValuePair[] customFields;
 
     @ApiModelProperty(value = "All identifiers for the device.")
     private DeviceId[] deviceIds;
@@ -128,10 +128,10 @@ public class DeviceInformation {
     private String monthToDateVoiceUsage;
 	
 	@ApiModelProperty(value = "The operator custom fields and values.Only for the ATT jasper devices.")
-	private CustomFields[] operatorCustomFields;
+	private KeyValuePair[] operatorCustomFields;
 	
 	@ApiModelProperty(value = "The customer custom fields and values.Only for the ATT jasper devices.")
-	private CustomFields[] customerCustomFields;
+	private KeyValuePair[] customerCustomFields;
 	
 	@ApiModelProperty(value = "Date when device was activated.Only for the ATT jasper devices.")
 	private String dateActivated;
@@ -155,19 +155,19 @@ public class DeviceInformation {
 		this.dateModified = dateModified;
 	}
     
-	public CustomFields[] getOperatorCustomFields() {
+	public KeyValuePair[] getOperatorCustomFields() {
 		return operatorCustomFields;
 	}
 
-	public void setOpeartorCustomFields(CustomFields[] operatorCustomFields) {
+	public void setOperatorCustomFields(KeyValuePair[] operatorCustomFields) {
 		this.operatorCustomFields = operatorCustomFields;
 	}
 
-	public CustomFields[] getCustomerCustomFields() {
+	public KeyValuePair[] getCustomerCustomFields() {
 		return customerCustomFields;
 	}
 
-	public void setCustomerCustomFields(CustomFields[] customerCustomFields) {
+	public void setCustomerCustomFields(KeyValuePair[] customerCustomFields) {
 		this.customerCustomFields = customerCustomFields;
 	}
   
@@ -292,11 +292,11 @@ public class DeviceInformation {
         this.ipAddress = ipAddress;
     }
 
-    public CustomFields[] getCustomFields() {
+    public KeyValuePair[] getCustomFields() {
         return customFields;
     }
 
-    public void setCustomFields(CustomFields[] customFields) {
+    public void setCustomFields(KeyValuePair[] customFields) {
         this.customFields = customFields;
     }
 
@@ -340,13 +340,13 @@ public class DeviceInformation {
         this.groupName = groupName;
     }
 
-    public Boolean isConnected() {
-        return isConnected;
-    }
+//    public Boolean isConnected() {
+//        return isConnected;
+//    }
 
-    public void setConnected(Boolean isConnected) {
-        this.isConnected = isConnected;
-    }
+//    public void setConnected(Boolean isConnected) {
+//        this.isConnected = isConnected;
+//    }
 
     public String getCreatedAt() {
         return createdAt;

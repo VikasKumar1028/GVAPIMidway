@@ -2,9 +2,9 @@ package com.gv.midway.processor.reactivate
 
 import com.gv.midway.attjasper.EditTerminalRequest
 import com.gv.midway.constant.IConstant
-import com.gv.midway.pojo.{MidWayDeviceId, MidWayDevices}
 import com.gv.midway.pojo.reActivateDevice.request.{ReactivateDeviceRequest, ReactivateDeviceRequestDataArea}
 import com.gv.midway.pojo.transaction.Transaction
+import com.gv.midway.pojo.{MidWayDeviceId, MidWayDevices}
 import com.gv.midway.{ATTJasperSuite, TestMocks}
 import org.apache.camel.ExchangePattern
 import org.mockito.ArgumentCaptor
@@ -51,9 +51,9 @@ class TestATTJasperReactivateDevicePreProcessor extends TestMocks with ATTJasper
       assert(request.getIccid === id1.getId)
       assert(request.getChangeType === IConstant.ATTJASPER_SIM_CHANGETYPE)
       assert(request.getTargetValue === IConstant.ATTJASPER_ACTIVATED)
-      assert(request.getLicenseKey === propertyValue(attJasperLicenseKey))
+      assert(request.getLicenseKey === propertyValue(IConstant.ATTJASPER_LICENSE_KEY))
       assert(request.getMessageId != null)
-      assert(request.getVersion === propertyValue(attJasperVersion))
+      assert(request.getVersion === propertyValue(IConstant.ATTJASPER_VERSION))
 
       verify(exchange, times(1)).setProperty(IConstant.MIDWAY_TRANSACTION_DEVICE_NUMBER, deviceNumber)
       verify(exchange, times(1)).setProperty(IConstant.MIDWAY_NETSUITE_ID, netSuiteId)

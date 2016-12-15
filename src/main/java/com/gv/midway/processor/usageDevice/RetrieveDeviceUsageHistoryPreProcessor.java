@@ -19,7 +19,7 @@ public class RetrieveDeviceUsageHistoryPreProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        LOGGER.info("Begin::RetrieveDeviceUsageHistoryPreProcessor");
+        LOGGER.debug("Begin::RetrieveDeviceUsageHistoryPreProcessor");
 
         UsageInformationRequest proxyRequest = (UsageInformationRequest) exchange
                 .getIn().getBody();
@@ -47,6 +47,6 @@ public class RetrieveDeviceUsageHistoryPreProcessor implements Processor {
 
         exchange.setPattern(ExchangePattern.InOut);
 
-        LOGGER.info("End::RetrieveDeviceUsageHistoryPreProcessor");
+        LOGGER.debug("End::RetrieveDeviceUsageHistoryPreProcessor");
     }
 }

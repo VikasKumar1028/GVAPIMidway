@@ -2,7 +2,7 @@ package com.gv.midway.pojo.activateDevice.request;
 
 import java.util.Arrays;
 import com.gv.midway.pojo.verizon.Address;
-import com.gv.midway.pojo.verizon.CustomFields;
+import com.gv.midway.pojo.KeyValuePair;
 import com.gv.midway.pojo.verizon.CustomerName;
 import com.gv.midway.pojo.verizon.PrimaryPlaceOfUse;
 import com.wordnik.swagger.annotations.ApiModelProperty;
@@ -21,7 +21,7 @@ public class ActivateDevices {
     private String servicePlan;
 
     @ApiModelProperty(value = "The custom fields and values that have been set for the device.")
-    private CustomFields[] customFields;
+    private KeyValuePair[] customFields;
 
     @ApiModelProperty(value = "The residential street address or the primary business street address of the Customer and Customer Name . Leave these fields empty to use the account profile address as the primary place of use. These values will be applied to all devices in the activation request.If the account is enabled for non-geographic MDNs and the device supports it, the primaryPlaceOfUse address will also be used to derive the MDN for the device.The Primary Place of Use location may affect taxation or have other legal implications. You may want to speak with legal and/or financial advisers before entering values for these fields.primaryPlaceOfUse cannot be used with leadId. VPP partners should enter a leadId value for a customer lead, and the AddressZipCode in the lead record will be used for taxation. VPP partners can use primaryPlaceOfUse fields without a leadId to associate customer-specific data with devices.")
     private Address address;
@@ -46,11 +46,11 @@ public class ActivateDevices {
         this.servicePlan = servicePlan;
     }
 
-    public CustomFields[] getCustomFields() {
+    public KeyValuePair[] getCustomFields() {
         return customFields;
     }
 
-    public void setCustomFields(CustomFields[] customFields) {
+    public void setCustomFields(KeyValuePair[] customFields) {
         this.customFields = customFields;
     }
 

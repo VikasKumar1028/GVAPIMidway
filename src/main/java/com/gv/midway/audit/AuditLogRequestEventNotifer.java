@@ -32,7 +32,7 @@ public class AuditLogRequestEventNotifer extends EventNotifierSupport {
             final Exchange exchange = create.getExchange();
 
             if (exchange.getIn().getBody() instanceof BaseRequest && exchange.getProperty(IConstant.AUDIT_TRANSACTION_ID) == null) {
-                LOGGER.info("In Audit log Request*************************************");
+                LOGGER.debug("In Audit log Request*************************************");
                 final BaseRequest baseRequest = (BaseRequest) exchange.getIn().getBody();
 
                 final String TransactionId = CommonUtil.getMidwayTransactionID();
@@ -41,10 +41,10 @@ public class AuditLogRequestEventNotifer extends EventNotifierSupport {
                 final String requestEndpoint = exchange.getFromEndpoint().toString();
                 final String requestEndpointSplit[] = requestEndpoint.split("//");
 
-                LOGGER.info("requestEndpointSplit::" + requestEndpointSplit[1].replaceAll("]", " "));
+                LOGGER.debug("requestEndpointSplit::" + requestEndpointSplit[1].replaceAll("]", " "));
 
                 final String apiOperationName = "GV_" + requestEndpointSplit[1].replaceAll("]", "") + "_ProxyRequest";
-                LOGGER.info("apiOperationName" + apiOperationName);
+                LOGGER.debug("apiOperationName" + apiOperationName);
 
                 final Audit audit = new Audit();
                 audit.setApiOperationName(apiOperationName);

@@ -9,18 +9,15 @@ import com.gv.midway.pojo.token.VerizonSessionLoginResponse;
 
 public class VerizonSessionAttributeProcessor implements Processor {
 
-    private static final Logger LOGGER = Logger.getLogger(VerizonSessionAttributeProcessor.class
-            .getName());
+    private static final Logger LOGGER = Logger.getLogger(VerizonSessionAttributeProcessor.class.getName());
 
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        VerizonSessionLoginResponse resp = (VerizonSessionLoginResponse) exchange
-                .getIn().getBody();
+        VerizonSessionLoginResponse resp = (VerizonSessionLoginResponse) exchange.getIn().getBody();
 
-        LOGGER.info("*********************resp.getSessionToken()*********************"
-                + resp.getSessionToken());
-        exchange.setProperty(IConstant.VZ_SEESION_TOKEN, resp.getSessionToken());
+        LOGGER.debug("*********************resp.getSessionToken()*********************" + resp.getSessionToken());
+        exchange.setProperty(IConstant.VZ_SESSION_TOKEN, resp.getSessionToken());
 
     }
 }

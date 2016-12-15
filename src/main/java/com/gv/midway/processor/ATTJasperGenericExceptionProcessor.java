@@ -25,29 +25,29 @@ public class ATTJasperGenericExceptionProcessor implements Processor {
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		LOGGER.info("Begin:ATTJasperGenericExceptionProcessor");
-		LOGGER.info("------------------------**********------------" + exchange.getProperty(Exchange.EXCEPTION_CAUGHT).getClass());
+		LOGGER.debug("Begin:ATTJasperGenericExceptionProcessor");
+		LOGGER.error("------------------------**********------------" + exchange.getProperty(Exchange.EXCEPTION_CAUGHT).getClass());
 
 		final SoapFault soapFault = (SoapFault) exchange.getProperty(Exchange.EXCEPTION_CAUGHT);
 		final Header responseHeader = (Header) exchange.getProperty(IConstant.HEADER);
 
 		final String message = soapFault.getMessage();
 
-		LOGGER.info("MSG    ------------------" + message);
+		LOGGER.error("MSG    ------------------" + message);
 
 		// fault String for the fault code.
 		final Integer errorCode = Integer.valueOf(message);
 
 		final String responseDescription = (String) exchange.getProperty(IConstant.ATTJASPER_SOAP_FAULT_ERRORMESSAGE);
 
-		LOGGER.info("responseDescription ------------------" + responseDescription);
+		LOGGER.error("responseDescription ------------------" + responseDescription);
 
 		final Response response = new Response();
 		response.setResponseCode(errorCode);
 		response.setResponseStatus(IResponse.ERROR_MESSAGE);
 		response.setResponseDescription(responseDescription);
 
-		LOGGER.info("exchange endpoint of error........." + exchange.getFromEndpoint().toString());
+		LOGGER.error("exchange endpoint of error........." + exchange.getFromEndpoint().toString());
 
 		switch (exchange.getFromEndpoint().toString()) {
 			case "Endpoint[direct://deviceInformationCarrier]":
@@ -90,6 +90,6 @@ public class ATTJasperGenericExceptionProcessor implements Processor {
 				break;
 		}
 
-		LOGGER.info("End:ATTJasperGenericExceptionProcessor");
+		LOGGER.debug("End:ATTJasperGenericExceptionProcessor");
 	}
 }

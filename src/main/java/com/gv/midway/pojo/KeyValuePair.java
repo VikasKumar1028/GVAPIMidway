@@ -1,21 +1,21 @@
-package com.gv.midway.pojo.verizon;
+package com.gv.midway.pojo;
 
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
-public class CustomFieldsToUpdate {
+public class KeyValuePair {
 
-    public CustomFieldsToUpdate() { }
+    public KeyValuePair() { }
 
-    public CustomFieldsToUpdate(String key, String value) {
+    public KeyValuePair(String key, String value) {
         this.key = key;
         this.value = value;
     }
 
-    @ApiModelProperty(value = "The name of the custom field. Valid names are CustomField1, CustomField2, CustomField3, CustomField4, and CustomField5.", required = true)
-    private String key;
-
-    @ApiModelProperty(value = "The value of the custom field. The value is not case-sensitive.Wildcards and partial matches are not supported.", required = true)
+    @ApiModelProperty(value = "The value of the pair. The value is not case-sensitive. Wildcards and partial matches are not supported.", required = true)
     private String value;
+
+    @ApiModelProperty(value = "The key of the pair. Valid key examples are CustomField1, CustomField2, CustomField3, CustomField4, and CustomField5.", required = true)
+    private String key;
 
     public String getValue() {
         return value;
@@ -50,7 +50,7 @@ public class CustomFieldsToUpdate {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        CustomFieldsToUpdate other = (CustomFieldsToUpdate) obj;
+        KeyValuePair other = (KeyValuePair) obj;
         if (key == null) {
             if (other.key != null)
                 return false;
@@ -66,6 +66,13 @@ public class CustomFieldsToUpdate {
 
     @Override
     public String toString() {
-        return "CustomFieldsToUpdate [value=" + value + ", key=" + key + "]";
+        StringBuilder builder = new StringBuilder();
+        builder.append("KeyValuePair [value=");
+        builder.append(value);
+        builder.append(", key=");
+        builder.append(key);
+        builder.append("]");
+        return builder.toString();
     }
+
 }

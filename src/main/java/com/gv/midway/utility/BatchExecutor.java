@@ -16,7 +16,7 @@ public class BatchExecutor {
     public ExecutorService executorService;
 
     private BatchExecutor() {
-        LOGGER.info("singelton created");
+        LOGGER.debug("singelton created");
         setExecutor();
     };
 
@@ -47,10 +47,9 @@ public class BatchExecutor {
         executorService.shutdown();
         try {
             if (!executorService.awaitTermination(10, TimeUnit.SECONDS)) {
-                LOGGER.info("Executor not able to finish task in specified time.");
+                LOGGER.warn("Executor not able to finish task in specified time.");
                 List<Runnable> droppedTasks = executorService.shutdownNow();
-                LOGGER.info("Executor was abruptly shut down. "
-                        + droppedTasks.size() + " tasks will not be executed.");
+                LOGGER.warn("Executor was abruptly shut down. " + droppedTasks.size() + " tasks will not be executed.");
             }
         } catch (InterruptedException e) {
             LOGGER.error("ERROR"+e);

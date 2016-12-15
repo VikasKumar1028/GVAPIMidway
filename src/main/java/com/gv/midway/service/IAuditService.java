@@ -4,16 +4,28 @@ import org.apache.camel.Exchange;
 
 public interface IAuditService {
 
-    public void auditExternalRequestCall(Exchange exchange);
+    void auditExternalRequestCall(Exchange exchange);
 
-    public void auditExternalResponseCall(Exchange exchange);
+    void auditExternalResponseCall(Exchange exchange);
     
-    public void auditExternalSOAPResponseCall(Exchange exchange);
+    void auditExternalSOAPResponseCall(Exchange exchange);
 
-    public void auditExternalExceptionResponseCall(Exchange exchange);
+    void auditExternalExceptionResponseCall(Exchange exchange);
     
-    public void auditExternalSOAPExceptionResponseCall(Exchange exchange);
+    void auditExternalSOAPExceptionResponseCall(Exchange exchange);
 
-    public void auditExternalConnectionExceptionResponseCall(Exchange exchange);
+    void auditExternalConnectionExceptionResponseCall(Exchange exchange);
+
+    void auditExternalRequestCallMock(Exchange exchange);
+
+    void auditExternalResponseCallMock(Exchange exchange);
+
+    void auditExternalSOAPResponseCallMock(Exchange exchange);
+
+    void auditExternalExceptionResponseCallMock(Exchange exchange);
+
+    void auditExternalSOAPExceptionResponseCallMock(Exchange exchange);
+
+    void auditExternalConnectionExceptionResponseCallMock(Exchange exchange);
 
 }

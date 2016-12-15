@@ -1,7 +1,6 @@
 package com.gv.midway
 
 import com.gv.midway.constant.IConstant
-import com.gv.midway.utility.NetSuiteOAuthUtil
 import org.apache.camel.component.cxf.common.message.CxfConstants
 import org.apache.camel.{Exchange, Message}
 import org.apache.cxf.headers.Header
@@ -17,12 +16,18 @@ trait TestMocks extends FunSuiteLike with MockitoSugar {
   protected val OPT_KORE = Some(IConstant.BSCARRIER_SERVICE_KORE)
   protected val OPT_ATT = Some(IConstant.BSCARRIER_SERVICE_ATTJASPER)
 
-  def properties: List[String] = List.empty[String]
+  def environmentProperties: List[String] = List()
+
+  def exchangeProperties: List[String] = List()
 
   protected def withMockExchange(f: Exchange => Unit): Unit = withMockExchange(None)(f)
 
   protected def withMockExchange(carrier: Option[String] = None)(f: Exchange => Unit): Unit = {
     val exchange = mock[Exchange]
+
+    exchangeProperties.foreach { p =>
+      when(exchange.getProperty(p)).thenReturn(propertyValue(p), Nil: _*)
+    }
 
     carrier.foreach{c =>
       //TODO We need to make this consistently done in a single way
@@ -31,6 +36,12 @@ trait TestMocks extends FunSuiteLike with MockitoSugar {
     }
 
     f(exchange)
+  }
+
+  protected def withMockMessage(f: Message => Unit): Unit = {
+    val message = mock[Message]
+
+    f(message)
   }
 
   protected def withMockExchangeAndMessage(f: (Exchange, Message) => Unit): Unit = withMockExchangeAndMessage(None)(f)
@@ -51,7 +62,7 @@ trait TestMocks extends FunSuiteLike with MockitoSugar {
     withMockExchangeAndMessage(carrier){ (exchange, message) =>
       val environment = mock[Environment]
 
-      properties.foreach { s =>
+      environmentProperties.foreach { s =>
         when(environment.getProperty(s)).thenReturn(propertyValue(s), Nil: _*)
       }
 
@@ -68,12 +79,9 @@ trait ATTJasperSuite {
 
   this: TestMocks =>
 
-  protected val attJasperVersion = "attJasper.version"
-  protected val attJasperLicenseKey = "attJasper.licenseKey"
-  protected val attJasperUsername = "attJasper.userName"
-  protected val attJasperPassword = "attJasper.password"
-
-  override val properties = List(attJasperVersion, attJasperLicenseKey, attJasperUsername, attJasperPassword)
+  override val environmentProperties = List(
+    IConstant.ATTJASPER_VERSION, IConstant.ATTJASPER_LICENSE_KEY, IConstant.ATTJASPER_USERNAME, IConstant.ATTJASPER_PASSWORD
+  )
 
   protected def assertMessageHeaderATTJasper(message: Message, operationName: String, operationNamespace: String, soapAction: String): Unit = {
     verify(message, times(1)).setHeader(CxfConstants.OPERATION_NAME, operationName)
@@ -86,13 +94,57 @@ trait ATTJasperSuite {
 trait NetSuiteSuite {
   this: TestMocks =>
 
-  protected val netSuiteOAuthTokenId = "netSuite.oauthTokenId"
-  protected val netSuiteOAuthTokenSecret = "netSuite.oauthTokenSecret"
-  protected val netSuiteConsumerKey = "netSuite.oauthConsumerKey"
-  protected val netSuiteOAuthConsumerSecret = "netSuite.oauthConsumerSecret"
-  protected val netSuiteRealm = "netSuite.realm"
-  protected val netSuiteEndpoint = "netSuite.endPoint"
+  override val environmentProperties = List(
+      IConstant.NETSUITE_OAUTH_CONSUMER_KEY
+    , IConstant.NETSUITE_OAUTH_TOKEN_ID
+    , IConstant.NETSUITE_OAUTH_TOKEN_SECRET
+    , IConstant.NETSUITE_OAUTH_CONSUMER_SECRET
+    , IConstant.NETSUITE_REALM
+    , IConstant.NETSUITE_END_POINT
+  )
+}
 
-  override val properties =
-    List(netSuiteOAuthTokenId, netSuiteOAuthTokenSecret, netSuiteConsumerKey, netSuiteOAuthConsumerSecret, netSuiteRealm, netSuiteEndpoint)
+trait KoreSuite {
+  this: TestMocks =>
+
+  protected val koreAuth = IConstant.KORE_AUTHENTICATION
+
+  override val environmentProperties = List(koreAuth)
+
+  protected def assertKoreRequest(message: Message, path: String): Unit = {
+    verify(message, times(1)).setHeader(Exchange.CONTENT_TYPE, "application/json")
+    verify(message, times(1)).setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json")
+    verify(message, times(1)).setHeader(Exchange.HTTP_METHOD, "POST")
+    verify(message, times(1)).setHeader("Authorization", propertyValue(koreAuth))
+    verify(message, times(1)).setHeader(Exchange.HTTP_PATH, path)
+  }
+}
+
+trait VerizonSuite {
+  this: TestMocks =>
+
+  protected val verizonAuth = IConstant.VERIZON_AUTHENTICATION
+  protected val verizonAPIUsername = IConstant.VERIZON_API_USERNAME
+  protected val verizonAPIPassword = IConstant.VERIZON_API_PASSWORD
+
+  override val environmentProperties = List(verizonAuth, verizonAPIUsername, verizonAPIPassword)
+
+  protected def assertVerizonRequest(message: Message, path: String): Unit = {
+    verify(message, times(1)).setHeader(Exchange.CONTENT_TYPE, "application/x-www-form-urlencoded")
+    verify(message, times(1)).setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json")
+    verify(message, times(1)).setHeader(Exchange.HTTP_METHOD, "POST")
+    verify(message, times(1)).setHeader("Authorization", propertyValue(verizonAuth))
+    verify(message, times(1)).setHeader(Exchange.HTTP_PATH, path)
+    verify(message, times(1)).setHeader(Exchange.HTTP_QUERY, "grant_type=client_credentials")
+  }
+
+  protected def assertVerizonRequestToken(message: Message, path: String, token: String, body: AnyRef): Unit = {
+    verify(message, times(1)).setHeader("Authorization", s"Bearer $token")
+    verify(message, times(1)).setHeader(Exchange.CONTENT_TYPE, "application/json")
+    verify(message, times(1)).setHeader(Exchange.ACCEPT_CONTENT_TYPE, "application/json")
+    verify(message, times(1)).setHeader(Exchange.HTTP_METHOD, "POST")
+    verify(message, times(1)).setHeader(Exchange.HTTP_PATH, path)
+    verify(message, times(1)).setBody(body)
+  }
+
 }

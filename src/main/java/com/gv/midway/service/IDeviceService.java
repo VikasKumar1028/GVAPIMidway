@@ -41,4 +41,10 @@ public interface IDeviceService {
     public ConnectionInformationRequest getDeviceSessionInfo(Exchange exchange) throws InvalidParameterException;
 
     public UsageInformationRequest getDeviceSessionUsage(Exchange exchange) throws InvalidParameterException;
+
+
+
+    public ConnectionInformationRequest getDeviceSessionInfoMock(Exchange exchange) throws InvalidParameterException;
+
+    public UsageInformationRequest getDeviceSessionUsageMock(Exchange exchange) throws InvalidParameterException;
 }

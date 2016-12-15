@@ -17,7 +17,7 @@ public class StubKoreReactivateDeviceProcessor implements Processor {
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		LOGGER.info("Begin:StubKoreReactivateDeviceProcessor");
+		LOGGER.debug("Begin:StubKoreReactivateDeviceProcessor");
 		CarrierProvisioningDeviceResponse reactivateDeviceResponse = new CarrierProvisioningDeviceResponse();
 
 		CarrierProvisioningDeviceResponseDataArea reactivateDeviceResponseDataArea = new CarrierProvisioningDeviceResponseDataArea();
@@ -45,7 +45,7 @@ public class StubKoreReactivateDeviceProcessor implements Processor {
 		reactivateDeviceResponse.setDataArea(reactivateDeviceResponseDataArea);
 
 		exchange.getIn().setBody(reactivateDeviceResponse);
-		LOGGER.info("End:StubKoreReactivateDeviceProcessor");
+		LOGGER.debug("End:StubKoreReactivateDeviceProcessor");
 
 	}
 

@@ -25,8 +25,8 @@ public class GenericErrorProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        LOGGER.info("Begin:GenericErrorProcessor");
-        LOGGER.info("----.Generic exchange----------" + exchange.getFromEndpoint().toString());
+        LOGGER.debug("Begin:GenericErrorProcessor");
+        LOGGER.debug("----.Generic exchange----------" + exchange.getFromEndpoint().toString());
 
         final Response response = new Response();
 
@@ -47,7 +47,8 @@ public class GenericErrorProcessor implements Processor {
             responseHeader = (Header) exchange.getProperty(IConstant.HEADER);
         }
 
-        LOGGER.info("endpoint is......" + exchange.getFromEndpoint().toString());
+        LOGGER.error("endpoint:" + exchange.getFromEndpoint().toString());
+        LOGGER.error("response:\n" + response);
 
         switch (exchange.getFromEndpoint().toString()) {
             case "Endpoint[direct://deviceInformationCarrier]":
@@ -123,6 +124,6 @@ public class GenericErrorProcessor implements Processor {
                 break;
         }
 
-        LOGGER.info("End:GenericErrorProcessor");
+        LOGGER.debug("End:GenericErrorProcessor");
     }
 }

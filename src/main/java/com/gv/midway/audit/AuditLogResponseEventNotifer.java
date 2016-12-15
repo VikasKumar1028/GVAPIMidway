@@ -36,7 +36,7 @@ public class AuditLogResponseEventNotifer extends EventNotifierSupport {
 
             //TODO-Jeff JobinitializedResponse is not a child of BaseResponse so the second condition check here is pointless
             if (messageBody instanceof BaseResponse && !(messageBody instanceof JobinitializedResponse)) {
-                LOGGER.info("In Audit log Response4");
+                LOGGER.debug("In Audit log Response");
                 if (!(messageBody instanceof TargetResponse)) {
                     final BaseResponse baseResponse = (BaseResponse) messageBody;
 
@@ -45,10 +45,10 @@ public class AuditLogResponseEventNotifer extends EventNotifierSupport {
                     final String responseEndpoint = exchange.getFromEndpoint().toString();
                     final String responseEndpointSplit[] = responseEndpoint.split("//");
 
-                    LOGGER.info("responseEndpointSplit::" + responseEndpointSplit[1].replaceAll("]", " "));
+                    LOGGER.debug("responseEndpointSplit::" + responseEndpointSplit[1].replaceAll("]", " "));
 
                     final String apiOperationName = "GV_" + responseEndpointSplit[1].replaceAll("]", "") + "_ProxyResponse";
-                    LOGGER.info("apiOperationName" + apiOperationName);
+                    LOGGER.debug("apiOperationName" + apiOperationName);
 
                     final Audit audit = new Audit();
 

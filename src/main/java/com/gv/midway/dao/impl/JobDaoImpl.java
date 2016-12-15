@@ -10,14 +10,6 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.newA
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
 
-
-
-
-
-
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -31,6 +23,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.camel.Exchange;
+import org.apache.camel.component.cxf.CxfOperationException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -42,6 +35,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.JobName;
 import com.gv.midway.dao.IJobDao;
@@ -53,16 +48,11 @@ import com.gv.midway.pojo.job.JobParameter;
 import com.gv.midway.pojo.job.JobStatus;
 import com.gv.midway.pojo.notification.DeviceOverageNotification;
 import com.gv.midway.pojo.server.ServerDetail;
-import com.gv.midway.pojo.transaction.Transaction;
-import com.gv.midway.pojo.usageInformation.request.DevicesUsageByDayAndCarrierRequest;
 import com.gv.midway.pojo.usageInformation.response.DevicesUsageByDayAndCarrier;
 import com.gv.midway.pojo.usageView.DeviceUsageView;
 import com.gv.midway.pojo.usageView.DeviceUsageViewElement;
-import com.gv.midway.pojo.verizon.DeviceId;
 import com.gv.midway.utility.CommonUtil;
 import com.mongodb.WriteResult;
-
-import org.apache.camel.Message;
 
 @Service
 public class JobDaoImpl implements IJobDao {
@@ -97,17 +87,14 @@ public class JobDaoImpl implements IJobDao {
 
             String carrierName = jobDetail.getCarrierName();
 
-            LOGGER.info("Carrier Name -----------------" + carrierName);
+            LOGGER.debug("Carrier Name -----------------" + carrierName);
             // We have to check bs_carrier with possible reseller values for
             // that carrier.
-            Query searchDeviceQuery = new Query(Criteria.where("bs_carrier")
-                    .regex(carrierName, "i"));
+            Query searchDeviceQuery = new Query(Criteria.where("bs_carrier").regex(carrierName, "i"));
 
-            deviceInformationList = mongoTemplate.find(searchDeviceQuery,
-                    DeviceInformation.class);
+            deviceInformationList = mongoTemplate.find(searchDeviceQuery, DeviceInformation.class);
 
-            LOGGER.info("deviceInformationList ------------------"
-                    + deviceInformationList.size());
+            LOGGER.debug("deviceInformationList ------------------" + deviceInformationList.size());
         }
 
         catch (Exception e) {
@@ -123,7 +110,7 @@ public class JobDaoImpl implements IJobDao {
     @Override
     public List<DeviceInformation> fetchOddDevices(Exchange exchange) {
 
-        LOGGER.info("fetchOddDevices::::::::");
+        LOGGER.debug("fetchOddDevices::::::::");
 
         JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
 
@@ -143,24 +130,19 @@ public class JobDaoImpl implements IJobDao {
 
             String carrierName = jobDetail.getCarrierName();
 
-            LOGGER.info("Carrier Name -----------------" + carrierName);
+            LOGGER.debug("Carrier Name -----------------" + carrierName);
             // We have to check bs_carrier with possible reseller values for
             // that carrier.
             Query searchDeviceQuery = new Query(Criteria.where("bs_carrier")
                     .regex(carrierName, "i")).addCriteria(Criteria.where(
                     "netSuiteId").mod(2, 1));
 
-            LOGGER.info("searchDeviceQuery::::::::::" + searchDeviceQuery);
+            LOGGER.debug("searchDeviceQuery::::::::::" + searchDeviceQuery);
 
-            deviceInformationList = mongoTemplate.find(searchDeviceQuery,
-                    DeviceInformation.class);
+            deviceInformationList = mongoTemplate.find(searchDeviceQuery, DeviceInformation.class);
 
-            LOGGER.info("deviceInformationList ------------------"
-                    + deviceInformationList.size());
-        }
-
-        catch (Exception e) {
-
+            LOGGER.debug("deviceInformationList ------------------" + deviceInformationList.size());
+        } catch (Exception e) {
             LOGGER.error("Error in fetchOddDevices :" + e);
         }
 
@@ -173,7 +155,7 @@ public class JobDaoImpl implements IJobDao {
     @Override
     public List<DeviceInformation> fetchEvenDevices(Exchange exchange) {
 
-        LOGGER.info("fetchEvenDevices::::::::");
+        LOGGER.debug("fetchEvenDevices::::::::");
 
         JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
 
@@ -193,7 +175,7 @@ public class JobDaoImpl implements IJobDao {
 
             String carrierName = jobDetail.getCarrierName();
 
-            LOGGER.info("Carrier Name -----------------" + carrierName);
+            LOGGER.debug("Carrier Name -----------------" + carrierName);
             // We have to check bs_carrier with possible reseller values for
             // that carrier.
             Query searchDeviceQuery = new Query(Criteria.where("bs_carrier")
@@ -201,15 +183,10 @@ public class JobDaoImpl implements IJobDao {
                     "netSuiteId").mod(2, 0));
             ;
 
-            deviceInformationList = mongoTemplate.find(searchDeviceQuery,
-                    DeviceInformation.class);
+            deviceInformationList = mongoTemplate.find(searchDeviceQuery, DeviceInformation.class);
 
-            LOGGER.info("deviceInformationList ------------------"
-                    + deviceInformationList.size());
-        }
-
-        catch (Exception e) {
-
+            LOGGER.debug("deviceInformationList ------------------" + deviceInformationList.size());
+        } catch (Exception e) {
             LOGGER.error("Error in fetchEvenDevices :" + e);
         }
 
@@ -223,7 +200,7 @@ public class JobDaoImpl implements IJobDao {
     public void insertJobDetails(Exchange exchange) {
         JobDetail jobDetail = (JobDetail) exchange.getIn().getBody();
 
-        LOGGER.info("-----------Job Details -------" + jobDetail.toString());
+        LOGGER.debug("-----------Job Details -------" + jobDetail.toString());
         jobDetail.setStartTime(new Date().toString());
         jobDetail.setStatus(IConstant.JOB_STARTED);
         jobDetail.setIpAddress(CommonUtil.getIpAddress());
@@ -246,17 +223,16 @@ public class JobDaoImpl implements IJobDao {
     @Override
     public void updateJobDetails(Exchange exchange) {
 
-        LOGGER.info("Inside updateJobDetails .....................");
+        LOGGER.debug("Inside updateJobDetails .....................");
 
         JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
 
         if ("VERIZON_CONNECTION_HISTORY".equals(jobDetail.getName().toString())) {
-
             getConnectionHistoryJobCounts(exchange);
         } else {
-
             getDeviceUsageJobCounts(exchange);
         }
+
         try {
 
             Query searchJobQuery = new Query(Criteria.where(IConstant.CARRIER_NAME).is(
@@ -276,31 +252,25 @@ public class JobDaoImpl implements IJobDao {
             update.set("status", IConstant.JOB_COMPLETED);
 
             // checking total count
-            update.set("transactionCount",
-                    exchange.getProperty(IConstant.JOB_TOTAL_COUNT));
+            update.set("transactionCount", exchange.getProperty(IConstant.JOB_TOTAL_COUNT));
 
             // checking Error Cont
             if (exchange.getProperty(IConstant.JOB_ERROR_COUNT) != null) {
-                update.set("transactionFailed",
-                        exchange.getProperty(IConstant.JOB_ERROR_COUNT));
+                update.set("transactionFailed", exchange.getProperty(IConstant.JOB_ERROR_COUNT));
             } else {
                 update.set("transactionFailed", "0");
             }
 
             // checking Successful count
             if (exchange.getProperty(IConstant.JOB_SUCCESS_COUNT) != null) {
-                update.set("transactionPassed",
-                        exchange.getProperty(IConstant.JOB_SUCCESS_COUNT));
+                update.set("transactionPassed", exchange.getProperty(IConstant.JOB_SUCCESS_COUNT));
             } else {
                 update.set("transactionPassed", "0");
             }
             mongoTemplate.updateFirst(searchJobQuery, update, JobDetail.class);
 
-        }
-
-        catch (Exception e) {
-            LOGGER.info("Error In updateJobDetails-----------------------------"
-                    + e);
+        } catch (Exception e) {
+            LOGGER.error("Error In updateJobDetails-----------------------------" + e);
         }
 
     }
@@ -311,7 +281,7 @@ public class JobDaoImpl implements IJobDao {
     @Override
     public void getDeviceUsageJobCounts(Exchange exchange) {
 
-        LOGGER.info("Inside getDeviceUsageJobCounts .....................");
+        LOGGER.debug("Inside getDeviceUsageJobCounts .....................");
 
         JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
         try {
@@ -322,37 +292,28 @@ public class JobDaoImpl implements IJobDao {
                             .and("isValid").is(true)),
                     group("transactionStatus").count().as("count"),
 
-                    project("count").and("transactionStatus")
-                            .previousOperation());
+                    project("count").and("transactionStatus").previousOperation());
 
-            AggregationResults<JobStatus> results = mongoTemplate.aggregate(
-                    agg, DeviceUsage.class, JobStatus.class);
+            AggregationResults<JobStatus> results = mongoTemplate.aggregate(agg, DeviceUsage.class, JobStatus.class);
 
             Iterator itr = results.iterator();
             while (itr.hasNext()) {
                 JobStatus element = (JobStatus) itr.next();
 
-                LOGGER.info(element.getTransactionStatus()
-                        + "-----------------------------" + element.getCount());
-                if (IConstant.MIDWAY_TRANSACTION_STATUS_SUCCESS.equals(element
-                        .getTransactionStatus())) {
+                LOGGER.info(element.getTransactionStatus() + "-----------------------------" + element.getCount());
+                if (IConstant.MIDWAY_TRANSACTION_STATUS_SUCCESS.equals(element.getTransactionStatus())) {
                     exchange.setProperty(IConstant.JOB_SUCCESS_COUNT, element.getCount());
-                    LOGGER.info("Success Count-------------"
-                            + element.getCount());
+                    LOGGER.info("Success Count--------" + element.getCount());
                 }
-                if (IConstant.MIDWAY_TRANSACTION_STATUS_ERROR.equals(element
-                        .getTransactionStatus())) {
+                if (IConstant.MIDWAY_TRANSACTION_STATUS_ERROR.equals(element.getTransactionStatus())) {
                     exchange.setProperty(IConstant.JOB_ERROR_COUNT, element.getCount());
                     LOGGER.info("Error Count----------" + element.getCount());
                 }
 
             }
 
-        }
-
-        catch (Exception e) {
-            LOGGER.info("Error In updateJobDetails-----------------------------"
-                    + e);
+        } catch (Exception e) {
+            LOGGER.error("Error In updateJobDetails-----------------------------" + e);
         }
 
     }
@@ -362,7 +323,7 @@ public class JobDaoImpl implements IJobDao {
      */
     @Override
     public void getConnectionHistoryJobCounts(Exchange exchange) {
-        LOGGER.info("Inside getConnectionHistoryJobCounts ");
+        LOGGER.debug("Inside getConnectionHistoryJobCounts ");
 
         JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
 
@@ -374,37 +335,28 @@ public class JobDaoImpl implements IJobDao {
                             .and("isValid").is(true)),
                     group("transactionStatus").count().as("count"),
 
-                    project("count").and("transactionStatus")
-                            .previousOperation());
+                    project("count").and("transactionStatus").previousOperation());
 
-            AggregationResults<JobStatus> results = mongoTemplate.aggregate(
-                    agg, DeviceConnection.class, JobStatus.class);
+            AggregationResults<JobStatus> results = mongoTemplate.aggregate(agg, DeviceConnection.class, JobStatus.class);
 
             Iterator itr = results.iterator();
             while (itr.hasNext()) {
                 JobStatus element = (JobStatus) itr.next();
 
-                LOGGER.info(element.getTransactionStatus()
-                        + "-----------------------------" + element.getCount());
-                if (IConstant.MIDWAY_TRANSACTION_STATUS_SUCCESS.equals(element
-                        .getTransactionStatus())) {
+                LOGGER.info(element.getTransactionStatus() + "-----------------------------" + element.getCount());
+                if (IConstant.MIDWAY_TRANSACTION_STATUS_SUCCESS.equals(element.getTransactionStatus())) {
                     exchange.setProperty(IConstant.JOB_SUCCESS_COUNT, element.getCount());
-                    LOGGER.info("Success Count-------------"
-                            + element.getCount());
+                    LOGGER.info("    Success Count--------" + element.getCount());
                 }
-                if (IConstant.MIDWAY_TRANSACTION_STATUS_ERROR.equals(element
-                        .getTransactionStatus())) {
+                if (IConstant.MIDWAY_TRANSACTION_STATUS_ERROR.equals(element.getTransactionStatus())) {
                     exchange.setProperty(IConstant.JOB_ERROR_COUNT, element.getCount());
-                    LOGGER.info("Error Count----------" + element.getCount());
+                    LOGGER.info("    Error Count----------" + element.getCount());
                 }
 
             }
 
-        }
-
-        catch (Exception e) {
-            LOGGER.info("Error In updateJobDetails-----------------------------"
-                    + e);
+        } catch (Exception e) {
+            LOGGER.error("Error In updateJobDetails-----------------------------" + e);
         }
 
     }
@@ -415,7 +367,7 @@ public class JobDaoImpl implements IJobDao {
     @Override
     public void deleteDeviceUsageRecords(Exchange exchange) {
 
-        LOGGER.info("Inside deleteDeviceUsageRecords .....................");
+        LOGGER.debug("Inside deleteDeviceUsageRecords .....................");
 
         JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
 
@@ -431,7 +383,7 @@ public class JobDaoImpl implements IJobDao {
         WriteResult result = mongoTemplate.updateMulti(searchJobQuery, update,
                 DeviceUsage.class);
 
-        LOGGER.info("WriteResult ............." + result);
+        LOGGER.debug("WriteResult ............." + result);
 
     }
 
@@ -441,7 +393,7 @@ public class JobDaoImpl implements IJobDao {
     @Override
     public void deleteDeviceConnectionHistoryRecords(Exchange exchange) {
 
-        LOGGER.info("Inside deleteDeviceConnectionRecords .....................");
+        LOGGER.debug("Inside deleteDeviceConnectionRecords .....................");
 
         JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
         try {
@@ -458,7 +410,7 @@ public class JobDaoImpl implements IJobDao {
             WriteResult result = mongoTemplate.updateMulti(searchJobQuery,
                     update, DeviceConnection.class);
 
-            LOGGER.info("WriteResult *********************" + result);
+            LOGGER.debug("WriteResult *********************" + result);
 
         }
 
@@ -481,7 +433,7 @@ public class JobDaoImpl implements IJobDao {
 
             String carrierName = jobDetail.getCarrierName();
 
-            LOGGER.info("Carrier Name -----------------" + carrierName);
+            LOGGER.debug("Carrier Name -----------------" + carrierName);
             // We have to check bs_carrier with possible reseller values for
             // that carrier.
             Query searchQuery = new Query(Criteria.where(IConstant.CARRIER_NAME).regex(
@@ -512,11 +464,8 @@ public class JobDaoImpl implements IJobDao {
 
             }
 
-        }
-
-        catch (Exception e) {
-            LOGGER.error("Error In Fetching Transactioon Failure Device Usage/Device Connection Records-----------------------------"
-                    + e);
+        } catch (Exception e) {
+            LOGGER.error("Fetching Transaction Failure Device Usage/Device Connection Records------------------" + e);
         }
 
         return list;
@@ -529,7 +478,7 @@ public class JobDaoImpl implements IJobDao {
 
     @Override
     public void deleteTransactionFailureDeviceUsageRecords(Exchange exchange) {
-        LOGGER.info("Inside deleteTransactionFailureDeviceUsageRecords .....................");
+        LOGGER.debug("Inside deleteTransactionFailureDeviceUsageRecords .....................");
 
         JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
         try {
@@ -549,13 +498,10 @@ public class JobDaoImpl implements IJobDao {
             WriteResult result = mongoTemplate.updateMulti(searchJobQuery,
                     update, DeviceUsage.class);
 
-            LOGGER.info("WriteResult *********************" + result);
+            LOGGER.debug("WriteResult *********************" + result);
 
-        }
-
-        catch (Exception e) {
-            LOGGER.error("Error In Deleting Device Usage Records-----------------------------"
-                    + e);
+        } catch (Exception e) {
+            LOGGER.error("Error In Deleting Device Usage Records-----------------------------" + e);
         }
 
     }
@@ -564,9 +510,8 @@ public class JobDaoImpl implements IJobDao {
      * Soft Delete the Transaction Failure records for Device Connection
      */
     @Override
-    public void deleteTransactionFailureDeviceConnectionHistoryRecords(
-            Exchange exchange) {
-        LOGGER.info("Inside deleteTransactionFailureDeviceConnectionHistoryRecords .....................");
+    public void deleteTransactionFailureDeviceConnectionHistoryRecords(Exchange exchange) {
+        LOGGER.debug("Inside deleteTransactionFailureDeviceConnectionHistoryRecords .....................");
 
         JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
         try {
@@ -583,14 +528,11 @@ public class JobDaoImpl implements IJobDao {
 
             update.set("isValid", false);
 
-            WriteResult result = mongoTemplate.updateMulti(searchJobQuery,
-                    update, DeviceConnection.class);
+            WriteResult result = mongoTemplate.updateMulti(searchJobQuery, update, DeviceConnection.class);
 
-            LOGGER.info("WriteResult *********************" + result);
+            LOGGER.debug("WriteResult *********************" + result);
 
-        }
-
-        catch (Exception e) {
+        } catch (Exception e) {
             LOGGER.error("Error In Saving Job Detail-----------------------------"
                     + e);
         }
@@ -603,15 +545,13 @@ public class JobDaoImpl implements IJobDao {
     @Override
     public ServerDetail fetchServerIp(String currentServerIp) {
 
-        LOGGER.info("Inside fetchServerIp.....................");
+        LOGGER.debug("Inside fetchServerIp.....................");
 
         ServerDetail serverDetail;
 
-        Query searchDeviceQuery = new Query(Criteria.where("ipAddress").is(
-                currentServerIp));
+        Query searchDeviceQuery = new Query(Criteria.where("ipAddress").is(currentServerIp));
 
-        serverDetail = mongoTemplate.findOne(searchDeviceQuery,
-                ServerDetail.class);
+        serverDetail = mongoTemplate.findOne(searchDeviceQuery, ServerDetail.class);
 
         return serverDetail;
 
@@ -708,8 +648,7 @@ public class JobDaoImpl implements IJobDao {
         Set<Integer> timeOutDeviceSet = new HashSet<Integer>();
 
         for (DeviceInformation deviceInformation : timeOutDeviceList) {
-            LOGGER.info("timeOut devices ..........."
-                    + deviceInformation.getNetSuiteId());
+            LOGGER.debug("timeOut devices ..........." + deviceInformation.getNetSuiteId());
             timeOutDeviceSet.add(deviceInformation.getNetSuiteId());
         }
 
@@ -729,8 +668,7 @@ public class JobDaoImpl implements IJobDao {
         Set<Integer> timeOutDeviceSetInDB = new HashSet<Integer>();
 
         for (DeviceUsage deviceUsage : deviceUsageList) {
-            LOGGER.info("timeOut devices in usage..........."
-                    + deviceUsage.getNetSuiteId());
+            LOGGER.debug("timeOut devices in usage..........." + deviceUsage.getNetSuiteId());
             timeOutDeviceSetInDB.add(deviceUsage.getNetSuiteId());
         }
 
@@ -738,10 +676,8 @@ public class JobDaoImpl implements IJobDao {
         List<DeviceUsage> timeOutDevicesNotInUsage = new ArrayList<DeviceUsage>();
         for (DeviceInformation deviceInformation : timeOutDeviceList) {
 
-            if (!timeOutDeviceSetInDB.contains(deviceInformation
-                    .getNetSuiteId())) {
-                LOGGER.info("timeOut devices Not in usage..........."
-                        + deviceInformation.getNetSuiteId());
+            if (!timeOutDeviceSetInDB.contains(deviceInformation.getNetSuiteId())) {
+                LOGGER.debug("timeOut devices Not in usage..........." + deviceInformation.getNetSuiteId());
                 DeviceUsage deviceUsage = new DeviceUsage();
                 deviceUsage.setCarrierName(carrierName);
 
@@ -750,22 +686,17 @@ public class JobDaoImpl implements IJobDao {
 
                 deviceUsage.setDate(jobDetail.getDate());
                 deviceUsage.setTransactionErrorReason("TimeOut Error");
-                deviceUsage
-                        .setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
+                deviceUsage.setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
                 deviceUsage.setNetSuiteId(deviceInformation.getNetSuiteId());
                 deviceUsage.setIsValid(true);
                 deviceUsage.setJobId(jobDetail.getJobId());
 
                 if (carrierName.equalsIgnoreCase("KORE")) {
 
+                    deviceUsage.setDeviceId(CommonUtil.getSimNumber(deviceInformation.getDeviceIds()));
+                } else {
                     deviceUsage.setDeviceId(CommonUtil
-                            .getSimNumber(deviceInformation.getDeviceIds()));
-                }
-
-                else {
-                    deviceUsage.setDeviceId(CommonUtil
-                            .getRecommendedDeviceIdentifier(deviceInformation
-                                    .getDeviceIds()));
+                            .getRecommendedDeviceIdentifier(deviceInformation.getDeviceIds()));
 
                 }
 
@@ -774,8 +705,7 @@ public class JobDaoImpl implements IJobDao {
         }
         // Add all the timeOut Devices that are not in Device Usage Collection
         if (timeOutDevicesNotInUsage.size() > 0) {
-            LOGGER.info("Adding timeOut devices Not in usage..........."
-                    + timeOutDevicesNotInUsage.size());
+            LOGGER.debug("Adding timeOut devices Not in usage..........." + timeOutDevicesNotInUsage.size());
             mongoTemplate.insertAll(timeOutDevicesNotInUsage);
 
         }
@@ -798,8 +728,7 @@ public class JobDaoImpl implements IJobDao {
         Set<Integer> timeOutDeviceSet = new HashSet<Integer>();
 
         for (DeviceInformation deviceInformation : timeOutDeviceList) {
-            LOGGER.info("timeOut devices ..........."
-                    + deviceInformation.getNetSuiteId());
+            LOGGER.info("timeOut devices ..........." + deviceInformation.getNetSuiteId());
             timeOutDeviceSet.add(deviceInformation.getNetSuiteId());
         }
 
@@ -812,15 +741,13 @@ public class JobDaoImpl implements IJobDao {
                 .addCriteria(Criteria.where("isValid").is(true))
                 .addCriteria(Criteria.where("netSuiteId").in(timeOutDeviceSet));
 
-        List<DeviceConnection> deviceConnectionList = mongoTemplate.find(
-                searchJobQuery, DeviceConnection.class);
+        List<DeviceConnection> deviceConnectionList = mongoTemplate.find(searchJobQuery, DeviceConnection.class);
 
         // Add timeOut devices from DB in a Set with NetSuiteId
         Set<Integer> timeOutDeviceSetInDB = new HashSet<Integer>();
 
         for (DeviceConnection deviceConnection : deviceConnectionList) {
-            LOGGER.info("timeOut devices in Connection..........."
-                    + deviceConnection.getNetSuiteId());
+            LOGGER.debug("timeOut devices in Connection..........." + deviceConnection.getNetSuiteId());
             timeOutDeviceSetInDB.add(deviceConnection.getNetSuiteId());
         }
 
@@ -828,24 +755,19 @@ public class JobDaoImpl implements IJobDao {
         List<DeviceConnection> timeOutDevicesNotInConnection = new ArrayList<DeviceConnection>();
         for (DeviceInformation deviceInformation : timeOutDeviceList) {
 
-            if (!timeOutDeviceSetInDB.contains(deviceInformation
-                    .getNetSuiteId())) {
-                LOGGER.info("timeOut devices Not in Connection..........."
-                        + deviceInformation.getNetSuiteId());
+            if (!timeOutDeviceSetInDB.contains(deviceInformation.getNetSuiteId())) {
+                LOGGER.debug("timeOut devices Not in Connection..........." + deviceInformation.getNetSuiteId());
                 DeviceConnection deviceConnection = new DeviceConnection();
                 deviceConnection.setCarrierName(carrierName);
 
                 deviceConnection.setDate(jobDetail.getDate());
                 deviceConnection.setTransactionErrorReason("TimeOut Error");
-                deviceConnection
-                        .setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
-                deviceConnection.setNetSuiteId(deviceInformation
-                        .getNetSuiteId());
+                deviceConnection.setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
+                deviceConnection.setNetSuiteId(deviceInformation.getNetSuiteId());
                 deviceConnection.setIsValid(true);
                 deviceConnection.setJobId(jobDetail.getJobId());
                 deviceConnection.setDeviceId(CommonUtil
-                        .getRecommendedDeviceIdentifier(deviceInformation
-                                .getDeviceIds()));
+                        .getRecommendedDeviceIdentifier(deviceInformation.getDeviceIds()));
 
                 timeOutDevicesNotInConnection.add(deviceConnection);
             }
@@ -853,10 +775,8 @@ public class JobDaoImpl implements IJobDao {
         // Add all the timeOut Devices that are not in Device Connection
         // Collection
         if (timeOutDevicesNotInConnection.size() > 0) {
-            LOGGER.info("Adding timeOut devices Not in Connection..........."
-                    + timeOutDevicesNotInConnection.size());
+            LOGGER.debug("Adding timeOut devices Not in Connection..........." + timeOutDevicesNotInConnection.size());
             mongoTemplate.insertAll(timeOutDevicesNotInConnection);
-
         }
     }
 
@@ -877,12 +797,9 @@ public class JobDaoImpl implements IJobDao {
         Set<Integer> timeOutDeviceSetTransactionFailure = new HashSet<Integer>();
 
         for (DeviceUsage deviceUsage : timeOutDeviceListTransactionFailure) {
-            LOGGER.info("timeOut devices TransactionFailure ..........."
-                    + deviceUsage.getNetSuiteId());
+            LOGGER.debug("timeOut devices TransactionFailure ..........." + deviceUsage.getNetSuiteId());
             timeOutDeviceSetTransactionFailure.add(deviceUsage.getNetSuiteId());
         }
-
-        String carrierName = (String) exchange.getProperty(IConstant.CARRIER_NAME);
 
         // find the TransactionFailure timeout devices that are in device usage
         // Collection
@@ -901,8 +818,7 @@ public class JobDaoImpl implements IJobDao {
         Set<Integer> timeOutDeviceSetInDB = new HashSet<Integer>();
 
         for (DeviceUsage deviceUsage : deviceUsageListTransactionFailure) {
-            LOGGER.info("timeOut devices TransactionFailure in usage..........."
-                    + deviceUsage.getNetSuiteId());
+            LOGGER.debug("timeOut devices TransactionFailure in usage..........." + deviceUsage.getNetSuiteId());
             timeOutDeviceSetInDB.add(deviceUsage.getNetSuiteId());
         }
 
@@ -911,15 +827,13 @@ public class JobDaoImpl implements IJobDao {
         for (DeviceUsage deviceUsage : timeOutDeviceListTransactionFailure) {
 
             if (!timeOutDeviceSetInDB.contains(deviceUsage.getNetSuiteId())) {
-                LOGGER.info("timeOut devices Not in usage TransactionFailure..........."
-                        + deviceUsage.getNetSuiteId());
+                LOGGER.debug("timeOut devices Not in usage TransactionFailure......" + deviceUsage.getNetSuiteId());
 
                 deviceUsage.setDataUsed(0);
 
                 deviceUsage.setDate(jobDetail.getDate());
                 deviceUsage.setTransactionErrorReason("TimeOut Error");
-                deviceUsage
-                        .setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
+                deviceUsage.setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
 
                 deviceUsage.setIsValid(true);
                 deviceUsage.setJobId(jobDetail.getJobId());
@@ -929,8 +843,7 @@ public class JobDaoImpl implements IJobDao {
         }
         // Add all the timeOut Devices that are not in Device Usage Collection
         if (timeOutDevicesNotInUsage.size() > 0) {
-            LOGGER.info("Adding timeOut devices Not in usage..........."
-                    + timeOutDevicesNotInUsage.size());
+            LOGGER.debug("Adding timeOut devices Not in usage..........." + timeOutDevicesNotInUsage.size());
             mongoTemplate.insertAll(timeOutDevicesNotInUsage);
 
         }
@@ -954,10 +867,8 @@ public class JobDaoImpl implements IJobDao {
         Set<Integer> timeOutDeviceSetTransactionFailure = new HashSet<Integer>();
 
         for (DeviceConnection deviceConnection : timeOutDeviceTransactionFailureList) {
-            LOGGER.info("timeOut devices TransactionFailure ..........."
-                    + deviceConnection.getNetSuiteId());
-            timeOutDeviceSetTransactionFailure.add(deviceConnection
-                    .getNetSuiteId());
+            LOGGER.debug("timeOut devices TransactionFailure ..........." + deviceConnection.getNetSuiteId());
+            timeOutDeviceSetTransactionFailure.add(deviceConnection.getNetSuiteId());
         }
 
 
@@ -967,8 +878,7 @@ public class JobDaoImpl implements IJobDao {
                 .addCriteria(Criteria.where("date").is(jobDetail.getDate()))
                 .addCriteria(Criteria.where("isValid").is(true))
                 .addCriteria(
-                        Criteria.where("netSuiteId").in(
-                                timeOutDeviceSetTransactionFailure));
+                        Criteria.where("netSuiteId").in(timeOutDeviceSetTransactionFailure));
 
         List<DeviceConnection> deviceConnectionListTransactionFailure = mongoTemplate
                 .find(searchJobQuery, DeviceConnection.class);
@@ -977,8 +887,7 @@ public class JobDaoImpl implements IJobDao {
         Set<Integer> timeOutDeviceSetInDB = new HashSet<Integer>();
 
         for (DeviceConnection deviceConnection : deviceConnectionListTransactionFailure) {
-            LOGGER.info("timeOut devices TransactionFailure in Connection..........."
-                    + deviceConnection.getNetSuiteId());
+            LOGGER.debug("timeOut devices TransactionFailure in Connection........" + deviceConnection.getNetSuiteId());
             timeOutDeviceSetInDB.add(deviceConnection.getNetSuiteId());
         }
 
@@ -986,15 +895,12 @@ public class JobDaoImpl implements IJobDao {
         List<DeviceConnection> timeOutDevicesNotInConnection = new ArrayList<DeviceConnection>();
         for (DeviceConnection deviceConnection : timeOutDeviceTransactionFailureList) {
 
-            if (!timeOutDeviceSetInDB
-                    .contains(deviceConnection.getNetSuiteId())) {
-                LOGGER.info("timeOut devices Not in Connection TransactionFailure..........."
-                        + deviceConnection.getNetSuiteId());
+            if (!timeOutDeviceSetInDB.contains(deviceConnection.getNetSuiteId())) {
+                LOGGER.debug("timeOut devices Not in Connection TransactionFailure..." + deviceConnection.getNetSuiteId());
 
                 deviceConnection.setDate(jobDetail.getDate());
                 deviceConnection.setTransactionErrorReason("TimeOut Error");
-                deviceConnection
-                        .setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
+                deviceConnection.setTransactionStatus(IConstant.MIDWAY_TRANSACTION_STATUS_ERROR);
 
                 deviceConnection.setIsValid(true);
                 deviceConnection.setJobId(jobDetail.getJobId());
@@ -1004,8 +910,7 @@ public class JobDaoImpl implements IJobDao {
         // Add all the timeOut Devices that are not in Device Connection
         // Collection
         if (timeOutDevicesNotInConnection.size() > 0) {
-            LOGGER.info("Adding timeOut devices Not in Connection..........."
-                    + timeOutDevicesNotInConnection.size());
+            LOGGER.debug("Adding timeOut devices Not in Connection........." + timeOutDevicesNotInConnection.size());
             mongoTemplate.insertAll(timeOutDevicesNotInConnection);
 
         }
@@ -1014,7 +919,7 @@ public class JobDaoImpl implements IJobDao {
     @Override
     public void updateDeviceUsageView(Exchange exchange) {
 
-        LOGGER.info("Inside updateDeviceUsageView .....................");
+        LOGGER.debug("Inside updateDeviceUsageView .....................");
 
         Map<Integer, DeviceUsageViewElement> existingRecords = fetchExistingDeviceUsageView(exchange);
 
@@ -1064,8 +969,7 @@ public class JobDaoImpl implements IJobDao {
                     list.add(viewElement);
 
                 }
-                DeviceUsageViewElement[] elements = list
-                        .toArray(new DeviceUsageViewElement[list.size()]);
+                DeviceUsageViewElement[] elements = list.toArray(new DeviceUsageViewElement[list.size()]);
 
                 view.setElements(elements);
 
@@ -1075,31 +979,24 @@ public class JobDaoImpl implements IJobDao {
                     DeviceUsage deviceUsageElement = (DeviceUsage) itr.next();
                     DeviceUsageViewElement newViewElement = new DeviceUsageViewElement();
 
-                    DeviceUsageViewElement mapElement = existingRecords
-                            .get(deviceUsageElement.getNetSuiteId());
+                    DeviceUsageViewElement mapElement = existingRecords.get(deviceUsageElement.getNetSuiteId());
                     // if Element not present adding the element to the hashmap
 
                     if (mapElement == null) {
 
-                        newViewElement.setDeviceId(deviceUsageElement
-                                .getDeviceId());
-                        newViewElement.setNetSuiteId(deviceUsageElement
-                                .getNetSuiteId());
-                        newViewElement.setDataUsed(deviceUsageElement
-                                .getDataUsed());
+                        newViewElement.setDeviceId(deviceUsageElement.getDeviceId());
+                        newViewElement.setNetSuiteId(deviceUsageElement.getNetSuiteId());
+                        newViewElement.setDataUsed(deviceUsageElement.getDataUsed());
                         newViewElement.setIsUpdatedElement(Boolean.TRUE);
                         newViewElement.setJobId(deviceUsageElement.getJobId());
                         newViewElement.setLastTimeStampUpdated(new Date());
 
-                        existingRecords.put(deviceUsageElement.getNetSuiteId(),
-                                newViewElement);
+                        existingRecords.put(deviceUsageElement.getNetSuiteId(), newViewElement);
 
                     }
                     // if the map Element has different value than view element
-                    else if (mapElement.getDataUsed() != deviceUsageElement
-                            .getDataUsed()) {
-                        mapElement
-                                .setDataUsed(deviceUsageElement.getDataUsed());
+                    else if (mapElement.getDataUsed() != deviceUsageElement.getDataUsed()) {
+                        mapElement.setDataUsed(deviceUsageElement.getDataUsed());
                         mapElement.setJobId(deviceUsageElement.getJobId());
                         mapElement.setIsUpdatedElement(Boolean.TRUE);
                         mapElement.setLastTimeStampUpdated(new Date());
@@ -1108,9 +1005,7 @@ public class JobDaoImpl implements IJobDao {
                 }
 
                 DeviceUsageViewElement[] updatedElements = existingRecords
-                        .values().toArray(
-                                new DeviceUsageViewElement[existingRecords
-                                        .values().size()]);
+                        .values().toArray(new DeviceUsageViewElement[existingRecords.values().size()]);
 
                 view.setElements(updatedElements);
 
@@ -1121,8 +1016,7 @@ public class JobDaoImpl implements IJobDao {
             }
             Query searchDeviceUsageViewQuery = new Query(Criteria.where(
             		IConstant.CARRIER_NAME).regex(jobDetail.getCarrierName(), "i"))
-                    .addCriteria(Criteria.where("date").is(
-                            jobDetail.getDate()));
+                    .addCriteria(Criteria.where("date").is(jobDetail.getDate()));
 
             Update update = new Update();
 
@@ -1130,22 +1024,17 @@ public class JobDaoImpl implements IJobDao {
             update.set(IConstant.CARRIER_NAME,jobDetail.getCarrierName() );
             update.set("date",jobDetail.getDate());
 
-            mongoTemplate.upsert(searchDeviceUsageViewQuery, update,
-                    DeviceUsageView.class);
+            mongoTemplate.upsert(searchDeviceUsageViewQuery, update, DeviceUsageView.class);
 
-        }
-
-        catch (Exception e) {
-            LOGGER.info("Error In updateDeviceUsageView-----------------------------"
-                    + e);
+        } catch (Exception e) {
+            LOGGER.error("Error In updateDeviceUsageView-----------------------------" + e);
         }
 
     }
 
-    public Map<Integer, DeviceUsageViewElement> fetchExistingDeviceUsageView(
-            Exchange exchange) {
+    public Map<Integer, DeviceUsageViewElement> fetchExistingDeviceUsageView(Exchange exchange) {
 
-        LOGGER.info("Inside fetchExistingDeviceUsageView .....................");
+        LOGGER.debug("Inside fetchExistingDeviceUsageView .....................");
 
         Map<Integer, DeviceUsageViewElement> deviceUsageViewMap = new HashMap();
 
@@ -1160,7 +1049,6 @@ public class JobDaoImpl implements IJobDao {
                     searchJobQuery, DeviceUsageView.class);
 
             if (deviceUsageViewList.size() > 0) {
-                ArrayList<DeviceUsageViewElement> list = new ArrayList<DeviceUsageViewElement>();
 
                 DeviceUsageView view = deviceUsageViewList.get(0);
 
@@ -1169,15 +1057,11 @@ public class JobDaoImpl implements IJobDao {
                 deviceUsageViewMap = Arrays
                         .asList(elements)
                         .stream()
-                        .collect(
-                                Collectors.toMap(x -> x.getNetSuiteId(), x -> x));
+                        .collect(Collectors.toMap(x -> x.getNetSuiteId(), x -> x));
             }
 
-        }
-
-        catch (Exception e) {
-            LOGGER.info("Error In fetchExistingDeviceUsageView-----------------------------"
-                    + e);
+        } catch (Exception e) {
+            LOGGER.error("Error In fetchExistingDeviceUsageView-----------------------------" + e);
         }
         return deviceUsageViewMap;
 
@@ -1191,7 +1075,7 @@ public class JobDaoImpl implements IJobDao {
 		
 		Boolean isUpdatedElementfalse = false;
 
-		LOGGER.info("Inside fetchDeviceUsageView .....................");
+		LOGGER.debug("Inside fetchDeviceUsageView .....................");
 		DevicesUsageByDayAndCarrier deviceUsageResponse = null;
 
 		List<DevicesUsageByDayAndCarrier> deviceUsagelist = new ArrayList<DevicesUsageByDayAndCarrier>();
@@ -1213,18 +1097,13 @@ public class JobDaoImpl implements IJobDao {
 
 				deviceUsageResponse = new DevicesUsageByDayAndCarrier();
 
-				ArrayList<DeviceUsageViewElement> list = new ArrayList<DeviceUsageViewElement>();
+				DeviceUsageView deviceUsageView = deviceUsageViewList.get(0);
 
-				DeviceUsageView deviceUasgesview = deviceUsageViewList.get(0);
+				DeviceUsageViewElement[] elements = deviceUsageView.getElements();
 
-				DeviceUsageViewElement[] elements = deviceUasgesview
-						.getElements();
+				LOGGER.debug("elements:" + elements.length);
 
-				LOGGER.info("elements:" + elements.length);
-
-				for (int i = 0; i < elements.length; i++)
-
-				{
+				for (int i = 0; i < elements.length; i++) {
 					// request parameter is false
 					// add all
 					// if request paramter is true
@@ -1243,12 +1122,8 @@ public class JobDaoImpl implements IJobDao {
 
 			}
 
-		}
-		
-		catch (Exception e) {
-			LOGGER.info("Error In fetchDeviceUsageView-----------------------------"
-					+ e);
-
+		} catch (Exception e) {
+			LOGGER.error("Error In fetchDeviceUsageView-----------------------------" + e);
 		}
 		return deviceUsagelist;
 
@@ -1262,11 +1137,10 @@ public class JobDaoImpl implements IJobDao {
 		// table
 		AggregationResults<DeviceUsage> results = null;
 
-		String fetchdate = jobDetail.getDate();
-		String[] fetchDateString = fetchdate.split("-");
-		String beginningMonthDate = fetchDateString[0] + "-"
-				+ fetchDateString[1] + "-01";
-		LOGGER.info("beginningMonthDate:::::" + beginningMonthDate);
+		String fetchDate = jobDetail.getDate();
+		String[] fetchDateString = fetchDate.split("-");
+		String beginningMonthDate = fetchDateString[0] + "-" + fetchDateString[1] + "-01";
+		LOGGER.debug("beginningMonthDate:::::" + beginningMonthDate);
 
 		try
 
@@ -1282,18 +1156,113 @@ public class JobDaoImpl implements IJobDao {
 			// .max("date").as("date")
 			);
 
-			results = mongoTemplate.aggregate(agg, DeviceUsage.class,
-					DeviceUsage.class);
+			results = mongoTemplate.aggregate(agg, DeviceUsage.class, DeviceUsage.class);
 
-			LOGGER.info("LIST KA SIZE" + results.getMappedResults().size());
-		}
-
-		catch (Exception e) {
-			LOGGER.info("e::" + e.getMessage());
+			LOGGER.debug("LIST KA SIZE" + results.getMappedResults().size());
+		} catch (Exception e) {
+			LOGGER.error("e::" + e.getMessage());
 		}
 
 		return results.getMappedResults();
 
 	}
+	
+	   @Override
+	    public void updateNetSuiteCallBackResponse(Exchange exchange) {
+	        LOGGER.info("is netsuite callback error......." + exchange.getProperty("isNetSuiteCallBackError"));
+
+	        Map map = exchange.getIn().getBody(Map.class);
+
+	        ObjectMapper mapper = new ObjectMapper();
+
+	        String jsonstring = null;
+
+	        try {
+	            jsonstring = mapper.writeValueAsString(map);
+	        } catch (JsonProcessingException e) {
+	            LOGGER.error(e);
+	        }
+
+	        LOGGER.debug("is netsuite callback response......."
+	                + exchange.getIn().getBody() + "   " + jsonstring);
+
+	        if (exchange.getProperty("isNetSuiteCallBackError") == null) {
+
+	            JobDetail jobDetail = (JobDetail) exchange.getProperty(IConstant.JOB_DETAIL);
+
+	            try {
+
+	                Query searchJobQuery = new Query(Criteria.where(
+	                        IConstant.CARRIER_NAME).is(jobDetail.getCarrierName()))
+	                        .addCriteria(
+	                                Criteria.where("date").is(jobDetail.getDate()))
+	                        .addCriteria(
+	                                Criteria.where("name").is(jobDetail.getName()))
+	                        .addCriteria(
+	                                Criteria.where("type").is(jobDetail.getType()))
+	                        .addCriteria(
+	                                Criteria.where("jobId")
+	                                        .is(jobDetail.getJobId()));
+
+	                Update update = new Update();
+
+	                update.set("callBackDelivered", true);
+	                update.set("netSuiteResponse", jsonstring);
+	                update.set("lastTimeStampUpdated", new Date());
+	                mongoTemplate.updateFirst(searchJobQuery, update, JobDetail.class);
+	            } catch (Exception e) {
+	                LOGGER.info("Error In updateJobDetails-----------------------------" + e);
+	            }
+
+	        }
+
+	        else {
+	            LOGGER.info("error while sending callback to Netsuite");
+
+	        }
+
+	    }
+
+	    @Override
+	    public void updateNetSuiteCallBackError(Exchange exchange) {
+
+	        LOGGER.debug("net suite call back error.............");
+
+	        JobDetail jobDetail = (JobDetail) exchange
+	                .getProperty(IConstant.JOB_DETAIL);
+	        
+
+	       try {
+
+	            Query searchJobQuery = new Query(Criteria.where(
+	                    IConstant.CARRIER_NAME).is(jobDetail.getCarrierName()))
+	                    .addCriteria(Criteria.where("date").is(jobDetail.getDate()))
+	                    .addCriteria(Criteria.where("name").is(jobDetail.getName()))
+	                    .addCriteria(Criteria.where("type").is(jobDetail.getType()))
+	                    .addCriteria(Criteria.where("jobId").is(jobDetail.getJobId()));
+
+	        Update update = new Update();
+
+	        Exception exception = (Exception) exchange.getProperty(Exchange.EXCEPTION_CAUGHT);
+
+	        if (exception instanceof CxfOperationException) {
+	            CxfOperationException cxfOperationException = (CxfOperationException) exception;
+	            update.set("callBackFailureToNetSuiteReason", cxfOperationException.getResponseBody());
+	        } else {
+	            update.set("callBackFailureToNetSuiteReason", exception.getMessage());
+	        }
+
+	        update.set("callBackDelivered", false);
+	        update.set("lastTimeStampUpdated", new Date());
+	        mongoTemplate.updateFirst(searchJobQuery, update, JobDetail.class);
+
+	        exchange.setProperty("isNetSuiteCallBackError", true);
+
+	    } catch(Exception ex){
+	        LOGGER.error("net suite call back error.  ............" + ex);
+	        
+	    }
+    }
+	    
 
 }

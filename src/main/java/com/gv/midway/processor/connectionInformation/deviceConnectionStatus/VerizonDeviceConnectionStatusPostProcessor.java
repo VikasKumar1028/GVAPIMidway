@@ -1,13 +1,10 @@
 package com.gv.midway.processor.connectionInformation.deviceConnectionStatus;
 
-import java.util.Map;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gv.midway.constant.IConstant;
 import com.gv.midway.constant.IResponse;
 import com.gv.midway.pojo.Header;
@@ -33,25 +30,20 @@ public class VerizonDeviceConnectionStatusPostProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        LOGGER.info("Begin:VerizonDeviceConnectionStatusPostProcessor");
+        LOGGER.debug("Begin:VerizonDeviceConnectionStatusPostProcessor");
 
         ConnectionStatusResponse businessResponse = new ConnectionStatusResponse();
         ConnectionStatusResponseDataArea connectionStatusResponseDataArea = new ConnectionStatusResponseDataArea();
         Response response = new Response();
 
-        LOGGER.info("exchange.getIn().getBody().toString()***************************************"
-                + exchange.getIn().getBody().toString());
+        LOGGER.debug("exchange.getIn().getBody()****************************" + exchange.getIn().getBody());
 
         if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
 
-            Map map = exchange.getIn().getBody(Map.class);
-            ObjectMapper mapper = new ObjectMapper(); // jackson's objectmapper
-            ConnectionInformationResponse connectionResponse = mapper
-                    .convertValue(map, ConnectionInformationResponse.class);
+            ConnectionInformationResponse connectionResponse = exchange.getIn().getBody(ConnectionInformationResponse.class);
 
             String deviceStatus = null;
-            int totalConnectionHistory = connectionResponse
-                    .getConnectionHistory().length;
+            int totalConnectionHistory = connectionResponse.getConnectionHistory().length;
             if (totalConnectionHistory > 0) {
                 totalConnectionHistory = totalConnectionHistory - 1;
                 int totalConnectionHistoryEvents = connectionResponse
@@ -80,7 +72,7 @@ public class VerizonDeviceConnectionStatusPostProcessor implements Processor {
                 status = IConstant.DEVICE_NOT_IN_SESSION;
             }
 
-            LOGGER.info("RequestID::" + exchange.getIn().getBody().toString());
+            LOGGER.debug("RequestID::" + exchange.getIn().getBody().toString());
             response.setResponseCode(IResponse.SUCCESS_CODE);
             response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
             response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_CONNECTION_STATUS);
@@ -95,16 +87,16 @@ public class VerizonDeviceConnectionStatusPostProcessor implements Processor {
 
         }
 
-        Header responseheader = (Header) exchange.getProperty(IConstant.HEADER);
+        Header responseHeader = (Header) exchange.getProperty(IConstant.HEADER);
 
-        businessResponse.setHeader(responseheader);
+        businessResponse.setHeader(responseHeader);
         businessResponse.setResponse(response);
 
         businessResponse.setDataArea(connectionStatusResponseDataArea);
 
         exchange.getIn().setBody(businessResponse);
 
-        LOGGER.info("End:VerizonDeviceConnectionStatusPostProcessor");
+        LOGGER.debug("End:VerizonDeviceConnectionStatusPostProcessor");
 
     }
 

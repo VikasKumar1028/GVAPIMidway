@@ -35,7 +35,7 @@ public class ATTJasperDeviceSessionBeginEndInfoPostProcessor implements
 	@Override
 	public void process(Exchange exchange) throws Exception {
 		// TODO Auto-generated method stub
-		LOGGER.info("Begin:ATTJasperDeviceSessionBeginEndInfoPostProcessor");
+		LOGGER.debug("Begin:ATTJasperDeviceSessionBeginEndInfoPostProcessor");
 
 		SessionBeginEndResponse businessResponse = new SessionBeginEndResponse();
 		SessionBeginEndResponseDataArea sessionBeginEndResponseDataArea = new SessionBeginEndResponseDataArea();
@@ -88,6 +88,6 @@ public class ATTJasperDeviceSessionBeginEndInfoPostProcessor implements
 
 		exchange.getIn().setBody(businessResponse);
 
-		LOGGER.info("End:ATTJasperDeviceSessionBeginEndInfoPostProcessor");
+		LOGGER.debug("End:ATTJasperDeviceSessionBeginEndInfoPostProcessor");
 	}
 }

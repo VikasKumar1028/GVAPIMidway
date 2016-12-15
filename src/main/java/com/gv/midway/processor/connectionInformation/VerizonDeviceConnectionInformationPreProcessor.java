@@ -22,10 +22,10 @@ public class VerizonDeviceConnectionInformationPreProcessor implements
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        LOGGER.info("Start:VerizonDeviceConnectionInformationPreProcessor");
-        LOGGER.info("Session Parameters  VZSessionToken"
-                + exchange.getProperty(IConstant.VZ_SEESION_TOKEN));
-        LOGGER.info("Session Parameters  VZAuthorization"
+        LOGGER.debug("Start:VerizonDeviceConnectionInformationPreProcessor");
+        LOGGER.debug("Session Parameters  VZSessionToken"
+                + exchange.getProperty(IConstant.VZ_SESSION_TOKEN));
+        LOGGER.debug("Session Parameters  VZAuthorization"
                 + exchange.getProperty(IConstant.VZ_AUTHORIZATION_TOKEN));
 
         ConnectionInformationRequestDataArea businessRequest = new ConnectionInformationRequestDataArea();
@@ -49,7 +49,7 @@ public class VerizonDeviceConnectionInformationPreProcessor implements
         message.setHeader(Exchange.HTTP_PATH,
                 "/devices/connections/actions/listHistory");
 
-        LOGGER.info("End:VerizonDeviceConnectionStatusPreProcessor");
+        LOGGER.debug("End:VerizonDeviceConnectionStatusPreProcessor");
 
     }
 

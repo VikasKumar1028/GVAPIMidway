@@ -22,7 +22,7 @@ public class VerizonDeactivateDevicePreProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        LOGGER.info("Begin:VerizonDeactivateDevicePreProcessor");
+        LOGGER.debug("Begin:VerizonDeactivateDevicePreProcessor");
 
         DeactivateDeviceRequestVerizon businessRequest = new DeactivateDeviceRequestVerizon();
         DeactivateDeviceRequest proxyRequest = (DeactivateDeviceRequest) exchange
@@ -57,7 +57,7 @@ public class VerizonDeactivateDevicePreProcessor implements Processor {
                 businessDeviceId.setId(proxyDeviceId.getId());
                 businessDeviceId.setKind(proxyDeviceId.getKind());
 
-                LOGGER.info(proxyDeviceId.getId());
+                LOGGER.debug(proxyDeviceId.getId());
 
                 businessDeviceIdArray[i] = businessDeviceId;
 
@@ -79,7 +79,7 @@ public class VerizonDeactivateDevicePreProcessor implements Processor {
 
         message.setHeader(Exchange.HTTP_PATH, "/devices/actions/deactivate");
 
-        LOGGER.info("End:VerizonDeactivateDevicePreProcessor");
+        LOGGER.debug("End:VerizonDeactivateDevicePreProcessor");
 
     }
 }

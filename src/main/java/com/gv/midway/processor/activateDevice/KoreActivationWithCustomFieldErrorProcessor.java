@@ -42,7 +42,7 @@ public class KoreActivationWithCustomFieldErrorProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        LOGGER.info("Begin:KoreActivationWithCustomFieldErrorProcessor");
+        LOGGER.debug("Begin:KoreActivationWithCustomFieldErrorProcessor");
 
         final Message message = exchange.getIn();
 
@@ -50,7 +50,7 @@ public class KoreActivationWithCustomFieldErrorProcessor implements Processor {
         final String midWayTransactionId = (String) exchange.getProperty(IConstant.MIDWAY_TRANSACTION_ID);
         final Integer netSuiteID = (Integer) exchange.getProperty(IConstant.MIDWAY_NETSUITE_ID);
         final Object object = exchange.getProperty(IConstant.KAFKA_OBJECT);
-        final Object body = exchange.getProperty(IConstant.KORE_ACTIVATION_CUSTOMEFIELD_PAYLOAD);
+        final Object body = exchange.getProperty(IConstant.KORE_ACTIVATION_CUSTOMFIELD_PAYLOAD);
 
         String errorDescription = null;
 
@@ -76,7 +76,7 @@ public class KoreActivationWithCustomFieldErrorProcessor implements Processor {
             final Exception errorObj = (Exception) exchange.getProperty(Exchange.EXCEPTION_CAUGHT);
 
             if (errorObj instanceof CxfOperationException) {
-                LOGGER.info("cxf exception calling the changeCustomFields");
+                LOGGER.error("cxf exception calling the changeCustomFields");
                 final CxfOperationException exception = (CxfOperationException) errorObj;
                 final String errorResponseBody = exception.getResponseBody();
                 final ObjectMapper mapper = new ObjectMapper();
@@ -85,7 +85,7 @@ public class KoreActivationWithCustomFieldErrorProcessor implements Processor {
                     final KoreErrorResponse errorResponsePayload = mapper.readValue(errorResponseBody, KoreErrorResponse.class);
                     errorDescription = errorResponsePayload.getErrorMessage();
 
-                    exchange.setProperty(IConstant.KORE_ACTIVATION_CUSTOMEFIELD_ERRORPAYLOAD, errorResponsePayload);
+                    exchange.setProperty(IConstant.KORE_ACTIVATION_CUSTOMFIELD_ERRORPAYLOAD, errorResponsePayload);
                 } catch (Exception e) {
                     LOGGER.error("Error ::" + e);
                 }
@@ -119,7 +119,7 @@ public class KoreActivationWithCustomFieldErrorProcessor implements Processor {
 
             netSuiteCallBackError.setKeyValues(new KeyValues[]{keyValues1, keyValues2, keyValues3, keyValues4});
 
-            exchange.setProperty(IConstant.KORE_ACTIVATION_CUSTOMEFIELD_ERROR_DESCRIPTION, errorDescription);
+            exchange.setProperty(IConstant.KORE_ACTIVATION_CUSTOMFIELD_ERROR_DESCRIPTION, errorDescription);
             exchange.setProperty(IConstant.KAFKA_OBJECT, netSuiteCallBackError);
         }
 
@@ -138,10 +138,9 @@ public class KoreActivationWithCustomFieldErrorProcessor implements Processor {
 
         final NetSuiteOAuthHeaderProperties properties = EnvironmentParser.getNetSuiteOAuthHeaderProperties(newEnv);
 
-        LOGGER.info("request type for NetSuite CallBack error...." + RequestType.CHANGECUSTOMFIELDS);
-        LOGGER.info("oauth info is....." + properties);
+        LOGGER.error("request type for NetSuite CallBack error...." + RequestType.CHANGECUSTOMFIELDS);
+        LOGGER.error("oauth info is....." + properties);
 
-        //final String script = "539";
         final String script = newEnv.getProperty("netSuite.callbacks.script");
         final String oauthHeader = NetSuiteOAuthUtil.getNetSuiteOAuthHeader(properties, script);
 
@@ -153,9 +152,10 @@ public class KoreActivationWithCustomFieldErrorProcessor implements Processor {
         message.setBody(netSuiteCallBackProvisioningRequest);
 
         exchange.setProperty("script", script);
+        exchange.setProperty(IConstant.MIDWAY_TRANSACTION_REQUEST_TYPE, RequestType.CHANGECUSTOMFIELDS);
         exchange.setPattern(ExchangePattern.InOut);
 
-        LOGGER.info("error callback response to Kore for activation with Custom Field..." + exchange.getIn().getBody());
-        LOGGER.info("End:KoreActivationWithCustomFieldErrorProcessor");
+        LOGGER.error("error callback response to Kore for activation with Custom Field..." + exchange.getIn().getBody());
+        LOGGER.debug("End:KoreActivationWithCustomFieldErrorProcessor");
     }
 }

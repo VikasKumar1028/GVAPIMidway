@@ -18,12 +18,12 @@ public class JobInitializedPostProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        LOGGER.info("Begin::JobInitializedPostProcessor");
+        LOGGER.debug("Begin::JobInitializedPostProcessor");
 
         final JobinitializedResponse jobinitializedResponse = new JobinitializedResponse();
         jobinitializedResponse.setMessage(IResponse.SUCCESS_DESCRIPTION_JOB_INITIALIZED);
 
         exchange.getIn().setBody(jobinitializedResponse);
-        LOGGER.info("End::JobInitializedPostProcessor");
+        LOGGER.debug("End::JobInitializedPostProcessor");
     }
 }

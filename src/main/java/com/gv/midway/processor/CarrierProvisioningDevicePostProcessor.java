@@ -27,15 +27,14 @@ public class CarrierProvisioningDevicePostProcessor implements Processor {
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
-		LOGGER.info("Begin:CarrierProvisioningDevicePostProcessor");
+		LOGGER.debug("Begin:CarrierProvisioningDevicePostProcessor");
 
 		final CarrierProvisioningDeviceResponseDataArea carrierProvisioningDeviceResponseDataArea = new CarrierProvisioningDeviceResponseDataArea();
 		final Response response = new Response();
 
-		LOGGER.info("exchange.getIn().getBody().toString()***************************************" + exchange.getIn().getBody().toString());
+		LOGGER.debug("RequestID::" + exchange.getIn().getBody().toString());
 
 		if (!exchange.getIn().getBody().toString().contains("errorMessage=")) {
-			LOGGER.info("RequestID::" + exchange.getIn().getBody().toString());
 			response.setResponseCode(IResponse.SUCCESS_CODE);
 			response.setResponseStatus(IResponse.SUCCESS_MESSAGE);
 			response.setResponseDescription(IResponse.SUCCESS_DESCRIPTION_PROVISIONING_MIDWAY);
@@ -55,6 +54,6 @@ public class CarrierProvisioningDevicePostProcessor implements Processor {
 
 		exchange.getIn().setBody(carrierProvisioningDeviceResponse);
 
-		LOGGER.info("End:CarrierProvisioningDevicePostProcessor");
+		LOGGER.debug("End:CarrierProvisioningDevicePostProcessor");
 	}
 }

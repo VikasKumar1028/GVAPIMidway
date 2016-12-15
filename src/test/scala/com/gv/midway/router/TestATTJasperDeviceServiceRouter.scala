@@ -12,7 +12,7 @@ class TestATTJasperDeviceServiceRouter extends FunSuite {
     , (RequestType.SUSPEND, "seda:attJasperSedaSuspend")
     , (RequestType.RESTORE, "seda:attJasperSedaRestore")
     , (RequestType.REACTIVATION, "seda:attJasperSedaReactivation")
-    , (RequestType.CHANGECUSTOMFIELDS, "seda:attJasperSedaCustomeFields")
+    , (RequestType.CHANGECUSTOMFIELDS, "seda:attJasperSedaCustomFields")
     , (RequestType.CHANGESERVICEPLAN, "seda:attJasperSedaChangeDeviceServicePlans")
   ).foreach { case (request, endpoint) =>
     test(s"$request -> $endpoint") {

@@ -11,7 +11,7 @@ public class DeviceSplitter {
 
     public List<Transaction> split(List deviceList) {
 
-        LOGGER.info("*****************SPLITTER*********************");
+        LOGGER.debug("*****************SPLITTER*********************");
         return deviceList;
     }
 

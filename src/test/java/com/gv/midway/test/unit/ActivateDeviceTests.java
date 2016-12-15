@@ -2,19 +2,15 @@ package com.gv.midway.test.unit;
 
 import com.gv.midway.attjasper.EditTerminalResponse;
 import com.gv.midway.constant.IEndPoints;
-import com.gv.midway.pojo.BaseRequest;
+import com.gv.midway.pojo.activateDevice.kore.request.ActivateDeviceRequestKore;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceId;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequest;
 import com.gv.midway.pojo.activateDevice.request.ActivateDeviceRequestDataArea;
 import com.gv.midway.pojo.activateDevice.request.ActivateDevices;
-import com.gv.midway.pojo.deviceInformation.kore.response.D;
-import com.gv.midway.pojo.deviceInformation.kore.response.DeviceInformationResponseKore;
-import com.gv.midway.pojo.kore.KoreProvisoningResponse;
-import com.gv.midway.pojo.verizon.CustomFields;
-import com.gv.midway.pojo.verizon.DeviceId;
+import com.gv.midway.pojo.kore.KoreProvisioningResponse;
+import com.gv.midway.pojo.KeyValuePair;
 import com.gv.midway.utility.CommonUtil;
 import org.apache.camel.Exchange;
-import org.apache.camel.ExchangePattern;
 import org.apache.camel.builder.AdviceWithRouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.model.RouteDefinition;
@@ -28,13 +24,46 @@ public class ActivateDeviceTests extends MidwayTestSupport {
     @Test
     public void test_activateDeviceKore() throws Exception {
 
-        RouteDefinition route = context.getRouteDefinition("activateDevice");
-        route.adviceWith(context, new AdviceWithRouteBuilder() {
+        RouteDefinition activateDeviceRoute = context.getRouteDefinition("activateDevice");
+        activateDeviceRoute.adviceWith(context, new AdviceWithRouteBuilder() {
             @Override
             public void configure() throws Exception {
+                interceptSendToEndpoint("direct:processActivateKoreTransaction").process(exchange -> {
+
+                });
+            }
+
+        });
+
+        RouteDefinition activateDeviceKore = context.getRouteDefinition("processActivateKoreTransaction");
+        activateDeviceKore.adviceWith(context, new AdviceWithRouteBuilder() {
+
+            @Override
+            public void configure() throws Exception {
+                weaveById("populateActivateDBPayloadKore").replace().bean(iTransactionalService, "populateActivateDBPayloadMock");
+            }
+
+        });
+
+        RouteDefinition koreSedaActivationKore = context.getRouteDefinition("koreSedaActivationKore");
+        koreSedaActivationKore.adviceWith(context, new AdviceWithRouteBuilder() {
+
+            @Override
+            public void configure() throws Exception {
+                weaveById("auditExternalRequestCallKoreActivate").replace().bean(iAuditService, "auditExternalRequestCallMock");
+
                 interceptSendToEndpoint(IEndPoints.URI_REST_KORE_ENDPOINT)
                         .process(exchange -> {
-                            KoreProvisoningResponse response = new KoreProvisoningResponse();
+                            //init
+                            ActivateDeviceRequestKore request = exchange.getIn().getBody(ActivateDeviceRequestKore.class);
+
+                            //Tests
+                            assertIsInstanceOf(ActivateDeviceRequestKore.class, exchange.getIn().getBody());
+                            assertEquals("89014103277405945812", request.getDeviceNumber());
+                            assertEquals("KoreServicePlan01", request.getEAPCode());
+
+                            //Prep next leg of route
+                            KoreProvisioningResponse response = new KoreProvisioningResponse();
                             exchange.getIn().setBody(CommonUtil.toJsonString(response));
                         })
                         .to("mock:" + IEndPoints.URI_REST_KORE_ENDPOINT)
@@ -47,9 +76,13 @@ public class ActivateDeviceTests extends MidwayTestSupport {
             }
 
         });
+
         context.start();
 
-        template.request("direct:activateDevice", (Exchange exchange) -> setExchangeProperties(exchange, getActivateDeviceRequest()));
+        template.request("direct:activateDevice", (Exchange exchange) -> {
+            exchange.setProperty("hasServicePlan", true);
+            setExchangeProperties(exchange, getActivateDeviceRequest());
+        });
 
         MockEndpoint mock = getMockEndpoint("mock:" + IEndPoints.URI_REST_KORE_ENDPOINT);
 
@@ -63,7 +96,7 @@ public class ActivateDeviceTests extends MidwayTestSupport {
         mock = getMockEndpoint("mock:direct:postActivateDeviceKoreRest");
 
         mock.expectedMessageCount(1);
-        mock.allMessages().body().isInstanceOf(KoreProvisoningResponse.class);
+        mock.allMessages().body().isInstanceOf(KoreProvisioningResponse.class);
         testHeader(mock, "KORE");
 
         mock.assertIsSatisfied();
@@ -144,15 +177,15 @@ public class ActivateDeviceTests extends MidwayTestSupport {
         dataArea.setAccountName("");
         ActivateDevices activateDevices = new ActivateDevices();
         activateDevices.setNetSuiteId(123456);
-        activateDevices.setServicePlan("");
+        activateDevices.setServicePlan("KoreServicePlan01");
         activateDevices.setMacAddress("");
         activateDevices.setSerialNumber("");
-        ActivateDeviceId activateDeviceId = new ActivateDeviceId("", "");
+        ActivateDeviceId activateDeviceId = new ActivateDeviceId("89014103277405945812", "SIM");
         activateDevices.setDeviceIds(new ActivateDeviceId[]{activateDeviceId});
-        CustomFields customFields = new CustomFields();
-        customFields.setKey("cust1");
-        customFields.setValue("");
-        activateDevices.setCustomFields(new CustomFields[]{customFields});
+        KeyValuePair customField = new KeyValuePair();
+        customField.setKey("cust1");
+        customField.setValue("");
+        activateDevices.setCustomFields(new KeyValuePair[]{customField});
         dataArea.setDevices(activateDevices);
         activateDeviceRequest.setDataArea(dataArea);
         return activateDeviceRequest;
